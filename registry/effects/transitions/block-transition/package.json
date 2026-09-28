@@ -1,0 +1,18 @@
+{
+  "name": "@hyperiux/block-transition",
+  "version": "1.1.0",
+  "description": "Horizontal split-block route transition with row-based stagger and optional content shift blur using GSAP.",
+  "main": "index.tsx",
+  "files": [
+    "index.tsx",
+    "registry.json"
+  ],
+  "keywords": [
+    "transitions",
+    "hyperiux"
+  ],
+  "dependencies": {
+    "gsap": "*",
+    "next-transition-router": "*"
+  }
+}

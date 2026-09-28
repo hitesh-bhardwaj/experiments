@@ -1,0 +1,26 @@
+{
+  "name": "@hyperiux/book-flip",
+  "version": "1.1.0",
+  "description": "3D interactive book viewer with realistic page flips, built with React Three Fiber and Drei.",
+  "main": "index.tsx",
+  "files": [
+    "index.tsx",
+    "Book.tsx",
+    "Experience.tsx",
+    "PageContext.tsx",
+    "UI.tsx",
+    "BookFlip.tsx",
+    "createSuspendedRaf.ts",
+    "registry.json"
+  ],
+  "keywords": [
+    "webgl",
+    "hyperiux"
+  ],
+  "dependencies": {
+    "three": "*",
+    "@react-three/fiber": "*",
+    "@react-three/drei": "*",
+    "maath": "*"
+  }
+}

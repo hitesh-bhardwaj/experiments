@@ -1,0 +1,222 @@
+{
+  "name": "arc-flow-carousel",
+  "type": "registry:component",
+  "title": "Arc Flow Carousel",
+  "description": "Draggable image carousel where cards ride a wheel arc, with flick momentum, idle drift, and reduced-motion support.",
+  "dependencies": [
+    "gsap"
+  ],
+  "registryDependencies": [],
+  "exportName": "ArcFlowCarousel",
+  "exportKind": "default",
+  "tier": "free",
+  "version": "1.0.0",
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "date": "2026-08-20",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "props": [
+    {
+      "name": "smoothing",
+      "type": "number",
+      "default": 5.5,
+      "description": "How fast the fan catches up to the pointer. Higher feels snappier.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 1,
+        "max": 12,
+        "step": 0.1
+      }
+    },
+    {
+      "name": "momentum",
+      "type": "number",
+      "default": 1,
+      "description": "Flick distance multiplier after release.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0,
+        "max": 3,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "dragSensitivity",
+      "type": "number",
+      "default": 1.2,
+      "description": "How far the fan travels per pixel dragged or scrolled.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0.2,
+        "max": 3,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "autoRotateSpeed",
+      "type": "number",
+      "default": 0,
+      "description": "Constant idle drift in rad/s. Positive drifts new cards in from the left.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": -1,
+        "max": 1,
+        "step": 0.01
+      }
+    },
+    {
+      "name": "pauseOnHover",
+      "type": "boolean",
+      "default": true,
+      "description": "Pauses the idle drift while a pointer hovers the carousel.",
+      "remixer": {
+        "control": "checkbox",
+        "group": "motion",
+        "groupTitle": "Motion"
+      }
+    },
+    {
+      "name": "snap",
+      "type": "boolean",
+      "default": false,
+      "description": "Snaps to the nearest card once a flick or wheel input settles.",
+      "remixer": {
+        "control": "checkbox",
+        "group": "motion",
+        "groupTitle": "Motion"
+      }
+    },
+    {
+      "name": "radiusRatio",
+      "type": "number",
+      "default": 0.85,
+      "description": "Circle radius as a multiple of the container width. Bigger is a flatter arc.",
+      "remixer": {
+        "control": "range",
+        "group": "layout",
+        "groupTitle": "Layout",
+        "min": 0.4,
+        "max": 1.6,
+        "step": 0.01
+      }
+    },
+    {
+      "name": "cardRatio",
+      "type": "number",
+      "default": 0.21,
+      "description": "Card width as a fraction of the container width, clamped by min/max card width.",
+      "remixer": {
+        "control": "range",
+        "group": "layout",
+        "groupTitle": "Layout",
+        "min": 0.1,
+        "max": 0.4,
+        "step": 0.01
+      }
+    },
+    {
+      "name": "maxCardWidth",
+      "type": "number",
+      "default": 320,
+      "description": "Upper bound on card width, in pixels.",
+      "remixer": {
+        "control": "range",
+        "group": "layout",
+        "groupTitle": "Layout",
+        "min": 200,
+        "max": 560,
+        "step": 1
+      }
+    },
+    {
+      "name": "cardAspect",
+      "type": "number",
+      "default": 0.62,
+      "description": "Card width divided by height.",
+      "remixer": {
+        "control": "range",
+        "group": "layout",
+        "groupTitle": "Layout",
+        "min": 0.3,
+        "max": 1.2,
+        "step": 0.01
+      }
+    },
+    {
+      "name": "overlap",
+      "type": "number",
+      "default": -0.04,
+      "description": "0 = cards touch edge to edge, 0.3 = overlap by 30%, negative = a gap between them.",
+      "remixer": {
+        "control": "range",
+        "group": "layout",
+        "groupTitle": "Layout",
+        "min": -0.5,
+        "max": 0.85,
+        "step": 0.01
+      }
+    },
+    {
+      "name": "arcOffset",
+      "type": "number",
+      "default": 0.5,
+      "description": "Vertical position of the leading card's centre, as a fraction of height.",
+      "remixer": {
+        "control": "range",
+        "group": "layout",
+        "groupTitle": "Layout",
+        "min": 0,
+        "max": 1,
+        "step": 0.01
+      }
+    },
+    {
+      "name": "surfaceColor",
+      "type": "string",
+      "default": "#000000",
+      "description": "Shared hex color for the carousel background and wheel surface.",
+      "remixer": {
+        "control": "color",
+        "group": "colors",
+        "groupTitle": "Colors"
+      }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "motion",
+    "layout": {
+      "buttonClassName": "right-4! top-25!",
+      "panelClassName": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/arc-flow-carousel/index.tsx",
+      "content": "// Built using Hyperiux Vault: https://vault.hyperiux.com\nimport ArcFlowCarouselComp, {\n  type ArcFlowCarouselCompProps,\n  type SmoothSliderItem,\n} from \"./ArcFlowCarouselComp\";\n\nconst defaultItems: SmoothSliderItem[] = [\n  {\n    src: \"https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/h-10.jpg\",\n    alt: \"Editorial portrait\",\n    title: \"Editorial Portrait\",\n    description: \"Soft-focus studio portrait with a quiet, print-like color grade.\",\n  },\n  {\n    src: \"https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/h-11.jpg\",\n    alt: \"Studio still life\",\n    title: \"Studio Still Life\",\n    description: \"A minimal composition built around light falloff and glassy texture.\",\n  },\n  {\n    src: \"https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/h-12.jpg\",\n    alt: \"Type poster\",\n    title: \"Type Poster\",\n    description: \"Poster exploration balancing negative space, blur, and sharp letterforms.\",\n  },\n  {\n    src: \"https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/h-13.jpg\",\n    alt: \"Product campaign\",\n    title: \"Product Campaign\",\n    description: \"Commercial visual with polished highlights and a restrained luxury tone.\",\n  },\n  {\n    src: \"https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/h-14.jpg\",\n    alt: \"Landscape study\",\n    title: \"Landscape Study\",\n    description: \"Atmospheric frame capturing motion, depth, and a misty horizon line.\",\n  },\n  {\n    src: \"https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/h-15.jpg\",\n    alt: \"Motion frame\",\n    title: \"Motion Frame\",\n    description: \"A cinematic still chosen for its sweeping blur and directional energy.\",\n  },\n  {\n    src: \"https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/h-22.jpg\",\n    alt: \"Brand artwork\",\n    title: \"Brand Artwork\",\n    description: \"Graphic composition designed to feel tactile, glossy, and dimensional.\",\n  },\n  {\n    src: \"https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/h-23.jpg\",\n    alt: \"Cover art\",\n    title: \"Cover Art\",\n    description: \"A cover-style visual with sculptural forms and a cool editorial palette.\",\n  },\n];\n\nexport type { SmoothSliderItem };\n\nexport default function ArcFlowCarousel({ items = defaultItems, ...rest }: ArcFlowCarouselCompProps) {\n  return <ArcFlowCarouselComp items={items} {...rest} />;\n}\n"
+    },
+    {
+      "path": "ArcFlowCarouselComp.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/arc-flow-carousel/ArcFlowCarouselComp.tsx",
+      "content": "// Built using Hyperiux Vault: https://vault.hyperiux.com\n\"use client\";\n\nimport { useCallback, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from \"react\";\nimport { gsap } from \"gsap\";\n\nfunction usePrefersReducedMotion() {\n  return useSyncExternalStore(\n    (callback) => {\n      if (typeof window === \"undefined\") return () => {};\n\n      const mediaQueryList = window.matchMedia(\"(prefers-reduced-motion: reduce)\");\n      mediaQueryList.addEventListener(\"change\", callback);\n\n      return () => mediaQueryList.removeEventListener(\"change\", callback);\n    },\n    () => (typeof window === \"undefined\" ? false : window.matchMedia?.(\"(prefers-reduced-motion: reduce)\")?.matches ?? false),\n    () => false\n  );\n}\n\nexport interface SmoothSliderItem {\n  src: string;\n  alt?: string;\n  label?: string;\n  title?: string;\n  description?: string;\n}\n\nexport interface ArcFlowCarouselCompProps {\n  items?: SmoothSliderItem[];\n  /** Circle radius as a multiple of the container width. Bigger = flatter arc. */\n  radiusRatio?: number;\n  /** Card width as a fraction of the container width (clamped by min/max). */\n  cardRatio?: number;\n  minCardWidth?: number;\n  maxCardWidth?: number;\n  /** Card width / height. 0.62 ≈ the video's card proportions. */\n  cardAspect?: number;\n  /** 0 = cards touch edge to edge, 0.3 = overlap by 30%, negative = a gap between them. */\n  overlap?: number;\n  /** Vertical position of the leading card's centre, as a fraction of height. */\n  arcOffset?: number;\n  /** Higher = the fan catches up to the pointer faster. 4–9 feels natural. */\n  smoothing?: number;\n  /** How far the fan travels per pixel dragged. 1 = 1:1 at the centre card, higher = more travel per drag. */\n  dragSensitivity?: number;\n  /** Flick distance multiplier after release. */\n  momentum?: number;\n  /** Snap to the nearest card once the flick settles. */\n  snap?: boolean;\n  /** How wheel / trackpad input is consumed. */\n  wheelControl?: \"horizontal\" | \"both\" | \"off\";\n  /** Constant idle drift in rad/s. Positive drifts new cards in from the left. */\n  autoRotateSpeed?: number;\n  /** Pause the idle drift while a pointer hovers the carousel. */\n  pauseOnHover?: boolean;\n  /** Shared hex color used for both the page background and the wheel surface. */\n  surfaceColor?: string;\n  className?: string;\n}\n\nconst DRAG_SMOOTHING = 14;\nconst VELOCITY_WINDOW = 90;\nconst MAX_FLICK = 9;\n/** How much slower a card follows per unit distance from the active one. 0 = no lag, 1 = edge cards barely move. */\nconst STAGGER_LAG_STRENGTH = 0.85;\n/** Floor on a card's follow rate, as a fraction of the base rate, so far cards never stall. */\nconst MIN_FOLLOW_FRACTION = 0.6;\n\nexport default function ArcFlowCarouselComp({\n  items = [],\n  radiusRatio = 0.85,\n  cardRatio = 0.21,\n  minCardWidth = 150,\n  maxCardWidth = 320,\n  cardAspect = 0.62,\n  overlap = -0.04,\n  arcOffset = 0.5,\n  smoothing = 5.5,\n  dragSensitivity = 1.2,\n  momentum = 1,\n  snap = false,\n  wheelControl = \"horizontal\",\n  autoRotateSpeed = 0,\n  pauseOnHover = true,\n  surfaceColor = \"#000000\",\n  className = \"\",\n}: ArcFlowCarouselCompProps) {\n  const stageRef = useRef<HTMLDivElement | null>(null);\n  const discRef = useRef<HTMLDivElement | null>(null);\n  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);\n  const innerRefs = useRef<(HTMLDivElement | null)[]>([]);\n\n  const reduceMotion = usePrefersReducedMotion();\n\n  // How many card slots the wheel needs so the wrap point stays off screen.\n  const [slotCount, setSlotCount] = useState(() => Math.max(items.length, 12));\n\n  // Live geometry, recomputed on resize. Read by the ticker, never by render.\n  const layoutRef = useRef({\n    radius: 900,\n    cardWidth: 220,\n    cardHeight: 330,\n    step: 0.14,\n    centerX: 0,\n    centerY: 0,\n    maxAngle: 1,\n  });\n\n  // Wheel position in radians. `current` chases `target` every frame.\n  const currentRef = useRef(0);\n  const targetRef = useRef(0);\n  // Each card's own eased position - chases `current`, not `target`, so\n  // motion ripples outward from the active card instead of moving as one.\n  const slotOffsetsRef = useRef<number[]>([]);\n  const draggingRef = useRef(false);\n  const pointerIdRef = useRef<number | null>(null);\n  const lastXRef = useRef(0);\n  const samplesRef = useRef<{ t: number; value: number }[]>([]);\n  const revealRef = useRef(reduceMotion ? 1 : 0);\n  const revealStartRef = useRef(0);\n  const wheelSettleRef = useRef(0);\n  const hoveredRef = useRef(false);\n\n  const total = items.length;\n\n  const measure = useCallback(() => {\n    const stage = stageRef.current;\n    if (!stage || !total) return;\n\n    const width = stage.offsetWidth;\n    const height = stage.offsetHeight;\n\n    const cardWidth = gsap.utils.clamp(minCardWidth, maxCardWidth, width * cardRatio);\n    const cardHeight = cardWidth / cardAspect;\n    const radius = Math.max(width * radiusRatio, cardWidth * 4.2);\n\n    // Arc length between two card centres -> angle between them.\n    const step = (cardWidth * (1 - gsap.utils.clamp(-0.5, 0.85, overlap))) / radius;\n\n    // Card centres ride the circle; `arcOffset` places the leading one.\n    const centerX = width / 2;\n    const centerY = height * arcOffset + radius;\n\n    // The disc rim clears the card bottoms by a hair, reading as a ground line.\n    const discRadius = radius - cardHeight * 0.66;\n\n    // A card is worth drawing while any part of it can reach the viewport.\n    const reach = Math.min(1, (width / 2 + cardWidth * 1.2) / radius);\n    const maxAngle = Math.asin(reach) + 0.12;\n\n    layoutRef.current = { radius, cardWidth, cardHeight, step, centerX, centerY, maxAngle };\n\n    const disc = discRef.current;\n    if (disc) {\n      disc.style.width = `${discRadius * 2}px`;\n      disc.style.height = `${discRadius * 2}px`;\n      disc.style.left = `${centerX}px`;\n      disc.style.top = `${centerY - discRadius}px`;\n    }\n\n    // Enough slots that the wrap seam is always past `maxAngle`.\n    const needed = Math.ceil((maxAngle * 2) / step) + 2;\n    setSlotCount((prev) => {\n      const next = Math.max(total, Math.ceil(needed / total) * total);\n      return next === prev ? prev : next;\n    });\n  }, [arcOffset, cardAspect, cardRatio, maxCardWidth, minCardWidth, overlap, radiusRatio, total]);\n\n  useLayoutEffect(() => {\n    measure();\n\n    const stage = stageRef.current;\n    if (!stage || typeof ResizeObserver === \"undefined\") {\n      window.addEventListener(\"resize\", measure);\n      return () => window.removeEventListener(\"resize\", measure);\n    }\n\n    const observer = new ResizeObserver(measure);\n    observer.observe(stage);\n    return () => observer.disconnect();\n  }, [measure]);\n\n  // Render loop: one exponential lerp, then a transform per card.\n  useEffect(() => {\n    if (!total) return;\n\n    const draw = (dt: number) => {\n      const { radius, cardWidth, cardHeight, step, centerX, centerY, maxAngle } = layoutRef.current;\n      const span = slotCount * step;\n      const half = span / 2;\n      const reveal = revealRef.current;\n      const rate = draggingRef.current ? DRAG_SMOOTHING : reduceMotion ? DRAG_SMOOTHING : smoothing;\n      const useUnifiedOffset = reduceMotion;\n\n      const slotOffsets = slotOffsetsRef.current;\n      if (slotOffsets.length !== slotCount) {\n        slotOffsets.length = slotCount;\n        slotOffsets.fill(currentRef.current);\n      }\n\n      for (let i = 0; i < slotCount; i += 1) {\n        const card = cardRefs.current[i];\n        if (!card) continue;\n\n        if (useUnifiedOffset) {\n          slotOffsets[i] = currentRef.current;\n        } else {\n          // Rank this card's distance from the active one using its own last\n          // position - continuous enough to pick a follow rate from.\n          let rankAngle = (i * step - slotOffsets[i]) % span;\n          if (rankAngle < -half) rankAngle += span;\n          else if (rankAngle >= half) rankAngle -= span;\n          const distanceFactor = gsap.utils.clamp(0, 1, Math.abs(rankAngle) / maxAngle);\n\n          // The touched/active card tracks the drag almost immediately; cards\n          // further out follow it with more lag, so motion ripples outward\n          // instead of the whole fan moving as one rigid piece.\n          const followRate = Math.max(\n            rate * (1 - distanceFactor * STAGGER_LAG_STRENGTH),\n            rate * MIN_FOLLOW_FRACTION,\n          );\n          const followLerp = 1 - Math.exp(-followRate * dt);\n          slotOffsets[i] += (currentRef.current - slotOffsets[i]) * followLerp;\n        }\n\n        // Wrap into [-half, half) so the strip of cards is endless.\n        let baseAngle = (i * step - slotOffsets[i]) % span;\n        if (baseAngle < -half) baseAngle += span;\n        else if (baseAngle >= half) baseAngle -= span;\n\n        if (Math.abs(baseAngle) > maxAngle) {\n          if (card.style.visibility !== \"hidden\") card.style.visibility = \"hidden\";\n          continue;\n        }\n        if (card.style.visibility === \"hidden\") card.style.visibility = \"visible\";\n\n        const x = centerX + radius * Math.sin(baseAngle) - cardWidth / 2;\n        const y = centerY - radius * Math.cos(baseAngle) - cardHeight / 2;\n\n        card.style.transform = `translate3d(${x}px, ${y}px, 0) rotate(${baseAngle}rad)`;\n        card.style.width = `${cardWidth}px`;\n        card.style.height = `${cardHeight}px`;\n        // Right always stacks over left, no exception for the active card -\n        // a plain fanned hand of cards, ordered purely by position.\n        card.style.zIndex = `${Math.round((baseAngle + half) * 1000)}`;\n\n        const inner = innerRefs.current[i];\n        if (inner && reveal < 1) {\n          // Staggered entrance, outwards from the middle of the fan.\n          const delay = Math.min(1, Math.abs(baseAngle) / maxAngle) * 0.45;\n          const p = gsap.utils.clamp(0, 1, (reveal - delay) / (1 - delay || 1));\n          const eased = 1 - Math.pow(1 - p, 3);\n          inner.style.opacity = `${eased}`;\n          inner.style.transform = `translate3d(0, ${(1 - eased) * cardHeight * 0.35}px, 0)`;\n        } else if (inner && inner.style.opacity !== \"1\") {\n          inner.style.opacity = \"1\";\n          inner.style.transform = \"translate3d(0, 0, 0)\";\n        }\n      }\n    };\n\n    const tick = (_time: number, deltaTime: number) => {\n      const dt = Math.min(deltaTime, 50) / 1000;\n      const rate = draggingRef.current ? DRAG_SMOOTHING : reduceMotion ? DRAG_SMOOTHING : smoothing;\n      const lerp = 1 - Math.exp(-rate * dt);\n\n      const delta = targetRef.current - currentRef.current;\n      currentRef.current += delta * lerp;\n\n      if (Math.abs(delta) < 0.00002) currentRef.current = targetRef.current;\n\n      if (revealRef.current < 1) {\n        // Wall-clock, so a dropped frame can't stretch the entrance.\n        const now = performance.now();\n        if (!revealStartRef.current) revealStartRef.current = now;\n        revealRef.current = Math.min(1, (now - revealStartRef.current) / 1100);\n      }\n\n      // A slow constant drift, like the wheel is idling - paused mid-flick,\n      // mid-hover, or once reduced motion asks for stillness.\n      if (\n        autoRotateSpeed &&\n        !reduceMotion &&\n        !draggingRef.current &&\n        !(pauseOnHover && hoveredRef.current)\n      ) {\n        targetRef.current += autoRotateSpeed * dt;\n      }\n\n      draw(dt);\n    };\n\n    // Land on the first card and paint one frame before the ticker starts.\n    draw(1);\n    gsap.ticker.add(tick);\n\n    return () => gsap.ticker.remove(tick);\n  }, [autoRotateSpeed, pauseOnHover, reduceMotion, slotCount, smoothing, total]);\n\n  // Pointer drag + flick.\n  useEffect(() => {\n    const stage = stageRef.current;\n    if (!stage || !total) return;\n\n    const pushSample = () => {\n      const now = performance.now();\n      const samples = samplesRef.current;\n      samples.push({ t: now, value: targetRef.current });\n      while (samples.length > 2 && now - samples[0].t > VELOCITY_WINDOW) samples.shift();\n    };\n\n    const onPointerDown = (e: PointerEvent) => {\n      if (e.button !== 0 && e.pointerType === \"mouse\") return;\n      draggingRef.current = true;\n      pointerIdRef.current = e.pointerId;\n      lastXRef.current = e.clientX;\n      samplesRef.current = [{ t: performance.now(), value: targetRef.current }];\n      // Kill any leftover flick the moment a finger lands.\n      targetRef.current = currentRef.current;\n      stage.setPointerCapture(e.pointerId);\n      stage.style.cursor = \"grabbing\";\n    };\n\n    const onPointerMove = (e: PointerEvent) => {\n      if (!draggingRef.current || e.pointerId !== pointerIdRef.current) return;\n      const dx = e.clientX - lastXRef.current;\n      lastXRef.current = e.clientX;\n      // Pixels along the rim -> radians, scaled by dragSensitivity.\n      targetRef.current -= (dx * dragSensitivity) / layoutRef.current.radius;\n      pushSample();\n    };\n\n    const endDrag = (e: PointerEvent) => {\n      if (!draggingRef.current || e.pointerId !== pointerIdRef.current) return;\n      draggingRef.current = false;\n      pointerIdRef.current = null;\n      stage.style.cursor = \"grab\";\n      if (stage.hasPointerCapture(e.pointerId)) stage.releasePointerCapture(e.pointerId);\n\n      pushSample();\n\n      const { step } = layoutRef.current;\n      let projected = targetRef.current;\n\n      if (!reduceMotion) {\n        const samples = samplesRef.current;\n        const first = samples[0];\n        const last = samples[samples.length - 1];\n        const dt = last && first ? (last.t - first.t) / 1000 : 0;\n\n        if (dt > 0.008) {\n          // Velocity in rad/s. Handing the lerp `v / rate` keeps the card\n          // speed continuous through the release - no jolt, no dead stop.\n          const velocity = (last.value - first.value) / dt;\n          const throw_ = gsap.utils.clamp(-MAX_FLICK, MAX_FLICK, velocity / smoothing) * momentum;\n          projected = targetRef.current + throw_;\n        }\n      }\n\n      targetRef.current = snap ? gsap.utils.snap(step, projected) : projected;\n      samplesRef.current = [];\n    };\n\n    const onWheel = (e: WheelEvent) => {\n      if (wheelControl === \"off\") return;\n      const horizontal = Math.abs(e.deltaX) > Math.abs(e.deltaY);\n      if (wheelControl === \"horizontal\" && !horizontal) return;\n\n      const delta = horizontal ? e.deltaX : e.deltaY;\n      e.preventDefault();\n      targetRef.current += (delta * dragSensitivity) / layoutRef.current.radius;\n\n      if (snap) {\n        // Wheel input arrives in bursts; settle on a card once it stops.\n        window.clearTimeout(wheelSettleRef.current);\n        wheelSettleRef.current = window.setTimeout(() => {\n          targetRef.current = gsap.utils.snap(layoutRef.current.step, targetRef.current);\n        }, 140);\n      }\n    };\n\n    const onKeyDown = (e: KeyboardEvent) => {\n      const { step } = layoutRef.current;\n      if (e.key === \"ArrowRight\") {\n        e.preventDefault();\n        targetRef.current += step;\n      } else if (e.key === \"ArrowLeft\") {\n        e.preventDefault();\n        targetRef.current -= step;\n      }\n    };\n\n    const onPointerEnter = () => {\n      hoveredRef.current = true;\n    };\n    const onPointerLeave = () => {\n      hoveredRef.current = false;\n    };\n\n    stage.addEventListener(\"pointerdown\", onPointerDown);\n    stage.addEventListener(\"pointermove\", onPointerMove);\n    stage.addEventListener(\"pointerup\", endDrag);\n    stage.addEventListener(\"pointercancel\", endDrag);\n    stage.addEventListener(\"pointerenter\", onPointerEnter);\n    stage.addEventListener(\"pointerleave\", onPointerLeave);\n    stage.addEventListener(\"wheel\", onWheel, { passive: false });\n    stage.addEventListener(\"keydown\", onKeyDown);\n\n    return () => {\n      stage.removeEventListener(\"pointerdown\", onPointerDown);\n      stage.removeEventListener(\"pointermove\", onPointerMove);\n      stage.removeEventListener(\"pointerup\", endDrag);\n      stage.removeEventListener(\"pointercancel\", endDrag);\n      stage.removeEventListener(\"pointerenter\", onPointerEnter);\n      stage.removeEventListener(\"pointerleave\", onPointerLeave);\n      stage.removeEventListener(\"wheel\", onWheel);\n      stage.removeEventListener(\"keydown\", onKeyDown);\n      window.clearTimeout(wheelSettleRef.current);\n    };\n  }, [dragSensitivity, momentum, reduceMotion, smoothing, snap, total, wheelControl]);\n\n  if (!total) return null;\n\n  const slots = Array.from({ length: slotCount }, (_, i) => items[i % total]);\n\n  return (\n    <section\n      className={`relative bg-black h-dvh w-full overflow-hidden select-none ${className}`}\n      style={{ backgroundColor: surfaceColor }}\n    >\n      <div\n        ref={stageRef}\n        tabIndex={0}\n        role=\"region\"\n        aria-label=\"Draggable image carousel\"\n        className=\"absolute inset-0 cursor-grab outline-none\"\n        style={{ touchAction: \"pan-y\" }}\n      >\n        {/* The wheel the cards ride on. */}\n        <div\n          ref={discRef}\n          aria-hidden\n          className=\"pointer-events-none absolute -translate-x-1/2 rounded-full\"\n          style={{\n            backgroundColor: surfaceColor,\n            boxShadow: \"none\",\n          }}\n        />\n\n        {slots.map((item, i) => (\n          <div\n            key={i}\n            ref={(el) => {\n              cardRefs.current[i] = el;\n            }}\n            className=\"group absolute top-0 left-0 will-change-transform\"\n            style={{ visibility: \"hidden\" }}\n          >\n            <div\n              ref={(el) => {\n                innerRefs.current[i] = el;\n              }}\n              className=\"relative h-full w-full overflow-hidden rounded-[10px] bg-black/5\"\n              style={{\n                opacity: reduceMotion ? 1 : 0,\n                boxShadow: \"0 18px 40px -12px rgba(0,0,0,0.45), 0 2px 6px rgba(0,0,0,0.15)\",\n              }}\n            >\n              {/* eslint-disable-next-line @next/next/no-img-element */}\n              <img\n                src={item.src}\n                alt={item.alt ?? `Slide ${(i % total) + 1}`}\n                draggable={false}\n                className=\"pointer-events-none block h-full w-full object-cover select-none\"\n              />\n              {(item.title || item.description) ? (\n                <div\n                  className={`pointer-events-none absolute inset-0 transition-opacity duration-300 ease-out ${\n                    reduceMotion ? \"opacity-100\" : \"opacity-0 group-hover:opacity-100\"\n                  }`}\n                  style={{\n                    background:\n                      \"linear-gradient(180deg, rgba(0,0,0,0.08) 0%, rgba(0,0,0,0.16) 45%, rgba(0,0,0,0.62) 100%)\",\n                  }}\n                />\n              ) : null}\n              {(item.title || item.description) ? (\n                <div\n                  className={`pointer-events-none absolute inset-x-0 bottom-0 p-4 text-white transition-all duration-300 ease-out ${\n                    reduceMotion\n                      ? \"translate-y-0 opacity-100\"\n                      : \"translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100\"\n                  }`}\n                  style={{\n                    background:\n                      \"linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.08) 35%, rgba(0,0,0,0.26) 100%)\",\n                  }}\n                >\n                  {item.title ? (\n                    <p className=\"text-[1.4vw] font-medium uppercase  text-white/95\">\n                      {item.title}\n                    </p>\n                  ) : null}\n                  {item.description ? (\n                    <p className=\"mt-2 max-w-[22ch] text-[1.1vw] leading-[1.1] text-white/75\">\n                      {item.description}\n                    </p>\n                  ) : null}\n                </div>\n              ) : null}\n              {item.label ? (\n                <span className=\"absolute bottom-3 left-1/2 -translate-x-1/2 text-[0.7rem] tracking-[0.18em] text-white/90 uppercase\">\n                  {item.label}\n                </span>\n              ) : null}\n            </div>\n          </div>\n        ))}\n      </div>\n    </section>\n  );\n}\n"
+    }
+  ]
+}

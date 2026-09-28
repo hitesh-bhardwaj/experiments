@@ -1,0 +1,176 @@
+{
+  "name": "hover-stack",
+  "type": "registry:component",
+  "title": "Hover Stack",
+  "description": "Overlapping card stack that fans out around the hovered card",
+  "dependencies": [],
+  "registryDependencies": [],
+  "exportName": "HoverStack",
+  "exportKind": "default",
+  "tier": "free",
+  "version": "1.0.1",
+  "changelog": [
+    {
+      "version": "1.0.1",
+      "date": "2026-07-30",
+      "summary": "Added reduced-motion support and configurable stack controls.",
+      "breaking": false
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-07-21",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "props": [
+    {
+      "name": "cardWidth",
+      "type": "number",
+      "default": 280,
+      "description": "Width of each card in pixels.",
+      "remixer": {
+        "control": "range",
+        "group": "layout",
+        "groupTitle": "Layout",
+        "min": 160,
+        "max": 420,
+        "step": 4
+      }
+    },
+    {
+      "name": "cardHeight",
+      "type": "number",
+      "default": 360,
+      "description": "Height of each card in pixels.",
+      "remixer": {
+        "control": "range",
+        "group": "layout",
+        "groupTitle": "Layout",
+        "min": 200,
+        "max": 520,
+        "step": 4
+      }
+    },
+    {
+      "name": "overlap",
+      "type": "number",
+      "default": 96,
+      "description": "Horizontal overlap between resting cards in pixels.",
+      "remixer": {
+        "control": "range",
+        "group": "layout",
+        "groupTitle": "Layout",
+        "min": 0,
+        "max": 200,
+        "step": 2
+      }
+    },
+    {
+      "name": "pushDistance",
+      "type": "number",
+      "default": 235,
+      "description": "Distance neighboring cards are pushed aside on hover.",
+      "remixer": {
+        "control": "range",
+        "group": "behavior",
+        "groupTitle": "Behavior",
+        "min": 100,
+        "max": 400,
+        "step": 5
+      }
+    },
+    {
+      "name": "hoverLift",
+      "type": "number",
+      "default": 30,
+      "description": "Vertical lift applied to the hovered card in pixels.",
+      "remixer": {
+        "control": "range",
+        "group": "behavior",
+        "groupTitle": "Behavior",
+        "min": 0,
+        "max": 100,
+        "step": 2
+      }
+    },
+    {
+      "name": "spread",
+      "type": "number",
+      "description": "Distance cards spread while hovered.",
+      "default": 24,
+      "remixer": {
+        "control": "range",
+        "group": "controls",
+        "groupTitle": "Controls",
+        "min": 0,
+        "max": 72,
+        "step": 1
+      }
+    },
+    {
+      "name": "rotation",
+      "type": "number",
+      "description": "Rotation amount applied to stacked items.",
+      "default": 7,
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": -180,
+        "max": 180,
+        "step": 1
+      }
+    },
+    {
+      "name": "duration",
+      "type": "number",
+      "description": "Hover animation duration.",
+      "default": 0.35,
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0,
+        "max": 5,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "accentColor",
+      "type": "color",
+      "description": "Outline color shown around the active card. Transparent by default.",
+      "default": "transparent",
+      "remixer": {
+        "control": "color",
+        "group": "style",
+        "groupTitle": "Style"
+      }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "layout",
+    "layout": {
+      "buttonClassName": "right-4! top-25!",
+      "panelClassName": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/hover-stack/index.tsx",
+      "content": "// Built using Hyperiux Vault: https://vault.hyperiux.com\n\n\nimport React from \"react\";\nimport { HoverStackComp, type HoverStackCard } from \"./HoverStackComp\";\n\nconst cards: HoverStackCard[] = [\n    {\n        id: 1,\n        quote: \"A must-have for anyone looking to save time and boost productivity.\",\n        tag: \"Efficiency\",\n        bg: \"#E4FF1A\",\n        accent: \"text-[#1A1A1A]\",\n    },\n    {\n        id: 2,\n        quote: \"This tech has completely streamlined my daily tasks.\",\n        tag: \"Workflow\",\n        bg: \"#DD1155\",\n        accent: \"text-[#ffffff]\",\n    },\n    {\n        id: 3,\n        quote: \"Innovative and powerful, yet so easy to use!\",\n        tag: \"Simplicity\",\n        bg: \"#FF5714\",\n        accent: \"text-[#1A1A1A]\",\n    },\n    {\n        id: 4,\n        quote: \"It made everything smoother. Highly recommend!\",\n        tag: \"Reliability\",\n        bg: \"#E980FC\",\n        accent: \"text-[#1A1A1A]\",\n    },\n    {\n        id: 5,\n        quote: \"Fast, reliable, and user-friendly. Exactly what I needed.\",\n        tag: \"Speed\",\n        bg: \"#67D6A3\",\n        accent: \"text-[#1A1A1A]\",\n    },\n    {\n        id: 6,\n        quote: \"I can’t imagine my workflow without it now. Simply amazing!\",\n        tag: \"Impact\",\n        bg: \"#3454D1\",\n        accent: \"text-[#ffffff]\",\n    },\n    {\n        id: 7,\n        quote: \"Performance is a game changer. So much smoother now.\",\n        tag: \"Performance\",\n        bg: \"#B98CFF\",\n        accent: \"text-[#1A1A1A]\",\n    },\n];\n\nconst HoverStack = ({\n    cardWidth = 280,\n    cardHeight = 360,\n    overlap = 96,\n    pushDistance = 235,\n    hoverLift = 30,\n    spread = 24,\n    rotation = 7,\n    duration = 0.35,\n    accentColor = \"transparent\",\n}) => {\n    return (\n        <>\n            <section className=\"w-full h-fit bg-[#fff9ec] py-[10%] max-md:py-[20%] overflow-hidden flex flex-col gap-[7vw] justify-center items-center\">\n                <div className=\"flex flex-col w-full justify-center items-center gap-[1vw] max-md:gap-[3vw] text-center text-[#1a1a1a]\">\n                <h1 className=\" text-[5.5vw] max-md:text-[9vw] max-[1025px]:text-[7vw]\">\n                    Hover Stack Cards\n                </h1>\n                <p className=\"text-[1.2vw] max-[1025px]:hidden\">\n                    Hover any card , so they can pop out.\n                </p>\n\n                </div>\n\n                <HoverStackComp\n                    cards={cards}\n                    cardWidth={cardWidth}\n                    cardHeight={cardHeight}\n                    overlap={overlap}\n                    pushDistance={pushDistance}\n                    hoverLift={hoverLift}\n                    spread={spread}\n                    rotation={rotation}\n                    duration={duration}\n                    accentColor={accentColor}\n                />\n            </section>\n        </>\n    );\n};\n\nexport default HoverStack;\n"
+    },
+    {
+      "path": "HoverStackComp.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/hover-stack/HoverStackComp.tsx",
+      "content": "\"use client\";\n\nimport React, { useEffect, useMemo, useState, type CSSProperties } from \"react\";\n\ntype CSSVars = CSSProperties & Record<string, string | number | undefined>;\n\nexport interface HoverStackCard {\n  id?: number;\n  quote: string;\n  tag?: string;\n  bg: string;\n  accent?: string;\n}\n\ninterface PreparedHoverStackCard extends HoverStackCard {\n  _rotation: number;\n  _baseX: number;\n  _baseZ: number;\n}\n\ninterface HoverStackCompProps {\n  cards?: HoverStackCard[];\n  cardWidth?: number;\n  cardHeight?: number;\n  overlap?: number;\n  hoverLift?: number;\n  pushDistance?: number;\n  spread?: number;\n  rotation?: number;\n  duration?: number;\n  accentColor?: string;\n  className?: string;\n}\n\nconst PRESET_ROTATIONS = [-8, 4, -3, 5, -4, 6, 3, -6, 2, -5];\n\nconst BREAKPOINT = 1025;\n\nconst HoverStackComp = ({\n  cards = [],\n  cardWidth = 280,\n  cardHeight = 360,\n  overlap = 92,\n  hoverLift = 28,\n  pushDistance = 110,\n  spread = 24,\n  rotation = 7,\n  duration = 0.35,\n  accentColor = \"transparent\",\n  className = \"\",\n}: HoverStackCompProps) => {\n  const [activeIndex, setActiveIndex] = useState<number | null>(null);\n  const [isSmallScreen, setIsSmallScreen] = useState(false);\n  const [hasMounted, setHasMounted] = useState(false);\n  const [reduceMotion, setReduceMotion] = useState(\n    () =>\n      typeof window !== \"undefined\" &&\n      (window.matchMedia?.(\"(prefers-reduced-motion: reduce)\")?.matches ?? false)\n  );\n\n  useEffect(() => {\n    const checkWidth = () => {\n      setIsSmallScreen(window.innerWidth < BREAKPOINT);\n    };\n\n    checkWidth();\n    setHasMounted(true);\n\n    window.addEventListener(\"resize\", checkWidth);\n\n    return () => {\n      window.removeEventListener(\"resize\", checkWidth);\n    };\n  }, []);\n\n  useEffect(() => {\n    const mq = window.matchMedia?.(\"(prefers-reduced-motion: reduce)\");\n    if (!mq) return;\n\n    const onChange = (event: MediaQueryListEvent) => {\n      setReduceMotion(event.matches);\n      if (event.matches) setActiveIndex(null);\n    };\n\n    setReduceMotion(mq.matches);\n    mq.addEventListener?.(\"change\", onChange);\n    return () => mq.removeEventListener?.(\"change\", onChange);\n  }, []);\n\n  const preparedCards: PreparedHoverStackCard[] = useMemo(() => {\n    const rotationScale = rotation / 7;\n\n    return cards.map((card, index) => {\n      const presetRotation =\n        PRESET_ROTATIONS[index % PRESET_ROTATIONS.length] +\n        (index % 2 === 0 ? 0 : 1);\n\n      const baseX = index * overlap;\n\n      return {\n        ...card,\n        _rotation: presetRotation * rotationScale,\n        _baseX: baseX,\n        _baseZ: index + 1,\n      };\n    });\n  }, [cards, overlap, rotation]);\n\n  const getCardStyle = (card: PreparedHoverStackCard, index: number): CSSVars => {\n    const isActive = activeIndex === index;\n    const hasActive = activeIndex !== null;\n\n    let x = card._baseX;\n    let y = 0;\n    let rotate = card._rotation;\n    let zIndex = card._baseZ;\n    let scale = 1;\n\n    if (reduceMotion) {\n      // No lift / push / rotate snap - only raise z-index so the card is readable.\n      if (isActive) zIndex = 999;\n\n      return {\n        \"--card-width\": `${cardWidth}px`,\n        \"--card-height\": `${cardHeight}px`,\n        transform: `translate3d(${x}px, ${y}px, 0) rotate(${rotate}deg) scale(1)`,\n        zIndex,\n        transition: \"none\",\n        background: card.bg,\n      };\n    }\n\n    let boxShadow;\n\n    if (hasActive) {\n      if (index < activeIndex) {\n        x -= pushDistance;\n        y -= spread * 0.4;\n      } else if (index > activeIndex) {\n        x += pushDistance;\n        y += spread * 0.4;\n      }\n\n      if (isActive) {\n        x = card._baseX;\n        y = -hoverLift;\n        rotate = 0;\n        zIndex = 999;\n        scale = 1.035;\n        boxShadow = `0 0 0 3px ${accentColor}`;\n      }\n    }\n\n    const activeMs = Math.max(0, duration) * 1000;\n    const transition = isActive\n      ? `transform ${activeMs}ms cubic-bezier(0.22, 1.6, 0.32, 1), box-shadow ${activeMs * (900 / 700)}ms cubic-bezier(0.22, 1.6, 0.32, 1)`\n      : hasActive\n        ? `transform ${activeMs}ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow ${activeMs}ms cubic-bezier(0.22, 1, 0.36, 1)`\n        : `transform ${activeMs * (480 / 700)}ms cubic-bezier(0.4, 0, 0.2, 1), box-shadow ${activeMs * (380 / 700)}ms cubic-bezier(0.4, 0, 0.2, 1)`;\n\n    return {\n      \"--card-width\": `${cardWidth}px`,\n      \"--card-height\": `${cardHeight}px`,\n      transform: `translate3d(${x}px, ${y}px, 0) rotate(${rotate}deg) scale(${scale})`,\n      zIndex,\n      transition,\n      background: card.bg,\n      boxShadow,\n    };\n  };\n\n  const totalWidth =\n    preparedCards.length > 0\n      ? preparedCards.at(-1)!._baseX + cardWidth\n      : cardWidth;\n\n  if (!hasMounted) {\n    return null;\n  }\n\n  return (\n    <div className={`relative w-full px-[7vw] ${className}`}>\n      {isSmallScreen ? (\n        <div className=\"flex flex-col gap-[8.8vw]\">\n          {cards.map((card, index) => (\n            <div\n              key={card.id ?? index}\n              className={`relative flex min-h-[58.667vw] w-full cursor-default select-none flex-col justify-between overflow-hidden rounded-[4.8vw] border border-black/10 p-[4.8vw] ${card.accent || \"\"}`}\n              style={{\n                background: card.bg,\n              }}\n            >\n              <div />\n\n              <div className=\"relative z-2 flex flex-1 items-center\">\n                <p className=\"m-0 max-w-full text-[4vw] max-md:text-[4.5vw] leading-[1.05] tracking-[-0.04em]\">\n                  “{card.quote}”\n                </p>\n              </div>\n\n              <div className=\"relative z-2 flex flex-col gap-[3.2vw]\">\n                <div className=\"h-[0.267vw] w-full bg-black/20\" />\n\n                <div className=\"flex items-center justify-between gap-[3.2vw]\">\n                  <div className=\"flex items-center gap-[2.1vw]\">\n                    <div className=\"flex size-[8.5vw] items-center justify-center rounded-full border border-black/10 bg-black text-[0.82rem] text-white shadow-[0_0.586vw_1.367vw_rgba(0,0,0,0.12)]\">\n                      ↗\n                    </div>\n\n                    <span className=\"text-[2.667vw] font-semibold uppercase tracking-[0.14em]\">\n                      Explore\n                    </span>\n                  </div>\n\n                  <span className=\"text-[2.6vw] uppercase tracking-[0.16em] opacity-70\">\n                    0{index + 1}\n                  </span>\n                </div>\n              </div>\n            </div>\n          ))}\n        </div>\n      ) : (\n        <div\n          className=\"relative mx-auto\"\n          style={{\n            \"--stack-width\": `${totalWidth}px`,\n            \"--stack-height\": `${cardHeight + (reduceMotion ? 0 : hoverLift) + 24}px`,\n            width: \"var(--stack-width)\",\n            height: \"var(--stack-height)\",\n          } as CSSVars}\n        >\n          {preparedCards.map((card, index) => (\n            <div\n              key={card.id ?? index}\n              className={`absolute left-0 top-0 flex h-[var(--card-height)] w-[var(--card-width)] origin-[center_center] cursor-pointer select-none flex-col justify-between overflow-hidden rounded-[1.667vw] border border-black/10 p-[1.667vw] will-change-transform ${card.accent || \"\"}`}\n              style={getCardStyle(card, index)}\n              onMouseEnter={() => setActiveIndex(index)}\n              onMouseLeave={() => setActiveIndex(null)}\n            >\n              <div />\n\n              <div className=\"relative z-2 flex flex-1 items-center\">\n                <p className=\"m-0 max-w-[92%] text-[1.9rem] leading-[0.95] tracking-tighter\">\n                  “{card.quote}”\n                </p>\n              </div>\n\n              <div className=\"relative z-2 flex flex-col gap-[1.111vw]\">\n                <div className=\"h-[0.069vw] w-full bg-black/20\" />\n\n                <div className=\"flex items-center justify-between gap-[1.111vw]\">\n                  <div className=\"flex items-center gap-[0.556vw]\">\n                    <div className=\"flex size-[2.5vw] items-center justify-center rounded-full border border-black/10 bg-black text-[0.9rem] text-white shadow-[0_0.417vw_0.972vw_rgba(0,0,0,0.12)]\">\n                      ↗\n                    </div>\n\n                    <span className=\"text-[0.833vw] font-semibold uppercase tracking-[0.14em]\">\n                      Explore\n                    </span>\n                  </div>\n\n                  <span className=\"text-[0.764vw] uppercase tracking-[0.16em] opacity-70\">\n                    0{index + 1}\n                  </span>\n                </div>\n              </div>\n            </div>\n          ))}\n        </div>\n      )}\n    </div>\n  );\n};\n\nexport { HoverStackComp };\n"
+    }
+  ]
+}

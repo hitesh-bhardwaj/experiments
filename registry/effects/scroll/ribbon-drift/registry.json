@@ -1,0 +1,107 @@
+{
+  "name": "ribbon-drift",
+  "version": "1.0.1",
+  "type": "registry:component",
+  "title": "Ribbon Drift",
+  "description": "Scroll-driven ribbon gallery where image strips drift horizontally at alternating speeds, revealing project names with GSAP SplitText on scroll.",
+  "category": "scroll",
+  "dependencies": [
+    "gsap",
+    "lenis"
+  ],
+  "registryDependencies": [],
+  "previewUrl": "/demo/ribbon-drift",
+  "tier": "pro",
+  "main": "index.tsx",
+  "exportName": "RibbonDrift",
+  "exportKind": "default",
+  "importPath": "@/components/effects/ribbon-drift",
+  "target": "src/components/effects/ribbon-drift",
+  "files": [
+    {
+      "path": "index.tsx",
+      "target": "src/components/effects/ribbon-drift/index.tsx"
+    },
+    {
+      "path": "RibbonDriftComp.tsx",
+      "target": "src/components/effects/ribbon-drift/RibbonDriftComp.tsx"
+    }
+  ],
+  "changelog": [
+    {
+      "version": "1.0.1",
+      "date": "2026-07-30",
+      "summary": "Added reduced-motion support.",
+      "breaking": false
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-07-22",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "props": [
+    {
+      "name": "driftSpeed",
+      "type": "number",
+      "description": "Speed of the ribbon drift.",
+      "default": 1,
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0,
+        "max": 5,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "imageSize",
+      "type": "number",
+      "description": "Scale multiplier applied to the ribbon images.",
+      "default": 1,
+      "remixer": {
+        "control": "range",
+        "group": "style",
+        "groupTitle": "Style",
+        "min": 0.5,
+        "max": 2,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "showNames",
+      "type": "boolean",
+      "description": "Shows the project name on hover.",
+      "default": true,
+      "remixer": {
+        "control": "checkbox",
+        "group": "content",
+        "groupTitle": "Content"
+      }
+    },
+    {
+      "name": "ribbonColor",
+      "type": "color",
+      "description": "Color of the section-break reveal text fill.",
+      "default": "#000000",
+      "remixer": {
+        "control": "color",
+        "group": "style",
+        "groupTitle": "Style"
+      }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "content",
+    "layout": {
+      "buttonClassName": "right-4! top-25!",
+      "panelClassName": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  }
+}

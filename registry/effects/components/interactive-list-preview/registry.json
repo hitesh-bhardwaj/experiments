@@ -1,0 +1,113 @@
+{
+  "name": "interactive-list-preview",
+  "version": "1.0.1",
+  "type": "registry:component",
+  "title": "Interactive List Preview",
+  "description": "Hover-driven table list that reveals clipped images with a sliding highlight bar and mix-blend-mode difference inversion effect",
+  "category": "components",
+  "dependencies": [
+    "gsap"
+  ],
+  "registryDependencies": [],
+  "previewUrl": "/demo/interactive-list-preview",
+  "tier": "free",
+  "subfolder": true,
+  "main": "index.tsx",
+  "exportName": "InteractiveListPreview",
+  "exportKind": "default",
+  "importPath": "@/components/effects/interactive-list-preview",
+  "target": "src/components/effects/interactive-list-preview",
+  "files": [
+    {
+      "path": "index.tsx",
+      "target": "src/components/effects/interactive-list-preview/index.tsx"
+    },
+    {
+      "path": "InteractiveListPreviewComp.tsx",
+      "target": "src/components/effects/interactive-list-preview/InteractiveListPreviewComp.tsx"
+    }
+  ],
+  "changelog": [
+    {
+      "version": "1.0.1",
+      "date": "2026-07-30",
+      "summary": "Added reduced motion support.",
+      "breaking": false
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-07-21",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "props": [
+    {
+      "name": "imageSize",
+      "type": "number",
+      "description": "Scale multiplier for the hover preview image.",
+      "default": 1,
+      "remixer": {
+        "control": "range",
+        "group": "style",
+        "groupTitle": "Style",
+        "min": 0.5,
+        "max": 2,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "duration",
+      "type": "number",
+      "description": "Preview image reveal and hide duration.",
+      "default": 0.6,
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0.1,
+        "max": 2,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "smoothness",
+      "type": "number",
+      "description": "Highlight and row text transition smoothing duration.",
+      "default": 0.35,
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0.05,
+        "max": 1.5,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "lerp",
+      "type": "number",
+      "description": "Pointer-follow smoothing amount; higher values track faster.",
+      "default": 0.18,
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0.02,
+        "max": 1,
+        "step": 0.01
+      }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "motion",
+    "layout": {
+      "buttonClassName": "right-4! top-25!",
+      "panelClassName": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  }
+}

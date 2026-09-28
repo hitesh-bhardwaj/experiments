@@ -1,0 +1,19 @@
+{
+  "name": "@hyperiux/draggable-marquee",
+  "version": "1.0.1",
+  "description": "Infinite horizontal marquee with drag interaction and momentum physics",
+  "main": "index.tsx",
+  "files": [
+    "index.tsx",
+    "DraggableMarqueeComp.tsx",
+    "createSuspendedRaf.ts",
+    "registry.json"
+  ],
+  "keywords": [
+    "components",
+    "hyperiux"
+  ],
+  "dependencies": {
+    "gsap": "*"
+  }
+}

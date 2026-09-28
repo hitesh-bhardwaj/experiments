@@ -1,0 +1,16 @@
+{
+  "name": "@hyperiux/text-cloning",
+  "version": "1.0.1",
+  "description": "Canvas 2D effect that renders 9 depth-layered clones of any text string, offset by mouse parallax to create a 3D depth illusion. Includes a live text input and a subtle star-field background.",
+  "main": "index.tsx",
+  "files": [
+    "index.tsx",
+    "createSuspendedRaf.ts",
+    "registry.json"
+  ],
+  "keywords": [
+    "text",
+    "hyperiux"
+  ],
+  "dependencies": {}
+}

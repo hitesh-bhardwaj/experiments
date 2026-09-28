@@ -1,0 +1,125 @@
+{
+  "name": "gooey-counter",
+  "type": "registry:component",
+  "title": "Gooey Counter",
+  "description": "Canvas-based animated counter that morphs pixel-grid blocks between numbers 0–10 using an SVG gooey filter. Blocks scatter to a random layout between each number with eased transitions.",
+  "dependencies": [],
+  "registryDependencies": [],
+  "exportName": "GooeyCounter",
+  "exportKind": "default",
+  "tier": "free",
+  "version": "1.0.1",
+  "changelog": [
+    {
+      "version": "1.0.1",
+      "date": "2026-07-30",
+      "summary": "Added reduced motion support.",
+      "breaking": false
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-07-21",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "props": [
+    {
+      "name": "maxValue",
+      "type": "number",
+      "default": 100,
+      "description": "Upper bound of the looping 0..maxValue count sequence.",
+      "remixer": {
+        "control": "range",
+        "group": "controls",
+        "groupTitle": "Controls",
+        "min": 2,
+        "max": 100,
+        "step": 1
+      }
+    },
+    {
+      "name": "gridSize",
+      "type": "number",
+      "default": 22,
+      "description": "Number of grid columns used by the morphing counter.",
+      "remixer": {
+        "control": "range",
+        "group": "controls",
+        "groupTitle": "Controls",
+        "min": 12,
+        "max": 50,
+        "step": 1
+      }
+    },
+    {
+      "name": "duration",
+      "type": "number",
+      "default": 1,
+      "description": "Pace multiplier for the count/morph animation (1 = default speed).",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0.2,
+        "max": 3,
+        "step": 0.1
+      }
+    },
+    {
+      "name": "roundedness",
+      "type": "number",
+      "default": 0,
+      "description": "Corner rounding for each gooey grid cell.",
+      "remixer": {
+        "control": "range",
+        "group": "style",
+        "groupTitle": "Style",
+        "min": 0,
+        "max": 1,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "blobColor",
+      "type": "color",
+      "default": "#111111",
+      "description": "Color of the gooey animated blocks.",
+      "remixer": {
+        "control": "color",
+        "group": "style",
+        "groupTitle": "Style"
+      }
+    },
+    {
+      "name": "backgroundColor",
+      "type": "color",
+      "default": "#d1d1d1",
+      "description": "Background color behind the counter.",
+      "remixer": {
+        "control": "color",
+        "group": "style",
+        "groupTitle": "Style"
+      }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "controls",
+    "layout": {
+      "buttonClassName": "right-4! top-25!",
+      "panelClassName": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/gooey-counter/index.tsx",
+      "content": "// Built using Hyperiux Vault: https://vault.hyperiux.com\n\n\"use client\";\n\nimport { useEffect, useId, useRef } from \"react\";\n\nconst DEFAULT_GRID_SIZE = 22;\nconst MIN_GRID_SIZE = 12;\nconst MAX_GRID_SIZE = 50;\nconst DEFAULT_MAX_VALUE = 100;\nconst MAX_COUNTER_VALUE = 100;\n\ntype Cell = [number, number];\ntype GooeyBlock = {\n cr: number;\n cc: number;\n tr: number;\n tc: number;\n sr: number;\n sc: number;\n idle: boolean;\n};\ntype GooeyLayout = {\n vw: number;\n vh: number;\n cell: number;\n gridW: number;\n gridH: number;\n originX: number;\n originY: number;\n};\ntype GooeyTransition = {\n start: number;\n duration: number;\n onDone?: () => void;\n};\ntype GooeyState = {\n blocks: GooeyBlock[];\n phase: string;\n nextNumber: number;\n timer: ReturnType<typeof setTimeout> | null;\n raf: number | null;\n layout: GooeyLayout | null;\n transition: GooeyTransition | null;\n activeRows: number;\n activeCols: number;\n viewportWidth: number;\n maxBlocks: number;\n start?: () => void;\n};\n\nconst ROWS = 13;\nconst ROWS_TABLET = 30;\nconst ROWS_MOBILE = 32;\nconst CELL_MAX = 48;\nconst TRANSITION_MS = 480;\nconst NUMBER_DWELL_MS = 1000;\nconst RANDOM_DWELL_MS = 300;\nconst RANGE_MIN = 0;\nconst GRID_STROKE = \"rgba(255,255,255,0.55)\";\nconst MOBILE_MAX_WIDTH = 768;\nconst TABLET_MAX_WIDTH = 1024;\nconst DIGIT_HEIGHT = 9;\nconst DIGIT_WIDTH = 6;\nconst DIGIT_GAP = 1;\nconst MOBILE_DIGIT_HEIGHT = 13;\nconst MOBILE_DIGIT_WIDTH = 8;\nconst MOBILE_DIGIT_GAP = 1;\n\nconst DIGIT_MAPS = {\n 0: [\"011100\",\"110011\",\"110011\",\"110011\",\"110011\",\"110011\",\"110011\",\"110011\",\"011100\"],\n 1: [\"001100\",\"011100\",\"001100\",\"001100\",\"001100\",\"001100\",\"001100\",\"001100\",\"011110\"],\n 2: [\"011100\",\"110011\",\"000011\",\"000110\",\"001100\",\"011000\",\"110000\",\"110000\",\"111111\"],\n 3: [\"111100\",\"000011\",\"000011\",\"000011\",\"011100\",\"000011\",\"000011\",\"000011\",\"111100\"],\n 4: [\"000110\",\"001110\",\"011010\",\"110010\",\"110010\",\"111111\",\"000010\",\"000010\",\"000010\"],\n 5: [\"111111\",\"110000\",\"110000\",\"110000\",\"111100\",\"000011\",\"000011\",\"000011\",\"111100\"],\n 6: [\"001110\",\"011000\",\"110000\",\"110000\",\"111100\",\"110011\",\"110011\",\"110011\",\"011100\"],\n 7: [\"111111\",\"000011\",\"000011\",\"000011\",\"000110\",\"001100\",\"001100\",\"011000\",\"011000\"],\n 8: [\"011100\",\"110011\",\"110011\",\"110011\",\"011100\",\"110011\",\"110011\",\"110011\",\"011100\"],\n 9: [\"011100\",\"110011\",\"110011\",\"110011\",\"011111\",\"000011\",\"000011\",\"000110\",\"011000\"],\n};\n\n/**\n * @param {string[]} rows\n * @returns {string[]}\n */\nfunction strokeize(rows: string[]) {\n const h = rows.length, w = rows[0].length;\n /** @type {(r: number, c: number) => boolean} */\n const on = (r: number, c: number) => r >= 0 && r < h && c >= 0 && c < w && rows[r][c] === \"1\";\n return rows.map((row: string, r: number) =>\n  [...row].map((ch: string, c: number) => {\n   if (ch !== \"1\") return \"0\";\n   return (!on(r-1,c) || !on(r+1,c) || !on(r,c-1) || !on(r,c+1)) ? \"1\" : \"0\";\n  }).join(\"\")\n );\n}\n\nconst STROKE = Object.fromEntries(\n Object.entries(DIGIT_MAPS).map(([k, v]) => [k, strokeize(v)])\n);\n\n/**\n * @param {number} width\n * @returns {{ digitHeight: number, digitWidth: number, digitGap: number }}\n */\nfunction getDigitMetrics(width: number) {\n if (width <= MOBILE_MAX_WIDTH) {\n  return {\n   digitHeight: MOBILE_DIGIT_HEIGHT,\n   digitWidth: MOBILE_DIGIT_WIDTH,\n   digitGap: MOBILE_DIGIT_GAP,\n  };\n }\n\n return {\n  digitHeight: DIGIT_HEIGHT,\n  digitWidth: DIGIT_WIDTH,\n  digitGap: DIGIT_GAP,\n };\n}\n\n/**\n * @param {number} index\n * @param {number} sourceSize\n * @param {number} targetSize\n * @returns {number[]}\n */\nfunction getScaledCellIndexes(index: number, sourceSize: number, targetSize: number) {\n const start = Math.floor((index * targetSize) / sourceSize);\n const end = Math.floor(((index + 1) * targetSize) / sourceSize);\n const scaledIndexes: number[] = [];\n\n for (let scaledIndex = start; scaledIndex < Math.max(start + 1, end); scaledIndex++) {\n  scaledIndexes.push(scaledIndex);\n }\n\n return scaledIndexes;\n}\n\nfunction clampNumber(value: number, min: number, max: number, fallback: number) {\n const number = Number(value);\n if (!Number.isFinite(number)) return fallback;\n return Math.min(Math.max(number, min), max);\n}\n\n/**\n * @param {number} n\n * @param {number} rows\n * @param {number} cols\n * @param {number} width\n * @returns {[number, number][]}\n */\nfunction getNumberCells(n: number, rows: number, cols: number, width: number) {\n const digits = [...String(n)].map(Number);\n const { digitHeight, digitWidth, digitGap } = getDigitMetrics(width);\n const totalW = digits.length * digitWidth + (digits.length - 1) * digitGap;\n const startCol = Math.floor((cols - totalW) / 2);\n const rowOff = Math.max(0, Math.floor((rows - digitHeight) / 2));\n /** @type {[number, number][]} */\n const cells: Cell[] = [];\n digits.forEach((d: number, i: number) => {\n  const baseCol = startCol + i * (digitWidth + digitGap);\n  STROKE[d as keyof typeof STROKE].forEach((row: string, r: number) =>\n   [...row].forEach((ch: string, c: number) => {\n    if (ch !== \"1\") return;\n\n    const scaledRows = getScaledCellIndexes(r, DIGIT_HEIGHT, digitHeight);\n    const scaledCols = getScaledCellIndexes(c, DIGIT_WIDTH, digitWidth);\n\n    scaledRows.forEach(scaledRow => {\n     scaledCols.forEach(scaledCol => {\n      cells.push([scaledRow + rowOff, scaledCol + baseCol]);\n     });\n    });\n   })\n  );\n });\n return cells;\n}\n\n/**\n * @param {number} rows\n * @param {number} cols\n * @param {number} width\n * @param {number} maxValue\n * @returns {number}\n */\nfunction computeMaxBlocks(rows: number, cols: number, width: number, maxValue: number) {\n let max = 0;\n for (let n = RANGE_MIN; n <= maxValue; n++) {\n  max = Math.max(max, getNumberCells(n, rows, cols, width).length);\n }\n return max;\n}\n\n/** @type {(a: number, b: number, t: number) => number} */\nconst lerp = (a: number, b: number, t: number) => a + (b - a) * t;\n/** @type {(t: number) => number} */\nconst clamp01 = (t: number) => Math.max(0, Math.min(1, t));\n/** @type {(t: number) => number} */\nconst easeInOut = (t: number) => t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2, 3)/2;\n\n/**\n * @template T\n * @param {T[]} arr\n * @returns {T[]}\n */\nfunction shuffle<T>(arr: T[]) {\n const a = [...arr];\n for (let i = a.length - 1; i > 0; i--) {\n  const j = (Math.random() * (i + 1)) | 0;\n  [a[i], a[j]] = [a[j], a[i]];\n }\n return a;\n}\n\n/**\n * @param {number} n\n * @param {number} rows\n * @param {number} cols\n * @returns {[number, number][]}\n */\nfunction randomLayout(n: number, rows: number, cols: number) {\n /** @type {[number, number][]} */\n const all: Cell[] = [];\n for (let r = 0; r < rows; r++)\n  for (let c = 0; c < cols; c++) all.push([r, c]);\n return shuffle(all).slice(0, n);\n}\n\n/**\n * @param {number} width\n * @returns {number}\n */\nfunction getRowsForWidth(width: number) {\n if (width <= MOBILE_MAX_WIDTH) return ROWS_MOBILE;\n if (width <= TABLET_MAX_WIDTH) return ROWS_TABLET;\n return ROWS;\n}\n\n/**\n * @typedef {Object} GooeyBlock\n * @property {number} cr\n * @property {number} cc\n * @property {number} tr\n * @property {number} tc\n * @property {number} sr\n * @property {number} sc\n * @property {boolean} idle\n */\n\n/**\n * @param {GooeyBlock[]} blocks\n * @param {[number, number][]} targets\n */\nfunction assignTargets(blocks: GooeyBlock[], targets: Cell[]) {\n const used = new Set();\n blocks.slice(0, targets.length).forEach((b: GooeyBlock) => {\n  let best = -1, bestD = Infinity;\n  targets.forEach(([tr, tc]: Cell, i: number) => {\n   if (used.has(i)) return;\n   const d = (b.cr - tr) ** 2 + (b.cc - tc) ** 2;\n   if (d < bestD) { bestD = d; best = i; }\n  });\n  used.add(best);\n  b.tr = targets[best][0];\n  b.tc = targets[best][1];\n  b.idle = false;\n });\n blocks.slice(targets.length).forEach((b: GooeyBlock) => {\n  const t = targets[Math.floor(Math.random() * targets.length)];\n  b.tr = t[0]; b.tc = t[1]; b.idle = true;\n });\n}\n\n/**\n * @param {OffscreenCanvasRenderingContext2D} ctx\n * @param {number} x1\n * @param {number} y1\n * @param {number} x2\n * @param {number} y2\n * @param {number} r\n */\nfunction drawCapsule(\n ctx: OffscreenCanvasRenderingContext2D,\n x1: number,\n y1: number,\n x2: number,\n y2: number,\n r: number,\n) {\n const dx = x2-x1, dy = y2-y1, d = Math.hypot(dx, dy);\n if (d < 0.001) { ctx.beginPath(); ctx.arc(x1, y1, r, 0, Math.PI*2); ctx.fill(); return; }\n const nx = -dy/d, ny = dx/d, ang = Math.atan2(dy, dx);\n ctx.beginPath();\n ctx.moveTo(x1+nx*r, y1+ny*r); ctx.lineTo(x2+nx*r, y2+ny*r);\n ctx.arc(x2, y2, r, ang+Math.PI/2, ang-Math.PI/2);\n ctx.lineTo(x1-nx*r, y1-ny*r);\n ctx.arc(x1, y1, r, ang-Math.PI/2, ang+Math.PI/2);\n ctx.closePath(); ctx.fill();\n}\n\ninterface GooeyCounterProps {\n maxValue?: number;\n gridSize?: number;\n roundedness?: number;\n duration?: number;\n blobColor?: string;\n backgroundColor?: string;\n}\n\nexport default function GooeyCounter({\n maxValue = DEFAULT_MAX_VALUE,\n gridSize = DEFAULT_GRID_SIZE,\n roundedness = 0,\n duration = 1,\n blobColor = \"#111111\",\n backgroundColor = \"#d1d1d1\",\n}: GooeyCounterProps) {\n const canvasRef = useRef<any>(null);\n const stateRef = useRef<GooeyState | null>(null);\n const gooeyFilterId = `gooey-${useId().replace(/:/g, \"\")}`;\n\n useEffect(() => {\n  // Canvas setup\n  const canvas = /** @type {HTMLCanvasElement} */ (canvasRef.current);\n  const ctx = canvas.getContext(\"2d\") as CanvasRenderingContext2D;\n  let offscreen = new OffscreenCanvas(1, 1);\n  let offCtx = offscreen.getContext(\"2d\") as OffscreenCanvasRenderingContext2D;\n  const filterUrl = `url(#${gooeyFilterId})`;\n\n  const paceScale = duration;\n  const safeMaxValue = Math.round(clampNumber(maxValue, 2, MAX_COUNTER_VALUE, DEFAULT_MAX_VALUE));\n  const safeGridSize = Math.round(clampNumber(gridSize, MIN_GRID_SIZE, MAX_GRID_SIZE, DEFAULT_GRID_SIZE));\n  const safeRoundedness = clampNumber(roundedness, 0, 1, 0);\n  const transitionDuration = TRANSITION_MS * paceScale;\n  const numberDwellMs = NUMBER_DWELL_MS * paceScale;\n  const randomDwellMs = RANDOM_DWELL_MS * paceScale;\n\n  let reduceMotion =\n   window.matchMedia?.(\"(prefers-reduced-motion: reduce)\")?.matches ?? false;\n  const reduceMotionMq = window.matchMedia?.(\n   \"(prefers-reduced-motion: reduce)\"\n  );\n  /** @param {MediaQueryListEvent} event */\n  const onReduceMotionChange = (event: MediaQueryListEvent) => {\n   reduceMotion = event.matches;\n  };\n  reduceMotionMq?.addEventListener?.(\"change\", onReduceMotionChange);\n\n  // Simulation state\n  const sim: GooeyState = {\n   blocks: [], phase: \"idle\", nextNumber: RANGE_MIN + 1,\n   timer: null, raf: null, layout: null, transition: null,\n   activeRows: ROWS, activeCols: safeGridSize, viewportWidth: window.innerWidth, maxBlocks: computeMaxBlocks(ROWS, safeGridSize, window.innerWidth, safeMaxValue),\n  };\n  stateRef.current = sim;\n\n  const transitionMs = () => (reduceMotion ? 0 : transitionDuration);\n\n  // Animation helpers\n  /**\n   * @param {number} dur\n   * @param {(() => void) | undefined} [onDone]\n   */\n  function beginTransition(dur: number, onDone?: () => void) {\n   for (const b of sim.blocks) { b.sr = b.cr; b.sc = b.cc; }\n   // Duration 0 under reduced motion → snap to targets (no morph lerp).\n   if (dur <= 0) {\n    for (const b of sim.blocks) { b.cr = b.tr; b.cc = b.tc; }\n    sim.transition = null;\n    onDone?.();\n    return;\n   }\n   sim.transition = { start: performance.now(), duration: dur, onDone };\n  }\n\n  /**\n   * @param {number} n\n   * @param {(() => void) | undefined} [onDone]\n   */\n  function goToNumber(n: number, onDone?: () => void) {\n   const targets = getNumberCells(n, sim.activeRows, sim.activeCols, sim.viewportWidth);\n   while (sim.blocks.length < sim.maxBlocks) {\n    const p = targets[Math.floor(Math.random() * targets.length)];\n    sim.blocks.push({ cr: p[0], cc: p[1], tr: p[0], tc: p[1], sr: p[0], sc: p[1], idle: true });\n   }\n   assignTargets(sim.blocks, targets);\n   beginTransition(transitionMs(), onDone);\n  }\n\n  /** @param {() => void} onDone */\n  function goToRandom(onDone: () => void) {\n   const targets = randomLayout(sim.maxBlocks, sim.activeRows, sim.activeCols);\n   sim.blocks.forEach((b: GooeyBlock, i: number) => { b.tr = targets[i][0]; b.tc = targets[i][1]; b.idle = false; });\n   beginTransition(transitionMs(), onDone);\n  }\n\n  function loop() {\n   if (sim.timer !== null) clearTimeout(sim.timer);\n   // Reduced-motion: skip random scatter - step number → number with snaps.\n   if (reduceMotion) {\n    sim.timer = setTimeout(() => {\n     const n = sim.nextNumber;\n     sim.nextNumber = n >= safeMaxValue ? RANGE_MIN : n + 1;\n     goToNumber(n, loop);\n    }, numberDwellMs);\n    return;\n   }\n   sim.timer = setTimeout(() => {\n    goToRandom(() => {\n     sim.timer = setTimeout(() => {\n      const n = sim.nextNumber;\n     sim.nextNumber = n >= safeMaxValue ? RANGE_MIN : n + 1;\n     goToNumber(n, loop);\n     }, randomDwellMs);\n    });\n   }, numberDwellMs);\n  }\n\n  function start() {\n   if (sim.timer !== null) clearTimeout(sim.timer);\n   sim.blocks = []; sim.nextNumber = RANGE_MIN + 1; sim.transition = null;\n   const firstTargets = getNumberCells(RANGE_MIN, sim.activeRows, sim.activeCols, sim.viewportWidth);\n   if (reduceMotion) {\n    // Land on 0 immediately - no opening scatter morph.\n    sim.blocks = firstTargets.map(([r, c]) => ({\n     cr: r, cc: c, tr: r, tc: c, sr: r, sc: c, idle: false,\n    }));\n    while (sim.blocks.length < sim.maxBlocks) {\n     const p = firstTargets[Math.floor(Math.random() * firstTargets.length)];\n     sim.blocks.push({ cr: p[0], cc: p[1], tr: p[0], tc: p[1], sr: p[0], sc: p[1], idle: true });\n    }\n    beginTransition(0, loop);\n    return;\n   }\n   const rpos = randomLayout(sim.maxBlocks, sim.activeRows, sim.activeCols);\n   sim.blocks = rpos.map(p => ({ cr: p[0], cc: p[1], tr: p[0], tc: p[1], sr: p[0], sc: p[1], idle: false }));\n   assignTargets(sim.blocks, firstTargets);\n   beginTransition(transitionDuration, loop);\n  }\n  stateRef.current.start = start;\n\n  // Layout\n  function resize() {\n   const dpr = Math.min(window.devicePixelRatio || 1, 2);\n   const vw = window.innerWidth, vh = window.innerHeight;\n   const newRows = getRowsForWidth(vw);\n   const widthChanged = vw !== sim.viewportWidth;\n   sim.viewportWidth = vw;\n\n   if (newRows !== sim.activeRows || widthChanged || safeGridSize !== sim.activeCols) {\n    sim.activeRows = newRows;\n    sim.activeCols = safeGridSize;\n    sim.maxBlocks = computeMaxBlocks(newRows, safeGridSize, vw, safeMaxValue);\n   }\n\n   canvas.width = Math.floor(vw * dpr);\n   canvas.height = Math.floor(vh * dpr);\n   canvas.style.width = vw + \"px\";\n   canvas.style.height = vh + \"px\";\n   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);\n\n   offscreen = new OffscreenCanvas(Math.floor(vw * dpr), Math.floor(vh * dpr));\n   offCtx = offscreen.getContext(\"2d\") as OffscreenCanvasRenderingContext2D;\n   offCtx.setTransform(dpr, 0, 0, dpr, 0, 0);\n\n   const margin = Math.max(24, Math.min(vw, vh) * 0.05);\n   const cellW = Math.floor((vw - margin * 2) / sim.activeCols);\n   const cellH = Math.floor((vh - margin * 2) / sim.activeRows);\n   const cell = Math.min(CELL_MAX, Math.min(cellW, cellH));\n   const gridW = sim.activeCols * cell, gridH = sim.activeRows * cell;\n   const originX = Math.round((vw - gridW) / 2);\n   const originY = Math.round((vh - gridH) / 2);\n   sim.layout = { vw, vh, cell, gridW, gridH, originX, originY };\n  }\n\n  // Render loop\n  function frame() {\n   const L = sim.layout;\n   if (!L) { sim.raf = requestAnimationFrame(frame); return; }\n\n   if (sim.transition) {\n    const { start, duration, onDone } = sim.transition;\n    const t = clamp01((performance.now() - start) / Math.max(1, duration));\n    const e = easeInOut(t);\n    for (const b of sim.blocks) {\n     b.cr = lerp(b.sr, b.tr, e);\n     b.cc = lerp(b.sc, b.tc, e);\n    }\n    if (t >= 1) {\n     for (const b of sim.blocks) { b.cr = b.tr; b.cc = b.tc; }\n     sim.transition = null; onDone?.();\n    }\n   }\n\n   const { vw, vh, cell, gridW, gridH, originX, originY } = L;\n\n   ctx.fillStyle = backgroundColor;\n   ctx.fillRect(0, 0, vw, vh);\n\n   offCtx.clearRect(0, 0, vw, vh);\n   const snapped = sim.blocks.map((b: GooeyBlock) => ({\n    r: b.cr, c: b.cc, ir: Math.round(b.cr), ic: Math.round(b.cc),\n   }));\n   offCtx.fillStyle = blobColor;\n\n   const linkDist = 1.6;\n   for (let i = 0; i < snapped.length; i++) {\n    const a = snapped[i];\n    for (let j = i + 1; j < snapped.length; j++) {\n     const b = snapped[j];\n     const dx = b.c - a.c, dy = b.r - a.r, dist = Math.hypot(dx, dy);\n     if (dist < 0.001 || dist > linkDist) continue;\n     const rr = cell * 0.35 * (1 - dist / linkDist);\n     if (rr < 1) continue;\n     drawCapsule(offCtx,\n      originX + (a.c + 0.5) * cell, originY + (a.r + 0.5) * cell,\n      originX + (b.c + 0.5) * cell, originY + (b.r + 0.5) * cell, rr);\n    }\n   }\n   for (const s of snapped) {\n   offCtx.beginPath();\n    const radius = (cell * 0.5) * safeRoundedness;\n    if (radius > 0 && offCtx.roundRect) {\n     offCtx.roundRect(originX + s.c * cell, originY + s.r * cell, cell, cell, radius);\n    } else {\n     offCtx.rect(originX + s.c * cell, originY + s.r * cell, cell, cell);\n    }\n    offCtx.fill();\n   }\n\n   ctx.save();\n   ctx.filter = filterUrl;\n   ctx.drawImage(offscreen, 0, 0, vw, vh);\n   ctx.restore();\n\n   ctx.strokeStyle = GRID_STROKE;\n   ctx.lineWidth = 0.5;\n   for (let x = originX; x <= originX + gridW; x += cell) {\n    ctx.beginPath(); ctx.moveTo(x, originY); ctx.lineTo(x, originY + gridH); ctx.stroke();\n   }\n   for (let y = originY; y <= originY + gridH; y += cell) {\n    ctx.beginPath(); ctx.moveTo(originX, y); ctx.lineTo(originX + gridW, y); ctx.stroke();\n   }\n\n   sim.raf = requestAnimationFrame(frame);\n  }\n\n  // Boot and cleanup\n  resize();\n  window.addEventListener(\"resize\", resize, { passive: true });\n  start();\n  sim.raf = requestAnimationFrame(frame);\n\n  return () => {\n   if (sim.raf !== null) cancelAnimationFrame(sim.raf);\n   if (sim.timer !== null) clearTimeout(sim.timer);\n   window.removeEventListener(\"resize\", resize);\n   reduceMotionMq?.removeEventListener?.(\"change\", onReduceMotionChange);\n  };\n }, [gooeyFilterId, maxValue, gridSize, roundedness, duration, blobColor, backgroundColor]);\n\n return (\n  <div style={{ position: \"fixed\", inset: 0, background: backgroundColor }}>\n    <div className=\"w-full h-fit gap-[0.5vw]  text-black relative z-4 flex flex-col items-center justify-center max-[1025px]:text-center max-[1025px]:px-[7vw] max-[1025px]:gap-[3vw] pt-19 max-[1025px]:pt-20 max-md:pt-22 \">\n      <h1 className=\"text-[4vw] max-md:text-[9vw] max-[1025px]:text-[7vw]\">\n        Gooey Counter\n      </h1>\n      <p className=\"text-sm max-[1025px]:text-lg max-md:text-sm max-[1025px]:w-[80%] mx-auto\">\n        Gooey Counter is a morphing counter which counts from 0 to {Math.round(clampNumber(maxValue, 2, MAX_COUNTER_VALUE, DEFAULT_MAX_VALUE))}\n      </p>\n    </div>\n   <svg width=\"0\" height=\"0\" aria-hidden=\"true\" focusable=\"false\" style={{ position: \"absolute\" }}>\n    <defs>\n     <filter id={gooeyFilterId} x=\"-50%\" y=\"-50%\" width=\"200%\" height=\"200%\" colorInterpolationFilters=\"sRGB\">\n      <feGaussianBlur in=\"SourceGraphic\" stdDeviation=\"8\" result=\"blur\"/>\n      <feColorMatrix in=\"blur\" mode=\"matrix\"\n       values=\"1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 18 -7\" result=\"goo\"/>\n      <feComposite in=\"SourceGraphic\" in2=\"goo\" operator=\"atop\"/>\n     </filter>\n    </defs>\n   </svg>\n   <canvas ref={canvasRef} className=\" h-[75%]! w-[80%]!  max-md:h-full! max-[1025px]:w-[80%]! max-[1025px]:h-[60%]! top-[53%] max-md:top-[62%] left-1/2 -translate-y-1/2 absolute -translate-x-1/2  \"  />\n   <button\n    onClick={() => stateRef.current?.start?.()}\n    className=\"absolute bottom-8 cursor-pointer left-1/2 -translate-x-1/2 py-[0.7vw] px-[1.5vw] text-black bg-white rounded-[0.4vw] max-[1025px]:px-[5vw] max-[1025px]:py-[1.5vw] max-[1025px]:rounded-[1.5vw] max-[1025px]:bottom-24 max-md:bottom-15 max-md:text-[4.5vw] max-[1025px]:text-[3vw]\"\n\n   >\n    Reset\n   </button>\n  </div>\n );\n}\n"
+    }
+  ]
+}

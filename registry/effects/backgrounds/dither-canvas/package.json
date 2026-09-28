@@ -1,0 +1,16 @@
+{
+  "name": "@hyperiux/dither-canvas",
+  "version": "1.0.1",
+  "description": "Interactive ASCII-style dither canvas with fluid mouse distortion over video",
+  "main": "index.tsx",
+  "files": [
+    "index.tsx",
+    "createSuspendedRaf.ts",
+    "registry.json"
+  ],
+  "keywords": [
+    "backgrounds",
+    "hyperiux"
+  ],
+  "dependencies": {}
+}

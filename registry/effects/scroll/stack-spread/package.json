@@ -1,0 +1,21 @@
+{
+  "name": "@hyperiux/stack-spread",
+  "version": "1.0.0",
+  "description": "A clustered stack of images that spreads into a full-bleed composition on scroll while centre text fades in behind it",
+  "main": "index.tsx",
+  "files": [
+    "index.tsx",
+    "registry.json"
+  ],
+  "keywords": [
+    "scroll",
+    "hyperiux"
+  ],
+  "peerDependencies": {
+    "react": ">=18",
+    "motion": "*"
+  },
+  "dependencies": {
+    "motion": "*"
+  }
+}

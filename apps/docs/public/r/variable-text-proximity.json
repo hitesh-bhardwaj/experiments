@@ -1,0 +1,228 @@
+{
+  "name": "variable-text-proximity",
+  "type": "registry:component",
+  "title": "Variable Hover",
+  "description": "Cursor-driven variable-font text where nearby letters gain weight and optical size",
+  "dependencies": [
+    "motion"
+  ],
+  "registryDependencies": [],
+  "exportName": "VariableTextProximity",
+  "exportKind": "default",
+  "tier": "free",
+  "version": "1.0.5",
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "date": "2026-08-18",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "props": [
+    {
+      "name": "radius",
+      "type": "number",
+      "default": 100,
+      "description": "Pointer influence radius.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 24,
+        "max": 240,
+        "step": 1
+      }
+    },
+    {
+      "name": "falloff",
+      "type": "string",
+      "default": "linear",
+      "description": "How quickly the font variation fades with distance.",
+      "remixer": {
+        "control": "select",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "options": [
+          {
+            "value": "linear",
+            "label": "Linear"
+          },
+          {
+            "value": "exponential",
+            "label": "Exponential"
+          },
+          {
+            "value": "gaussian",
+            "label": "Gaussian"
+          }
+        ]
+      }
+    },
+    {
+      "name": "baseWeight",
+      "type": "number",
+      "default": 300,
+      "description": "Font weight away from the pointer.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 100,
+        "max": 900,
+        "step": 10
+      }
+    },
+    {
+      "name": "hoverWeight",
+      "type": "number",
+      "default": 800,
+      "description": "Font weight nearest the pointer.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 100,
+        "max": 1000,
+        "step": 10
+      }
+    },
+    {
+      "name": "baseOpticalSize",
+      "type": "number",
+      "default": 9,
+      "description": "Optical size away from the pointer.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 8,
+        "max": 80,
+        "step": 1
+      }
+    },
+    {
+      "name": "hoverOpticalSize",
+      "type": "number",
+      "default": 40,
+      "description": "Optical size nearest the pointer.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 8,
+        "max": 144,
+        "step": 1
+      }
+    },
+    {
+      "name": "backgroundColor",
+      "type": "string",
+      "default": "#080808",
+      "description": "Demo background color.",
+      "remixer": {
+        "control": "color",
+        "group": "colors",
+        "enabled": false,
+        "groupTitle": "Colors"
+      }
+    },
+    {
+      "name": "textColor",
+      "type": "string",
+      "default": "#ffffff",
+      "description": "Text color.",
+      "remixer": {
+        "control": "color",
+        "group": "colors",
+        "groupTitle": "Colors"
+      }
+    },
+    {
+      "name": "fontSize",
+      "type": "number",
+      "default": 55,
+      "description": "Paragraph font size in pixels.",
+      "remixer": {
+        "control": "range",
+        "group": "type",
+        "groupTitle": "Type",
+        "min": 24,
+        "max": 88,
+        "step": 1
+      }
+    },
+    {
+      "name": "lineHeight",
+      "type": "number",
+      "default": 1.18,
+      "description": "Paragraph line height.",
+      "remixer": {
+        "control": "range",
+        "group": "type",
+        "groupTitle": "Type",
+        "min": 0.9,
+        "max": 1.7,
+        "step": 0.01
+      }
+    },
+    {
+      "name": "maxWidth",
+      "type": "number",
+      "default": 1040,
+      "description": "Maximum paragraph width in pixels.",
+      "remixer": {
+        "control": "range",
+        "group": "type",
+        "groupTitle": "Type",
+        "min": 520,
+        "max": 1320,
+        "step": 10
+      }
+    },
+    {
+      "name": "minWidth",
+      "type": "number",
+      "default": 920,
+      "description": "Minimum paragraph width in pixels.",
+      "remixer": {
+        "control": "range",
+        "group": "type",
+        "groupTitle": "Type",
+        "min": 420,
+        "max": 1320,
+        "step": 10
+      }
+    },
+    {
+      "name": "italic",
+      "type": "boolean",
+      "default": false,
+      "description": "Slant nearby letters toward italic on pointer proximity.",
+      "remixer": {
+        "control": "checkbox",
+        "group": "type",
+        "groupTitle": "Type"
+      }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "motion",
+    "layout": {
+      "buttonClassName": "right-4! top-25!",
+      "panelClassName": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/variable-text-proximity/index.tsx",
+      "content": "// Built using Hyperiux Vault: https://vault.hyperiux.com\n\n\"use client\";\n\nimport {\n  forwardRef,\n  useMemo,\n  useRef,\n  useEffect,\n  useState,\n  type MutableRefObject,\n  type CSSProperties,\n  type HTMLAttributes\n} from 'react';\nimport { motion } from 'motion/react';\nimport { Roboto_Flex } from 'next/font/google';\n\n// Loaded via next/font so the variable font is self-hosted and inlined at\n// build time - a runtime <link> to Google Fonts would flash the fallback\n// font on every load and reflow the layout once the webfont arrived.\nconst robotoFlex = Roboto_Flex({ subsets: ['latin'], display: 'swap' });\n\nfunction useAnimationFrame(callback: () => void) {\n  useEffect(() => {\n    let frameId: number;\n    const loop = () => {\n      callback();\n      frameId = requestAnimationFrame(loop);\n    };\n    frameId = requestAnimationFrame(loop);\n    return () => cancelAnimationFrame(frameId);\n  }, [callback]);\n}\n\nfunction useVaultPointerPositionRef(containerRef: MutableRefObject<HTMLElement | null>) {\n  const positionRef = useRef({ x: 0, y: 0 });\n\n  useEffect(() => {\n    const updatePosition = (x: number, y: number) => {\n      if (containerRef?.current) {\n        const rect = containerRef.current.getBoundingClientRect();\n        positionRef.current = { x: x - rect.left, y: y - rect.top };\n      } else {\n        positionRef.current = { x, y };\n      }\n    };\n\n    const handleMouseMove = (ev: MouseEvent) => updatePosition(ev.clientX, ev.clientY);\n    const handleTouchMove = (ev: TouchEvent) => {\n      const touch = ev.touches[0];\n      updatePosition(touch.clientX, touch.clientY);\n    };\n\n    window.addEventListener('mousemove', handleMouseMove);\n    window.addEventListener('touchmove', handleTouchMove);\n    return () => {\n      window.removeEventListener('mousemove', handleMouseMove);\n      window.removeEventListener('touchmove', handleTouchMove);\n    };\n  }, [containerRef]);\n\n  return positionRef;\n}\n\ninterface VariableTextProximityProps extends HTMLAttributes<HTMLSpanElement> {\n  label: string;\n  fromFontVariationSettings: string;\n  toFontVariationSettings: string;\n  containerRef: MutableRefObject<HTMLElement | null>;\n  radius?: number;\n  falloff?: 'linear' | 'exponential' | 'gaussian';\n  className?: string;\n  onClick?: () => void;\n  style?: CSSProperties;\n}\n\ntype VariableTextProximityDemoProps = {\n  radius?: number;\n  falloff?: 'linear' | 'exponential' | 'gaussian';\n  baseWeight?: number;\n  hoverWeight?: number;\n  baseOpticalSize?: number;\n  hoverOpticalSize?: number;\n  backgroundColor?: string;\n  textColor?: string;\n  fontSize?: number;\n  lineHeight?: number;\n  minWidth?: number;\n  maxWidth?: number;\n  italic?: boolean;\n  className?: string;\n};\n\ntype VariableTextProximityDemoStyle = CSSProperties & {\n  '--hv-variable-bg': string;\n  '--hv-variable-color': string;\n  '--hv-variable-font-size': string;\n  '--hv-variable-line-height': number;\n  '--hv-variable-min-width': string;\n  '--hv-variable-max-width': string;\n};\n\nconst VARIABLE_HOVER_COPY =\n  'Every letter keeps its own distance from the cursor. Drift across the paragraph and the nearest glyphs gain weight first, then the surrounding words settle back into place.';\n\nconst VariableProximityLetters = forwardRef<HTMLSpanElement, VariableTextProximityProps>((props, ref) => {\n  const {\n    label,\n    fromFontVariationSettings,\n    toFontVariationSettings,\n    containerRef,\n    radius = 50,\n    falloff = 'linear',\n    className = '',\n    onClick,\n    style,\n    ...restProps\n  } = props;\n  const letterRefs = useRef<(HTMLSpanElement | null)[]>([]);\n  const interpolatedSettingsRef = useRef<string[]>([]);\n  const mousePositionRef = useVaultPointerPositionRef(containerRef);\n  const smoothedPositionRef = useRef({ x: 0, y: 0 });\n  const lastPositionRef = useRef<{ x: number | null; y: number | null }>({ x: null, y: null });\n  const reducedMotionRef = useRef(false);\n  const [fontReady, setFontReady] = useState(false);\n\n  useEffect(() => {\n    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');\n    const updatePreference = () => {\n      reducedMotionRef.current = mediaQuery.matches;\n    };\n    updatePreference();\n    mediaQuery.addEventListener('change', updatePreference);\n    return () => mediaQuery.removeEventListener('change', updatePreference);\n  }, []);\n\n  useEffect(() => {\n    let cancelled = false;\n    document.fonts.ready.then(() => {\n      if (!cancelled) setFontReady(true);\n    });\n    return () => {\n      cancelled = true;\n    };\n  }, []);\n\n  useEffect(() => {\n    if (!fontReady) return;\n    letterRefs.current.forEach(letterRef => {\n      if (!letterRef) return;\n      const prevSettings = letterRef.style.fontVariationSettings;\n\n      letterRef.style.fontVariationSettings = fromFontVariationSettings;\n      const fromWidth = letterRef.getBoundingClientRect().width;\n\n      letterRef.style.fontVariationSettings = toFontVariationSettings;\n      const toWidth = letterRef.getBoundingClientRect().width;\n\n      letterRef.style.fontVariationSettings = prevSettings;\n      letterRef.style.display = 'inline-block';\n      letterRef.style.textAlign = 'center';\n      letterRef.style.width = `${Math.max(fromWidth, toWidth)}px`;\n    });\n  }, [fromFontVariationSettings, toFontVariationSettings, label, fontReady]);\n\n  const parsedSettings = useMemo(() => {\n    const parseSettings = (settingsStr: string) =>\n      new Map(\n        settingsStr\n          .split(',')\n          .map(s => s.trim())\n          .map(s => {\n            const [name, value] = s.split(' ');\n            return [name.replace(/['\"]/g, ''), parseFloat(value)];\n          })\n      );\n\n    const fromSettings = parseSettings(fromFontVariationSettings);\n    const toSettings = parseSettings(toFontVariationSettings);\n\n    return Array.from(fromSettings.entries()).map(([axis, fromValue]) => ({\n      axis,\n      fromValue,\n      toValue: toSettings.get(axis) ?? fromValue\n    }));\n  }, [fromFontVariationSettings, toFontVariationSettings]);\n\n  const calculateDistance = (x1: number, y1: number, x2: number, y2: number) =>\n    Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);\n\n  const calculateFalloff = (distance: number) => {\n    const norm = Math.min(Math.max(1 - distance / radius, 0), 1);\n    switch (falloff) {\n      case 'exponential':\n        return norm ** 2;\n      case 'gaussian':\n        return Math.exp(-((distance / (radius / 2)) ** 2) / 2);\n      case 'linear':\n      default:\n        return norm;\n    }\n  };\n\n  useAnimationFrame(() => {\n    if (!containerRef?.current) return;\n    const target = mousePositionRef.current;\n    const smoothed = smoothedPositionRef.current;\n\n    if (reducedMotionRef.current) {\n      smoothed.x = target.x;\n      smoothed.y = target.y;\n    } else {\n      const lerpFactor = 0.18;\n      smoothed.x += (target.x - smoothed.x) * lerpFactor;\n      smoothed.y += (target.y - smoothed.y) * lerpFactor;\n    }\n\n    if (\n      lastPositionRef.current.x !== null &&\n      Math.abs(smoothed.x - lastPositionRef.current.x) < 0.01 &&\n      Math.abs(smoothed.y - (lastPositionRef.current.y as number)) < 0.01\n    ) {\n      return;\n    }\n    lastPositionRef.current = { x: smoothed.x, y: smoothed.y };\n    const containerRect = containerRef.current.getBoundingClientRect();\n\n    letterRefs.current.forEach((letterRef, index) => {\n      if (!letterRef) return;\n\n      const rect = letterRef.getBoundingClientRect();\n      const letterCenterX = rect.left + rect.width / 2 - containerRect.left;\n      const letterCenterY = rect.top + rect.height / 2 - containerRect.top;\n\n      const distance = calculateDistance(\n        smoothed.x,\n        smoothed.y,\n        letterCenterX,\n        letterCenterY\n      );\n\n      if (distance >= radius) {\n        letterRef.style.fontVariationSettings = fromFontVariationSettings;\n        return;\n      }\n\n      const falloffValue = calculateFalloff(distance);\n      const newSettings = parsedSettings\n        .map(({ axis, fromValue, toValue }) => {\n          const interpolatedValue = fromValue + (toValue - fromValue) * falloffValue;\n          return `'${axis}' ${interpolatedValue}`;\n        })\n        .join(', ');\n\n      interpolatedSettingsRef.current[index] = newSettings;\n      letterRef.style.fontVariationSettings = newSettings;\n    });\n  });\n\n  const words = label.split(' ');\n  let letterIndex = 0;\n\n  return (\n    <span\n      ref={ref}\n      onClick={onClick}\n      style={{\n        display: 'inline',\n        ...style\n      }}\n      className={`${robotoFlex.className} ${className}`}\n      {...restProps}\n    >\n      {words.map((word, wordIndex) => (\n        <span key={wordIndex} className=\"hv-variable-word\">\n          {word.split('').map(letter => {\n            const currentLetterIndex = letterIndex++;\n            return (\n              <motion.span\n                key={currentLetterIndex}\n                ref={el => {\n                  letterRefs.current[currentLetterIndex] = el;\n                }}\n                className=\"hv-variable-letter\"\n                style={{\n                  fontVariationSettings: interpolatedSettingsRef.current[currentLetterIndex]\n                }}\n                aria-hidden=\"true\"\n              >\n                {letter}\n              </motion.span>\n            );\n          })}\n          {wordIndex < words.length - 1 && <span className=\"hv-variable-space\">&nbsp;</span>}\n        </span>\n      ))}\n      <span className=\"sr-only\">{label}</span>\n    </span>\n  );\n});\nexport default function VariableTextProximity({\n  radius = 100,\n  falloff = 'linear',\n  baseWeight = 300,\n  hoverWeight = 800,\n  baseOpticalSize = 9,\n  hoverOpticalSize = 40,\n  backgroundColor = '#080808',\n  textColor = '#ffffff',\n  fontSize = 55,\n  lineHeight = 1.18,\n  minWidth = 920,\n  maxWidth = 1040,\n  italic = false,\n  className = '',\n}: VariableTextProximityDemoProps) {\n  const stageRef = useRef<HTMLDivElement | null>(null);\n  const fromFontVariationSettings = `'wght' ${baseWeight}, 'opsz' ${baseOpticalSize}, 'slnt' 0`;\n  const toFontVariationSettings = `'wght' ${hoverWeight}, 'opsz' ${hoverOpticalSize}, 'slnt' ${italic ? -10 : 0}`;\n  const demoStyle: VariableTextProximityDemoStyle = {\n    '--hv-variable-bg': backgroundColor,\n    '--hv-variable-color': textColor,\n    '--hv-variable-font-size': `${fontSize}px`,\n    '--hv-variable-line-height': lineHeight,\n    '--hv-variable-min-width': `${minWidth}px`,\n    '--hv-variable-max-width': `${maxWidth}px`,\n  };\n\n  return (\n    <section\n      className={`hv-variable-root relative flex min-h-screen w-full items-center justify-center overflow-hidden px-6 ${className}`}\n      style={demoStyle}\n    >\n      <div ref={stageRef} className=\"hv-variable-stage relative z-10 mx-auto text-center\">\n        <VariableProximityLetters\n          label={VARIABLE_HOVER_COPY}\n          fromFontVariationSettings={fromFontVariationSettings}\n          toFontVariationSettings={toFontVariationSettings}\n          containerRef={stageRef}\n          radius={radius}\n          falloff={falloff}\n          className=\"hv-variable-heading\"\n        />\n      </div>\n      <style>{`\n        .hv-variable-root {\n          background: var(--hv-variable-bg);\n          color: var(--hv-variable-color);\n        }\n\n        .hv-variable-stage {\n          width: min(var(--hv-variable-max-width), calc(100vw - 2rem));\n          min-width: min(var(--hv-variable-min-width), var(--hv-variable-max-width), calc(100vw - 2rem));\n          max-width: min(var(--hv-variable-max-width), calc(100vw - 2rem));\n        }\n\n        .hv-variable-heading {\n          position: relative;\n          z-index: 1;\n          color: var(--hv-variable-color);\n          font-size: var(--hv-variable-font-size);\n          line-height: var(--hv-variable-line-height);\n          letter-spacing: 0;\n        }\n\n        .hv-variable-word {\n          display: inline-block;\n          white-space: nowrap;\n        }\n\n        .hv-variable-letter,\n        .hv-variable-space {\n          display: inline-block;\n        }\n\n        @media (max-width: 900px) {\n          .hv-variable-heading {\n            font-size: min(var(--hv-variable-font-size), 38px);\n          }\n        }\n\n        @media (max-width: 560px) {\n          .hv-variable-heading {\n            font-size: min(var(--hv-variable-font-size), 30px);\n          }\n        }\n      `}</style>\n    </section>\n  );\n}\n"
+    }
+  ]
+}

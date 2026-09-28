@@ -1,0 +1,89 @@
+{
+  "name": "chess-grid-transition",
+  "type": "registry:component",
+  "title": "Chess Grid Transition",
+  "description": "Staggered fullscreen grid wipe that sweeps blocks across the viewport during route changes",
+  "dependencies": [
+    "gsap",
+    "next-transition-router"
+  ],
+  "registryDependencies": [],
+  "exportName": "ChessGridTransition",
+  "exportKind": "default",
+  "tier": "free",
+  "version": "1.1.0",
+  "changelog": [
+    {
+      "version": "1.1.0",
+      "date": "2026-07-21",
+      "summary": "Added reduced-motion route fallback with short opacity fades.",
+      "breaking": false
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-02-10",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "props": [
+    {
+      "name": "duration",
+      "type": "number",
+      "default": 1,
+      "description": "Duration multiplier for the chess grid sweep.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0.25,
+        "max": 3,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "gridSize",
+      "type": "number",
+      "default": 8,
+      "description": "Grid density used to derive transition columns and responsive rows.",
+      "remixer": {
+        "control": "range",
+        "group": "grid",
+        "groupTitle": "Grid",
+        "min": 4,
+        "max": 16,
+        "step": 1
+      }
+    },
+    {
+      "name": "color",
+      "type": "string",
+      "default": "#ff5f00",
+      "description": "Chess grid block color.",
+      "remixer": {
+        "control": "color",
+        "group": "surface",
+        "groupTitle": "Surface"
+      }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "motion",
+    "layout": {
+      "buttonClassName": "right-4! top-25!",
+      "panelClassName": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/chess-grid-transition/index.tsx",
+      "content": "// Built using Hyperiux Vault: https://vault.hyperiux.com\n\n'use client'\n\nimport { TransitionRouter } from 'next-transition-router'\nimport React, { useEffect, useRef, useState, type ReactNode } from 'react'\nimport gsap from 'gsap'\n\nfunction prefersReducedMotion() {\n  if (typeof window === 'undefined') return false\n  return window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches ?? false\n}\n\nconst DEFAULT_GRID_SIZE = 8\nconst DEFAULT_COLOR = '#ff5f00'\n\nfunction clampNumber(value: number | undefined, min: number, max: number, fallback: number): number {\n  const next = Number(value)\n  if (!Number.isFinite(next)) return fallback\n  return Math.min(max, Math.max(min, next))\n}\n\ninterface ChessGridTransitionProps {\n  children?: ReactNode\n  duration?: number\n  gridSize?: number\n  color?: string\n}\n\nexport default function ChessGridTransition({\n  children,\n  duration = 1,\n  gridSize = DEFAULT_GRID_SIZE,\n  color = DEFAULT_COLOR,\n}: ChessGridTransitionProps) {\n  const wrapperRef = useRef<HTMLDivElement | null>(null)\n  const gridRef = useRef<HTMLDivElement | null>(null)\n\n  const [mounted, setMounted] = useState(false)\n  const [isMobile, setIsMobile] = useState(false)\n  const [isTablet, setIsTablet] = useState(false)\n\n  const safeDuration = clampNumber(duration, 0.25, 3, 1)\n  const cols = Math.round(clampNumber(gridSize, 4, 16, DEFAULT_GRID_SIZE))\n  const desktopRows = Math.max(2, Math.round(cols * 0.5))\n  const mobileRows = Math.max(4, Math.round(cols * 1.125))\n  const tabletRows = Math.max(4, Math.round(cols * 1.25))\n  const overlap = 2\n\n  useEffect(() => {\n    const updateViewport = () => {\n      const width = window.innerWidth\n      setIsMobile(width <= 639)\n      setIsTablet(width > 639 && width <= 1025)\n    }\n\n    updateViewport()\n    window.addEventListener('resize', updateViewport)\n    return () => window.removeEventListener('resize', updateViewport)\n  }, [])\n\n  const rows = isMobile ? mobileRows : isTablet ? tabletRows : desktopRows\n\n  const getRowCells = (cells: HTMLCollection, rowIndex: number) => {\n    const rowCells = []\n    for (let col = 0; col < cols; col++) {\n      rowCells.push(cells[rowIndex * cols + col])\n    }\n    return rowCells\n  }\n\n  const buildAnimation = (tl: gsap.core.Timeline, cells: HTMLCollection, direction = 1) => {\n    const rowsArr = Array.from({ length: rows }, (_, i) => i)\n\n    rowsArr.forEach((rowIndex, rowOrderIndex) => {\n      const rowCells = getRowCells(cells, rowIndex)\n\n      rowCells.forEach((cell, colIndex) => {\n        const delay = rowOrderIndex * 0.1 + colIndex * 0.1\n\n        if (direction === 1) {\n          const translateAmount = (cols - colIndex + 1) * 100\n\n          tl.fromTo(\n            cell,\n            { xPercent: translateAmount },\n            {\n              xPercent: 0,\n              duration: 0.8 * safeDuration,\n              ease: 'power2.out',\n            },\n            delay\n          )\n        } else {\n          tl.to(\n            cell,\n            {\n              xPercent: -(colIndex + 2) * 100,\n              duration: 0.8 * safeDuration,\n              ease: 'power2.in',\n            },\n            delay\n          )\n        }\n      })\n    })\n  }\n\n  useEffect(() => {\n    const cells = (gridRef.current as HTMLDivElement).children\n\n    Array.from(cells).forEach((cell, i) => {\n      const colIndex = i % cols\n      gsap.set(cell, { xPercent: -(colIndex + 2) * 100 })\n    })\n\n    setMounted(true)\n  }, [cols, rows])\n\n  const totalCells = cols * rows\n\n  return (\n    <TransitionRouter\n      auto\n      leave={(next) => {\n        const tl = gsap.timeline({ onComplete: next })\n\n        if (prefersReducedMotion()) {\n          tl.to(wrapperRef.current, { opacity: 0, duration: 0.2, ease: 'power1.out' }, 0)\n          return () => tl.kill()\n        }\n\n        const cells = (gridRef.current as HTMLDivElement).children\n\n        tl.to(wrapperRef.current, { opacity: 0, duration: 0.8 * safeDuration }, 0)\n\n        buildAnimation(tl, cells, 1)\n        return () => tl.kill()\n      }}\n      enter={(next) => {\n        const tl = gsap.timeline({ onComplete: next })\n\n        if (prefersReducedMotion()) {\n          tl.to(wrapperRef.current, { opacity: 1, duration: 0.2, ease: 'power1.out', clearProps: 'all' }, 0)\n          return () => tl.kill()\n        }\n\n        const cells = (gridRef.current as HTMLDivElement).children\n\n        tl.fromTo(\n          wrapperRef.current,\n          { opacity: 0 },\n          { opacity: 1, duration: 0.8 * safeDuration, delay: safeDuration, clearProps: 'all' },\n          0\n        )\n\n        buildAnimation(tl, cells, -1)\n        return () => tl.kill()\n      }}\n    >\n      <div\n        ref={gridRef}\n        className={`h-screen w-screen fixed top-0 left-0 z-999 pointer-events-none flex flex-wrap overflow-hidden ${\n          mounted ? 'opacity-100' : 'opacity-0'\n        }`}\n      >\n        {Array.from({ length: totalCells }).map((_, i) => {\n          const colIndex = i % cols\n          const rowIndex = Math.floor(i / cols)\n\n          return (\n            <span\n              key={i}\n              className='absolute shrink-0'\n              style={{\n                backgroundColor: color,\n                width: `calc((100vw / ${cols}) * ${isMobile ? 1.6 : 1} + ${overlap}px)`,\n                height: `calc(100vh / ${rows} + ${overlap}px)`,\n                left: `calc(${colIndex} * (100vw / ${cols}) * ${isMobile ? 1.6 : 1} - ${overlap / 2}px)`,\n                top: `calc(${rowIndex} * (100vh / ${rows}) - ${overlap / 2}px)`,\n              }}\n            ></span>\n          )\n        })}\n      </div>\n\n      <div className='h-full w-full relative z-2'>\n        <div ref={wrapperRef} className='h-full w-full will-change-transform'>\n          {children}\n        </div>\n      </div>\n\n\n    </TransitionRouter>\n  )\n}\n"
+    }
+  ]
+}

@@ -1,0 +1,112 @@
+{
+  "name": "circular-split-roll",
+  "type": "registry:component",
+  "title": "Circular Split Roll",
+  "description": "Split circular slider with orbiting titles on one side and image cards on the other",
+  "dependencies": [
+    "gsap",
+    "lenis"
+  ],
+  "registryDependencies": [],
+  "exportName": "CircularSplitRoll",
+  "exportKind": "default",
+  "tier": "free",
+  "version": "1.0.1",
+  "changelog": [
+    {
+      "version": "1.0.1",
+      "date": "2026-07-24",
+      "summary": "Added reduced motion support.",
+      "breaking": false
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-02-10",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "props": [
+    {
+      "name": "radius",
+      "type": "number",
+      "default": 500,
+      "description": "Radius of both rotating rings.",
+      "remixer": {
+        "control": "range",
+        "group": "layout",
+        "groupTitle": "Layout",
+        "min": 100,
+        "max": 900,
+        "step": 10
+      }
+    },
+    {
+      "name": "cardSize",
+      "type": "number",
+      "default": 205,
+      "description": "Size of the right-rail image cards.",
+      "remixer": {
+        "control": "range",
+        "group": "layout",
+        "groupTitle": "Layout",
+        "min": 80,
+        "max": 420,
+        "step": 1
+      }
+    },
+    {
+      "name": "textSideScale",
+      "type": "number",
+      "default": 0.68,
+      "description": "Title scale away from the center.",
+      "remixer": {
+        "control": "range",
+        "group": "text",
+        "groupTitle": "Text",
+        "min": 0.1,
+        "max": 1.5,
+        "step": 0.02
+      }
+    },
+    {
+      "name": "textSideOpacity",
+      "type": "number",
+      "default": 0.18,
+      "description": "Title opacity away from the center.",
+      "remixer": {
+        "control": "range",
+        "group": "text",
+        "groupTitle": "Text",
+        "min": 0,
+        "max": 1,
+        "step": 0.02
+      }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "layout",
+    "layout": {
+      "buttonClassName": "right-4! top-25!",
+      "panelClassName": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/circular-split-roll/index.tsx",
+      "content": "// Built using Hyperiux Vault: https://vault.hyperiux.com\n\n\"use client\";\n\nimport React, { useEffect, useState } from \"react\";\nimport { ReactLenis } from \"lenis/react\";\nimport { CircularSplitRollComp } from \"./CircularSplitRollComp\";\n\nconst TABLET_BREAKPOINT = 1024;\nconst ROLL_CONFIG = {\n  sectionHeight: 100,\n  leftRadiusX: 500,\n  leftRadiusY: 500,\n  rightRadiusX: 500,\n  rightRadiusY: 500,\n  imageCardWidth: 205,\n  imageCardHeight: 205,\n  scrub: 1.2,\n  textCenterScale: 1,\n  textSideScale: 0.68,\n  textSideOpacity: 0.18,\n  imageCenterScale: 1,\n  imageSideScale: 0.58,\n  imageSideOpacity: 0.14,\n};\n\nconst showcaseItems = [\n  {\n    title: \"Vuelta\",\n    image:\n      \"https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/v-01.jpg\",\n    alt: \"Vuelta lamp\",\n  },\n  {\n    title: \"JH42\",\n    image:\n      \"https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/v-02.jpg\",\n    alt: \"JH42 lamp\",\n  },\n  {\n    title: \"Hay\",\n    image:\n      \"https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/v-03.jpg\",\n    alt: \"Hay product\",\n  },\n  {\n    title: \"Teresa\",\n    image:\n      \"https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/h-08.jpg\",\n    alt: \"Teresa lamp\",\n  },\n  {\n    title: \"Tahiti\",\n    image:\n      \"https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/h-14.jpg\",\n    alt: \"Tahiti lamp\",\n  },\n  {\n    title: \"Akari 1A\",\n    image:\n      \"https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/v-06.jpg\",\n    alt: \"Akari 1A lamp\",\n  },\n  {\n    title: \"Nessino\",\n    image:\n      \"https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/v-07.jpg\",\n    alt: \"Nessino lamp\",\n  },\n  {\n    title: \"Panthella\",\n    image:\n      \"https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/v-08.jpg\",\n    alt: \"Panthella lamp\",\n  },\n  {\n    title: \"Bellhop\",\n    image:\n      \"https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/h-01.jpg\",\n    alt: \"Bellhop lamp\",\n  },\n  {\n    title: \"Flowerpot\",\n    image:\n      \"https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/h-06.jpg\",\n    alt: \"Flowerpot lamp\",\n  },\n];\n\nfunction useIsDesktop() {\n  const [isDesktop, setIsDesktop] = useState(false);\n  const [hasMounted, setHasMounted] = useState(false);\n\n  useEffect(() => {\n    const updateViewport = () => {\n      setIsDesktop(window.innerWidth > TABLET_BREAKPOINT);\n      setHasMounted(true);\n    };\n\n    updateViewport();\n\n    window.addEventListener(\"resize\", updateViewport);\n\n    return () => {\n      window.removeEventListener(\"resize\", updateViewport);\n    };\n  }, []);\n\n  return hasMounted && isDesktop;\n}\n\ninterface CircularSplitRollProps {\n  radius?: number;\n  cardSize?: number;\n  textSideScale?: number;\n  textSideOpacity?: number;\n}\n\nexport default function CircularSplitRoll({\n  radius = 500,\n  cardSize = 205,\n  textSideScale = 0.68,\n  textSideOpacity = 0.18,\n}: CircularSplitRollProps) {\n  const isDesktop = useIsDesktop();\n\n  return (\n    <ReactLenis\n      root\n      options={{\n        infinite: isDesktop,\n      }}\n    >\n      <main>\n        <CircularSplitRollComp\n          items={showcaseItems}\n          sectionHeight={ROLL_CONFIG.sectionHeight}\n          leftRadiusX={radius}\n          leftRadiusY={radius}\n          rightRadiusX={radius}\n          rightRadiusY={radius}\n          imageCardWidth={cardSize}\n          imageCardHeight={cardSize}\n          scrub={ROLL_CONFIG.scrub}\n          textCenterScale={ROLL_CONFIG.textCenterScale}\n          textSideScale={textSideScale}\n          textSideOpacity={textSideOpacity}\n          imageCenterScale={ROLL_CONFIG.imageCenterScale}\n          imageSideScale={ROLL_CONFIG.imageSideScale}\n          imageSideOpacity={ROLL_CONFIG.imageSideOpacity}\n        />\n      </main>\n\n    </ReactLenis>\n  );\n}\n"
+    },
+    {
+      "path": "CircularSplitRollComp.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/circular-split-roll/CircularSplitRollComp.tsx",
+      "content": "\"use client\";\n\nimport React, { useEffect, useMemo, useRef, useState } from \"react\";\nimport gsap from \"gsap\";\nimport { ScrollTrigger } from \"gsap/ScrollTrigger\";\n\nfunction usePrefersReducedMotion() {\n  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);\n\n  useEffect(() => {\n    const mediaQuery = window.matchMedia(\"(prefers-reduced-motion: reduce)\");\n    const update = () => setPrefersReducedMotion(mediaQuery.matches);\n    update();\n    mediaQuery.addEventListener(\"change\", update);\n    return () => mediaQuery.removeEventListener(\"change\", update);\n  }, []);\n\n  return prefersReducedMotion;\n}\n\nconst DESKTOP_WIDTH = 1200;\nconst TABLET_MIN_WIDTH = 768;\n\nconst LEFT_DEPTH_MAX = 30;\nconst RIGHT_DEPTH_MAX = 40;\nconst DEPTH_MIN = -1;\nconst DEPTH_MAX = 1;\nconst Z_INDEX_MIN = 1;\n\nconst LEFT_ANGLE_OFFSET = Math.PI;\nconst RIGHT_ANGLE_OFFSET = -Math.PI * 0.08;\n\ngsap.registerPlugin(ScrollTrigger);\n\nfunction wrapProgress(value: number) {\n  let wrappedValue = value % 1;\n\n  if (wrappedValue < 0) {\n    wrappedValue += 1;\n  }\n\n  return wrappedValue;\n}\n\nfunction getCircularPosition(\n  progress: number,\n  radiusX: number,\n  radiusY: number,\n  angleOffset = 0\n) {\n  const angle = progress * Math.PI * 2 + angleOffset;\n\n  return {\n    angle,\n    x: Math.sin(angle) * radiusX,\n    y: Math.cos(angle) * radiusY,\n    verticalDepth: Math.cos(angle),\n    horizontalDepth: Math.sin(angle),\n  };\n}\n\nfunction getStrength(value: number) {\n  return gsap.utils.clamp(\n    0,\n    1,\n    gsap.utils.mapRange(DEPTH_MIN, DEPTH_MAX, 0, 1, value)\n  );\n}\n\nfunction shapeFocus(strength: number, start = 0.42, power = 2.8) {\n  const normalized = gsap.utils.clamp(0, 1, (strength - start) / (1 - start));\n  return Math.pow(normalized, power);\n}\n\ninterface CircularSplitRollItem {\n  id?: string | number;\n  title?: string;\n  image?: string;\n  alt?: string;\n}\n\ninterface CircularSplitRollCompProps {\n  items?: CircularSplitRollItem[];\n  className?: string;\n  sectionHeight?: number;\n  leftRadiusX?: number;\n  leftRadiusY?: number;\n  rightRadiusX?: number;\n  rightRadiusY?: number;\n  imageCardWidth?: number;\n  imageCardHeight?: number;\n  titleSize?: string;\n  pinSpacing?: boolean;\n  scrub?: number;\n  textCenterScale?: number;\n  textSideScale?: number;\n  textCenterOpacity?: number;\n  textSideOpacity?: number;\n  imageCenterScale?: number;\n  imageSideScale?: number;\n  imageCenterOpacity?: number;\n  imageSideOpacity?: number;\n  textFocusStart?: number;\n  textFocusPower?: number;\n  imageFocusStart?: number;\n  imageFocusPower?: number;\n  gridImageClassName?: string;\n  gridCardClassName?: string;\n  gridTitleClassName?: string;\n}\n\nexport function CircularSplitRollComp({\n  items = [],\n  className = \"\",\n  sectionHeight = 260,\n\n  leftRadiusX = 220,\n  leftRadiusY = 220,\n  rightRadiusX = 400,\n  rightRadiusY = 400,\n\n  imageCardWidth = 190,\n  imageCardHeight = 210,\n  titleSize = \"clamp(28px, 3vw, 56px)\",\n\n  pinSpacing = true,\n  scrub = 1.2,\n\n  textCenterScale = 1,\n  textSideScale = 0.68,\n  textCenterOpacity = 1,\n  textSideOpacity = 0.18,\n\n  imageCenterScale = 1,\n  imageSideScale = 0.58,\n  imageCenterOpacity = 1,\n  imageSideOpacity = 0.14,\n\n  textFocusStart = 0.42,\n  textFocusPower = 2.6,\n  imageFocusStart = 0.45,\n  imageFocusPower = 3.2,\n\n  gridImageClassName = \"\",\n  gridCardClassName = \"\",\n  gridTitleClassName = \"\",\n}: CircularSplitRollCompProps) {\n  const rootRef = useRef<HTMLElement | null>(null);\n  const stickyRef = useRef<HTMLDivElement | null>(null);\n  const progressRef = useRef(0);\n  const reducedMotion = usePrefersReducedMotion();\n\n  const safeItems = useMemo(() => {\n    return items.map((item, index) => ({\n      id: item.id ?? index,\n      title: item.title ?? `Item ${index + 1}`,\n      image: item.image ?? \"\",\n      alt: item.alt ?? item.title ?? `Item ${index + 1}`,\n    }));\n  }, [items]);\n\n  useEffect(() => {\n    if (!rootRef.current || !stickyRef.current) return;\n\n    const mm = gsap.matchMedia();\n\n    mm.add(\"(min-width: 769px)\", () => {\n      const ctx = gsap.context(() => {\n        const leftNodes = gsap.utils.toArray(\n          \".circular-scroll-showcase__left-item\"\n        ) as HTMLElement[];\n        const rightNodes = gsap.utils.toArray(\n          \".circular-scroll-showcase__right-item\"\n        ) as HTMLElement[];\n\n        const total = safeItems.length;\n\n        if (!total) return;\n\n        gsap.set([...leftNodes, ...rightNodes], { opacity: 1 });\n\n        const render = (scrollProgress: number) => {\n          progressRef.current = scrollProgress;\n\n          const width =\n            typeof window !== \"undefined\" ? window.innerWidth : DESKTOP_WIDTH;\n\n          let factor = 1;\n\n          if (width < DESKTOP_WIDTH && width >= TABLET_MIN_WIDTH) {\n            factor = width / DESKTOP_WIDTH;\n          }\n\n          const leftRadiusScaledX = leftRadiusX * factor;\n          const leftRadiusScaledY = leftRadiusY * factor;\n          const rightRadiusScaledX = rightRadiusX * factor;\n          const rightRadiusScaledY = rightRadiusY * factor;\n\n          if (rootRef.current) {\n            rootRef.current.style.setProperty(\n              \"--css-card-width\",\n              `${imageCardWidth * factor}px`\n            );\n\n            rootRef.current.style.setProperty(\n              \"--css-card-height\",\n              `${imageCardHeight * factor}px`\n            );\n          }\n\n          leftNodes.forEach((node, index) => {\n            const localProgress = wrapProgress(index / total - scrollProgress);\n\n            const position = getCircularPosition(\n              localProgress,\n              leftRadiusScaledX,\n              leftRadiusScaledY,\n              LEFT_ANGLE_OFFSET\n            );\n\n            const rawStrength = getStrength(position.horizontalDepth);\n            const focusStrength = shapeFocus(\n              rawStrength,\n              textFocusStart,\n              textFocusPower\n            );\n\n            const scale = gsap.utils.interpolate(\n              textSideScale,\n              textCenterScale,\n              focusStrength\n            );\n\n            const opacity = gsap.utils.interpolate(\n              textSideOpacity,\n              textCenterOpacity,\n              focusStrength\n            );\n\n            const zIndex = Math.round(\n              gsap.utils.interpolate(Z_INDEX_MIN, LEFT_DEPTH_MAX, focusStrength)\n            );\n\n            gsap.set(node, {\n              x: position.x,\n              y: position.y,\n              scale,\n              opacity,\n              zIndex,\n              transformOrigin: \"50% 50%\",\n            });\n          });\n\n          rightNodes.forEach((node, index) => {\n            const localProgress = wrapProgress(index / total - scrollProgress);\n\n            const position = getCircularPosition(\n              localProgress,\n              rightRadiusScaledX,\n              rightRadiusScaledY,\n              RIGHT_ANGLE_OFFSET\n            );\n\n            const rawStrength = getStrength(-position.horizontalDepth);\n            const focusStrength = shapeFocus(\n              rawStrength,\n              imageFocusStart,\n              imageFocusPower\n            );\n\n            const scale = gsap.utils.interpolate(\n              imageSideScale,\n              imageCenterScale,\n              focusStrength\n            );\n\n            const opacity = gsap.utils.interpolate(\n              imageSideOpacity,\n              imageCenterOpacity,\n              focusStrength\n            );\n\n            const zIndex = Math.round(\n              gsap.utils.interpolate(Z_INDEX_MIN, RIGHT_DEPTH_MAX, focusStrength)\n            );\n\n            gsap.set(node, {\n              x: position.x,\n              y: position.y,\n              scale,\n              opacity,\n              zIndex,\n              transformOrigin: \"50% 50%\",\n            });\n          });\n        };\n\n        render(0);\n\n        const scrollTrigger = ScrollTrigger.create({\n          trigger: rootRef.current,\n          start: \"top top\",\n          end: `+=${sectionHeight * safeItems.length}%`,\n          pin: stickyRef.current,\n          scrub,\n          pinSpacing,\n          invalidateOnRefresh: true,\n          onUpdate: (self) => {\n            render(self.progress);\n          },\n        });\n\n        const onResize = () => {\n          render(progressRef.current);\n          scrollTrigger.refresh();\n        };\n\n        window.addEventListener(\"resize\", onResize);\n\n        return () => {\n          window.removeEventListener(\"resize\", onResize);\n          scrollTrigger.kill();\n        };\n      }, rootRef);\n\n      return () => ctx.revert();\n    });\n\n    return () => mm.revert();\n  }, [\n    safeItems,\n    scrub,\n    pinSpacing,\n    sectionHeight,\n    leftRadiusX,\n    leftRadiusY,\n    rightRadiusX,\n    rightRadiusY,\n    imageCardWidth,\n    imageCardHeight,\n    textCenterScale,\n    textSideScale,\n    textCenterOpacity,\n    textSideOpacity,\n    imageCenterScale,\n    imageSideScale,\n    imageCenterOpacity,\n    imageSideOpacity,\n    textFocusStart,\n    textFocusPower,\n    imageFocusStart,\n    imageFocusPower,\n  ]);\n\n  return (\n    <section\n      ref={rootRef}\n      className={`relative min-h-screen w-full overflow-clip bg-black text-white ${className}`}\n      style={{\n        \"--css-title-size\": titleSize,\n        \"--css-card-width\": `${imageCardWidth}px`,\n        \"--css-card-height\": `${imageCardHeight}px`,\n      } as React.CSSProperties & Record<string, string | number>}\n    >\n      <div\n        ref={stickyRef}\n        className=\"relative h-screen w-full overflow-hidden max-[1025px]:hidden\"\n      >\n        <div className=\"relative mx-auto flex h-full w-full\">\n          <div className=\"relative flex h-full w-[50vw] translate-x-[-60%] items-center justify-center\">\n            <div className=\"relative h-[78vh]\">\n              {safeItems.map((item) => (\n                <div\n                  key={item.id}\n                  className=\"circular-scroll-showcase__left-item pointer-events-none absolute left-1/2 top-1/2 w-full origin-center whitespace-nowrap text-center text-(length:--css-title-size,clamp(28px,3vw,56px)) font-medium leading-none tracking-[-0.04em] opacity-0 will-change-[transform,opacity]\"\n                >\n                  {item.title}\n                </div>\n              ))}\n            </div>\n          </div>\n\n          <div className=\"relative flex h-full w-[50vw] translate-x-[50%] items-center justify-center\">\n            <div className=\"relative h-[78vh]\">\n              {safeItems.map((item) => (\n                <div\n                  key={item.id}\n                  className=\"circular-scroll-showcase__right-item absolute left-1/2 top-1/2 ml-[calc(var(--css-card-width,210px)*-0.5)] mt-[calc(var(--css-card-height,210px)*-0.5)] h-(--css-card-height,210px) w-(--css-card-width,210px) origin-center opacity-0 will-change-[transform,opacity]\"\n                >\n                  <div className=\"relative h-full w-full overflow-hidden rounded-[18px] bg-[#f5f2eb] shadow-[0_30px_60px_rgba(0,0,0,0.28),0_8px_20px_rgba(0,0,0,0.16)]\">\n                    <img\n                      src={item.image}\n                      alt={item.alt}\n                      className=\"pointer-events-none block h-full w-full select-none object-cover absolute inset-0\"\n                      draggable=\"false\"\n                    />\n                  </div>\n                </div>\n              ))}\n            </div>\n          </div>\n        </div>\n      </div>\n\n      <div className=\"hidden w-full px-5 py-10 max-[1025px]:block max-md:px-4 max-md:py-8\">\n        <div className=\"mx-auto grid w-full max-w-5xl grid-cols-3 gap-5 max-md:grid-cols-2 max-md:gap-4\">\n          {safeItems.map((item) => (\n            <article\n              key={item.id}\n              className={`w-full ${gridCardClassName}`}\n            >\n              <div\n                className={`relative aspect-square w-full overflow-hidden rounded-[18px] bg-[#f5f2eb] shadow-[0_18px_38px_rgba(0,0,0,0.28)] max-md:rounded-[14px] ${gridImageClassName}`}\n              >\n                <img\n                  src={item.image}\n                  alt={item.alt}\n                  className=\"block h-full w-full object-cover absolute inset-0\"\n                  draggable=\"false\"\n                />\n              </div>\n\n              <h3\n                className={`mt-3 text-center text-[clamp(18px,4vw,30px)] font-medium leading-none tracking-[-0.04em] text-white max-md:mt-2 max-md:text-[clamp(16px,5vw,24px)] ${gridTitleClassName}`}\n              >\n                {item.title}\n              </h3>\n            </article>\n          ))}\n        </div>\n      </div>\n\n      {reducedMotion && (\n        <div\n          aria-live=\"polite\"\n          className=\"pointer-events-none fixed bottom-6 right-6 z-60 w-fit max-w-[min(90vw,26rem)] rounded-md border border-black/10 bg-white p-6 text-center shadow-sm\"\n        >\n          <h2 className=\"text-[1.15vw] max-[1025px]:text-[2vw] max-md:text-[3.5vw] leading-none text-black\">\n            This effect can&apos;t be reduced.\n          </h2>\n          <p className=\"mx-auto mt-4 text-sm leading-6 text-black\">\n            Reduced motion is enabled, but this effect relies on continuous\n            rotation around a circular path as you scroll, and can&apos;t be\n            simplified to a fade without losing the effect entirely.\n          </p>\n        </div>\n      )}\n    </section>\n  );\n}\n\nexport default CircularSplitRollComp;\n"
+    }
+  ]
+}

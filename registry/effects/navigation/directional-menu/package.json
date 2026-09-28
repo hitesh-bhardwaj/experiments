@@ -1,0 +1,24 @@
+{
+  "name": "@hyperiux/directional-menu",
+  "version": "1.1.0",
+  "description": "Mega menu with directional content transitions using GSAP",
+  "main": "index.tsx",
+  "files": [
+    "index.tsx",
+    "DirectionalMegaMenu.tsx",
+    "Menu1.tsx",
+    "Menu2.tsx",
+    "Menu3.tsx",
+    "MobileDirectionalMenu.tsx",
+    "useFocusTrap.ts",
+    "registry.json"
+  ],
+  "keywords": [
+    "navigation",
+    "hyperiux"
+  ],
+  "dependencies": {
+    "gsap": "*",
+    "lucide-react": "*"
+  }
+}

@@ -1,0 +1,114 @@
+{
+  "name": "depth-card-stack",
+  "version": "1.0.1",
+  "type": "registry:component",
+  "title": "Depth Card Stack",
+  "description": "3D stacked card carousel with perspective depth, gyroscopic tilt on hover, texture reveal effect, physics throw animation, and autoplay",
+  "category": "carousels",
+  "dependencies": [
+    "gsap",
+    "lucide-react"
+  ],
+  "registryDependencies": [],
+  "previewUrl": "/demo/depth-card-stack",
+  "tier": "pro",
+  "main": "index.tsx",
+  "exportName": "DepthCardStack",
+  "exportKind": "default",
+  "importPath": "@/components/effects/depth-card-stack",
+  "target": "src/components/effects/depth-card-stack",
+  "files": [
+    {
+      "path": "index.tsx",
+      "target": "src/components/effects/depth-card-stack/index.tsx"
+    },
+    {
+      "path": "DepthCardStackComp.tsx",
+      "target": "src/components/effects/depth-card-stack/DepthCardStackComp.tsx"
+    },
+    {
+      "path": "SliderCard.tsx",
+      "target": "src/components/effects/depth-card-stack/SliderCard.tsx"
+    }
+  ],
+  "changelog": [
+    {
+      "version": "1.0.1",
+      "date": "2026-07-30",
+      "summary": "Added reduced-motion support.",
+      "breaking": false
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-07-21",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "props": [
+    {
+      "name": "duration",
+      "type": "number",
+      "description": "Card navigation transition duration.",
+      "default": 0.55,
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0.15,
+        "max": 1.5,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "mouseInteraction",
+      "type": "boolean",
+      "description": "Enables pointer tilt and texture reveal on the active card.",
+      "default": true,
+      "remixer": {
+        "control": "checkbox",
+        "group": "controls",
+        "groupTitle": "Controls"
+      }
+    },
+    {
+      "name": "lerp",
+      "type": "number",
+      "description": "Pointer-follow smoothing amount; higher values track faster.",
+      "default": 0.18,
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0.02,
+        "max": 1,
+        "step": 0.01
+      }
+    },
+    {
+      "name": "smoothness",
+      "type": "number",
+      "description": "Hover enter/leave smoothing duration for card tilt and texture reveal.",
+      "default": 0.4,
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0.1,
+        "max": 1.2,
+        "step": 0.05
+      }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "motion",
+    "layout": {
+      "buttonClassName": "right-4! top-25!",
+      "panelClassName": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  }
+}

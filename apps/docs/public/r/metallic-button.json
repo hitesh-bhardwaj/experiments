@@ -1,0 +1,217 @@
+{
+  "name": "metallic-button",
+  "type": "registry:component",
+  "title": "Metallic Button",
+  "description": "Button with a WebGL metallic shader rim, hover and press speed ramps, and a click ripple",
+  "dependencies": [
+    "lucide-react"
+  ],
+  "registryDependencies": [],
+  "exportName": "MetallicButton",
+  "exportKind": "default",
+  "tier": "free",
+  "version": "1.0.0",
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "date": "2026-09-15",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "props": [
+    {
+      "name": "label",
+      "type": "string",
+      "default": "Get Started",
+      "description": "Button label text."
+    },
+    {
+      "name": "viewMode",
+      "type": "string",
+      "default": "text",
+      "description": "Renders the label or a single sparkle icon."
+    },
+    {
+      "name": "baseColor",
+      "type": "color",
+      "default": "#000000",
+      "description": "Dark base the metal sits on.",
+      "remixer": {
+        "control": "color",
+        "group": "colors",
+        "groupTitle": "Colors"
+      }
+    },
+    {
+      "name": "sheenColor",
+      "type": "color",
+      "default": "#ffffff",
+      "description": "Overlay tint; sets how warm or cold the chrome reads.",
+      "remixer": {
+        "control": "color",
+        "group": "colors",
+        "groupTitle": "Colors"
+      }
+    },
+    {
+      "name": "bandCount",
+      "type": "number",
+      "default": 4,
+      "description": "Density of the stripe bands.",
+      "remixer": {
+        "control": "range",
+        "group": "metal",
+        "groupTitle": "Metal",
+        "min": 1,
+        "max": 10,
+        "step": 0.5
+      }
+    },
+    {
+      "name": "edgeBlur",
+      "type": "number",
+      "default": 0.5,
+      "description": "Colour transition sharpness: 0 is a hard edge, 1 a smooth gradient.",
+      "remixer": {
+        "control": "range",
+        "group": "metal",
+        "groupTitle": "Metal",
+        "min": 0,
+        "max": 1,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "flowAngle",
+      "type": "number",
+      "default": 45,
+      "description": "Direction the pattern flows, in degrees.",
+      "remixer": {
+        "control": "range",
+        "group": "metal",
+        "groupTitle": "Metal",
+        "min": 0,
+        "max": 360,
+        "step": 5
+      }
+    },
+    {
+      "name": "zoom",
+      "type": "number",
+      "default": 8,
+      "description": "Zoom into the pattern; higher reads as brighter chrome.",
+      "remixer": {
+        "control": "range",
+        "group": "metal",
+        "groupTitle": "Metal",
+        "min": 1,
+        "max": 12,
+        "step": 0.5
+      }
+    },
+    {
+      "name": "warp",
+      "type": "number",
+      "default": 0,
+      "description": "Noise warp over the stripe pattern.",
+      "remixer": {
+        "control": "range",
+        "group": "metal",
+        "groupTitle": "Metal",
+        "min": 0,
+        "max": 1,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "redFringe",
+      "type": "number",
+      "default": 0.3,
+      "description": "Red-channel dispersion; drives the warm edge fringing.",
+      "remixer": {
+        "control": "range",
+        "group": "chromatic",
+        "groupTitle": "Chromatic",
+        "min": -1,
+        "max": 1,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "blueFringe",
+      "type": "number",
+      "default": 0.3,
+      "description": "Blue-channel dispersion; drives the cool edge fringing.",
+      "remixer": {
+        "control": "range",
+        "group": "chromatic",
+        "groupTitle": "Chromatic",
+        "min": -1,
+        "max": 1,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "idleSpeed",
+      "type": "number",
+      "default": 0.6,
+      "description": "Sweep speed at rest.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0,
+        "max": 3,
+        "step": 0.1
+      }
+    },
+    {
+      "name": "hoverSpeed",
+      "type": "number",
+      "default": 1,
+      "description": "Sweep speed while hovered.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0,
+        "max": 4,
+        "step": 0.1
+      }
+    },
+    {
+      "name": "clickSpeed",
+      "type": "number",
+      "default": 2.4,
+      "description": "Sweep speed kicked on click, before settling back.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0,
+        "max": 6,
+        "step": 0.1
+      }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "metal",
+    "layout": {
+      "buttonClassName": "right-4! top-25!",
+      "panelClassName": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/metallic-button/index.tsx",
+      "content": "// Built using Hyperiux Vault: https://vault.hyperiux.com\n\n\"use client\";\n\nimport { Sparkles } from \"lucide-react\";\nimport type React from \"react\";\nimport {\n  useCallback,\n  useEffect,\n  useRef,\n  useState,\n  useSyncExternalStore,\n} from \"react\";\nconst VERTEX_SHADER = `#version 300 es\nprecision mediump float;\n\nlayout(location = 0) in vec4 a_position;\n\nuniform vec2 u_resolution;\nuniform float u_pixelRatio;\nuniform float u_originX;\nuniform float u_originY;\nuniform float u_worldWidth;\nuniform float u_worldHeight;\nuniform float u_fit;\nuniform float u_scale;\nuniform float u_rotation;\nuniform float u_offsetX;\nuniform float u_offsetY;\n\nout vec2 v_objectUV;\nout vec2 v_responsiveUV;\nout vec2 v_responsiveBoxGivenSize;\n\nvec3 getBoxSize(float boxRatio, vec2 givenBoxSize) {\n  vec2 box = vec2(0.);\n  box.x = boxRatio * min(givenBoxSize.x / boxRatio, givenBoxSize.y);\n  float noFitBoxWidth = box.x;\n  if (u_fit == 1.) {\n    box.x = boxRatio * min(u_resolution.x / boxRatio, u_resolution.y);\n  } else if (u_fit == 2.) {\n    box.x = boxRatio * max(u_resolution.x / boxRatio, u_resolution.y);\n  }\n  box.y = box.x / boxRatio;\n  return vec3(box, noFitBoxWidth);\n}\n\nvoid main() {\n  gl_Position = a_position;\n\n  vec2 uv = gl_Position.xy * .5;\n  vec2 boxOrigin = vec2(.5 - u_originX, u_originY - .5);\n  vec2 givenBoxSize = vec2(u_worldWidth, u_worldHeight);\n  givenBoxSize = max(givenBoxSize, vec2(1.)) * u_pixelRatio;\n  float r = u_rotation * 3.14159265358979323846 / 180.;\n  mat2 graphicRotation = mat2(cos(r), sin(r), -sin(r), cos(r));\n  vec2 graphicOffset = vec2(-u_offsetX, u_offsetY);\n\n  float fixedRatio = 1.;\n  vec2 fixedRatioBoxGivenSize = vec2(\n  (u_worldWidth == 0.) ? u_resolution.x : givenBoxSize.x,\n  (u_worldHeight == 0.) ? u_resolution.y : givenBoxSize.y\n  );\n\n  vec2 objectBoxSize = getBoxSize(fixedRatio, fixedRatioBoxGivenSize).xy;\n  vec2 objectWorldScale = u_resolution.xy / objectBoxSize;\n\n  v_objectUV = uv;\n  v_objectUV *= objectWorldScale;\n  v_objectUV += boxOrigin * (objectWorldScale - 1.);\n  v_objectUV += graphicOffset;\n  v_objectUV /= u_scale;\n  v_objectUV = graphicRotation * v_objectUV;\n\n  v_responsiveBoxGivenSize = vec2(\n  (u_worldWidth == 0.) ? u_resolution.x : givenBoxSize.x,\n  (u_worldHeight == 0.) ? u_resolution.y : givenBoxSize.y\n  );\n  float responsiveRatio = v_responsiveBoxGivenSize.x / v_responsiveBoxGivenSize.y;\n  vec2 responsiveBoxSize = getBoxSize(responsiveRatio, v_responsiveBoxGivenSize).xy;\n  vec2 responsiveBoxScale = u_resolution.xy / responsiveBoxSize;\n\n  v_responsiveUV = uv;\n  v_responsiveUV *= responsiveBoxScale;\n  v_responsiveUV += boxOrigin * (responsiveBoxScale - 1.);\n  v_responsiveUV += graphicOffset;\n  v_responsiveUV /= u_scale;\n  v_responsiveUV.x *= responsiveRatio;\n  v_responsiveUV = graphicRotation * v_responsiveUV;\n  v_responsiveUV.x /= responsiveRatio;\n}`;\n\nconst FRAGMENT_SHADER = `#version 300 es\nprecision mediump float;\n\nuniform vec2 u_resolution;\nuniform float u_time;\n\nuniform vec4 u_colorBack;\nuniform vec4 u_colorTint;\n\nuniform float u_softness;\nuniform float u_repetition;\nuniform float u_shiftRed;\nuniform float u_shiftBlue;\nuniform float u_distortion;\nuniform float u_contour;\nuniform float u_angle;\n\nin vec2 v_objectUV;\nin vec2 v_responsiveUV;\nin vec2 v_responsiveBoxGivenSize;\n\nout vec4 fragColor;\n\n#define TWO_PI 6.28318530718\n#define PI 3.14159265358979323846\n\nvec2 rotate(vec2 uv, float th) {\n  return mat2(cos(th), sin(th), -sin(th), cos(th)) * uv;\n}\n\nvec3 permute(vec3 x) { return mod(((x * 34.0) + 1.0) * x, 289.0); }\nfloat snoise(vec2 v) {\n  const vec4 C = vec4(0.211324865405187, 0.366025403784439,\n    -0.577350269189626, 0.024390243902439);\n  vec2 i = floor(v + dot(v, C.yy));\n  vec2 x0 = v - i + dot(i, C.xx);\n  vec2 i1;\n  i1 = (x0.x > x0.y) ? vec2(1.0, 0.0) : vec2(0.0, 1.0);\n  vec4 x12 = x0.xyxy + C.xxzz;\n  x12.xy -= i1;\n  i = mod(i, 289.0);\n  vec3 p = permute(permute(i.y + vec3(0.0, i1.y, 1.0))\n    + i.x + vec3(0.0, i1.x, 1.0));\n  vec3 m = max(0.5 - vec3(dot(x0, x0), dot(x12.xy, x12.xy),\n      dot(x12.zw, x12.zw)), 0.0);\n  m = m * m;\n  m = m * m;\n  vec3 x = 2.0 * fract(p * C.www) - 1.0;\n  vec3 h = abs(x) - 0.5;\n  vec3 ox = floor(x + 0.5);\n  vec3 a0 = x - ox;\n  m *= 1.79284291400159 - 0.85373472095314 * (a0 * a0 + h * h);\n  vec3 g;\n  g.x = a0.x * x0.x + h.x * x0.y;\n  g.yz = a0.yz * x12.xz + h.yz * x12.yw;\n  return 130.0 * dot(m, g);\n}\n\nfloat getColorChanges(float c1, float c2, float stripe_p, vec3 w, float blur, float bump, float tint) {\n  float ch = mix(c2, c1, smoothstep(.0, 2. * blur, stripe_p));\n\n  float border = w[0];\n  ch = mix(ch, c2, smoothstep(border, border + 2. * blur, stripe_p));\n\n  border = w[0] + .4 * (1. - bump) * w[1];\n  ch = mix(ch, c1, smoothstep(border, border + 2. * blur, stripe_p));\n\n  border = w[0] + .5 * (1. - bump) * w[1];\n  ch = mix(ch, c2, smoothstep(border, border + 2. * blur, stripe_p));\n\n  border = w[0] + w[1];\n  ch = mix(ch, c1, smoothstep(border, border + 2. * blur, stripe_p));\n\n  float gradient_t = (stripe_p - w[0] - w[1]) / w[2];\n  float gradient = mix(c1, c2, smoothstep(0., 1., gradient_t));\n  ch = mix(ch, gradient, smoothstep(border, border + .5 * blur, stripe_p));\n\n  ch = mix(ch, 1. - min(1., (1. - ch) / max(tint, 0.0001)), u_colorTint.a);\n  return ch;\n}\n\nvoid main() {\n  const float firstFrameOffset = 2.8;\n  float t = .3 * (u_time + firstFrameOffset);\n\n  vec2 uv = v_objectUV + .5;\n  uv.y = 1. - uv.y;\n\n  float cycleWidth = u_repetition;\n  float edge = 0.;\n\n  vec2 rotatedUV = uv - vec2(.5);\n  float angle = (-u_angle + 70.) * PI / 180.;\n  float cosA = cos(angle);\n  float sinA = sin(angle);\n  rotatedUV = vec2(\n  rotatedUV.x * cosA - rotatedUV.y * sinA,\n  rotatedUV.x * sinA + rotatedUV.y * cosA\n  ) + vec2(.5);\n\n  vec2 shapeUV = uv - .5;\n  shapeUV *= .67;\n  edge = pow(clamp(3. * length(shapeUV), 0., 1.), 18.);\n\n  edge = mix(smoothstep(.9 - 2. * fwidth(edge), .9, edge), edge, smoothstep(0.0, 0.4, u_contour));\n\n  float opacity = 1. - smoothstep(.9 - 2. * fwidth(edge), .9, edge);\n  edge = 1.2 * edge;\n\n  float diagBLtoTR = rotatedUV.x - rotatedUV.y;\n  float diagTLtoBR = rotatedUV.x + rotatedUV.y;\n\n  vec3 color = vec3(0.);\n  vec3 color1 = vec3(.98, 0.98, 1.);\n  vec3 color2 = vec3(.1, .1, .1 + .1 * smoothstep(.7, 1.3, diagTLtoBR));\n\n  vec2 grad_uv = uv - .5;\n\n  float dist = length(grad_uv + vec2(0., .2 * diagBLtoTR));\n  grad_uv = rotate(grad_uv, (.25 - .2 * diagBLtoTR) * PI);\n  float direction = grad_uv.x;\n\n  float bump = pow(1.8 * dist, 1.2);\n  bump = 1. - bump;\n  bump *= pow(uv.y, .3);\n\n  float thin_strip_1_ratio = .12 / cycleWidth * (1. - .4 * bump);\n  float thin_strip_2_ratio = .07 / cycleWidth * (1. + .4 * bump);\n  float wide_strip_ratio = (1. - thin_strip_1_ratio - thin_strip_2_ratio);\n\n  float thin_strip_1_width = cycleWidth * thin_strip_1_ratio;\n  float thin_strip_2_width = cycleWidth * thin_strip_2_ratio;\n\n  float noise = snoise(uv - t);\n\n  edge += (1. - edge) * u_distortion * noise;\n\n  direction += diagBLtoTR;\n  float contour = 0.;\n  direction -= 2. * noise * diagBLtoTR * (smoothstep(0., 1., edge) * (1.0 - smoothstep(0., 1., edge)));\n  direction *= mix(1., 1. - edge, smoothstep(.5, 1., u_contour));\n  direction -= 1.7 * edge * smoothstep(.5, 1., u_contour);\n  direction += .2 * pow(u_contour, 4.) * (1.0 - smoothstep(0., 1., edge));\n\n  bump *= clamp(pow(uv.y, .1), .3, 1.);\n  direction *= (.1 + (1.1 - edge) * bump);\n\n  direction *= (.4 + .6 * (1.0 - smoothstep(.5, 1., edge)));\n  direction += .18 * (smoothstep(.1, .2, uv.y) * (1.0 - smoothstep(.2, .4, uv.y)));\n  direction += .03 * (smoothstep(.1, .2, 1. - uv.y) * (1.0 - smoothstep(.2, .4, 1. - uv.y)));\n\n  direction *= (.5 + .5 * pow(uv.y, 2.));\n  direction *= cycleWidth;\n  direction -= t;\n\n  float colorDispersion = (1. - bump);\n  colorDispersion = clamp(colorDispersion, 0., 1.);\n  float dispersionRed = colorDispersion;\n  dispersionRed += .03 * bump * noise;\n  dispersionRed += 5. * (smoothstep(-.1, .2, uv.y) * (1.0 - smoothstep(.1, .5, uv.y))) * (smoothstep(.4, .6, bump) * (1.0 - smoothstep(.4, 1., bump)));\n  dispersionRed -= diagBLtoTR;\n\n  float dispersionBlue = colorDispersion;\n  dispersionBlue *= 1.3;\n  dispersionBlue += (smoothstep(0., .4, uv.y) * (1.0 - smoothstep(.1, .8, uv.y))) * (smoothstep(.4, .6, bump) * (1.0 - smoothstep(.4, .8, bump)));\n  dispersionBlue -= .2 * edge;\n\n  dispersionRed *= (u_shiftRed / 20.);\n  dispersionBlue *= (u_shiftBlue / 20.);\n\n  float blur = u_softness / 15. + .3 * contour;\n\n  vec3 w = vec3(thin_strip_1_width, thin_strip_2_width, wide_strip_ratio);\n  w[1] -= .02 * smoothstep(.0, 1., edge + bump);\n  float stripe_r = fract(direction + dispersionRed);\n  float r = getColorChanges(color1.r, color2.r, stripe_r, w, blur + fwidth(stripe_r), bump, u_colorTint.r);\n  float stripe_g = fract(direction);\n  float g = getColorChanges(color1.g, color2.g, stripe_g, w, blur + fwidth(stripe_g), bump, u_colorTint.g);\n  float stripe_b = fract(direction - dispersionBlue);\n  float b = getColorChanges(color1.b, color2.b, stripe_b, w, blur + fwidth(stripe_b), bump, u_colorTint.b);\n\n  color = vec3(r, g, b);\n  color *= opacity;\n\n  vec3 bgColor = u_colorBack.rgb * u_colorBack.a;\n  color = color + bgColor * (1. - opacity);\n  opacity = opacity + u_colorBack.a * (1. - opacity);\n\n  color += 1. / 256. * (fract(sin(dot(.014 * gl_FragCoord.xy, vec2(12.9898, 78.233))) * 43758.5453123) - .5);\n\n  fragColor = vec4(color, opacity);\n}`;\n\ninterface MetallicShaderUniforms {\n  colorBack: string;\n  colorTint: string;\n  repetition: number;\n  softness: number;\n  angle: number;\n  scale: number;\n  distortion: number;\n  shiftRed: number;\n  shiftBlue: number;\n}\n\nconst DEFAULT_MIN_PIXEL_RATIO = 2;\nconst DEFAULT_MAX_PIXEL_COUNT = 1920 * 1080 * 4;\n\nexport function parseColor(value: string): [number, number, number, number] {\n  const fallback: [number, number, number, number] = [1, 1, 1, 1];\n  if (typeof value !== \"string\") return fallback;\n\n  let hex = value.trim().replace(\"#\", \"\");\n  if (hex.length === 3) {\n    hex = hex\n      .split(\"\")\n      .map((char) => char + char)\n      .join(\"\");\n  }\n  if (hex.length === 6) hex += \"ff\";\n  if (hex.length !== 8) return fallback;\n\n  const int = Number.parseInt(hex, 16);\n  if (Number.isNaN(int)) return fallback;\n\n  return [\n    ((int >> 24) & 255) / 255,\n    ((int >> 16) & 255) / 255,\n    ((int >> 8) & 255) / 255,\n    (int & 255) / 255,\n  ];\n}\n\nfunction createShader(gl: WebGL2RenderingContext, type: number, source: string) {\n  const shader = gl.createShader(type);\n  if (!shader) return null;\n  gl.shaderSource(shader, source);\n  gl.compileShader(shader);\n  if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {\n    console.error(\"Shader compile error:\", gl.getShaderInfoLog(shader));\n    gl.deleteShader(shader);\n    return null;\n  }\n  return shader;\n}\n\nclass MetallicShaderMount {\n  private gl: WebGL2RenderingContext | null = null;\n  private program: WebGLProgram | null = null;\n  private canvas: HTMLCanvasElement;\n  private parent: HTMLElement;\n  private locations: Record<string, WebGLUniformLocation | null> = {};\n  private rafId: number | null = null;\n  private lastRenderTime = 0;\n  private currentFrame = 0;\n  private speed: number;\n  private uniforms: MetallicShaderUniforms;\n  private renderScale = 1;\n  private resolutionChanged = true;\n  private resizeObserver: ResizeObserver | null = null;\n  private intersectionObserver: IntersectionObserver | null = null;\n  private isInViewport = true;\n  private disposed = false;\n\n  constructor(\n    parent: HTMLElement,\n    uniforms: MetallicShaderUniforms,\n    speed: number,\n  ) {\n    this.parent = parent;\n    this.uniforms = uniforms;\n    this.speed = speed;\n\n    this.canvas = document.createElement(\"canvas\");\n    parent.prepend(this.canvas);\n\n    const gl = this.canvas.getContext(\"webgl2\", {\n      antialias: true,\n      premultipliedAlpha: true,\n      alpha: true,\n    });\n    if (!gl) return;\n\n    const vertex = createShader(gl, gl.VERTEX_SHADER, VERTEX_SHADER);\n    const fragment = createShader(gl, gl.FRAGMENT_SHADER, FRAGMENT_SHADER);\n    if (!vertex || !fragment) return;\n\n    const program = gl.createProgram();\n    if (!program) return;\n    gl.attachShader(program, vertex);\n    gl.attachShader(program, fragment);\n    gl.linkProgram(program);\n    gl.deleteShader(vertex);\n    gl.deleteShader(fragment);\n    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {\n      console.error(\"Program link error:\", gl.getProgramInfoLog(program));\n      gl.deleteProgram(program);\n      return;\n    }\n\n    this.gl = gl;\n    this.program = program;\n\n    const buffer = gl.createBuffer();\n    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);\n    gl.bufferData(\n      gl.ARRAY_BUFFER,\n      new Float32Array([-1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1]),\n      gl.STATIC_DRAW,\n    );\n    const position = gl.getAttribLocation(program, \"a_position\");\n    gl.enableVertexAttribArray(position);\n    gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);\n\n    gl.enable(gl.BLEND);\n    gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);\n\n    this.cacheLocations();\n    this.setupObservers();\n    this.handleResize();\n    this.renderFrame(performance.now());\n    if (speed !== 0) this.requestRender();\n  }\n\n  private cacheLocations() {\n    const gl = this.gl;\n    const program = this.program;\n    if (!gl || !program) return;\n\n    const names = [\n      \"u_time\",\n      \"u_resolution\",\n      \"u_pixelRatio\",\n      \"u_colorBack\",\n      \"u_colorTint\",\n      \"u_softness\",\n      \"u_repetition\",\n      \"u_shiftRed\",\n      \"u_shiftBlue\",\n      \"u_distortion\",\n      \"u_contour\",\n      \"u_angle\",\n      \"u_originX\",\n      \"u_originY\",\n      \"u_worldWidth\",\n      \"u_worldHeight\",\n      \"u_fit\",\n      \"u_scale\",\n      \"u_rotation\",\n      \"u_offsetX\",\n      \"u_offsetY\",\n    ];\n    for (const name of names) {\n      this.locations[name] = gl.getUniformLocation(program, name);\n    }\n  }\n\n  private setupObservers() {\n    this.resizeObserver = new ResizeObserver(() => this.handleResize());\n    this.resizeObserver.observe(this.parent);\n\n    if (typeof IntersectionObserver !== \"undefined\") {\n      this.intersectionObserver = new IntersectionObserver(([entry]) => {\n        this.isInViewport = entry?.isIntersecting ?? true;\n        if (this.isInViewport && this.speed !== 0) this.requestRender();\n      });\n      this.intersectionObserver.observe(this.parent);\n    }\n  }\n\n  private handleResize = () => {\n    const gl = this.gl;\n    if (!gl || this.disposed) return;\n\n    const width = this.parent.clientWidth;\n    const height = this.parent.clientHeight;\n    if (width === 0 || height === 0) return;\n\n    const dpr = Math.max(1, window.devicePixelRatio);\n    const targetRenderScale = Math.max(dpr, DEFAULT_MIN_PIXEL_RATIO);\n    let targetPixelWidth = Math.round(width) * targetRenderScale;\n    let targetPixelHeight = Math.round(height) * targetRenderScale;\n\n    const headroom =\n      Math.sqrt(DEFAULT_MAX_PIXEL_COUNT) /\n      Math.sqrt(targetPixelWidth * targetPixelHeight);\n    const clamp = Math.min(1, headroom);\n    const newWidth = Math.round(targetPixelWidth * clamp);\n    const newHeight = Math.round(targetPixelHeight * clamp);\n\n    if (this.canvas.width === newWidth && this.canvas.height === newHeight) {\n      return;\n    }\n\n    this.canvas.width = newWidth;\n    this.canvas.height = newHeight;\n    this.renderScale = newWidth / Math.round(width);\n    this.resolutionChanged = true;\n    gl.viewport(0, 0, newWidth, newHeight);\n    this.renderFrame(performance.now());\n  };\n\n  private pushUniforms() {\n    const gl = this.gl;\n    if (!gl) return;\n\n    const u = this.uniforms;\n    gl.uniform4fv(this.locations.u_colorBack ?? null, parseColor(u.colorBack));\n    gl.uniform4fv(this.locations.u_colorTint ?? null, parseColor(u.colorTint));\n    gl.uniform1f(this.locations.u_repetition ?? null, u.repetition);\n    gl.uniform1f(this.locations.u_softness ?? null, u.softness);\n    gl.uniform1f(this.locations.u_angle ?? null, u.angle);\n    gl.uniform1f(this.locations.u_distortion ?? null, u.distortion);\n    gl.uniform1f(this.locations.u_shiftRed ?? null, u.shiftRed);\n    gl.uniform1f(this.locations.u_shiftBlue ?? null, u.shiftBlue);\n    gl.uniform1f(this.locations.u_contour ?? null, 0);\n\n    gl.uniform1f(this.locations.u_scale ?? null, u.scale);\n    gl.uniform1f(this.locations.u_fit ?? null, 1);\n    gl.uniform1f(this.locations.u_rotation ?? null, 0);\n    gl.uniform1f(this.locations.u_offsetX ?? null, 0.1);\n    gl.uniform1f(this.locations.u_offsetY ?? null, -0.1);\n    gl.uniform1f(this.locations.u_originX ?? null, 0.5);\n    gl.uniform1f(this.locations.u_originY ?? null, 0.5);\n    gl.uniform1f(this.locations.u_worldWidth ?? null, 0);\n    gl.uniform1f(this.locations.u_worldHeight ?? null, 0);\n  }\n\n  private renderFrame = (currentTime: number) => {\n    const gl = this.gl;\n    if (!gl || !this.program || this.disposed) return;\n\n    const dt = currentTime - this.lastRenderTime;\n    this.lastRenderTime = currentTime;\n    if (this.speed !== 0 && this.isInViewport) {\n      this.currentFrame += dt * this.speed;\n    }\n\n    gl.clearColor(0, 0, 0, 0);\n    gl.clear(gl.COLOR_BUFFER_BIT);\n    gl.useProgram(this.program);\n\n    gl.uniform1f(this.locations.u_time ?? null, this.currentFrame * 1e-3);\n    if (this.resolutionChanged) {\n      gl.uniform2f(\n        this.locations.u_resolution ?? null,\n        this.canvas.width,\n        this.canvas.height,\n      );\n      gl.uniform1f(this.locations.u_pixelRatio ?? null, this.renderScale);\n      this.resolutionChanged = false;\n    }\n    this.pushUniforms();\n\n    gl.drawArrays(gl.TRIANGLES, 0, 6);\n\n    if (this.speed !== 0 && this.isInViewport) {\n      this.requestRender();\n    } else {\n      this.rafId = null;\n    }\n  };\n\n  private requestRender = () => {\n    if (this.rafId !== null) cancelAnimationFrame(this.rafId);\n    this.rafId = requestAnimationFrame(this.renderFrame);\n  };\n\n  setSpeed(speed: number) {\n    this.speed = speed;\n    if (speed === 0) {\n      if (this.rafId !== null) cancelAnimationFrame(this.rafId);\n      this.rafId = null;\n      this.renderFrame(performance.now());\n      return;\n    }\n    if (this.rafId === null) {\n      this.lastRenderTime = performance.now();\n      this.requestRender();\n    }\n  }\n\n  setUniforms(uniforms: Partial<MetallicShaderUniforms>) {\n    this.uniforms = { ...this.uniforms, ...uniforms };\n    if (this.rafId === null) this.renderFrame(performance.now());\n  }\n\n  dispose() {\n    this.disposed = true;\n    if (this.rafId !== null) cancelAnimationFrame(this.rafId);\n    this.rafId = null;\n    this.resizeObserver?.disconnect();\n    this.resizeObserver = null;\n    this.intersectionObserver?.disconnect();\n    this.intersectionObserver = null;\n    if (this.gl && this.program) this.gl.deleteProgram(this.program);\n    this.gl = null;\n    this.program = null;\n    this.canvas.remove();\n  }\n}\n\n\nconst REDUCED_MOTION_QUERY = \"(prefers-reduced-motion: reduce)\";\n\nfunction prefersReducedMotion() {\n  if (typeof window === \"undefined\") return false;\n  return window.matchMedia?.(REDUCED_MOTION_QUERY)?.matches ?? false;\n}\n\nfunction subscribeToReducedMotion(callback: () => void) {\n  if (typeof window === \"undefined\") return () => {};\n  const mediaQueryList = window.matchMedia(REDUCED_MOTION_QUERY);\n  mediaQueryList.addEventListener(\"change\", callback);\n  return () => mediaQueryList.removeEventListener(\"change\", callback);\n}\n\nfunction getServerReducedMotionSnapshot() {\n  return false;\n}\n\nfunction usePrefersReducedMotion() {\n  return useSyncExternalStore(\n    subscribeToReducedMotion,\n    prefersReducedMotion,\n    getServerReducedMotionSnapshot,\n  );\n}\n\nconst SETTLE = \"transition-all duration-800 ease-[cubic-bezier(0.34,1.56,0.64,1)]\";\nconst SHADOW_SHIFT =\n  \"transition-[box-shadow] duration-150 ease-[cubic-bezier(0.4,0,0.2,1)]\";\n\nconst RIM_PRESSED =\n  \"shadow-[0px_0px_0px_1px_rgba(0,0,0,0.5),0px_1px_2px_0px_rgba(0,0,0,0.3)]\";\nconst RIM_HOVERED =\n  \"shadow-[0px_0px_0px_1px_rgba(0,0,0,0.4),0px_12px_6px_0px_rgba(0,0,0,0.05),0px_8px_5px_0px_rgba(0,0,0,0.1),0px_4px_4px_0px_rgba(0,0,0,0.15),0px_1px_2px_0px_rgba(0,0,0,0.2)]\";\nconst RIM_RESTING =\n  \"shadow-[0px_0px_0px_1px_rgba(0,0,0,0.3),0px_36px_14px_0px_rgba(0,0,0,0.02),0px_20px_12px_0px_rgba(0,0,0,0.08),0px_9px_9px_0px_rgba(0,0,0,0.12),0px_2px_5px_0px_rgba(0,0,0,0.15)]\";\nconst FACE_PRESSED =\n  \"shadow-[inset_0px_2px_4px_rgba(0,0,0,0.4),inset_0px_1px_2px_rgba(0,0,0,0.3)]\";\n\ninterface MetallicButtonProps {\n  label?: string;\n  onClick?: () => void;\n  viewMode?: \"text\" | \"icon\";\n  className?: string;\n  baseColor?: string;\n  sheenColor?: string;\n  bandCount?: number;\n  edgeBlur?: number;\n  flowAngle?: number;\n  zoom?: number;\n  warp?: number;\n  redFringe?: number;\n  blueFringe?: number;\n  idleSpeed?: number;\n  hoverSpeed?: number;\n  clickSpeed?: number;\n}\n\nexport function MetallicButton({\n  label = \"Get Started\",\n  onClick,\n  viewMode = \"text\",\n  className = \"\",\n  baseColor = \"#000000\",\n  sheenColor = \"#ffffff\",\n  bandCount = 4,\n  edgeBlur = 0.5,\n  flowAngle = 45,\n  zoom = 8,\n  warp = 0,\n  redFringe = 0.3,\n  blueFringe = 0.3,\n  idleSpeed = 0.6,\n  hoverSpeed = 1,\n  clickSpeed = 2.4,\n}: MetallicButtonProps) {\n  const [isHovered, setIsHovered] = useState(false);\n  const [isPressed, setIsPressed] = useState(false);\n  const [ripples, setRipples] = useState<\n    Array<{ x: number; y: number; id: number }>\n  >([]);\n  const surfaceRef = useRef<HTMLDivElement>(null);\n  const mount = useRef<MetallicShaderMount | null>(null);\n  const buttonRef = useRef<HTMLButtonElement>(null);\n  const rippleId = useRef(0);\n  const isHoveredRef = useRef(false);\n  const reducedMotion = usePrefersReducedMotion();\n\n  const uniformsRef = useRef<MetallicShaderUniforms>({\n    colorBack: baseColor,\n    colorTint: sheenColor,\n    repetition: bandCount,\n    softness: edgeBlur,\n    angle: flowAngle,\n    scale: zoom,\n    distortion: warp,\n    shiftRed: redFringe,\n    shiftBlue: blueFringe,\n  });\n  const idleSpeedRef = useRef(idleSpeed);\n  const reducedMotionRef = useRef(reducedMotion);\n  uniformsRef.current = {\n    colorBack: baseColor,\n    colorTint: sheenColor,\n    repetition: bandCount,\n    softness: edgeBlur,\n    angle: flowAngle,\n    scale: zoom,\n    distortion: warp,\n    shiftRed: redFringe,\n    shiftBlue: blueFringe,\n  };\n  idleSpeedRef.current = idleSpeed;\n  reducedMotionRef.current = reducedMotion;\n\n  const isIcon = viewMode === \"icon\";\n  const shellSize = isIcon ? \"h-11.5 w-11.5\" : \"h-11.5 w-35.5\";\n  const faceSize = isIcon ? \"h-10.5 w-10.5\" : \"h-10.5 w-34.5\";\n  const pressShift = isPressed\n    ? \"translate-y-px scale-[0.98]\"\n    : \"translate-y-0 scale-100\";\n\n  const applyUniforms = useCallback(() => {\n    mount.current?.setUniforms({\n      colorBack: baseColor,\n      colorTint: sheenColor,\n      repetition: bandCount,\n      softness: edgeBlur,\n      angle: flowAngle,\n      scale: zoom,\n      distortion: warp,\n      shiftRed: redFringe,\n      shiftBlue: blueFringe,\n    });\n  }, [\n    baseColor,\n    bandCount,\n    blueFringe,\n    edgeBlur,\n    flowAngle,\n    redFringe,\n    sheenColor,\n    warp,\n    zoom,\n  ]);\n\n  useEffect(() => {\n    const styleId = \"metallic-button-keyframes\";\n    if (!document.getElementById(styleId)) {\n      const style = document.createElement(\"style\");\n      style.id = styleId;\n      style.textContent = `\n        .metallic-button-canvas canvas {\n          width: 100% !important;\n          height: 100% !important;\n          display: block !important;\n          position: absolute !important;\n          top: 0 !important;\n          left: 0 !important;\n          border-radius: 100px !important;\n        }\n        @keyframes metallic-button-ripple {\n          0% {\n            transform: translate(-50%, -50%) scale(0);\n            opacity: 0.6;\n          }\n          100% {\n            transform: translate(-50%, -50%) scale(4);\n            opacity: 0;\n          }\n        }\n      `;\n      document.head.appendChild(style);\n    }\n\n    if (!surfaceRef.current) return;\n\n    mount.current = new MetallicShaderMount(\n      surfaceRef.current,\n      uniformsRef.current,\n      reducedMotionRef.current ? 0 : idleSpeedRef.current,\n    );\n\n    return () => {\n      mount.current?.dispose();\n      mount.current = null;\n    };\n  }, []);\n\n  useEffect(() => {\n    applyUniforms();\n  }, [applyUniforms]);\n\n  useEffect(() => {\n    if (reducedMotion) {\n      mount.current?.setSpeed(0);\n      return;\n    }\n    if (!isHoveredRef.current) mount.current?.setSpeed(idleSpeed);\n  }, [idleSpeed, reducedMotion]);\n\n  const handleMouseEnter = () => {\n    setIsHovered(true);\n    isHoveredRef.current = true;\n    if (!reducedMotion) mount.current?.setSpeed(hoverSpeed);\n  };\n\n  const handleMouseLeave = () => {\n    setIsHovered(false);\n    isHoveredRef.current = false;\n    setIsPressed(false);\n    if (!reducedMotion) mount.current?.setSpeed(idleSpeed);\n  };\n\n  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {\n    if (mount.current && !reducedMotion) {\n      mount.current.setSpeed(clickSpeed);\n      setTimeout(() => {\n        mount.current?.setSpeed(isHoveredRef.current ? hoverSpeed : idleSpeed);\n      }, 300);\n    }\n\n    if (buttonRef.current && !reducedMotion) {\n      const rect = buttonRef.current.getBoundingClientRect();\n      const ripple = {\n        x: e.clientX - rect.left,\n        y: e.clientY - rect.top,\n        id: rippleId.current++,\n      };\n\n      setRipples((prev) => [...prev, ripple]);\n      setTimeout(() => {\n        setRipples((prev) => prev.filter((r) => r.id !== ripple.id));\n      }, 600);\n    }\n\n    onClick?.();\n  };\n\n  return (\n    <div className={`relative inline-block ${className}`}>\n      <div className=\"perspective-origin-[50%_50%] perspective-[1000px]\">\n        <div className={`relative transform-3d ${shellSize}`}>\n          <div\n            className={`pointer-events-none absolute top-0 left-0 z-30 flex translate-z-5 items-center justify-center gap-1.5 transform-3d ${shellSize}`}\n          >\n            {isIcon ? (\n              <Sparkles\n                className={`size-4 text-[#666666] drop-shadow-[0px_1px_2px_rgba(0,0,0,0.5)] ${SETTLE}`}\n              />\n            ) : (\n              <span\n                className={`text-sm font-normal whitespace-nowrap text-[#666666] [text-shadow:0px_1px_2px_rgba(0,0,0,0.5)] ${SETTLE}`}\n              >\n                {label}\n              </span>\n            )}\n          </div>\n\n          <div\n            className={`absolute top-0 left-0 z-20 translate-z-2.5 transform-3d ${shellSize} ${pressShift} ${SETTLE}`}\n          >\n            <div\n              className={`m-0.5 rounded-full bg-[linear-gradient(180deg,#202020_0%,#000000_100%)] ${faceSize} ${SHADOW_SHIFT} ${isPressed ? FACE_PRESSED : \"shadow-none\"}`}\n            />\n          </div>\n\n          <div\n            className={`absolute top-0 left-0 z-10 translate-z-0 transform-3d ${shellSize} ${pressShift} ${SETTLE}`}\n          >\n            <div\n              className={`rounded-full bg-transparent ${shellSize} ${SHADOW_SHIFT} ${\n                isPressed\n                  ? RIM_PRESSED\n                  : isHovered\n                    ? RIM_HOVERED\n                    : RIM_RESTING\n              }`}\n            >\n              <div\n                ref={surfaceRef}\n                className={`metallic-button-canvas relative overflow-hidden rounded-full ${shellSize}`}\n              />\n            </div>\n          </div>\n\n          <button\n            ref={buttonRef}\n            type=\"button\"\n            onClick={handleClick}\n            onMouseEnter={handleMouseEnter}\n            onMouseLeave={handleMouseLeave}\n            onMouseDown={() => setIsPressed(true)}\n            onMouseUp={() => setIsPressed(false)}\n            aria-label={label}\n            className={`absolute top-0 left-0 z-40 translate-z-6.25 cursor-pointer overflow-hidden rounded-full border-none bg-transparent outline-none transform-3d ${shellSize}`}\n          >\n            {ripples.map((ripple) => (\n              <span\n                key={ripple.id}\n                className=\"pointer-events-none absolute size-5 rounded-full bg-[radial-gradient(circle,rgba(255,255,255,0.4)_0%,rgba(255,255,255,0)_70%)] animate-[metallic-button-ripple_0.6s_ease-out]\"\n                style={{\n                  left: `${ripple.x}px`,\n                  top: `${ripple.y}px`,\n                }}\n              />\n            ))}\n          </button>\n        </div>\n      </div>\n    </div>\n  );\n}\n\nexport default MetallicButton;\n"
+    }
+  ]
+}

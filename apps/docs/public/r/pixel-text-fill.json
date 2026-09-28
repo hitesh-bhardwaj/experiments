@@ -1,0 +1,260 @@
+{
+  "name": "pixel-text-fill",
+  "type": "registry:component",
+  "title": "Pixel Text Fill",
+  "description": "Scroll-scrubbed pixel text fill with an ordered-dither color edge.",
+  "dependencies": [
+    "gsap"
+  ],
+  "registryDependencies": [],
+  "exportName": "PixelTextFill",
+  "exportKind": "default",
+  "tier": "free",
+  "version": "1.1.0",
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "date": "2026-08-14",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "props": [
+    {
+      "name": "direction",
+      "type": "string",
+      "default": "up",
+      "description": "Fill direction.",
+      "remixer": {
+        "control": "select",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "options": [
+          {
+            "value": "up",
+            "label": "Up"
+          },
+          {
+            "value": "right",
+            "label": "Right"
+          }
+        ]
+      }
+    },
+    {
+      "name": "pixelSize",
+      "type": "number",
+      "default": 3,
+      "description": "Pixel cell size used by the dither edge.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 1,
+        "max": 12,
+        "step": 1
+      }
+    },
+    {
+      "name": "stagger",
+      "type": "number",
+      "default": 32,
+      "description": "Character stagger window for the fill head.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 2,
+        "max": 32,
+        "step": 1
+      }
+    },
+    {
+      "name": "bandFraction",
+      "type": "number",
+      "default": 1.15,
+      "description": "Soft pixel band width as a fraction of each glyph.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0.35,
+        "max": 3,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "effectWidth",
+      "type": "number",
+      "default": 1.4,
+      "description": "Pixelated fill band width multiplier.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0.5,
+        "max": 4,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "settleBlend",
+      "type": "number",
+      "default": 0.45,
+      "description": "How early the final text color blends in behind the pixel edge.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0,
+        "max": 1,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "textColor",
+      "type": "string",
+      "default": "#ffffff",
+      "description": "Final text color.",
+      "remixer": {
+        "control": "color",
+        "group": "colors",
+        "groupTitle": "Colors"
+      }
+    },
+    {
+      "name": "primaryColor",
+      "type": "string",
+      "default": "#ff5f00",
+      "description": "Pixel dither edge color.",
+      "remixer": {
+        "control": "color",
+        "group": "colors",
+        "groupTitle": "Colors"
+      }
+    },
+    {
+      "name": "dimColor",
+      "type": "string",
+      "default": "#272727",
+      "description": "Initial dim text color.",
+      "remixer": {
+        "control": "color",
+        "group": "colors",
+        "groupTitle": "Colors"
+      }
+    },
+    {
+      "name": "backgroundColor",
+      "type": "string",
+      "default": "#101113",
+      "description": "Section background color.",
+      "remixer": {
+        "control": "color",
+        "group": "colors",
+        "groupTitle": "Colors"
+      }
+    },
+    {
+      "name": "fontSize",
+      "type": "number",
+      "default": 3.2,
+      "description": "Font size in vw units.",
+      "remixer": {
+        "control": "range",
+        "group": "type",
+        "groupTitle": "Type",
+        "min": 3,
+        "max": 12,
+        "step": 0.25
+      }
+    },
+    {
+      "name": "fontWeight",
+      "type": "number",
+      "default": 500,
+      "description": "Font weight.",
+      "remixer": {
+        "control": "range",
+        "enabled": false,
+        "group": "type",
+        "groupTitle": "Type",
+        "min": 100,
+        "max": 900,
+        "step": 100
+      }
+    },
+    {
+      "name": "lineHeight",
+      "type": "number",
+      "default": 1.18,
+      "description": "Text line height.",
+      "remixer": {
+        "control": "range",
+        "group": "type",
+        "groupTitle": "Type",
+        "min": 0.9,
+        "max": 1.6,
+        "step": 0.01
+      }
+    },
+    {
+      "name": "textAlign",
+      "type": "string",
+      "default": "center",
+      "description": "Text alignment.",
+      "remixer": {
+        "control": "select",
+        "group": "type",
+        "groupTitle": "Type",
+        "options": [
+          {
+            "value": "left",
+            "label": "Left"
+          },
+          {
+            "value": "center",
+            "label": "Center"
+          },
+          {
+            "value": "right",
+            "label": "Right"
+          }
+        ]
+      }
+    },
+    {
+      "name": "maxWidth",
+      "type": "number",
+      "default": 80,
+      "description": "Text wrapper width as a percentage of the section.",
+      "remixer": {
+        "control": "range",
+        "group": "type",
+        "groupTitle": "Type",
+        "min": 40,
+        "max": 100,
+        "step": 1
+      }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "motion",
+    "layout": {
+      "buttonClassName": "right-4! top-25!",
+      "panelClassName": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/pixel-text-fill/index.tsx",
+      "content": "// Built using Hyperiux Vault: https://vault.hyperiux.com\n\n\"use client\";\n\nimport { useEffect, useRef, useState } from \"react\";\nimport gsap from \"gsap\";\nimport ScrollTrigger from \"gsap/ScrollTrigger\";\n\nif (typeof window !== \"undefined\") {\n  gsap.registerPlugin(ScrollTrigger);\n}\n\ntype FillDirection = \"up\" | \"right\";\ntype TextAlign = \"left\" | \"center\" | \"right\";\n\ntype PixelTextFillProps = {\n  text?: string;\n  textColor?: string;\n  primaryColor?: string;\n  dimColor?: string;\n  backgroundColor?: string;\n  fontSize?: number;\n  fontWeight?: number;\n  lineHeight?: number;\n  textAlign?: TextAlign;\n  maxWidth?: number;\n  sectionHeight?: number;\n  pixelSize?: number;\n  stagger?: number;\n  bandFraction?: number;\n  effectWidth?: number;\n  settleBlend?: number;\n  direction?: FillDirection;\n  start?: string;\n  end?: string;\n  id?: string;\n  className?: string;\n};\n\ntype Segment = {\n  x: number;\n  width: number;\n  top: number;\n  bottom: number;\n  height: number;\n};\n\ntype PixelTextFillLayout = {\n  width: number;\n  height: number;\n  dpr: number;\n  chars: Segment[];\n  crispDim: HTMLCanvasElement;\n  crispFill: HTMLCanvasElement;\n  crispAccent: HTMLCanvasElement;\n  scratch: HTMLCanvasElement;\n  mask: HTMLCanvasElement;\n};\n\nconst DEFAULT_TEXT = \"Build with calm motion.\\nKeep the rhythm crisp and clear.\\nMake each screen feel alive.\\nLet every detail guide focus.\";\n\nconst BAYER = [\n  0, 32, 8, 40, 2, 34, 10, 42, 48, 16, 56, 24, 50, 18, 58, 26, 12, 44, 4, 36,\n  14, 46, 6, 38, 60, 28, 52, 20, 62, 30, 54, 22, 3, 35, 11, 43, 1, 33, 9, 41,\n  51, 19, 59, 27, 49, 17, 57, 25, 15, 47, 7, 39, 13, 45, 5, 37, 63, 31, 55, 23,\n  61, 29, 53, 21,\n];\n\nfunction hashNoise(x: number, y: number) {\n  let h = Math.imul(x, 374761393) + Math.imul(y, 668265263);\n  h = Math.imul(h ^ (h >>> 13), 1274126177);\n  return ((h ^ (h >>> 16)) >>> 0) / 4294967295;\n}\n\nfunction cellThreshold(x: number, y: number) {\n  const ordered = (BAYER[(y & 7) * 8 + (x & 7)] + 0.5) / 64;\n  return ordered * 0.75 + hashNoise(x, y) * 0.25;\n}\n\nfunction clamp01(value: number) {\n  return value < 0 ? 0 : value > 1 ? 1 : value;\n}\n\nfunction smoothstep01(value: number) {\n  const x = clamp01(value);\n  return x * x * (3 - 2 * x);\n}\n\nfunction wrapLines(ctx: CanvasRenderingContext2D, text: string, maxWidth: number) {\n  const lines: string[] = [];\n  const paragraphs = String(text).split(\"\\n\");\n\n  for (const paragraph of paragraphs) {\n    const words = paragraph.split(/\\s+/).filter(Boolean);\n    let line = \"\";\n\n    if (!words.length) {\n      lines.push(\"\");\n      continue;\n    }\n\n    for (const word of words) {\n      const candidate = line ? `${line} ${word}` : word;\n\n      if (line && ctx.measureText(candidate).width > maxWidth) {\n        lines.push(line);\n        line = word;\n      } else {\n        line = candidate;\n      }\n    }\n\n    if (line) lines.push(line);\n  }\n\n  return lines;\n}\n\nexport default function PixelTextFill({\n  text = DEFAULT_TEXT,\n  textColor = \"#ffffff\",\n  primaryColor = \"#ff5f00\",\n  dimColor = \"#272727\",\n  backgroundColor = \"#101113\",\n  fontSize = 3.2,\n  fontWeight = 500,\n  lineHeight = 1.18,\n  textAlign = \"center\",\n  maxWidth = 80,\n  sectionHeight = 250,\n  pixelSize = 3,\n  stagger = 32,\n  bandFraction = 1.15,\n  effectWidth = 1.4,\n  settleBlend = 0.45,\n  direction = \"up\",\n  start = \"top top\",\n  end = \"bottom bottom\",\n  id = \"pixel-text-fill\",\n  className = \"\",\n}: PixelTextFillProps) {\n  const sectionRef = useRef<HTMLElement>(null);\n  const wrapperRef = useRef<HTMLDivElement>(null);\n  const textRef = useRef<HTMLParagraphElement>(null);\n  const canvasRef = useRef<HTMLCanvasElement>(null);\n  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);\n\n  useEffect(() => {\n    const mediaQuery = window.matchMedia?.(\"(prefers-reduced-motion: reduce)\");\n    if (!mediaQuery) return;\n\n    setPrefersReducedMotion(mediaQuery.matches);\n\n    const onReduceMotionChange = (event: MediaQueryListEvent) => {\n      setPrefersReducedMotion(event.matches);\n    };\n\n    mediaQuery.addEventListener?.(\"change\", onReduceMotionChange);\n\n    return () => {\n      mediaQuery.removeEventListener?.(\"change\", onReduceMotionChange);\n    };\n  }, []);\n\n  useEffect(() => {\n    let frame: number | null = null;\n    let disposed = false;\n    let scrollTrigger: ScrollTrigger | null = null;\n    let progress = 0;\n    let targetProgress = 0;\n    let layout: PixelTextFillLayout | null = null;\n\n    const canvas = canvasRef.current;\n    const wrapper = wrapperRef.current;\n    const textElement = textRef.current;\n\n    const makeLayer = (width: number, height: number) => {\n      const layer = document.createElement(\"canvas\");\n      layer.width = Math.max(1, Math.ceil(width));\n      layer.height = Math.max(1, Math.ceil(height));\n      return layer;\n    };\n\n    const build = () => {\n      if (!canvas || !wrapper || !textElement) return;\n\n      const rect = wrapper.getBoundingClientRect();\n      const width = rect.width;\n      const height = rect.height;\n\n      if (width < 1 || height < 1) {\n        layout = null;\n        return;\n      }\n\n      const dpr = Math.min(window.devicePixelRatio || 1, 2);\n      const styles = window.getComputedStyle(textElement);\n      const parsedFontSize = Number.parseFloat(styles.fontSize) || 16;\n      const parsedLineHeight = Number.parseFloat(styles.lineHeight);\n      const computedLineHeight = Number.isFinite(parsedLineHeight)\n        ? parsedLineHeight\n        : parsedFontSize * lineHeight;\n      const font = `${styles.fontStyle} ${styles.fontWeight} ${parsedFontSize}px ${styles.fontFamily}`;\n      const letterSpacing = styles.letterSpacing;\n      const align = styles.textAlign;\n      const hasLetterSpacing = letterSpacing && letterSpacing !== \"normal\";\n\n      canvas.width = Math.ceil(width * dpr);\n      canvas.height = Math.ceil(height * dpr);\n      canvas.style.width = `${width}px`;\n      canvas.style.height = `${height}px`;\n\n      const ctx = canvas.getContext(\"2d\");\n      if (!ctx) return;\n\n      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);\n      ctx.font = font;\n\n      if (hasLetterSpacing && \"letterSpacing\" in ctx) {\n        (ctx as CanvasRenderingContext2D & { letterSpacing: string }).letterSpacing = letterSpacing;\n      }\n\n      const lines = wrapLines(ctx, text, width);\n      const metrics = ctx.measureText(\"Hg\");\n      const ascent = metrics.fontBoundingBoxAscent || parsedFontSize * 0.8;\n      const descent = metrics.fontBoundingBoxDescent || parsedFontSize * 0.2;\n      const firstBaseline = (computedLineHeight - (ascent + descent)) / 2 + ascent;\n\n      const lineGeometry = lines.map((line, index) => {\n        const lineWidth = ctx.measureText(line).width;\n        const x =\n          align === \"right\"\n            ? width - lineWidth\n            : align === \"left\" || align === \"start\"\n              ? 0\n              : (width - lineWidth) / 2;\n\n        return { line, x, baseline: firstBaseline + index * computedLineHeight };\n      });\n\n      const chars: Segment[] = [];\n\n      for (const { line, x, baseline } of lineGeometry) {\n        let previous = 0;\n\n        for (let index = 0; index < line.length; index += 1) {\n          const next = ctx.measureText(line.slice(0, index + 1)).width;\n          const character = line[index];\n\n          if (character.trim()) {\n            const glyph = ctx.measureText(character);\n            const top = baseline - (glyph.actualBoundingBoxAscent || ascent * 0.72) - 1;\n            const bottom = baseline + (glyph.actualBoundingBoxDescent || 0) + 1;\n\n            chars.push({\n              x: x + previous,\n              width: next - previous,\n              top,\n              bottom,\n              height: bottom - top,\n            });\n          }\n\n          previous = next;\n        }\n      }\n\n      const paint = (target: HTMLCanvasElement, color: string) => {\n        const tctx = target.getContext(\"2d\");\n        if (!tctx) return;\n\n        tctx.setTransform(dpr, 0, 0, dpr, 0, 0);\n        tctx.clearRect(0, 0, width, height);\n        tctx.font = font;\n        tctx.textBaseline = \"alphabetic\";\n        tctx.fillStyle = color;\n\n        if (hasLetterSpacing && \"letterSpacing\" in tctx) {\n          (tctx as CanvasRenderingContext2D & { letterSpacing: string }).letterSpacing = letterSpacing;\n        }\n\n        for (const { line, x, baseline } of lineGeometry) {\n          tctx.fillText(line, x, baseline);\n        }\n      };\n\n      const crispDim = makeLayer(width * dpr, height * dpr);\n      const crispFill = makeLayer(width * dpr, height * dpr);\n      const crispAccent = makeLayer(width * dpr, height * dpr);\n      const scratch = makeLayer(width * dpr, height * dpr);\n      const mask = makeLayer(width * dpr, height * dpr);\n\n      paint(crispDim, dimColor);\n      paint(crispFill, textColor);\n      paint(crispAccent, primaryColor);\n\n      layout = {\n        width,\n        height,\n        dpr,\n        chars,\n        crispDim,\n        crispFill,\n        crispAccent,\n        scratch,\n        mask,\n      };\n    };\n\n    const draw = () => {\n      frame = null;\n      if (!layout || !canvas) return;\n\n      const { width, height, dpr, chars } = layout;\n      const ctx = canvas.getContext(\"2d\");\n      if (!ctx) return;\n\n      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);\n      ctx.clearRect(0, 0, width, height);\n      ctx.drawImage(layout.crispDim, 0, 0, width, height);\n\n      const total = chars.length;\n      if (!total) return;\n\n      const head = progress * (total + stagger);\n      const soft = Math.max(0.35, bandFraction) * Math.max(0.25, effectWidth);\n      const settle = clamp01(settleBlend);\n      const horizontal = direction === \"right\";\n      const dissolve = new Path2D();\n      let hasDissolve = false;\n      let hasFillMask = false;\n      const maskCanvas = layout.mask;\n      const mctx = maskCanvas.getContext(\"2d\");\n      if (!mctx) return;\n\n      mctx.setTransform(dpr, 0, 0, dpr, 0, 0);\n      mctx.clearRect(0, 0, width, height);\n      mctx.globalCompositeOperation = \"source-over\";\n\n      for (let index = 0; index < total; index += 1) {\n        const local = (head - index) / stagger;\n        if (local <= 0) continue;\n\n        const char = chars[index];\n        const axisSize = horizontal ? char.width : char.height;\n        const invAxis = axisSize > 0 ? 1 / axisSize : 0;\n        const right = char.x + char.width;\n        const front = Math.min(local, 1 + soft * 0.5);\n        const fillDelay = clamp01(0.22 + (1 - settle) * 0.28);\n        const fillT = smoothstep01((local - fillDelay) / Math.max(0.28, 1 - fillDelay));\n        const fadePx = Math.max(axisSize * 0.42, soft * axisSize * 0.75);\n\n        if (fillT >= 0.999) {\n          mctx.fillStyle = \"#fff\";\n          mctx.fillRect(char.x, char.top, char.width, char.height);\n          hasFillMask = true;\n        } else if (fillT > 0.001) {\n          if (horizontal) {\n            const crestX = char.x + fillT * (char.width + fadePx * 0.95);\n            const grad = mctx.createLinearGradient(crestX - fadePx, 0, crestX + fadePx * 0.2, 0);\n\n            grad.addColorStop(0, \"rgba(255,255,255,1)\");\n            grad.addColorStop(0.65, \"rgba(255,255,255,0.4)\");\n            grad.addColorStop(1, \"rgba(255,255,255,0)\");\n\n            mctx.fillStyle = grad;\n            mctx.fillRect(char.x, char.top, char.width, char.height);\n          } else {\n            const crestY = char.bottom - fillT * (char.height + fadePx * 0.95);\n            const gradTop = crestY - fadePx * 0.2;\n            const grad = mctx.createLinearGradient(0, gradTop, 0, crestY + fadePx);\n\n            grad.addColorStop(0, \"rgba(255,255,255,0)\");\n            grad.addColorStop(0.35, \"rgba(255,255,255,0.4)\");\n            grad.addColorStop(1, \"rgba(255,255,255,1)\");\n\n            mctx.fillStyle = grad;\n            mctx.fillRect(char.x, Math.max(char.top, gradTop), char.width, char.bottom - Math.max(char.top, gradTop));\n          }\n\n          hasFillMask = true;\n        }\n\n        const firstRow = Math.floor(char.top / pixelSize);\n        const lastRow = Math.ceil(char.bottom / pixelSize);\n        const firstCol = Math.floor(char.x / pixelSize);\n        const lastCol = Math.ceil(right / pixelSize);\n\n        for (let row = firstRow; row < lastRow; row += 1) {\n          const y = row * pixelSize;\n          const cy = y + pixelSize * 0.5;\n          const top = Math.max(y, char.top);\n          const cellHeight = Math.min(y + pixelSize, char.bottom) - top;\n\n          if (cellHeight <= 0) continue;\n\n          for (let col = firstCol; col < lastCol; col += 1) {\n            const x = Math.max(col * pixelSize, char.x);\n            const cellWidth = Math.min((col + 1) * pixelSize, right) - x;\n\n            if (cellWidth <= 0) continue;\n\n            const cx = x + cellWidth * 0.5;\n            const fromStart = horizontal ? (cx - char.x) * invAxis : (char.bottom - cy) * invAxis;\n            const coverage = clamp01((front + soft * 0.5 - fromStart) / soft);\n\n            if (coverage <= 0.001) continue;\n            if (coverage <= cellThreshold(col, row)) continue;\n\n            dissolve.rect(x, top, cellWidth, cellHeight);\n            hasDissolve = true;\n          }\n        }\n      }\n\n      const stampMasked = (source: HTMLCanvasElement, maskSource: HTMLCanvasElement) => {\n        const sctx = layout?.scratch.getContext(\"2d\");\n        if (!layout || !sctx) return;\n\n        sctx.setTransform(dpr, 0, 0, dpr, 0, 0);\n        sctx.globalCompositeOperation = \"source-over\";\n        sctx.clearRect(0, 0, width, height);\n        sctx.drawImage(source, 0, 0, width, height);\n        sctx.globalCompositeOperation = \"destination-in\";\n        sctx.drawImage(maskSource, 0, 0, width, height);\n        sctx.globalCompositeOperation = \"source-over\";\n        ctx.drawImage(layout.scratch, 0, 0, width, height);\n      };\n\n      const stampPath = (source: HTMLCanvasElement, path: Path2D) => {\n        const sctx = layout?.scratch.getContext(\"2d\");\n        if (!layout || !sctx) return;\n\n        sctx.setTransform(dpr, 0, 0, dpr, 0, 0);\n        sctx.globalCompositeOperation = \"source-over\";\n        sctx.clearRect(0, 0, width, height);\n        sctx.drawImage(source, 0, 0, width, height);\n        sctx.globalCompositeOperation = \"destination-in\";\n        sctx.fill(path);\n        sctx.globalCompositeOperation = \"source-over\";\n        ctx.drawImage(layout.scratch, 0, 0, width, height);\n      };\n\n      if (hasDissolve) stampPath(layout.crispAccent, dissolve);\n      if (hasFillMask) stampMasked(layout.crispFill, maskCanvas);\n    };\n\n    const schedule = () => {\n      if (frame !== null || disposed) return;\n      frame = requestAnimationFrame(draw);\n    };\n\n    const renderProgress = (nextProgress: number) => {\n      targetProgress = clamp01(nextProgress);\n      schedule();\n    };\n\n    const tickProgress = () => {\n      if (disposed) return;\n\n      progress += (targetProgress - progress) * 0.18;\n\n      if (Math.abs(targetProgress - progress) < 0.001) {\n        progress = targetProgress;\n      }\n\n      draw();\n\n      if (progress !== targetProgress) {\n        frame = requestAnimationFrame(tickProgress);\n      }\n    };\n\n    const scheduleSmooth = () => {\n      if (disposed) return;\n      if (frame !== null) cancelAnimationFrame(frame);\n      frame = requestAnimationFrame(tickProgress);\n    };\n\n    const renderSmoothProgress = (nextProgress: number) => {\n      targetProgress = clamp01(nextProgress);\n      scheduleSmooth();\n    };\n\n    const init = () => {\n      if (disposed) return;\n\n      build();\n\n      if (prefersReducedMotion) {\n        progress = 1;\n        targetProgress = 1;\n        draw();\n        return;\n      }\n\n      scrollTrigger = ScrollTrigger.create({\n        trigger: sectionRef.current,\n        start,\n        end,\n        fastScrollEnd: true,\n        invalidateOnRefresh: true,\n        onUpdate: (self) => {\n          renderSmoothProgress(self.progress);\n        },\n        onRefresh: (self) => {\n          renderProgress(self.progress);\n        },\n        onEnter: (self) => renderSmoothProgress(self.progress),\n        onEnterBack: (self) => renderSmoothProgress(self.progress),\n        onLeave: () => renderSmoothProgress(1),\n        onLeaveBack: () => renderSmoothProgress(0),\n      });\n\n      schedule();\n      requestAnimationFrame(() => ScrollTrigger.refresh());\n    };\n\n    if (document.fonts?.ready) {\n      document.fonts.ready.then(init);\n    } else {\n      init();\n    }\n\n    const observer = new ResizeObserver(() => {\n      build();\n      schedule();\n      ScrollTrigger.refresh();\n    });\n\n    if (wrapper) observer.observe(wrapper);\n\n    return () => {\n      disposed = true;\n      observer.disconnect();\n      scrollTrigger?.kill();\n      if (frame !== null) cancelAnimationFrame(frame);\n    };\n  }, [\n    bandFraction,\n    dimColor,\n    direction,\n    end,\n    effectWidth,\n    lineHeight,\n    pixelSize,\n    prefersReducedMotion,\n    primaryColor,\n    settleBlend,\n    stagger,\n    start,\n    text,\n    textColor,\n  ]);\n\n  return (\n    <section\n      id={id}\n      ref={sectionRef}\n      className={`relative w-full ${className}`}\n      style={{\n        backgroundColor,\n        height: `${sectionHeight}vh`,\n      }}\n    >\n      <div className=\"sticky top-0 flex h-screen w-full items-center overflow-hidden px-0\">\n        <div\n          ref={wrapperRef}\n          className=\"relative z-10 mx-auto\"\n          style={{\n            width: `${maxWidth}%`,\n            maxWidth: \"none\",\n            margin: \"0 auto\",\n          }}\n        >\n          <p\n            ref={textRef}\n            className=\"m-0 text-transparent\"\n            style={{\n              fontSize: `clamp(2.5rem, ${fontSize}vw, 16rem)`,\n              fontWeight,\n              lineHeight,\n              textAlign,\n              whiteSpace: \"pre-line\",\n            }}\n          >\n            {text}\n          </p>\n\n          <canvas\n            ref={canvasRef}\n            aria-hidden=\"true\"\n            className=\"pointer-events-none absolute inset-0 h-full w-full\"\n          />\n        </div>\n      </div>\n    </section>\n  );\n}\n"
+    }
+  ]
+}

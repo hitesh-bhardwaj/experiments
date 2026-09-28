@@ -1,0 +1,121 @@
+{
+  "name": "parallax-gallery",
+  "version": "1.0.1",
+  "changelog": [
+    {
+      "version": "1.0.1",
+      "date": "2026-07-23",
+      "summary": "Added reduced motion support.",
+      "breaking": false
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-07-20",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "type": "registry:component",
+  "title": "Parallax Gallery",
+  "description": "Pinned frame gallery with snapping slides and mirrored thumbnail rails",
+  "category": "scroll",
+  "dependencies": [
+    "gsap",
+    "lenis"
+  ],
+  "registryDependencies": [],
+  "previewUrl": "/demo/parallax-gallery",
+  "tier": "pro",
+  "main": "index.tsx",
+  "exportName": "ParallaxGallery",
+  "exportKind": "default",
+  "importPath": "@/components/effects/parallax-gallery",
+  "target": "src/components/effects/parallax-gallery",
+  "files": [
+    {
+      "path": "index.tsx",
+      "target": "src/components/effects/parallax-gallery/index.tsx"
+    },
+    {
+      "path": "ParallaxGallery.tsx",
+      "target": "src/components/effects/parallax-gallery/ParallaxGallery.tsx"
+    }
+  ],
+  "props": [
+    {
+      "name": "bgColor",
+      "type": "color",
+      "default": "#111111",
+      "description": "Background color of the gallery section.",
+      "remixer": {
+        "control": "color",
+        "group": "style",
+        "groupTitle": "Style"
+      }
+    },
+    {
+      "name": "borderColor",
+      "type": "color",
+      "default": "rgba(255, 255, 255, 0.5)",
+      "description": "Color of the dashed border around the center frame.",
+      "remixer": {
+        "control": "color",
+        "group": "style",
+        "groupTitle": "Style"
+      }
+    },
+    {
+      "name": "rotationDeg",
+      "type": "number",
+      "default": 6,
+      "description": "Max rotation (degrees) applied to off-center slides as they scroll past.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0,
+        "max": 30,
+        "step": 0.5
+      }
+    },
+    {
+      "name": "offscreenScale",
+      "type": "number",
+      "default": 1.2,
+      "description": "Scale applied to off-center slides relative to the centered one.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 1,
+        "max": 2,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "frameScale",
+      "type": "number",
+      "default": 1,
+      "description": "Multiplier on the center frame's width/height.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0.5,
+        "max": 1.5,
+        "step": 0.05
+      }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "motion",
+    "layout": {
+      "buttonClassName": "right-4! top-25!",
+      "panelClassName": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  }
+}

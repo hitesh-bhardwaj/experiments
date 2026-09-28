@@ -1,0 +1,73 @@
+{
+  "name": "glitchy-text",
+  "version": "1.0.1",
+  "changelog": [
+    {
+      "version": "1.0.1",
+      "date": "2026-07-30",
+      "summary": "Added reduced motion support.",
+      "breaking": false
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-02-10",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "type": "registry:component",
+  "title": "Glitchy Text",
+  "description": "GSAP SplitText effect that stagger-animates four overlapping char layers \u2014 two white and two yellow \u2014 out and in at slightly different delays, creating a chromatic glitch swap. Plays on mount and replays on button click.",
+  "category": "text",
+  "dependencies": [
+    "gsap"
+  ],
+  "registryDependencies": [],
+  "previewUrl": "/demo/glitchy-text",
+  "tier": "pro",
+  "exportName": "GlitchyText",
+  "exportKind": "default",
+  "main": "index.tsx",
+  "props": [
+    {
+      "name": "baseTextColor",
+      "type": "string",
+      "default": "#ffffff",
+      "description": "Base text layer color.",
+      "remixer": {
+        "control": "color",
+        "group": "colors",
+        "groupTitle": "Colors"
+      }
+    },
+    {
+      "name": "glitchColor",
+      "type": "string",
+      "default": "#eab308",
+      "description": "Accent color for the glitch layers and replay button.",
+      "remixer": {
+        "control": "color",
+        "group": "colors",
+        "groupTitle": "Colors"
+      }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "colors",
+    "layout": {
+      "buttonClassName": "right-4! top-25!",
+      "panelClassName": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/glitchy-text/index.tsx"
+    }
+  ]
+}

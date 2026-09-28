@@ -1,0 +1,19 @@
+{
+  "name": "@hyperiux/rotation-slider",
+  "version": "1.0.1",
+  "description": "Scroll-pinned horizontal slider with 3D card rotation, vertical drift, and SplitText caption reveals.",
+  "main": "index.tsx",
+  "files": [
+    "index.tsx",
+    "RotationSliderComp.tsx",
+    "registry.json"
+  ],
+  "keywords": [
+    "scroll",
+    "hyperiux"
+  ],
+  "dependencies": {
+    "gsap": "*",
+    "lucide-react": "*"
+  }
+}

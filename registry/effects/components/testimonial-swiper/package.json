@@ -1,0 +1,20 @@
+{
+  "name": "@hyperiux/testimonial-swiper",
+  "version": "1.0.1",
+  "description": "Editorial testimonial slider with split-text quote transitions and directional controls",
+  "main": "index.tsx",
+  "files": [
+    "index.tsx",
+    "NavigationButtons.tsx",
+    "TestimonialComp.tsx",
+    "registry.json"
+  ],
+  "keywords": [
+    "components",
+    "hyperiux"
+  ],
+  "dependencies": {
+    "gsap": "*",
+    "lucide-react": "*"
+  }
+}

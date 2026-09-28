@@ -1,0 +1,24 @@
+{
+  "name": "@hyperiux/mouse-pixelation",
+  "version": "1.1.0",
+  "description": "Three R3F WebGL mouse-reactive pixelation effects behind a version-switcher header. V1: GLSL pixel-circle shader with animated orbiting circles and GSAP scroll pin. V2: image texture with velocity-driven block displacement. V3: extruded pixel trail grid paired with a deforming bloom-lit cube that auto-cycles neon colors.",
+  "main": "index.tsx",
+  "files": [
+    "index.tsx",
+    "EnhancedPixelCube.tsx",
+    "PixelCircle.tsx",
+    "PixelShift.tsx",
+    "createSuspendedRaf.ts",
+    "registry.json"
+  ],
+  "keywords": [
+    "webgl",
+    "hyperiux"
+  ],
+  "dependencies": {
+    "three": "*",
+    "@react-three/fiber": "*",
+    "@react-three/postprocessing": "*",
+    "gsap": "*"
+  }
+}

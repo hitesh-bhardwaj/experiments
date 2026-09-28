@@ -1,0 +1,752 @@
+[
+  {
+    "name": "@hyperiux/dither-canvas",
+    "version": "1.0.1",
+    "tarball": "registry/dist/hyperiux-dither-canvas-1.0.1.tgz"
+  },
+  {
+    "name": "@hyperiux/dot-transition",
+    "version": "1.0.0",
+    "tarball": "registry/dist/hyperiux-dot-transition-1.0.0.tgz"
+  },
+  {
+    "name": "@hyperiux/dotted-grid",
+    "version": "1.0.1",
+    "tarball": "registry/dist/hyperiux-dotted-grid-1.0.1.tgz"
+  },
+  {
+    "name": "@hyperiux/dotted-trail",
+    "version": "1.0.0",
+    "tarball": "registry/dist/hyperiux-dotted-trail-1.0.0.tgz"
+  },
+  {
+    "name": "@hyperiux/grid-lift",
+    "version": "1.1.0",
+    "tarball": "registry/dist/hyperiux-grid-lift-1.1.0.tgz"
+  },
+  {
+    "name": "@hyperiux/spider-particles",
+    "version": "1.0.1",
+    "tarball": "registry/dist/hyperiux-spider-particles-1.0.1.tgz"
+  },
+  {
+    "name": "@hyperiux/animated-toggle",
+    "version": "1.0.1",
+    "tarball": "registry/dist/hyperiux-animated-toggle-1.0.1.tgz"
+  },
+  {
+    "name": "@hyperiux/arrow-fill-button",
+    "version": "1.1.0",
+    "tarball": "registry/dist/hyperiux-arrow-fill-button-1.1.0.tgz"
+  },
+  {
+    "name": "@hyperiux/char-stagger-button",
+    "version": "1.1.0",
+    "tarball": "registry/dist/hyperiux-char-stagger-button-1.1.0.tgz"
+  },
+  {
+    "name": "@hyperiux/char-stagger-primary-button",
+    "version": "1.1.0",
+    "tarball": "registry/dist/hyperiux-char-stagger-primary-button-1.1.0.tgz"
+  },
+  {
+    "name": "@hyperiux/dot-fill-button",
+    "version": "1.1.0",
+    "tarball": "registry/dist/hyperiux-dot-fill-button-1.1.0.tgz"
+  },
+  {
+    "name": "@hyperiux/link-button",
+    "version": "1.0.1",
+    "tarball": "registry/dist/hyperiux-link-button-1.0.1.tgz"
+  },
+  {
+    "name": "@hyperiux/metallic-button",
+    "version": "1.0.0",
+    "tarball": "registry/dist/hyperiux-metallic-button-1.0.0.tgz"
+  },
+  {
+    "name": "@hyperiux/scramble-link-button",
+    "version": "1.1.0",
+    "tarball": "registry/dist/hyperiux-scramble-link-button-1.1.0.tgz"
+  },
+  {
+    "name": "@hyperiux/shiny-button",
+    "version": "1.0.0",
+    "tarball": "registry/dist/hyperiux-shiny-button-1.0.0.tgz"
+  },
+  {
+    "name": "@hyperiux/spotlight-button",
+    "version": "1.0.0",
+    "tarball": "registry/dist/hyperiux-spotlight-button-1.0.0.tgz"
+  },
+  {
+    "name": "@hyperiux/arc-flow-carousel",
+    "version": "1.0.0",
+    "tarball": "registry/dist/hyperiux-arc-flow-carousel-1.0.0.tgz"
+  },
+  {
+    "name": "@hyperiux/clippath-slider",
+    "version": "1.0.1",
+    "tarball": "registry/dist/hyperiux-clippath-slider-1.0.1.tgz"
+  },
+  {
+    "name": "@hyperiux/depth-card-stack",
+    "version": "1.0.1",
+    "tarball": "registry/dist/hyperiux-depth-card-stack-1.0.1.tgz"
+  },
+  {
+    "name": "@hyperiux/dimensional-switch-slider",
+    "version": "1.1.0",
+    "tarball": "registry/dist/hyperiux-dimensional-switch-slider-1.1.0.tgz"
+  },
+  {
+    "name": "@hyperiux/ellipse-carousel",
+    "version": "1.0.0",
+    "tarball": "registry/dist/hyperiux-ellipse-carousel-1.0.0.tgz"
+  },
+  {
+    "name": "@hyperiux/infinite-carousel",
+    "version": "1.0.1",
+    "tarball": "registry/dist/hyperiux-infinite-carousel-1.0.1.tgz"
+  },
+  {
+    "name": "@hyperiux/orbit-flip-slider",
+    "version": "1.0.0",
+    "tarball": "registry/dist/hyperiux-orbit-flip-slider-1.0.0.tgz"
+  },
+  {
+    "name": "@hyperiux/parallax-strip-slider",
+    "version": "1.0.0",
+    "tarball": "registry/dist/hyperiux-parallax-strip-slider-1.0.0.tgz"
+  },
+  {
+    "name": "@hyperiux/ring-carousel",
+    "version": "1.0.1",
+    "tarball": "registry/dist/hyperiux-ring-carousel-1.0.1.tgz"
+  },
+  {
+    "name": "@hyperiux/webgl-slider",
+    "version": "1.0.1",
+    "tarball": "registry/dist/hyperiux-webgl-slider-1.0.1.tgz"
+  },
+  {
+    "name": "@hyperiux/zoom-slider",
+    "version": "1.0.1",
+    "tarball": "registry/dist/hyperiux-zoom-slider-1.0.1.tgz"
+  },
+  {
+    "name": "@hyperiux/animated-faq",
+    "version": "1.0.1",
+    "tarball": "registry/dist/hyperiux-animated-faq-1.0.1.tgz"
+  },
+  {
+    "name": "@hyperiux/animated-form",
+    "version": "1.0.1",
+    "tarball": "registry/dist/hyperiux-animated-form-1.0.1.tgz"
+  },
+  {
+    "name": "@hyperiux/animated-modal",
+    "version": "1.0.1",
+    "tarball": "registry/dist/hyperiux-animated-modal-1.0.1.tgz"
+  },
+  {
+    "name": "@hyperiux/animated-tabs",
+    "version": "1.0.1",
+    "tarball": "registry/dist/hyperiux-animated-tabs-1.0.1.tgz"
+  },
+  {
+    "name": "@hyperiux/border-beam",
+    "version": "1.0.2",
+    "tarball": "registry/dist/hyperiux-border-beam-1.0.2.tgz"
+  },
+  {
+    "name": "@hyperiux/card-drift",
+    "version": "1.0.1",
+    "tarball": "registry/dist/hyperiux-card-drift-1.0.1.tgz"
+  },
+  {
+    "name": "@hyperiux/draggable-marquee",
+    "version": "1.0.1",
+    "tarball": "registry/dist/hyperiux-draggable-marquee-1.0.1.tgz"
+  },
+  {
+    "name": "@hyperiux/elastic-accordion",
+    "version": "1.0.0",
+    "tarball": "registry/dist/hyperiux-elastic-accordion-1.0.0.tgz"
+  },
+  {
+    "name": "@hyperiux/globe",
+    "version": "1.0.0",
+    "tarball": "registry/dist/hyperiux-globe-1.0.0.tgz"
+  },
+  {
+    "name": "@hyperiux/gooey-counter",
+    "version": "1.0.1",
+    "tarball": "registry/dist/hyperiux-gooey-counter-1.0.1.tgz"
+  },
+  {
+    "name": "@hyperiux/gsap-flip-card",
+    "version": "1.0.0",
+    "tarball": "registry/dist/hyperiux-gsap-flip-card-1.0.0.tgz"
+  },
+  {
+    "name": "@hyperiux/hover-stack",
+    "version": "1.0.1",
+    "tarball": "registry/dist/hyperiux-hover-stack-1.0.1.tgz"
+  },
+  {
+    "name": "@hyperiux/infinite-grid-gallery",
+    "version": "1.0.1",
+    "tarball": "registry/dist/hyperiux-infinite-grid-gallery-1.0.1.tgz"
+  },
+  {
+    "name": "@hyperiux/information-drawer",
+    "version": "1.0.0",
+    "tarball": "registry/dist/hyperiux-information-drawer-1.0.0.tgz"
+  },
+  {
+    "name": "@hyperiux/interactive-list-preview",
+    "version": "1.0.1",
+    "tarball": "registry/dist/hyperiux-interactive-list-preview-1.0.1.tgz"
+  },
+  {
+    "name": "@hyperiux/shear-wipe",
+    "version": "1.1.0",
+    "tarball": "registry/dist/hyperiux-shear-wipe-1.1.0.tgz"
+  },
+  {
+    "name": "@hyperiux/testimonial-swiper",
+    "version": "1.0.1",
+    "tarball": "registry/dist/hyperiux-testimonial-swiper-1.0.1.tgz"
+  },
+  {
+    "name": "@hyperiux/timeline",
+    "version": "1.0.0",
+    "tarball": "registry/dist/hyperiux-timeline-1.0.0.tgz"
+  },
+  {
+    "name": "@hyperiux/video-player",
+    "version": "1.0.1",
+    "tarball": "registry/dist/hyperiux-video-player-1.0.1.tgz"
+  },
+  {
+    "name": "@hyperiux/butterfly-trail-cursor",
+    "version": "1.1.0",
+    "tarball": "registry/dist/hyperiux-butterfly-trail-cursor-1.1.0.tgz"
+  },
+  {
+    "name": "@hyperiux/character-trail",
+    "version": "1.0.1",
+    "tarball": "registry/dist/hyperiux-character-trail-1.0.1.tgz"
+  },
+  {
+    "name": "@hyperiux/coffee-bean-cursor",
+    "version": "1.1.0",
+    "tarball": "registry/dist/hyperiux-coffee-bean-cursor-1.1.0.tgz"
+  },
+  {
+    "name": "@hyperiux/colorful-cursor-aura",
+    "version": "1.1.0",
+    "tarball": "registry/dist/hyperiux-colorful-cursor-aura-1.1.0.tgz"
+  },
+  {
+    "name": "@hyperiux/cursor-move",
+    "version": "1.0.1",
+    "tarball": "registry/dist/hyperiux-cursor-move-1.0.1.tgz"
+  },
+  {
+    "name": "@hyperiux/fish-eye",
+    "version": "1.0.1",
+    "tarball": "registry/dist/hyperiux-fish-eye-1.0.1.tgz"
+  },
+  {
+    "name": "@hyperiux/full-screen-crosshair",
+    "version": "1.0.1",
+    "tarball": "registry/dist/hyperiux-full-screen-crosshair-1.0.1.tgz"
+  },
+  {
+    "name": "@hyperiux/inertia-img",
+    "version": "1.1.0",
+    "tarball": "registry/dist/hyperiux-inertia-img-1.1.0.tgz"
+  },
+  {
+    "name": "@hyperiux/interactive-arrows",
+    "version": "1.1.0",
+    "tarball": "registry/dist/hyperiux-interactive-arrows-1.1.0.tgz"
+  },
+  {
+    "name": "@hyperiux/liquid-glass-cursor",
+    "version": "1.1.0",
+    "tarball": "registry/dist/hyperiux-liquid-glass-cursor-1.1.0.tgz"
+  },
+  {
+    "name": "@hyperiux/magnetic-image-trail",
+    "version": "1.1.0",
+    "tarball": "registry/dist/hyperiux-magnetic-image-trail-1.1.0.tgz"
+  },
+  {
+    "name": "@hyperiux/noise-ripple-cursor",
+    "version": "1.0.1",
+    "tarball": "registry/dist/hyperiux-noise-ripple-cursor-1.0.1.tgz"
+  },
+  {
+    "name": "@hyperiux/phantom-image-trail",
+    "version": "1.0.1",
+    "tarball": "registry/dist/hyperiux-phantom-image-trail-1.0.1.tgz"
+  },
+  {
+    "name": "@hyperiux/pixel-bloom",
+    "version": "1.0.1",
+    "tarball": "registry/dist/hyperiux-pixel-bloom-1.0.1.tgz"
+  },
+  {
+    "name": "@hyperiux/pixelated-image-effect",
+    "version": "1.1.0",
+    "tarball": "registry/dist/hyperiux-pixelated-image-effect-1.1.0.tgz"
+  },
+  {
+    "name": "@hyperiux/rope-cursor",
+    "version": "1.0.1",
+    "tarball": "registry/dist/hyperiux-rope-cursor-1.0.1.tgz"
+  },
+  {
+    "name": "@hyperiux/lines-loader",
+    "version": "1.0.1",
+    "tarball": "registry/dist/hyperiux-lines-loader-1.0.1.tgz"
+  },
+  {
+    "name": "@hyperiux/numeric-tunnel",
+    "version": "1.0.1",
+    "tarball": "registry/dist/hyperiux-numeric-tunnel-1.0.1.tgz"
+  },
+  {
+    "name": "@hyperiux/stack-loader",
+    "version": "1.0.1",
+    "tarball": "registry/dist/hyperiux-stack-loader-1.0.1.tgz"
+  },
+  {
+    "name": "@hyperiux/directional-menu",
+    "version": "1.1.0",
+    "tarball": "registry/dist/hyperiux-directional-menu-1.1.0.tgz"
+  },
+  {
+    "name": "@hyperiux/displacement-navbar",
+    "version": "1.0.0",
+    "tarball": "registry/dist/hyperiux-displacement-navbar-1.0.0.tgz"
+  },
+  {
+    "name": "@hyperiux/elevate-navbar",
+    "version": "1.1.0",
+    "tarball": "registry/dist/hyperiux-elevate-navbar-1.1.0.tgz"
+  },
+  {
+    "name": "@hyperiux/expanding-navbar",
+    "version": "1.1.0",
+    "tarball": "registry/dist/hyperiux-expanding-navbar-1.1.0.tgz"
+  },
+  {
+    "name": "@hyperiux/immersive-full-screen-nav",
+    "version": "1.1.0",
+    "tarball": "registry/dist/hyperiux-immersive-full-screen-nav-1.1.0.tgz"
+  },
+  {
+    "name": "@hyperiux/morphing-dock",
+    "version": "1.0.0",
+    "tarball": "registry/dist/hyperiux-morphing-dock-1.0.0.tgz"
+  },
+  {
+    "name": "@hyperiux/perspective-shift-menu",
+    "version": "1.0.0",
+    "tarball": "registry/dist/hyperiux-perspective-shift-menu-1.0.0.tgz"
+  },
+  {
+    "name": "@hyperiux/side-navbar",
+    "version": "1.0.0",
+    "tarball": "registry/dist/hyperiux-side-navbar-1.0.0.tgz"
+  },
+  {
+    "name": "@hyperiux/unfold-navbar",
+    "version": "1.0.0",
+    "tarball": "registry/dist/hyperiux-unfold-navbar-1.0.0.tgz"
+  },
+  {
+    "name": "@hyperiux/cards-runway",
+    "version": "1.0.1",
+    "tarball": "registry/dist/hyperiux-cards-runway-1.0.1.tgz"
+  },
+  {
+    "name": "@hyperiux/circular-slider",
+    "version": "1.0.1",
+    "tarball": "registry/dist/hyperiux-circular-slider-1.0.1.tgz"
+  },
+  {
+    "name": "@hyperiux/circular-split-roll",
+    "version": "1.0.1",
+    "tarball": "registry/dist/hyperiux-circular-split-roll-1.0.1.tgz"
+  },
+  {
+    "name": "@hyperiux/grid-scale",
+    "version": "1.0.1",
+    "tarball": "registry/dist/hyperiux-grid-scale-1.0.1.tgz"
+  },
+  {
+    "name": "@hyperiux/helix-slider",
+    "version": "1.2.0",
+    "tarball": "registry/dist/hyperiux-helix-slider-1.2.0.tgz"
+  },
+  {
+    "name": "@hyperiux/horizontal-feature-reveal",
+    "version": "1.1.0",
+    "tarball": "registry/dist/hyperiux-horizontal-feature-reveal-1.1.0.tgz"
+  },
+  {
+    "name": "@hyperiux/infinite-perspective-slider",
+    "version": "1.0.1",
+    "tarball": "registry/dist/hyperiux-infinite-perspective-slider-1.0.1.tgz"
+  },
+  {
+    "name": "@hyperiux/parallax-footer",
+    "version": "1.0.0",
+    "tarball": "registry/dist/hyperiux-parallax-footer-1.0.0.tgz"
+  },
+  {
+    "name": "@hyperiux/parallax-gallery",
+    "version": "1.0.1",
+    "tarball": "registry/dist/hyperiux-parallax-gallery-1.0.1.tgz"
+  },
+  {
+    "name": "@hyperiux/parallax-image-animation",
+    "version": "1.0.1",
+    "tarball": "registry/dist/hyperiux-parallax-image-animation-1.0.1.tgz"
+  },
+  {
+    "name": "@hyperiux/parallax-slider",
+    "version": "1.0.1",
+    "tarball": "registry/dist/hyperiux-parallax-slider-1.0.1.tgz"
+  },
+  {
+    "name": "@hyperiux/ribbon-drift",
+    "version": "1.0.1",
+    "tarball": "registry/dist/hyperiux-ribbon-drift-1.0.1.tgz"
+  },
+  {
+    "name": "@hyperiux/rotation-slider",
+    "version": "1.0.1",
+    "tarball": "registry/dist/hyperiux-rotation-slider-1.0.1.tgz"
+  },
+  {
+    "name": "@hyperiux/scroll-distortion",
+    "version": "1.0.1",
+    "tarball": "registry/dist/hyperiux-scroll-distortion-1.0.1.tgz"
+  },
+  {
+    "name": "@hyperiux/scroll-shuffled-cards",
+    "version": "1.0.1",
+    "tarball": "registry/dist/hyperiux-scroll-shuffled-cards-1.0.1.tgz"
+  },
+  {
+    "name": "@hyperiux/scroll-stack",
+    "version": "1.1.0",
+    "tarball": "registry/dist/hyperiux-scroll-stack-1.1.0.tgz"
+  },
+  {
+    "name": "@hyperiux/split-canvas",
+    "version": "1.0.1",
+    "tarball": "registry/dist/hyperiux-split-canvas-1.0.1.tgz"
+  },
+  {
+    "name": "@hyperiux/square-translate",
+    "version": "1.0.1",
+    "tarball": "registry/dist/hyperiux-square-translate-1.0.1.tgz"
+  },
+  {
+    "name": "@hyperiux/stack-spread",
+    "version": "1.0.0",
+    "tarball": "registry/dist/hyperiux-stack-spread-1.0.0.tgz"
+  },
+  {
+    "name": "@hyperiux/stacking-cards",
+    "version": "1.0.1",
+    "tarball": "registry/dist/hyperiux-stacking-cards-1.0.1.tgz"
+  },
+  {
+    "name": "@hyperiux/sticky-content-wrapper",
+    "version": "1.0.1",
+    "tarball": "registry/dist/hyperiux-sticky-content-wrapper-1.0.1.tgz"
+  },
+  {
+    "name": "@hyperiux/svg-path",
+    "version": "1.0.1",
+    "tarball": "registry/dist/hyperiux-svg-path-1.0.1.tgz"
+  },
+  {
+    "name": "@hyperiux/svg-pixel-reveal",
+    "version": "1.1.0",
+    "tarball": "registry/dist/hyperiux-svg-pixel-reveal-1.1.0.tgz"
+  },
+  {
+    "name": "@hyperiux/text-convergence",
+    "version": "1.0.1",
+    "tarball": "registry/dist/hyperiux-text-convergence-1.0.1.tgz"
+  },
+  {
+    "name": "@hyperiux/blur-text",
+    "version": "1.0.1",
+    "tarball": "registry/dist/hyperiux-blur-text-1.0.1.tgz"
+  },
+  {
+    "name": "@hyperiux/chromatic-text",
+    "version": "1.1.3",
+    "tarball": "registry/dist/hyperiux-chromatic-text-1.1.3.tgz"
+  },
+  {
+    "name": "@hyperiux/circle-text-reveal",
+    "version": "1.0.1",
+    "tarball": "registry/dist/hyperiux-circle-text-reveal-1.0.1.tgz"
+  },
+  {
+    "name": "@hyperiux/depth-flip-text",
+    "version": "1.0.0",
+    "tarball": "registry/dist/hyperiux-depth-flip-text-1.0.0.tgz"
+  },
+  {
+    "name": "@hyperiux/drop-text",
+    "version": "2.0.0",
+    "tarball": "registry/dist/hyperiux-drop-text-2.0.0.tgz"
+  },
+  {
+    "name": "@hyperiux/flickering-text",
+    "version": "1.0.0",
+    "tarball": "registry/dist/hyperiux-flickering-text-1.0.0.tgz"
+  },
+  {
+    "name": "@hyperiux/focus-text",
+    "version": "1.0.0",
+    "tarball": "registry/dist/hyperiux-focus-text-1.0.0.tgz"
+  },
+  {
+    "name": "@hyperiux/glitchy-text",
+    "version": "1.0.1",
+    "tarball": "registry/dist/hyperiux-glitchy-text-1.0.1.tgz"
+  },
+  {
+    "name": "@hyperiux/glowing-text",
+    "version": "1.1.0",
+    "tarball": "registry/dist/hyperiux-glowing-text-1.1.0.tgz"
+  },
+  {
+    "name": "@hyperiux/mask-text-reveal",
+    "version": "1.0.1",
+    "tarball": "registry/dist/hyperiux-mask-text-reveal-1.0.1.tgz"
+  },
+  {
+    "name": "@hyperiux/number-counter",
+    "version": "1.0.1",
+    "tarball": "registry/dist/hyperiux-number-counter-1.0.1.tgz"
+  },
+  {
+    "name": "@hyperiux/overflow-text-reveal",
+    "version": "1.1.0",
+    "tarball": "registry/dist/hyperiux-overflow-text-reveal-1.1.0.tgz"
+  },
+  {
+    "name": "@hyperiux/perspective-text-reveal",
+    "version": "1.1.0",
+    "tarball": "registry/dist/hyperiux-perspective-text-reveal-1.1.0.tgz"
+  },
+  {
+    "name": "@hyperiux/pixel-text-fill",
+    "version": "1.1.0",
+    "tarball": "registry/dist/hyperiux-pixel-text-fill-1.1.0.tgz"
+  },
+  {
+    "name": "@hyperiux/rectangular-text-reveal",
+    "version": "1.1.0",
+    "tarball": "registry/dist/hyperiux-rectangular-text-reveal-1.1.0.tgz"
+  },
+  {
+    "name": "@hyperiux/rolling-text",
+    "version": "1.0.0",
+    "tarball": "registry/dist/hyperiux-rolling-text-1.0.0.tgz"
+  },
+  {
+    "name": "@hyperiux/scramble-text",
+    "version": "1.0.1",
+    "tarball": "registry/dist/hyperiux-scramble-text-1.0.1.tgz"
+  },
+  {
+    "name": "@hyperiux/slide-text-reveal",
+    "version": "1.1.0",
+    "tarball": "registry/dist/hyperiux-slide-text-reveal-1.1.0.tgz"
+  },
+  {
+    "name": "@hyperiux/spotlight-text",
+    "version": "1.1.0",
+    "tarball": "registry/dist/hyperiux-spotlight-text-1.1.0.tgz"
+  },
+  {
+    "name": "@hyperiux/text-cloning",
+    "version": "1.0.1",
+    "tarball": "registry/dist/hyperiux-text-cloning-1.0.1.tgz"
+  },
+  {
+    "name": "@hyperiux/text-fill-animation",
+    "version": "1.0.0",
+    "tarball": "registry/dist/hyperiux-text-fill-animation-1.0.0.tgz"
+  },
+  {
+    "name": "@hyperiux/text-hover",
+    "version": "1.0.1",
+    "tarball": "registry/dist/hyperiux-text-hover-1.0.1.tgz"
+  },
+  {
+    "name": "@hyperiux/text-stream",
+    "version": "1.0.1",
+    "tarball": "registry/dist/hyperiux-text-stream-1.0.1.tgz"
+  },
+  {
+    "name": "@hyperiux/typing-text",
+    "version": "1.1.3",
+    "tarball": "registry/dist/hyperiux-typing-text-1.1.3.tgz"
+  },
+  {
+    "name": "@hyperiux/variable-text-proximity",
+    "version": "1.0.5",
+    "tarball": "registry/dist/hyperiux-variable-text-proximity-1.0.5.tgz"
+  },
+  {
+    "name": "@hyperiux/aperture-transition",
+    "version": "1.0.0",
+    "tarball": "registry/dist/hyperiux-aperture-transition-1.0.0.tgz"
+  },
+  {
+    "name": "@hyperiux/ascend-transition",
+    "version": "1.0.0",
+    "tarball": "registry/dist/hyperiux-ascend-transition-1.0.0.tgz"
+  },
+  {
+    "name": "@hyperiux/block-transition",
+    "version": "1.1.0",
+    "tarball": "registry/dist/hyperiux-block-transition-1.1.0.tgz"
+  },
+  {
+    "name": "@hyperiux/chess-grid-transition",
+    "version": "1.1.0",
+    "tarball": "registry/dist/hyperiux-chess-grid-transition-1.1.0.tgz"
+  },
+  {
+    "name": "@hyperiux/depth-shift-transition",
+    "version": "1.0.0",
+    "tarball": "registry/dist/hyperiux-depth-shift-transition-1.0.0.tgz"
+  },
+  {
+    "name": "@hyperiux/page-flip-transition",
+    "version": "1.1.0",
+    "tarball": "registry/dist/hyperiux-page-flip-transition-1.1.0.tgz"
+  },
+  {
+    "name": "@hyperiux/pixel-transition",
+    "version": "1.1.0",
+    "tarball": "registry/dist/hyperiux-pixel-transition-1.1.0.tgz"
+  },
+  {
+    "name": "@hyperiux/radial-slice-transition",
+    "version": "1.1.0",
+    "tarball": "registry/dist/hyperiux-radial-slice-transition-1.1.0.tgz"
+  },
+  {
+    "name": "@hyperiux/svg-brush-transition",
+    "version": "1.1.0",
+    "tarball": "registry/dist/hyperiux-svg-brush-transition-1.1.0.tgz"
+  },
+  {
+    "name": "@hyperiux/sweep-lift-transition",
+    "version": "1.0.0",
+    "tarball": "registry/dist/hyperiux-sweep-lift-transition-1.0.0.tgz"
+  },
+  {
+    "name": "@hyperiux/3d-portfolio-slider",
+    "version": "1.0.1",
+    "tarball": "registry/dist/hyperiux-3d-portfolio-slider-1.0.1.tgz"
+  },
+  {
+    "name": "@hyperiux/book-flip",
+    "version": "1.1.0",
+    "tarball": "registry/dist/hyperiux-book-flip-1.1.0.tgz"
+  },
+  {
+    "name": "@hyperiux/colliding-models",
+    "version": "1.0.1",
+    "tarball": "registry/dist/hyperiux-colliding-models-1.0.1.tgz"
+  },
+  {
+    "name": "@hyperiux/curved-plane",
+    "version": "1.0.1",
+    "tarball": "registry/dist/hyperiux-curved-plane-1.0.1.tgz"
+  },
+  {
+    "name": "@hyperiux/donut-particles",
+    "version": "1.0.1",
+    "tarball": "registry/dist/hyperiux-donut-particles-1.0.1.tgz"
+  },
+  {
+    "name": "@hyperiux/draggable-canvas",
+    "version": "1.1.0",
+    "tarball": "registry/dist/hyperiux-draggable-canvas-1.1.0.tgz"
+  },
+  {
+    "name": "@hyperiux/file-encryption",
+    "version": "1.0.1",
+    "tarball": "registry/dist/hyperiux-file-encryption-1.0.1.tgz"
+  },
+  {
+    "name": "@hyperiux/fractal-glass",
+    "version": "1.0.1",
+    "tarball": "registry/dist/hyperiux-fractal-glass-1.0.1.tgz"
+  },
+  {
+    "name": "@hyperiux/grid-tunnel",
+    "version": "1.0.1",
+    "tarball": "registry/dist/hyperiux-grid-tunnel-1.0.1.tgz"
+  },
+  {
+    "name": "@hyperiux/hero-banner-animated",
+    "version": "1.1.0",
+    "tarball": "registry/dist/hyperiux-hero-banner-animated-1.1.0.tgz"
+  },
+  {
+    "name": "@hyperiux/hover-slider",
+    "version": "1.0.1",
+    "tarball": "registry/dist/hyperiux-hover-slider-1.0.1.tgz"
+  },
+  {
+    "name": "@hyperiux/hyperiux-glitter",
+    "version": "1.0.1",
+    "tarball": "registry/dist/hyperiux-hyperiux-glitter-1.0.1.tgz"
+  },
+  {
+    "name": "@hyperiux/interactive-blur-reveal",
+    "version": "1.0.1",
+    "tarball": "registry/dist/hyperiux-interactive-blur-reveal-1.0.1.tgz"
+  },
+  {
+    "name": "@hyperiux/milky-way",
+    "version": "1.0.1",
+    "tarball": "registry/dist/hyperiux-milky-way-1.0.1.tgz"
+  },
+  {
+    "name": "@hyperiux/mouse-pixelation",
+    "version": "1.1.0",
+    "tarball": "registry/dist/hyperiux-mouse-pixelation-1.1.0.tgz"
+  },
+  {
+    "name": "@hyperiux/progressive-bloom-valley",
+    "version": "1.0.1",
+    "tarball": "registry/dist/hyperiux-progressive-bloom-valley-1.0.1.tgz"
+  },
+  {
+    "name": "@hyperiux/strip-slider",
+    "version": "1.0.0",
+    "tarball": "registry/dist/hyperiux-strip-slider-1.0.0.tgz"
+  }
+]

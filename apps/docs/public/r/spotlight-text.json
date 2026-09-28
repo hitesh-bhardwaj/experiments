@@ -1,0 +1,115 @@
+{
+  "name": "spotlight-text",
+  "type": "registry:component",
+  "title": "Spotlight Text",
+  "description": "Mouse-tracked spotlight that reveals bright text through a radial gradient mask over dimmed text. Disabled on mobile.",
+  "dependencies": [],
+  "registryDependencies": [],
+  "exportName": "SpotlightText",
+  "exportKind": "default",
+  "tier": "pro",
+  "version": "1.1.0",
+  "changelog": [
+    {
+      "version": "1.1.0",
+      "date": "2026-07-30",
+      "summary": "Removed text and width-style content controls and added working base color, spotlight color, lerp, spotlight size, and smoothness controls.",
+      "breaking": false
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-02-10",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "props": [
+    {
+      "name": "baseTextColor",
+      "type": "string",
+      "default": "#525252",
+      "description": "Dim base text color.",
+      "remixer": {
+        "control": "color",
+        "group": "style",
+        "groupTitle": "Style"
+      }
+    },
+    {
+      "name": "spotlightColor",
+      "type": "string",
+      "default": "#ffffff",
+      "description": "Text color inside the spotlight.",
+      "remixer": {
+        "control": "color",
+        "group": "style",
+        "groupTitle": "Style"
+      }
+    },
+    {
+      "name": "lerp",
+      "type": "number",
+      "default": 0.08,
+      "description": "Pointer-follow smoothing amount; higher values track faster.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0.01,
+        "max": 1,
+        "step": 0.01
+      }
+    },
+    {
+      "name": "spotlightSize",
+      "type": "number",
+      "default": 220,
+      "description": "Spotlight radius in pixels.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 60,
+        "max": 500,
+        "step": 5
+      }
+    },
+    {
+      "name": "smoothness",
+      "type": "number",
+      "default": 0.12,
+      "description": "Spotlight opacity smoothing amount.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0.01,
+        "max": 1,
+        "step": 0.01
+      }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "motion",
+    "layout": {
+      "buttonClassName": "right-4! top-25!",
+      "panelClassName": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/spotlight-text/index.tsx"
+    },
+    {
+      "path": "createSuspendedRaf.ts",
+      "type": "registry:component",
+      "target": "src/components/effects/spotlight-text/createSuspendedRaf.ts"
+    }
+  ]
+}

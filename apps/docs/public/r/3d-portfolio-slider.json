@@ -1,0 +1,99 @@
+{
+  "name": "3d-portfolio-slider",
+  "type": "registry:component",
+  "title": "3D Portfolio Slider",
+  "description": "Infinite scroll slider with a Three.ts WebGL fullscreen plane, cosine zoom distortion, a circular thumbnail ring, and GSAP text transitions",
+  "dependencies": [
+    "three",
+    "gsap",
+    "lenis"
+  ],
+  "registryDependencies": [],
+  "exportName": "PortfolioSlider3D",
+  "exportKind": "default",
+  "tier": "pro",
+  "version": "1.0.1",
+  "changelog": [
+    {
+      "version": "1.0.1",
+      "date": "2026-07-23",
+      "summary": "Fixed a GPU memory leak by disposing each plane's geometry, material, and texture on unmount.",
+      "breaking": false
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-07-21",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "props": [
+    {
+      "name": "zoomFactor",
+      "type": "number",
+      "default": 1,
+      "description": "Multiplier on the shader zoom applied to planes as they swing away from center.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0,
+        "max": 3,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "scrollSpeed",
+      "type": "number",
+      "default": 0.01,
+      "description": "How fast wheel/scroll input moves the carousel.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0.002,
+        "max": 0.03,
+        "step": 0.001
+      }
+    },
+    {
+      "name": "showCaption",
+      "type": "boolean",
+      "default": true,
+      "description": "Shows the project caption text overlay.",
+      "remixer": {
+        "control": "checkbox",
+        "group": "style",
+        "groupTitle": "Style"
+      }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "motion",
+    "layout": {
+      "buttonClassName": "right-4! top-25!",
+      "panelClassName": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/3d-portfolio-slider/index.tsx"
+    },
+    {
+      "path": "PortfolioSlider.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/3d-portfolio-slider/PortfolioSlider.tsx"
+    },
+    {
+      "path": "createSuspendedRaf.ts",
+      "type": "registry:component",
+      "target": "src/components/effects/3d-portfolio-slider/createSuspendedRaf.ts"
+    }
+  ]
+}

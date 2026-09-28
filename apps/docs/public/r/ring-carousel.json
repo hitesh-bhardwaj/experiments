@@ -1,0 +1,165 @@
+{
+  "name": "ring-carousel",
+  "type": "registry:component",
+  "title": "Ring Carousel",
+  "description": "3D ring gallery carousel with drag momentum, snap-to-slide, autoplay, and optional navigation + dots.",
+  "dependencies": [
+    "gsap",
+    "lucide-react"
+  ],
+  "registryDependencies": [],
+  "exportName": "RingCarousel",
+  "exportKind": "default",
+  "tier": "pro",
+  "version": "1.0.1",
+  "changelog": [
+    {
+      "version": "1.0.1",
+      "date": "2026-07-22",
+      "summary": "Added reduced-motion support and fixed drag response being throttled along with momentum/inertia.",
+      "breaking": false
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-06-04",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "props": [
+    {
+      "name": "snap",
+      "type": "boolean",
+      "default": true,
+      "description": "Snaps the ring to the nearest item after drag.",
+      "remixer": {
+        "control": "checkbox",
+        "group": "behavior",
+        "groupTitle": "Behavior"
+      }
+    },
+    {
+      "name": "autoPlay",
+      "type": "boolean",
+      "default": true,
+      "description": "Rotates the carousel automatically.",
+      "remixer": {
+        "control": "checkbox",
+        "group": "behavior",
+        "groupTitle": "Behavior"
+      }
+    },
+    {
+      "name": "pauseOnHover",
+      "type": "boolean",
+      "default": true,
+      "description": "Pauses autoplay while the carousel is hovered.",
+      "remixer": {
+        "control": "checkbox",
+        "group": "behavior",
+        "groupTitle": "Behavior"
+      }
+    },
+    {
+      "name": "showNavigation",
+      "type": "boolean",
+      "default": true,
+      "description": "Shows previous and next buttons.",
+      "remixer": {
+        "control": "checkbox",
+        "group": "controls",
+        "groupTitle": "Controls"
+      }
+    },
+    {
+      "name": "showDots",
+      "type": "boolean",
+      "default": true,
+      "description": "Shows pagination dots.",
+      "remixer": {
+        "control": "checkbox",
+        "group": "controls",
+        "groupTitle": "Controls"
+      }
+    },
+    {
+      "name": "cardSize",
+      "type": "number",
+      "default": 1,
+      "description": "Multiplier applied to carousel card width and height.",
+      "remixer": {
+        "control": "range",
+        "group": "style",
+        "groupTitle": "Style",
+        "min": 0.5,
+        "max": 1.6,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "cardWidth",
+      "type": "number",
+      "default": 720,
+      "description": "Carousel card width in pixels.",
+      "remixer": {
+        "control": "range",
+        "group": "style",
+        "groupTitle": "Style",
+        "min": 320,
+        "max": 1100,
+        "step": 1
+      }
+    },
+    {
+      "name": "cardHeight",
+      "type": "number",
+      "default": 450,
+      "description": "Carousel card height in pixels.",
+      "remixer": {
+        "control": "range",
+        "group": "style",
+        "groupTitle": "Style",
+        "min": 220,
+        "max": 760,
+        "step": 1
+      }
+    },
+    {
+      "name": "roundedness",
+      "type": "number",
+      "default": 20,
+      "description": "Carousel card corner radius in pixels.",
+      "remixer": {
+        "control": "range",
+        "group": "style",
+        "groupTitle": "Style",
+        "min": 0,
+        "max": 80,
+        "step": 1
+      }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "behavior",
+    "layout": {
+      "buttonClassName": "right-4! top-25!",
+      "panelClassName": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/ring-carousel/index.tsx"
+    },
+    {
+      "path": "RingCarouselComp.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/ring-carousel/RingCarouselComp.tsx"
+    }
+  ]
+}

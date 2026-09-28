@@ -1,0 +1,84 @@
+{
+  "name": "grid-scale",
+  "type": "registry:component",
+  "title": "Grid Scale",
+  "description": "Scroll-driven animation where a centered clip-path panel expands to fullscreen while corner boxes fly in, grid lines dissolve, and floating keyword pills converge to the center.",
+  "dependencies": [
+    "gsap"
+  ],
+  "registryDependencies": [],
+  "exportName": "GridScale",
+  "exportKind": "default",
+  "tier": "pro",
+  "version": "1.0.1",
+  "changelog": [
+    {
+      "version": "1.0.1",
+      "date": "2026-07-23",
+      "summary": "Added reduced-motion support and fixed scroll-trigger positioning.",
+      "breaking": false
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-07-20",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "props": [
+    {
+      "name": "bgColor",
+      "type": "color",
+      "default": "#242424",
+      "description": "Background color of the section.",
+      "remixer": {
+        "control": "color",
+        "group": "style",
+        "groupTitle": "Style"
+      }
+    },
+    {
+      "name": "panelColor",
+      "type": "color",
+      "default": "#ffffff",
+      "description": "Background color of the expanding center panel.",
+      "remixer": {
+        "control": "color",
+        "group": "style",
+        "groupTitle": "Style"
+      }
+    },
+    {
+      "name": "convergeStagger",
+      "type": "number",
+      "default": 0.7,
+      "description": "Total stagger spread (seconds) as the floating keyword pills converge to center.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0,
+        "max": 3,
+        "step": 0.05
+      }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "style",
+    "layout": {
+      "buttonClassName": "right-4! top-25!",
+      "panelClassName": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/grid-scale/index.tsx"
+    }
+  ]
+}

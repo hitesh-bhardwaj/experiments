@@ -1,0 +1,17 @@
+{
+  "name": "@hyperiux/pixel-bloom",
+  "version": "1.0.1",
+  "description": "Cursor-reactive media grid that swaps nearby cells into a textured ASCII collage",
+  "main": "index.tsx",
+  "files": [
+    "index.tsx",
+    "2dcanvasTracker.tsx",
+    "createSuspendedRaf.ts",
+    "registry.json"
+  ],
+  "keywords": [
+    "cursor",
+    "hyperiux"
+  ],
+  "dependencies": {}
+}

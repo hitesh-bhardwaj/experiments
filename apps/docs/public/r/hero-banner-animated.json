@@ -1,0 +1,145 @@
+{
+  "name": "hero-banner-animated",
+  "type": "registry:component",
+  "title": "Hero Banner Animated",
+  "description": "Immersive WebGL hero with a 3D room, interactive TV screen with pixelated video transition, mouse-tracked lighting, edge blur, and film grain post-processing.",
+  "dependencies": [
+    "@react-three/fiber",
+    "@react-three/drei",
+    "@react-three/postprocessing",
+    "postprocessing",
+    "gsap",
+    "three",
+    "motion",
+    "lucide-react"
+  ],
+  "registryDependencies": [],
+  "exportName": "HeroBannerAnimated",
+  "exportKind": "default",
+  "tier": "pro",
+  "version": "1.1.0",
+  "changelog": [
+    {
+      "version": "1.1.0",
+      "date": "2026-07-22",
+      "summary": "added reduced-motion",
+      "breaking": false
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-06-04",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "props": [
+    {
+      "name": "mouseMovement",
+      "type": "boolean",
+      "default": true,
+      "description": "Enables the cursor-tracked point light."
+    },
+    {
+      "name": "intensity",
+      "type": "number",
+      "default": 3,
+      "description": "Peak brightness of the cursor-tracked point light when the scene is not zoomed."
+    },
+    {
+      "name": "lerp",
+      "type": "number",
+      "default": 0.1,
+      "description": "Smoothing factor for the point light following the cursor; higher values follow faster."
+    },
+    {
+      "name": "accentColor",
+      "type": "string",
+      "default": "#ECE4B4",
+      "description": "Accent color for hero text, markers, links, and icon highlights."
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "controls",
+    "layout": {
+      "controlsButtonClassName": "right-4! top-25!"
+    },
+    "panel": {
+      "className": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "controls": [
+      {
+        "name": "mouseMovement",
+        "label": "Mouse Movement",
+        "type": "toggle",
+        "group": "controls",
+        "copyable": true
+      },
+      {
+        "name": "intensity",
+        "label": "Intensity",
+        "type": "range",
+        "group": "controls",
+        "copyable": true,
+        "min": 0,
+        "max": 10,
+        "step": 0.1
+      },
+      {
+        "name": "lerp",
+        "label": "Lerp",
+        "type": "range",
+        "group": "controls",
+        "copyable": true,
+        "min": 0.01,
+        "max": 1,
+        "step": 0.01
+      },
+      {
+        "name": "accentColor",
+        "label": "Accent Color",
+        "type": "color",
+        "group": "style",
+        "copyable": true
+      }
+    ]
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/hero-banner-animated/index.tsx"
+    },
+    {
+      "path": "CustomGrainNoise.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/hero-banner-animated/CustomGrainNoise.tsx"
+    },
+    {
+      "path": "EdgeBlurEffect.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/hero-banner-animated/EdgeBlurEffect.tsx"
+    },
+    {
+      "path": "RoomModel.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/hero-banner-animated/RoomModel.tsx"
+    },
+    {
+      "path": "VideoUI.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/hero-banner-animated/VideoUI.tsx"
+    },
+    {
+      "path": "createSuspendedRaf.ts",
+      "type": "registry:component",
+      "target": "src/components/effects/hero-banner-animated/createSuspendedRaf.ts"
+    },
+    {
+      "path": "assets/textures/bathroom-floor-roughness.png",
+      "type": "registry:asset",
+      "target": "public/assets/textures/bathroom-floor-roughness.png",
+      "source": "/assets/textures/bathroom-floor-roughness.png"
+    }
+  ]
+}

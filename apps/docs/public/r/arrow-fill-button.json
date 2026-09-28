@@ -1,0 +1,147 @@
+{
+  "name": "arrow-fill-button",
+  "type": "registry:component",
+  "title": "Arrow Fill Button",
+  "description": "Button with expanding circle fill and animated arrow icon on hover",
+  "dependencies": [
+    "lucide-react"
+  ],
+  "registryDependencies": [],
+  "exportName": "ArrowFillButton",
+  "exportKind": "default",
+  "tier": "free",
+  "version": "1.1.0",
+  "changelog": [
+    {
+      "version": "1.1.0",
+      "date": "2026-07-21",
+      "summary": "Added prefers-reduced-motion support: fill/clip-path/arrow hover transitions are disabled or shown in their end state instead of animating",
+      "breaking": false
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-06-04",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "props": [
+    {
+      "name": "btnText",
+      "type": "string",
+      "default": "Hover Me",
+      "demoDefault": "Hover me",
+      "description": "Button label text.",
+      "remixer": {
+        "control": "text",
+        "group": "content",
+        "groupTitle": "Content"
+      }
+    },
+    {
+      "name": "bgColor",
+      "type": "color",
+      "default": "#ff5f00",
+      "description": "Resting button background color.",
+      "remixer": {
+        "control": "color",
+        "group": "colors",
+        "groupTitle": "Colors"
+      }
+    },
+    {
+      "name": "textColor",
+      "type": "color",
+      "default": "#ffffff",
+      "description": "Resting label color.",
+      "remixer": {
+        "control": "color",
+        "group": "colors",
+        "groupTitle": "Colors"
+      }
+    },
+    {
+      "name": "fillBgColor",
+      "type": "color",
+      "default": "#ffffff",
+      "description": "Circle fill color before hover.",
+      "remixer": {
+        "control": "color",
+        "group": "colors",
+        "groupTitle": "Colors"
+      }
+    },
+    {
+      "name": "fillTextColor",
+      "type": "color",
+      "default": "#ff5f00",
+      "description": "Label color inside the fill before hover.",
+      "remixer": {
+        "control": "color",
+        "group": "colors",
+        "groupTitle": "Colors"
+      }
+    },
+    {
+      "name": "hoverFillBgColor",
+      "type": "color",
+      "default": "#ffffff",
+      "description": "Expanded fill color on hover.",
+      "remixer": {
+        "control": "color",
+        "group": "hover",
+        "groupTitle": "Hover"
+      }
+    },
+    {
+      "name": "hoverFillTextColor",
+      "type": "color",
+      "default": "#ff5f00",
+      "description": "Label color inside the expanded fill on hover.",
+      "remixer": {
+        "control": "color",
+        "group": "hover",
+        "groupTitle": "Hover"
+      }
+    },
+    {
+      "name": "arrowColor",
+      "type": "color",
+      "description": "Arrow color before hover. Falls back to fillTextColor when unset.",
+      "remixer": {
+        "control": "color",
+        "group": "hover",
+        "groupTitle": "Hover"
+      }
+    },
+    {
+      "name": "hoverArrowColor",
+      "type": "color",
+      "description": "Arrow color after hover. Falls back to hoverFillTextColor when unset.",
+      "remixer": {
+        "control": "color",
+        "group": "hover",
+        "groupTitle": "Hover"
+      }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "colors",
+    "layout": {
+      "buttonClassName": "right-4! top-25!",
+      "panelClassName": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/arrow-fill-button/index.tsx",
+      "content": "// Built using Hyperiux Vault: https://vault.hyperiux.com\n\n\"use client\";\n\nimport { useEffect, useRef, useState, type ComponentPropsWithoutRef, type CSSProperties, type PointerEvent } from \"react\";\nimport { ArrowRight } from \"lucide-react\";\n\nconst DEFAULT_HREF = \"#\";\nconst COMPACT_LAYOUT_BREAKPOINT = 1280;\nconst ANIMATION_DURATION_MS = 450;\n\nexport interface ArrowFillButtonOwnProps {\n  btnText?: string;\n  href?: string;\n  className?: string;\n  bgColor?: string;\n  textColor?: string;\n  fillBgColor?: string;\n  fillTextColor?: string;\n  hoverFillBgColor?: string;\n  hoverFillTextColor?: string;\n  arrowColor?: string;\n  hoverArrowColor?: string;\n  animationDuration?: number;\n  fillOnHover?: boolean;\n}\n\nexport type ArrowFillButtonProps = ArrowFillButtonOwnProps & Omit<ComponentPropsWithoutRef<'a'>, keyof ArrowFillButtonOwnProps>;\n\nfunction ArrowFillButton({\n  btnText=\"Hover Me\",\n  href = DEFAULT_HREF,\n  className = \"\",\n\n  bgColor = \"#ff5f00\",\n  textColor = \"#ffffff\",\n\n  fillBgColor = \"#ffffff\",\n  fillTextColor = \"#ff5f00\",\n\n  hoverFillBgColor = \"#ffffff\",\n  hoverFillTextColor = \"#ff5f00\",\n\n  arrowColor,\n  hoverArrowColor,\n\n  ...props\n}: ArrowFillButtonProps) {\n  const [isReady, setIsReady] = useState(false);\n  const [isCompactLayout, setIsCompactLayout] = useState(false);\n  const [isPressed, setIsPressed] = useState(false);\n  const releaseTimeoutRef = useRef<number | null>(null);\n\n  const usesUtilityBackground =\n    className.includes(\"bg-\") ||\n    className.includes(\"from-\") ||\n    className.includes(\"via-\") ||\n    className.includes(\"to-\");\n\n  useEffect(() => {\n    const frame = window.requestAnimationFrame(() => {\n      setIsReady(true);\n    });\n\n    return () => window.cancelAnimationFrame(frame);\n  }, []);\n\n  useEffect(() => {\n    const mediaQuery = window.matchMedia(\n      `(max-width: ${COMPACT_LAYOUT_BREAKPOINT - 1}px)`\n    );\n\n    const syncCompactLayout = (event: MediaQueryList | MediaQueryListEvent) => {\n      const matches = \"matches\" in event ? event.matches : ((event as any).currentTarget as MediaQueryList).matches;\n      setIsCompactLayout(matches);\n\n      if (!matches) {\n        setIsPressed(false);\n      }\n    };\n\n    syncCompactLayout(mediaQuery);\n    mediaQuery.addEventListener(\"change\", syncCompactLayout);\n\n    return () => {\n      mediaQuery.removeEventListener(\"change\", syncCompactLayout);\n    };\n  }, []);\n\n  useEffect(() => {\n    return () => {\n      if (releaseTimeoutRef.current) {\n        window.clearTimeout(releaseTimeoutRef.current);\n      }\n    };\n  }, []);\n\n  const clearPressedState = () => {\n    if (releaseTimeoutRef.current) {\n      window.clearTimeout(releaseTimeoutRef.current);\n    }\n\n    releaseTimeoutRef.current = window.setTimeout(() => {\n      setIsPressed(false);\n      releaseTimeoutRef.current = null;\n    }, ANIMATION_DURATION_MS);\n  };\n\n  const handlePointerDown = (event: PointerEvent<HTMLAnchorElement>) => {\n    props.onPointerDown?.(event);\n\n    if (!isCompactLayout || event.pointerType === \"mouse\") {\n      return;\n    }\n\n    if (releaseTimeoutRef.current) {\n      window.clearTimeout(releaseTimeoutRef.current);\n      releaseTimeoutRef.current = null;\n    }\n\n    setIsPressed(true);\n  };\n\n  const handlePointerUp = (event: PointerEvent<HTMLAnchorElement>) => {\n    props.onPointerUp?.(event);\n\n    if (!isCompactLayout || event.pointerType === \"mouse\") {\n      return;\n    }\n\n    clearPressedState();\n  };\n\n  const handlePointerCancel = (event: PointerEvent<HTMLAnchorElement>) => {\n    props.onPointerCancel?.(event);\n\n    if (!isCompactLayout || event.pointerType === \"mouse\") {\n      return;\n    }\n\n    clearPressedState();\n  };\n\n  return (\n    <a\n      href={href}\n      {...props}\n      data-pressed={isPressed ? \"true\" : \"false\"}\n      onPointerDown={handlePointerDown}\n      onPointerUp={handlePointerUp}\n      onPointerCancel={handlePointerCancel}\n      className={`group relative inline-flex h-[4.2vw] w-fit min-w-fit max-w-none cursor-pointer items-center justify-center overflow-hidden rounded-full px-[3vw] pr-[calc(var(--icon-circle)+var(--icon-right)+2vw)] whitespace-nowrap font-medium text-[1.1vw] leading-none [text-rendering:geometricPrecision] [--icon-circle:3.1vw] [--icon-right:0.55vw] [--circle-inset-y:calc((100%-var(--icon-circle))/2)] max-[1025px]:h-[11vw] max-[1025px]:px-[5vw] max-[1025px]:pr-[calc(var(--icon-circle)+var(--icon-right)+4vw)] max-[1025px]:text-[3vw] max-[1025px]:font-normal max-[1025px]:[--icon-circle:8vw] max-[1025px]:[--icon-right:1.5vw] max-md:h-[15vw] max-md:px-[7vw] max-md:pr-[calc(var(--icon-circle)+var(--icon-right)+5vw)] max-md:text-[4.2vw] max-md:[--icon-circle:11vw] max-md:[--icon-right:2vw] ${\n        usesUtilityBackground ? \"\" : \"bg-(--btn-bg)\"\n      } text-(--btn-text) ${className}`}\n      style={{\n        \"--btn-bg\": bgColor,\n        \"--btn-text\": textColor,\n        \"--btn-fill-bg\": fillBgColor,\n        \"--btn-fill-text\": fillTextColor,\n        \"--btn-fill-bg-hover\": hoverFillBgColor,\n        \"--btn-fill-text-hover\": hoverFillTextColor,\n        \"--btn-arrow\": arrowColor || fillTextColor,\n        \"--btn-arrow-hover\": hoverArrowColor || hoverFillTextColor,\n        visibility: isReady ? \"visible\" : \"hidden\",\n      } as CSSProperties & Record<string, string | number>}\n    >\n      <span className=\"relative z-1 pb-px\">{btnText}</span>\n\n      <div\n        aria-hidden=\"true\"\n        className={`pointer-events-none absolute z-2 rounded-full bg-(--btn-fill-bg) inset-[var(--circle-inset-y)_var(--icon-right)_var(--circle-inset-y)_calc(100%-var(--icon-right)-var(--icon-circle))] ${\n          isReady\n            ? \"transition-all duration-450 ease-[cubic-bezier(0.785,0.135,0.15,0.86)] motion-reduce:transition-none group-hover:bg-(--btn-fill-bg-hover) group-hover:inset-0 group-data-[pressed=true]:bg-(--btn-fill-bg-hover) group-data-[pressed=true]:inset-0\"\n            : \"\"\n        }`}\n      />\n\n      <div\n        aria-hidden=\"true\"\n        className={`pointer-events-none absolute inset-0 z-2 flex items-center px-[3vw] pr-[calc(var(--icon-circle)+var(--icon-right)+2vw)] text-(--btn-fill-text) [clip-path:inset(var(--circle-inset-y)_var(--icon-right)_var(--circle-inset-y)_calc(100%-var(--icon-right)-var(--icon-circle)))] max-[1025px]:px-[5vw] max-[1025px]:pr-[calc(var(--icon-circle)+var(--icon-right)+4vw)] max-md:px-[7vw] max-md:pr-[calc(var(--icon-circle)+var(--icon-right)+5vw)] ${\n          isReady\n            ? \"transition-all duration-450 ease-[cubic-bezier(0.785,0.135,0.15,0.86)] motion-reduce:transition-none group-hover:text-(--btn-fill-text-hover) group-hover:[clip-path:inset(0_0_0_0)] group-data-[pressed=true]:text-(--btn-fill-text-hover) group-data-[pressed=true]:[clip-path:inset(0_0_0_0)]\"\n            : \"\"\n        }`}\n      >\n        <span className=\"relative z-1 pb-px whitespace-nowrap\">{btnText}</span>\n      </div>\n\n      <span\n        className={`pointer-events-none absolute right-[var(--icon-right)] top-1/2 z-3 inline-flex h-[var(--icon-circle)] w-[var(--icon-circle)] shrink-0 -translate-y-1/2 items-center justify-center overflow-hidden rounded-full bg-(--btn-fill-bg) text-(--btn-arrow) ${\n          isReady\n            ? \"transition-colors duration-450 ease-[cubic-bezier(0.785,0.135,0.15,0.86)] motion-reduce:transition-none group-hover:bg-(--btn-fill-bg-hover) group-hover:text-(--btn-arrow-hover) group-data-[pressed=true]:bg-(--btn-fill-bg-hover) group-data-[pressed=true]:text-(--btn-arrow-hover)\"\n            : \"\"\n        }`}\n        style={{\n          WebkitMaskImage: \"-webkit-radial-gradient(white, black)\",\n          maskImage: \"radial-gradient(white, black)\",\n        }}\n        aria-hidden=\"true\"\n      >\n          <ArrowRight\n            className={`absolute left-1/2 top-1/2 size-[1.5vw] max-[1025px]:size-[4vw] max-md:size-[5vw] translate-x-[-170%] -translate-y-1/2 origin-center scale-0 text-current ${\n              isReady\n                ? \"transition-transform duration-450 ease-[cubic-bezier(0.785,0.135,0.15,0.86)] motion-reduce:transition-none group-hover:-translate-x-1/2 group-hover:-translate-y-1/2 group-hover:scale-100 group-data-[pressed=true]:-translate-x-1/2 group-data-[pressed=true]:-translate-y-1/2 group-data-[pressed=true]:scale-100\"\n                : \"\"\n            }`}\n            strokeWidth={1.8}\n          />\n\n          <ArrowRight\n            className={`absolute left-1/2 top-1/2 size-[1.5vw] max-[1025px]:size-[4vw] max-md:size-[5vw] -translate-x-1/2 -translate-y-1/2 origin-center text-current ${\n              isReady\n                ? \"transition-transform duration-[450ms] ease-[cubic-bezier(0.785,0.135,0.15,0.86)] motion-reduce:transition-none group-hover:translate-x-[70%] group-hover:-translate-y-1/2 group-hover:scale-0 group-data-[pressed=true]:translate-x-[70%] group-data-[pressed=true]:-translate-y-1/2 group-data-[pressed=true]:scale-0\"\n                : \"\"\n            }`}\n            strokeWidth={1.8}\n          />\n        </span>\n    </a>\n  );\n}\n\nexport default ArrowFillButton;\n"
+    }
+  ]
+}

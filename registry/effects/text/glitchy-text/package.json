@@ -1,0 +1,17 @@
+{
+  "name": "@hyperiux/glitchy-text",
+  "version": "1.0.1",
+  "description": "GSAP SplitText effect that stagger-animates four overlapping char layers - two white and two yellow - out and in at slightly different delays, creating a chromatic glitch swap. Plays on mount and replays on button click.",
+  "main": "index.tsx",
+  "files": [
+    "index.tsx",
+    "registry.json"
+  ],
+  "keywords": [
+    "text",
+    "hyperiux"
+  ],
+  "dependencies": {
+    "gsap": "*"
+  }
+}

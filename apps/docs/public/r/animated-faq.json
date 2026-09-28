@@ -1,0 +1,134 @@
+{
+  "name": "animated-faq",
+  "type": "registry:component",
+  "title": "Animated FAQ",
+  "description": "Accessible accordion-style FAQ component with smooth GSAP animations",
+  "dependencies": [
+    "gsap",
+    "lucide-react"
+  ],
+  "registryDependencies": [],
+  "exportName": "AnimatedFaq",
+  "exportKind": "default",
+  "tier": "free",
+  "version": "1.0.1",
+  "changelog": [
+    {
+      "version": "1.0.1",
+      "date": "2026-07-28",
+      "summary": "Updated accordion behavior and documented reduced-motion support.",
+      "breaking": false
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-07-22",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "props": [
+    {
+      "name": "allowMultiple",
+      "type": "boolean",
+      "default": false,
+      "description": "Lets more than one FAQ answer stay open at once.",
+      "remixer": {
+        "control": "checkbox",
+        "group": "behavior",
+        "groupTitle": "Behavior"
+      }
+    },
+    {
+      "name": "duration",
+      "type": "number",
+      "default": 0.5,
+      "description": "Open and close animation duration.",
+      "remixer": {
+        "control": "range",
+        "group": "behavior",
+        "groupTitle": "Behavior",
+        "min": 0.1,
+        "max": 1.5,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "showIcon",
+      "type": "boolean",
+      "default": true,
+      "description": "Shows or hides the FAQ trigger icon.",
+      "remixer": {
+        "control": "checkbox",
+        "group": "icon",
+        "groupTitle": "Icon"
+      }
+    },
+    {
+      "name": "iconPosition",
+      "type": "string",
+      "default": "right",
+      "description": "Side where the trigger icon is rendered.",
+      "remixer": {
+        "control": "select",
+        "group": "icon",
+        "groupTitle": "Icon",
+        "options": [
+          {
+            "value": "right",
+            "label": "Right"
+          },
+          {
+            "value": "left",
+            "label": "Left"
+          }
+        ]
+      }
+    },
+    {
+      "name": "iconMode",
+      "type": "string",
+      "default": "rotate",
+      "description": "Chevron rotation style used by the trigger icon.",
+      "remixer": {
+        "control": "select",
+        "group": "icon",
+        "groupTitle": "Icon",
+        "options": [
+          {
+            "value": "rotate",
+            "label": "Rotate Down"
+          },
+          {
+            "value": "rotate-left-down",
+            "label": "Rotate Right"
+          }
+        ]
+      }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "behavior",
+    "layout": {
+      "buttonClassName": "right-4! top-25!",
+      "panelClassName": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/animated-faq/index.tsx",
+      "content": "// Built using Hyperiux Vault: https://vault.hyperiux.com\n\nimport {\n  FAQContent,\n  FAQGroup,\n  FAQTitle,\n  FAQWrapper,\n} from \"./AnimatedFaqComp\";\nimport React, { type ReactNode } from \"react\";\n\nexport { FAQContent, FAQGroup, FAQTitle, FAQWrapper };\n\ninterface FAQItem {\n  id: string;\n  title: ReactNode;\n  content: ReactNode;\n  defaultOpen: boolean;\n}\n\nconst faqItems: FAQItem[] = [\n  {\n    id: \"faq-1\",\n    title: \"What makes this FAQ package more reusable?\",\n    content: (\n      <>\n        You are no longer locked into a plain data object. You can pass rich\n        JSX, custom markup, inline links, badges, icons, or even other\n        components inside the title and content.\n      </>\n    ),\n    defaultOpen: true,\n  },\n  {\n    id: \"faq-2\",\n    title: \"Can I put custom content inside the answer?\",\n    content: (\n      <div className=\"space-y-3\">\n        <p>Yes. This content area accepts full React nodes, not just text.</p>\n        <ul className=\"list-disc pl-5 space-y-1\">\n          <li>Paragraphs</li>\n          <li>Lists</li>\n          <li>Buttons</li>\n          <li>Inline links</li>\n        </ul>\n      </div>\n    ),\n    defaultOpen: false,\n  },\n  {\n    id: \"faq-3\",\n    title: \"Does it use the ChevronBird trigger?\",\n    content: (\n      <>\n        Yes. The open and close state is visually driven by ChevronBird, so your\n        motion language stays consistent across the whole system.\n      </>\n    ),\n    defaultOpen: false,\n  },\n];\n\nexport default function AnimatedFaq() {\n  const defaultOpenItems = faqItems\n    .filter((item) => item.defaultOpen)\n    .map((item) => item.id);\n\n  return (\n    <div className=\"mx-auto max-w-4xl space-y-4\">\n      <FAQGroup allowMultiple={false} defaultOpenItems={defaultOpenItems}>\n        {faqItems.map((item) => (\n          <FAQWrapper\n            key={item.id}\n            itemId={item.id}\n            className=\"rounded-md border border-white/20 px-6 py-5\"\n            titleClassName=\"text-[1.1rem] font-medium text-white\"\n            iconSize={16}\n            iconStrokeWidth={2}\n            duration={0.5}\n          >\n            <FAQTitle className=\"pb-0\">{item.title}</FAQTitle>\n\n            <FAQContent className=\"pt-4 text-neutral-400\">\n              {item.content}\n            </FAQContent>\n          </FAQWrapper>\n        ))}\n      </FAQGroup>\n    </div>\n  );\n}\n"
+    },
+    {
+      "path": "AnimatedFaqComp.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/animated-faq/AnimatedFaqComp.tsx",
+      "content": "\"use client\";\n\nimport React, {\n  createContext,\n  useCallback,\n  useContext,\n  useEffect,\n  useId,\n  useLayoutEffect,\n  useMemo,\n  useRef,\n  useState,\n  type MouseEvent as ReactMouseEvent,\n  type KeyboardEvent,\n  type ReactNode,\n} from \"react\";\n\nimport gsap from \"gsap\";\nimport { ChevronDown, ChevronRight } from \"lucide-react\";\n\nconst useIsomorphicLayoutEffect =\n  typeof window !== \"undefined\" ? useLayoutEffect : useEffect;\n\ninterface FAQGroupContextValue {\n  allowMultiple: boolean;\n  openItems: string[];\n  toggleItem: (itemId: string) => void;\n}\n\ninterface FAQContextValue {\n  isOpen: boolean;\n  contentOuterRef: React.RefObject<HTMLDivElement | null>;\n  contentInnerRef: React.RefObject<HTMLDivElement | null>;\n  contentId: string;\n  buttonId: string;\n  titleClassName: string;\n  contentClassName: string;\n  iconClassName: string;\n  iconSize: number;\n  iconStrokeWidth: number;\n}\n\nconst FAQContext = createContext<FAQContextValue | null>(null);\nconst FAQGroupContext = createContext<FAQGroupContextValue | null>(null);\n\nconst useFAQContext = () => {\n  const context = useContext(FAQContext);\n\n  if (!context) {\n    throw new Error(\"FAQTitle and FAQContent must be used inside FAQWrapper.\");\n  }\n\n  return context;\n};\n\nexport interface FAQGroupProps {\n  children?: ReactNode;\n  allowMultiple?: boolean;\n  defaultOpenItems?: string[];\n  value?: string[];\n  onChange?: (next: string[]) => void;\n}\n\nexport function FAQGroup({\n  children,\n  allowMultiple = false,\n  defaultOpenItems = [],\n  value,\n  onChange,\n}: FAQGroupProps) {\n  const isControlled = Array.isArray(value);\n  const [internalOpenItems, setInternalOpenItems] = useState<string[]>(defaultOpenItems);\n\n  const openItems = isControlled ? (value as string[]) : internalOpenItems;\n\n  const toggleItem = useCallback(\n    (itemId: string) => {\n      const next = (() => {\n        const isOpen = openItems.includes(itemId);\n\n        if (allowMultiple) {\n          return isOpen\n            ? openItems.filter((id) => id !== itemId)\n            : [...openItems, itemId];\n        }\n\n        return isOpen ? [] : [itemId];\n      })();\n\n      if (!isControlled) {\n        setInternalOpenItems(next);\n      }\n\n      onChange?.(next);\n    },\n    [allowMultiple, isControlled, onChange, openItems]\n  );\n\n  const contextValue = useMemo(\n    () => ({\n      allowMultiple,\n      openItems,\n      toggleItem,\n    }),\n    [allowMultiple, openItems, toggleItem]\n  );\n\n  return (\n    <FAQGroupContext.Provider value={contextValue}>\n      {children}\n    </FAQGroupContext.Provider>\n  );\n}\n\nexport interface FAQWrapperProps {\n  children?: ReactNode;\n  className?: string;\n  titleClassName?: string;\n  contentClassName?: string;\n  iconClassName?: string;\n  iconSize?: number;\n  iconStrokeWidth?: number;\n  duration?: number;\n  defaultOpen?: boolean;\n  controlledOpen?: boolean;\n  onToggle?: (next: boolean) => void;\n  itemId?: string;\n}\n\nexport function FAQWrapper({\n  children,\n  className = \"\",\n  titleClassName = \"\",\n  contentClassName = \"\",\n  iconClassName = \"\",\n  iconSize = 18,\n  iconStrokeWidth = 2,\n  duration = 0.45,\n  defaultOpen = false,\n  controlledOpen,\n  onToggle,\n  itemId,\n}: FAQWrapperProps) {\n  const group = useContext(FAQGroupContext);\n\n  const generatedId = useId();\n  const resolvedItemId = itemId ?? generatedId;\n\n  const isStandaloneControlled = typeof controlledOpen === \"boolean\";\n  const [internalOpen, setInternalOpen] = useState(defaultOpen);\n\n  const isOpen = group\n    ? group.openItems.includes(resolvedItemId)\n    : isStandaloneControlled\n      ? (controlledOpen as boolean)\n      : internalOpen;\n\n  const contentOuterRef = useRef<HTMLDivElement | null>(null);\n  const contentInnerRef = useRef<HTMLDivElement | null>(null);\n  const openHeightRef = useRef(0);\n  const reduceMotionRef = useRef(\n    typeof window !== \"undefined\" &&\n      (window.matchMedia?.(\"(prefers-reduced-motion: reduce)\")?.matches ?? false)\n  );\n\n  const contentId = useId();\n  const buttonId = useId();\n\n  useEffect(() => {\n    const mq = window.matchMedia?.(\"(prefers-reduced-motion: reduce)\");\n    if (!mq) return;\n    const onChange = (event: MediaQueryListEvent) => {\n      reduceMotionRef.current = event.matches;\n    };\n    reduceMotionRef.current = mq.matches;\n    mq.addEventListener?.(\"change\", onChange);\n    return () => mq.removeEventListener?.(\"change\", onChange);\n  }, []);\n\n  const handleToggle = () => {\n    if (group) {\n      group.toggleItem(resolvedItemId);\n      onToggle?.(!isOpen);\n      return;\n    }\n\n    if (isStandaloneControlled) {\n      onToggle?.(!controlledOpen);\n      return;\n    }\n\n    setInternalOpen((prev) => {\n      const next = !prev;\n      onToggle?.(next);\n      return next;\n    });\n  };\n\n  const handleWrapperClick = (event: ReactMouseEvent<HTMLDivElement>) => {\n    const isInteractive = (event.target as HTMLElement).closest(\n      \"a, button, input, textarea, select\"\n    );\n\n    if (isInteractive) return;\n\n    handleToggle();\n  };\n\n  const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {\n    if (event.key === \"Enter\" || event.key === \" \") {\n      event.preventDefault();\n      handleToggle();\n    }\n  };\n\n  useIsomorphicLayoutEffect(() => {\n    if (!contentOuterRef.current || !contentInnerRef.current) return;\n\n    const outer = contentOuterRef.current;\n    const inner = contentInnerRef.current;\n\n    gsap.killTweensOf([outer, inner]);\n\n    const tweenDuration = reduceMotionRef.current ? 0 : duration;\n\n    if (isOpen) {\n      gsap.set(outer, {\n        overflow: \"hidden\",\n        height: \"auto\",\n      });\n\n      const targetHeight = outer.scrollHeight;\n      openHeightRef.current = targetHeight;\n      gsap.set(outer, { height: 0 });\n\n      gsap.fromTo(\n        outer,\n        { height: 0 },\n        {\n          height: targetHeight,\n          duration: tweenDuration,\n          ease: \"power3.out\",\n          onComplete: () => {\n            gsap.set(outer, {\n              height: \"auto\",\n              overflow: \"visible\",\n            });\n          },\n        }\n      );\n    } else {\n      gsap.set(outer, { overflow: \"hidden\" });\n\n      gsap.fromTo(\n        outer,\n        { height: openHeightRef.current },\n        {\n          height: 0,\n          duration: tweenDuration,\n          ease: \"power3.out\",\n        }\n      );\n    }\n  }, [isOpen, duration]);\n\n  const value: FAQContextValue = {\n    isOpen,\n    contentOuterRef,\n    contentInnerRef,\n    contentId,\n    buttonId,\n    titleClassName,\n    contentClassName,\n    iconClassName,\n    iconSize,\n    iconStrokeWidth,\n  };\n\n  return (\n    <FAQContext.Provider value={value}>\n      <div\n        className={`cursor-pointer ${className}`}\n        role=\"button\"\n        tabIndex={0}\n        aria-expanded={isOpen}\n        aria-controls={contentId}\n        id={buttonId}\n        onClick={handleWrapperClick}\n        onKeyDown={handleKeyDown}\n      >\n        {children}\n      </div>\n    </FAQContext.Provider>\n  );\n}\n\nexport interface FAQTitleProps {\n  children?: ReactNode;\n  className?: string;\n  showIcon?: boolean;\n  iconPosition?: 'left' | 'right';\n  iconMode?: 'rotate' | 'rotate-left-down';\n}\n\nexport function FAQTitle({\n  children,\n  className = \"\",\n  showIcon = true,\n  iconPosition = \"right\",\n  iconMode = \"rotate\",\n}: FAQTitleProps) {\n  const {\n    isOpen,\n    titleClassName,\n    iconClassName,\n    iconSize,\n    iconStrokeWidth,\n  } = useFAQContext();\n\n  const icon = showIcon ? (\n    <div className={`shrink-0 ${iconClassName}`}>\n      {iconMode === \"rotate-left-down\" ? (\n        <ChevronRight\n          size={iconSize}\n          strokeWidth={iconStrokeWidth}\n          className={`transition-transform duration-300 ease-out motion-reduce:transition-none ${\n            isOpen ? \"rotate-90\" : \"rotate-0\"\n          }`}\n          aria-hidden=\"true\"\n        />\n      ) : (\n        <ChevronDown\n          size={iconSize}\n          strokeWidth={iconStrokeWidth}\n          className={`transition-transform duration-300 ease-out motion-reduce:transition-none ${\n            isOpen ? \"rotate-180\" : \"rotate-0\"\n          }`}\n          aria-hidden=\"true\"\n        />\n      )}\n    </div>\n  ) : null;\n\n  return (\n    <div\n      className={`flex w-full items-center justify-between gap-6 ${titleClassName} ${className}`}\n    >\n      {iconPosition === \"left\" ? (\n        <>\n          {icon}\n          <div className=\"flex-1\">{children}</div>\n        </>\n      ) : (\n        <>\n          <div className=\"flex-1\">{children}</div>\n          {icon}\n        </>\n      )}\n    </div>\n  );\n}\n\nexport interface FAQContentProps {\n  children?: ReactNode;\n  className?: string;\n  innerClassName?: string;\n}\n\nexport function FAQContent({\n  children,\n  className = \"\",\n  innerClassName = \"\",\n}: FAQContentProps) {\n  const {\n    isOpen,\n    contentOuterRef,\n    contentInnerRef,\n    contentId,\n    buttonId,\n    contentClassName,\n  } = useFAQContext();\n\n  return (\n    <div\n      id={contentId}\n      ref={contentOuterRef}\n      role=\"region\"\n      aria-labelledby={buttonId}\n      style={{\n        height: isOpen ? \"auto\" : 0,\n        overflow: isOpen ? \"visible\" : \"hidden\",\n      }}\n      className={contentClassName}\n    >\n      <div ref={contentInnerRef} className={className}>\n        <div className={innerClassName}>{children}</div>\n      </div>\n    </div>\n  );\n}\n\nexport const AnimatedFAQ = {\n  Group: FAQGroup,\n  Wrapper: FAQWrapper,\n  Title: FAQTitle,\n  Content: FAQContent,\n};\n\nexport default AnimatedFAQ;\n"
+    }
+  ]
+}

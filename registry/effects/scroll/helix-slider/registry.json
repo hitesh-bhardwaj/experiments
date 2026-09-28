@@ -1,0 +1,165 @@
+{
+  "name": "helix-slider",
+  "version": "1.2.0",
+  "changelog": [
+    {
+      "version": "1.2.0",
+      "date": "2026-09-10",
+      "summary": "Rebuilt as a WebGL rotating gallery with drag, wheel momentum, and idle autoplay.",
+      "breaking": false
+    },
+    {
+      "version": "1.1.0",
+      "date": "2026-07-24",
+      "summary": "Added prefers-reduced-motion support (ported from the docs copy): shows a notice explaining the continuous scroll-driven rotation can't be reduced to a static fade.",
+      "breaking": false
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-02-10",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "type": "registry:component",
+  "title": "Helix Slider",
+  "description": "WebGL gallery that threads images along a rotating spiral, driven by drag, wheel momentum and idle autoplay",
+  "category": "scroll",
+  "dependencies": [
+    "@react-three/fiber",
+    "three"
+  ],
+  "registryDependencies": [],
+  "previewUrl": "/demo/helix-slider",
+  "tier": "pro",
+  "main": "index.tsx",
+  "exportName": "HelixSlider",
+  "exportKind": "default",
+  "importPath": "@/components/effects/helix-slider",
+  "target": "src/components/effects/helix-slider",
+  "files": [
+    {
+      "path": "index.tsx",
+      "target": "src/components/effects/helix-slider/index.tsx"
+    },
+    {
+      "path": "createSuspendedRaf.ts",
+      "target": "src/components/effects/helix-slider/createSuspendedRaf.ts"
+    }
+  ],
+  "props": [
+    {
+      "name": "autoplaySpeed",
+      "type": "number",
+      "default": 0.12,
+      "description": "Idle movement speed; 0 stops autoplay.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "groupCollapsible": false,
+        "min": 0,
+        "max": 1,
+        "step": 0.01
+      }
+    },
+    {
+      "name": "radius",
+      "type": "number",
+      "default": 2.8,
+      "description": "Width of the spiral.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "groupCollapsible": false,
+        "min": 1.5,
+        "max": 4.5,
+        "step": 0.1
+      }
+    },
+    {
+      "name": "turns",
+      "type": "number",
+      "default": 3.3,
+      "description": "Number of spiral twists.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "groupCollapsible": false,
+        "min": 1,
+        "max": 5,
+        "step": 0.1
+      }
+    },
+    {
+      "name": "cardScale",
+      "type": "number",
+      "default": 1,
+      "description": "Scales image cards proportionally.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "groupCollapsible": false,
+        "min": 0.6,
+        "max": 1.5,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "dragSensitivity",
+      "type": "number",
+      "default": 0.006,
+      "description": "How strongly the gallery responds to dragging.",
+      "remixer": {
+        "control": "range",
+        "group": "interaction",
+        "groupTitle": "Interaction",
+        "groupCollapsible": false,
+        "min": 0.002,
+        "max": 0.02,
+        "step": 0.001
+      }
+    },
+    {
+      "name": "inertiaDecay",
+      "type": "number",
+      "default": 2.2,
+      "description": "Higher values stop movement sooner after release.",
+      "remixer": {
+        "control": "range",
+        "group": "interaction",
+        "groupTitle": "Interaction",
+        "groupCollapsible": false,
+        "min": 0.5,
+        "max": 6,
+        "step": 0.1
+      }
+    },
+    {
+      "name": "background",
+      "type": "color",
+      "default": "#0d0d0d",
+      "description": "Gallery background.",
+      "remixer": {
+        "control": "color",
+        "group": "style",
+        "groupTitle": "Style",
+        "groupCollapsible": false
+      }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "motion",
+    "layout": {
+      "buttonClassName": "right-4! top-25!",
+      "panelClassName": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  }
+}

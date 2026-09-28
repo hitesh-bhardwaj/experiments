@@ -1,0 +1,110 @@
+{
+  "name": "scroll-distortion",
+  "type": "registry:component",
+  "title": "Scroll Distortion",
+  "description": "Scroll-synced WebGL image transition with displacement distortion and fullscreen typography",
+  "dependencies": [
+    "gsap",
+    "three"
+  ],
+  "registryDependencies": [],
+  "exportName": "ScrollDistortion",
+  "exportKind": "default",
+  "tier": "pro",
+  "version": "1.0.1",
+  "changelog": [
+    {
+      "version": "1.0.1",
+      "date": "2026-07-21",
+      "summary": "Added reduced-motion transitions.",
+      "breaking": false
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-07-20",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "props": [
+    {
+      "name": "distortionStrength",
+      "type": "number",
+      "default": 0.8,
+      "description": "Strength of the displacement distortion during transitions.",
+      "remixer": {
+        "control": "range",
+        "group": "shader",
+        "groupTitle": "Shader",
+        "min": 0,
+        "max": 2,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "rgbShift",
+      "type": "number",
+      "default": 0.05,
+      "description": "Amount of RGB channel separation during the distortion.",
+      "remixer": {
+        "control": "range",
+        "group": "shader",
+        "groupTitle": "Shader",
+        "min": 0,
+        "max": 0.3,
+        "step": 0.005
+      }
+    },
+    {
+      "name": "distortionScale",
+      "type": "number",
+      "default": 0.15,
+      "description": "Scale of the fold and stretch distortion while transitioning.",
+      "remixer": {
+        "control": "range",
+        "group": "shader",
+        "groupTitle": "Shader",
+        "min": 0,
+        "max": 0.6,
+        "step": 0.01
+      }
+    },
+    {
+      "name": "transitionDuration",
+      "type": "number",
+      "default": 1.25,
+      "description": "Duration of each image distortion transition.",
+      "remixer": {
+        "control": "range",
+        "group": "shader",
+        "groupTitle": "Shader",
+        "min": 0.2,
+        "max": 2.5,
+        "step": 0.05
+      }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "shader",
+    "layout": {
+      "buttonClassName": "right-4! top-25!",
+      "panelClassName": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/scroll-distortion/index.tsx"
+    },
+    {
+      "path": "createSuspendedRaf.ts",
+      "type": "registry:component",
+      "target": "src/components/effects/scroll-distortion/createSuspendedRaf.ts"
+    }
+  ]
+}

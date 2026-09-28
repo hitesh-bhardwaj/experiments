@@ -1,0 +1,385 @@
+{
+  "name": "typing-text",
+  "type": "registry:component",
+  "title": "Typing Text",
+  "description": "Vault-themed typewriter text with sequential, cascade, looping, and shape-shifting cursor variants.",
+  "dependencies": [],
+  "registryDependencies": [],
+  "exportName": "TypingText",
+  "exportKind": "default",
+  "tier": "free",
+  "version": "1.1.3",
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "date": "2026-08-14",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "props": [
+    {
+      "name": "variant",
+      "type": "string",
+      "default": "sequential",
+      "description": "Typing sequence variant.",
+      "remixer": {
+        "control": "select",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "options": [
+          {
+            "value": "sequential",
+            "label": "Sequential"
+          },
+          {
+            "value": "cascade",
+            "label": "Cascade"
+          },
+          {
+            "value": "loop",
+            "label": "Loop"
+          }
+        ]
+      }
+    },
+    {
+      "name": "textColor",
+      "type": "string",
+      "default": "#d8d8d8",
+      "description": "Typed text color.",
+      "remixer": {
+        "control": "color",
+        "group": "colors",
+        "groupTitle": "Colors"
+      }
+    },
+    {
+      "name": "cursorColor",
+      "type": "string",
+      "default": "#f59e0b",
+      "description": "Cursor color.",
+      "remixer": {
+        "control": "color",
+        "group": "cursor",
+        "groupTitle": "Cursor"
+      }
+    },
+    {
+      "name": "backgroundColor",
+      "type": "string",
+      "default": "#121212",
+      "description": "Background color.",
+      "remixer": {
+        "control": "color",
+        "group": "colors",
+        "groupTitle": "Colors"
+      }
+    },
+    {
+      "name": "fontSize",
+      "type": "number",
+      "default": 2.4,
+      "description": "Text size in vw units.",
+      "remixer": {
+        "control": "range",
+        "group": "type",
+        "groupTitle": "Type",
+        "min": 1,
+        "max": 5,
+        "step": 0.1
+      }
+    },
+    {
+      "name": "fontWeight",
+      "type": "number",
+      "default": 500,
+      "description": "Font weight.",
+      "remixer": {
+        "control": "range",
+        "group": "type",
+        "groupTitle": "Type",
+        "min": 100,
+        "max": 900,
+        "step": 100
+      }
+    },
+    {
+      "name": "lineHeight",
+      "type": "number",
+      "default": 1.55,
+      "description": "Line height.",
+      "remixer": {
+        "control": "range",
+        "group": "type",
+        "groupTitle": "Type",
+        "min": 1,
+        "max": 2.2,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "letterSpacing",
+      "type": "number",
+      "default": 0,
+      "description": "Letter spacing in em units.",
+      "remixer": {
+        "control": "range",
+        "group": "type",
+        "groupTitle": "Type",
+        "min": 0,
+        "max": 0.18,
+        "step": 0.01
+      }
+    },
+    {
+      "name": "textAlign",
+      "type": "string",
+      "default": "left",
+      "description": "Text alignment.",
+      "remixer": {
+        "control": "select",
+        "group": "type",
+        "groupTitle": "Type",
+        "options": [
+          {
+            "value": "left",
+            "label": "Left"
+          },
+          {
+            "value": "center",
+            "label": "Center"
+          },
+          {
+            "value": "right",
+            "label": "Right"
+          }
+        ]
+      }
+    },
+    {
+      "name": "maxWidth",
+      "type": "number",
+      "default": 80,
+      "description": "Maximum text block width in vw units.",
+      "remixer": {
+        "control": "range",
+        "group": "type",
+        "groupTitle": "Type",
+        "min": 42,
+        "max": 96,
+        "step": 1
+      }
+    },
+    {
+      "name": "charactersPerSecond",
+      "type": "number",
+      "default": 18,
+      "description": "Typing speed.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 6,
+        "max": 42,
+        "step": 1
+      }
+    },
+    {
+      "name": "animationDuration",
+      "type": "number",
+      "default": 1,
+      "description": "Multiplier applied to each line typing duration.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0.2,
+        "max": 3,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "lineDelay",
+      "type": "number",
+      "default": 0.5,
+      "description": "Delay between line starts.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0,
+        "max": 2,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "holdDuration",
+      "type": "number",
+      "default": 1.4,
+      "description": "Hold time before loop reset.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0.2,
+        "max": 4,
+        "step": 0.1
+      }
+    },
+    {
+      "name": "typingDirection",
+      "type": "string",
+      "default": "left-to-right",
+      "description": "Direction the text types from.",
+      "remixer": {
+        "control": "select",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "options": [
+          {
+            "value": "left-to-right",
+            "label": "Left To Right"
+          },
+          {
+            "value": "right-to-left",
+            "label": "Right To Left"
+          }
+        ]
+      }
+    },
+    {
+      "name": "blur",
+      "type": "number",
+      "default": 0,
+      "description": "Starting blur in pixels.",
+      "remixer": {
+        "control": "range",
+        "group": "appearance",
+        "groupTitle": "Appearance",
+        "min": 0,
+        "max": 20,
+        "step": 0.5
+      }
+    },
+    {
+      "name": "rotate",
+      "type": "number",
+      "default": 0,
+      "description": "Starting X rotation in degrees.",
+      "remixer": {
+        "control": "range",
+        "group": "appearance",
+        "groupTitle": "Appearance",
+        "min": -90,
+        "max": 90,
+        "step": 1
+      }
+    },
+    {
+      "name": "scale",
+      "type": "number",
+      "default": 1,
+      "description": "Starting scale before the line settles.",
+      "remixer": {
+        "control": "range",
+        "group": "appearance",
+        "groupTitle": "Appearance",
+        "min": 0.2,
+        "max": 2,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "perspective",
+      "type": "number",
+      "default": 800,
+      "description": "Perspective depth for rotated typing.",
+      "remixer": {
+        "control": "range",
+        "group": "appearance",
+        "groupTitle": "Appearance",
+        "min": 120,
+        "max": 2000,
+        "step": 20
+      }
+    },
+    {
+      "name": "cursorStyle",
+      "type": "string",
+      "default": "bar",
+      "description": "Cursor visual style.",
+      "remixer": {
+        "control": "select",
+        "group": "cursor",
+        "groupTitle": "Cursor",
+        "options": [
+          {
+            "value": "bar",
+            "label": "Bar"
+          },
+          {
+            "value": "square",
+            "label": "Square"
+          },
+          {
+            "value": "triangle",
+            "label": "Triangle"
+          },
+          {
+            "value": "underscore",
+            "label": "Underscore"
+          },
+          {
+            "value": "dot",
+            "label": "Dot"
+          }
+        ]
+      }
+    },
+    {
+      "name": "cursorWidth",
+      "type": "number",
+      "default": 3,
+      "description": "Cursor thickness in pixels.",
+      "remixer": {
+        "control": "range",
+        "group": "cursor",
+        "groupTitle": "Cursor",
+        "min": 1,
+        "max": 10,
+        "step": 1
+      }
+    },
+    {
+      "name": "showCursor",
+      "type": "boolean",
+      "default": true,
+      "description": "Shows the animated cursor.",
+      "remixer": {
+        "control": "checkbox",
+        "group": "cursor",
+        "groupTitle": "Cursor"
+      }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "motion",
+    "layout": {
+      "buttonClassName": "right-4! top-25!",
+      "panelClassName": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/typing-text/index.tsx",
+      "content": "// Built using Hyperiux Vault: https://vault.hyperiux.com\n\n\"use client\";\n\nimport { useEffect, useMemo, useState, type CSSProperties } from \"react\";\n\ntype TypingVariant = \"sequential\" | \"cascade\" | \"loop\";\ntype CursorStyle = \"bar\" | \"square\" | \"triangle\" | \"underscore\" | \"dot\";\ntype TextAlign = \"left\" | \"center\" | \"right\";\ntype TypingDirection = \"left-to-right\" | \"right-to-left\";\n\ntype TypingTextProps = {\n  lines?: string[];\n  variant?: TypingVariant;\n  textColor?: string;\n  cursorColor?: string;\n  backgroundColor?: string;\n  fontSize?: number;\n  fontWeight?: CSSProperties[\"fontWeight\"];\n  lineHeight?: number;\n  letterSpacing?: number;\n  charactersPerSecond?: number;\n  animationDuration?: number;\n  lineDelay?: number;\n  holdDuration?: number;\n  blur?: number;\n  rotate?: number;\n  scale?: number;\n  perspective?: number;\n  typingDirection?: TypingDirection;\n  cursorWidth?: number;\n  cursorStyle?: CursorStyle;\n  textAlign?: TextAlign;\n  maxWidth?: number;\n  showCursor?: boolean;\n  className?: string;\n};\n\ntype TypingLineStyle = CSSProperties & {\n  \"--typing-target-width\": string;\n  \"--typing-steps\": number;\n  \"--typing-duration\": string;\n  \"--typing-delay\": string;\n  \"--typing-loop-duration\": string;\n  \"--typing-step\": string;\n  \"--typing-char-animation\": string;\n  \"--typing-cursor-animation\": string;\n  \"--typing-cursor-color\": string;\n  \"--typing-cursor-width\": string;\n  \"--typing-blur\": string;\n  \"--typing-rotate\": string;\n  \"--typing-scale\": number;\n};\n\nconst DEFAULT_LINES = [\n  \"Opening the vault handshake...\",\n  \"Verifying encrypted component keys.\",\n  \"Loading protected motion presets.\",\n  \"Vault access granted. Hyperiux assets are ready.\",\n];\n\nfunction getAlignmentClass(textAlign: TextAlign) {\n  if (textAlign === \"center\") return \"items-center text-center\";\n  if (textAlign === \"right\") return \"items-end text-right\";\n  return \"items-start text-left\";\n}\n\nexport default function TypingText({\n  lines = DEFAULT_LINES,\n  variant = \"sequential\",\n  textColor = \"#d8d8d8\",\n  cursorColor = \"#f59e0b\",\n  backgroundColor = \"#121212\",\n  fontSize = 2.4,\n  fontWeight = 500,\n  lineHeight = 1.55,\n  letterSpacing = 0,\n  charactersPerSecond = 18,\n  animationDuration = 1,\n  lineDelay = 0.5,\n  holdDuration = 1.4,\n  blur = 0,\n  rotate = 0,\n  scale = 1,\n  perspective = 800,\n  typingDirection = \"left-to-right\",\n  cursorWidth = 3,\n  cursorStyle = \"bar\",\n  textAlign = \"left\",\n  maxWidth = 80,\n  showCursor = true,\n  className = \"\",\n}: TypingTextProps) {\n  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);\n  const preparedLines = useMemo(\n    () => lines.map((line) => ({ text: line, chars: Math.max(Array.from(line).length, 1) })),\n    [lines]\n  );\n  const animationKey = [\n    variant,\n    charactersPerSecond,\n    animationDuration,\n    lineDelay,\n    holdDuration,\n    blur,\n    rotate,\n    scale,\n    perspective,\n    typingDirection,\n  ].join(\"-\");\n\n  useEffect(() => {\n    const mediaQuery = window.matchMedia?.(\"(prefers-reduced-motion: reduce)\");\n    if (!mediaQuery) return;\n\n    setPrefersReducedMotion(mediaQuery.matches);\n\n    const onReduceMotionChange = (event: MediaQueryListEvent) => {\n      setPrefersReducedMotion(event.matches);\n    };\n\n    mediaQuery.addEventListener?.(\"change\", onReduceMotionChange);\n\n    return () => {\n      mediaQuery.removeEventListener?.(\"change\", onReduceMotionChange);\n    };\n  }, []);\n\n  let elapsed = 0;\n\n  return (\n    <section\n      className={`typing-text-root relative flex min-h-screen w-full items-center justify-center overflow-hidden px-6 py-24 ${className}`}\n      style={{ backgroundColor, color: textColor }}\n    >\n      <div\n        className={`relative z-10 flex w-full flex-col ${getAlignmentClass(textAlign)}`}\n        style={{ maxWidth: `${maxWidth}vw`, perspective: `${perspective}px` }}\n        aria-label={preparedLines.map((line) => line.text).join(\" \")}\n      >\n        {preparedLines.map((line, index) => {\n          const typingDuration = Math.max(\n            0.35,\n            (line.chars / Math.max(charactersPerSecond, 1)) * Math.max(animationDuration, 0.1)\n          );\n          const delay =\n            variant === \"sequential\"\n              ? elapsed\n              : index * Math.max(lineDelay, 0);\n          const loopDuration = Math.max(typingDuration * 2 + holdDuration, 2.4);\n\n          if (variant === \"sequential\") {\n            elapsed += typingDuration + Math.max(lineDelay, 0);\n          }\n\n          const lineStyle: TypingLineStyle = {\n            \"--typing-target-width\": `${line.chars}ch`,\n            \"--typing-steps\": line.chars,\n            \"--typing-duration\": `${typingDuration}s`,\n            \"--typing-delay\": `${delay}s`,\n            \"--typing-loop-duration\": `${loopDuration}s`,\n            \"--typing-step\": `${typingDuration / line.chars}s`,\n            \"--typing-char-animation\": prefersReducedMotion\n              ? \"none\"\n              : variant === \"loop\"\n                ? \"typing-text-char-loop var(--typing-loop-duration) linear infinite forwards\"\n                : \"typing-text-char-in 1ms linear forwards\",\n            \"--typing-cursor-animation\": prefersReducedMotion\n              ? \"none\"\n              : variant === \"loop\"\n                ? \"typing-text-cursor 820ms steps(1, end) var(--typing-delay) infinite both\"\n                : \"typing-text-cursor-finish var(--typing-duration) linear var(--typing-delay) both\",\n            \"--typing-cursor-color\": cursorColor,\n            \"--typing-cursor-width\": `${cursorWidth}px`,\n            \"--typing-blur\": `${blur}px`,\n            \"--typing-rotate\": `${rotate}deg`,\n            \"--typing-scale\": scale,\n            color: textColor,\n            fontSize: `clamp(1.2rem, ${fontSize}vw, 5rem)`,\n            fontWeight,\n            lineHeight,\n            letterSpacing: `${letterSpacing}em`,\n            direction: typingDirection === \"right-to-left\" ? \"rtl\" : \"ltr\",\n            textAlign: typingDirection === \"right-to-left\" ? \"right\" : \"left\",\n            transformOrigin: typingDirection === \"right-to-left\" ? \"right center\" : \"left center\",\n            width: prefersReducedMotion ? \"auto\" : undefined,\n            maxWidth: prefersReducedMotion ? \"100%\" : undefined,\n            animation: prefersReducedMotion\n              ? \"none\"\n              : variant === \"loop\"\n                ? \"typing-text-loop var(--typing-loop-duration) steps(var(--typing-steps), end) var(--typing-delay) infinite both\"\n                : \"typing-text-write var(--typing-duration) steps(var(--typing-steps), end) var(--typing-delay) both\",\n          };\n\n          return (\n            <span\n              key={`${animationKey}-${line.text}-${index}`}\n              aria-hidden=\"true\"\n              data-cursor-style={showCursor ? cursorStyle : undefined}\n              data-typing-direction={typingDirection}\n              data-typing-variant={variant}\n              className=\"typing-text-line mb-2 block max-w-full whitespace-nowrap font-mono will-change-[width,opacity]\"\n              style={lineStyle}\n            >\n              <span className=\"typing-text-content block max-w-full overflow-hidden\">\n                {Array.from(line.text).map((character, characterIndex) => (\n                  <span\n                    key={`${characterIndex}-${character}`}\n                    className=\"typing-text-char\"\n                    style={{ \"--char-index\": characterIndex } as CSSProperties}\n                  >\n                    {character}\n                  </span>\n                ))}\n              </span>\n            </span>\n          );\n        })}\n      </div>\n\n      <style>{`\n        .typing-text-root {\n          isolation: isolate;\n        }\n\n        .typing-text-line {\n          position: relative;\n          width: 0;\n          opacity: 0;\n          transition:\n            color 240ms ease,\n            background-color 240ms ease;\n        }\n\n        .typing-text-line[data-cursor-style]::after,\n        .typing-text-line[data-cursor-style] .typing-text-char::before {\n          position: absolute;\n          inset-block-start: 50%;\n          width: var(--typing-cursor-width);\n          height: 1em;\n          background: var(--typing-cursor-color);\n          opacity: 0;\n          translate: 0 -50%;\n          transform-origin: center;\n          transition:\n            background-color 240ms ease,\n            border-color 240ms ease,\n            border-radius 240ms ease,\n            clip-path 240ms ease,\n            height 240ms ease,\n            opacity 180ms ease,\n            transform 240ms ease,\n            width 240ms ease;\n        }\n\n        .typing-text-line[data-cursor-style]::after {\n          content: \"\";\n          inset-inline-start: calc(100% + 0.16em);\n          animation: var(--typing-cursor-animation);\n        }\n\n        .typing-text-line[data-typing-direction=\"right-to-left\"]::after {\n          inset-inline: auto calc(100% + 0.16em);\n        }\n\n        .typing-text-line[data-cursor-style=\"square\"]::after,\n        .typing-text-line[data-cursor-style=\"square\"] .typing-text-char::before {\n          width: 0.58em;\n          height: 0.58em;\n        }\n\n        .typing-text-line[data-cursor-style=\"triangle\"]::after,\n        .typing-text-line[data-cursor-style=\"triangle\"] .typing-text-char::before {\n          width: 0.64em;\n          height: 0.64em;\n          clip-path: polygon(0 0, 100% 50%, 0 100%);\n        }\n\n        .typing-text-line[data-typing-direction=\"right-to-left\"][data-cursor-style=\"triangle\"]::after,\n        .typing-text-line[data-typing-direction=\"right-to-left\"][data-cursor-style=\"triangle\"] .typing-text-char::before {\n          transform: scaleX(-1);\n        }\n\n        .typing-text-line[data-cursor-style=\"dot\"]::after,\n        .typing-text-line[data-cursor-style=\"dot\"] .typing-text-char::before {\n          width: 0.38em;\n          height: 0.38em;\n          border-radius: 999px;\n        }\n\n        .typing-text-line[data-cursor-style=\"underscore\"]::after,\n        .typing-text-line[data-cursor-style=\"underscore\"] .typing-text-char::before {\n          inset-block-start: auto;\n          inset-block-end: 0.16em;\n          width: 0.72em;\n          height: var(--typing-cursor-width);\n          translate: 0 0;\n        }\n\n        @keyframes typing-text-write {\n          0% {\n            width: 0;\n            opacity: 0;\n            filter: blur(var(--typing-blur));\n            transform: rotateX(var(--typing-rotate)) scale(var(--typing-scale));\n          }\n\n          1% {\n            opacity: 1;\n          }\n\n          99.9% {\n            opacity: 1;\n          }\n\n          100% {\n            width: min(var(--typing-target-width), 100%);\n            opacity: 1;\n            filter: blur(0);\n            transform: rotateX(0deg) scale(1);\n          }\n        }\n\n        @keyframes typing-text-loop {\n          0% {\n            width: 0;\n            opacity: 0;\n            filter: blur(var(--typing-blur));\n            transform: rotateX(var(--typing-rotate)) scale(var(--typing-scale));\n          }\n\n          6% {\n            opacity: 1;\n          }\n\n          46%,\n          72% {\n            width: min(var(--typing-target-width), 100%);\n            opacity: 1;\n            filter: blur(0);\n            transform: rotateX(0deg) scale(1);\n          }\n\n          100% {\n            width: 0;\n            opacity: 0;\n            filter: blur(var(--typing-blur));\n            transform: rotateX(var(--typing-rotate)) scale(var(--typing-scale));\n          }\n        }\n\n        @keyframes typing-text-cursor {\n          0%,\n          45% {\n            opacity: 1;\n          }\n\n          46%,\n          100% {\n            opacity: 0;\n          }\n        }\n\n        @keyframes typing-text-cursor-finish {\n          0%,\n          99.8% {\n            opacity: 1;\n          }\n\n          99.9%,\n          100% {\n            opacity: 0;\n          }\n        }\n\n        @keyframes typing-text-fade-in {\n          from {\n            opacity: 0;\n          }\n\n          to {\n            opacity: 1;\n          }\n        }\n\n        @media (prefers-reduced-motion: reduce) {\n          .typing-text-line {\n            width: auto !important;\n            max-width: 100%;\n            opacity: 0;\n            animation: typing-text-fade-in 0.4s ease-out forwards !important;\n          }\n\n          .typing-text-line::after {\n            opacity: 0 !important;\n          }\n        }\n\n        @keyframes typing-text-char-in {\n          from {\n            opacity: 0;\n          }\n\n          to {\n            opacity: 1;\n          }\n        }\n\n        @keyframes typing-text-caret {\n          0%,\n          99.9% {\n            opacity: 1;\n          }\n\n          100% {\n            opacity: 0;\n          }\n        }\n\n        @keyframes typing-text-char-loop {\n          0%,\n          62% {\n            opacity: 1;\n          }\n\n          62.01%,\n          100% {\n            opacity: 0;\n          }\n        }\n\n        @keyframes typing-text-settle {\n          0% {\n            opacity: 1;\n            filter: blur(var(--typing-blur));\n            transform: rotateX(var(--typing-rotate)) scale(var(--typing-scale));\n          }\n\n          100% {\n            opacity: 1;\n            filter: blur(0);\n            transform: rotateX(0deg) scale(1);\n          }\n        }\n\n        @media (max-width: 640px) {\n          .typing-text-line {\n            width: auto !important;\n            max-width: 100%;\n            white-space: normal !important;\n            overflow-wrap: break-word;\n            opacity: 1;\n            animation: typing-text-settle var(--typing-duration) linear var(--typing-delay) both !important;\n          }\n\n          .typing-text-content {\n            display: inline !important;\n            overflow: visible !important;\n          }\n\n          .typing-text-char {\n            position: relative;\n            opacity: 0;\n            animation: var(--typing-char-animation);\n            animation-delay: calc(var(--typing-delay) + var(--char-index) * var(--typing-step));\n          }\n\n          .typing-text-line[data-cursor-style] .typing-text-char::before {\n            content: \"\";\n            inset-inline-start: auto;\n            inset-inline-end: calc(100% + 0.16em);\n            animation: typing-text-caret var(--typing-step) linear forwards;\n            animation-delay: calc(var(--typing-delay) + (var(--char-index) - 1) * var(--typing-step));\n          }\n\n          .typing-text-line[data-cursor-style] .typing-text-char:first-child::before {\n            animation-duration: var(--typing-delay);\n            animation-delay: 0s;\n          }\n\n          .typing-text-line:not([data-typing-variant=\"loop\"])[data-cursor-style]::after {\n            content: none;\n          }\n\n          .typing-text-line[data-typing-variant=\"loop\"][data-cursor-style]::after {\n            position: static;\n            display: inline-block;\n            translate: none;\n            margin-inline-start: 0.16em;\n            vertical-align: -0.1em;\n            animation-delay: calc(var(--typing-delay) + var(--typing-duration));\n            animation-fill-mode: forwards;\n          }\n        }\n\n        @media (max-width: 640px) and (prefers-reduced-motion: reduce) {\n          .typing-text-line {\n            opacity: 1 !important;\n            animation: none !important;\n          }\n\n          .typing-text-char {\n            opacity: 1;\n            animation: none;\n          }\n\n          .typing-text-char::before {\n            content: none;\n          }\n        }\n      `}</style>\n    </section>\n  );\n}\n"
+    }
+  ]
+}

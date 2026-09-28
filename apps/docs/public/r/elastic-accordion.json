@@ -1,0 +1,179 @@
+{
+  "name": "elastic-accordion",
+  "type": "registry:component",
+  "title": "Elastic Accordion",
+  "description": "An accordion with gooey elastic expansion and staggered answer reveals.",
+  "dependencies": [
+    "gsap"
+  ],
+  "registryDependencies": [],
+  "exportName": "ElasticAccordion",
+  "exportKind": "default",
+  "tier": "pro",
+  "version": "1.0.0",
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "date": "2026-09-10",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "props": [
+    {
+      "name": "duration",
+      "type": "number",
+      "default": 0.8,
+      "description": "Expansion animation duration in seconds.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "min": 0.2,
+        "max": 2,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "goo",
+      "type": "number",
+      "default": 9,
+      "description": "Strength of the gooey connection between question and answer.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "min": 0,
+        "max": 20,
+        "step": 1
+      },
+      "label": "Gooey strength"
+    },
+    {
+      "name": "stagger",
+      "type": "number",
+      "default": 0.05,
+      "description": "Delay between answer line reveals in seconds.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "min": 0,
+        "max": 0.2,
+        "step": 0.01
+      }
+    },
+    {
+      "name": "multiple",
+      "type": "boolean",
+      "default": false,
+      "description": "Allows multiple answers to remain open.",
+      "remixer": {
+        "control": "checkbox",
+        "group": "behavior"
+      }
+    },
+    {
+      "name": "startOpen",
+      "type": "number",
+      "default": 0,
+      "description": "Initially open item index; -1 closes all items.",
+      "remixer": {
+        "control": "select",
+        "group": "behavior",
+        "options": [
+          {
+            "label": "All closed",
+            "value": -1
+          },
+          {
+            "label": "Item 1",
+            "value": 0
+          },
+          {
+            "label": "Item 2",
+            "value": 1
+          },
+          {
+            "label": "Item 3",
+            "value": 2
+          },
+          {
+            "label": "Item 4",
+            "value": 3
+          },
+          {
+            "label": "Item 5",
+            "value": 4
+          }
+        ]
+      }
+    },
+    {
+      "name": "bgColor",
+      "type": "color",
+      "default": "#ebebe9",
+      "description": "Background color.",
+      "remixer": {
+        "control": "color",
+        "group": "colors"
+      }
+    },
+    {
+      "name": "panelColor",
+      "type": "color",
+      "default": "#101010",
+      "description": "Question and answer panel color.",
+      "remixer": {
+        "control": "color",
+        "group": "colors"
+      }
+    },
+    {
+      "name": "textColor",
+      "type": "color",
+      "default": "#fffaf2",
+      "description": "Text and icon color; secondary elements use reduced opacity.",
+      "remixer": {
+        "control": "color",
+        "group": "colors"
+      }
+    },
+    {
+      "name": "ease",
+      "type": "string",
+      "default": "elastic.out(1,0.82)",
+      "description": "GSAP easing for expansion. Available in code only.",
+      "remixer": {
+        "enabled": false
+      }
+    },
+    {
+      "name": "items",
+      "type": "ElasticAccordionItem[]",
+      "description": "Question and answer items; defaults to the built-in FAQ."
+    },
+    {
+      "name": "className",
+      "type": "string",
+      "default": "",
+      "description": "Additional root class names."
+    },
+    {
+      "name": "onChange",
+      "type": "(index: number, isOpen: boolean) => void",
+      "description": "Called when an item is toggled."
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "motion",
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/elastic-accordion/index.tsx"
+    }
+  ]
+}

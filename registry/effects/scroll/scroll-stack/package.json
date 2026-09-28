@@ -1,0 +1,18 @@
+{
+  "name": "@hyperiux/scroll-stack",
+  "version": "1.1.0",
+  "description": "Successive content cards that hand off focus and fade as the next section enters",
+  "main": "index.tsx",
+  "files": [
+    "index.tsx",
+    "ScrollStackComp.tsx",
+    "registry.json"
+  ],
+  "keywords": [
+    "scroll",
+    "hyperiux"
+  ],
+  "dependencies": {
+    "gsap": "*"
+  }
+}

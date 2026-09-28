@@ -1,0 +1,141 @@
+{
+  "name": "animated-tabs",
+  "version": "1.0.1",
+  "type": "registry:component",
+  "title": "Tabs",
+  "description": "Animated tabs with a moving active indicator and panel transitions",
+  "category": "components",
+  "dependencies": [
+    "gsap"
+  ],
+  "registryDependencies": [],
+  "previewUrl": "/demo/animated-tabs",
+  "tier": "pro",
+  "main": "index.tsx",
+  "exportName": "AnimatedTabs",
+  "exportKind": "default",
+  "importPath": "@/components/effects/animated-tabs",
+  "target": "src/components/effects/animated-tabs",
+  "files": [
+    {
+      "path": "index.tsx",
+      "target": "src/components/effects/animated-tabs/index.tsx"
+    },
+    {
+      "path": "AnimatedTabsComp.tsx",
+      "target": "src/components/effects/animated-tabs/AnimatedTabsComp.tsx"
+    }
+  ],
+  "changelog": [
+    {
+      "version": "1.0.1",
+      "date": "2026-07-31",
+      "summary": "Added reduced-motion support, reworked the props API (defaultActiveIndex, animationType, slideDistance, accentColor, duration), and changed the tab-index control to a name-based dropdown.",
+      "breaking": false
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-07-21",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "props": [
+    {
+      "name": "defaultActiveIndex",
+      "type": "number",
+      "default": 0,
+      "description": "Index of the initially active tab.",
+      "remixer": {
+        "control": "select",
+        "group": "behavior",
+        "groupTitle": "Behavior",
+        "options": [
+          {
+            "label": "Overview",
+            "value": 0
+          },
+          {
+            "label": "Services",
+            "value": 1
+          },
+          {
+            "label": "Contact",
+            "value": 2
+          }
+        ]
+      }
+    },
+    {
+      "name": "animationType",
+      "type": "string",
+      "default": "slide",
+      "description": "Panel transition style.",
+      "remixer": {
+        "control": "select",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "options": [
+          {
+            "label": "Slide",
+            "value": "slide"
+          },
+          {
+            "label": "Fade",
+            "value": "fade"
+          }
+        ]
+      }
+    },
+    {
+      "name": "slideDistance",
+      "type": "number",
+      "default": 40,
+      "description": "Horizontal travel distance for the slide transition, in pixels.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0,
+        "max": 160,
+        "step": 5
+      }
+    },
+    {
+      "name": "accentColor",
+      "type": "color",
+      "default": "#ff6b00",
+      "description": "Color used for the active tab label and indicator.",
+      "remixer": {
+        "control": "color",
+        "group": "style",
+        "groupTitle": "Style"
+      }
+    },
+    {
+      "name": "duration",
+      "type": "number",
+      "default": 0.35,
+      "description": "Panel and indicator transition duration in seconds.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0.05,
+        "max": 2,
+        "step": 0.05
+      }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "behavior",
+    "layout": {
+      "buttonClassName": "right-4! top-25!",
+      "panelClassName": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  }
+}

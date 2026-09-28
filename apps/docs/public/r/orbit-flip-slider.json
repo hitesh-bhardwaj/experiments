@@ -1,0 +1,539 @@
+{
+  "name": "orbit-flip-slider",
+  "type": "registry:component",
+  "title": "Orbit Flip Slider",
+  "description": "GSAP Flip-driven gallery that morphs one ring of images between four camera views - a flat circle, a zoomed-in upper arc, a tilted 3D ring, and a coverflow band - with a bouncy 3D hover tilt on every card.",
+  "dependencies": [
+    "gsap"
+  ],
+  "registryDependencies": [],
+  "exportName": "OrbitFlipSlider",
+  "exportKind": "default",
+  "tier": "free",
+  "version": "1.0.0",
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "date": "2026-08-20",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "props": [
+    {
+      "name": "backgroundColor",
+      "type": "string",
+      "default": "#e9e9ea",
+      "description": "Background color behind the ring.",
+      "remixer": {
+        "control": "color",
+        "group": "colors",
+        "groupTitle": "Colors"
+      }
+    },
+    {
+      "name": "imageWidth",
+      "type": "number",
+      "default": 90,
+      "description": "Width of each image card in pixels.",
+      "remixer": {
+        "control": "range",
+        "group": "general",
+        "groupTitle": "General",
+        "min": 80,
+        "max": 320,
+        "step": 4
+      }
+    },
+    {
+      "name": "imageHeight",
+      "type": "number",
+      "default": 140,
+      "description": "Height of each image card in pixels.",
+      "remixer": {
+        "control": "range",
+        "group": "general",
+        "groupTitle": "General",
+        "min": 120,
+        "max": 420,
+        "step": 4
+      }
+    },
+    {
+      "name": "imageGap",
+      "type": "number",
+      "default": 0,
+      "description": "Extra spacing between image cards in pixels.",
+      "remixer": {
+        "control": "range",
+        "group": "general",
+        "groupTitle": "General",
+        "min": 0,
+        "max": 120,
+        "step": 2
+      }
+    },
+    {
+      "name": "rounded",
+      "type": "string",
+      "default": "rounded-none",
+      "description": "Tailwind border-radius class applied to each image card.",
+      "remixer": {
+        "control": "select",
+        "group": "general",
+        "groupTitle": "General",
+        "options": [
+          "rounded-none",
+          "rounded-sm",
+          "rounded-md",
+          "rounded-lg",
+          "rounded-xl",
+          "rounded-2xl",
+          "rounded-3xl",
+          "rounded-full"
+        ]
+      }
+    },
+    {
+      "name": "enableHoverMovement",
+      "type": "boolean",
+      "default": true,
+      "description": "Enables the hover lift and perspective tilt on image cards.",
+      "remixer": {
+        "control": "checkbox",
+        "group": "general",
+        "groupTitle": "General"
+      }
+    },
+    {
+      "name": "hoverMoveY",
+      "type": "number",
+      "default": -8,
+      "description": "Vertical movement applied to the image card on hover, in pixels.",
+      "remixer": {
+        "control": "range",
+        "group": "general",
+        "groupTitle": "General",
+        "min": -80,
+        "max": 80,
+        "step": 1
+      }
+    },
+    {
+      "name": "perspectiveRotateValue",
+      "type": "number",
+      "default": 180,
+      "description": "How far each card rotates on hover, in degrees.",
+      "remixer": {
+        "control": "range",
+        "group": "general",
+        "groupTitle": "General",
+        "min": 0,
+        "max": 180,
+        "step": 1
+      }
+    },
+    {
+      "name": "perspectiveRotateDirection",
+      "type": "string",
+      "default": "right",
+      "description": "Direction each card rotates on hover.",
+      "remixer": {
+        "control": "select",
+        "group": "general",
+        "groupTitle": "General",
+        "options": [
+          "left",
+          "right"
+        ]
+      }
+    },
+    {
+      "name": "rotate",
+      "type": "boolean",
+      "default": true,
+      "description": "Continuously and slowly rotates the ring of cards.",
+      "remixer": {
+        "control": "checkbox",
+        "group": "general",
+        "groupTitle": "General"
+      }
+    },
+    {
+      "name": "rotateSpeed",
+      "type": "number",
+      "default": 4,
+      "description": "Speed of the automatic rotation, in degrees per second.",
+      "remixer": {
+        "control": "range",
+        "group": "general",
+        "groupTitle": "General",
+        "min": 0.5,
+        "max": 30,
+        "step": 0.5
+      }
+    },
+    {
+      "name": "stopRotationOnHover",
+      "type": "boolean",
+      "default": true,
+      "description": "Pauses the automatic rotation while the pointer is hovering the slider.",
+      "remixer": {
+        "control": "checkbox",
+        "group": "general",
+        "groupTitle": "General"
+      }
+    },
+    {
+      "name": "flatRadiusX",
+      "type": "number",
+      "default": 1.6,
+      "description": "Horizontal stretch of the flat circle, as a multiplier of its base radius.",
+      "remixer": {
+        "enabled": false,
+        "control": "range",
+        "group": "flat",
+        "groupTitle": "Flat",
+        "min": 0.3,
+        "max": 2,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "flatRadiusY",
+      "type": "number",
+      "default": 1.2,
+      "description": "Vertical stretch of the flat circle, as a multiplier of its base radius.",
+      "remixer": {
+        "enabled": false,
+        "control": "range",
+        "group": "flat",
+        "groupTitle": "Flat",
+        "min": 0.3,
+        "max": 2,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "flatScale",
+      "type": "number",
+      "default": 1,
+      "description": "Uniform zoom on the flat circle as a whole - position spread and card size together.",
+      "remixer": {
+        "enabled": false,
+        "control": "range",
+        "group": "flat",
+        "groupTitle": "Flat",
+        "min": 0.3,
+        "max": 2,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "ringRotateX",
+      "type": "number",
+      "default": 31,
+      "description": "Rotates the ring's plane on the x axis, in degrees. Swings the near/far cards vertically apart.",
+      "remixer": {
+        "enabled": false,
+        "control": "range",
+        "group": "ring",
+        "groupTitle": "Ring",
+        "min": -90,
+        "max": 90,
+        "step": 1
+      }
+    },
+    {
+      "name": "ringRotateY",
+      "type": "number",
+      "default": 56,
+      "description": "Rotates the ring on the y axis, in degrees. Spins which card faces the camera.",
+      "remixer": {
+        "enabled": false,
+        "control": "range",
+        "group": "ring",
+        "groupTitle": "Ring",
+        "min": -180,
+        "max": 180,
+        "step": 1
+      }
+    },
+    {
+      "name": "ringRotateZ",
+      "type": "number",
+      "default": -25,
+      "description": "Rotates the whole projected ring on the z axis, in degrees. Spins the composition in place, like a wheel face.",
+      "remixer": {
+        "enabled": false,
+        "control": "range",
+        "group": "ring",
+        "groupTitle": "Ring",
+        "min": -180,
+        "max": 180,
+        "step": 1
+      }
+    },
+    {
+      "name": "ringRadiusX",
+      "type": "number",
+      "default": 1.5,
+      "description": "Horizontal stretch of the ring, as a multiplier of its base radius.",
+      "remixer": {
+        "enabled": false,
+        "control": "range",
+        "group": "ring",
+        "groupTitle": "Ring",
+        "min": 0.3,
+        "max": 2,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "ringRadiusY",
+      "type": "number",
+      "default": 1.2,
+      "description": "Vertical stretch of the ring, as a multiplier of its base radius.",
+      "remixer": {
+        "enabled": false,
+        "control": "range",
+        "group": "ring",
+        "groupTitle": "Ring",
+        "min": 0.3,
+        "max": 2,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "ringScale",
+      "type": "number",
+      "default": 1,
+      "description": "Uniform zoom on the ring as a whole - position spread and card size together, like moving the camera closer or further on the z axis.",
+      "remixer": {
+        "enabled": false,
+        "control": "range",
+        "group": "ring",
+        "groupTitle": "Ring",
+        "min": 0.3,
+        "max": 2,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "tiltRotateX",
+      "type": "number",
+      "default": 70,
+      "description": "Rotates the tilt view's ring on the x axis, in degrees.",
+      "remixer": {
+        "enabled": false,
+        "control": "range",
+        "group": "tilt",
+        "groupTitle": "Tilt",
+        "min": -90,
+        "max": 90,
+        "step": 1
+      }
+    },
+    {
+      "name": "tiltRotateY",
+      "type": "number",
+      "default": 0,
+      "description": "Rotates the tilt view's ring on the y axis, in degrees. Shifts which part of the upper arc is centered.",
+      "remixer": {
+        "enabled": false,
+        "control": "range",
+        "group": "tilt",
+        "groupTitle": "Tilt",
+        "min": -180,
+        "max": 180,
+        "step": 1
+      }
+    },
+    {
+      "name": "tiltRotateZ",
+      "type": "number",
+      "default": 0,
+      "description": "Rotates the whole projected tilt composition on the z axis, in degrees.",
+      "remixer": {
+        "enabled": false,
+        "control": "range",
+        "group": "tilt",
+        "groupTitle": "Tilt",
+        "min": -180,
+        "max": 180,
+        "step": 1
+      }
+    },
+    {
+      "name": "tiltRadiusX",
+      "type": "number",
+      "default": 1.9,
+      "description": "Horizontal stretch of the tilt view, as a multiplier of its base radius.",
+      "remixer": {
+        "enabled": false,
+        "control": "range",
+        "group": "tilt",
+        "groupTitle": "Tilt",
+        "min": 0.3,
+        "max": 2,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "tiltRadiusY",
+      "type": "number",
+      "default": 1.5,
+      "description": "Vertical stretch of the tilt view, as a multiplier of its base radius.",
+      "remixer": {
+        "enabled": false,
+        "control": "range",
+        "group": "tilt",
+        "groupTitle": "Tilt",
+        "min": 0.3,
+        "max": 2,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "tiltScale",
+      "type": "number",
+      "default": 1.2,
+      "description": "Uniform zoom on the tilt view as a whole.",
+      "remixer": {
+        "enabled": false,
+        "control": "range",
+        "group": "tilt",
+        "groupTitle": "Tilt",
+        "min": 0.3,
+        "max": 2,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "tiltMoveY",
+      "type": "number",
+      "default": 300,
+      "description": "Pans the tilt view up or down, in pixels, without affecting its rotation, stretch or zoom.",
+      "remixer": {
+        "enabled": false,
+        "control": "range",
+        "group": "tilt",
+        "groupTitle": "Tilt",
+        "min": -400,
+        "max": 400,
+        "step": 5
+      }
+    },
+    {
+      "name": "galleryRotateX",
+      "type": "number",
+      "default": 0,
+      "description": "Rotates the gallery coverflow's ring on the x axis, in degrees.",
+      "remixer": {
+        "enabled": false,
+        "control": "range",
+        "group": "gallery",
+        "groupTitle": "Gallery",
+        "min": -90,
+        "max": 90,
+        "step": 1
+      }
+    },
+    {
+      "name": "galleryRotateY",
+      "type": "number",
+      "default": 0,
+      "description": "Rotates the gallery coverflow on the y axis, in degrees. Spins which card faces the camera.",
+      "remixer": {
+        "enabled": false,
+        "control": "range",
+        "group": "gallery",
+        "groupTitle": "Gallery",
+        "min": -180,
+        "max": 180,
+        "step": 1
+      }
+    },
+    {
+      "name": "galleryRotateZ",
+      "type": "number",
+      "default": 0,
+      "description": "Rotates the whole projected gallery composition on the z axis, in degrees.",
+      "remixer": {
+        "enabled": false,
+        "control": "range",
+        "group": "gallery",
+        "groupTitle": "Gallery",
+        "min": -180,
+        "max": 180,
+        "step": 1
+      }
+    },
+    {
+      "name": "galleryRadiusX",
+      "type": "number",
+      "default": 1.3,
+      "description": "Horizontal stretch of the gallery coverflow, as a multiplier of its base radius.",
+      "remixer": {
+        "enabled": false,
+        "control": "range",
+        "group": "gallery",
+        "groupTitle": "Gallery",
+        "min": 0.3,
+        "max": 2,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "galleryRadiusY",
+      "type": "number",
+      "default": 1.5,
+      "description": "Vertical stretch of the gallery coverflow, as a multiplier of its base radius.",
+      "remixer": {
+        "enabled": false,
+        "control": "range",
+        "group": "gallery",
+        "groupTitle": "Gallery",
+        "min": 0.3,
+        "max": 2,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "galleryScale",
+      "type": "number",
+      "default": 1.2,
+      "description": "Uniform zoom on the gallery coverflow as a whole.",
+      "remixer": {
+        "enabled": false,
+        "control": "range",
+        "group": "gallery",
+        "groupTitle": "Gallery",
+        "min": 0.3,
+        "max": 2,
+        "step": 0.05
+      }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "general",
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/orbit-flip-slider/index.tsx",
+      "content": "// Built using Hyperiux Vault: https://vault.hyperiux.com\nimport OrbitFlipSliderComp from './OrbitFlipSliderComp';\n\ninterface OrbitFlipSliderItem {\n  id?: string | number;\n  image: string;\n  alt?: string;\n}\n\ninterface OrbitFlipSliderProps {\n  items?: OrbitFlipSliderItem[];\n\n  backgroundColor?: string;\n  imageWidth?: number;\n  imageHeight?: number;\n  imageGap?: number;\n  rounded?: string;\n  enableHoverMovement?: boolean;\n  hoverMoveY?: number;\n  perspectiveRotateValue?: number;\n  perspectiveRotateDirection?: \"left\" | \"right\";\n  rotate?: boolean;\n  rotateSpeed?: number;\n  stopRotationOnHover?: boolean;\n  flatRadiusX?: number;\n  flatRadiusY?: number;\n  flatScale?: number;\n  ringRotateX?: number;\n  ringRotateY?: number;\n  ringRotateZ?: number;\n  ringRadiusX?: number;\n  ringRadiusY?: number;\n  ringScale?: number;\n  tiltRotateX?: number;\n  tiltRotateY?: number;\n  tiltRotateZ?: number;\n  tiltRadiusX?: number;\n  tiltRadiusY?: number;\n  tiltScale?: number;\n  tiltMoveY?: number;\n  galleryRotateX?: number;\n  galleryRotateY?: number;\n  galleryRotateZ?: number;\n  galleryRadiusX?: number;\n  galleryRadiusY?: number;\n  galleryScale?: number;\n}\n\nconst defaultItems: OrbitFlipSliderItem[] = Array.from({ length: 16 }, (_, i) => ({\n  id: i,\n  image: `https://picsum.photos/seed/orbit-flip-slider-${i}/400/500`,\n  alt: `Selected work ${i + 1}`,\n}));\n\nconst OrbitFlipSlider = ({\n  items = defaultItems,\n\n  backgroundColor = \"#e9e9ea\",\n  imageWidth = 140,\n  imageHeight = 200,\n  imageGap = 0,\n  rounded = \"rounded-none\",\n  enableHoverMovement = true,\n  hoverMoveY = -8,\n  perspectiveRotateValue = 180,\n  perspectiveRotateDirection = \"right\",\n  rotate = true,\n  rotateSpeed = 4,\n  stopRotationOnHover = true,\n  flatRadiusX = 1,\n  flatRadiusY = 1,\n  flatScale = 1,\n  ringRotateX = 31,\n  ringRotateY = 56,\n  ringRotateZ = -25,\n  ringRadiusX = 1.5,\n  ringRadiusY = 0.65,\n  ringScale = 0.6,\n  tiltRotateX = 70,\n  tiltRotateY = 0,\n  tiltRotateZ = 0,\n  tiltRadiusX = 1.2,\n  tiltRadiusY = 1,\n  tiltScale = 1,\n  tiltMoveY = 325,\n  galleryRotateX = 10,\n  galleryRotateY = 0,\n  galleryRotateZ = 0,\n  galleryRadiusX = 1,\n  galleryRadiusY = 1,\n  galleryScale = 1,\n}: OrbitFlipSliderProps) => {\n  return (\n    <OrbitFlipSliderComp\n      items={items}\n\n      backgroundColor={backgroundColor}\n      imageWidth={imageWidth}\n      imageHeight={imageHeight}\n      imageGap={imageGap}\n      rounded={rounded}\n      enableHoverMovement={enableHoverMovement}\n      hoverMoveY={hoverMoveY}\n      perspectiveRotateValue={perspectiveRotateValue}\n      perspectiveRotateDirection={perspectiveRotateDirection}\n      rotate={rotate}\n      rotateSpeed={rotateSpeed}\n      stopRotationOnHover={stopRotationOnHover}\n      flatRadiusX={flatRadiusX}\n      flatRadiusY={flatRadiusY}\n      flatScale={flatScale}\n      ringRotateX={ringRotateX}\n      ringRotateY={ringRotateY}\n      ringRotateZ={ringRotateZ}\n      ringRadiusX={ringRadiusX}\n      ringRadiusY={ringRadiusY}\n      ringScale={ringScale}\n      tiltRotateX={tiltRotateX}\n      tiltRotateY={tiltRotateY}\n      tiltRotateZ={tiltRotateZ}\n      tiltRadiusX={tiltRadiusX}\n      tiltRadiusY={tiltRadiusY}\n      tiltScale={tiltScale}\n      tiltMoveY={tiltMoveY}\n      galleryRotateX={galleryRotateX}\n      galleryRotateY={galleryRotateY}\n      galleryRotateZ={galleryRotateZ}\n      galleryRadiusX={galleryRadiusX}\n      galleryRadiusY={galleryRadiusY}\n      galleryScale={galleryScale}\n    />\n  );\n};\n\nexport default OrbitFlipSlider;\n"
+    },
+    {
+      "path": "OrbitFlipSliderComp.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/orbit-flip-slider/OrbitFlipSliderComp.tsx",
+      "content": "// Built using Hyperiux Vault: https://vault.hyperiux.com\n'use client'\nimport { useSyncExternalStore } from \"react\";\nimport React, { useEffect, useRef, useState, useCallback } from \"react\";\nimport Image from \"next/image\";\nimport { gsap } from \"gsap\";\nimport { Flip } from \"gsap/dist/Flip\";\n\nfunction usePrefersReducedMotion() {\n  return useSyncExternalStore(\n    (callback) => {\n      if (typeof window === \"undefined\") return () => {};\n\n      const mediaQueryList = window.matchMedia(\"(prefers-reduced-motion: reduce)\");\n      mediaQueryList.addEventListener(\"change\", callback);\n\n      return () => mediaQueryList.removeEventListener(\"change\", callback);\n    },\n    () => (typeof window === \"undefined\" ? false : window.matchMedia?.(\"(prefers-reduced-motion: reduce)\")?.matches ?? false),\n    () => false\n  );\n}\n\ngsap.registerPlugin(Flip);\n\ntype OrbitFlipSliderMode = \"flat\" | \"tilt\" | \"ring\" | \"gallery\";\n\ninterface OrbitFlipSliderItem {\n  id?: string | number;\n  image: string;\n  alt?: string;\n}\n\ninterface OrbitFlipSliderCompProps {\n  items?: OrbitFlipSliderItem[];\n  backgroundColor?: string;\n  imageWidth?: number;\n  imageHeight?: number;\n  imageGap?: number;\n  rounded?: string;\n  enableHoverMovement?: boolean;\n  hoverMoveY?: number;\n  perspectiveRotateValue?: number;\n  perspectiveRotateDirection?: \"left\" | \"right\";\n  rotate?: boolean;\n  rotateSpeed?: number;\n  stopRotationOnHover?: boolean;\n  flatRadiusX?: number;\n  flatRadiusY?: number;\n  flatScale?: number;\n  ringRotateX?: number;\n  ringRotateY?: number;\n  ringRotateZ?: number;\n  ringRadiusX?: number;\n  ringRadiusY?: number;\n  ringScale?: number;\n  tiltRotateX?: number;\n  tiltRotateY?: number;\n  tiltRotateZ?: number;\n  tiltRadiusX?: number;\n  tiltRadiusY?: number;\n  tiltScale?: number;\n  tiltMoveY?: number;\n  galleryRotateX?: number;\n  galleryRotateY?: number;\n  galleryRotateZ?: number;\n  galleryRadiusX?: number;\n  galleryRadiusY?: number;\n  galleryScale?: number;\n}\n\ninterface CardBox {\n  x: number;\n  y: number;\n  width: number;\n  height: number;\n  zIndex: number;\n}\n\n// x/y tilt the underlying 3D ring, z spins the whole projected composition\n// in place, radiusX/radiusY stretch it independent of the depth math, scale\n// zooms everything (position and card size) uniformly, and moveY pans the\n// whole composition up/down on screen without affecting any of the above.\ninterface AxisTransform {\n  x: number;\n  y: number;\n  z: number;\n  radiusX: number;\n  radiusY: number;\n  scale: number;\n  moveY: number;\n}\n\nconst MODES: { key: OrbitFlipSliderMode; label: string }[] = [\n  { key: \"flat\", label: \"Flat\" },\n  { key: \"tilt\", label: \"Tilt\" },\n  { key: \"ring\", label: \"Ring\" },\n  { key: \"gallery\", label: \"Gallery\" },\n];\n\nconst degToRad = (deg: number) => (deg * Math.PI) / 180;\n\n// Mirrors Tailwind's `max-md:` breakpoint (max-width: 767px) - below this,\n// the ring is pulled in so it doesn't overflow narrow viewports.\nconst MOBILE_BREAKPOINT = 768;\nconst MOBILE_FLAT_RADIUS_X_SCALE = 0.55;\nconst MOBILE_TILT_RADIUS_X_SCALE = 0.6;\nconst MOBILE_TILT_RADIUS_Y_SCALE = 0.8;\nconst MOBILE_RING_SCALE = 0.6;\nconst MOBILE_GALLERY_SCALE = 0.6;\n\ninterface CoverflowParams {\n  radius: number;\n  tiltDeg: number;\n  camDistFactor: number;\n  offsetDeg: number;\n  anchorY: number;\n  positionScaleStrength?: number;\n  sizeScaleStrength?: number;\n}\n\nconst getBaseOrbitRadius = (\n  count: number,\n  cardWidth: number,\n  cardHeight: number,\n  imageGap: number\n) => {\n  const baseSpan = Math.max(cardWidth, cardHeight) + imageGap;\n  return Math.max((count * baseSpan) / (2 * Math.PI) * 0.62, baseSpan * 0.9);\n};\n\n// Distributes every card fully around a ring lying almost flat. Every card\n// stays flat and forward-facing (billboarded) no matter where it sits on the\n// ring - only its position and depth-driven scale/z-index change. Zoomed in\n// close, only the near slice reads as full-size cards; the rest recede\n// smaller into the depth, with the frontmost cards naturally stacking above\n// the ones behind them.\nconst buildCoverflowLayout = (\n  count: number,\n  containerW: number,\n  containerH: number,\n  sizes: { w: number; h: number }[],\n  params: CoverflowParams\n): CardBox[] => {\n  const cx = containerW / 2;\n  const camDist = params.radius * params.camDistFactor;\n  const tilt = degToRad(params.tiltDeg);\n  const positionScaleStrength = params.positionScaleStrength ?? 1;\n  const sizeScaleStrength = params.sizeScaleStrength ?? 0.42;\n\n  return sizes.map((size, i) => {\n    const thetaDeg = params.offsetDeg + (i / count) * 360;\n    const theta = degToRad(thetaDeg);\n    const px = params.radius * Math.sin(theta);\n    const pz0 = -params.radius * Math.cos(theta);\n    const py = -pz0 * Math.sin(tilt);\n    const pz = pz0 * Math.cos(tilt);\n    const scale = Math.max(camDist / (camDist + pz), 0.05);\n    const positionScale = 1 + (scale - 1) * positionScaleStrength;\n    const sizeScale = 1 + (scale - 1) * sizeScaleStrength;\n\n    return {\n      x: cx + px * positionScale,\n      y: containerH * params.anchorY + py * positionScale,\n      width: size.w * sizeScale,\n      height: size.h * sizeScale,\n      zIndex: Math.round(scale * 1000) + 1,\n    };\n  });\n};\n\n// Spins the whole projected composition around its own screen anchor - the\n// z axis of the screen itself, on top of the 3D x/y tilt baked into the\n// projection.\nconst applyZRotation = (boxes: CardBox[], cx: number, cy: number, zDeg: number): CardBox[] => {\n  if (!zDeg) return boxes;\n  const rad = degToRad(zDeg);\n  const cos = Math.cos(rad);\n  const sin = Math.sin(rad);\n  return boxes.map((box) => {\n    const dx = box.x - cx;\n    const dy = box.y - cy;\n    return {\n      ...box,\n      x: cx + dx * cos - dy * sin,\n      y: cy + dx * sin + dy * cos,\n    };\n  });\n};\n\n// Stretches the composition horizontally/vertically around its anchor,\n// independent of the 3D depth math (scale/z-index stay driven by the true\n// circular radius) - lets it read wider or taller without changing how\n// near/far cards foreshorten.\nconst applyRadiusScale = (\n  boxes: CardBox[],\n  cx: number,\n  cy: number,\n  baseRadius: number,\n  radiusX: number,\n  radiusY: number\n): CardBox[] => {\n  const sx = radiusX / baseRadius;\n  const sy = radiusY / baseRadius;\n  if (sx === 1 && sy === 1) return boxes;\n  return boxes.map((box) => ({\n    ...box,\n    x: cx + (box.x - cx) * sx,\n    y: cy + (box.y - cy) * sy,\n  }));\n};\n\n// Zooms the whole composition uniformly - position spread and card size\n// together - around its anchor, like moving the camera closer or further.\nconst applyUniformScale = (boxes: CardBox[], cx: number, cy: number, scale: number): CardBox[] => {\n  if (scale === 1) return boxes;\n  return boxes.map((box) => ({\n    ...box,\n    x: cx + (box.x - cx) * scale,\n    y: cy + (box.y - cy) * scale,\n    width: box.width * scale,\n    height: box.height * scale,\n  }));\n};\n\nconst applyTransform = (\n  boxes: CardBox[],\n  cx: number,\n  cy: number,\n  baseRadius: number,\n  t: AxisTransform\n): CardBox[] => {\n  const radiusScaled = applyRadiusScale(boxes, cx, cy, baseRadius, baseRadius * t.radiusX, baseRadius * t.radiusY);\n  const scaled = applyUniformScale(radiusScaled, cx, cy, t.scale);\n  return applyZRotation(scaled, cx, cy, t.z);\n};\n\ninterface FlatTransform {\n  radiusX: number;\n  radiusY: number;\n  scale: number;\n}\n\ninterface ModeTransforms {\n  flat: FlatTransform;\n  tilt: AxisTransform;\n  ring: AxisTransform;\n  gallery: AxisTransform;\n}\n\nconst buildLayout = (\n  mode: OrbitFlipSliderMode,\n  count: number,\n  containerW: number,\n  containerH: number,\n  sizes: { w: number; h: number }[],\n  transforms: ModeTransforms,\n  imageGap: number,\n  rotationOffsetDeg: number = 0\n): CardBox[] => {\n  const cx = containerW / 2;\n  const cy = containerH / 2;\n  const cardWidth = sizes[0]?.w ?? 140;\n  const cardHeight = sizes[0]?.h ?? 200;\n  const baseRadius = getBaseOrbitRadius(count, cardWidth, cardHeight, imageGap);\n\n  // Every mode is the same ring of cards, always flat and forward-facing -\n  // only the camera's zoom, tilt and framing differ. Flat is the ring seen\n  // straight-on, evenly spaced, from far enough back that it reads as a\n  // plain circle.\n  if (mode === \"flat\") {\n    const f = transforms.flat;\n    const rx = baseRadius * f.radiusX;\n    const ry = baseRadius * f.radiusY;\n    const boxes = sizes.map((size, i) => {\n      const angle = (i / count) * Math.PI * 2 - Math.PI / 2 + degToRad(rotationOffsetDeg);\n      return {\n        x: cx + rx * Math.cos(angle),\n        y: cy + ry * Math.sin(angle),\n        width: size.w,\n        height: size.h,\n        zIndex: i + 1,\n      };\n    });\n    return applyUniformScale(boxes, cx, cy, f.scale);\n  }\n\n  // Tilt, ring and gallery are the same coverflow ring - only how it's\n  // rotated, stretched and zoomed differs between them.\n  const t = transforms[mode];\n  const radius = mode === \"gallery\" ? baseRadius * 1.55 : baseRadius * 1.12;\n  const anchorY = 0.5;\n  const camDistFactor = mode === \"gallery\" ? 1.55 : 1.75;\n  const positionScaleStrength = mode === \"gallery\" ? 0.28 : 0.45;\n  const sizeScaleStrength = mode === \"gallery\" ? 0.16 : 0.42;\n  const boxes = buildCoverflowLayout(count, containerW, containerH, sizes, {\n    radius,\n    tiltDeg: t.x,\n    camDistFactor,\n    offsetDeg: -90 + t.y + rotationOffsetDeg,\n    anchorY,\n    positionScaleStrength,\n    sizeScaleStrength,\n  });\n  const transformed = applyTransform(boxes, cx, containerH * anchorY, radius, t);\n  if (!t.moveY) return transformed;\n  return transformed.map((box) => ({ ...box, y: box.y + t.moveY }));\n};\n\nconst OrbitFlipSliderComp = ({\n  items = [],\n  backgroundColor = \"#e9e9ea\",\n  imageWidth = 140,\n  imageHeight = 200,\n  imageGap = 0,\n  rounded = \"rounded-none\",\n  enableHoverMovement = true,\n  hoverMoveY = -8,\n  perspectiveRotateValue = 180,\n  perspectiveRotateDirection = \"right\",\n  rotate = true,\n  rotateSpeed = 4,\n  stopRotationOnHover = true,\n  flatRadiusX = 1,\n  flatRadiusY = 1,\n  flatScale = 1,\n  ringRotateX = 31,\n  ringRotateY = 56,\n  ringRotateZ = -25,\n  ringRadiusX = 1.5,\n  ringRadiusY = 0.65,\n  ringScale = 0.6,\n  tiltRotateX = 70,\n  tiltRotateY = 0,\n  tiltRotateZ = 0,\n  tiltRadiusX = 1.2,\n  tiltRadiusY = 1,\n  tiltScale = 1,\n  tiltMoveY = 325,\n  galleryRotateX = 10,\n  galleryRotateY = 0,\n  galleryRotateZ = 0,\n  galleryRadiusX = 1,\n  galleryRadiusY = 1,\n  galleryScale = 1,\n}: OrbitFlipSliderCompProps) => {\n  const FLIP_DURATION_SECONDS = 0.9;\n  const trackRef = useRef<HTMLDivElement | null>(null);\n  const modeRef = useRef<OrbitFlipSliderMode>(\"flat\");\n  const isFlipAnimatingRef = useRef(false);\n  const flipResumeTimeoutRef = useRef<number | null>(null);\n  const rotationOffsetRef = useRef(0);\n  const hoveredCardCountRef = useRef(0);\n  const [activeMode, setActiveMode] = useState<OrbitFlipSliderMode>(\"flat\");\n  const reducedMotion = usePrefersReducedMotion();\n\n  const sizes = items.map(() => ({ w: imageWidth, h: imageHeight }));\n  const transforms: ModeTransforms = {\n    flat: {\n      radiusX: flatRadiusX,\n      radiusY: flatRadiusY,\n      scale: flatScale,\n    },\n    tilt: {\n      x: tiltRotateX,\n      y: tiltRotateY,\n      z: tiltRotateZ,\n      radiusX: tiltRadiusX,\n      radiusY: tiltRadiusY,\n      scale: tiltScale,\n      moveY: tiltMoveY,\n    },\n    ring: {\n      x: ringRotateX,\n      y: ringRotateY,\n      z: ringRotateZ,\n      radiusX: ringRadiusX,\n      radiusY: ringRadiusY,\n      scale: ringScale,\n      moveY: 0,\n    },\n    gallery: {\n      x: galleryRotateX,\n      y: galleryRotateY,\n      z: galleryRotateZ,\n      radiusX: galleryRadiusX,\n      radiusY: galleryRadiusY,\n      scale: galleryScale,\n      moveY: 0,\n    },\n  };\n\n  const applyLayout = useCallback(\n    (mode: OrbitFlipSliderMode, animate: boolean) => {\n      const track = trackRef.current;\n      if (!track) return;\n\n      const cards = gsap.utils.toArray<HTMLElement>(\".orbit-flip-slider-card\", track);\n      if (!cards.length) return;\n\n      const { width, height } = track.getBoundingClientRect();\n      const isMobile = window.innerWidth < MOBILE_BREAKPOINT;\n      const responsiveTransforms: ModeTransforms = isMobile\n        ? {\n            ...transforms,\n            flat: { ...transforms.flat, radiusX: transforms.flat.radiusX * MOBILE_FLAT_RADIUS_X_SCALE },\n            tilt: {\n              ...transforms.tilt,\n              radiusX: transforms.tilt.radiusX * MOBILE_TILT_RADIUS_X_SCALE,\n              radiusY: transforms.tilt.radiusY * MOBILE_TILT_RADIUS_Y_SCALE,\n            },\n            ring: { ...transforms.ring, scale: transforms.ring.scale * MOBILE_RING_SCALE },\n            gallery: { ...transforms.gallery, scale: transforms.gallery.scale * MOBILE_GALLERY_SCALE },\n          }\n        : transforms;\n      const layout = buildLayout(mode, cards.length, width, height, sizes, responsiveTransforms, imageGap, rotationOffsetRef.current);\n\n      const commit = () => {\n        cards.forEach((card, i) => {\n          const box = layout[i];\n          gsap.set(card, {\n            x: box.x,\n            y: box.y,\n            xPercent: -50,\n            yPercent: -50,\n            width: box.width,\n            height: box.height,\n            zIndex: box.zIndex,\n          });\n        });\n      };\n\n      if (!animate || reducedMotion) {\n        commit();\n        return;\n      }\n\n      const state = Flip.getState(cards);\n      commit();\n      isFlipAnimatingRef.current = true;\n      if (flipResumeTimeoutRef.current !== null) window.clearTimeout(flipResumeTimeoutRef.current);\n      flipResumeTimeoutRef.current = window.setTimeout(() => {\n        isFlipAnimatingRef.current = false;\n        flipResumeTimeoutRef.current = null;\n      }, FLIP_DURATION_SECONDS * 1000);\n      Flip.from(state, {\n        duration: FLIP_DURATION_SECONDS,\n        ease: \"power3.inOut\",\n        stagger: 0.015,\n        absolute: true,\n      });\n    },\n    [\n      sizes,\n      reducedMotion,\n      imageWidth,\n      imageHeight,\n      imageGap,\n      flatRadiusX,\n      flatRadiusY,\n      flatScale,\n      ringRotateX,\n      ringRotateY,\n      ringRotateZ,\n      ringRadiusX,\n      ringRadiusY,\n      ringScale,\n      tiltRotateX,\n      tiltRotateY,\n      tiltRotateZ,\n      tiltRadiusX,\n      tiltRadiusY,\n      tiltScale,\n      tiltMoveY,\n      galleryRotateX,\n      galleryRotateY,\n      galleryRotateZ,\n      galleryRadiusX,\n      galleryRadiusY,\n      galleryScale,\n    ]\n  );\n\n  useEffect(() => {\n    const ctx = gsap.context(() => {\n      applyLayout(modeRef.current, false);\n\n      const handleResize = () => applyLayout(modeRef.current, false);\n      window.addEventListener(\"resize\", handleResize);\n      return () => window.removeEventListener(\"resize\", handleResize);\n    }, trackRef);\n\n    return () => ctx.revert();\n    // eslint-disable-next-line react-hooks/exhaustive-deps\n  }, [items.length]);\n\n  const didMountTransforms = useRef(false);\n  useEffect(() => {\n    if (!didMountTransforms.current) {\n      didMountTransforms.current = true;\n      return;\n    }\n    applyLayout(modeRef.current, true);\n    // eslint-disable-next-line react-hooks/exhaustive-deps\n  }, [\n    imageWidth,\n    imageHeight,\n    imageGap,\n    flatRadiusX,\n    flatRadiusY,\n    flatScale,\n    ringRotateX,\n    ringRotateY,\n    ringRotateZ,\n    ringRadiusX,\n    ringRadiusY,\n    ringScale,\n    tiltRotateX,\n    tiltRotateY,\n    tiltRotateZ,\n    tiltRadiusX,\n    tiltRadiusY,\n    tiltScale,\n    tiltMoveY,\n    galleryRotateX,\n    galleryRotateY,\n    galleryRotateZ,\n    galleryRadiusX,\n    galleryRadiusY,\n    galleryScale,\n  ]);\n\n  const handleModeChange = (mode: OrbitFlipSliderMode) => {\n    if (mode === modeRef.current) return;\n    modeRef.current = mode;\n    setActiveMode(mode);\n    applyLayout(mode, true);\n  };\n\n  // Continuously nudges the ring's rotation offset and re-commits positions\n  // directly (no Flip) each frame - paused while a Flip mode-transition is\n  // in flight, or while hovered when stopRotationOnHover is on.\n  useEffect(() => {\n    if (!rotate || reducedMotion) return;\n    let rafId: number;\n    let lastTime = performance.now();\n\n    const tick = (now: number) => {\n      const dt = (now - lastTime) / 1000;\n      lastTime = now;\n      const paused = isFlipAnimatingRef.current || (stopRotationOnHover && hoveredCardCountRef.current > 0);\n      if (!paused) {\n        rotationOffsetRef.current += rotateSpeed * dt;\n        applyLayout(modeRef.current, false);\n      }\n      rafId = requestAnimationFrame(tick);\n    };\n\n    rafId = requestAnimationFrame(tick);\n    return () => cancelAnimationFrame(rafId);\n  }, [rotate, rotateSpeed, stopRotationOnHover, reducedMotion, applyLayout]);\n\n  // Every card stays flat and forward-facing at rest - hover just pops it\n  // toward the viewer with a bouncy tilt, without touching z-index.\n  const handleCardEnter = useCallback(\n    (e: React.MouseEvent<HTMLDivElement>) => {\n      hoveredCardCountRef.current += 1;\n      if (reducedMotion || !enableHoverMovement || window.innerWidth < MOBILE_BREAKPOINT) return;\n      const card = e.currentTarget;\n      const inner = card.querySelector<HTMLElement>(\".orbit-flip-slider-card-inner\");\n      if (!inner) return;\n      const rotateY =\n        perspectiveRotateDirection === \"left\"\n          ? -Math.abs(perspectiveRotateValue)\n          : Math.abs(perspectiveRotateValue);\n\n      gsap.killTweensOf(inner);\n      gsap.to(inner, {\n        y: hoverMoveY,\n        rotateY,\n        boxShadow: \"0 14px 26px rgba(0,0,0,0.2)\",\n        duration: 0.8,\n        ease: \"back.out(2.2)\",\n      });\n    },\n    [enableHoverMovement, hoverMoveY, perspectiveRotateDirection, perspectiveRotateValue, reducedMotion]\n  );\n\n  const handleCardLeave = useCallback(\n    (e: React.MouseEvent<HTMLDivElement>) => {\n      hoveredCardCountRef.current = Math.max(0, hoveredCardCountRef.current - 1);\n      if (reducedMotion || !enableHoverMovement || window.innerWidth < MOBILE_BREAKPOINT) return;\n      const card = e.currentTarget;\n      const inner = card.querySelector<HTMLElement>(\".orbit-flip-slider-card-inner\");\n      if (!inner) return;\n\n      gsap.killTweensOf(inner);\n      gsap.to(inner, {\n        y: 0,\n        rotateY: 0,\n        boxShadow: \"0 1px 2px rgba(0,0,0,0.08)\",\n        duration: 0.7,\n        ease: \"back.out(2.2)\",\n      });\n    },\n    [enableHoverMovement, reducedMotion]\n  );\n\n  return (\n    <div\n      className=\"relative flex h-screen w-full flex-col overflow-hidden\"\n      style={{ backgroundColor }}\n    >\n    \n\n      <div\n        ref={trackRef}\n        className=\"relative w-full flex-1 overflow-hidden\"\n      >\n        {items.map((item, i) => (\n          <div\n            key={item.id ?? i}\n            className=\"orbit-flip-slider-card absolute left-0 top-0\"\n            onMouseEnter={handleCardEnter}\n            onMouseLeave={handleCardLeave}\n            style={{ perspective: \"500px\" }}\n          >\n            <div\n              className={`orbit-flip-slider-card-inner relative h-full w-full overflow-hidden bg-white ${rounded}`}\n              style={{\n                boxShadow: \"0 1px 2px rgba(0,0,0,0.08)\",\n                transformStyle: \"preserve-3d\",\n              }}\n            >\n              <Image\n                src={item.image}\n                alt={item.alt ?? `Selected work ${i + 1}`}\n                fill\n                sizes={`${imageWidth}px`}\n                className=\"object-cover\"\n                draggable={false}\n              />\n            </div>\n          </div>\n        ))}\n      </div>\n        <div className=\"absolute top-20 left-6\">\n        <div className=\"flex flex-wrap items-center gap-2\">\n          {MODES.map((m) => (\n            <button\n              key={m.key}\n              type=\"button\"\n              onClick={() => handleModeChange(m.key)}\n              className={`rounded-full border px-5 py-2 text-sm transition-colors duration-300 ${\n                activeMode === m.key\n                  ? \"border-black bg-black text-white\"\n                  : \"border-black/15 bg-white/70 text-black/70 hover:bg-black/10\"\n              }`}\n            >\n              {m.label}\n            </button>\n          ))}\n        </div>\n      </div>\n    </div>\n  );\n};\n\nexport default OrbitFlipSliderComp;\n"
+    }
+  ]
+}

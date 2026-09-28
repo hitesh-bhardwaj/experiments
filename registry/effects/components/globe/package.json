@@ -1,0 +1,25 @@
+{
+  "name": "@hyperiux/globe",
+  "version": "1.0.0",
+  "private": false,
+  "peerDependencies": {
+    "gsap": "^3.15.0",
+    "lucide-react": "^0.577.0",
+    "react": ">=19.0.0",
+    "react-dom": ">=19.0.0"
+  },
+  "description": "Interactive dotted world globe with animated routes, location navigation, and a desktop flat-map projection.",
+  "main": "index.tsx",
+  "files": [
+    "index.tsx",
+    "registry.json"
+  ],
+  "keywords": [
+    "components",
+    "hyperiux"
+  ],
+  "dependencies": {
+    "gsap": "*",
+    "lucide-react": "*"
+  }
+}

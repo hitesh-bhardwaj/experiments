@@ -1,0 +1,45 @@
+/* Lumera template fonts. Scoped to this folder only - imported from
+   ./lumera-styles.css, which only the lumera template page imports, so these
+   @font-face rules never load on any other page in the app. */
+
+/* PP Neue Montreal - heading font (var(--font-neue-montreal)) */
+
+@font-face {
+  font-family: "PP Neue Montreal";
+  src: url("./assets/fonts/ppneuemontreal-woff2/ppneuemontreal-book.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "PP Neue Montreal";
+  src: url("./assets/fonts/ppneuemontreal-woff2/ppneuemontreal-medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Aeonik Pro - body font (var(--font-aeonik-pro)) */
+
+@font-face {
+  font-family: "Aeonik Pro";
+  src: url("./assets/fonts/aeonik-pro-woff2/AeonikPro-Light.woff2") format("woff2");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Aeonik Pro";
+  src: url("./assets/fonts/aeonik-pro-woff2/AeonikPro-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Aeonik Pro";
+  src: url("./assets/fonts/aeonik-pro-woff2/AeonikPro-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+

@@ -1,0 +1,88 @@
+{
+  "name": "svg-brush-transition",
+  "type": "registry:component",
+  "title": "SVG Brush Transition",
+  "description": "Brush-stroke navigation transition that draws a large SVG path across the viewport",
+  "dependencies": [
+    "gsap",
+    "next-transition-router"
+  ],
+  "registryDependencies": [],
+  "exportName": "SVGBrushTransition",
+  "exportKind": "default",
+  "tier": "pro",
+  "version": "1.1.0",
+  "changelog": [
+    {
+      "version": "1.1.0",
+      "date": "2026-07-21",
+      "summary": "Added reduced-motion route fallback with short opacity fades.",
+      "breaking": false
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-02-10",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "props": [
+    {
+      "name": "strokeWidth",
+      "type": "number",
+      "default": 2,
+      "description": "Final brush stroke width after the covering wipe completes.",
+      "remixer": {
+        "control": "range",
+        "group": "brush",
+        "groupTitle": "Brush",
+        "min": 1,
+        "max": 24,
+        "step": 1
+      }
+    },
+    {
+      "name": "strokeColor",
+      "type": "string",
+      "default": "#82A0FF",
+      "description": "SVG brush stroke color.",
+      "remixer": {
+        "control": "color",
+        "group": "brush",
+        "groupTitle": "Brush"
+      }
+    },
+    {
+      "name": "duration",
+      "type": "number",
+      "default": 1.5,
+      "description": "Duration of the SVG brush draw and reveal animations.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0.25,
+        "max": 4,
+        "step": 0.05
+      }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "brush",
+    "layout": {
+      "buttonClassName": "right-4! top-25!",
+      "panelClassName": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/svg-brush-transition/index.tsx"
+    }
+  ]
+}

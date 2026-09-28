@@ -1,0 +1,17 @@
+{
+  "name": "@hyperiux/drop-text",
+  "version": "2.0.0",
+  "description": "Text that drops into place with configurable stagger origins and character, word, or line splitting.",
+  "main": "index.tsx",
+  "files": [
+    "index.tsx",
+    "registry.json"
+  ],
+  "keywords": [
+    "text",
+    "hyperiux"
+  ],
+  "dependencies": {
+    "gsap": "*"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "name": "@hyperiux/timeline",
+  "version": "1.0.0",
+  "description": "Horizontal scroll timeline with Lenis smoothing, GSAP milestone reveals, and reduced-motion support.",
+  "main": "index.tsx",
+  "files": [
+    "index.tsx",
+    "registry.json"
+  ],
+  "keywords": [
+    "components",
+    "hyperiux"
+  ],
+  "dependencies": {
+    "@gsap/react": "*",
+    "gsap": "*",
+    "lenis": "*"
+  }
+}

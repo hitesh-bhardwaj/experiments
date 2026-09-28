@@ -1,0 +1,131 @@
+{
+  "name": "shear-wipe",
+  "type": "registry:component",
+  "title": "Shear Wipe",
+  "description": "Two full-screen content panels separated by a slanted GSAP clip-path edge that shears open on hover or click, revealing the second panel.",
+  "dependencies": [
+    "gsap"
+  ],
+  "registryDependencies": [],
+  "exportName": "ShearWipe",
+  "exportKind": "default",
+  "tier": "pro",
+  "version": "1.1.0",
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "date": "2026-08-06",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "props": [
+    {
+      "name": "componentsTextColor",
+      "type": "string",
+      "default": "text-[#0D47A1]",
+      "description": "Tailwind text color class for the Components panel copy.",
+      "remixer": {
+        "control": "select",
+        "group": "components",
+        "groupTitle": "Components Panel",
+        "options": [
+          {
+            "value": "text-[#0D47A1]",
+            "label": "Royal Blue"
+          },
+          {
+            "value": "text-white",
+            "label": "White"
+          },
+          {
+            "value": "text-black",
+            "label": "Black"
+          },
+          {
+            "value": "text-[#EA580C]",
+            "label": "Orange"
+          },
+          {
+            "value": "text-[#166534]",
+            "label": "Forest"
+          },
+          {
+            "value": "text-[#7C3AED]",
+            "label": "Violet"
+          }
+        ]
+      }
+    },
+    {
+      "name": "showcaseTextColor",
+      "type": "string",
+      "default": "text-white",
+      "description": "Tailwind text color class for the Showcase panel copy.",
+      "remixer": {
+        "control": "select",
+        "group": "showcase",
+        "groupTitle": "Showcase Panel",
+        "options": [
+          {
+            "value": "text-white",
+            "label": "White"
+          },
+          {
+            "value": "text-black",
+            "label": "Black"
+          },
+          {
+            "value": "text-[#EA580C]",
+            "label": "Orange"
+          },
+          {
+            "value": "text-[#166534]",
+            "label": "Forest"
+          },
+          {
+            "value": "text-[#7C3AED]",
+            "label": "Violet"
+          }
+        ]
+      }
+    },
+    {
+      "name": "clipPathDuration",
+      "type": "number",
+      "default": 0.9,
+      "description": "Duration of the shear clip-path wipe between panels.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0.3,
+        "max": 2,
+        "step": 0.05
+      }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "motion",
+    "layout": {
+      "buttonClassName": "right-4! top-25!",
+      "panelClassName": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/shear-wipe/index.tsx"
+    },
+    {
+      "path": "ShearWipeComp.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/shear-wipe/ShearWipeComp.tsx"
+    }
+  ]
+}

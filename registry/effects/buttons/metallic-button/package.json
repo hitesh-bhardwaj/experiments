@@ -1,0 +1,17 @@
+{
+  "name": "@hyperiux/metallic-button",
+  "version": "1.0.0",
+  "description": "Button with a WebGL metallic shader rim, hover and press speed ramps, and a click ripple",
+  "main": "index.tsx",
+  "files": [
+    "index.tsx",
+    "registry.json"
+  ],
+  "keywords": [
+    "buttons",
+    "hyperiux"
+  ],
+  "dependencies": {
+    "lucide-react": "*"
+  }
+}

@@ -1,0 +1,95 @@
+{
+  "name": "char-stagger-primary-button",
+  "type": "registry:component",
+  "title": "Character Stagger Primary Button",
+  "description": "Primary button with staggered character animation on hover",
+  "dependencies": [
+    "lucide-react"
+  ],
+  "registryDependencies": [],
+  "exportName": "CharStaggerPrimaryButton",
+  "exportKind": "default",
+  "tier": "pro",
+  "version": "1.1.0",
+  "changelog": [
+    {
+      "version": "1.1.0",
+      "date": "2026-07-21",
+      "summary": "Added prefers-reduced-motion support: the hover character-stagger animation is skipped when the user has reduced motion enabled",
+      "breaking": false
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-06-04",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "props": [
+    {
+      "name": "btnText",
+      "type": "string",
+      "default": "Hover me",
+      "description": "Button label text.",
+      "remixer": {
+        "control": "text",
+        "group": "content",
+        "groupTitle": "Content"
+      }
+    },
+    {
+      "name": "staggerStep",
+      "type": "number",
+      "default": 0.01,
+      "description": "Delay between each character's hover motion.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0,
+        "max": 0.08,
+        "step": 0.005
+      }
+    },
+    {
+      "name": "hoverColor",
+      "type": "color",
+      "default": "#ffffff",
+      "description": "Text color while hovered.",
+      "remixer": {
+        "control": "color",
+        "group": "appearance",
+        "groupTitle": "Appearance"
+      }
+    },
+    {
+      "name": "showArrow",
+      "type": "boolean",
+      "default": false,
+      "description": "Shows the optional arrow icon.",
+      "remixer": {
+        "control": "checkbox",
+        "group": "appearance",
+        "groupTitle": "Appearance"
+      }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "content",
+    "layout": {
+      "buttonClassName": "right-4! top-25!",
+      "panelClassName": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/char-stagger-primary-button/index.tsx"
+    }
+  ]
+}

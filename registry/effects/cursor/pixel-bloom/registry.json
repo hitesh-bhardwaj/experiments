@@ -1,0 +1,116 @@
+{
+  "name": "pixel-bloom",
+  "version": "1.0.1",
+  "changelog": [
+    {
+      "version": "1.0.1",
+      "date": "2026-07-23",
+      "summary": "Added reduced-motion support, added a gridImageUrls prop with a safe fallback, and removed debug logging.",
+      "breaking": false
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-06-04",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "type": "registry:component",
+  "title": "Pixel Bloom",
+  "description": "Cursor-reactive media grid that swaps nearby cells into a textured ASCII collage",
+  "category": "cursor",
+  "dependencies": [],
+  "registryDependencies": [],
+  "previewUrl": "/demo/pixel-bloom",
+  "coverImage": "pixel-bloom",
+  "videoUrl": "pixel-bloom",
+  "tier": "pro",
+  "main": "index.tsx",
+  "exportName": "PixelBloom",
+  "exportKind": "default",
+  "importPath": "@/components/effects/pixel-bloom",
+  "target": "src/components/effects/pixel-bloom",
+  "props": [
+    {
+      "name": "gridSize",
+      "type": "number",
+      "default": 35,
+      "description": "Pixel grid cell size.",
+      "remixer": {
+        "control": "range",
+        "group": "bloom",
+        "groupTitle": "Bloom",
+        "min": 12,
+        "max": 80,
+        "step": 1
+      }
+    },
+    {
+      "name": "effectRadius",
+      "type": "number",
+      "default": 40,
+      "description": "Radius of the cursor bloom.",
+      "remixer": {
+        "control": "range",
+        "group": "bloom",
+        "groupTitle": "Bloom",
+        "min": 8,
+        "max": 160,
+        "step": 1
+      }
+    },
+    {
+      "name": "maxTrailLength",
+      "type": "number",
+      "default": 8,
+      "description": "Maximum number of active trail points.",
+      "remixer": {
+        "control": "range",
+        "group": "bloom",
+        "groupTitle": "Bloom",
+        "min": 1,
+        "max": 32,
+        "step": 1
+      }
+    },
+    {
+      "name": "cellLifetime",
+      "type": "number",
+      "default": 100,
+      "description": "How long each pixel cell remains active.",
+      "remixer": {
+        "control": "range",
+        "group": "bloom",
+        "groupTitle": "Bloom",
+        "min": 20,
+        "max": 800,
+        "step": 10
+      }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "bloom",
+    "layout": {
+      "buttonClassName": "right-4! top-25!",
+      "panelClassName": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "target": "src/components/effects/pixel-bloom/index.tsx"
+    },
+    {
+      "path": "2dcanvasTracker.tsx",
+      "target": "src/components/effects/pixel-bloom/2dcanvasTracker.ts"
+    },
+    {
+      "path": "createSuspendedRaf.ts",
+      "target": "src/components/effects/pixel-bloom/createSuspendedRaf.ts"
+    }
+  ]
+}

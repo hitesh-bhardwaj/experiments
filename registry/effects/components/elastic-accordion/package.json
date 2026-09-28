@@ -1,0 +1,17 @@
+{
+  "name": "@hyperiux/elastic-accordion",
+  "version": "1.0.0",
+  "description": "An accordion with gooey elastic expansion and staggered answer reveals.",
+  "main": "index.tsx",
+  "files": [
+    "index.tsx",
+    "registry.json"
+  ],
+  "keywords": [
+    "components",
+    "hyperiux"
+  ],
+  "dependencies": {
+    "gsap": "*"
+  }
+}

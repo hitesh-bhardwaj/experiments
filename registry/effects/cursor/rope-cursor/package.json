@@ -1,0 +1,16 @@
+{
+  "name": "@hyperiux/rope-cursor",
+  "version": "1.0.1",
+  "description": "Soft trailing rope that lags behind the pointer with a smooth SVG path",
+  "main": "index.tsx",
+  "files": [
+    "index.tsx",
+    "createSuspendedRaf.ts",
+    "registry.json"
+  ],
+  "keywords": [
+    "cursor",
+    "hyperiux"
+  ],
+  "dependencies": {}
+}

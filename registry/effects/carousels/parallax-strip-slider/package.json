@@ -1,0 +1,22 @@
+{
+  "name": "@hyperiux/parallax-strip-slider",
+  "version": "1.0.0",
+  "description": "Fullscreen image slider that reveals each slide through staggered vertical strips with a Ken-Burns zoom and a GSAP SplitText title reveal",
+  "main": "index.tsx",
+  "files": [
+    "index.tsx",
+    "registry.json"
+  ],
+  "keywords": [
+    "carousels",
+    "hyperiux"
+  ],
+  "peerDependencies": {
+    "react": ">=18",
+    "gsap": "*"
+  },
+  "dependencies": {
+    "@gsap/react": "*",
+    "gsap": "*"
+  }
+}

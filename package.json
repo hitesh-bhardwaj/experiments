@@ -1,0 +1,42 @@
+{
+  "name": "hyperiux-pro-components",
+  "private": true,
+  "license": "MPL-2.0",
+  "scripts": {
+    "dev": "npm --prefix apps/docs run dev",
+    "build": "npm --prefix apps/docs run build",
+    "start": "npm --prefix apps/docs run start",
+    "lint": "npm --prefix apps/docs run lint",
+    "build:registry": "node ./scripts/build-registry.js",
+    "component:new": "node ./scripts/component-workflow.mjs new",
+    "component:sync": "node ./scripts/component-workflow.mjs sync",
+    "component:rename": "node ./scripts/component-workflow.mjs rename",
+    "component:move": "node ./scripts/component-workflow.mjs move",
+    "component:delete": "node ./scripts/component-workflow.mjs delete",
+    "component:diff": "node ./scripts/component-workflow.mjs diff",
+    "component:revert": "node ./scripts/component-workflow.mjs revert",
+    "component:verify": "node ./scripts/component-workflow.mjs verify",
+    "component:test": "npm --prefix apps/docs run test -- src/lib/component-workflow.test.js",
+    "sanity:code:diff": "node ./scripts/sanity-code-sync.mjs diff",
+    "sanity:code:sync": "node ./scripts/sanity-code-sync.mjs sync",
+    "sanity:code:test": "npm --prefix apps/docs run test -- src/lib/sanity-code-sync.test.js",
+    "template:package": "node ./scripts/package-template.mjs",
+    "template:update": "node ./scripts/package-template.mjs",
+    "template:create": "node ./scripts/create-template.mjs"
+  },
+  "dependencies": {
+    "@gsap/react": "^2.1.2",
+    "@next/bundle-analyzer": "^16.2.10",
+    "@vercel/blob": "^2.8.0",
+    "archiver": "^7.0.1",
+    "disposable-email-domains": "^1.0.62",
+    "jspdf": "^4.2.1",
+    "leva": "^0.10.1",
+    "next-recaptcha-v3": "^1.5.3",
+    "razorpay": "^2.9.8",
+    "react-dom": "^19.2.8",
+    "recharts": "^3.10.1",
+    "tailwind-merge": "^3.6.0",
+    "tailwind-variants": "^3.2.2"
+  }
+}

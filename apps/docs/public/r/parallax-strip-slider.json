@@ -1,0 +1,176 @@
+{
+  "name": "parallax-strip-slider",
+  "type": "registry:component",
+  "title": "Parallax Strip Slider",
+  "description": "Fullscreen image slider that reveals each slide through staggered vertical strips with a Ken-Burns zoom and a GSAP SplitText title reveal",
+  "dependencies": [
+    "@gsap/react",
+    "gsap"
+  ],
+  "registryDependencies": [],
+  "exportName": "ParallaxStripSlider",
+  "exportKind": "default",
+  "tier": "free",
+  "version": "1.0.0",
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "date": "2026-09-04",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "props": [
+    {
+      "name": "stripCount",
+      "type": "number",
+      "default": 12,
+      "description": "Number of vertical strips the incoming slide is revealed through.",
+      "remixer": {
+        "control": "range",
+        "group": "strips",
+        "groupTitle": "Strips",
+        "min": 4,
+        "max": 24,
+        "step": 1
+      }
+    },
+    {
+      "name": "revealDuration",
+      "type": "number",
+      "default": 0.5,
+      "description": "Duration of each strip's clip-path wipe, in seconds.",
+      "remixer": {
+        "control": "range",
+        "group": "strips",
+        "groupTitle": "Strips",
+        "min": 0.2,
+        "max": 1.5,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "stripStagger",
+      "type": "number",
+      "default": 0.04,
+      "description": "Delay between consecutive strips as they wipe in, in seconds.",
+      "remixer": {
+        "control": "range",
+        "group": "strips",
+        "groupTitle": "Strips",
+        "min": 0,
+        "max": 0.15,
+        "step": 0.01
+      }
+    },
+    {
+      "name": "zoomFrom",
+      "type": "number",
+      "default": 1.2,
+      "description": "Starting scale of the incoming image before it settles to 1 (Ken-Burns zoom).",
+      "remixer": {
+        "control": "range",
+        "group": "image",
+        "groupTitle": "Image",
+        "min": 1,
+        "max": 1.6,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "zoomDuration",
+      "type": "number",
+      "default": 0.9,
+      "description": "Duration of the image zoom settle, in seconds.",
+      "remixer": {
+        "control": "range",
+        "group": "image",
+        "groupTitle": "Image",
+        "min": 0.3,
+        "max": 2,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "autoplay",
+      "type": "boolean",
+      "default": false,
+      "description": "Auto-advance slides on a 5s timer. Paused while a transition is running and under reduced motion.",
+      "remixer": {
+        "control": "checkbox",
+        "group": "playback",
+        "groupTitle": "Playback"
+      }
+    },
+    {
+      "name": "showProgressBar",
+      "type": "boolean",
+      "default": true,
+      "description": "Show the thin progress bar across the top of the slider.",
+      "remixer": {
+        "control": "checkbox",
+        "group": "ui",
+        "groupTitle": "UI"
+      }
+    },
+    {
+      "name": "showCounter",
+      "type": "boolean",
+      "default": true,
+      "description": "Show the numeric slide counter in the bottom-right.",
+      "remixer": {
+        "control": "checkbox",
+        "group": "ui",
+        "groupTitle": "UI"
+      }
+    },
+    {
+      "name": "showControls",
+      "type": "boolean",
+      "default": true,
+      "description": "Enable the click-to-navigate overlay and its circular cursor (left half = previous, right half = next).",
+      "remixer": {
+        "control": "checkbox",
+        "group": "ui",
+        "groupTitle": "UI"
+      }
+    },
+    {
+      "name": "showClue",
+      "type": "boolean",
+      "default": true,
+      "description": "Show the hint pill telling the viewer to click either side to navigate.",
+      "remixer": {
+        "control": "checkbox",
+        "group": "ui",
+        "groupTitle": "UI"
+      }
+    },
+    {
+      "name": "accentColor",
+      "type": "color",
+      "default": "#ffffff",
+      "description": "Color of the slide title, progress bar fill, caption text, counter, and control borders.",
+      "remixer": {
+        "control": "color",
+        "group": "style",
+        "groupTitle": "Style"
+      }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "strips",
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/parallax-strip-slider/index.tsx",
+      "content": "// Built using Hyperiux Vault: https://vault.hyperiux.com\n\"use client\";\n\nimport React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from \"react\";\nimport Image from \"next/image\";\nimport gsap from \"gsap\";\nimport { useGSAP } from \"@gsap/react\";\nimport { SplitText } from \"gsap/SplitText\";\n\nif (typeof window !== \"undefined\") {\n  gsap.registerPlugin(SplitText);\n}\n\n// Animation timing\nconst STRIP_COUNT = 12;\nconst REVEAL_DURATION = 0.5;\nconst STRIP_STAGGER = 0.04;\nconst ZOOM_DURATION = 0.9;\nconst ZOOM_FROM = 1.2;\nconst AUTOPLAY_INTERVAL = 5000;\nconst TITLE_CHAR_DURATION = 0.6;\nconst TITLE_CHAR_STAGGER = 0.04;\nconst TITLE_CHAR_Y_PERCENT = 100;\nconst PROGRESS_DURATION = 0.9;\n\ntype Slide = {\n  src: string;\n  title: string;\n  chapter?: string;\n};\n\ntype ParallaxStripSliderProps = {\n  /** Slides to cycle through. Defaults to a built-in sample set. */\n  slides?: Slide[];\n  className?: string;\n  /** Number of vertical strips in the wipe reveal. */\n  stripCount?: number;\n  /** Duration of each strip's clip-path wipe, in seconds. */\n  revealDuration?: number;\n  /** Delay between consecutive strips, in seconds. */\n  stripStagger?: number;\n  /** Starting scale of the incoming image (Ken-Burns zoom). */\n  zoomFrom?: number;\n  /** Duration of the image zoom settle, in seconds. */\n  zoomDuration?: number;\n  /** Auto-advance slides on a timer. */\n  autoplay?: boolean;\n  /** Show the top progress bar. */\n  showProgressBar?: boolean;\n  /** Show the numeric slide counter. */\n  showCounter?: boolean;\n  /** Enable the click-to-navigate overlay and its circular cursor (left half = prev, right half = next). */\n  showControls?: boolean;\n  /** Show the hint pill telling the viewer to click either side to navigate. */\n  showClue?: boolean;\n  /** Text shown in the hint pill. */\n  clueText?: string;\n  /** Color of the progress bar fill, caption text, and control borders. */\n  accentColor?: string;\n};\n\nconst DEFAULT_SLIDES: Slide[] = [\n  {\n    src: \"https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=1600&q=80\",\n    title: \"Fire\",\n    chapter: \"Collection 01\",\n  },\n  {\n    src: \"https://images.unsplash.com/photo-1520975954732-35dd22299614?auto=format&fit=crop&w=1600&q=80\",\n    title: \"Allure\",\n    chapter: \"Collection 02\",\n  },\n  {\n    src: \"https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&w=1600&q=80\",\n    title: \"Ember\",\n    chapter: \"Collection 03\",\n  },\n];\n\ntype TransitionDirection = \"next\" | \"prev\";\n\nfunction prefersReducedMotion() {\n  return window.matchMedia?.(\"(prefers-reduced-motion: reduce)\")?.matches ?? false;\n}\n\nexport default function ParallaxStripSlider({\n  slides = DEFAULT_SLIDES,\n  className = \"\",\n  stripCount = STRIP_COUNT,\n  revealDuration = REVEAL_DURATION,\n  stripStagger = STRIP_STAGGER,\n  zoomFrom = ZOOM_FROM,\n  zoomDuration = ZOOM_DURATION,\n  autoplay = false,\n  showProgressBar = true,\n  showCounter = true,\n  showControls = true,\n  showClue = true,\n  clueText = \"Click either side and watch the next strip cut through.\",\n  accentColor = \"#ffffff\",\n}: ParallaxStripSliderProps) {\n  const [current, setCurrent] = useState(0);\n  const [incoming, setIncoming] = useState<number | null>(null);\n  const [caption, setCaption] = useState(0);\n  const [direction, setDirection] = useState<TransitionDirection>(\"next\");\n  const rootRef = useRef<HTMLDivElement>(null);\n  const captionRef = useRef<HTMLDivElement>(null);\n  const chapterRef = useRef<HTMLSpanElement>(null);\n  const titleRef = useRef<HTMLHeadingElement>(null);\n  const counterRef = useRef<HTMLSpanElement>(null);\n  const counterNumRef = useRef<HTMLSpanElement>(null);\n  const progressRef = useRef<HTMLDivElement>(null);\n  const stripsRef = useRef<HTMLDivElement[]>([]);\n  const zoomRef = useRef<HTMLDivElement[]>([]);\n  const isAnimating = useRef(false);\n  const isFirstCaption = useRef(true);\n  const splitRef = useRef<SplitText | null>(null);\n\n  // Circular click-to-navigate cursor.\n  const cursorRef = useRef<HTMLDivElement>(null);\n  const line1Ref = useRef<HTMLSpanElement>(null);\n  const line2Ref = useRef<HTMLSpanElement>(null);\n  const isInside = useRef(false);\n  const mouse = useRef({ x: 0, y: 0 });\n  const pos = useRef({ x: 0, y: 0 });\n\n  const total = slides.length;\n\n  const goTo = useCallback(\n    (next: number, transitionDirection: TransitionDirection) => {\n      if (isAnimating.current || next === current || total < 2) return;\n      isAnimating.current = true;\n      setDirection(transitionDirection);\n      setIncoming(next);\n    },\n    [current, total]\n  );\n\n  const onNext = useCallback(\n    () => goTo((current + 1) % total, \"next\"),\n    [current, total, goTo]\n  );\n  const onPrev = useCallback(\n    () => goTo((current - 1 + total) % total, \"prev\"),\n    [current, total, goTo]\n  );\n\n  // Auto-advance on a timer; pauses while a transition is mid-flight and when\n  // reduced motion is requested.\n  useEffect(() => {\n    if (!autoplay || total < 2) return;\n    if (typeof window !== \"undefined\" && prefersReducedMotion()) return;\n    const id = window.setInterval(() => {\n      if (!isAnimating.current) onNext();\n    }, AUTOPLAY_INTERVAL);\n    return () => window.clearInterval(id);\n  }, [autoplay, total, onNext]);\n\n  // Wipe + zoom + progress on slide change.\n  useGSAP(\n    () => {\n      if (incoming === null) return;\n\n      const strips = stripsRef.current.slice(0, stripCount).filter(Boolean);\n      const zooms = zoomRef.current.slice(0, stripCount).filter(Boolean);\n      if (!strips.length) return;\n      const isPrevious = direction === \"prev\";\n      const orderedStrips = isPrevious ? [...strips].reverse() : strips;\n\n      // Reduced motion: swap without the reveal.\n      if (prefersReducedMotion()) {\n        setCaption(incoming);\n        setCurrent(incoming);\n        setIncoming(null);\n        isAnimating.current = false;\n        return;\n      }\n\n      const settle = () => {\n        setCaption(incoming);\n        setCurrent(incoming);\n        setIncoming(null);\n        isAnimating.current = false;\n      };\n\n      const tl = gsap.timeline({ onComplete: settle });\n\n      // Reverse stagger + clip origin when moving backward.\n      tl.fromTo(\n        orderedStrips,\n        { clipPath: isPrevious ? \"inset(0 0 0 100%)\" : \"inset(0 100% 0 0)\" },\n        {\n          clipPath: isPrevious ? \"inset(0 0 0 0%)\" : \"inset(0 0% 0 0)\",\n          duration: revealDuration,\n          ease: \"power3.out\",\n          stagger: stripStagger,\n        },\n        0\n      );\n\n      tl.fromTo(\n        zooms,\n        { scale: zoomFrom },\n        {\n          scale: 1,\n          duration: zoomDuration,\n          ease: \"power3.out\",\n        },\n        0\n      );\n\n      // Bar slides toward the incoming fill.\n      if (progressRef.current) {\n        tl.to(\n          progressRef.current,\n          {\n            scaleX: (incoming + 1) / total,\n            duration: PROGRESS_DURATION,\n            ease: \"power3.inOut\",\n          },\n          0\n        );\n      }\n\n      // Outgoing caption texts fade out under the strips.\n      const outgoing = [\n        captionRef.current,\n        titleRef.current,\n        counterRef.current,\n      ].filter(Boolean);\n      if (outgoing.length) {\n        tl.to(\n          outgoing,\n          {\n            autoAlpha: 0,\n            y: -2,\n            duration: 0.35,\n            ease: \"power2.in\",\n          },\n          0.15\n        );\n        tl.add(() => setCaption(incoming), 0.5);\n      }\n    },\n    { dependencies: [incoming, direction, stripCount, revealDuration, stripStagger, zoomFrom, zoomDuration], scope: rootRef }\n  );\n\n  // Revert the split before React commits the new title.\n  useLayoutEffect(() => {\n    splitRef.current?.revert();\n    splitRef.current = null;\n  }, [caption]);\n\n  // Incoming caption reveal: title chars, chapter fade, counter number.\n  useGSAP(\n    () => {\n      if (isFirstCaption.current) {\n        isFirstCaption.current = false;\n        return;\n      }\n      if (!captionRef.current || !titleRef.current) return;\n\n      // Snap back what the outgoing tween hid.\n      gsap.set([captionRef.current, titleRef.current], { autoAlpha: 1, y: 0 });\n\n      if (prefersReducedMotion()) {\n        gsap.set(\n          [chapterRef.current, titleRef.current, counterRef.current, counterNumRef.current],\n          { autoAlpha: 1, y: 0, yPercent: 0 }\n        );\n        return;\n      }\n\n      // Chars only - no line/mask wrappers that shift metrics.\n      const split = new SplitText(titleRef.current, { type: \"chars\" });\n      splitRef.current = split;\n\n      const tl = gsap.timeline({\n        // Restore plain <h2> once the reveal is done.\n        onComplete: () => {\n          split.revert();\n          if (splitRef.current === split) splitRef.current = null;\n        },\n      });\n\n      // Title: char stagger up from below the clip.\n      tl.from(\n        split.chars,\n        {\n          yPercent: TITLE_CHAR_Y_PERCENT,\n          duration: TITLE_CHAR_DURATION,\n          ease: \"power2.out\",\n          stagger: TITLE_CHAR_STAGGER,\n        },\n        0\n      );\n\n      // Chapter: fade only.\n      if (chapterRef.current) {\n        tl.fromTo(\n          chapterRef.current,\n          { autoAlpha: 0, y: 0 },\n          { autoAlpha: 1, y: 0, duration: 0.5, ease: \"power2.out\" },\n          0\n        );\n      }\n\n      // Counter: fade block, lift just the number.\n      if (counterRef.current) {\n        tl.fromTo(\n          counterRef.current,\n          { autoAlpha: 0, y: 0 },\n          { autoAlpha: 1, y: 0, duration: 0.45, ease: \"power2.out\" },\n          0\n        );\n      }\n      if (counterNumRef.current) {\n        tl.from(\n          counterNumRef.current,\n          {\n            yPercent: 110,\n            duration: 0.55,\n            ease: \"power3.out\",\n          },\n          0\n        );\n      }\n    },\n    { dependencies: [caption], scope: rootRef }\n  );\n\n  // Drop the last live split on unmount.\n  useGSAP(\n    () => () => {\n      splitRef.current?.revert();\n      splitRef.current = null;\n    },\n    { scope: rootRef }\n  );\n\n  // Circular cursor: smooth follow + arrow that flips with the pointer side.\n  // Mirrors the clip-path-slider interaction (0.12 lerp, power3 eases).\n  useEffect(() => {\n    if (!showControls) return;\n    const cursor = cursorRef.current;\n    const l1 = line1Ref.current;\n    const l2 = line2Ref.current;\n    if (!cursor || !l1 || !l2) return;\n\n    gsap.set(cursor, { xPercent: -50, yPercent: -50, opacity: 0, scale: 0.6 });\n    gsap.set(l1, {\n      transformOrigin: \"100% 50%\",\n      xPercent: -50,\n      yPercent: -50,\n      y: -1.5,\n      rotation: 45,\n      x: 0,\n    });\n    gsap.set(l2, {\n      transformOrigin: \"100% 50%\",\n      xPercent: -50,\n      yPercent: -50,\n      y: 1.5,\n      rotation: -45,\n      x: 0,\n    });\n\n    let currentSide: \"left\" | \"right\" = \"right\";\n    let rafId: number | null = null;\n\n    const handleMove = (e: MouseEvent) => {\n      const x = e.clientX;\n      const y = e.clientY;\n      const target = e.target instanceof Element ? e.target : null;\n      const isOverControls = Boolean(\n        target?.closest(\n          'button, input, textarea, select, a, label, [role=\"button\"], [contenteditable=\"true\"], [class*=\"remixer-panel\"]'\n        )\n      );\n\n      mouse.current.x = x;\n      mouse.current.y = y;\n\n      const rect = rootRef.current?.getBoundingClientRect();\n      const isOut =\n        !rect ||\n        x <= rect.left ||\n        y <= rect.top ||\n        x >= rect.right ||\n        y >= rect.bottom;\n\n      if (isOut || isOverControls) {\n        if (isInside.current) {\n          isInside.current = false;\n          gsap.to(cursor, {\n            opacity: 0,\n            scale: 0.6,\n            duration: 0.25,\n            ease: \"power3.inOut\",\n          });\n        }\n        return;\n      }\n\n      if (!isInside.current) {\n        pos.current.x = x;\n        pos.current.y = y;\n        gsap.set(cursor, { x, y });\n        gsap.to(cursor, {\n          opacity: 1,\n          scale: 1,\n          duration: 0.25,\n          ease: \"power3.out\",\n        });\n        isInside.current = true;\n      }\n\n      const isLeft = rect ? x < rect.left + rect.width / 2 : false;\n      const nextSide = isLeft ? \"left\" : \"right\";\n\n      if (nextSide !== currentSide) {\n        currentSide = nextSide;\n        if (nextSide === \"left\") {\n          gsap.to(l1, { rotation: 135, x: \"-1vw\", duration: 0.35, ease: \"power3.inOut\" });\n          gsap.to(l2, { rotation: -135, x: \"-1vw\", duration: 0.35, ease: \"power3.inOut\" });\n        } else {\n          gsap.to(l1, { rotation: 45, x: 4, duration: 0.35, ease: \"power3.inOut\" });\n          gsap.to(l2, { rotation: -45, x: 4, duration: 0.35, ease: \"power3.inOut\" });\n        }\n      }\n    };\n\n    const render = () => {\n      pos.current.x += (mouse.current.x - pos.current.x) * 0.12;\n      pos.current.y += (mouse.current.y - pos.current.y) * 0.12;\n      gsap.set(cursor, { x: pos.current.x, y: pos.current.y });\n      rafId = requestAnimationFrame(render);\n    };\n\n    window.addEventListener(\"mousemove\", handleMove);\n    render();\n\n    return () => {\n      window.removeEventListener(\"mousemove\", handleMove);\n      if (rafId) cancelAnimationFrame(rafId);\n    };\n  }, [showControls]);\n\n  const renderStrips = (slide: Slide) => {\n    const width = 100 / stripCount;\n\n    return Array.from({ length: stripCount }, (_, i) => (\n      <div\n        key={i}\n        ref={(el) => {\n          if (el) stripsRef.current[i] = el;\n        }}\n        className=\"absolute inset-y-0 overflow-hidden\"\n        style={{\n          left: `${i * width}%`,\n          width: `${width}%`,\n          // Cover the seam between neighbours.\n          marginLeft: i === 0 ? 0 : \"-0.5px\",\n          paddingLeft: i === 0 ? 0 : \"0.5px\",\n        }}\n      >\n        {/* Full-width image pulled back by this strip's offset. */}\n        <div\n          className=\"absolute inset-y-0\"\n          style={{\n            left: `-${i * 100}%`,\n            width: `${stripCount * 100}%`,\n          }}\n        >\n          <div\n            ref={(el) => {\n              if (el) zoomRef.current[i] = el;\n            }}\n            className=\"relative h-full w-full will-change-transform\"\n          >\n            <Image\n              src={slide.src}\n              alt=\"\"\n              fill\n              sizes=\"100vw\"\n              draggable={false}\n              className=\"object-cover select-none\"\n            />\n          </div>\n        </div>\n      </div>\n    ));\n  };\n\n  const activeSlide = slides[caption];\n\n  return (\n    <div\n      ref={rootRef}\n      className={`parallax-strip-slider relative h-full w-full overflow-hidden bg-black ${className}`}\n    >\n      {/* Outgoing slide, revealed away underneath. */}\n      <div className=\"absolute inset-0\">\n        <Image\n          src={slides[current].src}\n          alt={slides[current].title}\n          fill\n          priority\n          sizes=\"100vw\"\n          draggable={false}\n          className=\"object-cover select-none\"\n        />\n      </div>\n\n      {/* Incoming slide, mounted only during a transition. */}\n      {incoming !== null && (\n        <div className=\"absolute inset-0\">{renderStrips(slides[incoming])}</div>\n      )}\n\n      {/* Click-to-navigate overlay: left half steps back, right half advances. */}\n      {showControls && total > 1 && (\n        <div\n          className=\"absolute inset-0 z-20\"\n          style={{ cursor: \"none\" }}\n          onClick={(e) => {\n            if (isAnimating.current) return;\n            const rect = e.currentTarget.getBoundingClientRect();\n            const isLeft = e.clientX < rect.left + rect.width / 2;\n            if (isLeft) onPrev();\n            else onNext();\n          }}\n        />\n      )}\n\n      {/* Top progress bar, floating over the image. Pushed clear of the fixed\n          demo header. */}\n      {showProgressBar && (\n        <div\n          className=\"pointer-events-none absolute inset-x-10 top-20 z-10 h-px max-[1025px]:top-28\"\n          style={{ backgroundColor: `${accentColor}33` }}\n        >\n          <div\n            ref={progressRef}\n            className=\"h-full w-full origin-left\"\n            style={{\n              transform: `scaleX(${(caption + 1) / total})`,\n              backgroundColor: accentColor,\n            }}\n          />\n        </div>\n      )}\n\n      {/* Top-left label */}\n      <div\n        ref={captionRef}\n        className=\"pointer-events-none absolute inset-x-0 top-0 px-10 pb-10 pt-24 max-[1025px]:pt-32\"\n      >\n        <span\n          ref={chapterRef}\n          className=\"block text-xs font-medium tracking-wide\"\n          style={{ color: accentColor }}\n        >\n          {activeSlide.chapter ??\n            `Collection ${String(caption + 1).padStart(2, \"0\")}`}\n        </span>\n      </div>\n\n      {/* Bottom bar: three fixed thirds on one line; on mobile it stacks with\n          the title + counter above and the controls below. */}\n      <div className=\"absolute inset-x-0 bottom-0 flex items-end px-10 pb-10 max-[1025px]:flex-col max-[1025px]:items-stretch max-[1025px]:gap-6 max-md:pb-32\">\n        <h2\n          ref={titleRef}\n          className=\"pointer-events-none w-1/3 shrink-0 overflow-hidden text-8xl leading-none flex items-end max-[1025px]:order-1 max-[1025px]:w-full\"\n          style={{\n            fontFamily: '\"Instrument Serif\", Georgia, serif',\n            color: accentColor,\n          }}\n        >\n          {activeSlide.title}\n        </h2>\n\n        {/* Middle third keeps its width so the counter stays pinned to the\n            right. On mobile the spacer collapses. */}\n        <div aria-hidden className=\"w-1/3 shrink-0 max-[1025px]:hidden\" />\n\n        {showCounter && (\n          <span\n            ref={counterRef}\n            className=\"pointer-events-none flex w-1/3 pb-5 shrink-0 h-full items-center pt-5! justify-end text-xs max-[1025px]:order-2 max-[1025px]:h-auto max-[1025px]:w-full max-[1025px]:justify-start max-[1025px]:p-0 max-md:order-first max-md:justify-end\"\n            style={{ color: `${accentColor}b3` }}\n          >\n            {/* Fixed-width clip so the number can lift in without reflow. */}\n            <span className=\"inline-block w-[2ch] overflow-hidden text-right\">\n              <span ref={counterNumRef} className=\"inline-block\">\n                {String(caption + 1).padStart(2, \"0\")}\n              </span>\n            </span>\n            <span> / {String(total).padStart(2, \"0\")}</span>\n          </span>\n        )}\n      </div>\n\n      {/* Circular nav cursor - follows the pointer, arrow flips per side. */}\n      {showControls && total > 1 && (\n        <div\n          ref={cursorRef}\n          className=\"pointer-events-none fixed left-0 top-0 z-100 max-[1025px]:hidden\"\n        >\n          <div\n            className=\"flex size-15 items-center justify-center rounded-full\"\n            style={{ backgroundColor: accentColor }}\n          >\n            <div className=\"relative size-7.5\">\n              <span\n                ref={line1Ref}\n                className=\"absolute left-1/2 top-1/2 h-0.5 w-4\"\n                style={{ backgroundColor: \"#000000\" }}\n              />\n              <span\n                ref={line2Ref}\n                className=\"absolute left-1/2 top-1/2 h-0.5 w-4\"\n                style={{ backgroundColor: \"#000000\" }}\n              />\n            </div>\n          </div>\n        </div>\n      )}\n\n\n      {showClue && clueText && total > 1 && (\n        <p className=\"pointer-events-none absolute bottom-8 left-1/2 z-50 -translate-x-1/2 rounded-full border border-white/15 bg-black/35 px-6 py-3 text-center font-mono text-sm leading-relaxed text-white/80 backdrop-blur-md max-md:bottom-6 max-md:w-[70%] max-md:text-sm max-[1025px]:text-base\">\n          {clueText}\n        </p>\n      )}\n\n      <style jsx global>{`\n        @import url(\"https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap\");\n      `}</style>\n    </div>\n  );\n}\n"
+    }
+  ]
+}

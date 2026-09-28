@@ -1,0 +1,184 @@
+{
+  "name": "depth-flip-text",
+  "type": "registry:component",
+  "title": "Depth Flip Text",
+  "description": "Vault-themed perspective text flip with staggered character motion and optional crossfade.",
+  "dependencies": [
+    "gsap",
+    "@gsap/react"
+  ],
+  "registryDependencies": [],
+  "exportName": "DepthFlipText",
+  "exportKind": "default",
+  "tier": "free",
+  "version": "1.0.0",
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "date": "2026-08-17",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "props": [
+    {
+      "name": "phrases",
+      "type": "string[]",
+      "default": [
+        "Hyperiux Vault ships faster",
+        "Premium UI for modern teams",
+        "Built to launch beautifully"
+      ],
+      "description": "Phrases that cycle through the perspective flip.",
+      "copyable": true,
+      "remixer": {
+        "control": "json/list",
+        "enabled": false,
+        "group": "content",
+        "groupTitle": "Content"
+      }
+    },
+    {
+      "name": "backgroundColor",
+      "type": "string",
+      "default": "#f6f5f2",
+      "description": "Background color behind the effect.",
+      "remixer": {
+        "control": "color",
+        "enabled": false,
+        "group": "colors",
+        "groupTitle": "Colors"
+      }
+    },
+    {
+      "name": "textColor",
+      "type": "string",
+      "default": "#ffffff",
+      "description": "Text color for both the current and incoming phrase.",
+      "remixer": {
+        "control": "color",
+        "group": "colors",
+        "groupTitle": "Colors"
+      }
+    },
+    {
+      "name": "loop",
+      "type": "boolean",
+      "default": false,
+      "description": "Restarts the phrase sequence after the last entry.",
+      "remixer": {
+        "control": "checkbox",
+        "group": "motion",
+        "groupTitle": "Motion"
+      }
+    },
+    {
+      "name": "holdDuration",
+      "type": "number",
+      "default": 0.4,
+      "description": "Delay before each phrase begins its flip transition.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0,
+        "max": 3,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "transitionDuration",
+      "type": "number",
+      "default": 1.4,
+      "description": "Duration of the flip animation.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0.1,
+        "max": 3,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "charStagger",
+      "type": "number",
+      "default": 0.02,
+      "description": "Delay between each character beginning its motion.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0,
+        "max": 0.12,
+        "step": 0.005
+      }
+    },
+    {
+      "name": "useOpacityTransition",
+      "type": "boolean",
+      "default": false,
+      "description": "Fades outgoing and incoming characters during the flip.",
+      "remixer": {
+        "control": "checkbox",
+        "group": "motion",
+        "groupTitle": "Motion"
+      }
+    },
+    {
+      "name": "scrub",
+      "type": "boolean",
+      "default": false,
+      "description": "Links the first flip transition to scroll progress instead of autoplay.",
+      "remixer": {
+        "enabled": false,
+        "control": "checkbox",
+        "group": "motion",
+        "groupTitle": "Motion"
+      }
+    },
+    {
+      "name": "scrollStart",
+      "type": "string",
+      "default": "top 80%",
+      "description": "ScrollTrigger start value used when scrub is enabled.",
+      "remixer": {
+        "enabled": false,
+        "control": "text",
+        "group": "motion",
+        "groupTitle": "Motion"
+      }
+    },
+    {
+      "name": "scrollEnd",
+      "type": "string",
+      "default": "bottom 20%",
+      "description": "ScrollTrigger end value used when scrub is enabled.",
+      "remixer": {
+        "enabled": false,
+        "control": "text",
+        "group": "motion",
+        "groupTitle": "Motion"
+      }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "motion",
+    "layout": {
+      "buttonClassName": "right-4! top-25!",
+      "panelClassName": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/depth-flip-text/index.tsx",
+      "content": "// Built using Hyperiux Vault: https://vault.hyperiux.com\n\n\"use client\";\n\nimport { useEffect, useMemo, useRef, useState } from \"react\";\nimport type { Ref } from \"react\";\nimport gsap from \"gsap\";\nimport { useGSAP } from \"@gsap/react\";\nimport { ScrollTrigger } from \"gsap/ScrollTrigger\";\nimport { SplitText } from \"gsap/SplitText\";\n\ngsap.registerPlugin(useGSAP, SplitText, ScrollTrigger);\n\ninterface DepthFlipTextProps {\n  phrases?: string[];\n  className?: string;\n  backgroundColor?: string;\n  textColor?: string;\n  loop?: boolean;\n  holdDuration?: number;\n  transitionDuration?: number;\n  charStagger?: number;\n  useOpacityTransition?: boolean;\n  scrub?: boolean;\n  scrollStart?: string;\n  scrollEnd?: string;\n}\n\nconst DEFAULT_PHRASES = [\n  \"Hyperiux Vault ships faster\",\n  \"Premium UI for modern teams\",\n  \"Built to launch beautifully\",\n];\n\nconst LINE_HEIGHT = 0.9;\n\nconst CHAR_PERSPECTIVE = 1200;\n\nconst FLIP_EASE = \"power4.inOut\";\n\nconst DepthFlipText = ({\n  phrases = DEFAULT_PHRASES,\n  className = \"\",\n  backgroundColor = \"#f6f5f2\",\n  textColor = \"#050505\",\n  loop = false,\n  holdDuration = 0.4,\n  transitionDuration = 1.4,\n  charStagger = 0.02,\n  useOpacityTransition = false,\n  scrub = false,\n  scrollStart = \"top 80%\",\n  scrollEnd = \"bottom 20%\",\n}: DepthFlipTextProps) => {\n  const normalizedPhrases = useMemo(\n    () => phrases.map((phrase) => phrase.trim()).filter(Boolean),\n    [phrases],\n  );\n\n  const [activeIndex, setActiveIndex] = useState(0);\n  const [fontsReady, setFontsReady] = useState(false);\n\n  const containerRef = useRef<HTMLDivElement>(null);\n  const currentRef = useRef<HTMLParagraphElement>(null);\n  const nextRef = useRef<HTMLParagraphElement>(null);\n\n  // Splitting against a fallback font would measure the wrong face height and\n  // reflow once the real font lands, so stay hidden until the font is in.\n  useEffect(() => {\n    let cancelled = false;\n    const ready = document.fonts?.ready ?? Promise.resolve();\n\n    ready.then(() => {\n      if (!cancelled) setFontsReady(true);\n    });\n\n    return () => {\n      cancelled = true;\n    };\n  }, []);\n\n  const displayIndex = scrub ? 0 : activeIndex;\n  const isLast = displayIndex >= normalizedPhrases.length - 1;\n  const hasNext = normalizedPhrases.length > 1 && (!isLast || (!scrub && loop));\n  const nextIndex = isLast ? 0 : displayIndex + 1;\n  const currentPhrase = normalizedPhrases[displayIndex] ?? \"\";\n  const nextPhrase = hasNext ? (normalizedPhrases[nextIndex] ?? \"\") : \"\";\n\n  useGSAP(\n    () => {\n      const currentEl = currentRef.current;\n      const nextEl = nextRef.current;\n      if (!fontsReady || !currentEl || !nextEl) return;\n\n      const currentSplit = SplitText.create(currentEl, { type: \"words, chars\" });\n      const nextSplit = SplitText.create(nextEl, { type: \"words, chars\" });\n      const cleanup = () => {\n        currentSplit.revert();\n        nextSplit.revert();\n      };\n\n      const prefersReduced = window.matchMedia?.(\n        \"(prefers-reduced-motion: reduce)\",\n      ).matches;\n\n      // The crossfade rides on the characters, never on the paragraph - an\n      // opacity below 1 on the paragraph would flatten its 3D children.\n      gsap.set([currentEl, nextEl], { opacity: 1 });\n\n      if (prefersReduced) {\n        gsap.set(currentSplit.chars, {\n          clearProps: \"transform,transformOrigin,transformPerspective,backfaceVisibility,opacity\",\n        });\n        gsap.set(nextSplit.chars, {\n          clearProps: \"transform,transformOrigin,transformPerspective,backfaceVisibility,opacity\",\n        });\n        gsap.set(nextEl, { opacity: hasNext ? 0 : 1 });\n\n        if (!hasNext) return cleanup;\n\n        gsap\n          .timeline({\n            delay: scrub ? 0 : holdDuration,\n            onComplete: scrub ? undefined : () => setActiveIndex(nextIndex),\n            scrollTrigger: scrub\n              ? {\n                  trigger: containerRef.current,\n                  start: scrollStart,\n                  end: scrollEnd,\n                  scrub: true,\n                }\n              : undefined,\n          })\n          .to(\n            currentEl,\n            {\n              opacity: 0,\n              duration: transitionDuration,\n              ease: \"power2.out\",\n            },\n            0,\n          )\n          .to(\n            nextEl,\n            {\n              opacity: 1,\n              duration: transitionDuration,\n              ease: \"power2.out\",\n            },\n            0,\n          );\n\n        return cleanup;\n      }\n\n      if (!hasNext || !currentSplit.chars.length) {\n        gsap.set(nextSplit.chars, { opacity: 0 });\n        return cleanup;\n      }\n\n      // Rotating about an axis half a line-height BEHIND the glyph is what\n      // kills the shift: at rotationX 0 the transform resolves to plain\n      // identity, so the outgoing face starts, and the incoming face ends,\n      // exactly on their own layout box. Measured per cycle in px because\n      // GSAP reads the z-origin with a bare parseFloat.\n      const faceOffset = (currentSplit.chars[0] as HTMLElement).offsetHeight / 2;\n      const faceProps = {\n        transformOrigin: `50% 50% ${-faceOffset}px`,\n        transformPerspective: CHAR_PERSPECTIVE,\n        backfaceVisibility: \"hidden\" as const,\n        force3D: true,\n      };\n\n      gsap.set(currentSplit.chars, { ...faceProps, rotationX: 0, opacity: 1 });\n      gsap.set(nextSplit.chars, {\n        ...faceProps,\n        rotationX: -90,\n        opacity: useOpacityTransition ? 0 : 1,\n      });\n      const advance = () => setActiveIndex(nextIndex);\n\n      gsap\n        .timeline({\n          delay: scrub ? 0 : holdDuration,\n          onComplete: scrub ? undefined : advance,\n          scrollTrigger: scrub\n            ? {\n                trigger: containerRef.current,\n                start: scrollStart,\n                end: scrollEnd,\n                scrub: true,\n              }\n            : undefined,\n        })\n        .to(\n          currentSplit.chars,\n          {\n            rotationX: 90,\n            opacity: useOpacityTransition ? 0 : 1,\n            duration: transitionDuration,\n            ease: FLIP_EASE,\n            stagger: charStagger,\n          },\n          0,\n        )\n        .to(\n          nextSplit.chars,\n          {\n            rotationX: 0,\n            opacity: 1,\n            duration: transitionDuration,\n            ease: FLIP_EASE,\n            stagger: charStagger,\n          },\n          0,\n        );\n\n      return cleanup;\n    },\n    {\n      scope: containerRef,\n      // Each cycle re-splits fresh paragraphs, so the previous cycle's splits\n      // and inline styles have to be reverted rather than accumulated.\n      revertOnUpdate: true,\n      dependencies: [\n        activeIndex,\n        nextIndex,\n        hasNext,\n        fontsReady,\n        currentPhrase,\n        nextPhrase,\n        scrub,\n        scrollStart,\n        scrollEnd,\n        holdDuration,\n        transitionDuration,\n        charStagger,\n        useOpacityTransition,\n      ],\n    },\n  );\n\n  return (\n    <section\n      className={`relative flex min-h-screen w-full items-center justify-center overflow-hidden px-4 sm:px-6 ${className}`}\n      style={{ backgroundColor }}\n    >\n      <div\n        aria-hidden=\"true\"\n        className=\"absolute inset-0 bg-black/35\"\n      />\n      <div\n        ref={containerRef}\n        className=\"relative z-10 w-full max-w-[1400px] max-md:min-h-[18vw]\"\n        style={{ opacity: fontsReady ? 1 : 0 }}\n      >\n        <Phrase\n          key={`current-${activeIndex}`}\n          ref={currentRef}\n          text={currentPhrase}\n          tone={textColor}\n        />\n        <Phrase\n          key={`next-${nextIndex}`}\n          ref={nextRef}\n          text={nextPhrase}\n          tone={textColor}\n          secondary\n        />\n      </div>\n    </section>\n  );\n};\n\ninterface PhraseProps {\n  ref: Ref<HTMLParagraphElement>;\n  text: string;\n  tone: string;\n  secondary?: boolean;\n}\n\nconst Phrase = ({ ref, text, tone, secondary = false }: PhraseProps) => (\n  <p\n    ref={ref}\n    className={`m-0 w-full whitespace-nowrap max-md:whitespace-normal text-center  text-[6vw] max-md:text-[10vw] max-[1025px]:text-[8vw] font-medium text-white! tracking-[-0.08em]  ${secondary ? \"absolute inset-0 opacity-0\" : \"relative\"}`}\n    style={{ color: tone, lineHeight: LINE_HEIGHT }}\n  >\n    {text}\n  </p>\n);\n\nexport default DepthFlipText;\n"
+    }
+  ]
+}

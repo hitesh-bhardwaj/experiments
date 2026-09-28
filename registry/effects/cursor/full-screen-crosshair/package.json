@@ -1,0 +1,17 @@
+{
+  "name": "@hyperiux/full-screen-crosshair",
+  "version": "1.0.1",
+  "description": "Fullscreen crosshair cursor overlay with configurable gap, thickness, smoothing, and center content.",
+  "main": "index.tsx",
+  "files": [
+    "index.tsx",
+    "useMouse.ts",
+    "createSuspendedRaf.ts",
+    "registry.json"
+  ],
+  "keywords": [
+    "cursor",
+    "hyperiux"
+  ],
+  "dependencies": {}
+}

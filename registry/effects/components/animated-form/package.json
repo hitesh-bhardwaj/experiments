@@ -1,0 +1,24 @@
+{
+  "name": "@hyperiux/animated-form",
+  "version": "1.0.1",
+  "description": "Config-driven contact form with validation for text, phone, select, textarea, and checkbox fields",
+  "main": "index.tsx",
+  "files": [
+    "index.tsx",
+    "Button.tsx",
+    "Checkbox.tsx",
+    "ContactForm.tsx",
+    "Input.tsx",
+    "PhoneInput.tsx",
+    "Select.tsx",
+    "Textarea.tsx",
+    "registry.json"
+  ],
+  "keywords": [
+    "components",
+    "hyperiux"
+  ],
+  "dependencies": {
+    "zod": "*"
+  }
+}

@@ -1,0 +1,118 @@
+{
+  "name": "rope-cursor",
+  "type": "registry:component",
+  "title": "Rope Cursor",
+  "description": "Soft trailing rope that lags behind the pointer with a smooth SVG path",
+  "dependencies": [],
+  "registryDependencies": [],
+  "exportName": "RopeCursor",
+  "exportKind": "default",
+  "tier": "pro",
+  "version": "1.0.1",
+  "changelog": [
+    {
+      "version": "1.0.1",
+      "date": "2026-07-24",
+      "summary": "Added reduced-motion support, restyled the reduced-motion notice, and replaced per-frame GSAP tweens with direct time-based smoothing, removing the gsap dependency.",
+      "breaking": false
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-06-04",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "props": [
+    {
+      "name": "ropeColor",
+      "type": "color",
+      "default": "#bda985",
+      "description": "Stroke color of the rope.",
+      "remixer": {
+        "control": "color",
+        "group": "appearance",
+        "groupTitle": "Appearance"
+      }
+    },
+    {
+      "name": "ropeWidth",
+      "type": "number",
+      "default": 2,
+      "description": "Stroke width of the rope.",
+      "remixer": {
+        "control": "range",
+        "group": "appearance",
+        "groupTitle": "Appearance",
+        "min": 0.5,
+        "max": 10,
+        "step": 0.5
+      }
+    },
+    {
+      "name": "ropeOpacity",
+      "type": "number",
+      "default": 0.6,
+      "description": "Opacity of the rope stroke.",
+      "remixer": {
+        "control": "range",
+        "group": "appearance",
+        "groupTitle": "Appearance",
+        "min": 0.05,
+        "max": 1,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "segmentLength",
+      "type": "number",
+      "default": 0,
+      "description": "Distance allowed between rope segments.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0,
+        "max": 80,
+        "step": 1
+      }
+    },
+    {
+      "name": "segmentCount",
+      "type": "number",
+      "default": 8,
+      "description": "Number of points used to draw the rope.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 2,
+        "max": 32,
+        "step": 1
+      }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "appearance",
+    "layout": {
+      "buttonClassName": "right-4! top-25!",
+      "panelClassName": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/rope-cursor/index.tsx"
+    },
+    {
+      "path": "createSuspendedRaf.ts",
+      "type": "registry:component",
+      "target": "src/components/effects/rope-cursor/createSuspendedRaf.ts"
+    }
+  ]
+}

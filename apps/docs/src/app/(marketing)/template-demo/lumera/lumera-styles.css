@@ -1,0 +1,116 @@
+
+@import "./fonts.css";
+
+:root {
+ --font-neue-montreal: "PP Neue Montreal", Arial, Helvetica, sans-serif;
+  --font-aeonik-pro: "Aeonik Pro", Arial, Helvetica, sans-serif;
+  
+}
+
+.font-neue-montreal {
+  font-family: var(--font-neue-montreal);
+}
+
+.font-aeonik-pro {
+  font-family: var(--font-aeonik-pro);
+}
+
+.lumera-page ::selection {
+  background-color: #1c1b1a;
+  color: #eeeeee;
+}
+
+.lumera-page ::-moz-selection {
+  background-color: #1c1b1a;
+  color: #eeeeee;
+}
+
+body {
+  width: 100vw;
+  height: 100%;
+  overflow-x: hidden;
+  font-family: var(--font-aeonik-pro);
+  text-rendering: geometricPrecision;
+  font-kerning: none;
+  color: #1c1b1a;
+  scroll-behavior: smooth;
+}
+
+html body {
+  background-color: #ffffff;
+}
+
+[data-para-anim],
+[data-title-anim] {
+  font-kerning: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  body *,
+  body *::before,
+  body *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+.no-scrollbar {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
+}
+
+#preloader {
+  animation: lumera-preloader-out 2.8s linear forwards;
+}
+
+@keyframes lumera-preloader-out {
+  /* Hold while the wordmark sweeps: 0.5s delay + 2s sweep - 0.2s overlap. */
+  0%,
+  82.1% {
+    transform: translateY(0);
+    animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1); /* power3.out */
+  }
+  100% {
+    transform: translateY(-100%);
+    visibility: hidden;
+  }
+}
+
+/* The wordmark sweep, previously tweened by GSAP: 0.5s delay, 2s, power3.out. */
+.lumera-loader-sweep {
+  animation: lumera-loader-sweep 2.5s cubic-bezier(0.215, 0.61, 0.355, 1) forwards;
+}
+
+@keyframes lumera-loader-sweep {
+  0%,
+  20% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* No sweep, no slide: the overlay simply is not part of the experience. */
+  #preloader {
+    animation: none;
+    display: none;
+  }
+
+  .lumera-loader-sweep {
+    animation: none;
+  }
+}

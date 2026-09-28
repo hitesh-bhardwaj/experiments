@@ -1,0 +1,122 @@
+{
+  "name": "video-player",
+  "type": "registry:component",
+  "title": "Custom Video Player",
+  "description": "Minimal cinematic video player with timed controls, scrubbing, and mute state",
+  "dependencies": [
+    "lucide-react"
+  ],
+  "registryDependencies": [],
+  "exportName": "VideoPlayer",
+  "exportKind": "default",
+  "tier": "pro",
+  "version": "1.0.1",
+  "changelog": [
+    {
+      "version": "1.0.1",
+      "date": "2026-07-30",
+      "summary": "Replaced the rAF progress loop with native timeupdate events.",
+      "breaking": false
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-07-23",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "props": [
+    {
+      "name": "autoPlay",
+      "type": "boolean",
+      "default": true,
+      "description": "Starts playback automatically when allowed.",
+      "remixer": {
+        "control": "checkbox",
+        "group": "controls",
+        "groupTitle": "Controls"
+      }
+    },
+    {
+      "name": "startMuted",
+      "type": "boolean",
+      "default": true,
+      "description": "Initial muted state.",
+      "remixer": {
+        "control": "checkbox",
+        "group": "controls",
+        "groupTitle": "Controls"
+      }
+    },
+    {
+      "name": "showCloseButton",
+      "type": "boolean",
+      "default": true,
+      "description": "Shows the close button on the player.",
+      "remixer": {
+        "control": "checkbox",
+        "group": "controls",
+        "groupTitle": "Controls"
+      }
+    },
+    {
+      "name": "rounded",
+      "type": "boolean",
+      "default": false,
+      "description": "Rounds the player frame when not fullscreen.",
+      "remixer": {
+        "control": "checkbox",
+        "group": "controls",
+        "groupTitle": "Controls"
+      }
+    },
+    {
+      "name": "preserveAspectRatio",
+      "type": "boolean",
+      "default": true,
+      "description": "Uses object-contain instead of object-cover for the video.",
+      "remixer": {
+        "control": "checkbox",
+        "group": "controls",
+        "groupTitle": "Controls"
+      }
+    },
+    {
+      "name": "hideControlsDelay",
+      "type": "number",
+      "description": "Delay before controls auto-hide, in milliseconds.",
+      "default": 1800,
+      "remixer": {
+        "control": "range",
+        "group": "controls",
+        "groupTitle": "Controls",
+        "min": 500,
+        "max": 5000,
+        "step": 100
+      }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "controls",
+    "layout": {
+      "buttonClassName": "right-4! top-25!",
+      "panelClassName": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/video-player/index.tsx"
+    },
+    {
+      "path": "VideoPlayerComp.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/video-player/VideoPlayerComp.tsx"
+    }
+  ]
+}

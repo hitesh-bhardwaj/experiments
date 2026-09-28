@@ -1,0 +1,133 @@
+{
+  "name": "curved-plane",
+  "version": "1.0.1",
+  "type": "registry:component",
+  "title": "Curved Plane",
+  "description": "Three.ts WebGL horizontal image carousel with a custom GLSL shader that curves the plane edges on drag and scroll. Images fade toward the edges and deform proportionally to interaction velocity. Supports drag, touch, scroll, and inertia momentum.",
+  "category": "webgl",
+  "dependencies": [
+    "three"
+  ],
+  "registryDependencies": [],
+  "previewUrl": "/demo/curved-plane",
+  "tier": "pro",
+  "main": "index.tsx",
+  "exportName": "CurvedPlane",
+  "exportKind": "default",
+  "importPath": "@/components/effects/curved-plane",
+  "target": "src/components/effects/curved-plane",
+  "props": [
+    {
+      "name": "speed",
+      "type": "number",
+      "default": 1,
+      "description": "Drag, wheel, and inertia movement speed.",
+      "suggested": true
+    },
+    {
+      "name": "curveValue",
+      "type": "number",
+      "default": 1,
+      "description": "Multiplier for the image plane curvature deformation.",
+      "suggested": true
+    },
+    {
+      "name": "gap",
+      "type": "number",
+      "default": 1,
+      "description": "Spacing multiplier between image planes.",
+      "suggested": true
+    },
+    {
+      "name": "imageSize",
+      "type": "number",
+      "default": 1,
+      "description": "Image plane size multiplier.",
+      "suggested": true
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "controls",
+    "layout": {
+      "controlsButtonClassName": "right-4! top-25!"
+    },
+    "panel": {
+      "className": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "controls": [
+      {
+        "name": "speed",
+        "label": "Speed",
+        "type": "range",
+        "group": "motion",
+        "copyable": true,
+        "min": 0,
+        "max": 3,
+        "step": 0.05
+      },
+      {
+        "name": "curveValue",
+        "label": "Curve Value",
+        "type": "range",
+        "group": "controls",
+        "copyable": true,
+        "min": 0,
+        "max": 3,
+        "step": 0.05
+      },
+      {
+        "name": "gap",
+        "label": "Gap",
+        "type": "range",
+        "group": "controls",
+        "copyable": true,
+        "min": 0.5,
+        "max": 2,
+        "step": 0.05
+      },
+      {
+        "name": "imageSize",
+        "label": "Image Size",
+        "type": "range",
+        "group": "controls",
+        "copyable": true,
+        "min": 0.5,
+        "max": 2,
+        "step": 0.05
+      }
+    ]
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "target": "src/components/effects/curved-plane/index.tsx"
+    },
+    {
+      "path": "CurvedSwiperHorizontal.tsx",
+      "target": "src/components/effects/curved-plane/CurvedSwiperHorizontal.tsx"
+    },
+    {
+      "path": "CurvedSwiperVertical.tsx",
+      "target": "src/components/effects/curved-plane/CurvedSwiperVertical.tsx"
+    },
+    {
+      "path": "createSuspendedRaf.ts",
+      "target": "src/components/effects/curved-plane/createSuspendedRaf.ts"
+    }
+  ],
+  "changelog": [
+    {
+      "version": "1.0.1",
+      "date": "2026-07-21",
+      "summary": "Add prefers-reduced-motion support",
+      "breaking": false
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-07-20",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "name": "@hyperiux/rectangular-text-reveal",
+  "version": "1.1.0",
+  "description": "Text reveal animation with colored rectangles sliding across each line",
+  "main": "index.tsx",
+  "files": [
+    "index.tsx",
+    "registry.json"
+  ],
+  "keywords": [
+    "text",
+    "hyperiux"
+  ],
+  "dependencies": {
+    "gsap": "*"
+  }
+}

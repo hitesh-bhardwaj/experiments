@@ -1,0 +1,17 @@
+{
+  "name": "@hyperiux/link-button",
+  "version": "1.0.1",
+  "description": "Minimal link button with animated underline and rotating arrow icon",
+  "main": "index.tsx",
+  "files": [
+    "index.tsx",
+    "registry.json"
+  ],
+  "keywords": [
+    "buttons",
+    "hyperiux"
+  ],
+  "dependencies": {
+    "lucide-react": "*"
+  }
+}

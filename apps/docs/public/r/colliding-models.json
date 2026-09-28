@@ -1,0 +1,125 @@
+{
+  "name": "colliding-models",
+  "type": "registry:component",
+  "title": "Colliding Models",
+  "description": "Physics-driven colliding 3D connectors with transmission material and postprocessing, built with R3F + Rapier.",
+  "dependencies": [
+    "three",
+    "@react-three/fiber",
+    "@react-three/drei",
+    "@react-three/rapier",
+    "@react-three/postprocessing",
+    "maath"
+  ],
+  "registryDependencies": [],
+  "exportName": "CollidingModels",
+  "exportKind": "default",
+  "tier": "pro",
+  "version": "1.0.1",
+  "changelog": [
+    {
+      "version": "1.0.1",
+      "date": "2026-07-30",
+      "summary": "Added a reduced-motion notice and wired connectorCount, gravity, modelScale, and backgroundColor into the live scene.",
+      "breaking": false
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-06-04",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "props": [
+    {
+      "name": "connectorCount",
+      "type": "number",
+      "default": 8,
+      "description": "Number of connecting shapes or joints.",
+      "suggested": true
+    },
+    {
+      "name": "gravity",
+      "type": "number",
+      "default": 0,
+      "description": "Physics gravity strength.",
+      "suggested": true
+    },
+    {
+      "name": "modelScale",
+      "type": "number",
+      "default": 1,
+      "description": "Scale applied to the 3D model.",
+      "suggested": true
+    },
+    {
+      "name": "backgroundColor",
+      "type": "string",
+      "default": "#141518",
+      "description": "Canvas background color.",
+      "suggested": true
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "suggested": true,
+    "defaultOpenGroupId": "controls",
+    "layout": {
+      "controlsButtonClassName": "right-4! top-25!"
+    },
+    "panel": {
+      "className": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "controls": [
+      {
+        "name": "connectorCount",
+        "label": "Connector Count",
+        "type": "range",
+        "group": "controls",
+        "copyable": true,
+        "min": 0,
+        "max": 24,
+        "step": 1
+      },
+      {
+        "name": "gravity",
+        "label": "Gravity",
+        "type": "range",
+        "group": "controls",
+        "copyable": true,
+        "min": 0,
+        "max": 10,
+        "step": 0.1
+      },
+      {
+        "name": "modelScale",
+        "label": "Model Scale",
+        "type": "range",
+        "group": "controls",
+        "copyable": true,
+        "min": 0,
+        "max": 3,
+        "step": 0.05
+      },
+      {
+        "name": "backgroundColor",
+        "label": "Background Color",
+        "type": "color",
+        "group": "style",
+        "copyable": true
+      }
+    ]
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/colliding-models/index.tsx"
+    },
+    {
+      "path": "createSuspendedRaf.ts",
+      "type": "registry:component",
+      "target": "src/components/effects/colliding-models/createSuspendedRaf.ts"
+    }
+  ]
+}

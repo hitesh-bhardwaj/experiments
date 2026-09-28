@@ -1,0 +1,127 @@
+{
+  "name": "file-encryption",
+  "type": "registry:component",
+  "title": "File Encryption",
+  "description": "Auto-scrolling draggable card marquee with a WebGL laser beam that splits each card between its plain and ASCII/encrypted face, plus Canvas 2D particle scatter.",
+  "dependencies": [
+    "gsap"
+  ],
+  "registryDependencies": [],
+  "exportName": "FileEncryption",
+  "exportKind": "default",
+  "tier": "pro",
+  "version": "1.0.1",
+  "changelog": [
+    {
+      "version": "1.0.1",
+      "date": "2026-07-21",
+      "summary": "Add prefers-reduced-motion support",
+      "breaking": false
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-07-20",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "props": [
+    {
+      "name": "accentColor",
+      "type": "string",
+      "default": "#ff5f00",
+      "description": "Beam, particle, and heading accent color.",
+      "suggested": true
+    },
+    {
+      "name": "backgroundColor",
+      "type": "string",
+      "default": "#07060f",
+      "description": "Scene and marquee background color.",
+      "suggested": true
+    },
+    {
+      "name": "speed",
+      "type": "number",
+      "default": 1,
+      "description": "Marquee, particle, and scramble animation speed.",
+      "suggested": true
+    },
+    {
+      "name": "cardSize",
+      "type": "number",
+      "default": 1,
+      "description": "Credit card size multiplier.",
+      "suggested": true
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "suggested": true,
+    "defaultOpenGroupId": "controls",
+    "layout": {
+      "controlsButtonClassName": "right-4! top-25!"
+    },
+    "panel": {
+      "className": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "controls": [
+      {
+        "name": "accentColor",
+        "label": "Accent Color",
+        "type": "color",
+        "group": "style",
+        "copyable": true
+      },
+      {
+        "name": "backgroundColor",
+        "label": "Background Color",
+        "type": "color",
+        "group": "style",
+        "copyable": true
+      },
+      {
+        "name": "speed",
+        "label": "Speed",
+        "type": "range",
+        "group": "motion",
+        "copyable": true,
+        "min": 0,
+        "max": 5,
+        "step": 0.05
+      },
+      {
+        "name": "cardSize",
+        "label": "Card Size",
+        "type": "range",
+        "group": "controls",
+        "copyable": true,
+        "min": 0.65,
+        "max": 1.5,
+        "step": 0.05
+      }
+    ]
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/file-encryption/index.tsx"
+    },
+    {
+      "path": "FileEncryptionComp.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/file-encryption/FileEncryptionComp.tsx"
+    },
+    {
+      "path": "webgl-context-recovery.ts",
+      "type": "registry:component",
+      "target": "src/components/effects/file-encryption/webgl-context-recovery.ts"
+    },
+    {
+      "path": "createSuspendedRaf.ts",
+      "type": "registry:component",
+      "target": "src/components/effects/file-encryption/createSuspendedRaf.ts"
+    }
+  ]
+}

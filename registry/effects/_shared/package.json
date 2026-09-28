@@ -1,0 +1,6 @@
+{
+  "name": "@hyperiux/effects-shared",
+  "private": true,
+  "type": "module",
+  "description": "Canonical shared helpers for Vault effects (copied into packages on rollout)"
+}

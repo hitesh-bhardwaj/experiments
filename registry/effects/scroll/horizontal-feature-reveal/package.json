@@ -1,0 +1,18 @@
+{
+  "name": "@hyperiux/horizontal-feature-reveal",
+  "version": "1.1.0",
+  "description": "Horizontal storytelling section that converts vertical scroll into a panoramic gallery track",
+  "main": "index.tsx",
+  "files": [
+    "index.tsx",
+    "HorizontalFeatureRevealComp.tsx",
+    "registry.json"
+  ],
+  "keywords": [
+    "scroll",
+    "hyperiux"
+  ],
+  "dependencies": {
+    "gsap": "*"
+  }
+}

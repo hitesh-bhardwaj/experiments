@@ -1,0 +1,68 @@
+{
+  "name": "ascend-transition",
+  "type": "registry:component",
+  "title": "Ascend Transition",
+  "description": "A scaled-down panel rises from the bottom with clip-path revealing its height, then scales up to fill the screen before the next page fades in",
+  "dependencies": [
+    "gsap",
+    "next-transition-router"
+  ],
+  "registryDependencies": [],
+  "exportName": "AscendTransition",
+  "exportKind": "default",
+  "tier": "pro",
+  "version": "1.0.0",
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "date": "2026-08-05",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "props": [
+    {
+      "name": "bgColor",
+      "type": "string",
+      "default": "#ffffff",
+      "description": "Background color of the covering panel that rises and reveals the new page.",
+      "remixer": {
+        "control": "color",
+        "group": "surface",
+        "groupTitle": "Surface"
+      }
+    },
+    {
+      "name": "duration",
+      "type": "number",
+      "default": 0.9,
+      "description": "Base duration of the rise/reveal phase; related scale-up and fade timings scale with it.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0.2,
+        "max": 2,
+        "step": 0.05
+      }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "motion",
+    "layout": {
+      "buttonClassName": "right-4! top-25!",
+      "panelClassName": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/ascend-transition/index.tsx"
+    }
+  ]
+}

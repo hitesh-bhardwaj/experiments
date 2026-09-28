@@ -1,0 +1,135 @@
+{
+  "name": "scramble-link-button",
+  "type": "registry:component",
+  "title": "Scramble Link Button",
+  "description": "Link button with text scramble effect on hover, optional underline and arrow",
+  "dependencies": [
+    "lucide-react"
+  ],
+  "registryDependencies": [],
+  "exportName": "ScrambleLinkButton",
+  "exportKind": "default",
+  "tier": "free",
+  "version": "1.1.0",
+  "changelog": [
+    {
+      "version": "1.1.0",
+      "date": "2026-07-28",
+      "summary": "Reduce motion added to scramble effect, and pointer events added for mobile devices.",
+      "breaking": false
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-07-09",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "props": [
+    {
+      "name": "btnText",
+      "type": "string",
+      "default": "Hover me",
+      "description": "Button label text.",
+      "remixer": {
+        "control": "text",
+        "group": "content",
+        "groupTitle": "Content"
+      }
+    },
+    {
+      "name": "hoverColor",
+      "type": "color",
+      "default": "#ff6b00",
+      "description": "Text color while hovered or pressed.",
+      "remixer": {
+        "control": "color",
+        "group": "appearance",
+        "groupTitle": "Appearance"
+      }
+    },
+    {
+      "name": "showLine",
+      "type": "boolean",
+      "default": true,
+      "description": "Shows the animated underline.",
+      "remixer": {
+        "control": "checkbox",
+        "group": "appearance",
+        "groupTitle": "Appearance"
+      }
+    },
+    {
+      "name": "showArrow",
+      "type": "boolean",
+      "default": false,
+      "description": "Shows the optional arrow icon.",
+      "remixer": {
+        "control": "checkbox",
+        "group": "appearance",
+        "groupTitle": "Appearance"
+      }
+    },
+    {
+      "name": "scrambleDuration",
+      "type": "number",
+      "default": 1000,
+      "description": "Total scramble duration in milliseconds.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 200,
+        "max": 2400,
+        "step": 50
+      }
+    },
+    {
+      "name": "stepMs",
+      "type": "number",
+      "default": 50,
+      "description": "Delay between scramble frames.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 16,
+        "max": 140,
+        "step": 1
+      }
+    },
+    {
+      "name": "revealStagger",
+      "type": "number",
+      "default": 1.4,
+      "description": "Controls how characters resolve across the word.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0.5,
+        "max": 3,
+        "step": 0.1
+      }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "content",
+    "layout": {
+      "buttonClassName": "right-4! top-25!",
+      "panelClassName": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/scramble-link-button/index.tsx",
+      "content": "// Built using Hyperiux Vault: https://vault.hyperiux.com\n\n\"use client\";\n\nimport React, { useEffect, useRef, useState, type ComponentPropsWithoutRef, type ComponentType, type CSSProperties, type MouseEventHandler, type PointerEvent } from \"react\";\nimport { ArrowRight } from \"lucide-react\";\n\nconst DEFAULT_BTN_TEXT = \"Hover me\";\nconst DEFAULT_HREF = \"#\";\nconst DEFAULT_HOVER_COLOR = \"#ff6b00\";\nconst DEFAULT_SCRAMBLE_DURATION = 1000;\nconst DEFAULT_STEP_MS = 50;\nconst DEFAULT_REVEAL_STAGGER = 1.4;\nconst COMPACT_LAYOUT_BREAKPOINT = 1025;\nconst GLYPHS = \"abcdefghijklmnopqrstuvwxyz0123456789\";\n\ninterface GetScrambledTextOptions {\n  finalText: string;\n  iteration: number;\n  maxIterations: number;\n  revealStagger: number;\n}\n\nfunction getScrambledText({\n  finalText,\n  iteration,\n  maxIterations,\n  revealStagger,\n}: GetScrambledTextOptions): string {\n  let output = \"\";\n\n  for (let index = 0; index < finalText.length; index += 1) {\n    const char = finalText[index];\n\n    if (char === \" \") {\n      output += char;\n      continue;\n    }\n\n    const revealThreshold =\n      (((index + 1) / finalText.length) * maxIterations) / revealStagger;\n\n    if (iteration >= revealThreshold) {\n      output += char;\n      continue;\n    }\n\n    output += GLYPHS[Math.floor(Math.random() * GLYPHS.length)];\n  }\n\n  return output;\n}\n\nexport interface ScrambleLinkButtonOwnProps {\n  btnText?: string;\n  href?: string;\n  className?: string;\n  textClassName?: string;\n  linkProps?: Partial<ComponentPropsWithoutRef<'a'>>;\n  hoverColor?: string;\n  showLine?: boolean;\n  lineClassName?: string;\n  showArrow?: boolean;\n  icon?: ComponentType<{ className?: string }>;\n  iconClassName?: string;\n  scrambleDuration?: number;\n  stepMs?: number;\n  revealStagger?: number;\n  onClick?: MouseEventHandler<HTMLAnchorElement>;\n}\n\nexport type ScrambleLinkButtonProps = ScrambleLinkButtonOwnProps & Omit<ComponentPropsWithoutRef<'a'>, 'href' | 'onClick' | keyof ScrambleLinkButtonOwnProps>;\n\nexport function ScrambleLinkButton({\n  btnText = DEFAULT_BTN_TEXT,\n  href = DEFAULT_HREF,\n  className = \"\",\n  textClassName = \"\",\n  linkProps = {},\n  hoverColor = DEFAULT_HOVER_COLOR,\n  showLine = false,\n  lineClassName = \"\",\n  showArrow = false,\n  icon: Icon = ArrowRight,\n  iconClassName = \"\",\n  scrambleDuration = DEFAULT_SCRAMBLE_DURATION,\n  stepMs = DEFAULT_STEP_MS,\n  revealStagger = DEFAULT_REVEAL_STAGGER,\n  onClick,\n  ...props\n}: ScrambleLinkButtonProps) {\n  const scrambleRef = useRef<HTMLSpanElement | null>(null);\n  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);\n  const [isCompactLayout, setIsCompactLayout] = useState(false);\n  const [isPressed, setIsPressed] = useState(false);\n\n  const activeTextStyle =\n    isCompactLayout && isPressed ? { color: hoverColor } : undefined;\n  const activeLineStyle =\n    isCompactLayout && isPressed ? { color: hoverColor } : undefined;\n\n  const innerClassName = `relative inline-block ${\n    showLine\n      ? `w-fit after:absolute after:left-0 after:bottom-[-4%] after:h-[1.5px] after:w-full after:origin-right after:scale-x-0 after:bg-current after:transition-transform after:duration-[450ms] after:ease-[cubic-bezier(0.625,0.05,0,1)] after:content-[''] motion-reduce:after:transition-none motion-safe:group-hover:after:origin-left motion-safe:group-hover:after:scale-x-100 motion-safe:group-data-[pressed=true]:after:origin-left motion-safe:group-data-[pressed=true]:after:scale-x-100 ${lineClassName}`\n      : \"\"\n  }`;\n\n  useEffect(() => {\n    if (scrambleRef.current) {\n      scrambleRef.current.textContent = btnText;\n    }\n\n    return () => {\n      if (timeoutRef.current) {\n        clearTimeout(timeoutRef.current);\n      }\n    };\n  }, [btnText]);\n\n  useEffect(() => {\n    const mediaQuery = window.matchMedia(\n      `(max-width: ${COMPACT_LAYOUT_BREAKPOINT - 1}px)`\n    );\n\n    const syncCompactLayout = (event: MediaQueryList | MediaQueryListEvent) => {\n      const matches = \"matches\" in event ? event.matches : ((event as any).currentTarget as MediaQueryList).matches;\n      setIsCompactLayout(matches);\n\n      if (!matches) {\n        setIsPressed(false);\n      }\n    };\n\n    syncCompactLayout(mediaQuery);\n    mediaQuery.addEventListener(\"change\", syncCompactLayout);\n\n    return () => {\n      mediaQuery.removeEventListener(\"change\", syncCompactLayout);\n    };\n  }, []);\n\n  const runScramble = () => {\n    const element = scrambleRef.current;\n\n    if (!element || !btnText.length) {\n      return;\n    }\n\n    if (window.matchMedia?.(\"(prefers-reduced-motion: reduce)\")?.matches) {\n      element.textContent = btnText;\n      return;\n    }\n\n    if (timeoutRef.current) {\n      clearTimeout(timeoutRef.current);\n    }\n\n    let iteration = 0;\n    const maxIterations = Math.max(1, Math.floor(scrambleDuration / stepMs));\n\n    const updateScramble = () => {\n      element.textContent = getScrambledText({\n        finalText: btnText,\n        iteration,\n        maxIterations,\n        revealStagger,\n      });\n\n      if (iteration >= maxIterations) {\n        element.textContent = btnText;\n        return;\n      }\n\n      iteration += 1;\n      timeoutRef.current = setTimeout(updateScramble, stepMs);\n    };\n\n    updateScramble();\n  };\n\n  const onMouseEnter = () => {\n    runScramble();\n  };\n\n  const handlePointerDown = (event: PointerEvent<HTMLAnchorElement>) => {\n    props.onPointerDown?.(event);\n\n    if (!isCompactLayout || event.pointerType === \"mouse\") {\n      return;\n    }\n\n    setIsPressed(true);\n    runScramble();\n  };\n\n  const handlePointerUp = (event: PointerEvent<HTMLAnchorElement>) => {\n    props.onPointerUp?.(event);\n  };\n\n  const handlePointerCancel = (event: PointerEvent<HTMLAnchorElement>) => {\n    props.onPointerCancel?.(event);\n  };\n\n  return (\n    <a\n      href={href}\n      {...linkProps}\n      {...props}\n      onClick={onClick}\n      onMouseEnter={onMouseEnter}\n      data-pressed={isPressed ? \"true\" : \"false\"}\n      onPointerDown={handlePointerDown}\n      onPointerUp={handlePointerUp}\n      onPointerCancel={handlePointerCancel}\n      className={`group inline-flex cursor-pointer items-center gap-2  text-[1.1vw] text-inherit no-underline transition-colors duration-350 ease-in-out motion-reduce:transition-none hover:text-(--scramble-hover-color) group-data-[pressed=true]:text-(--scramble-hover-color) max-lg:text-[3vw] max-md:text-[4.2vw] ${className}`}\n      style={{ \"--scramble-hover-color\": hoverColor } as CSSProperties & Record<string, string>}\n    >\n      <span className={innerClassName} style={activeLineStyle}>\n        <span\n          className={`pointer-events-none invisible inline-block select-none whitespace-pre [font-variant-ligatures:none] ${textClassName}`}\n          style={activeTextStyle}\n        >\n          {btnText}\n        </span>\n\n        <span\n          ref={scrambleRef}\n          className={`absolute inset-0 inline-block whitespace-pre text-left [font-variant-ligatures:none] ${textClassName}`}\n          style={activeTextStyle}\n          aria-label={btnText}\n        >\n          {btnText}\n        </span>\n      </span>\n\n      {showArrow && Icon && (\n        <span\n          className={`inline-flex items-center justify-center ${iconClassName}`}\n        >\n          <Icon className=\"transition-transform duration-300 ease-in-out motion-reduce:rotate-0 motion-reduce:transition-none motion-safe:group-hover:-rotate-45 motion-safe:group-data-[pressed=true]:-rotate-45\" />\n        </span>\n      )}\n    </a>\n  );\n}\n\nexport default ScrambleLinkButton;\n"
+    }
+  ]
+}

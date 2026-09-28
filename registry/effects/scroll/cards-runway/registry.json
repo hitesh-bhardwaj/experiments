@@ -1,0 +1,120 @@
+{
+  "name": "cards-runway",
+  "version": "1.0.1",
+  "changelog": [
+    {
+      "version": "1.0.1",
+      "date": "2026-07-30",
+      "summary": "Added reduced-motion support, configurable styling, and improved desktop sizing.",
+      "breaking": false
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-06-04",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "type": "registry:component",
+  "title": "Cards Runway",
+  "description": "A horizontal runway of cards that animates as you scroll",
+  "category": "scroll",
+  "dependencies": [
+    "gsap"
+  ],
+  "registryDependencies": [],
+  "previewUrl": "/demo/cards-runway",
+  "tier": "pro",
+  "main": "index.tsx",
+  "exportName": "CardsRunway",
+  "exportKind": "default",
+  "importPath": "@/components/effects/cards-runway",
+  "target": "src/components/effects/cards-runway",
+  "files": [
+    {
+      "path": "index.tsx",
+      "target": "src/components/effects/cards-runway/index.tsx"
+    },
+    {
+      "path": "CardsRunway.tsx",
+      "target": "src/components/effects/cards-runway/CardsRunway.tsx"
+    }
+  ],
+  "props": [
+    {
+      "name": "accentColor",
+      "type": "color",
+      "default": "#ff5f00",
+      "description": "Accent color used by the runway card bars.",
+      "remixer": {
+        "control": "color",
+        "group": "style",
+        "groupTitle": "Style"
+      }
+    },
+    {
+      "name": "cardColor",
+      "type": "color",
+      "default": "#161616",
+      "description": "Background color of each card.",
+      "remixer": {
+        "control": "color",
+        "group": "style",
+        "groupTitle": "Style"
+      }
+    },
+    {
+      "name": "speed",
+      "type": "number",
+      "default": 1,
+      "description": "Playback speed multiplier for the runway motion.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0.2,
+        "max": 3,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "gap",
+      "type": "number",
+      "default": 48,
+      "description": "Spacing between runway cards in pixels.",
+      "remixer": {
+        "control": "range",
+        "group": "style",
+        "groupTitle": "Style",
+        "min": 0,
+        "max": 160,
+        "step": 1
+      }
+    },
+    {
+      "name": "perspective",
+      "type": "number",
+      "default": 900,
+      "description": "Perspective depth applied to the runway track.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0,
+        "max": 2000,
+        "step": 25
+      }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "style",
+    "layout": {
+      "buttonClassName": "right-4! top-25!",
+      "panelClassName": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  }
+}

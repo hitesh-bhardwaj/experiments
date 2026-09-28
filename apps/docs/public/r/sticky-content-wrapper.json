@@ -1,0 +1,137 @@
+{
+  "name": "sticky-content-wrapper",
+  "type": "registry:component",
+  "title": "Sticky Content Wrapper",
+  "description": "Split-screen sticky scroll with content on one side and images on the other, revealing on scroll",
+  "dependencies": [
+    "gsap",
+    "lenis"
+  ],
+  "registryDependencies": [],
+  "exportName": "StickyContentWrapper",
+  "exportKind": "default",
+  "tier": "free",
+  "version": "1.0.1",
+  "changelog": [
+    {
+      "version": "1.0.1",
+      "date": "2026-07-30",
+      "summary": "Added reduced-motion support.",
+      "breaking": false
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-07-21",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "props": [
+    {
+      "name": "bgColor",
+      "type": "color",
+      "default": "#ffffff",
+      "description": "Background color of the sticky section, including the gap between the content and image panes.",
+      "remixer": {
+        "control": "color",
+        "group": "style",
+        "groupTitle": "Style"
+      }
+    },
+    {
+      "name": "contentEnterYPercent",
+      "type": "number",
+      "default": 2,
+      "description": "Vertical offset (% of content height) each content block starts from before sliding into place.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0,
+        "max": 60,
+        "step": 1
+      }
+    },
+    {
+      "name": "contentTransitionDuration",
+      "type": "number",
+      "default": 0.9,
+      "description": "Duration of each content block's enter/exit transition on the scroll timeline.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0.1,
+        "max": 3,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "initialImageScale",
+      "type": "number",
+      "default": 1.5,
+      "description": "Scale of an image before it becomes the active image.",
+      "remixer": {
+        "control": "range",
+        "group": "image",
+        "groupTitle": "Image",
+        "min": 1,
+        "max": 2.5,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "activeImageScale",
+      "type": "number",
+      "default": 1.2,
+      "description": "Scale of the image while it is active on screen.",
+      "remixer": {
+        "control": "range",
+        "group": "image",
+        "groupTitle": "Image",
+        "min": 1,
+        "max": 2,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "exitImageScale",
+      "type": "number",
+      "default": 1,
+      "description": "Scale of an image after it has exited.",
+      "remixer": {
+        "control": "range",
+        "group": "image",
+        "groupTitle": "Image",
+        "min": 0.5,
+        "max": 1.5,
+        "step": 0.05
+      }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "motion",
+    "layout": {
+      "buttonClassName": "right-4! top-25!",
+      "panelClassName": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/sticky-content-wrapper/index.tsx",
+      "content": "// Built using Hyperiux Vault: https://vault.hyperiux.com\n\nimport { StickyContentComp } from \"./StickyContentComp\";\n\nconst stickyItems = [\n {\n heading:\"Designed for Modern Living\",\n paragraph:\n \"Thoughtfully crafted residences that seamlessly blend architecture, comfort, and lifestyle-creating spaces where design enhances everyday living.\",\n list:[\n \"• Open layouts with natural light\",\n \"• Premium materials and finishes\",\n \"• Smart and sustainable design\",\n ],\n link:{ href:\"#\", text:\"Explore Residences\" },\n image:\"https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/v-01.jpg\",\n },\n\n {\n heading:\"Locations That Matter\",\n paragraph:\n \"Strategically located developments offering seamless connectivity to business hubs, education centers, and lifestyle destinations.\",\n list:[\n \"• Close to key urban corridors\",\n \"• Excellent transport connectivity\",\n \"• Surrounded by lifestyle hubs\",\n ],\n link:{ href:\"#\", text:\"View Locations\" },\n image:\"https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/v-02.jpg\",\n },\n\n {\n heading:\"Built for Long-Term Value\",\n paragraph:\n \"Engineered for durability and appreciation, ensuring your investment continues to grow alongside evolving urban landscapes.\",\n list:[\n \"• High-quality construction standards\",\n \"• Future-ready infrastructure\",\n \"• Strong long-term appreciation potential\",\n ],\n link:{ href:\"#\", text:\"Explore Investment\" },\n image:\"https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/v-03.jpg\",\n },\n\n {\n heading:\"Crafted for Elevated Experiences\",\n paragraph:\n \"From curated amenities to refined interiors, every detail is designed to deliver a seamless and elevated lifestyle experience.\",\n list:[\n \"• World-class lifestyle amenities\",\n \"• Thoughtfully designed interiors\",\n \"• Community-driven living spaces\",\n ],\n link:{ href:\"#\", text:\"View Amenities\" },\n image:\"https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/v-04.jpg\",\n },\n];\n\nexport default function StickyContentWrapper({\n bgColor = \"#ffffff\",\n contentEnterYPercent = 2,\n contentTransitionDuration = 0.9,\n initialImageScale = 1.5,\n activeImageScale = 1.2,\n exitImageScale = 1,\n}) {\n return (\n <section>\n <StickyContentComp\n items={stickyItems}\n leftClassName=\"text-black\"\n bgColor={bgColor}\n contentEnterYPercent={contentEnterYPercent}\n contentExitYPercent={-2}\n contentTransitionDuration={contentTransitionDuration}\n contentDelay={0.35}\n  initialImageScale={initialImageScale}\n activeImageScale={activeImageScale}\n exitImageScale={exitImageScale}\n />\n </section>\n );\n}\n\n\n\n"
+    },
+    {
+      "path": "StickyContentComp.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/sticky-content-wrapper/StickyContentComp.tsx",
+      "content": "\"use client\";\n\nimport React, { useLayoutEffect, useRef } from \"react\";\nimport gsap from \"gsap\";\nimport ScrollTrigger from \"gsap/dist/ScrollTrigger\";\nimport { useLenis } from \"lenis/react\";\n\ngsap.registerPlugin(ScrollTrigger);\n\n// True when the user has asked the OS to minimise animation. Safe to call\n// during render - returns false on the server.\nfunction prefersReducedMotion() {\n  if (typeof window === \"undefined\") return false;\n  return window.matchMedia?.(\"(prefers-reduced-motion: reduce)\")?.matches ?? false;\n}\n\ninterface StickyContentLink {\n  href?: string;\n  text?: string;\n  label?: string;\n  className?: string;\n  target?: string;\n  rel?: string;\n}\n\ninterface StickyContentItem {\n  heading?: string;\n  paragraphs?: string[];\n  paragraph?: string | string[];\n  list?: string[];\n  listItems?: string[];\n  link?: StickyContentLink;\n  href?: string;\n  linkText?: string;\n  cta?: string;\n  image?: string;\n  alt?: string;\n  imageAlt?: string;\n  width?: number;\n  height?: number;\n}\n\nconst getParagraphs = (item: StickyContentItem) => {\n  if (Array.isArray(item.paragraphs)) return item.paragraphs;\n  if (Array.isArray(item.paragraph)) return item.paragraph;\n  return item.paragraph ? [item.paragraph] : [];\n};\n\nconst getListItems = (item: StickyContentItem) => {\n  if (Array.isArray(item.list)) return item.list;\n  if (Array.isArray(item.listItems)) return item.listItems;\n  return [];\n};\n\nconst getLink = (item: StickyContentItem): StickyContentLink | null => {\n  if (item.link) return item.link;\n  if (item.href) {\n    return {\n      href: item.href,\n      text: item.linkText || item.cta || \"Learn more\",\n    };\n  }\n  return null;\n};\n\nconst renderStickyContent = (item: StickyContentItem) => {\n  const paragraphs = getParagraphs(item);\n  const listItems = getListItems(item);\n  const link = getLink(item);\n\n  return (\n    <div className=\"flex h-full w-full flex-col text-black\">\n      {item.heading && <h3 className=\"font-medium\">{item.heading}</h3>}\n\n      {paragraphs.map((paragraph, paragraphIndex) => (\n        <p key={`paragraph-${paragraphIndex}`}>{paragraph}</p>\n      ))}\n\n      {listItems.length > 0 && (\n        <ul className=\"flex flex-col \">\n          {listItems.map((listItem, listIndex) => (\n            <li key={`list-${listIndex}`}>{listItem}</li>\n          ))}\n        </ul>\n      )}\n\n      {link?.href && (\n        <a\n          href={link.href}\n          onClick={(e: React.MouseEvent<HTMLAnchorElement>) => {\n    e.preventDefault();\n          }}\n          className={`group mt-[1vw] inline-flex w-fit items-center gap-2 text-[1.2vw] leading-[1.2] no-underline ${link.className || \"\"}`}\n          target={link.target}\n          rel={link.rel || (link.target === \"_blank\" ? \"noreferrer\" : undefined)}\n        >\n          <span className=\"relative inline-block w-fit after:absolute after:bottom-[-2%] after:left-0 after:h-[1.5px] after:w-full after:origin-right after:scale-x-0 after:bg-current after:transition-transform after:duration-500 after:ease-[cubic-bezier(0.62,0.05,0.01,0.99)] after:content-[''] group-hover:after:origin-left group-hover:after:scale-x-100 group-focus-visible:after:origin-left group-focus-visible:after:scale-x-100\">\n            {link.text || link.label || \"Learn more\"}\n          </span>\n          <svg\n            className=\"h-[1em] w-[1em] flex-none transition-transform duration-300 group-hover:-rotate-45 group-focus-visible:-rotate-45\"\n            viewBox=\"0 0 24 24\"\n            fill=\"none\"\n            aria-hidden=\"true\"\n          >\n            <path\n              d=\"M5 12h14M13 5l7 7-7 7\"\n              stroke=\"currentColor\"\n              strokeWidth=\"2\"\n              strokeLinecap=\"round\"\n              strokeLinejoin=\"round\"\n            />\n          </svg>\n        </a>\n      )}\n    </div>\n  );\n};\n\ninterface StickyContentCompProps {\n  items?: StickyContentItem[];\n  className?: string;\n  leftClassName?: string;\n  rightClassName?: string;\n  contentClassName?: string;\n  imageClassName?: string;\n  containerHeight?: string;\n  bgColor?: string;\n  contentEnterYPercent?: number;\n  contentExitYPercent?: number;\n  contentTransitionDuration?: number;\n  contentDelay?: number;\n  stepGap?: number;\n  enableImageScaleFlow?: boolean;\n  initialImageScale?: number;\n  activeImageScale?: number;\n  exitImageScale?: number;\n}\n\nexport function StickyContentComp({\n  items = [],\n  className = \"\",\n  leftClassName = \"\",\n  rightClassName = \"\",\n  contentClassName = \"\",\n  imageClassName = \"\",\n  containerHeight,\n  bgColor = \"#ffffff\",\n  contentEnterYPercent = 12,\n  contentExitYPercent = -12,\n  contentTransitionDuration = 0.8,\n  contentDelay = 0.28,\n  stepGap = 2,\n  enableImageScaleFlow = true,\n  initialImageScale = 1.5,\n  activeImageScale = 1.2,\n  exitImageScale = 1,\n}: StickyContentCompProps) {\n  // State & refs\n  const sectionRef = useRef<HTMLElement | null>(null);\n  const stickyRef = useRef<HTMLDivElement | null>(null);\n  const contentRefsRef = useRef<(HTMLDivElement | null)[]>([]);\n  const imageRefsRef = useRef<(HTMLDivElement | null)[]>([]);\n  const lenis = useLenis();\n\n  // Effects\n  useLayoutEffect(() => {\n    if (!sectionRef.current || !stickyRef.current || !items.length) {\n      return;\n    }\n\n    const reducedMotion = prefersReducedMotion();\n\n    const context = gsap.context(() => {\n      // Initial element state\n      const contents = contentRefsRef.current;\n      const images = imageRefsRef.current;\n\n      contents.forEach((content, index) => {\n        gsap.set(content, {\n          autoAlpha: index === 0 ? 1 : 0,\n          yPercent: index === 0 ? 0 : contentEnterYPercent,\n          zIndex: items.length - index,\n        });\n      });\n\n      // Reduced motion: images crossfade in place - no clip-path wipe or\n      // scale, so only the active image is visible at a time via autoAlpha.\n      images.forEach((image, index) => {\n        gsap.set(image, {\n          autoAlpha: reducedMotion ? (index === 0 ? 1 : 0) : 1,\n          zIndex: items.length - index,\n          clipPath: \"inset(0% 0% 0% 0%)\",\n          scale: reducedMotion\n            ? 1\n            : enableImageScaleFlow\n              ? index === 0\n                ? activeImageScale\n                : initialImageScale\n              : 1,\n          transformOrigin: \"center center\",\n        });\n      });\n\n      // Scroll timeline\n      const totalTimelineDuration = Math.max(1, (items.length - 1) * stepGap);\n      const snapValues =\n        items.length > 1\n          ? Array.from({ length: items.length }, (_, index) => index / (items.length - 1))\n          : [0];\n      const timeline = gsap.timeline({\n        scrollTrigger: {\n          trigger: sectionRef.current,\n          start: \"top top\",\n          end: \"bottom bottom\",\n          scrub: 1,\n          snap: (\n            items.length > 1\n              ? {\n                  snapTo: snapValues,\n                  duration: { min: 0.2, max: 0.5 },\n                  ease: \"power2.inOut\",\n                  delay: 0,\n                  inertia: false,\n                  onStart: () => {\n                    lenis?.stop();\n                  },\n                  onComplete: () => {\n                    lenis?.start();\n                  },\n                }\n              : false\n          ) as any,\n        },\n      });\n\n      items.forEach((_, index) => {\n        if (index === items.length - 1) {\n          return;\n        }\n\n        const currentContent = contents[index];\n        const nextContent = contents[index + 1];\n        const currentImage = images[index];\n        const nextImage = images[index + 1];\n        const stepStart = index * stepGap;\n        const nextContentStart =\n          stepStart + contentTransitionDuration + contentDelay;\n\n        timeline\n          .to(\n            currentContent,\n            {\n              autoAlpha: 0,\n              yPercent: contentExitYPercent,\n              duration: contentTransitionDuration,\n              ease: \"power2.inOut\",\n            },\n            stepStart,\n          )\n          .fromTo(\n            nextContent,\n            {\n              autoAlpha: 0,\n              yPercent: contentEnterYPercent,\n            },\n            {\n              autoAlpha: 1,\n              yPercent: 0,\n              duration: contentTransitionDuration,\n              ease: \"power2.inOut\",\n            },\n            nextContentStart,\n          )\n          .to(\n            currentImage,\n            reducedMotion\n              ? { autoAlpha: 0, duration: stepGap, ease: \"none\" }\n              : {\n                  clipPath: \"inset(0% 0% 100% 0%)\",\n                  scale: enableImageScaleFlow ? exitImageScale : 1,\n                  duration: stepGap,\n                  ease: \"none\",\n                },\n            stepStart,\n          );\n\n        if (reducedMotion) {\n          timeline.to(\n            nextImage,\n            { autoAlpha: 1, duration: stepGap, ease: \"none\" },\n            stepStart,\n          );\n        } else if (enableImageScaleFlow) {\n          timeline.to(\n            nextImage,\n            {\n              scale: activeImageScale,\n              duration: stepGap,\n              ease: \"none\",\n            },\n            stepStart,\n          );\n        }\n      });\n\n      timeline.duration(totalTimelineDuration);\n      ScrollTrigger.refresh();\n    }, sectionRef);\n\n    // Cleanup\n    return () => context.revert();\n  }, [\n    items,\n    lenis,\n    contentEnterYPercent,\n    contentExitYPercent,\n    contentTransitionDuration,\n    contentDelay,\n    stepGap,\n    enableImageScaleFlow,\n    initialImageScale,\n    activeImageScale,\n    exitImageScale,\n  ]);\n\n  if (!items.length) {\n    return null;\n  }\n\n  return (\n    <section\n      ref={sectionRef}\n      className={`flex w-screen justify-between relative ${className}`}\n      style={{\n        height: containerHeight || `${items.length * 100}vh`,\n        backgroundColor: bgColor,\n      }}\n    >\n       <div className=\"fixed bottom-10 left-[20%] z-30 -translate-x-1/2  flex flex-col gap-[0.5vw] justify-center text-black items-center \">\n       <p className=\"text-lg text-black\">\n        scroll\n       </p>\n                    \n                    <svg\n                        width=\"20\"\n                        height=\"28\"\n                        className=\"size-[1.5vw]\"\n                        viewBox=\"0 0 20 28\"\n                        fill=\"none\"\n                        xmlns=\"http://www.w3.org/2000/svg\"\n                    >\n                        <style>{`\n                  .chev1 { animation: fadeDown 1.4s ease-in-out infinite; }\n                  .chev2 { animation: fadeDown 1.4s ease-in-out 0.22s infinite; }\n                  .chev3 { animation: fadeDown 1.4s ease-in-out 0.44s infinite; }\n                  @keyframes fadeDown {\n                    0%   { opacity: 0.08; transform: translateY(-3px); }\n                    50%  { opacity: 0.55; transform: translateY(2px); }\n                    100% { opacity: 0.08; transform: translateY(-3px); }\n                  }\n                `}</style>\n                        <polyline\n                            className=\"chev1 stroke-current\"\n                            points=\"2,2 10,9 18,2\"\n                            stroke=\"black\"\n                            strokeWidth=\"1.4\"\n                            fill=\"none\"\n\n                            strokeLinecap=\"round\"\n                            strokeLinejoin=\"round\"\n                        />\n                        <polyline\n                            className=\"chev2 stroke-current\"\n                            points=\"2,10 10,17 18,10\"\n                            stroke=\"black\"\n                            strokeWidth=\"1.4\"\n                            fill=\"none\"\n\n                            strokeLinecap=\"round\"\n                            strokeLinejoin=\"round\"\n                        />\n                        <polyline\n                            className=\"chev3 stroke-current\"\n                            points=\"2,18 10,25 18,18\"\n                            stroke=\"black\"\n                            strokeWidth=\"1.4\"\n                            fill=\"none\"\n\n                            strokeLinecap=\"round\"\n                            strokeLinejoin=\"round\"\n                        />\n                    </svg>\n                </div>\n      <div\n        ref={stickyRef}\n        className=\"sticky top-0 flex h-screen w-full justify-between max-[1025px]:h-screen max-[1025px]:flex-col-reverse max-[1025px]:justify-start max-[1025px]:px-[5vw] max-md:px-[6vw]\"\n      >\n        <div\n          className={`relative h-full w-[42%] max-[1025px]:h-[55%] max-[1025px]:w-full ${leftClassName}`}\n          style={{ backgroundColor: bgColor }}\n        >\n          {items.map((item, index) => (\n            <div\n              key={`content-${index}`}\n              ref={(element) => {\n                contentRefsRef.current[index] = element;\n              }}\n              className={`absolute inset-0 h-full w-full pl-[5vw] pt-[35%] opacity-0 [&_a]:mb-[1vw] [&_a]:text-[1.2vw] [&_h3]:mb-[2.5vw] [&_h3]:text-[4vw] [&_li]:mb-[0.5vw] [&_li]:text-[1.05vw] [&_p]:mb-[1vw] [&_p]:text-[1.2vw] [&_ul]:mb-[1vw] max-[1025px]:pl-0 max-[1025px]:pt-[7%] max-[1025px]:[&_a]:mb-[3vw] max-[1025px]:[&_a]:text-[2.8vw] max-[1025px]:[&_h3]:mb-[4vw] max-[1025px]:[&_h3]:text-[5.5vw] max-[1025px]:[&_li]:mb-[1vw] max-[1025px]:[&_li]:text-[2.5vw] max-[1025px]:[&_p]:mb-[3vw] max-[1025px]:[&_p]:text-[2.8vw] max-[1025px]:[&_ul]:mb-[4vw] max-md:pt-[10%] max-md:[&_a]:text-[4.5vw] max-md:[&_h3]:text-[7.5vw] max-md:[&_li]:text-[4vw] max-md:[&_p]:text-[4.5vw] ${contentClassName}`}\n            >\n              {renderStickyContent(item)}\n            </div>\n          ))}\n        </div>\n\n        <div\n          className={`relative h-full w-1/2 overflow-hidden max-[1025px]:mt-[7vh] max-[1025px]:h-[37%] max-[1025px]:w-full max-[1025px]:rounded-[3.5vw] ${rightClassName}`}\n        >\n          {items.map((item, index) => (\n            <div\n              key={`image-${index}`}\n              ref={(element) => {\n                imageRefsRef.current[index] = element;\n              }}\n              className={`absolute inset-0 h-full w-full opacity-0 ${imageClassName}`}\n            >\n              <img\n                src={item.image}\n                alt={item.alt || item.imageAlt || `sticky-image-${index + 1}`}\n                className=\"h-full w-full object-cover\"\n                width={item.width || 1080}\n                height={item.height || 1080}\n              />\n            </div>\n          ))}\n        </div>\n      </div>\n    </section>\n  );\n}\n"
+    }
+  ]
+}

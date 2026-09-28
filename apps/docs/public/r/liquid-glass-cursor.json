@@ -1,0 +1,147 @@
+{
+  "name": "liquid-glass-cursor",
+  "type": "registry:component",
+  "title": "Liquid Glass Cursor",
+  "description": "Magnifying glass-lens cursor with chromatic-aberration SVG refraction over live wrapped content, hover shape morphing, and spring-smoothed tracking.",
+  "dependencies": [
+    "motion"
+  ],
+  "registryDependencies": [],
+  "exportName": "LiquidGlassCursor",
+  "exportKind": "default",
+  "tier": "free",
+  "version": "1.1.0",
+  "changelog": [
+    {
+      "version": "1.1.0",
+      "date": "2026-08-26",
+      "summary": "Rebuilt as a magnifying glass-lens wrapper with chromatic-aberration SVG refraction over live wrapped content, replacing the previous GSAP hover-morph cursor API",
+      "breaking": false
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-06-04",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "props": [
+    {
+      "name": "size",
+      "type": "number",
+      "default": 150,
+      "description": "Diameter of the lens in pixels.",
+      "remixer": {
+        "control": "range",
+        "group": "size",
+        "groupTitle": "Size",
+        "min": 60,
+        "max": 320,
+        "step": 1
+      }
+    },
+    {
+      "name": "magnification",
+      "type": "number",
+      "default": 1.15,
+      "description": "Zoom level applied to the content copy under the lens.",
+      "remixer": {
+        "control": "range",
+        "group": "size",
+        "groupTitle": "Size",
+        "min": 1,
+        "max": 2,
+        "step": 0.01
+      }
+    },
+    {
+      "name": "textHoverSize",
+      "type": "number",
+      "default": 130,
+      "description": "Lens diameter when hovering a data-cursor=\"text\" target.",
+      "remixer": {
+        "control": "range",
+        "group": "size",
+        "groupTitle": "Size",
+        "min": 60,
+        "max": 260,
+        "step": 1
+      }
+    },
+    {
+      "name": "maxButtonWidth",
+      "type": "number",
+      "default": 260,
+      "description": "Lens width when hovering a data-cursor=\"button\" target.",
+      "remixer": {
+        "control": "range",
+        "group": "button",
+        "groupTitle": "Button Hover",
+        "min": 80,
+        "max": 420,
+        "step": 1
+      }
+    },
+    {
+      "name": "maxButtonHeight",
+      "type": "number",
+      "default": 110,
+      "description": "Lens height when hovering a data-cursor=\"button\" target.",
+      "remixer": {
+        "control": "range",
+        "group": "button",
+        "groupTitle": "Button Hover",
+        "min": 40,
+        "max": 240,
+        "step": 1
+      }
+    },
+    {
+      "name": "distortion",
+      "type": "number",
+      "default": 60,
+      "description": "SVG displacement strength for the glass refraction.",
+      "remixer": {
+        "control": "range",
+        "group": "filter",
+        "groupTitle": "Filter",
+        "min": 0,
+        "max": 150,
+        "step": 1
+      }
+    },
+    {
+      "name": "aberration",
+      "type": "number",
+      "default": 1,
+      "description": "Chromatic aberration amount - how far the R/G/B channels split at the rim.",
+      "remixer": {
+        "control": "range",
+        "group": "filter",
+        "groupTitle": "Filter",
+        "min": 0,
+        "max": 2,
+        "step": 0.05
+      }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "size",
+    "layout": {
+      "buttonClassName": "right-4! top-25!",
+      "panelClassName": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/liquid-glass-cursor/index.tsx",
+      "content": "// Built using Hyperiux Vault: https://vault.hyperiux.com\n\n\n\"use client\";\n\nimport { useEffect, useId, useRef, useState } from \"react\";\nimport {\n  motion,\n  useMotionValue,\n  useReducedMotion,\n  useSpring,\n  useTransform,\n} from \"motion/react\";\n\ninterface LiquidGlassCursorProps {\n  children?: React.ReactNode;\n  size?: number;\n  magnification?: number;\n  textHoverSize?: number;\n  maxButtonWidth?: number;\n  maxButtonHeight?: number;\n  distortion?: number;\n  aberration?: number;\n  className?: string;\n}\n\nconst TEXT_SELECTOR =\n  '[data-cursor=\"text\"], p, span, h1, h2, h3, h4, h5, h6, label';\nconst BUTTON_SELECTOR =\n  '[data-cursor=\"button\"], button, a, [role=\"button\"], input, select, textarea';\n\nexport default function LiquidGlassCursor({\n  children,\n  size = 150,\n  magnification = 1.15,\n  textHoverSize = 130,\n  maxButtonWidth = 260,\n  maxButtonHeight = 110,\n  distortion = 60,\n  aberration = 1,\n  className = \"\",\n}: LiquidGlassCursorProps) {\n  const ref = useRef<HTMLDivElement>(null);\n  const rawId = useId();\n  const filterId = `lgc-${rawId.replace(/[^a-zA-Z0-9]/g, \"\")}`;\n  const [dims, setDims] = useState({ width: 0, height: 0 });\n  const [copyStyle, setCopyStyle] = useState<React.CSSProperties>({});\n  const [mapUrl, setMapUrl] = useState(\"\");\n  const reduceMotion = useReducedMotion();\n\n  // Displacement bitmap is generated once at the largest size any shape can\n  // reach, then stretched (non-uniformly, via preserveAspectRatio=\"none\") to\n  // match the live lens dimensions - regenerating pixels every frame would jank.\n  const mapSize = Math.max(size, textHoverSize, maxButtonWidth, maxButtonHeight);\n\n  const x = useMotionValue(0);\n  const y = useMotionValue(0);\n  const presence = useMotionValue(0);\n  const targetW = useMotionValue(size);\n  const targetH = useMotionValue(size);\n\n  const springConfig = reduceMotion\n    ? { stiffness: 2000, damping: 90 }\n    : { stiffness: 300, damping: 26 };\n  const shapeSpringConfig = reduceMotion\n    ? { stiffness: 2000, damping: 90 }\n    : { stiffness: 340, damping: 28 };\n  const sx = useSpring(x, springConfig);\n  const sy = useSpring(y, springConfig);\n  const scale = useSpring(presence, { stiffness: 260, damping: 20 });\n  const sw = useSpring(targetW, shapeSpringConfig);\n  const sh = useSpring(targetH, shapeSpringConfig);\n\n  const setShapeForTarget = (target: EventTarget | null) => {\n    const el = target instanceof Element ? target : null;\n    if (el?.closest(BUTTON_SELECTOR)) {\n      targetW.set(maxButtonWidth);\n      targetH.set(maxButtonHeight);\n    } else if (el?.closest(TEXT_SELECTOR)) {\n      targetW.set(textHoverSize);\n      targetH.set(textHoverSize);\n    } else {\n      targetW.set(size);\n      targetH.set(size);\n    }\n  };\n\n  // Radial displacement map: neutral (128,128) at center, pulling samples\n  // toward the lens center with cubic falloff so the bulge lives at the rim.\n  useEffect(() => {\n    const canvas = document.createElement(\"canvas\");\n    canvas.width = canvas.height = mapSize;\n    const ctx = canvas.getContext(\"2d\");\n    if (!ctx) return;\n    const img = ctx.createImageData(mapSize, mapSize);\n    const c = mapSize / 2;\n    for (let py = 0; py < mapSize; py++) {\n      for (let px = 0; px < mapSize; px++) {\n        const dx = px - c;\n        const dy = py - c;\n        const dist = Math.sqrt(dx * dx + dy * dy);\n        const nd = Math.min(dist / c, 1);\n        const strength = nd * nd * nd;\n        const ux = dist > 0 ? dx / dist : 0;\n        const uy = dist > 0 ? dy / dist : 0;\n        const i = (py * mapSize + px) * 4;\n        img.data[i] = Math.round(255 * (0.5 - 0.5 * ux * strength));\n        img.data[i + 1] = Math.round(255 * (0.5 - 0.5 * uy * strength));\n        img.data[i + 2] = 128;\n        img.data[i + 3] = 255;\n      }\n    }\n    ctx.putImageData(img, 0, 0);\n    const url = canvas.toDataURL();\n    const raf = requestAnimationFrame(() => setMapUrl(url));\n    return () => cancelAnimationFrame(raf);\n  }, [mapSize]);\n\n  useEffect(() => {\n    const el = ref.current;\n    if (!el) return;\n    const ro = new ResizeObserver(() => {\n      setDims({ width: el.offsetWidth, height: el.offsetHeight });\n      // mirror the wrapper's surface so the lens magnifies bg + layout, not just children\n      const cs = getComputedStyle(el);\n      setCopyStyle({\n        backgroundColor: cs.backgroundColor,\n        backgroundImage: cs.backgroundImage,\n        backgroundSize: cs.backgroundSize,\n        backgroundPosition: cs.backgroundPosition,\n        padding: cs.padding,\n        boxSizing: \"border-box\",\n      });\n    });\n    ro.observe(el);\n    return () => ro.disconnect();\n  }, []);\n\n  const lensX = useTransform([sx, sw], ([v, w]) => (v as number) - (w as number) / 2);\n  const lensY = useTransform([sy, sh], ([v, h]) => (v as number) - (h as number) / 2);\n  // light comes from top-left, so the glass casts its shadow down-right\n  const shadowX = useTransform(\n    [sx, sw],\n    ([v, w]) => (v as number) - (w as number) / 2 + 8\n  );\n  const shadowY = useTransform(\n    [sy, sh],\n    ([v, h]) => (v as number) - (h as number) / 2 + 12\n  );\n  // place the magnified copy so the point under the cursor stays centered in the lens\n  const copyX = useTransform(\n    [sx, sw],\n    ([v, w]) => (w as number) / 2 - magnification * (v as number)\n  );\n  const copyY = useTransform(\n    [sy, sh],\n    ([v, h]) => (h as number) / 2 - magnification * (v as number)\n  );\n\n  // chromatic aberration: each channel refracts at a different strength\n  const scaleR = distortion * (1 + 0.5 * aberration);\n  const scaleG = distortion;\n  const scaleB = distortion * (1 - 0.5 * aberration);\n  const isolate = (channel: 0 | 1 | 2) =>\n    [0, 1, 2, 3]\n      .map((row) => {\n        const r = [0, 0, 0, 0, 0];\n        if (row === 3) r[3] = 1;\n        else if (row === channel) r[channel] = 1;\n        return r.join(\" \");\n      })\n      .join(\"  \");\n\n  return (\n    <div\n      ref={ref}\n      onMouseMove={(e) => {\n        const rect = e.currentTarget.getBoundingClientRect();\n        x.set(e.clientX - rect.left);\n        y.set(e.clientY - rect.top);\n        presence.set(1);\n      }}\n      onMouseOver={(e) => setShapeForTarget(e.target)}\n      onMouseLeave={() => {\n        presence.set(0);\n        targetW.set(size);\n        targetH.set(size);\n      }}\n      className={`relative overflow-hidden bg-[#0c0d12] [cursor:none] ${className}`}\n    >\n      {children}\n\n      <svg className=\"absolute h-0 w-0\" aria-hidden=\"true\">\n        <defs>\n          {mapUrl && (\n          <filter\n            id={filterId}\n            x=\"0\"\n            y=\"0\"\n            width=\"100%\"\n            height=\"100%\"\n            colorInterpolationFilters=\"sRGB\"\n          >\n            <feImage\n              href={mapUrl}\n              x=\"0\"\n              y=\"0\"\n              width=\"100%\"\n              height=\"100%\"\n              preserveAspectRatio=\"none\"\n              result=\"map\"\n            />\n            <feColorMatrix\n              in=\"SourceGraphic\"\n              type=\"matrix\"\n              values={isolate(0)}\n              result=\"cr\"\n            />\n            <feDisplacementMap\n              in=\"cr\"\n              in2=\"map\"\n              scale={scaleR}\n              xChannelSelector=\"R\"\n              yChannelSelector=\"G\"\n              result=\"dr\"\n            />\n            <feColorMatrix\n              in=\"SourceGraphic\"\n              type=\"matrix\"\n              values={isolate(1)}\n              result=\"cg\"\n            />\n            <feDisplacementMap\n              in=\"cg\"\n              in2=\"map\"\n              scale={scaleG}\n              xChannelSelector=\"R\"\n              yChannelSelector=\"G\"\n              result=\"dg\"\n            />\n            <feColorMatrix\n              in=\"SourceGraphic\"\n              type=\"matrix\"\n              values={isolate(2)}\n              result=\"cb\"\n            />\n            <feDisplacementMap\n              in=\"cb\"\n              in2=\"map\"\n              scale={scaleB}\n              xChannelSelector=\"R\"\n              yChannelSelector=\"G\"\n              result=\"db\"\n            />\n            <feComposite\n              in=\"dr\"\n              in2=\"dg\"\n              operator=\"arithmetic\"\n              k1=\"0\"\n              k2=\"1\"\n              k3=\"1\"\n              k4=\"0\"\n              result=\"drg\"\n            />\n            <feComposite\n              in=\"drg\"\n              in2=\"db\"\n              operator=\"arithmetic\"\n              k1=\"0\"\n              k2=\"1\"\n              k3=\"1\"\n              k4=\"0\"\n            />\n          </filter>\n          )}\n        </defs>\n      </svg>\n\n      <motion.div\n        aria-hidden=\"true\"\n        style={{ x: shadowX, y: shadowY, scale, width: sw, height: sh }}\n        className=\"pointer-events-none absolute left-0 top-0 z-10 rounded-full bg-black/45 blur-xl\"\n      />\n\n      <motion.div\n        aria-hidden=\"true\"\n        style={{ x: lensX, y: lensY, scale, width: sw, height: sh }}\n        className=\"pointer-events-none absolute left-0 top-0 z-20 overflow-hidden rounded-full\"\n      >\n        <div\n          className=\"absolute inset-0\"\n          style={{ filter: mapUrl ? `url(#${filterId})` : undefined }}\n        >\n          <motion.div\n            style={{\n              ...copyStyle,\n              x: copyX,\n              y: copyY,\n              scale: magnification,\n              width: dims.width,\n              height: dims.height,\n              transformOrigin: \"0 0\",\n            }}\n            className=\"absolute left-0 top-0\"\n          >\n            {children}\n          </motion.div>\n        </div>\n        <div\n          className=\"absolute inset-0 rounded-full\"\n          style={{\n            background:\n              \"radial-gradient(ellipse 45% 30% at 32% 24%, rgba(255,255,255,0.35), transparent 70%)\",\n          }}\n        />\n        <div\n          className=\"absolute inset-0 rounded-full\"\n          style={{\n            boxShadow:\n              \"inset 0 0 0 1px rgba(255,255,255,0.25), inset 2px 4px 10px rgba(255,255,255,0.18), inset -3px -5px 14px rgba(0,0,0,0.35)\",\n          }}\n        />\n      </motion.div>\n\n      {reduceMotion && (\n        <div\n          aria-live=\"polite\"\n          className=\"pointer-events-none absolute bottom-4 right-4 z-40 w-fit max-w-65 rounded-md bg-black/10 p-3 text-center backdrop-blur-md max-md:hidden\"\n        >\n          <h2 className=\"text-sm leading-none text-black\">\n            The lens keeps tracking.\n          </h2>\n          <p className=\"mt-2 text-xs leading-5 text-black\">\n            Liquid Glass Cursor magnifies and refracts whatever your cursor\n            passes over. Since the lens is driven entirely by cursor motion,\n            there&apos;s no reduced motion version to fall back on.\n          </p>\n        </div>\n      )}\n    </div>\n  );\n}\n"
+    }
+  ]
+}

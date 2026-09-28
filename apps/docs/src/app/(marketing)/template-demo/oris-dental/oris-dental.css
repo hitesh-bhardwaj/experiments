@@ -1,0 +1,209 @@
+@font-face {
+  font-family: "AeonikPro";
+  src: url("./assets/fonts/AeonikPro-Light.woff2") format("woff2");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "AeonikPro";
+  src: url("./assets/fonts/AeonikPro-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "AeonikPro";
+  src: url("./assets/fonts/AeonikPro-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "AeonikPro";
+  src: url("./assets/fonts/AeonikPro-Bold.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "AeonikPro";
+  src: url("./assets/fonts/AeonikPro-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Apply AeonikPro font family globally to the template */
+.oris-font,
+#oris-hero,
+#oris-footer,
+#main {
+  font-family:
+    "AeonikPro",
+    system-ui,
+    -apple-system,
+    sans-serif;
+}
+
+/* globals.css sets font-family directly on h1-h4, which wins over
+   inheritance from #main. Re-assert AeonikPro for headings in the template. */
+.oris-font :is(h1, h2, h3, h4, h5, h6),
+#oris-hero :is(h1, h2, h3, h4, h5, h6),
+#oris-footer :is(h1, h2, h3, h4, h5, h6),
+#main :is(h1, h2, h3, h4, h5, h6) {
+  font-family:
+    "AeonikPro",
+    system-ui,
+    -apple-system,
+    sans-serif;
+}
+
+.oris-dental-main{
+  line-height: 1.3;
+}
+
+/* globals.css's unlayered `html, body { color: var(--foreground) }` (white)
+   otherwise inherits into any element here with no color of its own.
+   Give the template its own base text color so it never depends on the
+   app shell's theme, and keep #oris-hero explicit since its text sat on
+   the blue-to-white gradient relying on that inherited white. */
+#main {
+  color: #13314a;
+}
+
+#oris-hero {
+  color: #ffffff;
+}
+
+.text-oris-primary {
+  color: #3365e2;
+}
+
+.oris-paddx {
+  padding-inline: 4vw;
+}
+
+.text-oris-secondary {
+  color: #13314a;
+}
+.text-oris-gray {
+  color: #c4c4c4;
+}
+
+.oris-bg-primary {
+  background-color: #3365e2;
+}
+
+.bg-oris-secondary {
+  background-color: #13314a;
+}
+
+/* Selection colors */
+::selection,
+#main ::selection,
+.oris-font ::selection,
+#oris-hero ::selection,
+#oris-footer ::selection {
+  background-color: #3365e2;
+  color: #ffffff;
+}
+
+::-moz-selection,
+#main ::-moz-selection,
+.oris-font ::-moz-selection,
+#oris-hero ::-moz-selection,
+#oris-footer ::-moz-selection {
+  background-color: #3365e2;
+  color: #ffffff;
+}
+
+/* Custom scrollbar styled with Oris primary color */
+html,
+body,
+#main {
+  scrollbar-color: #3365e2 transparent;
+  scrollbar-width: thin;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #3365e2;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #2552d0;
+}
+
+
+.oris-text32 {
+  font-size: 1.8vw;
+}
+
+.oris-text22 {
+  font-size: 1.15vw;
+  font-weight: 400;
+
+}
+
+.oris-text64 {
+  font-size: 3.5vw;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+
+.oris-text48 {
+  font-size: 3vw;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  font-weight: 400;
+}
+
+@media (max-width: 1025px) {
+  .oris-paddx {
+    padding-inline: 5vw;
+  }
+  .oris-text64 {
+    font-size: 6vw;
+  }
+  .oris-text48 {
+    font-size: 4vw;
+  }
+  .oris-text32 {
+    font-size: 3.4vw;
+  }
+  .oris-text22 {
+    font-size: 3vw;
+  }
+}
+
+@media (max-width: 768px) {
+  .oris-paddx {
+    padding-inline: 5vw;
+  }
+  .oris-text64 {
+    font-size: 8vw;
+  }
+  .oris-text48 {
+    font-size: 6.5vw;
+  }
+  .oris-text32 {
+    font-size: 4.5vw;
+  }
+  .oris-text22 {
+    font-size: 4vw;
+  }
+}

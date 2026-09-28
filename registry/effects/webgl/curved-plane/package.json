@@ -1,0 +1,20 @@
+{
+  "name": "@hyperiux/curved-plane",
+  "version": "1.0.1",
+  "description": "Three.ts WebGL horizontal image carousel with a custom GLSL shader that curves the plane edges on drag and scroll. Images fade toward the edges and deform proportionally to interaction velocity. Supports drag, touch, scroll, and inertia momentum.",
+  "main": "index.tsx",
+  "files": [
+    "index.tsx",
+    "CurvedSwiperHorizontal.tsx",
+    "CurvedSwiperVertical.tsx",
+    "createSuspendedRaf.ts",
+    "registry.json"
+  ],
+  "keywords": [
+    "webgl",
+    "hyperiux"
+  ],
+  "dependencies": {
+    "three": "*"
+  }
+}

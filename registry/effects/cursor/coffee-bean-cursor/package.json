@@ -1,0 +1,20 @@
+{
+  "name": "@hyperiux/coffee-bean-cursor",
+  "version": "1.1.0",
+  "description": "Mouse-reactive 3D coffee bean flow with velocity-based lighting and fluid drift",
+  "main": "index.tsx",
+  "files": [
+    "index.tsx",
+    "createSuspendedRaf.ts",
+    "registry.json"
+  ],
+  "keywords": [
+    "cursor",
+    "hyperiux"
+  ],
+  "dependencies": {
+    "@react-three/drei": "*",
+    "@react-three/fiber": "*",
+    "three": "*"
+  }
+}

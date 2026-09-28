@@ -1,0 +1,92 @@
+{
+  "name": "text-fill-animation",
+  "type": "registry:component",
+  "title": "Text Fill Animation",
+  "description": "Scroll-synced text color fill animation with customizable color sweep effect",
+  "dependencies": [
+    "gsap"
+  ],
+  "registryDependencies": [],
+  "exportName": "TextFillAnimation",
+  "exportKind": "default",
+  "tier": "pro",
+  "version": "1.0.0",
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "date": "2026-07-29",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "props": [
+    {
+      "name": "text",
+      "type": "string",
+      "default": "Design systems should feel effortless, not like you're fighting your own components every time you build.",
+      "description": "Text filled on scroll."
+    },
+    {
+      "name": "textColor",
+      "type": "string",
+      "default": "#111111",
+      "description": "Final text color.",
+      "remixer": {
+        "control": "color",
+        "group": "colors",
+        "groupTitle": "Colors"
+      }
+    },
+    {
+      "name": "primaryColor",
+      "type": "string",
+      "default": "#ff6b00",
+      "description": "Highlight color.",
+      "remixer": {
+        "control": "color",
+        "group": "colors",
+        "groupTitle": "Colors"
+      }
+    },
+    {
+      "name": "dimColor",
+      "type": "string",
+      "default": "#AAAAAA",
+      "description": "Initial dimmed text color.",
+      "remixer": {
+        "control": "color",
+        "group": "colors",
+        "groupTitle": "Colors"
+      }
+    },
+    {
+      "name": "backgroundColor",
+      "type": "string",
+      "default": "#F0EFE9",
+      "description": "Section background color.",
+      "remixer": {
+        "control": "color",
+        "group": "colors",
+        "groupTitle": "Colors"
+      }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "colors",
+    "layout": {
+      "buttonClassName": "right-4! top-25!",
+      "panelClassName": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/text-fill-animation/index.tsx"
+    }
+  ]
+}

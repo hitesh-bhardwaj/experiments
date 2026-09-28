@@ -1,0 +1,19 @@
+{
+  "name": "@hyperiux/noise-ripple-cursor",
+  "version": "1.0.1",
+  "description": "Interactive shader overlay that distorts and dithers an image with fluid cursor ripples",
+  "main": "index.tsx",
+  "files": [
+    "index.tsx",
+    "2dCanvasTracker.tsx",
+    "createSuspendedRaf.ts",
+    "registry.json"
+  ],
+  "keywords": [
+    "cursor",
+    "hyperiux"
+  ],
+  "dependencies": {
+    "three": "*"
+  }
+}

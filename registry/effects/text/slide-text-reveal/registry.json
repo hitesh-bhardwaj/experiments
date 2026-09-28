@@ -1,0 +1,140 @@
+{
+  "name": "slide-text-reveal",
+  "version": "1.1.0",
+  "changelog": [
+    {
+      "version": "1.1.0",
+      "date": "2026-07-30",
+      "summary": "Added reduced motion support.",
+      "breaking": false
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-02-10",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "type": "registry:component",
+  "title": "Slide Text Reveal",
+  "description": "Characters slide in from the right with staggered fade animation on scroll",
+  "category": "text",
+  "dependencies": [
+    "gsap"
+  ],
+  "registryDependencies": [],
+  "previewUrl": "/demo/slide-text-reveal",
+  "tier": "pro",
+  "exportName": "SlideTextReveal",
+  "exportKind": "default",
+  "main": "index.tsx",
+  "props": [
+    {
+      "name": "animateOnScroll",
+      "type": "boolean",
+      "default": true,
+      "description": "Runs reveal on scroll.",
+      "remixer": {
+        "enabled": false,
+        "control": "checkbox",
+        "group": "behavior",
+        "groupTitle": "Behavior"
+      }
+    },
+    {
+      "name": "delay",
+      "type": "number",
+      "default": 0,
+      "description": "Animation delay in seconds.",
+      "remixer": {
+        "control": "range",
+        "group": "timing",
+        "groupTitle": "Timing",
+        "min": 0,
+        "max": 2,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "duration",
+      "type": "number",
+      "default": 0.5,
+      "description": "Character reveal duration in seconds.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0.1,
+        "max": 3,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "speed",
+      "type": "number",
+      "default": 20,
+      "description": "Starting horizontal offset in pixels.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0,
+        "max": 120,
+        "step": 1
+      }
+    },
+    {
+      "name": "stagger",
+      "type": "number",
+      "default": 0.03,
+      "description": "Delay between revealed characters.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0,
+        "max": 0.2,
+        "step": 0.005
+      }
+    },
+    {
+      "name": "variant",
+      "type": "string",
+      "default": "right",
+      "description": "Slide direction.",
+      "remixer": {
+        "control": "select",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "options": [
+          {
+            "value": "right",
+            "label": "From right"
+          },
+          {
+            "value": "left",
+            "label": "From left"
+          }
+        ]
+      }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "motion",
+    "layout": {
+      "buttonClassName": "right-4! top-25!",
+      "panelClassName": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/slide-text-reveal/index.tsx"
+    }
+  ]
+}

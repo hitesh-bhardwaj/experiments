@@ -1,0 +1,17 @@
+{
+  "name": "@hyperiux/magnetic-image-trail",
+  "version": "1.1.0",
+  "description": "Canvas 2D effect that orbits a cluster of images around the cursor in a diagonal loop. Images scale up in the direction of movement and push forward/upward based on mouse velocity, creating a magnetic pull feel.",
+  "main": "index.tsx",
+  "files": [
+    "index.tsx",
+    "MagneticTrail.tsx",
+    "createSuspendedRaf.ts",
+    "registry.json"
+  ],
+  "keywords": [
+    "cursor",
+    "hyperiux"
+  ],
+  "dependencies": {}
+}

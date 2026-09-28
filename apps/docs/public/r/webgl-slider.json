@@ -1,0 +1,122 @@
+{
+  "name": "webgl-slider",
+  "type": "registry:component",
+  "title": "WebGL Slider",
+  "description": "Scroll-driven WebGL image slider with fold distortion, hover interaction, and Lenis + GSAP snap behavior.",
+  "dependencies": [
+    "three",
+    "gsap",
+    "lenis"
+  ],
+  "registryDependencies": [],
+  "exportName": "WebGLSlider",
+  "exportKind": "default",
+  "tier": "pro",
+  "version": "1.0.1",
+  "changelog": [
+    {
+      "version": "1.0.1",
+      "date": "2026-07-28",
+      "summary": "Added reduced motion support.",
+      "breaking": false
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-06-04",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "props": [
+    {
+      "name": "distortionStrength",
+      "type": "number",
+      "description": "Strength of the shader fold distortion as slides scroll past.",
+      "default": 1,
+      "remixer": {
+        "control": "range",
+        "group": "controls",
+        "groupTitle": "Controls",
+        "min": 0,
+        "max": 3,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "transitionDuration",
+      "type": "number",
+      "description": "Duration of the scroll-snap settle animation.",
+      "default": 0.6,
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0,
+        "max": 5,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "enableHoverEffect",
+      "type": "boolean",
+      "description": "Enables the pointer-driven hover bend on each slide.",
+      "default": true,
+      "remixer": {
+        "control": "checkbox",
+        "group": "motion",
+        "groupTitle": "Motion"
+      }
+    },
+    {
+      "name": "imageWidth",
+      "type": "number",
+      "description": "WebGL slide plane width.",
+      "default": 3.2,
+      "remixer": {
+        "control": "range",
+        "group": "style",
+        "groupTitle": "Style",
+        "min": 1,
+        "max": 6,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "imageHeight",
+      "type": "number",
+      "description": "WebGL slide plane height.",
+      "default": 3,
+      "remixer": {
+        "control": "range",
+        "group": "style",
+        "groupTitle": "Style",
+        "min": 1,
+        "max": 6,
+        "step": 0.05
+      }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "controls",
+    "layout": {
+      "buttonClassName": "right-4! top-25!",
+      "panelClassName": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/webgl-slider/index.tsx"
+    },
+    {
+      "path": "WebGLSliderComp.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/webgl-slider/WebGLSliderComp.tsx"
+    }
+  ]
+}

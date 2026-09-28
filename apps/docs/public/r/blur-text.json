@@ -1,0 +1,135 @@
+{
+  "name": "blur-text",
+  "type": "registry:component",
+  "title": "Blur Text",
+  "description": "Text that reveals with a blur-to-focus animation on scroll",
+  "dependencies": [
+    "motion"
+  ],
+  "registryDependencies": [],
+  "exportName": "BlurText",
+  "exportKind": "default",
+  "tier": "pro",
+  "version": "1.0.1",
+  "changelog": [
+    {
+      "version": "1.0.1",
+      "date": "2026-07-30",
+      "summary": "Added reduced-motion support.",
+      "breaking": false
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-02-10",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "props": [
+    {
+      "name": "delay",
+      "type": "number",
+      "default": 0,
+      "description": "Delay before the word animation starts.",
+      "remixer": {
+        "control": "range",
+        "group": "timing",
+        "groupTitle": "Timing",
+        "min": 0,
+        "max": 2,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "duration",
+      "type": "number",
+      "default": 0.5,
+      "description": "Animation duration per word.",
+      "remixer": {
+        "control": "range",
+        "group": "timing",
+        "groupTitle": "Timing",
+        "min": 0.1,
+        "max": 2,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "blur",
+      "type": "number",
+      "default": 10,
+      "description": "Initial blur amount in pixels.",
+      "remixer": {
+        "control": "range",
+        "group": "style",
+        "groupTitle": "Style",
+        "min": 0,
+        "max": 40,
+        "step": 1
+      }
+    },
+    {
+      "name": "variant",
+      "type": "string",
+      "default": "fade",
+      "description": "Direction variant for the reveal.",
+      "remixer": {
+        "control": "select",
+        "group": "style",
+        "groupTitle": "Style",
+        "options": [
+          {
+            "value": "fade",
+            "label": "Fade"
+          },
+          {
+            "value": "left",
+            "label": "Left"
+          },
+          {
+            "value": "right",
+            "label": "Right"
+          },
+          {
+            "value": "up",
+            "label": "Up"
+          },
+          {
+            "value": "down",
+            "label": "Down"
+          }
+        ]
+      }
+    },
+    {
+      "name": "once",
+      "type": "boolean",
+      "default": false,
+      "description": "Runs the reveal only once per viewport entry when enabled.",
+      "remixer": {
+        "enabled": false,
+        "control": "checkbox",
+        "group": "behavior",
+        "groupTitle": "Behavior"
+      }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "timing",
+    "layout": {
+      "buttonClassName": "right-4! top-25!",
+      "panelClassName": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/blur-text/index.tsx"
+    }
+  ]
+}

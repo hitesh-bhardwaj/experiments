@@ -1,0 +1,273 @@
+{
+  "name": "morphing-dock",
+  "type": "registry:component",
+  "title": "Morphing Dock",
+  "description": "Floating dock that morphs into navigation and contact panels, with character-stagger links and image previews.",
+  "dependencies": [
+    "@gsap/react",
+    "gsap"
+  ],
+  "registryDependencies": [],
+  "exportName": "MorphingDock",
+  "exportKind": "default",
+  "tier": "pro",
+  "version": "1.0.0",
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "date": "2026-09-14",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "props": [
+    {
+      "name": "duration",
+      "type": "number",
+      "default": 1,
+      "description": "Duration multiplier for dock animations; 1 preserves the original timing proportions.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0.2,
+        "max": 3,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "staggerStep",
+      "type": "number",
+      "default": 0.01,
+      "description": "Delay in seconds between animated letters.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0,
+        "max": 0.1,
+        "step": 0.005
+      }
+    },
+    {
+      "name": "showLine",
+      "type": "boolean",
+      "default": true,
+      "description": "Draw navigation link underlines on hover and focus. The CTA never shows an underline.",
+      "remixer": {
+        "control": "checkbox",
+        "group": "motion",
+        "groupTitle": "Motion"
+      }
+    },
+    {
+      "name": "backgroundColor",
+      "type": "color",
+      "default": "#111111",
+      "description": "Dock and expanded panel background.",
+      "remixer": {
+        "control": "color",
+        "group": "colors",
+        "groupTitle": "Colors"
+      }
+    },
+    {
+      "name": "textColor",
+      "type": "color",
+      "default": "#d2d2d2",
+      "description": "Resting navigation and CTA link color.",
+      "remixer": {
+        "control": "color",
+        "group": "colors",
+        "groupTitle": "Colors"
+      }
+    },
+    {
+      "name": "hoverColor",
+      "type": "color",
+      "default": "#ffffff",
+      "description": "Navigation and CTA link hover and focus color.",
+      "remixer": {
+        "control": "color",
+        "group": "colors",
+        "groupTitle": "Colors"
+      }
+    },
+    {
+      "name": "brand",
+      "type": "string",
+      "default": "HYPERIUX",
+      "description": "Dock brand label.",
+      "remixer": {
+        "enabled": false,
+        "control": "text",
+        "group": "content",
+        "groupTitle": "Content"
+      }
+    },
+    {
+      "name": "contactLabel",
+      "type": "string",
+      "default": "Contact",
+      "description": "Contact link label.",
+      "remixer": {
+        "enabled": false,
+        "control": "text",
+        "group": "content",
+        "groupTitle": "Content"
+      }
+    },
+    {
+      "name": "email",
+      "type": "string",
+      "default": "hello@hyperiux.com",
+      "description": "Contact email address.",
+      "remixer": {
+        "enabled": false,
+        "control": "text",
+        "group": "content",
+        "groupTitle": "Content"
+      }
+    },
+    {
+      "name": "emailNote",
+      "type": "string",
+      "default": "Partnerships, press and support.",
+      "description": "Supporting contact text.",
+      "remixer": {
+        "enabled": false,
+        "control": "text",
+        "group": "content",
+        "groupTitle": "Content"
+      }
+    },
+    {
+      "name": "ctaLabel",
+      "type": "string",
+      "default": "Get started",
+      "description": "CTA label.",
+      "remixer": {
+        "enabled": false,
+        "control": "text",
+        "group": "content",
+        "groupTitle": "Content"
+      }
+    },
+    {
+      "name": "ctaHref",
+      "type": "string",
+      "default": "#",
+      "description": "CTA destination.",
+      "remixer": {
+        "enabled": false,
+        "control": "text",
+        "group": "content",
+        "groupTitle": "Content"
+      }
+    },
+    {
+      "name": "teaserImage",
+      "type": "string",
+      "default": "https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/v-10.jpg",
+      "description": "Preview image URL.",
+      "remixer": {
+        "enabled": false,
+        "control": "text",
+        "group": "content",
+        "groupTitle": "Content"
+      }
+    },
+    {
+      "name": "teaserHref",
+      "type": "string",
+      "default": "#",
+      "description": "Preview destination.",
+      "remixer": {
+        "enabled": false,
+        "control": "text",
+        "group": "content",
+        "groupTitle": "Content"
+      }
+    },
+    {
+      "name": "expandedWidth",
+      "type": "number",
+      "default": 48,
+      "description": "Expanded nav panel width in viewport units.",
+      "remixer": {
+        "control": "range",
+        "group": "layout",
+        "groupTitle": "Layout",
+        "min": 30,
+        "max": 95,
+        "step": 1
+      }
+    },
+    {
+      "name": "expandedHeight",
+      "type": "number",
+      "default": 26,
+      "description": "Expanded nav panel height in viewport units.",
+      "remixer": {
+        "control": "range",
+        "group": "layout",
+        "groupTitle": "Layout",
+        "min": 15,
+        "max": 60,
+        "step": 1
+      }
+    },
+    {
+      "name": "items",
+      "type": "array",
+      "default": [
+        {
+          "label": "Components",
+          "href": "#",
+          "blurb": "Drop-in motion primitives"
+        },
+        {
+          "label": "Templates",
+          "href": "#",
+          "blurb": "Full pages, wired and ready"
+        },
+        {
+          "label": "Showcase",
+          "href": "#",
+          "blurb": "Built with Hyperiux in the wild"
+        },
+        {
+          "label": "Docs",
+          "href": "#",
+          "blurb": "Guides, props and recipes"
+        }
+      ],
+      "description": "Navigation items with label, href, and blurb strings.",
+      "remixer": {
+        "enabled": false,
+        "control": "json",
+        "group": "content",
+        "groupTitle": "Content"
+      }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "motion",
+    "layout": {
+      "containerClassName": "z-[300]",
+      "buttonClassName": "right-4! top-25!",
+      "panelClassName": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/morphing-dock/index.tsx"
+    }
+  ]
+}

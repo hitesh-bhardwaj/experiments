@@ -1,0 +1,20 @@
+{
+  "name": "@hyperiux/number-counter",
+  "version": "1.0.1",
+  "description": "Scroll-triggered number counters with digit rolling animations (multiple variants).",
+  "main": "index.tsx",
+  "files": [
+    "index.tsx",
+    "NumberCounterOne.tsx",
+    "NumberCounterTwo.tsx",
+    "NumberCounterThree.tsx",
+    "registry.json"
+  ],
+  "keywords": [
+    "text",
+    "hyperiux"
+  ],
+  "dependencies": {
+    "gsap": "*"
+  }
+}

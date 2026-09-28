@@ -1,0 +1,80 @@
+{
+  "name": "strip-slider",
+  "version": "1.0.0",
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "date": "2026-06-04",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "type": "registry:component",
+  "title": "Strip Slider",
+  "description": "WebGL image slider that splits each slide into vertical strips, transitioning with a staggered wave distortion using Three.ts shader materials and GSAP",
+  "category": "webgl",
+  "dependencies": [
+    "three"
+  ],
+  "registryDependencies": [],
+  "previewUrl": "/demo/strip-slider",
+  "tier": "pro",
+  "main": "index.tsx",
+  "exportName": "StripSlider",
+  "exportKind": "default",
+  "importPath": "@/components/effects/strip-slider",
+  "target": "src/components/effects/strip-slider",
+  "files": [
+    {
+      "path": "index.tsx",
+      "target": "src/components/effects/strip-slider/index.tsx"
+    },
+    {
+      "path": "StripSliderComp.tsx",
+      "target": "src/components/effects/strip-slider/StripSliderComp.tsx"
+    },
+    {
+      "path": "createSuspendedRaf.ts",
+      "target": "src/components/effects/strip-slider/createSuspendedRaf.ts"
+    }
+  ],
+  "props": [
+    {
+      "name": "dispScale",
+      "type": "number",
+      "default": 1,
+      "description": "Multiplier on the ripple/displacement wave strength across all gallery images (collapsed and expanded).",
+      "remixer": { "control": "range", "group": "motion", "groupTitle": "Motion", "min": 0, "max": 3, "step": 0.05 }
+    },
+    {
+      "name": "cameraSway",
+      "type": "number",
+      "default": 0.03,
+      "description": "How much the camera drifts toward the pointer position.",
+      "remixer": { "control": "range", "group": "motion", "groupTitle": "Motion", "min": 0, "max": 0.15, "step": 0.005 }
+    },
+    {
+      "name": "hideCentralStrip",
+      "type": "boolean",
+      "default": false,
+      "description": "Hides the central white strip overlay around the active image.",
+      "remixer": { "control": "checkbox", "group": "appearance", "groupTitle": "Appearance" }
+    },
+    {
+      "name": "imageSize",
+      "type": "number",
+      "default": 1,
+      "description": "Scales the strip gallery image group without recreating the WebGL scene.",
+      "remixer": { "control": "range", "group": "appearance", "groupTitle": "Appearance", "min": 0.5, "max": 1.6, "step": 0.05 }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "motion",
+    "layout": {
+      "buttonClassName": "right-4! top-25!",
+      "panelClassName": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "copyCode": { "includeOnlyPublicProps": true }
+  }
+}

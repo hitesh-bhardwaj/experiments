@@ -1,0 +1,372 @@
+{
+  "name": "drop-text",
+  "type": "registry:component",
+  "title": "Drop Text",
+  "description": "Text that drops into place with configurable stagger origins and character, word, or line splitting.",
+  "dependencies": [
+    "gsap"
+  ],
+  "registryDependencies": [],
+  "exportName": "DropText",
+  "exportKind": "default",
+  "tier": "free",
+  "version": "2.0.0",
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "date": "2026-08-14",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "props": [
+    {
+      "name": "variant",
+      "type": "string",
+      "default": "drop",
+      "description": "Animation style used for the text entrance.",
+      "remixer": {
+        "control": "select",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "options": [
+          {
+            "value": "drop",
+            "label": "Drop"
+          },
+          {
+            "value": "perspective",
+            "label": "Perspective"
+          }
+        ]
+      }
+    },
+    {
+      "name": "splitBy",
+      "type": "string",
+      "default": "characters",
+      "description": "Text unit used for the drop animation.",
+      "remixer": {
+        "control": "select",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "options": [
+          {
+            "value": "characters",
+            "label": "Characters"
+          },
+          {
+            "value": "words",
+            "label": "Words"
+          },
+          {
+            "value": "lines",
+            "label": "Lines"
+          }
+        ]
+      }
+    },
+    {
+      "name": "staggerFrom",
+      "type": "string",
+      "default": "random",
+      "description": "Origin used for the staggered drop sequence.",
+      "remixer": {
+        "control": "select",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "options": [
+          {
+            "value": "left",
+            "label": "Left"
+          },
+          {
+            "value": "right",
+            "label": "Right"
+          },
+          {
+            "value": "center",
+            "label": "Center"
+          },
+          {
+            "value": "random",
+            "label": "Random"
+          }
+        ]
+      }
+    },
+    {
+      "name": "yOffset",
+      "type": "number",
+      "default": -30,
+      "description": "Starting vertical offset in pixels. Negative values rise from above, positive values drop from below.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": -240,
+        "max": 240,
+        "step": 1
+      }
+    },
+    {
+      "name": "xOffset",
+      "type": "number",
+      "default": 0,
+      "description": "Starting horizontal offset in pixels.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": -240,
+        "max": 240,
+        "step": 1
+      }
+    },
+    {
+      "name": "rotate",
+      "type": "number",
+      "default": 0,
+      "description": "Starting rotation in degrees.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": -90,
+        "max": 90,
+        "step": 1
+      }
+    },
+    {
+      "name": "blur",
+      "type": "number",
+      "default": 0,
+      "description": "Starting blur in pixels.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0,
+        "max": 24,
+        "step": 0.5
+      }
+    },
+    {
+      "name": "scaleFrom",
+      "type": "number",
+      "default": 1,
+      "description": "Starting scale before the text settles into place.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0.2,
+        "max": 2,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "startOpacity",
+      "type": "number",
+      "default": 0,
+      "description": "Starting opacity before the text animates in.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0,
+        "max": 1,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "duration",
+      "type": "number",
+      "default": 0.4,
+      "description": "Animation duration in seconds.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0.1,
+        "max": 2,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "stagger",
+      "type": "number",
+      "default": 0.02,
+      "description": "Delay between each animated text unit.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0,
+        "max": 0.2,
+        "step": 0.005
+      }
+    },
+    {
+      "name": "ease",
+      "type": "string",
+      "default": "power2.out",
+      "description": "GSAP easing used by the drop animation.",
+      "remixer": {
+        "control": "select",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "options": [
+          {
+            "value": "linear",
+            "label": "Linear"
+          },
+          {
+            "value": "power2.out",
+            "label": "Ease Out"
+          },
+          {
+            "value": "power2.in",
+            "label": "Ease In"
+          },
+          {
+            "value": "power2.inOut",
+            "label": "Ease In Out"
+          },
+          {
+            "value": "back.out(1.7)",
+            "label": "Back"
+          },
+          {
+            "value": "circ.out",
+            "label": "Circular"
+          },
+          {
+            "value": "expo.out",
+            "label": "Expo"
+          }
+        ]
+      }
+    },
+    {
+      "name": "animateOnScroll",
+      "type": "boolean",
+      "default": false,
+      "description": "Runs the animation when the component enters the viewport.",
+      "remixer": {
+        "control": "checkbox",
+        "group": "behavior",
+        "groupTitle": "Behavior"
+      }
+    },
+    {
+      "name": "fontSize",
+      "type": "number",
+      "default": 6,
+      "description": "Font size in vw units.",
+      "remixer": {
+        "control": "range",
+        "group": "type",
+        "groupTitle": "Type",
+        "min": 4,
+        "max": 18,
+        "step": 0.25
+      }
+    },
+    {
+      "name": "fontColor",
+      "type": "string",
+      "default": "#ffffff",
+      "description": "Text color.",
+      "remixer": {
+        "control": "color",
+        "group": "type",
+        "groupTitle": "Type"
+      }
+    },
+    {
+      "name": "textAlign",
+      "type": "string",
+      "default": "center",
+      "description": "Text alignment.",
+      "remixer": {
+        "control": "select",
+        "group": "type",
+        "groupTitle": "Type",
+        "options": [
+          {
+            "value": "left",
+            "label": "Left"
+          },
+          {
+            "value": "center",
+            "label": "Center"
+          },
+          {
+            "value": "right",
+            "label": "Right"
+          }
+        ]
+      }
+    },
+    {
+      "name": "lineHeight",
+      "type": "number",
+      "default": 1,
+      "description": "Text line height.",
+      "remixer": {
+        "control": "range",
+        "group": "type",
+        "groupTitle": "Type",
+        "min": 0.75,
+        "max": 1.5,
+        "step": 0.01
+      }
+    },
+    {
+      "name": "letterSpacing",
+      "type": "number",
+      "default": 0,
+      "description": "Letter spacing in em units.",
+      "remixer": {
+        "control": "range",
+        "group": "type",
+        "groupTitle": "Type",
+        "min": -0.1,
+        "max": 0.4,
+        "step": 0.005
+      }
+    },
+    {
+      "name": "backgroundColor",
+      "type": "string",
+      "default": "#101113",
+      "description": "Background color behind the text.",
+      "remixer": {
+        "control": "color",
+        "group": "colors",
+        "enabled": false,
+        "groupTitle": "Colors"
+      }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "motion",
+    "layout": {
+      "buttonClassName": "right-4! top-25!",
+      "panelClassName": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/drop-text/index.tsx",
+      "content": "// Built using Hyperiux Vault: https://vault.hyperiux.com\n\n\"use client\";\n\nimport { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from \"react\";\nimport { gsap } from \"gsap\";\n\ntype StaggerFrom = \"left\" | \"right\" | \"center\" | \"random\";\ntype SplitBy = \"characters\" | \"words\" | \"lines\";\ntype TextAlign = \"left\" | \"center\" | \"right\";\ntype DropTextVariant = \"drop\" | \"perspective\";\ntype DropTextEase =\n  | \"linear\"\n  | \"power2.out\"\n  | \"power2.in\"\n  | \"power2.inOut\"\n  | \"back.out(1.7)\"\n  | \"circ.out\"\n  | \"expo.out\";\n\ntype DropTextProps = {\n  text?: string;\n  variant?: DropTextVariant;\n  splitBy?: SplitBy;\n  staggerFrom?: StaggerFrom;\n  xOffset?: number;\n  yOffset?: number;\n  rotate?: number;\n  blur?: number;\n  scaleFrom?: number;\n  startOpacity?: number;\n  fontSize?: number;\n  fontColor?: string;\n  textAlign?: TextAlign;\n  lineHeight?: number;\n  letterSpacing?: number;\n  backgroundColor?: string;\n  duration?: number;\n  delay?: number;\n  stagger?: number;\n  ease?: DropTextEase;\n  animateOnScroll?: boolean;\n  className?: string;\n};\n\nconst DEFAULT_TEXT = \"Motion Makes Spaces Move\";\n\n\nfunction mapStaggerFrom(staggerFrom: StaggerFrom) {\n  if (staggerFrom === \"left\") return \"start\";\n  if (staggerFrom === \"right\") return \"end\";\n  return staggerFrom;\n}\n\nfunction splitText(text: string, splitBy: SplitBy) {\n  if (splitBy === \"lines\") {\n    return text.split(/\\n/).map((line, index, lines) => ({\n      value: line,\n      separator: index < lines.length - 1 ? \"\\n\" : \"\",\n    }));\n  }\n\n  if (splitBy === \"words\") {\n    const matches = text.match(/\\S+\\s*/g);\n    return (matches ?? [text]).map((word) => ({\n      value: word.trimEnd(),\n      separator: word.endsWith(\" \") ? \"\\u00a0\" : \"\",\n    }));\n  }\n\n  return Array.from(text).map((character) => ({\n    value: character === \" \" ? \"\\u00a0\" : character,\n    separator: \"\",\n  }));\n}\n\nexport default function DropText({\n  text = DEFAULT_TEXT,\n  variant = \"drop\",\n  splitBy = \"characters\",\n  staggerFrom = \"random\",\n  xOffset = 0,\n  yOffset = -115,\n  rotate = 0,\n  blur = 0,\n  scaleFrom = 1,\n  startOpacity = 0,\n  fontSize = 6,\n  fontColor = \"#ffffff\",\n  textAlign = \"center\",\n  lineHeight = 1,\n  letterSpacing = 0,\n  backgroundColor = \"#101113\",\n  duration = 0.5,\n  delay = 0,\n  stagger = 0.05,\n  ease = \"power2.out\",\n  animateOnScroll = false,\n  className = \"\",\n}: DropTextProps) {\n  const sectionRef = useRef<HTMLElement>(null);\n  const containerRef = useRef<HTMLHeadingElement>(null);\n  const segments = useMemo(() => splitText(text, splitBy), [text, splitBy]);\n  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);\n  const initialPieceStyle: CSSProperties = prefersReducedMotion\n    ? {}\n    : {\n        opacity: startOpacity,\n        filter: `blur(${blur}px)`,\n        transform: [\n          `translate3d(${xOffset}px, ${yOffset}px, ${variant === \"perspective\" ? -420 : 0}px)`,\n          `rotate(${rotate}deg)`,\n          `rotateX(${variant === \"perspective\" ? 68 : 0}deg)`,\n          `scale(${scaleFrom})`,\n        ].join(\" \"),\n      };\n\n  useEffect(() => {\n    const mediaQuery = window.matchMedia?.(\"(prefers-reduced-motion: reduce)\");\n    if (!mediaQuery) return;\n\n    setPrefersReducedMotion(mediaQuery.matches);\n\n    const onReduceMotionChange = (event: MediaQueryListEvent) => {\n      setPrefersReducedMotion(event.matches);\n    };\n\n    mediaQuery.addEventListener?.(\"change\", onReduceMotionChange);\n\n    return () => {\n      mediaQuery.removeEventListener?.(\"change\", onReduceMotionChange);\n    };\n  }, []);\n\n  const playAnimation = useCallback(() => {\n    if (!containerRef.current) return;\n    const pieces = containerRef.current.querySelectorAll<HTMLElement>(\"[data-drop-piece]\");\n\n    gsap.killTweensOf(pieces);\n\n    if (prefersReducedMotion) {\n      gsap.set(pieces, {\n        x: 0,\n        y: 0,\n        z: 0,\n        rotate: 0,\n        rotateX: 0,\n        scale: 1,\n        opacity: 1,\n        filter: \"blur(0px)\",\n      });\n      return;\n    }\n\n    gsap.fromTo(\n      pieces,\n      {\n        x: xOffset,\n        y: yOffset,\n        z: variant === \"perspective\" ? -420 : 0,\n        rotate,\n        rotateX: variant === \"perspective\" ? 68 : 0,\n        scale: scaleFrom,\n        opacity: startOpacity,\n        filter: `blur(${blur}px)`,\n      },\n      {\n        x: 0,\n        y: 0,\n        z: 0,\n        rotate: 0,\n        rotateX: 0,\n        scale: 1,\n        opacity: 1,\n        filter: \"blur(0px)\",\n        duration,\n        delay,\n        stagger: {\n          each: stagger,\n          from: mapStaggerFrom(staggerFrom),\n        },\n        ease,\n      },\n    );\n  }, [blur, delay, duration, ease, prefersReducedMotion, rotate, scaleFrom, stagger, staggerFrom, startOpacity, variant, xOffset, yOffset]);\n\n  useEffect(() => {\n    let frame = 0;\n    let cancelled = false;\n    const playAfterPaint = () => {\n      const fontsReady = \"fonts\" in document ? document.fonts.ready : Promise.resolve();\n\n      fontsReady.finally(() => {\n        if (cancelled) return;\n        frame = requestAnimationFrame(() => {\n          if (!cancelled) playAnimation();\n        });\n      });\n    };\n\n    if (!animateOnScroll) {\n      playAfterPaint();\n      return () => {\n        cancelled = true;\n        cancelAnimationFrame(frame);\n        if (!containerRef.current) return;\n        const pieces = containerRef.current.querySelectorAll<HTMLElement>(\"[data-drop-piece]\");\n        gsap.killTweensOf(pieces);\n      };\n    }\n\n    if (!sectionRef.current) return;\n\n    const observer = new IntersectionObserver(\n      ([entry]) => {\n        if (entry?.isIntersecting) {\n          playAfterPaint();\n        }\n      },\n      { threshold: 0.45 },\n    );\n\n    observer.observe(sectionRef.current);\n\n    return () => {\n      cancelled = true;\n      cancelAnimationFrame(frame);\n      observer.disconnect();\n      if (!containerRef.current) return;\n      const pieces = containerRef.current.querySelectorAll<HTMLElement>(\"[data-drop-piece]\");\n      gsap.killTweensOf(pieces);\n    };\n  }, [animateOnScroll, playAnimation, segments]);\n\n  return (\n    <section\n      ref={sectionRef}\n      className={`flex min-h-screen w-full items-center justify-center overflow-hidden px-5 py-16 ${className}`}\n      style={{\n        backgroundColor,\n        backgroundPosition: \"center\",\n        backgroundRepeat: \"no-repeat\",\n        backgroundSize: \"cover\",\n        perspective: variant === \"perspective\" ? \"900px\" : undefined,\n      }}\n    >\n      <h2\n        ref={containerRef}\n        className=\"m-0 block w-full select-none whitespace-pre-wrap\"\n        style={{\n          color: fontColor,\n          fontSize: `${fontSize}vw`,\n          fontWeight: 400,\n          letterSpacing: `${letterSpacing}em`,\n          lineHeight,\n          textAlign,\n          transformStyle: variant === \"perspective\" ? \"preserve-3d\" : undefined,\n        }}\n      >\n        {segments.map((segment, index) => (\n          <span\n            key={`${segment.value}-${index}`}\n            data-drop-piece\n            className={splitBy === \"lines\" ? \"block\" : \"inline-block\"}\n            style={{\n              ...initialPieceStyle,\n              backfaceVisibility: variant === \"perspective\" ? \"hidden\" : undefined,\n              transformStyle: variant === \"perspective\" ? \"preserve-3d\" : undefined,\n            }}\n          >\n            {segment.value}\n            {segment.separator}\n          </span>\n        ))}\n      </h2>\n    </section>\n  );\n}\n"
+    }
+  ]
+}

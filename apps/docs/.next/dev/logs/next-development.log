@@ -1,0 +1,49 @@
+{"timestamp":"00:00:02.889","source":"Server","level":"LOG","message":"- Experiments (use with caution):"}
+{"timestamp":"00:00:02.889","source":"Server","level":"LOG","message":"  ✓ optimizeCss"}
+{"timestamp":"00:00:02.889","source":"Server","level":"LOG","message":"  · optimizePackageImports"}
+{"timestamp":"00:00:02.889","source":"Server","level":"LOG","message":""}
+{"timestamp":"00:00:02.893","source":"Browser","level":"LOG","message":"[Vercel Speed Insights] [vitals] {\"metrics\":[{\"attribution\":{\"eventTarget\":\"\",\"eventType\":\"click\"},\"href\":\"http://localhost:3000/effects/backgrounds/spider-particles\",\"id\":\"v3-1790580687432-4837449606468\",\"route\":\"/effects/[slug]/[effectSlug]\",\"type\":\"INP\",\"value\":80},{\"attribution\":{\"eventTarget\":\"div.relative.z-300.flex.min-h-[200vh].items-start>main.relative.min-w-0.flex-1\"},\"href\":\"http://localhost:3000/effects/backgrounds/spider-particles\",\"id\":\"v3-1790580687432-8892453163456\",\"route\":\"/effects/[slug]/[effectSlug]\",\"type\":\"CLS\",\"value\":0.1419}],\"scriptVersion\":\"0.1.3\",\"sdkName\":\"@vercel/speed-insights/next\",\"sdkVersion\":\"2.0.0\",\"speed\":\"4g\"} /_vercel/speed-insights/vitals"}
+{"timestamp":"00:00:03.467","source":"Server","level":"LOG","message":"Attention: Clerk collects telemetry data from its SDKs when connected to development instances."}
+{"timestamp":"00:00:03.468","source":"Server","level":"LOG","message":"The data collected is used to inform Clerk's product roadmap."}
+{"timestamp":"00:00:03.468","source":"Server","level":"LOG","message":"To learn more, including how to opt-out from the telemetry program, visit: https://clerk.com/docs/telemetry."}
+{"timestamp":"00:00:03.469","source":"Server","level":"LOG","message":""}
+{"timestamp":"00:00:06.505","source":"Server","level":"LOG","message":"○ Compiling /effects/[slug]/[effectSlug] ..."}
+{"timestamp":"00:00:06.986","source":"Server","level":"ERROR","message":"Error: x: Invalid source map. Only conformant source maps can be used to find the original code."}
+{"timestamp":"00:00:06.986","source":"Server","level":"ERROR","message":"Error: x: Invalid source map. Only conformant source maps can be used to find the original code."}
+{"timestamp":"00:00:06.987","source":"Server","level":"ERROR","message":"Error: x: Invalid source map. Only conformant source maps can be used to find the original code."}
+{"timestamp":"00:00:06.987","source":"Server","level":"ERROR","message":"Error: x: Invalid source map. Only conformant source maps can be used to find the original code."}
+{"timestamp":"00:00:06.987","source":"Server","level":"ERROR","message":"Error: x: Invalid source map. Only conformant source maps can be used to find the original code."}
+{"timestamp":"00:00:06.988","source":"Server","level":"ERROR","message":"Error: x: Invalid source map. Only conformant source maps can be used to find the original code."}
+{"timestamp":"00:00:06.988","source":"Server","level":"ERROR","message":"Error: x: Invalid source map. Only conformant source maps can be used to find the original code."}
+{"timestamp":"00:00:06.988","source":"Server","level":"ERROR","message":"Error: x: Invalid source map. Only conformant source maps can be used to find the original code."}
+{"timestamp":"00:00:06.988","source":"Server","level":"ERROR","message":"Error: x: Invalid source map. Only conformant source maps can be used to find the original code."}
+{"timestamp":"00:00:06.989","source":"Server","level":"ERROR","message":"Error: x: Invalid source map. Only conformant source maps can be used to find the original code."}
+{"timestamp":"00:00:06.989","source":"Server","level":"ERROR","message":"Error: x: Invalid source map. Only conformant source maps can be used to find the original code."}
+{"timestamp":"00:00:06.989","source":"Server","level":"ERROR","message":"Error: x: Invalid source map. Only conformant source maps can be used to find the original code."}
+{"timestamp":"00:00:06.989","source":"Server","level":"ERROR","message":"Error: x: Invalid source map. Only conformant source maps can be used to find the original code."}
+{"timestamp":"00:00:06.990","source":"Server","level":"ERROR","message":"Error: x: Invalid source map. Only conformant source maps can be used to find the original code."}
+{"timestamp":"00:00:06.990","source":"Server","level":"ERROR","message":"Error: x: Invalid source map. Only conformant source maps can be used to find the original code."}
+{"timestamp":"00:00:06.990","source":"Server","level":"ERROR","message":"Error: x: Invalid source map. Only conformant source maps can be used to find the original code."}
+{"timestamp":"00:00:06.991","source":"Server","level":"ERROR","message":"Error: x: Invalid source map. Only conformant source maps can be used to find the original code."}
+{"timestamp":"00:00:06.991","source":"Server","level":"ERROR","message":"Error: x: Invalid source map. Only conformant source maps can be used to find the original code."}
+{"timestamp":"00:00:06.992","source":"Server","level":"ERROR","message":"Error: x: Invalid source map. Only conformant source maps can be used to find the original code."}
+{"timestamp":"00:00:06.992","source":"Server","level":"ERROR","message":"Error: x: Invalid source map. Only conformant source maps can be used to find the original code."}
+{"timestamp":"00:00:06.992","source":"Server","level":"ERROR","message":"Error: x: Invalid source map. Only conformant source maps can be used to find the original code."}
+{"timestamp":"00:00:06.993","source":"Server","level":"ERROR","message":"Error: x: Invalid source map. Only conformant source maps can be used to find the original code."}
+{"timestamp":"00:00:06.993","source":"Server","level":"ERROR","message":"Error: x: Invalid source map. Only conformant source maps can be used to find the original code."}
+{"timestamp":"00:00:06.993","source":"Server","level":"ERROR","message":"Error: x: Invalid source map. Only conformant source maps can be used to find the original code."}
+{"timestamp":"00:00:06.994","source":"Server","level":"ERROR","message":"Error: x: Invalid source map. Only conformant source maps can be used to find the original code."}
+{"timestamp":"00:00:06.994","source":"Server","level":"ERROR","message":"Error: x: Invalid source map. Only conformant source maps can be used to find the original code."}
+{"timestamp":"00:00:06.994","source":"Server","level":"ERROR","message":"Error: x: Invalid source map. Only conformant source maps can be used to find the original code."}
+{"timestamp":"00:00:06.995","source":"Server","level":"ERROR","message":"Error: x: Invalid source map. Only conformant source maps can be used to find the original code."}
+{"timestamp":"00:00:06.995","source":"Server","level":"ERROR","message":"Error: x: Invalid source map. Only conformant source maps can be used to find the original code."}
+{"timestamp":"00:00:06.995","source":"Server","level":"ERROR","message":"Error: x: Invalid source map. Only conformant source maps can be used to find the original code."}
+{"timestamp":"00:00:06.996","source":"Server","level":"ERROR","message":"Error: x: Invalid source map. Only conformant source maps can be used to find the original code."}
+{"timestamp":"00:00:06.996","source":"Server","level":"ERROR","message":"Error: x: Invalid source map. Only conformant source maps can be used to find the original code."}
+{"timestamp":"00:00:06.997","source":"Server","level":"ERROR","message":"Error: x: Invalid source map. Only conformant source maps can be used to find the original code."}
+{"timestamp":"00:00:06.998","source":"Server","level":"ERROR","message":"Error: x: Invalid source map. Only conformant source maps can be used to find the original code."}
+{"timestamp":"00:00:06.998","source":"Server","level":"ERROR","message":"Error: x: Invalid source map. Only conformant source maps can be used to find the original code."}
+{"timestamp":"00:00:07.068","source":"Server","level":"ERROR","message":"⨯ ./\nModule not found: Can't resolve 'next-swc-loader'\n\nhttps://nextjs.org/docs/messages/module-not-found"}
+{"timestamp":"00:00:07.094","source":"Server","level":"ERROR","message":"⨯ Module not found: Error: Can't resolve 'next-flight-client-entry-loader' in '/Users/vidushisaxena/Documents/GitHub/vault-new/apps/docs'"}
+{"timestamp":"00:00:07.119","source":"Server","level":"ERROR","message":"Error: ENOENT: no such file or directory, open '/Users/vidushisaxena/Documents/GitHub/vault-new/apps/docs/node_modules/typescript/package.json'"}
+{"timestamp":"00:00:07.121","source":"Server","level":"ERROR","message":"Error: ENOENT: no such file or directory, open '/Users/vidushisaxena/Documents/GitHub/vault-new/apps/docs/node_modules/typescript/package.json'"}

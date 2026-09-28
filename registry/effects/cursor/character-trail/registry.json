@@ -1,0 +1,140 @@
+{
+  "name": "character-trail",
+  "version": "1.0.1",
+  "changelog": [
+    {
+      "version": "1.0.1",
+      "date": "2026-07-23",
+      "summary": "Added reduced-motion support.",
+      "breaking": false
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-06-04",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "type": "registry:component",
+  "title": "Character Trail",
+  "description": "Cursor wrapper that leaves a snake-like grid trail of character tiles as the mouse moves. Tiles snap to a 50px grid, cycle through a configurable alphabet and color palette, pop in with a spring animation, then stagger-fade out after the cursor idles.",
+  "category": "cursor",
+  "dependencies": [],
+  "registryDependencies": [],
+  "previewUrl": "/demo/character-trail",
+  "tier": "pro",
+  "main": "index.tsx",
+  "exportName": "CharacterTrail",
+  "exportKind": "default",
+  "importPath": "@/components/effects/character-trail",
+  "target": "src/components/effects/character-trail",
+  "files": [
+    {
+      "path": "index.tsx",
+      "target": "src/components/effects/character-trail/index.tsx"
+    },
+    {
+      "path": "CharacterTrailComp.tsx",
+      "target": "src/components/effects/character-trail/CharacterTrailComp.tsx"
+    },
+    {
+      "path": "createSuspendedRaf.ts",
+      "target": "src/components/effects/character-trail/createSuspendedRaf.ts"
+    }
+  ],
+  "props": [
+    {
+      "name": "characters",
+      "type": "string",
+      "default": "HYPERIUX",
+      "description": "Characters emitted by the cursor trail.",
+      "suggested": true
+    },
+    {
+      "name": "trailLength",
+      "type": "number",
+      "default": 24,
+      "description": "Maximum number of visible characters.",
+      "suggested": true
+    },
+    {
+      "name": "fontSize",
+      "type": "number",
+      "default": 18,
+      "description": "Size of each trail character.",
+      "suggested": true
+    },
+    {
+      "name": "textColor",
+      "type": "string",
+      "default": "#ffffff",
+      "description": "Trail character color.",
+      "suggested": true
+    },
+    {
+      "name": "fadeDuration",
+      "type": "number",
+      "default": 0.8,
+      "description": "Time before trail characters fade out.",
+      "suggested": true
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "suggested": true,
+    "defaultOpenGroupId": "controls",
+    "layout": {
+      "controlsButtonClassName": "right-4! top-25!",
+      "containerClassName": "z-50000!"
+    },
+    "panel": {
+      "className": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "controls": [
+      {
+        "name": "characters",
+        "label": "Characters",
+        "type": "text",
+        "group": "controls",
+        "copyable": true
+      },
+      {
+        "name": "trailLength",
+        "label": "Trail Length",
+        "type": "range",
+        "group": "controls",
+        "copyable": true,
+        "min": 0,
+        "max": 72,
+        "step": 0.1
+      },
+      {
+        "name": "fontSize",
+        "label": "Font Size",
+        "type": "range",
+        "group": "content",
+        "copyable": true,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      },
+      {
+        "name": "textColor",
+        "label": "Text Color",
+        "type": "color",
+        "group": "style",
+        "copyable": true
+      },
+      {
+        "name": "fadeDuration",
+        "label": "Fade Duration",
+        "type": "range",
+        "group": "motion",
+        "copyable": true,
+        "min": 0,
+        "max": 5,
+        "step": 0.05
+      }
+    ]
+  }
+}

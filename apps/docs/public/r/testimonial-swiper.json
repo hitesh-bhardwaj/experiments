@@ -1,0 +1,120 @@
+{
+  "name": "testimonial-swiper",
+  "type": "registry:component",
+  "title": "Testimonial Swiper",
+  "description": "Editorial testimonial slider with split-text quote transitions and directional controls",
+  "dependencies": [
+    "gsap",
+    "lucide-react"
+  ],
+  "registryDependencies": [],
+  "exportName": "TestimonialSwiper",
+  "exportKind": "default",
+  "tier": "pro",
+  "version": "1.0.1",
+  "changelog": [
+    {
+      "version": "1.0.1",
+      "date": "2026-07-31",
+      "summary": "Reworked the props API (testimonials, bgColor, accentColor, autoplay, navigation, imageSize), added reduced-motion support, and fixed default color and demo layout issues.",
+      "breaking": false
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-07-21",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "props": [
+    {
+      "name": "bgColor",
+      "type": "color",
+      "default": "#edeae2",
+      "description": "Background color behind the testimonial content.",
+      "remixer": {
+        "control": "color",
+        "group": "style",
+        "groupTitle": "Style"
+      }
+    },
+    {
+      "name": "autoplay",
+      "type": "boolean",
+      "default": true,
+      "description": "Automatically advances testimonials.",
+      "remixer": {
+        "control": "checkbox",
+        "group": "motion",
+        "groupTitle": "Motion"
+      }
+    },
+    {
+      "name": "autoplayDelay",
+      "type": "number",
+      "default": 4500,
+      "description": "Delay between testimonial changes in milliseconds.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 1000,
+        "max": 9000,
+        "step": 250
+      }
+    },
+    {
+      "name": "showNavigation",
+      "type": "boolean",
+      "default": true,
+      "description": "Shows previous/next controls.",
+      "remixer": {
+        "control": "checkbox",
+        "group": "controls",
+        "groupTitle": "Controls"
+      }
+    },
+    {
+      "name": "imageSize",
+      "type": "number",
+      "default": 1,
+      "description": "Scale multiplier for the testimonial images.",
+      "remixer": {
+        "control": "range",
+        "group": "style",
+        "groupTitle": "Style",
+        "min": 0.6,
+        "max": 1.8,
+        "step": 0.05
+      }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "style",
+    "layout": {
+      "buttonClassName": "right-4! top-25!",
+      "panelClassName": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/testimonial-swiper/index.tsx"
+    },
+    {
+      "path": "NavigationButtons.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/testimonial-swiper/NavigationButtons.tsx"
+    },
+    {
+      "path": "TestimonialComp.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/testimonial-swiper/TestimonialComp.tsx"
+    }
+  ]
+}

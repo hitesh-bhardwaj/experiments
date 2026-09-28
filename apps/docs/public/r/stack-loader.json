@@ -1,0 +1,102 @@
+{
+  "name": "stack-loader",
+  "type": "registry:component",
+  "title": "Stack Loader",
+  "description": "Stack-to-spread image intro loader with GSAP SplitText word animations and staggered image choreography",
+  "dependencies": [
+    "gsap"
+  ],
+  "registryDependencies": [],
+  "exportName": "StackLoader",
+  "exportKind": "default",
+  "tier": "free",
+  "version": "1.0.1",
+  "changelog": [
+    {
+      "version": "1.0.1",
+      "date": "2026-07-21",
+      "summary": "Add prefers-reduced-motion support",
+      "breaking": false
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-07-20",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "props": [
+    {
+      "name": "imageSize",
+      "type": "number",
+      "default": 1,
+      "description": "Scale multiplier for the loader image stack.",
+      "remixer": {
+        "control": "range",
+        "group": "controls",
+        "groupTitle": "Controls",
+        "min": 0.5,
+        "max": 2.5,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "duration",
+      "type": "number",
+      "default": 1,
+      "description": "Global duration multiplier for the loader animation.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0.25,
+        "max": 3,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "fadeOutDuration",
+      "type": "number",
+      "default": 0.8,
+      "description": "Duration of the final image and loader fade-out.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0.1,
+        "max": 3,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "backgroundColor",
+      "type": "string",
+      "default": "#fcfcfc",
+      "description": "Loader background color.",
+      "remixer": {
+        "control": "color",
+        "group": "style",
+        "groupTitle": "Style"
+      }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "controls",
+    "layout": {
+      "buttonClassName": "right-4! top-25!",
+      "panelClassName": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/stack-loader/index.tsx",
+      "content": "// Built using Hyperiux Vault: https://vault.hyperiux.com\n\n\"use client\";\n\nimport {\n  forwardRef,\n  useCallback,\n  useEffect,\n  useId,\n  useLayoutEffect,\n  useRef,\n  useState,\n} from \"react\";\nimport gsap from \"gsap\";\nimport { SplitText } from \"gsap/dist/SplitText\";\n\ngsap.registerPlugin(SplitText);\n\nconst INTRO_EASE = \"cubic-bezier(0.25,1,0.5,1)\";\nconst IMAGE_ENTRY_Y_PERCENT = 500;\nconst TEXT_ROTATE_X_START = 90;\nconst TEXT_TRANSFORM_PERSPECTIVE = 1000;\nconst IMAGE_Z_INDEX_DURATION = 0.1;\nconst IMAGE_Z_INDEX_STAGGER = 0.2;\nconst TEXT_STAGGER = 0.08;\nconst STACK_SCALE_STEP = 0.15;\nconst STACK_Y_PERCENT_STEP = 20;\nconst SPREAD_Y_PERCENT_STEP = 110;\nconst IMAGE_FADE_STAGGER = 0.08;\n\nconst STACK_IMAGE_SOURCES = [\n  \"https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/v-01.jpg\",\n  \"https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/v-02.jpg\",\n  \"https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/v-03.jpg\",\n  \"https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/v-04.jpg\",\n  \"https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/v-05.jpg\",\n  \"https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/v-06.jpg\",\n  \"https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/v-07.jpg\",\n];\n\nfunction clampNumber(value: unknown, min: number, max: number, fallback: number) {\n  const numericValue = Number(value);\n\n  if (!Number.isFinite(numericValue)) {\n    return fallback;\n  }\n\n  return Math.min(max, Math.max(min, numericValue));\n}\n\ninterface StackToSpreadIntroProps {\n  imageSize?: number;\n  duration?: number;\n  fadeOutDuration?: number;\n  backgroundColor?: string;\n  onComplete?: () => void;\n}\n\nconst StackToSpreadIntro = forwardRef<HTMLElement, StackToSpreadIntroProps>(\n  function StackToSpreadIntro(\n  {\n    imageSize = 1,\n    duration = 1,\n    fadeOutDuration = 0.8,\n    backgroundColor = \"#fcfcfc\",\n    onComplete,\n  },\n  ref\n) {\n  const uid = useId().replace(/:/g, \"\");\n  const loaderWrapperId = `loader-wrapper-${uid}`;\n  const imgsWrapperId = `imgs-wrapper-${uid}`;\n  const rootRef = useRef<HTMLElement | null>(null);\n  const imagesRef = useRef<(HTMLDivElement | null)[]>([]);\n  const text1Ref = useRef<HTMLParagraphElement | null>(null);\n  const text2Ref = useRef<HTMLParagraphElement | null>(null);\n  const descriptionTextRef = useRef<HTMLParagraphElement | null>(null);\n  const onCompleteRef = useRef(onComplete);\n  const safeImageSize = clampNumber(imageSize, 0.5, 2.5, 1);\n  const safeDuration = clampNumber(duration, 0.25, 3, 1);\n  const safeFadeOutDuration = clampNumber(fadeOutDuration, 0.1, 3, 0.8);\n\n  useEffect(() => {\n    onCompleteRef.current = onComplete;\n  }, [onComplete]);\n\n  useLayoutEffect(() => {\n    const reduceMotion =\n      window.matchMedia?.(\"(prefers-reduced-motion: reduce)\")?.matches ??\n      false;\n\n    // Reduced-motion: images already in a vertical line - smooth opacity only.\n    if (reduceMotion) {\n      const ctx = gsap.context(() => {\n        const imageElements = imagesRef.current.filter(Boolean);\n        const sideText = [text1Ref.current, text2Ref.current].filter(Boolean);\n        const description = descriptionTextRef.current;\n        const totalImages = imageElements.length;\n        const totalSpread =\n          totalImages > 1 ? SPREAD_Y_PERCENT_STEP * (totalImages - 1) : 0;\n\n        gsap.set(`#${imgsWrapperId}`, { yPercent: 0, opacity: 1 });\n        gsap.set(imageElements, {\n          opacity: 0,\n          scale: 1,\n          zIndex: (index: number) => index,\n          yPercent: (index: number) =>\n            totalImages === 1\n              ? 0\n              : -totalSpread / 2 + index * SPREAD_Y_PERCENT_STEP,\n        });\n        gsap.set(sideText, { opacity: 0, rotateX: 0 });\n        if (description) gsap.set(description, { opacity: 0, rotateX: 0 });\n\n        const tl = gsap.timeline({\n          defaults: { ease: \"power2.inOut\" },\n          onComplete: () => {\n            gsap.set(rootRef.current, { display: \"none\" });\n            onCompleteRef.current?.();\n          },\n        });\n        tl.timeScale(1 / safeDuration);\n\n        // Smooth opacity in (already laid out vertically).\n        tl.to(imageElements, {\n          opacity: 1,\n          duration: 0.7,\n          stagger: { each: 0.06, from: \"center\" },\n        });\n\n        tl.to(\n          sideText,\n          { opacity: 1, duration: 0.55 },\n          \"-=0.35\"\n        );\n        if (description) {\n          tl.to(description, { opacity: 1, duration: 0.55 }, \"<\");\n        }\n\n        tl.to(\n          [...sideText, description].filter(Boolean),\n          { opacity: 0, duration: 0.5 },\n          \"+=0.55\"\n        );\n        tl.to(\n          imageElements,\n          {\n            opacity: 0,\n            duration: safeFadeOutDuration,\n            stagger: { each: 0.04, from: \"edges\" },\n          },\n          \"-=0.15\"\n        );\n        tl.to(rootRef.current, { opacity: 0, duration: safeFadeOutDuration }, \"-=0.2\");\n      }, rootRef);\n\n      return () => ctx.revert();\n    }\n\n    const ctx = gsap.context(() => {\n      const imageElements = imagesRef.current.filter(Boolean);\n\n      const text1 = SplitText.create(text1Ref.current, {\n        type: \"words\",\n      });\n\n      const text2 = SplitText.create(text2Ref.current, {\n        type: \"words\",\n      });\n\n      const descriptionText = SplitText.create(descriptionTextRef.current, {\n        type: \"words,lines\",\n      });\n\n      const animatedTextTargets = [\n        text1.words,\n        text2.words,\n        descriptionText.lines,\n      ];\n\n      gsap.set(animatedTextTargets, {\n        rotateX: TEXT_ROTATE_X_START,\n        opacity: 0,\n        transformPerspective: TEXT_TRANSFORM_PERSPECTIVE,\n        transformOrigin: \"50% 100%\",\n        willChange: \"transform\",\n      });\n\n      gsap.set(imageElements, {\n        opacity: 0,\n      });\n\n      gsap.set(descriptionTextRef.current, {\n        opacity: 1,\n      });\n\n      const tl = gsap.timeline();\n      tl.timeScale(1 / safeDuration);\n\n      tl.fromTo(\n        `#${imgsWrapperId}`,\n        {\n          yPercent: IMAGE_ENTRY_Y_PERCENT,\n          opacity: 0,\n        },\n        {\n          yPercent: 0,\n          opacity: 1,\n          duration: 0.5,\n          ease: INTRO_EASE,\n        }\n      );\n\n      tl.set([text1Ref.current, text2Ref.current], { opacity: 1 }, \"<\");\n\n      tl.to(\n        imageElements,\n        {\n          opacity: 1,\n          duration: 0.5,\n          ease: INTRO_EASE,\n        },\n        \"<\"\n      );\n\n      tl.to(\n        animatedTextTargets,\n        {\n          rotateX: 0,\n          opacity: 1,\n          stagger: TEXT_STAGGER,\n          ease: INTRO_EASE,\n        },\n        \"<+0.5\"\n      );\n\n\n\n      imageElements.forEach((imageElement, index) => {\n        tl.to(\n          imageElement,\n          {\n            zIndex: index,\n            duration: IMAGE_Z_INDEX_DURATION,\n            ease: INTRO_EASE,\n          },\n          index * IMAGE_Z_INDEX_STAGGER\n        );\n      });\n\n\n\n      tl.to(\n        imageElements,\n        {\n          scale: (index: number) => 1 + index * STACK_SCALE_STEP,\n          yPercent: (index: number) => -(index * STACK_Y_PERCENT_STEP),\n          duration: 1,\n          stagger: {\n            each: 0.01,\n            from: \"end\",\n          },\n          ease: \"power3.inOut\",\n        },\n        \"<\"\n      );\n\n\n      tl.to(\n        imageElements,\n        {\n          scale: 1,\n          yPercent: (index: number, _target: unknown, elements: unknown[]) => {\n            const totalImages = elements.length;\n\n            if (totalImages === 1) return 0;\n\n            const totalSpread = SPREAD_Y_PERCENT_STEP * (totalImages - 1);\n\n            return -totalSpread / 2 + index * SPREAD_Y_PERCENT_STEP;\n          },\n          duration: 1,\n          stagger: {\n            each: 0.01,\n            from: \"end\",\n          },\n          ease: \"power3.inOut\",\n        },\n        \"+=0.2\"\n      );\n\n      tl.to(\n        descriptionText.lines,\n        {\n          rotateX: TEXT_ROTATE_X_START,\n          transformOrigin: \"top center\",\n          opacity: 0,\n          duration: 1,\n          stagger: TEXT_STAGGER,\n          ease: INTRO_EASE,\n        },\n        \"<-0.1\"\n      );\n\n\n      tl.to(\n        `#${imgsWrapperId}`,\n        {\n          yPercent: 0,\n          ease: INTRO_EASE,\n        },\n        \"<\"\n      );\n\n      tl.to([text1.words, text2.words], {\n        opacity: 0,\n        duration: 0.5,\n        rotateX: TEXT_ROTATE_X_START,\n        transformOrigin: \"top center\",\n        stagger: TEXT_STAGGER,\n        ease: INTRO_EASE,\n      });\n\n      tl.to(\n        imageElements,\n        {\n          opacity: 0,\n          duration: safeFadeOutDuration,\n          stagger: {\n            each: IMAGE_FADE_STAGGER,\n            from: \"end\",\n          },\n          onComplete: () => {\n            gsap.to(rootRef.current, {\n              opacity: 0,\n              duration: safeFadeOutDuration,\n              ease: INTRO_EASE,\n              onComplete: () => {\n                gsap.set(rootRef.current, {\n                  display: \"none\",\n                });\n\n                onCompleteRef.current?.();\n              },\n            });\n          },\n        },\n        \"<+0.2\"\n      );\n\n      return () => {\n        text1.revert();\n        text2.revert();\n        descriptionText.revert();\n      };\n    }, rootRef);\n\n    return () => ctx.revert();\n  }, [imgsWrapperId, safeDuration, safeFadeOutDuration]);\n\n  return (\n    <section\n      ref={(element) => {\n        rootRef.current = element;\n\n        if (typeof ref === \"function\") {\n          ref(element);\n        } else if (ref) {\n          ref.current = element;\n        }\n      }}\n      id={loaderWrapperId}\n      className=\"flex h-screen w-full items-center justify-center px-[2.5vw] text-black max-[1025px]:px-[5vw] max-md:px-[6vw]\"\n      style={{ backgroundColor }}\n    >\n      <div className=\"flex w-full items-center justify-between max-[1025px]:flex-col max-[1025px]:justify-center max-[1025px]:gap-[33vh] max-md:gap-[70vw]\">\n        <p\n          ref={text1Ref}\n          className=\"opacity-0 max-[1025px]:text-[2.8vw] max-md:text-[5vw]\"\n        >\n          HUMAN THINKERS\n        </p>\n\n        <div\n          id={imgsWrapperId}\n          className=\"relative max-[1025px]:z-99\"\n          style={{\n            width: `clamp(4rem, ${6.5 * safeImageSize}vw, 18rem)`,\n            height: `clamp(4rem, ${6.5 * safeImageSize}vw, 18rem)`,\n          }}\n        >\n          {STACK_IMAGE_SOURCES.map((src, index) => (\n            <div\n              key={`${src}-${index}`}\n              ref={(element) => {\n                imagesRef.current[index] = element;\n              }}\n              className=\"absolute top-0 left-0 size-full overflow-hidden rounded-sm opacity-0\"\n            >\n              <img\n                src={src}\n                width={1000}\n                height={1000}\n                className=\"h-full w-full object-cover\"\n                alt=\"loader-img\"\n              />\n            </div>\n          ))}\n        </div>\n\n        <p\n          ref={text2Ref}\n          className=\"opacity-0 max-[1025px]:text-[2.8vw] max-md:text-[4vw]\"\n        >\n          DIGITAL MAKERS\n        </p>\n      </div>\n\n      <p\n        ref={descriptionTextRef}\n        className=\"absolute bottom-[3vw] left-1/2 w-[40vw] -translate-x-1/2 text-center leading-[1.1] text-black opacity-0 max-[1025px]:bottom-[3vw] max-[1025px]:w-[68vw] max-[1025px]:text-[2.4vw] max-md:bottom-[6vw] max-md:w-[90%] max-md:text-[3.5vw]\"\n      >\n        Hyperiux Vault\n      </p>\n    </section>\n  );\n  }\n);\n\ninterface StackLoaderProps {\n  imageSize?: number;\n  duration?: number;\n  fadeOutDuration?: number;\n  backgroundColor?: string;\n}\n\nexport default function StackLoader({\n  imageSize = 1,\n  duration = 1,\n  fadeOutDuration = 0.8,\n  backgroundColor = \"#fcfcfc\",\n}: StackLoaderProps) {\n  const uid = useId().replace(/:/g, \"\");\n  const demoUiId = `demo-ui-${uid}`;\n  const [isLoaderComplete, setIsLoaderComplete] = useState(false);\n  const [introInstance, setIntroInstance] = useState(0);\n  const stackToSpreadIntroRef = useRef<HTMLElement | null>(null);\n  const previousRemixerPropsRef = useRef<Required<StackLoaderProps> | null>(null);\n\n  const handleLoaderComplete = useCallback(() => {\n    setIsLoaderComplete(true);\n  }, []);\n\n  const handleReplay = useCallback(() => {\n    setIsLoaderComplete(false);\n    setIntroInstance((currentInstance) => currentInstance + 1);\n  }, []);\n\n  useEffect(() => {\n    const remixerProps: Required<StackLoaderProps> = {\n      imageSize,\n      duration,\n      fadeOutDuration,\n      backgroundColor,\n    };\n\n    if (!previousRemixerPropsRef.current) {\n      previousRemixerPropsRef.current = remixerProps;\n      return;\n    }\n\n    const previousRemixerProps = previousRemixerPropsRef.current;\n    const hasChanged = (Object.keys(remixerProps) as (keyof StackLoaderProps)[]).some(\n      (key) => previousRemixerProps[key] !== remixerProps[key]\n    );\n\n    if (!hasChanged) return;\n\n    previousRemixerPropsRef.current = remixerProps;\n    setIsLoaderComplete(false);\n    setIntroInstance((currentInstance) => currentInstance + 1);\n  }, [backgroundColor, duration, fadeOutDuration, imageSize]);\n\n  return (\n    <div\n      id={demoUiId}\n      className=\"relative h-screen w-screen overflow-hidden bg-zinc-900\"\n    >\n      <p\n        className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-4xl font-bold text-neutral-300 transition-opacity duration-300 text-center ${\n          isLoaderComplete ? \"opacity-100\" : \"opacity-0\"\n        }`}\n      >\n        HYPERIUX VAULT\n      </p>\n\n     <button\n  type=\"button\"\n  onClick={handleReplay}\n  className={`absolute top-[calc(50%+4.5rem)] left-1/2 -translate-x-1/2 -translate-y-1/2\n    rounded-full border border-white/15 bg-white/5 px-5 py-2\n    text-sm font-medium text-white backdrop-blur-md\n\n    transition-all duration-300 cursor-pointer\n    hover:scale-105 hover:border-white/30 hover:bg-white/10\n    active:scale-95\n    ${\n      isLoaderComplete\n        ? \"opacity-100\"\n        : \"pointer-events-none opacity-0\"\n    }`}\n>\n  ↻ Replay\n</button>\n\n      <StackToSpreadIntro\n        key={introInstance}\n        ref={stackToSpreadIntroRef}\n        imageSize={imageSize}\n        duration={duration}\n        fadeOutDuration={fadeOutDuration}\n        backgroundColor={backgroundColor}\n        onComplete={handleLoaderComplete}\n      />\n    </div>\n  );\n}\n"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "name": "@hyperiux/text-fill-animation",
+  "version": "1.0.0",
+  "description": "Scroll-synced text color fill animation with customizable color sweep effect",
+  "main": "index.tsx",
+  "files": [
+    "index.tsx",
+    "registry.json"
+  ],
+  "keywords": [
+    "text",
+    "hyperiux"
+  ],
+  "dependencies": {
+    "gsap": "*"
+  }
+}

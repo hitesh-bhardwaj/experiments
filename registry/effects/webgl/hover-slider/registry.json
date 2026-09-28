@@ -1,0 +1,114 @@
+{
+  "name": "hover-slider",
+  "version": "1.0.1",
+  "type": "registry:component",
+  "title": "Hover Slider",
+  "description": "WebGL-powered list where hovering a row reveals a vertically-scrolling image stack with circular-arc curvature, velocity-based elastic snap, and GSAP-driven fade/curve transitions.",
+  "category": "webgl",
+  "dependencies": [
+    "three",
+    "gsap"
+  ],
+  "registryDependencies": [],
+  "previewUrl": "/demo/hover-slider",
+  "tier": "pro",
+  "main": "index.tsx",
+  "exportName": "HoverSlider",
+  "exportKind": "default",
+  "importPath": "@/components/effects/hover-slider",
+  "target": "src/components/effects/hover-slider",
+  "files": [
+    {
+      "path": "index.tsx",
+      "target": "src/components/effects/hover-slider/index.tsx"
+    },
+    {
+      "path": "HoverSliderComp.tsx",
+      "target": "src/components/effects/hover-slider/HoverSliderComp.tsx"
+    },
+    {
+      "path": "createSuspendedRaf.ts",
+      "target": "src/components/effects/hover-slider/createSuspendedRaf.ts"
+    }
+  ],
+  "changelog": [
+    {
+      "version": "1.0.1",
+      "date": "2026-07-21",
+      "summary": "Add prefers-reduced-motion support",
+      "breaking": false
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-07-20",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "props": [
+    {
+      "name": "transitionDuration",
+      "type": "number",
+      "default": 0.45,
+      "description": "Hover reveal and curve transition duration.",
+      "suggested": true
+    },
+    {
+      "name": "imageScale",
+      "type": "number",
+      "default": 0.95,
+      "description": "WebGL image plane scale.",
+      "suggested": true
+    },
+    {
+      "name": "curveFactor",
+      "type": "number",
+      "default": 1,
+      "description": "Multiplier for the circular arc image curvature.",
+      "suggested": true
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "suggested": true,
+    "defaultOpenGroupId": "controls",
+    "layout": {
+      "controlsButtonClassName": "right-4! top-25!"
+    },
+    "panel": {
+      "className": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "controls": [
+      {
+        "name": "transitionDuration",
+        "label": "Transition Duration",
+        "type": "range",
+        "group": "motion",
+        "copyable": true,
+        "min": 0.05,
+        "max": 3,
+        "step": 0.05
+      },
+      {
+        "name": "imageScale",
+        "label": "Image Scale",
+        "type": "range",
+        "group": "controls",
+        "copyable": true,
+        "min": 0.5,
+        "max": 2,
+        "step": 0.05
+      },
+      {
+        "name": "curveFactor",
+        "label": "Curve Factor",
+        "type": "range",
+        "group": "controls",
+        "copyable": true,
+        "min": 0,
+        "max": 2.5,
+        "step": 0.05
+      }
+    ]
+  }
+}

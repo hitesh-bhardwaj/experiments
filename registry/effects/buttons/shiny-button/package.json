@@ -1,0 +1,15 @@
+{
+  "name": "@hyperiux/shiny-button",
+  "version": "1.0.0",
+  "description": "Button with a rotating conic-gradient border, masked dot pattern, and inner shimmer that intensifies on hover",
+  "main": "index.tsx",
+  "files": [
+    "index.tsx",
+    "registry.json"
+  ],
+  "keywords": [
+    "buttons",
+    "hyperiux"
+  ],
+  "dependencies": {}
+}

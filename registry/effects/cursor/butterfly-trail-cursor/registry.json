@@ -1,0 +1,144 @@
+{
+  "name": "butterfly-trail-cursor",
+  "version": "1.1.0",
+  "changelog": [
+    {
+      "version": "1.1.0",
+      "date": "2026-07-22",
+      "summary": "reduce-motion applied",
+      "breaking": false
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-06-04",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "type": "registry:component",
+  "title": "Butterfly Trail Cursor",
+  "description": "3D butterfly swarm that spawns around the pointer and fades through space",
+  "category": "cursor",
+  "dependencies": [
+    "@react-three/drei",
+    "@react-three/fiber",
+    "three"
+  ],
+  "registryDependencies": [],
+  "previewUrl": "/demo/butterfly-trail-cursor",
+  "coverImage": "butterfly-trail-cursor",
+  "videoUrl": "butterfly-trail-cursor.mp4",
+  "tier": "pro",
+  "main": "index.tsx",
+  "exportName": "ButterflyTrailCursor",
+  "exportKind": "default",
+  "importPath": "@/components/effects/butterfly-trail-cursor",
+  "target": "src/components/effects/butterfly-trail-cursor",
+  "files": [
+    {
+      "path": "index.tsx",
+      "target": "src/components/effects/butterfly-trail-cursor/index.tsx"
+    },
+    {
+      "path": "createSuspendedRaf.ts",
+      "target": "src/components/effects/butterfly-trail-cursor/createSuspendedRaf.ts"
+    }
+  ],
+  "props": [
+    {
+      "name": "butterflyCount",
+      "type": "number",
+      "default": 14,
+      "description": "Number of trail butterflies.",
+      "suggested": true
+    },
+    {
+      "name": "trailDistance",
+      "type": "number",
+      "default": 18,
+      "description": "Distance between trail items.",
+      "suggested": true
+    },
+    {
+      "name": "wingColor",
+      "type": "string",
+      "default": "#ffffff",
+      "description": "Primary butterfly wing color.",
+      "suggested": true
+    },
+    {
+      "name": "size",
+      "type": "number",
+      "default": 28,
+      "description": "Rendered butterfly size.",
+      "suggested": true
+    },
+    {
+      "name": "followSpeed",
+      "type": "number",
+      "default": 0.18,
+      "description": "How quickly the trail follows the pointer.",
+      "suggested": true
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "suggested": true,
+    "defaultOpenGroupId": "controls",
+    "layout": {
+      "controlsButtonClassName": "right-4! top-25!"
+    },
+    "panel": {
+      "className": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "controls": [
+      {
+        "name": "butterflyCount",
+        "label": "Butterfly Count",
+        "type": "range",
+        "group": "controls",
+        "copyable": true,
+        "min": 0,
+        "max": 42,
+        "step": 0.1
+      },
+      {
+        "name": "trailDistance",
+        "label": "Trail Distance",
+        "type": "range",
+        "group": "controls",
+        "copyable": true,
+        "min": 0,
+        "max": 54,
+        "step": 0.1
+      },
+      {
+        "name": "wingColor",
+        "label": "Wing Color",
+        "type": "color",
+        "group": "style",
+        "copyable": true
+      },
+      {
+        "name": "size",
+        "label": "Size",
+        "type": "range",
+        "group": "content",
+        "copyable": true,
+        "min": 1,
+        "max": 112,
+        "step": 1
+      },
+      {
+        "name": "followSpeed",
+        "label": "Follow Speed",
+        "type": "range",
+        "group": "motion",
+        "copyable": true,
+        "min": 0.01,
+        "max": 5,
+        "step": 0.01
+      }
+    ]
+  }
+}

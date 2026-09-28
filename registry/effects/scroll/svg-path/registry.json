@@ -1,0 +1,124 @@
+{
+  "name": "svg-path",
+  "version": "1.0.1",
+  "changelog": [
+    {
+      "version": "1.0.1",
+      "date": "2026-07-24",
+      "summary": "Added reduced-motion support and made the marquee suspend its per-frame work while offscreen or in a hidden tab.",
+      "breaking": false
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-02-10",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "type": "registry:component",
+  "title": "Marquee on SVG Path",
+  "description": "Animate any content along a custom SVG path. Supports scroll velocity, drag interaction, hover slowdown, and responsive scaling.",
+  "category": "scroll",
+  "dependencies": [
+    "motion"
+  ],
+  "registryDependencies": [],
+  "previewUrl": "/demo/svg-path",
+  "tier": "pro",
+  "main": "index.tsx",
+  "exportName": "SVGPath",
+  "exportKind": "default",
+  "importPath": "@/components/effects/svg-path",
+  "target": "src/components/effects/svg-path",
+  "files": [
+    {
+      "path": "index.tsx",
+      "target": "src/components/effects/svg-path/index.tsx"
+    },
+    {
+      "path": "SVGPathComp.tsx",
+      "target": "src/components/effects/svg-path/SVGPathComp.tsx"
+    },
+    {
+      "path": "createSuspendedRaf.ts",
+      "target": "src/components/effects/svg-path/createSuspendedRaf.ts"
+    }
+  ],
+  "props": [
+    {
+      "name": "bgColor",
+      "type": "color",
+      "default": "#000000",
+      "description": "Background color of the section.",
+      "remixer": {
+        "control": "color",
+        "group": "style",
+        "groupTitle": "Style"
+      }
+    },
+    {
+      "name": "baseVelocity",
+      "type": "number",
+      "default": 8,
+      "description": "Marquee scroll speed along the path.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0,
+        "max": 24,
+        "step": 0.5
+      }
+    },
+    {
+      "name": "dragSensitivity",
+      "type": "number",
+      "default": 0.1,
+      "description": "How much drag movement translates to velocity.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0,
+        "max": 1,
+        "step": 0.02
+      }
+    },
+    {
+      "name": "slowDownFactor",
+      "type": "number",
+      "default": 0.3,
+      "description": "How much the marquee slows down while hovered.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0,
+        "max": 1,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "draggable",
+      "type": "boolean",
+      "default": true,
+      "description": "Enables drag interaction on the marquee.",
+      "remixer": {
+        "control": "checkbox",
+        "group": "motion",
+        "groupTitle": "Motion"
+      }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "motion",
+    "layout": {
+      "buttonClassName": "right-4! top-25!",
+      "panelClassName": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  }
+}

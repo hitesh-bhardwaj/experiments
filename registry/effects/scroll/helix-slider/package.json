@@ -1,0 +1,19 @@
+{
+  "name": "@hyperiux/helix-slider",
+  "version": "1.2.0",
+  "description": "WebGL gallery that threads images along a rotating spiral, driven by drag, wheel momentum and idle autoplay",
+  "main": "index.tsx",
+  "files": [
+    "index.tsx",
+    "createSuspendedRaf.ts",
+    "registry.json"
+  ],
+  "keywords": [
+    "scroll",
+    "hyperiux"
+  ],
+  "dependencies": {
+    "@react-three/fiber": "*",
+    "three": "*"
+  }
+}

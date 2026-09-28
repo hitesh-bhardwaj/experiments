@@ -1,0 +1,18 @@
+{
+  "name": "@hyperiux/aperture-transition",
+  "version": "1.0.0",
+  "description": "The whole screen scales down toward its center, then the incoming page reveals bottom-to-top via clip-path on the held-down page before growing back to fill the screen",
+  "main": "index.tsx",
+  "files": [
+    "index.tsx",
+    "registry.json"
+  ],
+  "keywords": [
+    "transitions",
+    "hyperiux"
+  ],
+  "dependencies": {
+    "gsap": "*",
+    "next-transition-router": "*"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "name": "@hyperiux/arc-flow-carousel",
+  "version": "1.0.0",
+  "description": "Draggable image carousel where cards ride a wheel arc, with flick momentum, idle drift, and reduced-motion support.",
+  "main": "index.tsx",
+  "files": [
+    "index.tsx",
+    "ArcFlowCarouselComp.tsx",
+    "registry.json"
+  ],
+  "keywords": [
+    "carousels",
+    "hyperiux"
+  ],
+  "dependencies": {
+    "gsap": "*"
+  }
+}

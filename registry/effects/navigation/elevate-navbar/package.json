@@ -1,0 +1,21 @@
+{
+  "name": "@hyperiux/elevate-navbar",
+  "version": "1.1.0",
+  "description": "A responsive glassmorphism navbar with animated dropdowns, text-swap hover effects, and a collapsible mobile menu.",
+  "main": "index.tsx",
+  "files": [
+    "index.tsx",
+    "ElevateMobileNav.tsx",
+    "ElevateDesktopNav.tsx",
+    "useFocusTrap.ts",
+    "registry.json"
+  ],
+  "keywords": [
+    "navigation",
+    "hyperiux"
+  ],
+  "dependencies": {
+    "gsap": "*",
+    "lucide-react": "*"
+  }
+}

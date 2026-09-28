@@ -1,0 +1,17 @@
+{
+  "name": "@hyperiux/pixel-text-fill",
+  "version": "1.1.0",
+  "description": "Scroll-scrubbed pixel text fill with an ordered-dither color edge.",
+  "main": "index.tsx",
+  "files": [
+    "index.tsx",
+    "registry.json"
+  ],
+  "keywords": [
+    "text",
+    "hyperiux"
+  ],
+  "dependencies": {
+    "gsap": "*"
+  }
+}

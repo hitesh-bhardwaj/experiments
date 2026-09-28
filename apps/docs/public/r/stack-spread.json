@@ -1,0 +1,124 @@
+{
+  "name": "stack-spread",
+  "type": "registry:component",
+  "title": "Stack Spread",
+  "description": "A clustered stack of images that spreads into a full-bleed composition on scroll while centre text fades in behind it",
+  "dependencies": [
+    "motion"
+  ],
+  "registryDependencies": [],
+  "exportName": "StackSpread",
+  "exportKind": "default",
+  "tier": "free",
+  "version": "1.0.0",
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "date": "2026-09-04",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "props": [
+    {
+      "name": "scrollLength",
+      "type": "number",
+      "default": 350,
+      "description": "Total scroll distance the spread plays out over, in vh. Sets the section height.",
+      "docsOnly": true,
+      "remixer": {
+        "enabled": false
+      }
+    },
+    {
+      "name": "clusterRotation",
+      "type": "boolean",
+      "default": true,
+      "description": "Fan the clustered stack with each card's own angle, or start every card flat.",
+      "remixer": {
+        "control": "checkbox",
+        "group": "motion",
+        "groupTitle": "Motion"
+      }
+    },
+    {
+      "name": "stackScale",
+      "type": "number",
+      "default": 0.82,
+      "description": "Scale of the cards while clustered, before they spread out to full size.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0.5,
+        "max": 1,
+        "step": 0.02
+      }
+    },
+    {
+      "name": "cardRadius",
+      "type": "number",
+      "default": 8,
+      "description": "Corner radius on each card, in px (desktop only - tablet/mobile keep their responsive radius).",
+      "remixer": {
+        "control": "range",
+        "group": "style",
+        "groupTitle": "Style",
+        "min": 0,
+        "max": 40,
+        "step": 1
+      }
+    },
+    {
+      "name": "bgColor",
+      "type": "color",
+      "default": "#ececeb",
+      "description": "Background color of the section behind the cards.",
+      "remixer": {
+        "control": "color",
+        "group": "style",
+        "groupTitle": "Style"
+      }
+    },
+    {
+      "name": "textColor",
+      "type": "color",
+      "default": "#141414",
+      "description": "Color of the centre headline and subtitle.",
+      "remixer": {
+        "control": "color",
+        "group": "text",
+        "groupTitle": "Text"
+      }
+    },
+    {
+      "name": "textFadeStart",
+      "type": "number",
+      "default": 0.3,
+      "description": "Scroll progress (0-1) where the centre text starts fading in.",
+      "remixer": {
+        "control": "range",
+        "group": "text",
+        "groupTitle": "Text",
+        "min": 0,
+        "max": 0.6,
+        "step": 0.05
+      }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "motion",
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/stack-spread/index.tsx",
+      "content": "// Built using Hyperiux Vault: https://vault.hyperiux.com\n\n\"use client\";\n\nimport Image from \"next/image\";\nimport {\n  motion,\n  useScroll,\n  useTransform,\n  useReducedMotion,\n  useMotionValue,\n  useSpring,\n  useMotionValueEvent,\n  type MotionValue,\n} from \"motion/react\";\nimport { useCallback, useEffect, useRef, useState } from \"react\";\n\n\n\nconst IMG_PARAMS = \"auto=format&fit=crop&w=1200&q=80\";\n\nconst IMG = {\n  plane: `https://images.unsplash.com/photo-1436491865332-7a61a109cc05?${IMG_PARAMS}`,\n  painting: `https://images.unsplash.com/photo-1578321272176-b7bbc0679853?${IMG_PARAMS}`,\n  breaker: `https://images.unsplash.com/photo-1547153760-18fc86324498?${IMG_PARAMS}`,\n  dog: `https://images.unsplash.com/photo-1507146426996-ef05306b995a?${IMG_PARAMS}`,\n  footballer: `https://images.unsplash.com/photo-1517649763962-0c623066013b?${IMG_PARAMS}`,\n  jacket: `https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?${IMG_PARAMS}`,\n  meadow: `https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?${IMG_PARAMS}`,\n  stripes: `https://images.unsplash.com/photo-1550859492-d5da9d8e45f3?${IMG_PARAMS}`,\n} as const;\n\n// per-image rest scale, keyed by img index (1-8). default 1, drop below to shrink.\nconst SCALE: Partial<Record<number, number>> = {\n  1: 0.9,\n  2: 0.8,\n  3: 0.9,\n  4: 0.8,\n  5: 0.8,\n  6: 0.9,\n  7: 0.9,\n  8: 0.7,\n};\nconst s = (i: number) => SCALE[i] ?? 1;\n\n// array order = stack order, back (z 2) -> front (z 9)\nconst CARDS: StackSpreadCard[] = [\n  // top-left stripes (img08) - sm row 1 left\n  {\n    item: { src: IMG.stripes, alt: \"Colour stripes\" },\n    stackOffset: { x: -8, y: -10 },\n    stackRotate: -18,\n    target: { x: -20, y: -34, rotate: 0, scale: s(8), w: 17, h: 22 },\n    targetSm: { x: -22, y: -40 },\n    z: 2,\n  },\n  // top-right meadow (img07) - sm row 1 right\n  {\n    item: { src: IMG.meadow, alt: \"Wildflower meadow\" },\n    stackOffset: { x: 14, y: -10 },\n    stackRotate: 20,\n    target: { x: 32, y: -30, rotate: 0, scale: s(7), w: 18, h: 32 },\n    targetSm: { x: 22, y: -40 },\n    z: 3,\n  },\n  // mid-left jacket (img06) - sm row 2 left\n  {\n    item: { src: IMG.jacket, alt: \"Figure in a leather jacket\" },\n    stackOffset: { x: -16, y: 0 },\n    stackRotate: -4,\n    target: { x: -36, y: -2, rotate: 0, scale: s(6), w: 15, h: 32 },\n    targetSm: { x: -22, y: -19 },\n    z: 4,\n  },\n  // top-centre footballer (img05) - sm row 2 right\n  {\n    item: { src: IMG.footballer, alt: \"Footballer mid-kick\" },\n    stackOffset: { x: 1, y: -10 },\n    stackRotate: -2,\n    target: { x: 6, y: -32, rotate: 0, scale: s(5), w: 25, h: 30 },\n    targetSm: { x: 22, y: -19 },\n    z: 5,\n  },\n  // mid-right dog (img04) - sm row 3 left\n  {\n    item: { src: IMG.dog, alt: \"Terrier in profile\" },\n    stackOffset: { x: 18, y: 1 },\n    stackRotate: 6,\n    target: { x: 37, y: 6, rotate: 0, scale: s(4), w: 18, h: 32 },\n    targetSm: { x: -22, y: 20 },\n    z: 6,\n  },\n  // bottom-left breaker (img03) - sm row 3 right\n  {\n    item: { src: IMG.breaker, alt: \"Breakdancer holding a pose\" },\n    stackOffset: { x: -6, y: 10 },\n    stackRotate: 6,\n    target: { x: -24, y: 34, rotate: 0, scale: s(3), w: 22, h: 25 },\n    targetSm: { x: 22, y: 20 },\n    z: 7,\n  },\n  // bottom-centre painting (img02) - sm row 4 left\n  {\n    item: { src: IMG.painting, alt: \"Renaissance fresco detail\" },\n    stackOffset: { x: 8, y: 7 },\n    stackRotate: 3,\n    target: { x: 2, y: 36, rotate: 0, scale: s(2), w: 20, h: 26 },\n    targetSm: { x: -22, y: 40 },\n    z: 8,\n  },\n  // bottom-right plane (img01) - sm row 4 right\n  {\n    item: { src: IMG.plane, alt: \"Vintage fighter plane\" },\n    stackOffset: { x: 20, y: 12 },\n    stackRotate: -7,\n    target: { x: 30, y: 34, rotate: 0, scale: s(1), w: 16, h: 20 },\n    targetSm: { x: 22, y: 40 },\n    z: 9,\n  },\n];\n\n// ---------------------------------------------------------------------------\n// Mechanism\n// ---------------------------------------------------------------------------\n\n// Scroll progress where the cluster starts scattering and where it finishes.\nconst SCATTER_START = 0.12;\nconst SCATTER_END = 0.9;\n\nconst PARALLAX_X = 2.6;\nconst PARALLAX_Y = 2.2;\nconst PARALLAX_SPRING = { stiffness: 90, damping: 22, mass: 0.6 };\nconst parallaxDepth = (i: number, total: number) =>\n  total <= 1 ? 1 : 0.55 + (i / (total - 1)) * 0.75;\n\n// Deterministic pseudo-random in [0, 1) - keeps SSR and client in sync.\nconst rand = (seed: number) => {\n  const v = Math.sin(seed * 127.1 + 311.7) * 43758.5453;\n  return v - Math.floor(v);\n};\n\n/**\n * Per-card pointer response: each card gets its own signed direction and\n * per-axis weight, so the spread cards drift every which way instead of\n * sliding as one block.\n */\nconst parallaxDrift = (i: number) => ({\n  x: (rand(i + 1) < 0.5 ? -1 : 1) * (0.55 + rand(i + 11) * 0.9),\n  y: (rand(i + 21) < 0.5 ? -1 : 1) * (0.55 + rand(i + 31) * 0.9),\n});\n\nconst SUB = \"Digital products, interfaces, and experiences built around people.\";\n\nconst RESPONSIVE = {\n  desktop: {\n    scale: null as number | null,\n    small: false,\n    colX: null as number | null,\n    card: null as { w: number; h: number } | null,\n  },\n  small: {\n    scale: 0.72,\n    small: true,\n    colX: 22,\n    card: { w: 40, h: 20 },\n  },\n};\n\nfunction useResponsive() {\n  const [r, setR] = useState(RESPONSIVE.desktop);\n  useEffect(() => {\n    const read = () => {\n      setR(window.innerWidth <= 1025 ? RESPONSIVE.small : RESPONSIVE.desktop);\n    };\n    read();\n    window.addEventListener(\"resize\", read);\n    return () => window.removeEventListener(\"resize\", read);\n  }, []);\n  return r;\n}\n\nfunction usePointerParallax(active: boolean, enabled: boolean) {\n  const rawX = useMotionValue(0);\n  const rawY = useMotionValue(0);\n  const x = useSpring(rawX, PARALLAX_SPRING);\n  const y = useSpring(rawY, PARALLAX_SPRING);\n\n  useEffect(() => {\n    if (!enabled) return;\n\n    if (!active) {\n      rawX.set(0);\n      rawY.set(0);\n      return;\n    }\n\n    const onMove = (event: PointerEvent) => {\n      rawX.set((event.clientX / window.innerWidth) * 2 - 1);\n      rawY.set((event.clientY / window.innerHeight) * 2 - 1);\n    };\n    const onLeave = () => {\n      rawX.set(0);\n      rawY.set(0);\n    };\n\n    window.addEventListener(\"pointermove\", onMove, { passive: true });\n    document.addEventListener(\"pointerleave\", onLeave);\n\n    return () => {\n      window.removeEventListener(\"pointermove\", onMove);\n      document.removeEventListener(\"pointerleave\", onLeave);\n    };\n  }, [active, enabled, rawX, rawY]);\n\n  return { x, y };\n}\n\nexport interface StackSpreadItem {\n  src: string;\n  alt?: string;\n}\n\nexport interface StackSpreadTarget {\n  x: number;\n  y: number;\n  rotate: number;\n  scale?: number;\n  w: number;\n  h: number;\n}\n\nexport interface StackSpreadCard {\n  item: StackSpreadItem;\n  target: StackSpreadTarget;\n  /** final x/y (vw/vh) for tablet + mobile; falls back to `target` */\n  targetSm?: { x: number; y: number };\n  /** angle while clustered */\n  stackRotate?: number;\n  /** offset while clustered (vw/vh) */\n  stackOffset?: { x: number; y: number };\n  /** paint order, higher on top */\n  z?: number;\n}\n\nfunction Card({\n  card,\n  progress,\n  reduce,\n  clusterRotation,\n  scaleMul,\n  isSmall,\n  colX,\n  fixedCard,\n  stackScale,\n  cardRadius,\n  pointer,\n  depth,\n  drift,\n}: {\n  card: StackSpreadCard;\n  progress: MotionValue<number>;\n  reduce: boolean | null;\n  clusterRotation: boolean;\n  /** uniform rest-scale for every card; null = use each card's own scale */\n  scaleMul: number | null;\n  isSmall: boolean;\n  colX: number | null;\n  fixedCard: { w: number; h: number } | null;\n  /** scale of the cards while clustered, before the scatter */\n  stackScale: number;\n  /** corner radius on each card, in px (desktop) */\n  cardRadius: number;\n  pointer: { x: MotionValue<number>; y: MotionValue<number> };\n  depth: number;\n  /** signed per-axis pointer response, so each card drifts its own way */\n  drift: { x: number; y: number };\n}) {\n  const { item, target } = card;\n\n  const flat = reduce === true;\n  const stackRotate = flat ? 0 : clusterRotation ? card.stackRotate ?? 0 : 0;\n  const stackOffset = card.stackOffset ?? { x: 0, y: 0 };\n  const restScale = scaleMul ?? target.scale ?? 1;\n\n  // final resting spot: column grid on small screens, scatter on desktop\n  const sm = isSmall && card.targetSm ? card.targetSm : null;\n  const endX = sm\n    ? colX != null\n      ? Math.sign(sm.x) * colX\n      : sm.x\n    : target.x;\n  const endY = sm ? sm.y : target.y;\n  const endRotate = flat || isSmall ? 0 : target.rotate;\n\n  // -50% keeps card centred on its anchor\n  const translate = useTransform(\n    [progress, pointer.x, pointer.y],\n    ([p, px, py]: number[]) => {\n      const tx = stackOffset.x + (endX - stackOffset.x) * p;\n      const ty = stackOffset.y + (endY - stackOffset.y) * p;\n      const amount = depth * p;\n      const dx = tx - px * PARALLAX_X * amount * drift.x;\n      const dy = ty - py * PARALLAX_Y * amount * drift.y;\n      return `calc(-50% + ${dx}vw) calc(-50% + ${dy}vh)`;\n    },\n  );\n  const rotate = useTransform(progress, [0, 1], [stackRotate, endRotate]);\n  const scale = useTransform(progress, [0, 1], [stackScale, restScale]);\n\n  return (\n    <motion.div\n      className=\"absolute left-1/2 top-1/2 will-change-transform\"\n      style={{\n        width: `${fixedCard ? fixedCard.w : target.w}vw`,\n        height: `${fixedCard ? fixedCard.h : target.h}vh`,\n        zIndex: card.z ?? 1,\n        translate,\n        rotate,\n        scale,\n      }}\n    >\n      <CardFace item={item} cardRadius={cardRadius} />\n    </motion.div>\n  );\n}\n\nfunction CardFace({\n  item,\n  cardRadius,\n}: {\n  item: StackSpreadItem;\n  cardRadius: number;\n}) {\n  return (\n    <div\n      className=\"relative h-full w-full overflow-hidden max-md:rounded-[4vw]\"\n      style={{ borderRadius: `${cardRadius}px` }}\n    >\n      <Image\n        src={item.src}\n        alt={item.alt ?? \"\"}\n        fill\n        sizes=\"(max-width: 1025px) 40vw, 25vw\"\n        className=\"object-cover\"\n        draggable={false}\n      />\n    </div>\n  );\n}\n\ninterface StackSpreadStageProps {\n  cards: StackSpreadCard[];\n  /** scatter scroll distance, in vh */\n  scrollLength?: number;\n  bgColor?: string;\n  /** fan the clustered stack (default) or start flat */\n  clusterRotation?: boolean;\n  /** scale of the cards while clustered, before the scatter */\n  stackScale?: number;\n  /** corner radius on each card, in px (desktop only - mobile keeps its responsive radius) */\n  cardRadius?: number;\n  /** color of the centre headline and subtitle */\n  textColor?: string;\n  /** scroll progress (0-1) where the centre text starts fading in */\n  textFadeStart?: number;\n}\n\nfunction StackSpreadStage({\n  cards,\n  scrollLength = 350,\n  bgColor = \"#ececeb\",\n  clusterRotation = true,\n  stackScale = 0.82,\n  cardRadius = 8,\n  textColor = \"#141414\",\n  textFadeStart = 0.3,\n}: StackSpreadStageProps) {\n  const wrapRef = useRef<HTMLDivElement>(null);\n  const reduce = useReducedMotion();\n  const { scale: scaleMul, small: isSmall, colX, card: fixedCard } =\n    useResponsive();\n\n  const { scrollYProgress } = useScroll({\n    target: wrapRef,\n    offset: [\"start start\", \"end end\"],\n  });\n\n  // hold, scatter, then settle\n  const progress = useTransform(\n    scrollYProgress,\n    [0, SCATTER_START, SCATTER_END, 1],\n    [0, 0, 1, 1],\n  );\n\n  // centre text always fades in on scroll; the scale-in is dropped only when\n  // reduced motion is confirmed (`true`), not on the null SSR value.\n  const [spread, setSpread] = useState(false);\n  useMotionValueEvent(progress, \"change\", (p) => {\n    setSpread((was) => (was ? p > 0.985 : p >= 0.999));\n  });\n  const parallaxEnabled = reduce !== true && !isSmall;\n  const pointer = usePointerParallax(spread, parallaxEnabled);\n\n  const noScale = reduce === true;\n  const copyOpacity = useTransform(progress, [textFadeStart, textFadeStart + 0.35], [0, 1]);\n  const copyScale = useTransform(progress, [textFadeStart, 0.9], [0.85, 1]);\n\n  return (\n    <section\n      ref={wrapRef}\n      className=\"relative w-full\"\n      style={{ height: `${scrollLength}vh`, backgroundColor: bgColor }}\n    >\n      <div className=\"sticky top-0 h-screen w-full overflow-hidden\">\n        {/* centre text */}\n        <motion.div\n          className=\"pointer-events-none absolute inset-0 z-5 flex flex-col items-center justify-center px-6 text-center max-md:px-8\"\n          style={{\n            opacity: copyOpacity,\n            scale: noScale ? 1 : copyScale,\n          }}\n        >\n          <h2\n            className=\"w-full whitespace-pre-line font-display text-[4.5vw] font-normal leading-none! tracking-tight max-md:text-[10vw]\"\n            style={{ color: textColor }}\n          >\n            Design\n\n           <span className=\"opacity-60\"> {\" \"}\n              That\n               {\" \"}\n              </span>\n              Responds.\n          </h2>\n          <p\n            className=\"mt-[1.2vw] w-full max-w-[42ch] text-[1.15vw] leading-relaxed tracking-tight max-md:mt-3 max-md:text-[3.6vw]\"\n            style={{ color: textColor, opacity: 0.6 }}\n          >\n            {SUB}\n          </p>\n        </motion.div>\n\n        {/* scattering cards */}\n        <div className=\"absolute inset-0 z-10\">\n          {cards.map((card, i) => (\n            <Card\n              key={i}\n              card={card}\n              progress={progress}\n              reduce={reduce}\n              clusterRotation={clusterRotation}\n              scaleMul={scaleMul}\n              isSmall={isSmall}\n              colX={colX}\n              fixedCard={fixedCard}\n              stackScale={stackScale}\n              cardRadius={cardRadius}\n              pointer={pointer}\n              depth={parallaxEnabled ? parallaxDepth(i, cards.length) : 0}\n              drift={parallaxDrift(i)}\n            />\n          ))}\n        </div>\n      </div>\n    </section>\n  );\n}\n\n\nexport interface StackSpreadProps {\n  /** scatter scroll distance, in vh */\n  scrollLength?: number;\n  bgColor?: string;\n  /** fan the clustered stack (default) or start flat */\n  clusterRotation?: boolean;\n  /** scale of the cards while clustered, before the scatter */\n  stackScale?: number;\n  /** corner radius on each card, in px (desktop only - mobile keeps its responsive radius) */\n  cardRadius?: number;\n  /** color of the centre headline and subtitle */\n  textColor?: string;\n  /** scroll progress (0-1) where the centre text starts fading in */\n  textFadeStart?: number;\n}\n\nexport default function StackSpread({\n  scrollLength = 350,\n  bgColor = \"#ececeb\",\n  clusterRotation = true,\n  stackScale = 0.82,\n  cardRadius = 8,\n  textColor = \"#141414\",\n  textFadeStart = 0.3,\n}: StackSpreadProps) {\n  return (\n    <StackSpreadStage\n      cards={CARDS}\n      scrollLength={scrollLength}\n      bgColor={bgColor}\n      clusterRotation={clusterRotation}\n      stackScale={stackScale}\n      cardRadius={cardRadius}\n      textColor={textColor}\n      textFadeStart={textFadeStart}\n    />\n  );\n}\n"
+    }
+  ]
+}

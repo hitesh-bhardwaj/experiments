@@ -1,0 +1,19 @@
+{
+  "name": "@hyperiux/ribbon-drift",
+  "version": "1.0.1",
+  "description": "Scroll-driven ribbon gallery where image strips drift horizontally at alternating speeds, revealing project names with GSAP SplitText on scroll.",
+  "main": "index.tsx",
+  "files": [
+    "index.tsx",
+    "RibbonDriftComp.tsx",
+    "registry.json"
+  ],
+  "keywords": [
+    "scroll",
+    "hyperiux"
+  ],
+  "dependencies": {
+    "gsap": "*",
+    "lenis": "*"
+  }
+}

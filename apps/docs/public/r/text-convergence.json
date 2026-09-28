@@ -1,0 +1,74 @@
+{
+  "name": "text-convergence",
+  "type": "registry:component",
+  "title": "Text Convergence",
+  "description": "Horizontal scroll-driven text marquee where characters fly in from random positions and converge into place as you scroll",
+  "dependencies": [
+    "gsap"
+  ],
+  "registryDependencies": [],
+  "exportName": "TextConvergence",
+  "exportKind": "default",
+  "tier": "free",
+  "version": "1.0.1",
+  "changelog": [
+    {
+      "version": "1.0.1",
+      "date": "2026-07-21",
+      "summary": "Added prefers-reduced-motion support: per-character fly-in yPercent/rotation range is reduced to 25% strength; the main horizontal scroll is unaffected",
+      "breaking": false
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-07-20",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "props": [
+    {
+      "name": "bgColor",
+      "type": "color",
+      "default": "#111111",
+      "description": "Background color of the section.",
+      "remixer": {
+        "control": "color",
+        "group": "style",
+        "groupTitle": "Style"
+      }
+    },
+    {
+      "name": "charRotation",
+      "type": "number",
+      "default": 20,
+      "description": "Max random rotation (degrees, plus or minus) each character starts from before flying into place.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0,
+        "max": 90,
+        "step": 1
+      }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "motion",
+    "layout": {
+      "buttonClassName": "right-4! top-25!",
+      "panelClassName": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/text-convergence/index.tsx",
+      "content": "// Built using Hyperiux Vault: https://vault.hyperiux.com\n\n'use client';\n\nimport { useEffect, useMemo, useRef } from \"react\";\nimport gsap from \"gsap\";\nimport { ScrollTrigger } from \"gsap/ScrollTrigger\";\nimport { SplitText } from \"gsap/SplitText\";\n\nconst BASE_HEIGHT_VH = 600;\nconst MIN_HEIGHT_VH = 300;\nconst MAX_HEIGHT_VH = 2000;\nconst BASE_WORD_COUNT = 20;\nconst INTRO_FADE_DISTANCE = 120;\nconst CHARACTER_SPLIT_TYPE = \"chars,words\";\nconst CHARACTER_Y_PERCENT_MIN = -200;\nconst CHARACTER_Y_PERCENT_MAX = 200;\nconst CHARACTER_EASE = \"elastic.out(1,0.8)\";\n\nconst TEXT = \"Build faster. Animate better. Ship smarter. Hyperiux Vault gives you the tools to create high-performance interfaces that look premium and feel effortless.\";\n\n// True when the user has asked the OS to minimise animation. Safe to call\n// during render - returns false on the server.\nfunction prefersReducedMotion() {\n  if (typeof window === \"undefined\") return false;\n  return window.matchMedia?.(\"(prefers-reduced-motion: reduce)\")?.matches ?? false;\n}\n\n// Reduced motion: keep the per-character assembly, just far weaker - the\n// main horizontal scroll (xPercent:-100) is left alone, it's the functional\n// scroll-through mechanism, not decorative per-char movement.\nconst REDUCED_MOTION_FACTOR = 0.25;\n\nconst getDynamicHeight = (text: string) => {\n  const trimmedText = text.trim();\n  const words = trimmedText ? trimmedText.split(/\\s+/).length : 0;\n  const scale = words / BASE_WORD_COUNT;\n  const calculatedHeight = BASE_HEIGHT_VH * scale;\n  const clampedHeight = Math.max(\n    MIN_HEIGHT_VH,\n    Math.min(calculatedHeight, MAX_HEIGHT_VH)\n  );\n\n  return `${clampedHeight}vh`;\n};\n\ngsap.registerPlugin(ScrollTrigger, SplitText);\n\ninterface TextConvergenceProps {\n  text?: string;\n  bgColor?: string;\n  textColor?: string;\n  charRotation?: number;\n}\n\nexport default function TextConvergence({\n  text = TEXT,\n  bgColor = \"#111111\",\n  textColor = \"text-white\",\n  charRotation = 20,\n}: TextConvergenceProps) {\n  // State and refs\n  const sectionRef = useRef<HTMLDivElement | null>(null);\n  const textRef = useRef<HTMLHeadingElement | null>(null);\n  const introRef = useRef<HTMLDivElement | null>(null);\n\n  // Derived values\n  const dynamicHeight = useMemo(() => getDynamicHeight(text), [text]);\n\n  // Effects\n  useEffect(() => {\n    if (!sectionRef.current) {\n      return;\n    }\n\n    sectionRef.current.style.setProperty(\"--text-break-height\", dynamicHeight);\n  }, [dynamicHeight]);\n\n  useEffect(() => {\n    const introElement = introRef.current;\n\n    if (!introElement) {\n      return;\n    }\n\n    const onScroll = () => {\n      const scrollY = window.scrollY;\n      const sectionTop = sectionRef.current?.offsetTop ?? 0;\n      const fadeProgress = Math.min(\n        (scrollY - sectionTop) / INTRO_FADE_DISTANCE,\n        1\n      );\n\n      introElement.style.opacity = String(1 - fadeProgress);\n    };\n\n    window.addEventListener(\"scroll\", onScroll, { passive: true });\n\n    return () => {\n      window.removeEventListener(\"scroll\", onScroll);\n    };\n  }, []);\n\n  useEffect(() => {\n    const context = gsap.context(() => {\n      const textElement = textRef.current;\n\n      if (!textElement) {\n        return;\n      }\n\n      const split = SplitText.create(textElement, {\n        type: CHARACTER_SPLIT_TYPE,\n      });\n\n      const reducedMotion = prefersReducedMotion();\n      const charScale = reducedMotion ? REDUCED_MOTION_FACTOR : 1;\n\n      const scrollTween = gsap.to(textElement, {\n        xPercent: -100,\n        ease: \"linear\",\n        scrollTrigger: {\n          trigger: sectionRef.current,\n          start: \"top top\",\n          end: \"bottom 70%\",\n          scrub: true,\n          markers: false,\n          scroller: window,\n          invalidateOnRefresh: true,\n        },\n      });\n\n      split.chars.forEach((character) => {\n        gsap.from(character, {\n          yPercent:\n            gsap.utils.random(CHARACTER_Y_PERCENT_MIN, CHARACTER_Y_PERCENT_MAX) *\n            charScale,\n          rotation:\n            gsap.utils.random(-charRotation, charRotation) *\n            charScale,\n          ease: CHARACTER_EASE,\n          scrollTrigger: {\n            trigger: character,\n            containerAnimation: scrollTween,\n            start: \"left 100%\",\n            end: \"left 30%\",\n            scrub: 0.4,\n          },\n        });\n      });\n    }, sectionRef);\n\n    return () => {\n      context.revert();\n    };\n  }, [text, charRotation]);\n\n  // Return\n  return (\n    <div\n      ref={sectionRef}\n      className=\"relative h-(--text-break-height)\"\n      style={{ backgroundColor: bgColor }}\n    >\n      <div className=\"sticky top-0 flex h-screen items-center overflow-clip\">\n        <h3\n          ref={textRef}\n          className={`flex w-max whitespace-nowrap gap-[4vw] pl-[100vw] ! text-4xl font-bold leading-[1.1] tracking-tighter ${textColor} sm:text-6xl lg:text-8xl xl:text-9xl`}\n        >\n          {text}\n        </h3>\n\n        <div\n          ref={introRef}\n          className=\"pointer-events-none absolute inset-0 z-20\"\n        >\n          <div\n            className=\"pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_70%_55%_at_50%_52%,rgba(255,255,255,0.06)_0%,transparent_70%)]\"\n          />\n\n          <span\n            className=\"absolute top-[2.2rem] left-[2.4rem] font-mono text-xs uppercase tracking-[0.22vw] text-gray-400\"\n          >\n            scroll experience\n          </span>\n\n          <span\n            className=\"absolute top-[2.2rem] right-[2.4rem] font-mono text-xs uppercase tracking-[0.22vw] text-gray-400\"\n          >\n            v1.0\n          </span>\n\n          <div\n            className=\"absolute inset-0 flex flex-col items-center justify-center gap-[2.4rem]\"\n          >\n            <svg\n              width=\"320\"\n              height=\"1\"\n              className=\"opacity-[0.2]\"\n              xmlns=\"http://www.w3.org/2000/svg\"\n            >\n              <line\n                x1=\"0\"\n                y1=\"0\"\n                x2=\"320\"\n                y2=\"0\"\n                stroke=\"white\"\n                strokeWidth=\"1\"\n              />\n            </svg>\n\n            <p\n              className=\"m-0 font-mono text-xs uppercase tracking-[0.3vw] text-gray-400\"\n            >\n              - kinetic typography -\n            </p>\n\n            <h2\n              className=\"m-0 max-w-[14ch] text-center font-serif text-5xl font-normal leading-none tracking-[-0.03vw] text-white/92 sm:text-6xl lg:text-8xl xl:text-9xl\"\n            >\n              Words\n              <br />\n              <em className=\"text-white/45 italic\">\n                in motion.\n              </em>\n            </h2>\n\n            <p\n              className=\"m-0 max-w-100 text-center font-mono text-sm leading-[1.7] tracking-[0.08vw] text-white/80\"\n            >\n              Each character assembles as you scroll.\n            \n              Drag the page downward to begin.\n            </p>\n\n            <div className=\"flex flex-col items-center gap-[2vw]\">\n  <span>\n  <p className=\"font-mono text-xs uppercase tracking-[0.25vw] text-white/80\">\n\n                scroll\n  </p>\n              </span>\n\n              <svg\n                width=\"20\"\n                height=\"28\"\n                viewBox=\"0 0 20 28\"\n                fill=\"none\"\n                xmlns=\"http://www.w3.org/2000/svg\"\n              >\n                <style>{`\n                  .chev1 { animation: fadeDown 1.4s ease-in-out infinite; }\n                  .chev2 { animation: fadeDown 1.4s ease-in-out 0.22s infinite; }\n                  .chev3 { animation: fadeDown 1.4s ease-in-out 0.44s infinite; }\n                  @keyframes fadeDown {\n                    0%   { opacity: 0.08; transform: translateY(-3px); }\n                    50%  { opacity: 0.55; transform: translateY(2px); }\n                    100% { opacity: 0.08; transform: translateY(-3px); }\n                  }\n                `}</style>\n                <polyline\n                  className=\"chev1\"\n                  points=\"2,2 10,9 18,2\"\n                  stroke=\"white\"\n                  strokeWidth=\"1.4\"\n                  fill=\"none\"\n                  strokeLinecap=\"round\"\n                  strokeLinejoin=\"round\"\n                />\n                <polyline\n                  className=\"chev2\"\n                  points=\"2,10 10,17 18,10\"\n                  stroke=\"white\"\n                  strokeWidth=\"1.4\"\n                  fill=\"none\"\n                  strokeLinecap=\"round\"\n                  strokeLinejoin=\"round\"\n                />\n                <polyline\n                  className=\"chev3\"\n                  points=\"2,18 10,25 18,18\"\n                  stroke=\"white\"\n                  strokeWidth=\"1.4\"\n                  fill=\"none\"\n                  strokeLinecap=\"round\"\n                  strokeLinejoin=\"round\"\n                />\n              </svg>\n            </div>\n          </div>\n\n          <span\n            className=\"absolute bottom-[2.2rem] left-[2.4rem] font-mono text-xs uppercase tracking-[0.18vw] text-gray-400\"\n          >\n            gsap · splittext\n          </span>\n\n          <div\n            className=\"absolute right-[10%] bottom-0 left-[10%] h-px bg-[linear-gradient(to_right,transparent,rgba(255,255,255,0.12),transparent)]\"\n          />\n        </div>\n      </div>\n    </div>\n  );\n}\n"
+    }
+  ]
+}

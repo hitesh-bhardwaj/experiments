@@ -1,0 +1,108 @@
+{
+  "name": "fish-eye",
+  "type": "registry:component",
+  "title": "Fish Eye",
+  "description": "WebGPU fish-eye lens distortion on images using Three.ts TSL node materials with smooth cursor tracking",
+  "dependencies": [
+    "@react-three/fiber",
+    "@react-three/drei",
+    "three"
+  ],
+  "registryDependencies": [],
+  "exportName": "FishEye",
+  "exportKind": "default",
+  "tier": "pro",
+  "version": "1.0.1",
+  "changelog": [
+    {
+      "version": "1.0.1",
+      "date": "2026-07-24",
+      "summary": "Added reduced-motion support and restyled the reduced-motion notice for legibility.",
+      "breaking": false
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-06-04",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "props": [
+    {
+      "name": "bulgeEffect",
+      "type": "number",
+      "default": 1,
+      "description": "Strength of the fish-eye bulge distortion.",
+      "remixer": {
+        "control": "range",
+        "group": "controls",
+        "groupTitle": "Controls",
+        "min": 0,
+        "max": 3,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "duration",
+      "type": "number",
+      "default": 0.125,
+      "description": "Smoothing duration for bulge strength changes.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0,
+        "max": 1,
+        "step": 0.005
+      }
+    },
+    {
+      "name": "smoothness",
+      "type": "number",
+      "default": 0.083,
+      "description": "Cursor-follow smoothing duration.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0,
+        "max": 1,
+        "step": 0.005
+      }
+    },
+    {
+      "name": "mouseInteractive",
+      "type": "boolean",
+      "default": true,
+      "description": "Enables cursor-driven fish-eye distortion.",
+      "remixer": {
+        "control": "checkbox",
+        "group": "controls",
+        "groupTitle": "Controls"
+      }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "controls",
+    "layout": {
+      "buttonClassName": "right-4! top-25!",
+      "panelClassName": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/fish-eye/index.tsx"
+    },
+    {
+      "path": "createSuspendedRaf.ts",
+      "type": "registry:component",
+      "target": "src/components/effects/fish-eye/createSuspendedRaf.ts"
+    }
+  ]
+}

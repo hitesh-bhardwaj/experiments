@@ -1,0 +1,10 @@
+User-agent: *
+
+Disallow: /tag/
+Disallow: /sign-in/
+Disallow: /sign-up/
+Disallow: /auth/
+Disallow: /cli-auth/
+Disallow: /_next/static/
+
+Sitemap: https://vault.hyperiux.com/sitemap.xml

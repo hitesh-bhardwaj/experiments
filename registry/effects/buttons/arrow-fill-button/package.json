@@ -1,0 +1,17 @@
+{
+  "name": "@hyperiux/arrow-fill-button",
+  "version": "1.1.0",
+  "description": "Button with expanding circle fill and animated arrow icon on hover",
+  "main": "index.tsx",
+  "files": [
+    "index.tsx",
+    "registry.json"
+  ],
+  "keywords": [
+    "buttons",
+    "hyperiux"
+  ],
+  "dependencies": {
+    "lucide-react": "*"
+  }
+}

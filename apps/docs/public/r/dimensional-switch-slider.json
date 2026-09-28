@@ -1,0 +1,177 @@
+{
+  "name": "dimensional-switch-slider",
+  "type": "registry:component",
+  "title": "Dimensional Switch Slider",
+  "description": "A 3D card-flip carousel with directional text transitions, configurable horizontal/vertical flip axis, custom easing, and pagination.",
+  "dependencies": [
+    "gsap",
+    "lucide-react"
+  ],
+  "registryDependencies": [],
+  "exportName": "DimensionalSwitchSlider",
+  "exportKind": "default",
+  "tier": "free",
+  "version": "1.1.0",
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "date": "2026-08-20",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "props": [
+    {
+      "name": "infinite",
+      "type": "boolean",
+      "default": true,
+      "description": "Wraps from the last item back to the first (and vice versa) instead of clamping and disabling the prev/next buttons at the ends.",
+      "remixer": {
+        "control": "checkbox",
+        "group": "behavior",
+        "groupTitle": "Behavior"
+      }
+    },
+    {
+      "name": "direction",
+      "type": "string",
+      "default": "horizontal",
+      "description": "Axis the card flips around - horizontal flips on Y with text sliding/tilting left-right, vertical flips on X with text sliding/tilting up-down.",
+      "remixer": {
+        "control": "select",
+        "group": "behavior",
+        "groupTitle": "Behavior",
+        "options": [
+          {
+            "label": "Horizontal",
+            "value": "horizontal"
+          },
+          {
+            "label": "Vertical",
+            "value": "vertical"
+          }
+        ]
+      }
+    },
+    {
+      "name": "autoplay",
+      "type": "boolean",
+      "default": true,
+      "description": "Automatically advances to the next slide on a timer.",
+      "remixer": {
+        "control": "checkbox",
+        "group": "behavior",
+        "groupTitle": "Behavior"
+      }
+    },
+    {
+      "name": "autoplayDelay",
+      "type": "number",
+      "default": 2600,
+      "description": "Time between automatic slide changes in milliseconds.",
+      "remixer": {
+        "control": "range",
+        "group": "behavior",
+        "groupTitle": "Behavior",
+        "min": 1200,
+        "max": 6000,
+        "step": 100
+      }
+    },
+    {
+      "name": "ease",
+      "type": "string",
+      "default": "cubic-bezier(1, -0.001, 0.159, 0.838)",
+      "description": "CSS cubic-bezier(...) string or a plain GSAP ease name - drives the card flip and both text tweens."
+    },
+    {
+      "name": "textColor",
+      "type": "string",
+      "default": "#ffffff",
+      "description": "Color applied to the slide text.",
+      "remixer": {
+        "control": "color",
+        "group": "style",
+        "groupTitle": "Style"
+      }
+    },
+    {
+      "name": "textSize",
+      "type": "number | string",
+      "default": 84,
+      "description": "Font size of the slide text. Numbers are treated as pixels; strings can use any CSS length.",
+      "remixer": {
+        "control": "range",
+        "group": "style",
+        "groupTitle": "Style",
+        "min": 32,
+        "max": 160,
+        "step": 1
+      }
+    },
+    {
+      "name": "cardWidth",
+      "type": "number | string",
+      "default": 680,
+      "description": "Width of the card. Numbers are treated as pixels; strings can use any CSS length.",
+      "remixer": {
+        "control": "range",
+        "group": "style",
+        "groupTitle": "Style",
+        "min": 280,
+        "max": 1000,
+        "step": 10
+      }
+    },
+    {
+      "name": "cardHeight",
+      "type": "number | string",
+      "default": 460,
+      "description": "Height of the card. Numbers are treated as pixels; strings can use any CSS length.",
+      "remixer": {
+        "control": "range",
+        "group": "style",
+        "groupTitle": "Style",
+        "min": 220,
+        "max": 720,
+        "step": 10
+      }
+    },
+    {
+      "name": "cardBorderRadius",
+      "type": "number | string",
+      "default": 16,
+      "description": "Border radius applied to both card faces. Numbers are treated as pixels; strings can use any CSS length.",
+      "remixer": {
+        "control": "range",
+        "group": "style",
+        "groupTitle": "Style",
+        "min": 0,
+        "max": 80,
+        "step": 1
+      }
+    },
+    {
+      "name": "cardClassName",
+      "type": "string",
+      "default": "max-md:w-[85vw]! max-md:h-[75vw]! max-[1024px]:w-[85vw]! max-[1024px]:h-[55vw]!",
+      "description": "Extra classes appended to the card's own wrapper div."
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "behavior",
+    "layout": "panel",
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/dimensional-switch-slider/index.tsx",
+      "content": "// Built using Hyperiux Vault: https://vault.hyperiux.com\n\"use client\";\n\nimport { useCallback, useEffect, useMemo, useRef, useState } from \"react\";\nimport { flushSync } from \"react-dom\";\nimport gsap from \"gsap\";\nimport { CustomEase } from \"gsap/CustomEase\";\nimport { ArrowLeft, ArrowRight } from \"lucide-react\";\nimport Image from \"next/image\";\n\ngsap.registerPlugin(CustomEase);\nconst prefersReducedMotion = () =>\n  typeof window !== \"undefined\" &&\n  window.matchMedia?.(\"(prefers-reduced-motion: reduce)\")?.matches === true;\n\ntype SlideItem = { image: string; text: string };\ntype CSSLength = string | number;\n\nconst R2_BASE = \"https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images\";\n\nconst ITEMS: SlideItem[] = [\n  { image: `${R2_BASE}/h-06.jpg`, text: \"Dimensional Switch\" },\n  { image: `${R2_BASE}/h-18.jpg`, text: \"Hyperiux Vault\" },\n  { image: `${R2_BASE}/h-20.jpg`, text: \"Motion Systems\" },\n  { image: `${R2_BASE}/h-11.jpg`, text: \"Interaction Design\" },\n  { image: `${R2_BASE}/h-15.jpg`, text: \"Source-First\" },\n];\n\nconst DEFAULT_EASE = \"cubic-bezier(1, -0.001, 0.159, 0.838)\";\nconst CUBIC_BEZIER_RE = /^cubic-bezier\\(\\s*([^,]+),\\s*([^,]+),\\s*([^,]+),\\s*([^)]+)\\)$/;\nfunction resolveEase(ease: string): string {\n  const match = ease.match(CUBIC_BEZIER_RE);\n  if (!match) return ease;\n\n  const id = `ease-${match.slice(1, 5).join(\"_\").replace(/[^\\d.-]/g, \"n\")}`;\n  if (!CustomEase.get(id)) {\n    CustomEase.create(id, match.slice(1, 5).join(\",\"));\n  }\n  return id;\n}\n\nfunction toCssLength(value: CSSLength) {\n  return typeof value === \"number\" ? `${value}px` : value;\n}\n\nconst EASE = \"power4.inOut\";\nconst DURATION = 0.9;\nconst TEXT_TRANSLATE_PERCENT = 40;\nconst TEXT_ROTATE_DEG = 45;\nconst OUTGOING_DURATION = DURATION * 0.45;\nconst VERTICAL_TEXT_TRANSLATE_PERCENT = 40;\nconst VERTICAL_TEXT_ROTATE_DEG = 45;\nconst VERTICAL_TEXT_ROTATE_REVERSED = true;\nconst VERTICAL_TEXT_TRANSLATE_REVERSED = true;\nconst VERTICAL_OUTGOING_DURATION = DURATION * 0.45;\nconst TEXT_Z = 60;\n\nexport interface DimensionalSwitchSliderProps {\n  infinite?: boolean;\n  ease?: string;\n  textColor?: string;\n  cardClassName?: string;\n  cardWidth?: CSSLength;\n  cardHeight?: CSSLength;\n  direction?: \"horizontal\" | \"vertical\";\n  textSize?: CSSLength;\n  cardBorderRadius?: CSSLength;\n  autoplay?: boolean;\n  autoplayDelay?: number;\n}\n\nconst DimensionalSwitchSlider = ({\n  infinite = true,\n  ease = DEFAULT_EASE,\n  textColor = \"#ffffff\",\n  cardClassName = \"max-md:w-[85vw]! max-md:h-[75vw]! max-[1024px]:w-[85vw]! max-[1024px]:h-[55vw]!\",\n  cardWidth = 680,\n  cardHeight = 460,\n  direction = \"horizontal\",\n  textSize = 84,\n  cardBorderRadius = 16,\n  autoplay = true,\n  autoplayDelay = 2600,\n}: DimensionalSwitchSliderProps = {}) => {\n  const isVertical = direction === \"vertical\";\n  const flipAxis = isVertical ? \"rotateX\" : \"rotateY\";\n  const flipperRef = useRef<HTMLDivElement>(null);\n  const prevTextRef = useRef<HTMLDivElement>(null);\n  const nextTextRef = useRef<HTMLDivElement>(null);\n  const showingNextRef = useRef(false);\n  const isAnimatingRef = useRef(false);\n  const rotationRef = useRef(0);\n  const resolvedEase = useMemo(() => resolveEase(ease), [ease]);\n  const resolvedCardWidth = toCssLength(cardWidth);\n  const resolvedCardHeight = toCssLength(cardHeight);\n  const resolvedTextSize = toCssLength(textSize);\n  const resolvedCardBorderRadius = toCssLength(cardBorderRadius);\n  const [frontIndex, setFrontIndex] = useState(0);\n  const [backIndex, setBackIndex] = useState(1 % ITEMS.length);\n  const [currentIndex, setCurrentIndex] = useState(0);\n\n  useEffect(() => {\n    gsap.set([prevTextRef.current, nextTextRef.current], { z: TEXT_Z });\n  }, []);\n\n  \n  useEffect(() => {\n    gsap.killTweensOf([flipperRef.current, prevTextRef.current, nextTextRef.current]);\n\n    const wasShowingNext = showingNextRef.current;\n    rotationRef.current = wasShowingNext ? 180 : 0;\n    gsap.set(flipperRef.current, { rotateX: 0, rotateY: 0, [flipAxis]: rotationRef.current });\n\n    const visibleRef = wasShowingNext ? nextTextRef : prevTextRef;\n    const hiddenRef = wasShowingNext ? prevTextRef : nextTextRef;\n    gsap.set(visibleRef.current, { xPercent: 0, yPercent: 0, rotateX: 0, rotateY: 0, opacity: 1 });\n    gsap.set(hiddenRef.current, { xPercent: 0, yPercent: 0, rotateX: 0, rotateY: 0, opacity: 0 });\n\n    isAnimatingRef.current = false;\n  }, [direction, flipAxis]);\n  const flipTo = useCallback((direction: \"prev\" | \"next\", newIndex: number) => {\n    const goingNext = direction === \"next\";\n    if (isAnimatingRef.current) return;\n    const wasShowingNext = showingNextRef.current;\n    flushSync(() => {\n      setCurrentIndex(newIndex);\n      if (wasShowingNext) {\n        setFrontIndex(newIndex);\n      } else {\n        setBackIndex(newIndex);\n      }\n    });\n\n    showingNextRef.current = !wasShowingNext;\n\n    const outgoingRef = wasShowingNext ? nextTextRef : prevTextRef;\n    const incomingRef = wasShowingNext ? prevTextRef : nextTextRef;\n    const flipGoingNext = isVertical ? !goingNext : goingNext;\n    rotationRef.current += flipGoingNext ? 180 : -180;\n    const rotateValue = rotationRef.current;\n    if (prefersReducedMotion()) {\n      gsap.set(flipperRef.current, { [flipAxis]: rotateValue });\n      gsap.set(outgoingRef.current, {\n        xPercent: 0,\n        yPercent: 0,\n        rotateX: 0,\n        rotateY: 0,\n        opacity: 0,\n      });\n      gsap.set(incomingRef.current, {\n        xPercent: 0,\n        yPercent: 0,\n        rotateX: 0,\n        rotateY: 0,\n        opacity: 1,\n      });\n      isAnimatingRef.current = false;\n      return;\n    }\n\n    isAnimatingRef.current = true;\n\n    const tl = gsap.timeline({\n      defaults: { duration: DURATION, ease: EASE },\n      onComplete: () => {\n        isAnimatingRef.current = false;\n      },\n    });\n\n    // Card flip - untouched.\n    tl.to(\n      flipperRef.current,\n      { [flipAxis]: rotateValue, ease: resolvedEase, duration: 0.7 },\n      0,\n    );\n    const textTl = gsap.timeline();\n\n    if (isVertical) {\n      const rotateGoingNext = VERTICAL_TEXT_ROTATE_REVERSED ? !goingNext : goingNext;\n      const translateGoingNext = VERTICAL_TEXT_TRANSLATE_REVERSED ? !goingNext : goingNext;\n\n      const outgoingEndRotate = rotateGoingNext\n        ? VERTICAL_TEXT_ROTATE_DEG\n        : -VERTICAL_TEXT_ROTATE_DEG;\n      const outgoingEndY = translateGoingNext\n        ? -VERTICAL_TEXT_TRANSLATE_PERCENT*2\n        : VERTICAL_TEXT_TRANSLATE_PERCENT*2;\n      const incomingStartRotate = rotateGoingNext\n        ? -VERTICAL_TEXT_ROTATE_DEG\n        : VERTICAL_TEXT_ROTATE_DEG;\n      const incomingStartY = translateGoingNext\n        ? VERTICAL_TEXT_TRANSLATE_PERCENT*2\n        : -VERTICAL_TEXT_TRANSLATE_PERCENT*2;\n\n      textTl.to(\n        outgoingRef.current,\n        {\n          yPercent: outgoingEndY,\n          rotateX: outgoingEndRotate,\n          duration: VERTICAL_OUTGOING_DURATION * 1.5,\n          ease: resolvedEase,\n        },\n        0,\n      );\n      textTl.to(outgoingRef.current, { opacity: 0, delay: -0.3, duration: 0 });\n      textTl.fromTo(\n        incomingRef.current,\n        { yPercent: incomingStartY, rotateX: incomingStartRotate, opacity: 0 },\n        {\n          yPercent: 0,\n          rotateX: 0,\n          opacity: 1,\n          duration: VERTICAL_OUTGOING_DURATION * 1.5,\n          ease: resolvedEase,\n        },\n        0.15,\n      );\n    } else {\n      const outgoingEndRotate = goingNext ? TEXT_ROTATE_DEG : -TEXT_ROTATE_DEG;\n      const outgoingEndX = goingNext\n        ? TEXT_TRANSLATE_PERCENT\n        : -TEXT_TRANSLATE_PERCENT;\n      const incomingStartRotate = goingNext ? -TEXT_ROTATE_DEG : TEXT_ROTATE_DEG;\n      const incomingStartX = goingNext\n        ? -TEXT_TRANSLATE_PERCENT\n        : TEXT_TRANSLATE_PERCENT;\n\n      textTl.to(\n        outgoingRef.current,\n        {\n          xPercent: outgoingEndX,\n          rotateY: outgoingEndRotate,\n          duration: OUTGOING_DURATION * 1.5,\n          ease: resolvedEase,\n        },\n        0,\n      );\n      textTl.to(outgoingRef.current, { opacity: 0, delay: -0.3, duration: 0 });\n      textTl.fromTo(\n        incomingRef.current,\n        { xPercent: incomingStartX, rotateY: incomingStartRotate, opacity: 0 },\n        {\n          xPercent: 0,\n          rotateY: 0,\n          opacity: 1,\n          duration: OUTGOING_DURATION * 1.5,\n          ease: resolvedEase,\n        },\n        0.15,\n      );\n    }\n\n    tl.add(textTl, 0);\n  }, [flipAxis, isVertical, resolvedEase]);\n  const switchTo = useCallback((direction: \"prev\" | \"next\") => {\n    const goingNext = direction === \"next\";\n    const wasShowingNext = showingNextRef.current;\n    const currentVisibleIndex = wasShowingNext ? backIndex : frontIndex;\n    const rawIndex = currentVisibleIndex + (goingNext ? 1 : -1);\n    const newIndex = infinite\n      ? ((rawIndex % ITEMS.length) + ITEMS.length) % ITEMS.length\n      : rawIndex;\n\n    if (!infinite && (newIndex < 0 || newIndex >= ITEMS.length)) return;\n\n    flipTo(direction, newIndex);\n  }, [backIndex, flipTo, frontIndex, infinite]);\n\n  useEffect(() => {\n    if (!autoplay || autoplayDelay <= 0 || prefersReducedMotion()) return;\n\n    const intervalId = window.setInterval(() => {\n      switchTo(\"next\");\n    }, autoplayDelay);\n\n    return () => window.clearInterval(intervalId);\n  }, [autoplay, autoplayDelay, switchTo]);\n  const goToIndex = useCallback((targetIndex: number) => {\n    if (targetIndex === currentIndex) return;\n\n    let direction: \"prev\" | \"next\";\n    if (infinite) {\n      const forwardDistance =\n        ((targetIndex - currentIndex) % ITEMS.length + ITEMS.length) %\n        ITEMS.length;\n      direction = forwardDistance <= ITEMS.length - forwardDistance ? \"next\" : \"prev\";\n    } else {\n      direction = targetIndex > currentIndex ? \"next\" : \"prev\";\n    }\n\n    flipTo(direction, targetIndex);\n  }, [currentIndex, flipTo, infinite]);\n\n  return (\n    <>\n      <div\n        className=\"flex flex-col items-center justify-center w-full h-full gap-4\"\n      >\n        <div\n          className={`dimensional-card relative ${cardClassName}`}\n          style={{ perspective: \"1000px\", width: resolvedCardWidth, height: resolvedCardHeight }}\n        >\n          <div ref={flipperRef} className=\"relative h-full w-full transform-3d\">\n            {/* Front face */}\n            <div\n              className=\"absolute inset-0 h-full w-full overflow-hidden backface-hidden prev-card-face\"\n              style={{ borderRadius: resolvedCardBorderRadius }}\n            >\n              <Image\n                src={ITEMS[frontIndex].image}\n                className=\"w-full h-full object-cover\"\n                alt={ITEMS[frontIndex].text}\n                width={300}\n                height={250}\n              />\n            </div>\n            <div\n              className={`absolute inset-0 h-full w-full overflow-hidden backface-hidden next-card-face ${\n                isVertical ? \"rotate-x-180\" : \"rotate-y-180\"\n              }`}\n              style={{ borderRadius: resolvedCardBorderRadius }}\n            >\n              <Image\n                src={ITEMS[backIndex].image}\n                className=\"w-full h-full object-cover\"\n                alt={ITEMS[backIndex].text}\n                width={300}\n                height={250}\n              />\n            </div>\n          </div>\n        </div>\n        <div\n          className=\"absolute inset-0 z-10 flex items-center justify-center w-[60%] h-[25vw] max-md:w-[90%] max-md:h-[100vw] max-[1024px]:w-[90%] max-[1024px]:h-[60vw]  top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 max-md:text-[10vw]! max-[1024px]:text-[8vw]! \"\n          style={{ perspective: \"1000px\", fontSize: resolvedTextSize }}\n        >\n          <div\n            ref={prevTextRef}\n            className=\"absolute w-fit text-center font-semibold prev-text\"\n            style={{ color: textColor }}\n          >\n            {ITEMS[frontIndex].text}\n          </div>\n          <div\n            ref={nextTextRef}\n            className=\"absolute w-fit text-center font-semibold next-text  opacity-0\"\n            style={{ color: textColor }}\n          >\n            {ITEMS[backIndex].text}\n          </div>\n        </div>\n\n        <div className=\"flex gap-4 z-10  absolute bottom-8 max-md:bottom-40 max-[1024px]:bottom-32\">\n          <button\n            type=\"button\"\n            onClick={() => switchTo(\"prev\")}\n            aria-label=\"Previous\"\n            disabled={!infinite && currentIndex === 0}\n            className=\"flex h-12 w-12 max-[1024px]:h-20 max-[1024px]:w-20 max-md:h-16 max-md:w-16 items-center justify-center rounded-full border border-white/20 bg-transparent text-white backdrop-blur-[10px] transition-colors duration-300 ease-in-out hover:bg-[#ff5f00] disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent\"\n          >\n            <ArrowLeft />\n          </button>\n          <button\n            type=\"button\"\n            onClick={() => switchTo(\"next\")}\n            aria-label=\"Next\"\n            disabled={!infinite && currentIndex === ITEMS.length - 1}\n            className=\"flex h-12 w-12 max-[1024px]:h-20 max-[1024px]:w-20 max-md:h-16 max-md:w-16 items-center justify-center rounded-full border border-white/20 bg-transparent text-white backdrop-blur-[10px] transition-colors duration-300 ease-in-out hover:bg-[#ff5f00] disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent\"\n          >\n            <ArrowRight />\n          </button>\n        </div>\n\n        <div className=\"flex gap-2 z-10 absolute bottom-30 max-[1024px]:bottom-64\">\n          {ITEMS.map((item, idx) => (\n            <button\n              key={item.text}\n              type=\"button\"\n              onClick={() => goToIndex(idx)}\n              aria-label={`Go to ${item.text}`}\n              aria-current={idx === currentIndex}\n              className={`h-2 max-[1024px]:h-4 max-md:h-3 rounded-full transition-all duration-300 ease-in-out ${\n                idx === currentIndex\n                  ? \"w-6 max-[1024px]:w-8  bg-[#ff5f00]\"\n                  : \"w-2 max-[1024px]:w-4 max-md:w-3 bg-white/30 hover:bg-white/50\"\n              }`}\n            />\n          ))}\n        </div>\n      </div>\n    </>\n  );\n};\n\nexport default DimensionalSwitchSlider;\n"
+    }
+  ]
+}

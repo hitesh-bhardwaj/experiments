@@ -1,0 +1,330 @@
+{
+  "name": "displacement-navbar",
+  "type": "registry:component",
+  "title": "Displacement Navbar",
+  "description": "A navbar shelf revealed by displacing the page beneath it, not overlaying it - GSAP-driven with a full reduced-motion fallback.",
+  "dependencies": [
+    "gsap"
+  ],
+  "registryDependencies": [],
+  "exportName": "DisplacementNavbar",
+  "exportKind": "default",
+  "tier": "pro",
+  "version": "1.0.0",
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "date": "2026-09-14",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "props": [
+    {
+      "name": "openDuration",
+      "type": "number",
+      "default": 0.65,
+      "description": "Page displacement and bar/mark open duration, in seconds.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0.2,
+        "max": 1.5,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "closeDuration",
+      "type": "number",
+      "default": 0.65,
+      "description": "Page displacement and bar/mark close duration, in seconds. Matches openDuration by default so the close mirrors the open.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0.2,
+        "max": 1.5,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "contentStagger",
+      "type": "number",
+      "default": 0.055,
+      "description": "Delay between each shelf content item fading in on open, and out again on close in reverse order.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0,
+        "max": 0.2,
+        "step": 0.005
+      }
+    },
+    {
+      "name": "imageSwapDuration",
+      "type": "number",
+      "default": 0.5,
+      "description": "Duration of the figure image cross-swap on link hover, in seconds.",
+      "remixer": {
+        "control": "range",
+        "group": "media",
+        "groupTitle": "Media",
+        "min": 0.15,
+        "max": 1.2,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "showMedia",
+      "type": "boolean",
+      "default": true,
+      "description": "Shows the figure image panel next to the primary links.",
+      "remixer": {
+        "control": "toggle",
+        "group": "media",
+        "groupTitle": "Media"
+      }
+    },
+    {
+      "name": "shelfBackground",
+      "type": "string",
+      "default": "#151515",
+      "description": "Shelf and header background color.",
+      "remixer": {
+        "control": "color",
+        "group": "style",
+        "groupTitle": "Style"
+      }
+    },
+    {
+      "name": "pageBackground",
+      "type": "string",
+      "default": "linear-gradient(160deg,#0D47A1 0%,#E3F2FD 100%)",
+      "description": "Displaced page background - any CSS background value, so a gradient works as well as a flat color.",
+      "remixer": {
+        "control": "text",
+        "group": "style",
+        "groupTitle": "Style"
+      }
+    },
+    {
+      "name": "linkColor",
+      "type": "string",
+      "default": "#f4f3f1",
+      "description": "Primary and info link text color.",
+      "remixer": {
+        "control": "color",
+        "group": "style",
+        "groupTitle": "Style"
+      }
+    },
+    {
+      "name": "mutedColor",
+      "type": "string",
+      "default": "rgba(244,243,241,0.38)",
+      "description": "Index numerals, captions, and dimmed-state color.",
+      "remixer": {
+        "control": "color",
+        "group": "style",
+        "groupTitle": "Style"
+      }
+    },
+    {
+      "name": "hairlineColor",
+      "type": "string",
+      "default": "rgba(244,243,241,0.14)",
+      "description": "Bar seam and footer divider color.",
+      "remixer": {
+        "control": "color",
+        "group": "style",
+        "groupTitle": "Style"
+      }
+    },
+    {
+      "name": "charStagger",
+      "type": "number",
+      "default": 0.01,
+      "description": "Per-character reveal delay on link hover, in seconds.",
+      "remixer": {
+        "control": "range",
+        "group": "links",
+        "groupTitle": "Links",
+        "min": 0,
+        "max": 0.06,
+        "step": 0.005
+      }
+    },
+    {
+      "name": "showLinkUnderline",
+      "type": "boolean",
+      "default": true,
+      "description": "Shows the underline draw-in under hovered links.",
+      "remixer": {
+        "control": "toggle",
+        "group": "links",
+        "groupTitle": "Links"
+      }
+    },
+    {
+      "name": "dimInactiveLinks",
+      "type": "boolean",
+      "default": true,
+      "description": "Dims sibling primary links while one is hovered.",
+      "remixer": {
+        "control": "toggle",
+        "group": "links",
+        "groupTitle": "Links"
+      }
+    },
+    {
+      "name": "primaryLinks",
+      "type": "array",
+      "default": [
+        {
+          "label": "Components"
+        },
+        {
+          "label": "Templates"
+        },
+        {
+          "label": "Showcase"
+        },
+        {
+          "label": "Docs"
+        }
+      ],
+      "description": "Numbered primary navigation links shown in the shelf.",
+      "remixer": {
+        "enabled": false,
+        "control": "json",
+        "group": "content",
+        "groupTitle": "Content"
+      }
+    },
+    {
+      "name": "infoLinks",
+      "type": "array",
+      "default": [
+        {
+          "label": "About"
+        },
+        {
+          "label": "Pricing"
+        },
+        {
+          "label": "Changelog"
+        },
+        {
+          "label": "Contact"
+        }
+      ],
+      "description": "Secondary info links shown in the shelf.",
+      "remixer": {
+        "enabled": false,
+        "control": "json",
+        "group": "content",
+        "groupTitle": "Content"
+      }
+    },
+    {
+      "name": "socials",
+      "type": "array",
+      "default": [
+        {
+          "label": "X"
+        },
+        {
+          "label": "GitHub"
+        },
+        {
+          "label": "Discord"
+        }
+      ],
+      "description": "Social links shown in the shelf footer.",
+      "remixer": {
+        "enabled": false,
+        "control": "json",
+        "group": "content",
+        "groupTitle": "Content"
+      }
+    },
+    {
+      "name": "media",
+      "type": "array",
+      "default": [
+        {
+          "src": "https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/gsap-flip-card/img01.png",
+          "caption": "Drop-in motion primitives"
+        },
+        {
+          "src": "https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/gsap-flip-card/img02.png",
+          "caption": "Full pages, wired and ready"
+        },
+        {
+          "src": "https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/gsap-flip-card/img03.png",
+          "caption": "Built with Hyperiux in the wild"
+        },
+        {
+          "src": "https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/gsap-flip-card/img04.png",
+          "caption": "Guides, props and recipes"
+        }
+      ],
+      "description": "Images and captions shown in the figure panel, matched to primary links.",
+      "remixer": {
+        "enabled": false,
+        "control": "json",
+        "group": "content",
+        "groupTitle": "Content"
+      }
+    },
+    {
+      "name": "brand",
+      "type": "string",
+      "default": "Hyperiux",
+      "description": "Brand label shown in the header.",
+      "remixer": {
+        "enabled": false,
+        "group": "content",
+        "groupTitle": "Content"
+      }
+    },
+    {
+      "name": "email",
+      "type": "string",
+      "default": "hello@hyperiux.com",
+      "description": "Contact email shown in the shelf footer.",
+      "remixer": {
+        "enabled": false,
+        "group": "content",
+        "groupTitle": "Content"
+      }
+    },
+    {
+      "name": "cities",
+      "type": "string",
+      "default": "Remote / Worldwide",
+      "description": "Location label shown in the shelf footer.",
+      "remixer": {
+        "enabled": false,
+        "group": "content",
+        "groupTitle": "Content"
+      }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "motion",
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/displacement-navbar/index.tsx"
+    }
+  ]
+}

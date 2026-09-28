@@ -1,0 +1,177 @@
+{
+  "name": "dotted-trail",
+  "version": "1.0.0",
+  "type": "registry:component",
+  "title": "Dotted Trail",
+  "description": "Interactive dotted grid with a soft two-color cursor trail and editable intro copy",
+  "category": "backgrounds",
+  "dependencies": [],
+  "registryDependencies": [],
+  "previewUrl": "/demo/dotted-trail",
+  "tier": "pro",
+  "main": "index.tsx",
+  "exportName": "DottedTrail",
+  "exportKind": "default",
+  "importPath": "@/components/effects/dotted-trail",
+  "target": "src/components/effects/dotted-trail",
+  "props": [
+    {
+      "name": "heading",
+      "type": "string",
+      "default": "Trace the invisible",
+      "description": "Large heading displayed over the dotted canvas.",
+      "remixer": {
+        "control": "text",
+        "group": "content",
+        "groupTitle": "Content"
+      }
+    },
+    {
+      "name": "clue",
+      "type": "string",
+      "default": "Move your cursor through the field.",
+      "description": "Short instruction shown below the heading.",
+      "remixer": {
+        "control": "text",
+        "group": "content",
+        "groupTitle": "Content"
+      }
+    },
+    {
+      "name": "trailColorA",
+      "type": "color",
+      "default": "#ff4fd8",
+      "description": "Start color for the cursor trail.",
+      "remixer": {
+        "control": "color",
+        "group": "trail",
+        "groupTitle": "Trail"
+      }
+    },
+    {
+      "name": "trailColorB",
+      "type": "color",
+      "default": "#8b5cf6",
+      "description": "End color for the cursor trail.",
+      "remixer": {
+        "control": "color",
+        "group": "trail",
+        "groupTitle": "Trail"
+      }
+    },
+    {
+      "name": "trailWidth",
+      "type": "number",
+      "default": 140,
+      "description": "Maximum blurred trail stroke width.",
+      "remixer": {
+        "control": "range",
+        "group": "trail",
+        "groupTitle": "Trail",
+        "min": 40,
+        "max": 240,
+        "step": 5
+      }
+    },
+    {
+      "name": "trailBlur",
+      "type": "number",
+      "default": 70,
+      "description": "Blur radius applied to the cursor trail.",
+      "remixer": {
+        "control": "range",
+        "group": "trail",
+        "groupTitle": "Trail",
+        "min": 0,
+        "max": 140,
+        "step": 5
+      }
+    },
+      {
+        "name": "dotColor",
+        "type": "color",
+        "default": "#64646e",
+      "description": "Idle dot color.",
+      "remixer": {
+        "control": "color",
+        "group": "grid",
+        "groupTitle": "Grid"
+      }
+    },
+      {
+        "name": "activeDotColor",
+        "type": "color",
+        "default": "#ffffff",
+      "description": "Dot color inside the active cursor radius.",
+      "remixer": {
+        "control": "color",
+        "group": "grid",
+        "groupTitle": "Grid"
+      }
+    },
+    {
+      "name": "dotSpacing",
+      "type": "number",
+      "default": 40,
+      "description": "Distance between dots in the grid.",
+      "remixer": {
+        "control": "range",
+        "group": "grid",
+        "groupTitle": "Grid",
+        "min": 24,
+        "max": 80,
+        "step": 2
+      }
+    },
+    {
+      "name": "interactionRadius",
+      "type": "number",
+      "default": 200,
+      "description": "Cursor radius that activates nearby dots.",
+      "remixer": {
+        "control": "range",
+        "group": "grid",
+        "groupTitle": "Grid",
+        "min": 80,
+        "max": 360,
+        "step": 10
+      }
+    },
+    {
+      "name": "backgroundColor",
+      "type": "color",
+      "default": "#ffffff",
+      "description": "Canvas background color.",
+      "remixer": {
+        "control": "color",
+        "group": "style",
+        "groupTitle": "Style"
+      }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "trail",
+    "layout": {
+      "buttonClassName": "right-4! top-25!",
+      "panelClassName": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "target": "src/components/effects/dotted-trail/index.tsx"
+    }
+  ],
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "date": "2026-08-21",
+      "summary": "Initial registry release with editable heading, clue, pink/purple trail colors, and remixer controls.",
+      "breaking": false
+    }
+  ]
+}

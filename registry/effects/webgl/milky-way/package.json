@@ -1,0 +1,26 @@
+{
+  "name": "@hyperiux/milky-way",
+  "version": "1.0.1",
+  "description": "GPU-accelerated GPGPU particle galaxy with spiral arms, curl-noise nebula smoke, twinkling sparkle stars, background starfield, and post-processing vignette + edge blur.",
+  "main": "index.tsx",
+  "files": [
+    "index.tsx",
+    "circular-text.tsx",
+    "edge-blur-effect.tsx",
+    "createSuspendedRaf.ts",
+    "registry.json"
+  ],
+  "keywords": [
+    "webgl",
+    "hyperiux"
+  ],
+  "dependencies": {
+    "@react-three/fiber": "*",
+    "@react-three/drei": "*",
+    "@react-three/postprocessing": "*",
+    "postprocessing": "*",
+    "three": "*",
+    "lucide-react": "*",
+    "gsap": "*"
+  }
+}

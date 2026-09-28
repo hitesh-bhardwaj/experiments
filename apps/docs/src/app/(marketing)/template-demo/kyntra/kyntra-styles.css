@@ -1,0 +1,314 @@
+/* Built using Hyperiux Vault: https://vault.hyperiux.com */
+
+
+@font-face {
+  font-family: "Kyntra Helvetica Neue";
+  src: url("./assets/fonts/helvetica-neue-woff2/HelveticaNeueLight.woff2") format("woff2");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Kyntra Helvetica Neue";
+  src: url("./assets/fonts/helvetica-neue-woff2/HelveticaNeueRoman.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Kyntra Helvetica Neue";
+  src: url("./assets/fonts/helvetica-neue-woff2/HelveticaNeueMedium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Kyntra Helvetica Neue";
+  src: url("./assets/fonts/helvetica-neue-woff2/HelveticaNeueBold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Aeonik Pro - default body typeface for the whole Kyntra template */
+
+@font-face {
+  font-family: "Kyntra Aeonik Pro";
+  src: url("./assets/fonts/aeonik-pro-woff2/AeonikPro-Light.woff2") format("woff2");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Kyntra Aeonik Pro";
+  src: url("./assets/fonts/aeonik-pro-woff2/AeonikPro-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Kyntra Aeonik Pro";
+  src: url("./assets/fonts/aeonik-pro-woff2/AeonikPro-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+.kyntra-page {
+  --font-helvetica-neue: "Kyntra Helvetica Neue", Arial, Helvetica, sans-serif;
+  --font-aeonik-pro: "Kyntra Aeonik Pro", Arial, Helvetica, sans-serif;
+
+  /* Kyntra brand primary */
+  --kyntra-primary: #134bd6;
+}
+
+/* Every element inside the Kyntra template defaults to Aeonik Pro.
+   Opt into the heading typeface per-element with .font-helvetica-neue. */
+.kyntra-page,
+.kyntra-page * {
+  font-family: var(--font-aeonik-pro);
+}
+
+.kyntra-page .font-helvetica-neue,
+.kyntra-page .font-helvetica-neue * {
+  font-family: var(--font-helvetica-neue);
+}
+
+.kyntra-page .font-aeonik-pro {
+  font-family: var(--font-aeonik-pro);
+}
+
+/* Brand primary colour utilities, scoped to the Kyntra template. */
+.kyntra-page .bg-kyntra-primary {
+  background-color: var(--kyntra-primary);
+}
+
+.kyntra-page .text-kyntra-primary {
+  color: var(--kyntra-primary);
+}
+
+.kyntra-page .fill-kyntra-primary {
+  fill: var(--kyntra-primary);
+}
+
+.kyntra-page .border-kyntra-primary {
+  border-color: var(--kyntra-primary);
+}
+
+.kyntra-page [data-open].bg-kyntra-primary {
+  background-color: #ffffff;
+}
+
+.kyntra-page [data-open].text-white {
+  color: var(--kyntra-primary);
+}
+
+/* Headings: Helvetica Neue, tight. h1 sizing/line-height defined here so
+   every Kyntra section shares one display scale. */
+.kyntra-page h1,
+.kyntra-page h2,
+.kyntra-page h3 {
+  font-family: var(--font-helvetica-neue);
+}
+
+.kyntra-page h1 {
+  font-size: 4.8vw;
+  line-height: 1.2;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+}
+
+.kyntra-page h2 {
+  font-size: 3.8vw;
+}
+
+.kyntra-page .text-18 {
+  font-size: 0.9vw;
+}
+
+.kyntra-page .text-22 {
+  font-size: 1.15vw;
+}
+
+.kyntra-page .text-28 {
+  font-size: 1.45vw;
+}
+
+.kyntra-page .text-30 {
+  font-size: 1.55vw;
+}
+
+.kyntra-page .text-20 {
+  font-size: 1vw;
+}
+
+.kyntra-page .text-24 {
+  font-size: 1.25vw;
+}
+
+.kyntra-page .text-44 {
+  font-size: 2.4vw;
+}
+
+/* Section wrapper: consistent block/inline padding across Kyntra sections. */
+.kyntra-page .kyntra-container {
+  padding-block: 7%;
+  padding-inline: 5%;
+}
+
+.focus-word {
+  white-space: nowrap;
+}
+
+/* Text selection: brand primary behind white text, scoped to this template. */
+.kyntra-page ::selection {
+  background-color: var(--kyntra-primary);
+  color: #ffffff;
+}
+
+.kyntra-page ::-moz-selection {
+  background-color: var(--kyntra-primary);
+  color: #ffffff;
+}
+
+/* Scrollbar in the brand primary. The page scrollbar belongs to the document
+   root, which sits above `.kyntra-page`, so it is reached with `:has()` -
+   keeping the styling to pages that actually render this template rather than
+   leaking to the rest of the app. The colour is repeated as a literal because
+   `--kyntra-primary` is declared on `.kyntra-page`, further down the tree. */
+html:has(.kyntra-page),
+html:has(.kyntra-page) body {
+  scrollbar-color: #134bd6 transparent;
+  scrollbar-width: thin;
+}
+
+html:has(.kyntra-page) ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+html:has(.kyntra-page) ::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+html:has(.kyntra-page) ::-webkit-scrollbar-thumb {
+  background-color: #134bd6;
+  border-radius: 9999px;
+}
+
+html:has(.kyntra-page) ::-webkit-scrollbar-thumb:hover {
+  background-color: #0f3cad;
+}
+
+
+/* ==========================================================================
+   Tablet - everything below 1025px.
+   ========================================================================== */
+@media (max-width: 1025px) {
+  .kyntra-page h1 {
+    font-size: 8vw;
+  }
+
+
+  .kyntra-page h2 {
+  font-size: 6.5vw;
+}
+
+  /* The hero heading breaks to three lines here, so it needs a smaller display
+     size than the shared heading scale to keep "Manage Your" on one line. */
+  .kyntra-page .kyntra-hero h1 {
+    font-size: 7vw;
+    line-height: 1.1;
+  }
+
+  /* Shared text scale. The desktop sizes are vw-based off a wide viewport, so
+     they collapse to unreadable at narrow widths - these re-anchor each step. */
+  .kyntra-page .text-18 {
+    font-size: 1.7vw;
+  }
+
+  .kyntra-page .text-20 {
+    font-size: 1.9vw;
+  }
+
+  .kyntra-page .text-22 {
+    font-size: 2.1vw;
+  }
+
+  .kyntra-page .text-24 {
+    font-size: 2.3vw;
+  }
+
+  .kyntra-page .text-28 {
+    font-size: 2.7vw;
+  }
+
+  .kyntra-page .text-30 {
+    font-size: 2.9vw;
+  }
+
+  .kyntra-page .text-44 {
+    font-size: 4.2vw;
+  }
+
+  .kyntra-page .kyntra-container {
+    padding-inline: 6%;
+  }
+}
+
+
+@media (max-width: 768px) {
+  .kyntra-page h1 {
+    font-size: 20vw;
+  }
+
+  .kyntra-page h2 {
+  font-size: 9.5vw;
+}
+
+  .kyntra-page .kyntra-container {
+  padding-block: 15%;
+  padding-inline: 7%;
+}
+
+  .kyntra-page .kyntra-hero h1 {
+    font-size: 12vw;
+  }
+
+  .kyntra-page .text-18 {
+    font-size: 4.2vw;
+  }
+
+  .kyntra-page .text-20 {
+    font-size: 3.4vw;
+  }
+
+  .kyntra-page .text-22 {
+    font-size: 4.2vw;
+  }
+
+  .kyntra-page .text-24 {
+    font-size: 4.2vw;
+  }
+
+  .kyntra-page .text-28 {
+    font-size: 5vw;
+  }
+
+  .kyntra-page .text-30 {
+    font-size: 5vw;
+  }
+
+  .kyntra-page .text-44 {
+    font-size: 7vw;
+  }
+
+  .kyntra-page .kyntra-container {
+    padding-inline: 7%;
+  }
+}

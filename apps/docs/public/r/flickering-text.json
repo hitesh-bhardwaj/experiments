@@ -1,0 +1,213 @@
+{
+  "name": "flickering-text",
+  "type": "registry:component",
+  "title": "Flickering Text",
+  "description": "Deterministic per-character text flicker with adjustable correlation and optional glow bloom.",
+  "dependencies": [
+    "gsap",
+    "@gsap/react"
+  ],
+  "registryDependencies": [],
+  "exportName": "FlickeringText",
+  "exportKind": "default",
+  "tier": "free",
+  "version": "1.0.0",
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "date": "2026-08-18",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "props": [
+    {
+      "name": "backgroundColor",
+      "type": "string",
+      "default": "#111844",
+      "description": "Background color behind the text.",
+      "remixer": {
+        "control": "color",
+        "enabled": false,
+        "group": "colors"
+      }
+    },
+    {
+      "name": "textColor",
+      "type": "string",
+      "default": "#ffffff",
+      "description": "Text color.",
+      "remixer": {
+        "control": "color",
+        "group": "colors",
+        "groupTitle": "Colors"
+      }
+    },
+    {
+      "name": "glowColor",
+      "type": "string",
+      "default": "#ffffff",
+      "description": "Glow color when bloom is enabled.",
+      "remixer": {
+        "control": "color",
+        "group": "colors",
+        "groupTitle": "Colors"
+      }
+    },
+    {
+      "name": "wigglesPerSecond",
+      "type": "number",
+      "default": 2,
+      "description": "Noise samples per second that drive the flicker.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0.2,
+        "max": 8,
+        "step": 0.1
+      }
+    },
+    {
+      "name": "correlation",
+      "type": "number",
+      "default": 0.5,
+      "description": "How much each character follows the shared flicker lane.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0,
+        "max": 1,
+        "step": 0.01
+      }
+    },
+    {
+      "name": "minOpacity",
+      "type": "number",
+      "default": 0,
+      "description": "Lowest opacity characters can dip to.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0,
+        "max": 1,
+        "step": 0.01
+      }
+    },
+    {
+      "name": "minAmount",
+      "type": "number",
+      "default": -1,
+      "description": "Lower bound of the flicker selector.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": -1,
+        "max": 1,
+        "step": 0.01
+      }
+    },
+    {
+      "name": "maxAmount",
+      "type": "number",
+      "default": 1,
+      "description": "Upper bound of the flicker selector.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": -1,
+        "max": 1,
+        "step": 0.01
+      }
+    },
+    {
+      "name": "glowIntensity",
+      "type": "number",
+      "default": 1,
+      "description": "Glow strength when bloom is enabled.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0,
+        "max": 2,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "glowRadius",
+      "type": "number",
+      "default": 1,
+      "description": "Glow spread multiplier.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0.25,
+        "max": 3,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "fontSize",
+      "type": "number | string",
+      "default": "12vw",
+      "description": "Font size for the text.",
+      "remixer": {
+        "control": "text",
+        "enabled": false,
+        "group": "type",
+        "groupTitle": "Type"
+      }
+    },
+    {
+      "name": "fontWeight",
+      "type": "number | string",
+      "default": 600,
+      "description": "Font weight for the text.",
+      "remixer": {
+        "control": "range",
+        "enabled": false,
+        "group": "type",
+        "groupTitle": "Type",
+        "min": 100,
+        "max": 900,
+        "step": 100
+      }
+    },
+    {
+      "name": "glow",
+      "type": "boolean",
+      "default": true,
+      "description": "Turns the extra glow effect on or off.",
+      "remixer": {
+        "control": "checkbox",
+        "group": "motion",
+        "groupTitle": "Motion"
+      }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "motion",
+    "layout": {
+      "buttonClassName": "right-4! top-25!",
+      "panelClassName": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/flickering-text/index.tsx",
+      "content": "// Built using Hyperiux Vault: https://vault.hyperiux.com\n\n\"use client\";\n\nimport { useRef } from \"react\";\nimport gsap from \"gsap\";\nimport { useGSAP } from \"@gsap/react\";\nimport { SplitText } from \"gsap/SplitText\";\n\ngsap.registerPlugin(useGSAP, SplitText);\n\n// The shared noise lane every character blends toward. Character lanes start\n// at 1 so lane 0 is always the common stream.\nconst SHARED_LANE = 0;\n\n// Hash constants for the deterministic value noise. Odd primes, nothing more.\nconst HASH_LANE = 374761393;\nconst HASH_STEP = 668265263;\nconst HASH_SEED = 2246822519;\nconst HASH_MIX = 1274126177;\nconst UINT32_MAX = 4294967295;\n\nconst LINE_HEIGHT = 0.82;\n\n// Bloom stack, tightest to widest. Radii are in em so the halo tracks the\n// font size, and the alphas stack up into a soft falloff instead of a ring.\nconst GLOW_LAYERS = [\n  { radius: 0.08, alpha: 0.55 },\n  { radius: 0.22, alpha: 0.35 },\n  { radius: 0.5, alpha: 0.22 },\n];\n\nconst DEFAULT_LINES = [\"FLICKERING\", \"TEXT\"];\nconst DEFAULT_RANDOM_SEED = 0;\nconst DEFAULT_GLOW_THRESHOLD = 0.6;\n\n\ninterface FlickeringTextProps {\n  className?: string;\n  backgroundColor?: string;\n  textColor?: string;\n  /** Noise samples per second, the After Effects \"Wiggles/Second\". */\n  wigglesPerSecond?: number;\n  /** 0 = every character flickers alone, 1 = the whole line flickers as one. */\n  correlation?: number;\n  /** Opacity a character falls to when the selector is fully applied. */\n  minOpacity?: number;\n  /** Lower bound of the selector amount. Negative values park characters at\n   *  full opacity for part of the cycle, which is what keeps the line legible. */\n  minAmount?: number;\n  maxAmount?: number;\n  fontSize?: number | string;\n  fontWeight?: number | string;\n  glow?: boolean;\n  /** Bloom color. Defaults to the text color. */\n  glowColor?: string;\n  /** Overall bloom strength. 0 turns the glow off. */\n  glowIntensity?: number;\n  /** Multiplier on the bloom radii. */\n  glowRadius?: number;\n}\n\n/** Deterministic value in [-1, 1] for a lane at a discrete wiggle step. */\nconst randomAt = (lane: number, step: number, seed: number) => {\n  let hash =\n    (Math.imul(lane, HASH_LANE) ^\n      Math.imul(step, HASH_STEP) ^\n      Math.imul(seed, HASH_SEED)) >>>\n    0;\n  hash = Math.imul(hash ^ (hash >>> 13), HASH_MIX) >>> 0;\n  return (hash / UINT32_MAX) * 2 - 1;\n};\n\n/** Layered text-shadow for a bloom at the given strength, 0 to 1. */\nconst glowShadow = (strength: number, color: string, radius: number) => {\n  if (strength <= 0) return \"none\";\n\n  return GLOW_LAYERS.map(({ radius: layerRadius, alpha }) => {\n    const mix = (alpha * strength * 100).toFixed(1);\n    return `0 0 ${(layerRadius * radius).toFixed(3)}em color-mix(in srgb, ${color} ${mix}%, transparent)`;\n  }).join(\", \");\n};\n\n/** Smoothstep-interpolated value noise: the wiggle between two samples. */\nconst noiseAt = (lane: number, time: number, seed: number) => {\n  const step = Math.floor(time);\n  const t = time - step;\n  const ease = t * t * (3 - 2 * t);\n  const from = randomAt(lane, step, seed);\n  const to = randomAt(lane, step + 1, seed);\n  return from + (to - from) * ease;\n};\n\nconst FlickeringText = ({\n  className = \"\",\n  backgroundColor = \"#111844\",\n  textColor = \"#ffffff\",\n  wigglesPerSecond = 2,\n  correlation = 0.5,\n  minOpacity = 0,\n  minAmount = -1,\n  maxAmount = 1,\n  fontSize = \"10vw\",\n  fontWeight = 700,\n  glow = true,\n  glowColor,\n  glowIntensity = 1,\n  glowRadius = 1,\n}: FlickeringTextProps) => {\n  const bloomColor = glowColor ?? textColor;\n  const containerRef = useRef<HTMLDivElement>(null);\n  const charRefs = useRef<HTMLSpanElement[]>([]);\n  const lineRefs = useRef<(HTMLParagraphElement | null)[]>([]);\n  const lines = DEFAULT_LINES;\n\n  useGSAP(\n    () => {\n      const splits = lineRefs.current\n        .filter((line): line is HTMLParagraphElement => Boolean(line))\n        .map((line) =>\n          SplitText.create(line, {\n            type: \"chars\",\n            charsClass: \"flickering-text-char\",\n            aria: \"none\",\n          }),\n        );\n\n      const chars = splits.flatMap((split) => split.chars as HTMLSpanElement[]);\n      charRefs.current = chars;\n\n      if (!chars.length) return;\n\n      const prefersReduced = window.matchMedia?.(\n        \"(prefers-reduced-motion: reduce)\",\n      ).matches;\n\n      if (prefersReduced) {\n        chars.forEach((char) => {\n          char.style.opacity = \"1\";\n          char.style.textShadow = \"none\";\n        });\n        return () => {\n          splits.forEach((split) => split.revert());\n          charRefs.current = [];\n        };\n      }\n\n      const startTime = gsap.ticker.time;\n\n    \n      const blendNorm = Math.hypot(1 - correlation, correlation);\n\n      const glowRamp = Math.max(1 - DEFAULT_GLOW_THRESHOLD, 0.001);\n\n      const onTick = () => {\n        const time = (gsap.ticker.time - startTime) * wigglesPerSecond;\n        const shared = noiseAt(SHARED_LANE, time, DEFAULT_RANDOM_SEED);\n\n        chars.forEach((char, lane) => {\n          const own = noiseAt(lane + 1, time, DEFAULT_RANDOM_SEED);\n          const noise =\n            (own * (1 - correlation) + shared * correlation) / blendNorm;\n\n         \n          const amount =\n            ((noise + 1) / 2) * (maxAmount - minAmount) + minAmount;\n          const opacity = gsap.utils.clamp(\n            Math.min(minOpacity, 1),\n            1,\n            1 + amount * (minOpacity - 1),\n          );\n\n         \n          const strength =\n            glow\n              ? gsap.utils.clamp(\n                  0,\n                  1,\n                  (opacity - DEFAULT_GLOW_THRESHOLD) / glowRamp,\n                ) * glowIntensity\n              : 0;\n\n          char.style.opacity = String(opacity);\n          char.style.textShadow = glowShadow(strength, bloomColor, glowRadius);\n        });\n      };\n\n      gsap.ticker.add(onTick);\n      return () => {\n        gsap.ticker.remove(onTick);\n        splits.forEach((split) => split.revert());\n        charRefs.current = [];\n      };\n    },\n    {\n      scope: containerRef,\n      dependencies: [\n        wigglesPerSecond,\n        correlation,\n        minOpacity,\n        minAmount,\n        maxAmount,\n        glow,\n        bloomColor,\n        glowIntensity,\n        glowRadius,\n      ],\n    },\n  );\n\n  return (\n    <section\n      className={`relative flex min-h-screen w-full items-center justify-center overflow-hidden px-4 sm:px-6 ${className}`}\n      style={{ backgroundColor: backgroundColor }}\n    >\n      <div\n        aria-hidden=\"true\"\n        className=\"absolute inset-0\"\n        style={{\n          backgroundPosition: \"center\",\n          backgroundRepeat: \"no-repeat\",\n          backgroundSize: \"cover\",\n        }}\n      />\n      <div\n        ref={containerRef}\n        className=\"relative w-full  max-w-[1400px]\"\n        aria-label={DEFAULT_LINES.join(\" \")}\n      >\n        {lines.map((line, lineIndex) => (\n          <p\n            key={`line-${lineIndex}`}\n            aria-hidden=\"true\"\n            ref={(el) => {\n              lineRefs.current[lineIndex] = el;\n            }}\n            className=\"m-0 w-full whitespace-nowrap text-center uppercase tracking-[-0.02em]\"\n            style={{ color: textColor, lineHeight: LINE_HEIGHT, fontSize, fontWeight }}\n          >\n            {line}\n          </p>\n        ))}\n      </div>\n    </section>\n  );\n};\n\nexport default FlickeringText;\n"
+    }
+  ]
+}

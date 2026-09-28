@@ -1,0 +1,101 @@
+{
+  "name": "stacking-cards",
+  "type": "registry:component",
+  "title": "Stacking Cards",
+  "description": "Full-screen card sequence that stacks, tilts, and reveals the next scene on scroll",
+  "dependencies": [
+    "gsap",
+    "lenis"
+  ],
+  "registryDependencies": [],
+  "exportName": "StackingCards",
+  "exportKind": "default",
+  "tier": "pro",
+  "version": "1.0.1",
+  "changelog": [
+    {
+      "version": "1.0.1",
+      "date": "2026-07-22",
+      "summary": "Added reduced motion support.",
+      "breaking": false
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-07-21",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "props": [
+    {
+      "name": "imageZoomEnabled",
+      "type": "boolean",
+      "default": true,
+      "description": "Enables the image zoom-in effect during card reveals.",
+      "remixer": {
+        "control": "checkbox",
+        "group": "motion",
+        "groupTitle": "Motion"
+      }
+    },
+    {
+      "name": "tiltEnabled",
+      "type": "boolean",
+      "default": true,
+      "description": "Enables the outgoing card tilt, scale, and rotateX treatment.",
+      "remixer": {
+        "control": "checkbox",
+        "group": "motion",
+        "groupTitle": "Motion"
+      }
+    },
+    {
+      "name": "cardCornerRadius",
+      "type": "string",
+      "default": "3vw",
+      "description": "Corner radius applied to the outgoing card as it tilts away.",
+      "remixer": {
+        "control": "text",
+        "group": "style",
+        "groupTitle": "Style"
+      }
+    },
+    {
+      "name": "stackPerspective",
+      "type": "number",
+      "default": 1200,
+      "description": "Perspective depth applied to the stacked card scene.",
+      "remixer": {
+        "control": "range",
+        "group": "style",
+        "groupTitle": "Style",
+        "min": 200,
+        "max": 2400,
+        "step": 10
+      }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "suggested": false,
+    "defaultOpenGroupId": "motion",
+    "layout": {
+      "controlsButtonClassName": "right-4! top-25!"
+    },
+    "panel": {
+      "className": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    }
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/stacking-cards/index.tsx"
+    },
+    {
+      "path": "StackingCardComp.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/stacking-cards/StackingCardComp.tsx"
+    }
+  ]
+}

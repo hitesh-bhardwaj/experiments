@@ -1,0 +1,17 @@
+{
+  "name": "@hyperiux/scramble-link-button",
+  "version": "1.1.0",
+  "description": "Link button with text scramble effect on hover, optional underline and arrow",
+  "main": "index.tsx",
+  "files": [
+    "index.tsx",
+    "registry.json"
+  ],
+  "keywords": [
+    "buttons",
+    "hyperiux"
+  ],
+  "dependencies": {
+    "lucide-react": "*"
+  }
+}

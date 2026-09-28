@@ -1,0 +1,47 @@
+# Hyperiux Vault
+
+> Hyperiux Vault is a curated library of 115 creative interaction effects and UI components for React and Next.js - scroll systems, cursor effects, text reveals, page transitions, WebGL scenes, animated backgrounds, buttons, and loaders. Effects are previewed live on the site and installed into projects via the `hyperiux-components` CLI.
+
+Hyperiux Vault is built by Hyperiux Immersion Labs. Free effects can be installed by anyone with a free account; Pro effects require a Hyperiux Pro subscription. Every effect ships as real source code (React components using GSAP, Motion, Three.js, or CSS) that developers own and customize - not a locked-in package import.
+
+Key facts:
+- Website: https://vault.hyperiux.com
+- Install CLI: `npx hyperiux-components add <effect-name>`
+- npm package: https://www.npmjs.com/package/hyperiux-components
+- GitHub: https://github.com/Hyperiux-Immersion-Labs/hyperiux-components
+- Stack: React, Next.js, GSAP, Motion (Framer Motion), Three.js / React Three Fiber
+
+## Docs
+
+- [Documentation home](https://vault.hyperiux.com/docs): Overview of how the Vault and CLI work
+- [Installation](https://vault.hyperiux.com/docs/installation): How to install effects with the CLI
+- [CLI reference](https://vault.hyperiux.com/docs/cli): Commands, Pro authentication, and tokens
+- [Dependencies](https://vault.hyperiux.com/docs/dependencies): Peer dependencies effects rely on (GSAP, Motion, Three.js)
+- [License](https://vault.hyperiux.com/docs/license): Usage terms for free and Pro effects
+
+## Effects by category
+
+- [All effects](https://vault.hyperiux.com/effects): Browse and search the full library
+- [Text animations](https://vault.hyperiux.com/effects/text-animations): Scramble, mask, overflow, blur, fill, spotlight, and reveal effects for real HTML text
+- [Scroll effects](https://vault.hyperiux.com/effects/scroll-effects): Scroll-driven animations for product stories, feature tours, and portfolio chapters
+- [Cursor effects](https://vault.hyperiux.com/effects/cursor-effects): Custom cursors, followers, and pointer-reactive interactions
+- [Page transitions](https://vault.hyperiux.com/effects/page-transitions): Route and view transitions for Next.js apps
+- [WebGL effects](https://vault.hyperiux.com/effects/webgl-effects): Three.js and shader-based scenes, galleries, and hero visuals
+- [Backgrounds](https://vault.hyperiux.com/effects/backgrounds): Dotted grids, particle fields, and dithered canvas textures for SaaS and AI heroes
+- [Buttons](https://vault.hyperiux.com/effects/buttons): Accessible CTA microinteractions - staggered labels, arrow fills, scramble links
+- [Navigation](https://vault.hyperiux.com/effects/navigation): Menus, navbars, and navigation interactions
+- [Carousels](https://vault.hyperiux.com/effects/carousels): Clip-path reveals and zoom sliders with swipe and keyboard support
+- [Loaders](https://vault.hyperiux.com/effects/loaders): Page loaders and progress animations
+- [Components](https://vault.hyperiux.com/effects/components): Composite UI components and sections
+- [Featured](https://vault.hyperiux.com/effects/featured): Curated picks selected for craft and brand impact
+- [Free effects](https://vault.hyperiux.com/effects/free): Effects available on the free plan
+- [Pro effects](https://vault.hyperiux.com/effects/pro): Premium effects unlocked with a Pro subscription
+
+## Pricing
+
+- [Pricing](https://vault.hyperiux.com/pricing): Free plan and Hyperiux Pro subscription (monthly, quarterly, yearly) with full vault and CLI access
+
+## Optional
+
+- [Sitemap](https://vault.hyperiux.com/sitemap.xml): Full URL index including every individual effect page
+- [Sign up](https://vault.hyperiux.com/sign-up): Create a free account to view free effect source code

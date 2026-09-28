@@ -1,0 +1,17 @@
+{
+  "name": "@hyperiux/variable-text-proximity",
+  "version": "1.0.5",
+  "description": "Cursor-driven variable-font text where nearby letters gain weight and optical size",
+  "main": "index.tsx",
+  "files": [
+    "index.tsx",
+    "registry.json"
+  ],
+  "keywords": [
+    "text",
+    "hyperiux"
+  ],
+  "dependencies": {
+    "motion": "*"
+  }
+}

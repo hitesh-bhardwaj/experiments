@@ -1,0 +1,181 @@
+{
+  "name": "circular-slider",
+  "type": "registry:component",
+  "title": "Rotating Carousel",
+  "description": "Scroll-driven circular carousel that rotates a ring of editorial cards through view",
+  "dependencies": [
+    "gsap",
+    "lucide-react"
+  ],
+  "registryDependencies": [],
+  "exportName": "CircularSlider",
+  "exportKind": "default",
+  "tier": "pro",
+  "version": "1.0.1",
+  "changelog": [
+    {
+      "version": "1.0.1",
+      "date": "2026-07-24",
+      "summary": "Added reduced-motion support.",
+      "breaking": false
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-07-23",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "props": [
+    {
+      "name": "items",
+      "type": "array",
+      "default": [],
+      "description": "Cards arranged around the circular carousel."
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "default": "Interfaces that react.",
+      "description": "Primary heading shown above the rotating carousel."
+    },
+    {
+      "name": "subtitle",
+      "type": "string",
+      "default": "Built for motion, crafted for experience.",
+      "description": "Supporting text shown below the rotating carousel."
+    },
+    {
+      "name": "backgroundColor",
+      "type": "string",
+      "default": "#111111",
+      "description": "Background color for the full component section.",
+      "remixer": {
+        "control": "color",
+        "group": "layout",
+        "groupTitle": "Layout"
+      }
+    },
+    {
+      "name": "showBottomText",
+      "type": "boolean",
+      "default": true,
+      "description": "Shows or hides the bottom supporting text.",
+      "remixer": {
+        "control": "checkbox",
+        "group": "layout",
+        "groupTitle": "Layout"
+      }
+    },
+    {
+      "name": "gap",
+      "type": "number",
+      "default": 24,
+      "description": "Additional spacing between cards along the wheel arc.",
+      "remixer": {
+        "control": "range",
+        "group": "layout",
+        "groupTitle": "Layout",
+        "min": 0,
+        "max": 120,
+        "step": 1
+      }
+    },
+    {
+      "name": "cardWidth",
+      "type": "number",
+      "default": 320,
+      "description": "Desktop width of each orbiting card in pixels.",
+      "remixer": {
+        "control": "range",
+        "group": "layout",
+        "groupTitle": "Layout",
+        "min": 220,
+        "max": 420,
+        "step": 4
+      }
+    },
+    {
+      "name": "cardHeight",
+      "type": "number",
+      "default": 360,
+      "description": "Desktop height of each orbiting card in pixels.",
+      "remixer": {
+        "control": "range",
+        "group": "layout",
+        "groupTitle": "Layout",
+        "min": 240,
+        "max": 520,
+        "step": 4
+      }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "layout",
+    "layout": {
+      "controlsButtonClassName": "right-4! top-25!"
+    },
+    "panel": {
+      "className": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "controls": [
+      {
+        "name": "backgroundColor",
+        "label": "Background Color",
+        "type": "color",
+        "group": "layout",
+        "copyable": true
+      },
+      {
+        "name": "showBottomText",
+        "label": "Show Bottom Text",
+        "type": "checkbox",
+        "group": "layout",
+        "copyable": true
+      },
+      {
+        "name": "gap",
+        "label": "Gap",
+        "type": "range",
+        "group": "layout",
+        "copyable": true,
+        "min": 0,
+        "max": 120,
+        "step": 1
+      },
+      {
+        "name": "cardWidth",
+        "label": "Card Width",
+        "type": "range",
+        "group": "layout",
+        "copyable": true,
+        "min": 220,
+        "max": 420,
+        "step": 4
+      },
+      {
+        "name": "cardHeight",
+        "label": "Card Height",
+        "type": "range",
+        "group": "layout",
+        "copyable": true,
+        "min": 240,
+        "max": 520,
+        "step": 4
+      }
+    ]
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/circular-slider/index.tsx"
+    },
+    {
+      "path": "CircularSliderComp.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/circular-slider/CircularSliderComp.tsx"
+    }
+  ]
+}

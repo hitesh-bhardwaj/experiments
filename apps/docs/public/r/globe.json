@@ -1,0 +1,243 @@
+{
+  "name": "globe",
+  "type": "registry:component",
+  "title": "Network Globe",
+  "description": "Interactive dotted world globe with animated routes, location navigation, and a desktop flat-map projection.",
+  "dependencies": [
+    "gsap",
+    "lucide-react"
+  ],
+  "registryDependencies": [],
+  "exportName": "Globe",
+  "exportKind": "default",
+  "tier": "pro",
+  "version": "1.0.0",
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "date": "2026-09-17",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "props": [
+    {
+      "name": "autoConnect",
+      "label": "Automatic Routes",
+      "type": "boolean",
+      "default": false,
+      "description": "Periodically animates a route between two random locations.",
+      "remixer": {
+        "control": "checkbox",
+        "group": "behavior",
+        "groupTitle": "Behavior"
+      }
+    },
+    {
+      "name": "autoRotate",
+      "label": "Auto Rotate",
+      "type": "boolean",
+      "default": true,
+      "description": "Continuously rotates the globe when it is idle.",
+      "remixer": {
+        "control": "checkbox",
+        "group": "behavior",
+        "groupTitle": "Behavior"
+      }
+    },
+    {
+      "name": "rotationSpeed",
+      "label": "Rotation Speed",
+      "type": "number",
+      "default": 4,
+      "description": "Automatic globe rotation speed in degrees per second.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0,
+        "max": 20,
+        "step": 0.5
+      }
+    },
+    {
+      "name": "routeFrequency",
+      "label": "Route Frequency",
+      "type": "number",
+      "default": 3.5,
+      "description": "Delay in seconds between automatic route animations.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0.5,
+        "max": 10,
+        "step": 0.5
+      }
+    },
+    {
+      "name": "routeDuration",
+      "label": "Route Duration",
+      "type": "number",
+      "default": 1.4,
+      "description": "Duration of each animated route in seconds.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0.2,
+        "max": 5,
+        "step": 0.1
+      }
+    },
+    {
+      "name": "connections",
+      "label": "Connections",
+      "type": "number",
+      "default": 3,
+      "description": "Number of nearby routes emitted after selecting a location.",
+      "remixer": {
+        "control": "range",
+        "group": "routes",
+        "groupTitle": "Routes",
+        "min": 1,
+        "max": 7,
+        "step": 1
+      }
+    },
+    {
+      "name": "dotDensity",
+      "label": "Dot Density",
+      "type": "number",
+      "default": 11000,
+      "description": "Number of sphere samples used to build the dotted land field.",
+      "remixer": {
+        "control": "range",
+        "group": "geometry",
+        "groupTitle": "Geometry",
+        "min": 2000,
+        "max": 30000,
+        "step": 500
+      }
+    },
+    {
+      "name": "dotSize",
+      "label": "Dot Size",
+      "type": "number",
+      "default": 2.3,
+      "description": "Rendered diameter of each land dot in pixels.",
+      "remixer": {
+        "control": "range",
+        "group": "geometry",
+        "groupTitle": "Geometry",
+        "min": 0.5,
+        "max": 6,
+        "step": 0.1
+      }
+    },
+    {
+      "name": "markerSize",
+      "label": "Marker Size",
+      "type": "number",
+      "default": 5,
+      "description": "Rendered diameter of each location marker in pixels.",
+      "remixer": {
+        "control": "range",
+        "group": "geometry",
+        "groupTitle": "Geometry",
+        "min": 1,
+        "max": 12,
+        "step": 0.5
+      }
+    },
+    {
+      "name": "routeColor",
+      "label": "Route Color",
+      "type": "color",
+      "default": "#fffaf2",
+      "description": "Color of animated connection routes.",
+      "remixer": {
+        "control": "color",
+        "group": "colors",
+        "groupTitle": "Colors"
+      }
+    },
+    {
+      "name": "mapColor",
+      "label": "Map Color",
+      "type": "color",
+      "default": "#ffffff",
+      "description": "Color of the dotted land field.",
+      "remixer": {
+        "control": "color",
+        "group": "colors",
+        "groupTitle": "Colors"
+      }
+    },
+    {
+      "name": "markerColor",
+      "label": "Marker Color",
+      "type": "color",
+      "default": "#fffaf2",
+      "description": "Color of location markers and the globe outline.",
+      "remixer": {
+        "control": "color",
+        "group": "colors",
+        "groupTitle": "Colors"
+      }
+    },
+    {
+      "name": "showLabels",
+      "label": "Show Labels",
+      "type": "boolean",
+      "default": true,
+      "description": "Shows location labels around the globe.",
+      "remixer": {
+        "control": "checkbox",
+        "group": "behavior",
+        "groupTitle": "Behavior"
+      }
+    },
+    {
+      "name": "enableDrag",
+      "label": "Enable Drag",
+      "type": "boolean",
+      "default": true,
+      "description": "Allows pointer dragging to rotate the globe.",
+      "remixer": {
+        "control": "checkbox",
+        "group": "behavior",
+        "groupTitle": "Behavior"
+      }
+    },
+    {
+      "name": "morphDuration",
+      "label": "Morph Duration",
+      "type": "number",
+      "default": 0.6,
+      "description": "Duration of the globe-to-map projection transition in seconds.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0.1,
+        "max": 3,
+        "step": 0.1
+      }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "behavior",
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/globe/index.tsx"
+    }
+  ]
+}

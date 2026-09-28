@@ -1,0 +1,153 @@
+{
+  "name": "rectangular-text-reveal",
+  "type": "registry:component",
+  "title": "Rectangular Text Reveal",
+  "description": "Text reveal animation with colored rectangles sliding across each line",
+  "dependencies": [
+    "gsap"
+  ],
+  "registryDependencies": [],
+  "exportName": "RectangularTextReveal",
+  "exportKind": "default",
+  "tier": "free",
+  "version": "1.1.0",
+  "changelog": [
+    {
+      "version": "1.1.0",
+      "date": "2026-07-21",
+      "summary": "Added reduced-motion support for accessible lower-motion rectangular reveal.",
+      "breaking": false
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-02-10",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "props": [
+    {
+      "name": "baseColor",
+      "type": "string",
+      "default": "#ea580c",
+      "description": "Base reveal rectangle color.",
+      "remixer": {
+        "control": "color",
+        "group": "colors",
+        "groupTitle": "Colors"
+      }
+    },
+    {
+      "name": "overlayColor",
+      "type": "string",
+      "default": "#111111",
+      "description": "Overlay reveal rectangle color.",
+      "remixer": {
+        "control": "color",
+        "group": "colors",
+        "groupTitle": "Colors"
+      }
+    },
+    {
+      "name": "useOverlay",
+      "type": "boolean",
+      "default": true,
+      "description": "Enables the overlay pass.",
+      "remixer": {
+        "control": "checkbox",
+        "group": "behavior",
+        "groupTitle": "Behavior"
+      }
+    },
+    {
+      "name": "stagger",
+      "type": "number",
+      "default": 0.2,
+      "description": "Delay between line reveals.",
+      "remixer": {
+        "control": "range",
+        "group": "timing",
+        "groupTitle": "Timing",
+        "min": 0,
+        "max": 1,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "coverDuration",
+      "type": "number",
+      "default": 0.34,
+      "description": "Cover animation duration.",
+      "remixer": {
+        "control": "range",
+        "group": "timing",
+        "groupTitle": "Timing",
+        "min": 0.1,
+        "max": 2,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "revealDuration",
+      "type": "number",
+      "default": 0.42,
+      "description": "Reveal animation duration.",
+      "remixer": {
+        "control": "range",
+        "group": "timing",
+        "groupTitle": "Timing",
+        "min": 0.1,
+        "max": 2,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "direction",
+      "type": "string",
+      "default": "left",
+      "description": "Reveal direction.",
+      "remixer": {
+        "control": "select",
+        "group": "behavior",
+        "groupTitle": "Behavior",
+        "options": [
+          {
+            "value": "left",
+            "label": "Left"
+          },
+          {
+            "value": "right",
+            "label": "Right"
+          },
+          {
+            "value": "top",
+            "label": "Top"
+          },
+          {
+            "value": "bottom",
+            "label": "Bottom"
+          }
+        ]
+      }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "colors",
+    "layout": {
+      "buttonClassName": "right-4! top-25!",
+      "panelClassName": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/rectangular-text-reveal/index.tsx",
+      "content": "// Built using Hyperiux Vault: https://vault.hyperiux.com\n\n\"use client\";\n\nimport React, { useLayoutEffect, useRef } from \"react\";\nimport gsap from \"gsap\";\nimport { CustomEase } from \"gsap/CustomEase\";\nimport { ScrollTrigger } from \"gsap/ScrollTrigger\";\nimport { SplitText } from \"gsap/SplitText\";\n\ngsap.registerPlugin(SplitText, CustomEase, ScrollTrigger);\n\nconst DEFAULT_TAG = \"div\";\nconst DEFAULT_TEXT = \"Rectangular text reveal in motion.\";\nconst DEFAULT_BASE_COLOR = \"#ea580c\";\nconst DEFAULT_OVERLAY_COLOR = \"#ffffff\";\nconst DEFAULT_STAGGER = 0.2;\nconst DEFAULT_COVER_DURATION = 0.34;\nconst DEFAULT_REVEAL_DURATION = 0.42;\nconst DEFAULT_OVERLAY_ENTER_DURATION = 0.24;\nconst DEFAULT_OVERLAY_EXIT_DURATION = 0.28;\nconst DEFAULT_INSET_X = \"0.08em\";\nconst DEFAULT_INSET_Y = \"0.08em\";\nconst DEFAULT_TRIGGER_START = \"top bottom\";\nconst DEFAULT_DIRECTION = \"left\";\nconst DEFAULT_DELAY = 0;\nconst DEFAULT_TOGGLE_ACTIONS = \"play none none reset\";\nconst REDUCED_MOTION_Y_OFFSET = 32;\nconst REDUCED_MOTION_DURATION = 0.9;\nconst REDUCED_MOTION_STAGGER = 0.12;\nconst REVEAL_EASE = \"hyperEase\";\nconst SCALE_X_ZERO = \"scaleX(0)\";\nconst SCALE_Y_ZERO = \"scaleY(0)\";\nconst LINE_CLASS_NAME = \"tb-line\";\n\ntype RectangularTextRevealDirection = 'left' | 'right' | 'top' | 'bottom';\n\nfunction getOrigins(direction: RectangularTextRevealDirection): { enterOrigin: string, exitOrigin: string, axis: 'scaleX' | 'scaleY' } {\n  switch (direction) {\n    case \"right\":\n      return {\n        enterOrigin: \"100% 50%\",\n        exitOrigin: \"0% 50%\",\n        axis: \"scaleX\",\n      };\n    case \"top\":\n      return {\n        enterOrigin: \"50% 0%\",\n        exitOrigin: \"50% 100%\",\n        axis: \"scaleY\",\n      };\n    case \"bottom\":\n      return {\n        enterOrigin: \"50% 100%\",\n        exitOrigin: \"50% 0%\",\n        axis: \"scaleY\",\n      };\n    case \"left\":\n    default:\n      return {\n        enterOrigin: \"0% 50%\",\n        exitOrigin: \"100% 50%\",\n        axis: \"scaleX\",\n      };\n  }\n}\n\ninterface CreateRevealRectOptions {\n  insetX: string;\n  insetY: string;\n  background: string;\n  transformOrigin: string;\n  axis: 'scaleX' | 'scaleY';\n  zIndex: number;\n  dataAttribute: string;\n}\n\nfunction createRevealRect({\n  insetX,\n  insetY,\n  background,\n  transformOrigin,\n  axis,\n  zIndex,\n  dataAttribute,\n}: CreateRevealRectOptions): HTMLDivElement {\n  const rect = document.createElement(\"div\");\n  rect.setAttribute(dataAttribute, \"true\");\n  Object.assign(rect.style, {\n    position: \"absolute\",\n    left: `-${insetX}`,\n    right: `-${insetX}`,\n    top: `-${insetY}`,\n    bottom: `-${insetY}`,\n    background,\n    transformOrigin,\n    transform: axis === \"scaleX\" ? SCALE_X_ZERO : SCALE_Y_ZERO,\n    zIndex: String(zIndex),\n    pointerEvents: \"none\",\n    willChange: \"transform\",\n  });\n\n  return rect;\n}\n\ninterface RectangularTextRevealProps {\n  children?: React.ReactNode;\n  as?: React.ElementType;\n  className?: string;\n  baseColor?: string;\n  overlayColor?: string;\n  useOverlay?: boolean;\n  stagger?: number;\n  coverDuration?: number;\n  revealDuration?: number;\n  overlayEnterDuration?: number;\n  overlayExitDuration?: number;\n  insetX?: string;\n  insetY?: string;\n  triggerStart?: string;\n  once?: boolean;\n  direction?: RectangularTextRevealDirection;\n  delay?: number;\n  toggleActions?: string;\n}\n\nexport default function RectangularTextReveal({\n  children = DEFAULT_TEXT,\n  as: Tag = DEFAULT_TAG,\n  className = \"\",\n  baseColor = DEFAULT_BASE_COLOR,\n  overlayColor = DEFAULT_OVERLAY_COLOR,\n  useOverlay = true,\n  stagger = DEFAULT_STAGGER,\n  coverDuration = DEFAULT_COVER_DURATION,\n  revealDuration = DEFAULT_REVEAL_DURATION,\n  overlayEnterDuration = DEFAULT_OVERLAY_ENTER_DURATION,\n  overlayExitDuration = DEFAULT_OVERLAY_EXIT_DURATION,\n  insetX = DEFAULT_INSET_X,\n  insetY = DEFAULT_INSET_Y,\n  triggerStart = DEFAULT_TRIGGER_START,\n  once = false,\n  direction = DEFAULT_DIRECTION,\n  delay = DEFAULT_DELAY,\n  toggleActions = DEFAULT_TOGGLE_ACTIONS,\n}: RectangularTextRevealProps) {\n  const elementRef = useRef<HTMLElement | null>(null);\n\n  useLayoutEffect(() => {\n    if (!elementRef.current) {\n      return;\n    }\n\n    const prefersReduced =\n      window.matchMedia &&\n      window.matchMedia(\"(prefers-reduced-motion: reduce)\").matches;\n\n    const { enterOrigin, exitOrigin, axis } = getOrigins(direction);\n\n    CustomEase.create(REVEAL_EASE, \"0.4,0,0.2,1\");\n\n    const split = new SplitText(elementRef.current, {\n      type: \"lines\",\n      linesClass: LINE_CLASS_NAME,\n    });\n\n    const lines = split.lines as HTMLElement[];\n\n    // Line setup\n    gsap.set(elementRef.current, { opacity: 1 });\n\n    if (prefersReduced) {\n      gsap.set(lines, {\n        opacity: 0,\n        y: REDUCED_MOTION_Y_OFFSET,\n        willChange: \"transform, opacity\",\n      });\n\n      const timeline = gsap.timeline({ paused: true, delay });\n\n      timeline.to(lines, {\n        opacity: 1,\n        y: 0,\n        duration: REDUCED_MOTION_DURATION,\n        ease: \"power3.out\",\n        stagger: REDUCED_MOTION_STAGGER,\n      });\n\n      const scrollTrigger = ScrollTrigger.create({\n        trigger: elementRef.current,\n        start: triggerStart,\n        once,\n        animation: timeline,\n        toggleActions: once ? \"play none none none\" : toggleActions,\n        ...(once\n          ? {}\n          : {\n              onLeaveBack: () => {\n                timeline.pause(0);\n                gsap.set(lines, { opacity: 0, y: REDUCED_MOTION_Y_OFFSET });\n              },\n            }),\n      });\n\n      return () => {\n        timeline.kill();\n        scrollTrigger.kill();\n        split.revert();\n      };\n    }\n\n    const wrappers: HTMLDivElement[] = [];\n    const baseRects: HTMLDivElement[] = [];\n    const overlayRects: (HTMLDivElement | null)[] = [];\n\n    lines.forEach((line) => {\n      const wrapper = document.createElement(\"div\");\n      wrapper.style.position = \"relative\";\n      wrapper.style.display = \"block\";\n      wrapper.style.overflow = \"hidden\";\n      wrapper.style.width = \"fit-content\";\n      wrapper.style.maxWidth = \"100%\";\n\n      (line.parentNode as ParentNode).insertBefore(wrapper, line);\n      wrapper.appendChild(line);\n\n      line.style.position = \"relative\";\n      line.style.display = \"block\";\n      line.style.width = \"fit-content\";\n      line.style.maxWidth = \"100%\";\n      line.style.zIndex = \"1\";\n      line.style.opacity = \"0\";\n      line.style.willChange = \"opacity\";\n\n      const baseRect = createRevealRect({\n        insetX,\n        insetY,\n        background: baseColor,\n        transformOrigin: enterOrigin,\n        axis,\n        zIndex: 2,\n        dataAttribute: \"data-reveal-base\",\n      });\n      wrapper.appendChild(baseRect);\n\n      let overlayRect: HTMLDivElement | null = null;\n\n      if (useOverlay) {\n        overlayRect = createRevealRect({\n          insetX,\n          insetY,\n          background: overlayColor,\n          transformOrigin: enterOrigin,\n          axis,\n          zIndex: 3,\n          dataAttribute: \"data-reveal-overlay\",\n        });\n        wrapper.appendChild(overlayRect);\n      }\n\n      wrappers.push(wrapper);\n      baseRects.push(baseRect);\n      overlayRects.push(overlayRect);\n    });\n\n    // Timeline\n    const timeline = gsap.timeline({ paused: true, delay });\n\n    lines.forEach((line, index) => {\n      const baseRect = baseRects[index];\n      const overlayRect = overlayRects[index];\n      const startAt = index * stagger;\n\n      if (useOverlay && overlayRect) {\n        timeline.to(\n          overlayRect,\n          {\n            [axis]: 1,\n            duration: overlayEnterDuration,\n            ease: REVEAL_EASE,\n            transformOrigin: enterOrigin,\n          },\n          startAt + 0.1\n        );\n      }\n\n      timeline\n        .to(\n          baseRect,\n          {\n            [axis]: 1,\n            duration: coverDuration,\n            ease: REVEAL_EASE,\n            transformOrigin: enterOrigin,\n          },\n          startAt\n        )\n        .set(\n          line,\n          {\n            opacity: 1,\n          },\n          startAt + coverDuration\n        );\n\n      if (useOverlay && overlayRect) {\n        timeline.to(\n          overlayRect,\n          {\n            [axis]: 0,\n            delay: 0.15,\n            duration: overlayExitDuration,\n            ease: REVEAL_EASE,\n            transformOrigin: exitOrigin,\n          },\n          startAt + coverDuration + 0.1\n        );\n      }\n\n      timeline.to(\n        baseRect,\n        {\n          [axis]: 0,\n          delay: useOverlay ? 0.2 : 0.12,\n          duration: revealDuration,\n          ease: REVEAL_EASE,\n          transformOrigin: exitOrigin,\n        },\n        startAt + coverDuration + 0.1\n      );\n    });\n\n    // Scroll trigger\n    const scrollTrigger = ScrollTrigger.create({\n      trigger: elementRef.current,\n      start: triggerStart,\n      once,\n      animation: timeline,\n      toggleActions: once ? \"play none none none\" : toggleActions,\n      ...(once\n        ? {}\n        : {\n            onLeaveBack: () => {\n              timeline.pause(0);\n\n              lines.forEach((line) => {\n                line.style.opacity = \"0\";\n              });\n\n              baseRects.forEach((rect) => {\n                gsap.set(rect, {\n                  [axis]: 0,\n                  transformOrigin: enterOrigin,\n                });\n              });\n\n              overlayRects.forEach((rect) => {\n                if (!rect) {\n                  return;\n                }\n\n                gsap.set(rect, {\n                  [axis]: 0,\n                  transformOrigin: enterOrigin,\n                });\n              });\n            },\n          }),\n    });\n\n    // Cleanup\n    return () => {\n      timeline.kill();\n      scrollTrigger.kill();\n      split.revert();\n\n      wrappers.forEach((wrapper) => {\n        if (!wrapper.parentNode) {\n          return;\n        }\n\n        while (wrapper.firstChild) {\n          wrapper.parentNode.insertBefore(wrapper.firstChild, wrapper);\n        }\n\n        wrapper.remove();\n      });\n    };\n  }, [\n    baseColor,\n    coverDuration,\n    delay,\n    direction,\n    insetX,\n    insetY,\n    once,\n    overlayColor,\n    overlayEnterDuration,\n    overlayExitDuration,\n    revealDuration,\n    stagger,\n    toggleActions,\n    triggerStart,\n    useOverlay,\n  ]);\n\n  // `Tag` is a dynamic element type (defaults to \"div\"), so its prop shape\n  // can't be resolved generically at the JSX call site - cast to keep this\n  // a behavior-preserving conversion rather than chasing full coverage here.\n  const Component = Tag as any;\n\n  return (\n    <Component ref={elementRef} className={className} style={{ opacity: 0 }}>\n      {children}\n    </Component>\n  );\n}\n"
+    }
+  ]
+}

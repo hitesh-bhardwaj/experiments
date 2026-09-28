@@ -1,0 +1,20 @@
+{
+  "name": "@hyperiux/butterfly-trail-cursor",
+  "version": "1.1.0",
+  "description": "3D butterfly swarm that spawns around the pointer and fades through space",
+  "main": "index.tsx",
+  "files": [
+    "index.tsx",
+    "createSuspendedRaf.ts",
+    "registry.json"
+  ],
+  "keywords": [
+    "cursor",
+    "hyperiux"
+  ],
+  "dependencies": {
+    "@react-three/drei": "*",
+    "@react-three/fiber": "*",
+    "three": "*"
+  }
+}

@@ -1,0 +1,163 @@
+{
+  "name": "interactive-arrows",
+  "version": "1.1.0",
+  "changelog": [
+    {
+      "version": "1.1.0",
+      "date": "2026-07-22",
+      "summary": "reduce-motion applied",
+      "breaking": false
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-06-04",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "type": "registry:component",
+  "title": "Interactive Arrows",
+  "description": "Canvas 2D collection of six cursor-reactive arrow and line effects: a hover-push arrow grid, an opacity-fade variant, a smooth-easing sparse grid, a particle-lines dot field, a persistent lines field, and a playful full-screen grid with center cutout.",
+  "category": "cursor",
+  "dependencies": [],
+  "registryDependencies": [],
+  "previewUrl": "/demo/interactive-arrows",
+  "tier": "pro",
+  "main": "index.tsx",
+  "exportName": "InteractiveArrows",
+  "exportKind": "default",
+  "importPath": "@/components/effects/interactive-arrows",
+  "target": "src/components/effects/interactive-arrows",
+  "files": [
+    {
+      "path": "index.tsx",
+      "target": "src/components/effects/interactive-arrows/index.tsx"
+    },
+    {
+      "path": "arrows.tsx",
+      "target": "src/components/effects/interactive-arrows/arrows.tsx"
+    },
+    {
+      "path": "ArrowsLimit.tsx",
+      "target": "src/components/effects/interactive-arrows/ArrowsLimit.tsx"
+    },
+    {
+      "path": "ArrowsOpacity.tsx",
+      "target": "src/components/effects/interactive-arrows/ArrowsOpacity.tsx"
+    },
+    {
+      "path": "ArrowsPlay.tsx",
+      "target": "src/components/effects/interactive-arrows/ArrowsPlay.tsx"
+    },
+    {
+      "path": "lines.tsx",
+      "target": "src/components/effects/interactive-arrows/lines.tsx"
+    },
+    {
+      "path": "points.tsx",
+      "target": "src/components/effects/interactive-arrows/points.tsx"
+    },
+    {
+      "path": "utils.ts",
+      "target": "src/components/effects/interactive-arrows/utils.ts"
+    },
+    {
+      "path": "createSuspendedRaf.ts",
+      "target": "src/components/effects/interactive-arrows/createSuspendedRaf.ts"
+    }
+  ],
+  "props": [
+    {
+      "name": "arrowCount",
+      "type": "number",
+      "default": 50,
+      "description": "Number of arrows rendered in the field.",
+      "suggested": true
+    },
+    {
+      "name": "arrowColor",
+      "type": "string",
+      "default": "#000000",
+      "description": "Arrow stroke or fill color.",
+      "suggested": true
+    },
+    {
+      "name": "activeColor",
+      "type": "string",
+      "default": "#000000",
+      "description": "Arrow color near the pointer.",
+      "suggested": true
+    },
+    {
+      "name": "reactionRadius",
+      "type": "number",
+      "default": 30,
+      "description": "Pointer radius that rotates or highlights arrows.",
+      "suggested": true
+    },
+    {
+      "name": "smoothing",
+      "type": "number",
+      "default": 0.12,
+      "description": "Motion smoothing for arrow response.",
+      "suggested": true
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "suggested": true,
+    "defaultOpenGroupId": "controls",
+    "layout": {
+      "controlsButtonClassName": "right-4! top-25!"
+    },
+    "panel": {
+      "className": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "controls": [
+      {
+        "name": "arrowCount",
+        "label": "Arrow Count",
+        "type": "range",
+        "group": "controls",
+        "copyable": true,
+        "min": 0,
+        "max": 72,
+        "step": 0.1
+      },
+      {
+        "name": "arrowColor",
+        "label": "Arrow Color",
+        "type": "color",
+        "group": "style",
+        "copyable": true
+      },
+      {
+        "name": "activeColor",
+        "label": "Active Color",
+        "type": "color",
+        "group": "style",
+        "copyable": true
+      },
+      {
+        "name": "reactionRadius",
+        "label": "Reaction Radius",
+        "type": "range",
+        "group": "controls",
+        "copyable": true,
+        "min": 0,
+        "max": 640,
+        "step": 1
+      },
+      {
+        "name": "smoothing",
+        "label": "Smoothing",
+        "type": "range",
+        "group": "controls",
+        "copyable": true,
+        "min": 0.01,
+        "max": 1,
+        "step": 0.01
+      }
+    ]
+  }
+}

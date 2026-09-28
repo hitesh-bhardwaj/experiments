@@ -1,0 +1,509 @@
+# Remixer Panel System Plan
+
+> **Audit status (2026-08-12):** the `registry.json` `props`/`remixer` shape this doc
+> prescribes is confirmed live and matching across sampled effects - trust the
+> architectural contract. Two things have drifted: (1) the implementation file layout
+> is not what's described below - real files live under
+> `apps/docs/src/components/remixer-panel/` as TypeScript (`RemixerPanel.tsx`,
+> `RemixerLauncher.tsx`, `useRemixerControls.ts`, `build-remixer-code.ts`,
+> `remixer-utils.ts`, `types.ts`), not the `hooks/usePropsRemixer.js` /
+> `components/ui/RemixerLauncher.jsx` paths named here; (2) the worked `spider-particles`
+> example below (`showWeb` as docs-only, excluded from copied code) is now wrong -
+> `showWeb` is a full public prop with `remixer.control: "checkbox"` in the current
+> registry.
+
+## Intro: Implementation Steps
+
+This document is a planning guide for making the Remixer Panel a reusable effect-level system, not a `DemoContent.jsx`-specific pattern. `spider-particles` is only the first reference example because it already has a working panel and exposes a useful docs-vs-registry prop mismatch.
+
+- Define the Remixer Panel contract independently from any page file, including values, schema, control groups, callbacks, generated-code behavior, and layout presets.
+- Create a central control schema model that can describe all current control types and future control types without rewriting every effect.
+- Create a reusable state hook for remixer values so each effect does not hand-roll `useState`, update handlers, and reset behavior.
+- Create a reusable launcher/container for the floating Controls button and slide-in panel chrome, with presets for each effect layout.
+- Create generic code-generation utilities that can output valid installable snippets while filtering docs-only controls.
+- Create a registry import resolver so copied snippets use the installed component path, not docs-local imports.
+- Validate the system against `spider-particles` as an example, without making the design specific to it.
+- Validate that spider-particles still works in the docs preview while copied code only includes props supported by the registry component.
+- Define a reusable checklist that any effect can follow when adopting the Remixer Panel.
+- Apply the shared system to other effects later only after the reusable contract is finalized.
+
+## Goal
+
+Build a reusable Remixer Panel system that can be attached to any effect preview, page, sandbox, registry demo, or future docs surface.
+
+The system must not depend on a file named `DemoContent.jsx`. That file can keep using the remixer during the current docs migration, but it should be only one consumer of the system. The reusable pieces should work anywhere that can render React client components.
+
+The desired behavior:
+
+- Any effect can declare a schema and defaults, then get a working live panel.
+- Live controls update the preview immediately.
+- Reset returns all controls to the declared defaults.
+- Copy code emits valid, ready-to-paste code for the installable registry component.
+- Docs-only preview controls can exist, but they must be excluded from copied code unless the installable component supports them.
+- Panel layout can be shared through presets, but individual effects can override placement/size when needed.
+- The control schema can grow as more effects need richer inputs.
+
+## Effect Prop Inventory
+
+Use [remixer-effect-props.md](./remixer-effect-props.md) as the current free/pro effect prop inventory. It lists each registry effect separately, with detected public props, defaults, likely value type, suggested Remixer control, and a short planning description.
+
+That inventory is intentionally broad. It should be used to decide which controls each effect can expose now, which props need richer metadata, and which fixed effects need public props before they can support the shared Remixer Panel.
+
+## Registry Source Of Truth
+
+The prop inventory is read-only planning output. The real source of truth must live under `registry/effects/<category>/<effect>/`, because that is the code users install into their own systems.
+
+Each effect needs two connected pieces:
+
+- `registry/effects/<category>/<effect>/index.jsx`: the installable component must accept the prop in its public API and use it in the live effect.
+- `registry/effects/<category>/<effect>/registry.json`: the same effect should declare public prop metadata that docs, demos, generated copy code, public registry JSON, and Sanity sync scripts can read.
+
+Do not make `apps/docs/src/lib/effect-configs.js`, any demo `DemoContent.jsx`, or Sanity the canonical prop source. Those systems should consume the registry metadata, not redefine it.
+
+Recommended `registry.json` shape:
+
+```json
+{
+  "name": "spider-particles",
+  "props": [
+    {
+      "name": "particleCount",
+      "type": "number",
+      "default": 180,
+      "description": "Number of particles generated by the effect.",
+      "remixer": {
+        "control": "range",
+        "group": "Particles",
+        "min": 20,
+        "max": 600,
+        "step": 10
+      }
+    },
+    {
+      "name": "particleColor",
+      "type": "color",
+      "default": "#ffffff",
+      "description": "Main particle color.",
+      "remixer": {
+        "control": "color",
+        "group": "Colors"
+      }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "layout": "floating-panel",
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  }
+}
+```
+
+The `props` array describes the public installable API. The nested `remixer` object describes how each prop should render in the Remixer Panel. A prop can exist without a remixer control if it should be documented but not live-editable.
+
+Docs-only controls are allowed, but they should be clearly marked so copied code does not include props the installed component cannot accept:
+
+```json
+{
+  "name": "demoBackground",
+  "type": "color",
+  "default": "#050505",
+  "description": "Docs preview background color.",
+  "docsOnly": true,
+  "remixer": {
+    "control": "color",
+    "group": "Preview"
+  }
+}
+```
+
+## Sync Flow
+
+The desired flow is:
+
+```txt
+registry/effects/<effect>/index.jsx
+  + registry/effects/<effect>/registry.json props/remixer metadata
+  -> apps/docs/scripts/build-registry.js
+  -> apps/docs/public/r/<effect>.json
+  -> docs demo + effect detail + copy-code generator
+  -> Sanity sync script later, if Sanity should store/search/display prop metadata
+```
+
+`apps/docs/scripts/build-registry.js` currently writes a curated `registryItem`, so it must be updated to include `props` and `remixer` from each effect `registry.json`. The root `scripts/build-registry.js` packs each effect with its local `registry.json`, so the npm/package artifact will already carry that metadata once it is added.
+
+## Non-Goals For This Planning Step
+
+- Do not migrate all effects yet.
+- Do not change every effect API.
+- Do not force every effect into the same `DemoContent.jsx` structure.
+- Do not make copied code depend on docs-only components or docs-only imports.
+- Do not rewrite `RemixerPanel.jsx` styling unless the later implementation proves a contract gap.
+
+## System Contract
+
+The remixer system should be made of reusable primitives:
+
+```txt
+effect defaults
+  -> effect control schema
+  -> usePropsRemixer/default state
+  -> RemixerLauncher layout wrapper
+  -> RemixerPanel renderer
+  -> buildRemixCode copied snippet
+```
+
+The page or preview component should only provide:
+
+- `defaultValues`
+- `controlGroups`
+- live preview rendering
+- copied-code rendering strategy
+- optional panel layout preset
+
+The shared system should own:
+
+- state updates
+- reset behavior
+- panel open/close chrome
+- common control rendering
+- value formatting
+- registry-safe filtering
+- import-path lookup
+- copy-code assembly
+
+## Control Schema Model
+
+Each effect should describe controls with plain objects. `spider-particles` currently uses `range`, `color`, and `checkbox`, but the model must not be limited to those.
+
+Base shape:
+
+```js
+const controlGroups = [
+  {
+    id: "group-id",
+    title: "Group Title",
+    description: "Optional group description",
+    controls: [
+      {
+        id: "propName",
+        label: "Prop Label",
+        type: "range",
+        defaultValue: 10,
+        description: "Optional helper text",
+        inRegistry: true,
+      },
+    ],
+  },
+];
+```
+
+Required common fields:
+
+- `id`: stable value key, usually matching the prop name.
+- `label`: user-facing control label.
+- `type`: renderer/formatter type.
+
+Recommended common fields:
+
+- `description`: short helper text.
+- `defaultValue`: value used by reset and docs generation when defaults are colocated with schema.
+- `inRegistry`: `false` when a control is live-preview-only.
+- `propName`: optional installable prop name when it differs from `id`.
+- `format`: optional display formatter for the panel value.
+- `serialize`: optional code serializer override.
+- `visibleWhen`: optional conditional display rule.
+- `disabledWhen`: optional conditional disabled rule.
+- `section`: optional UI grouping metadata for future layouts.
+
+## Control Types
+
+The Remixer Panel should support today’s existing types and leave a clean path for richer future controls.
+
+### Current Implemented Types
+
+These are already present in `apps/docs/src/components/ui/RemixerPanel.jsx`:
+
+| Type | Value Shape | UI | Code Output |
+|---|---|---|---|
+| `range` | number | slider | unquoted number |
+| `color` | string | color picker + text | quoted string |
+| `select` | string or number | select menu | by value type |
+| `radio` | string or number | segmented/radio options | by value type |
+| `toggle` | boolean | switch | `true` / `false` |
+| `checkbox` | boolean | checkbox row | `true` / `false` |
+
+### Planned Additional Types
+
+These should be supported by the shared schema even if their renderers are implemented later:
+
+| Type | Value Shape | Intended UI | Notes |
+|---|---|---|---|
+| `number` | number | numeric input/stepper | Useful when exact values matter. |
+| `text` | string | text input | For labels, button copy, class names, ids. |
+| `textarea` | string | multiline input | For larger copy or content blocks. |
+| `code` | string | monospace editor/input | For short snippets or templates. |
+| `color-rgba` | string or object | rgba picker | Useful for alpha-aware colors. |
+| `gradient` | string or object | gradient editor | Useful for background and text effects. |
+| `vector2` | `{ x, y }` or tuple | paired numeric inputs | Coordinates, offsets, origins. |
+| `vector3` | `{ x, y, z }` or tuple | triple numeric inputs | 3D transforms, camera positions. |
+| `size` | `{ width, height }` | paired numeric inputs | Canvas, cards, media sizes. |
+| `spacing` | number or object | linked spacing inputs | Padding, gap, margin controls. |
+| `angle` | number | dial or numeric input | Rotation, hue, direction. |
+| `duration` | number | numeric/range input | Animation durations in seconds/ms. |
+| `easing` | string | select or curve picker | Animation easing tokens. |
+| `image` | string | URL/file-like text input | Demo image URLs and assets. |
+| `asset-list` | array | list editor | Sliders, galleries, trails. |
+| `json` | object/array | JSON editor | Escape hatch for advanced config. |
+| `object` | object | nested group editor | Config object props. |
+| `array` | array | repeatable list editor | Items, tabs, FAQ entries. |
+| `compound` | custom | effect-provided renderer | Escape hatch for complex effect-specific UI. |
+
+### Type Rules
+
+- Unknown types should not silently render as a range.
+- If a type is not implemented in the UI yet, the shared renderer should show a clear unsupported-control state in development.
+- Serialization must be type-aware and overrideable per control.
+- Display formatting and copied-code serialization are different concerns. A formatted panel value should not automatically become copied-code output.
+- Complex values should use structured serialization, not string concatenation.
+
+## Registry Safety Model
+
+Every control must be classified against the installable registry component.
+
+Default:
+
+```js
+inRegistry: true
+```
+
+Live preview only:
+
+```js
+inRegistry: false
+```
+
+This matters because docs preview components can be richer than installable registry components. Copied code must represent what a user can actually paste after installing an effect.
+
+Before migrating any effect, compare:
+
+- docs remixer controls
+- docs-local preview component props
+- registry component props
+- `registry/index.json` import path
+
+If a control affects only docs-local preview behavior, keep it in the live panel but filter it out of copied code.
+
+## Shared Files To Create
+
+### 1. `apps/docs/src/hooks/usePropsRemixer.js`
+
+Purpose:
+
+- Store remixer values.
+- Update values by id.
+- Reset values.
+- Keep effect pages from duplicating state code.
+
+Planned API:
+
+```js
+const { values, setValue, resetValues, setValues } = usePropsRemixer(defaultValues);
+```
+
+Compatibility aliases can be provided if helpful:
+
+```js
+const { controls, updateControl, resetControls } = usePropsRemixer(defaultControls);
+```
+
+Implementation notes:
+
+- Accept flat primitives first.
+- Allow future support for nested values.
+- Reset should not keep stale mutated object references.
+- The hook should not know about `DemoContent.jsx`, registry paths, or code generation.
+
+### 2. `apps/docs/src/components/ui/RemixerLauncher.jsx`
+
+Purpose:
+
+- Own the floating Controls button.
+- Own slide-in/out panel layout.
+- Render `RemixerPanel`.
+- Support layout presets and custom effect overrides.
+
+Planned API:
+
+```jsx
+<RemixerLauncher
+  groups={controlGroups}
+  values={values}
+  onChange={setValue}
+  onCopyCode={buildCopiedCode}
+  onReset={resetValues}
+  defaultOpenGroupId="density"
+  preset={panelPreset}
+/>
+```
+
+Preset model:
+
+```js
+const preset = {
+  containerClassName: "pointer-events-none absolute inset-0 z-40 hidden xl:block",
+  buttonClassName: "right-4! top-25",
+  panelClassName: "right-0 top-[132px] h-[calc(100%-132px)] w-[344px]",
+  panelInnerClassName: "h-full py-4",
+  slideOutX: "100%",
+};
+```
+
+The launcher should not know about a specific effect. It only knows how to show the panel.
+
+### 3. `apps/docs/src/utils/buildRemixCode.js`
+
+Purpose:
+
+- Format values as JavaScript/JSX literals.
+- Filter registry-safe controls.
+- Assemble copied snippets consistently.
+
+Required helpers:
+
+```js
+formatControlValue(control, value)
+serializeControlValue(control, value)
+getRegistrySafeControls(controlGroups)
+buildRemixCode(options)
+```
+
+Expected behavior:
+
+- Numbers stay unquoted.
+- Booleans stay unquoted.
+- Strings are JSON-quoted.
+- Arrays and objects are serialized as valid JS.
+- Per-control `serialize` overrides are supported.
+- Copied-code comments include only values emitted in the snippet.
+- Docs-only controls are excluded when building registry snippets.
+
+### 4. `apps/docs/src/utils/getRegistryImportPath.js`
+
+Purpose:
+
+- Read `registry/index.json`.
+- Return installable import paths by registry component name.
+- Prevent copied snippets from importing docs-local preview paths.
+
+Example:
+
+```js
+getRegistryImportPath("spider-particles")
+// "@/components/effects/spider-particles"
+```
+
+## Spider Particles As Reference Example
+
+`spider-particles` should be migrated first only because it is a good validation case.
+
+Files checked:
+
+- `apps/docs/src/app/(marketing)/demo/spider-particles/DemoContent.jsx`
+- `apps/docs/src/components/spider-particles/index.jsx`
+- `registry/effects/backgrounds/spider-particles/index.jsx`
+- `apps/docs/src/components/ui/RemixerPanel.jsx`
+- `registry/index.json`
+
+Current docs controls:
+
+```js
+particleCount
+gridGap
+particleSize
+mouseConnectDist
+spotlightRadius
+particleColor
+lerpSpeed
+fadeSpeed
+showWeb
+```
+
+Current registry-safe copied controls:
+
+```js
+particleCount
+gridGap
+particleSize
+mouseConnectDist
+spotlightRadius
+particleColor
+```
+
+Docs-only controls:
+
+```js
+lerpSpeed
+fadeSpeed
+showWeb
+```
+
+Those docs-only controls should remain live in the preview and be marked:
+
+```js
+inRegistry: false
+```
+
+Expected copied import:
+
+```js
+import SpiderParticles from "@/components/effects/spider-particles";
+```
+
+Expected copied props:
+
+```js
+const spiderParticlesProps = {
+  particleCount: 180,
+  gridGap: 0,
+  particleSize: 20,
+  mouseConnectDist: 160,
+  spotlightRadius: 300,
+  particleColor: "#ffffff",
+};
+```
+
+## Spider Particles Validation Checklist
+
+After implementation:
+
+1. Open `/demo/spider-particles`.
+2. Confirm the panel button, panel size, panel position, blur, and slide direction match the current page.
+3. Change every live control and confirm the WebGL preview updates.
+4. Reset controls and confirm defaults return.
+5. Copy code and confirm it imports from `@/components/effects/spider-particles`.
+6. Confirm copied code excludes `lerpSpeed`, `fadeSpeed`, and `showWeb`.
+7. Confirm copied code includes valid literals, especially `particleColor: "#ffffff"`.
+8. Confirm copied code parses as JSX.
+9. Run lint/build for docs after the reference migration.
+
+## Future Effect Migration Checklist
+
+For each effect:
+
+1. Identify the installable registry name in `registry/index.json`.
+2. Compare the docs demo controls to the registry component props.
+3. Mark preview-only controls with `inRegistry: false`.
+4. Keep all live-preview controls wired to the preview component.
+5. Build copied code only from registry-safe controls.
+6. Choose the standard panel preset or copy the old page geometry into a custom preset.
+7. Verify each control type has a renderer and serializer.
+8. Confirm the copied snippet imports from the registry path.
+9. Manually test live controls, reset, and copy.
+10. Apply the system one effect at a time when implementation begins, so each effect stays easy to verify.
+
+
+## Final Rule
+
+The remixer should be effect-schema driven, not page-file driven. `DemoContent.jsx` can use the system, but the system should also work for any future docs page, registry preview, sandbox, or effect showcase that passes the same schema, values, callbacks, and code-generation strategy.

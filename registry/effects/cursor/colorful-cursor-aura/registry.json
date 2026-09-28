@@ -1,0 +1,134 @@
+{
+  "name": "colorful-cursor-aura",
+  "version": "1.1.0",
+  "changelog": [
+    {
+      "version": "1.1.0",
+      "date": "2026-07-22",
+      "summary": "reduce-motion applied",
+      "breaking": false
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-06-04",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "type": "registry:component",
+  "title": "Colorful Cursor Aura",
+  "description": "Layered radial color aura that follows the cursor across oversized headline text",
+  "category": "cursor",
+  "dependencies": [
+    "gsap"
+  ],
+  "registryDependencies": [],
+  "previewUrl": "/demo/colorful-cursor-aura",
+  "tier": "pro",
+  "main": "index.tsx",
+  "exportName": "ColorfulCursorAura",
+  "exportKind": "default",
+  "importPath": "@/components/effects/colorful-cursor-aura",
+  "target": "src/components/effects/colorful-cursor-aura",
+  "files": [
+    {
+      "path": "index.tsx",
+      "target": "src/components/effects/colorful-cursor-aura/index.tsx"
+    },
+    {
+      "path": "ColorfulCursorAuraComp.tsx",
+      "target": "src/components/effects/colorful-cursor-aura/ColorfulCursorAuraComp.tsx"
+    }
+  ],
+  "props": [
+    {
+      "name": "auraSize",
+      "type": "number",
+      "default": 325,
+      "description": "Diameter of the cursor aura.",
+      "suggested": true
+    },
+    {
+      "name": "color1",
+      "type": "string",
+      "default": "#a78bfa",
+      "description": "Outer aura ring color.",
+      "suggested": true
+    },
+    {
+      "name": "color2",
+      "type": "string",
+      "default": "#fb7185",
+      "description": "Middle aura ring color.",
+      "suggested": true
+    },
+    {
+      "name": "color3",
+      "type": "string",
+      "default": "#fde68a",
+      "description": "Inner aura ring color.",
+      "suggested": true
+    },
+    {
+      "name": "followSpeed",
+      "type": "number",
+      "default": 0.12,
+      "description": "How quickly the aura follows the cursor.",
+      "suggested": true
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "suggested": true,
+    "defaultOpenGroupId": "controls",
+    "layout": {
+      "controlsButtonClassName": "right-4! top-25!"
+    },
+    "panel": {
+      "className": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "controls": [
+      {
+        "name": "auraSize",
+        "label": "Aura Size",
+        "type": "range",
+        "group": "controls",
+        "copyable": true,
+        "min": 0,
+        "max": 640,
+        "step": 1
+      },
+      {
+        "name": "color1",
+        "label": "Color 1",
+        "type": "color",
+        "group": "style",
+        "copyable": true
+      },
+      {
+        "name": "color2",
+        "label": "Color 2",
+        "type": "color",
+        "group": "style",
+        "copyable": true
+      },
+      {
+        "name": "color3",
+        "label": "Color 3",
+        "type": "color",
+        "group": "style",
+        "copyable": true
+      },
+      {
+        "name": "followSpeed",
+        "label": "Follow Speed",
+        "type": "range",
+        "group": "motion",
+        "copyable": true,
+        "min": 0.01,
+        "max": 1,
+        "step": 0.01
+      }
+    ]
+  }
+}

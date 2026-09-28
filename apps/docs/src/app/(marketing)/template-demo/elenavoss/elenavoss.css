@@ -1,0 +1,279 @@
+@font-face {
+  font-family: "Elenavoss Helvetica Neue";
+  src: url("./assets/fonts/HelveticaNeueLight.woff2") format("woff2");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Elenavoss Helvetica Neue";
+  src: url("./assets/fonts/HelveticaNeueRoman.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Elenavoss Helvetica Neue";
+  src: url("./assets/fonts/HelveticaNeueMedium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Elenavoss Helvetica Neue";
+  src: url("./assets/fonts/HelveticaNeueBold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+.elenavoss-body {
+  /* Referenced by .under-multi's transition below - was previously
+     undefined, which makes `var(--default-ease)` invalid and therefore
+     invalidates the ENTIRE `transition: all 1s var(--default-ease)`
+     shorthand at computed-value time, collapsing transition-duration back
+     to its 0s initial value - so the underline hover state changed
+     instantly instead of easing in over 1s. */
+  --default-ease: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.elenavoss-body,
+.elenavoss-body * {
+  /* background-color: #080808; */
+  font-family: "Elenavoss Helvetica Neue", sans-serif;
+}
+
+.elenavoss-body {
+  font-weight: 400;
+}
+
+
+.elenavoss-body ::selection {
+  background-color: #F16B0D;
+  color: #070707;
+}
+
+.elenavoss-body ::-moz-selection {
+  background-color: #F16B0D;
+  color: #070707;
+}
+
+.elenavoss-body .font-light {
+  font-weight: 300 !important;
+}
+
+.elenavoss-body .font-normal {
+  font-weight: 400 !important;
+}
+
+.elenavoss-body .font-medium {
+  font-weight: 500 !important;
+}
+
+.elenavoss-body .font-bold {
+  font-weight: 700 !important;
+}
+
+/* Diagonal wipe reveal for the hero portrait: the mask's opaque region
+   starts as a sliver at the bottom-right corner and grows toward the
+   top-left along a 45deg line as --reveal increases, with a soft
+   (not hard-edged) transition band so it reads as a wipe, not a hard cut. */
+.hero-mask-reveal {
+  -webkit-mask-image: linear-gradient(to top left, black var(--reveal, 0%), transparent calc(var(--reveal, 0%) + 25%));
+  mask-image: linear-gradient(to top left, black var(--reveal, 0%), transparent calc(var(--reveal, 0%) + 25%));
+}
+
+/* Circle-from-center reveal for the services cards' hover fill
+   (Services.tsx): driven by the --reveal custom property, a circle
+   centered on the card grows outward to expose the gradient background
+   beneath the mask. radial-gradient's default "circle" sizing measures
+   100% as the distance to the farthest corner, so --reveal going 0% to
+   100% spreads the fill from the card's center out to its edges. The
+   transparent stop trails --reveal by a shrinking band (capped at 100%
+   via min()) so the growing edge stays soft mid-animation but resolves
+   to a fully opaque fill - not a faint ring - once --reveal reaches 100%. */
+.radial-mask-bg-fill {
+  --reveal: 0%;
+  -webkit-mask-image: radial-gradient(circle at center, black var(--reveal), transparent min(calc(var(--reveal) + 18%), 100%));
+  mask-image: radial-gradient(circle at center, black var(--reveal), transparent min(calc(var(--reveal) + 18%), 100%));
+}
+
+.marquee-1 {
+  animation: marquee-scroll-y 10s linear infinite;
+  will-change: transform;
+  /* transform: translateY(-55%); */
+}
+
+@keyframes marquee-scroll-y {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-51.1%);
+  }
+}
+.marquee-2 {
+  animation: marquee-scroll-y-2 18s linear infinite;
+  will-change: transform;
+  /* transform: translateY(-55%); */
+}
+
+@keyframes marquee-scroll-y-2 {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-51.1%);
+  }
+}
+
+
+.under-multi {
+  text-decoration: none;
+  background-image: linear-gradient(rgba(0, 0, 0, 0), rgb(0, 0, 0, 0)), linear-gradient(#ffffff, #ffffff);
+  background-size: 100% 0px, 0% 1px;
+  background-position: 100% 100%, 0 100%;
+  background-repeat: no-repeat, no-repeat;
+  transition: all 1s var(--default-ease);
+}
+
+.under-multi-parent:hover .under-multi {
+  background-size: 100% 0px, 100% 1px;
+}
+
+@media (max-width: 1025px) {
+  @keyframes marquee-scroll-y {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-50.27%);
+  }
+}
+@keyframes marquee-scroll-y-2 {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-50.27%);
+  }
+}
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-1,
+  .marquee-2 {
+    animation: none;
+  }
+
+  /* The pluckable divider's hit-region grows on hover to make the string
+     easier to catch. Line.tsx already disables the pluck itself under
+     reduced motion, so without this the box would still resize on hover
+     for an interaction that no longer does anything. */
+  .box:hover {
+    height: 40px;
+    top: -20px;
+  }
+
+  /* Services cards (Services.tsx). The component also branches on the same
+     preference in JS, but that state is false during server rendering and
+     React does not reconcile className differences while hydrating - so the
+     horizontal-scroll classes from the server HTML would stick. These rules
+     are applied by the browser regardless of hydration, which is what
+     actually makes the grid appear. */
+  .services-section {
+    height: auto !important;
+  }
+
+  .services-sticky {
+    position: static !important;
+    height: auto !important;
+    overflow: visible !important;
+    margin-top: 0 !important;
+  }
+
+  .services-row {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    transform: none !important;
+    width: auto !important;
+    /* The server HTML carries the horizontal-scroll classes (which have no
+       top padding, since that layout is vertically centred in a pinned
+       viewport), so the gap under the intro copy has to be set here too -
+       the grid sits directly in flow beneath it. */
+    padding-top: 5vw;
+  }
+
+  .services-card {
+    width: auto !important;
+    height: auto !important;
+    min-height: 22vw;
+    flex-shrink: 1 !important;
+  }
+
+  @media (max-width: 767px) {
+    .services-row {
+      grid-template-columns: minmax(0, 1fr);
+      padding-top: 12vw;
+    }
+
+    .services-card {
+      min-height: 0;
+    }
+  }
+
+  @media (min-width: 768px) and (max-width: 1025px) {
+    .services-row {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      padding-top: 8vw;
+    }
+
+    .services-card {
+      min-height: 32vw;
+    }
+  }
+}
+
+/* Get in Touch modal form (GetInTouchModal.tsx): every field's label is
+   now its native placeholder (see Input.tsx/Textarea.tsx), which needs
+   its own contrast on the modal's dark background - not covered by
+   ContactForm's injected <style> block. */
+.get-in-touch-form input::placeholder,
+.get-in-touch-form textarea::placeholder {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+
+.string-line {
+  height: 1px;
+  position: relative;
+  width: 100%;
+}
+.string-line svg {
+  position: absolute;
+  height: 100px;
+  width: 100%;
+  top: -50px;
+}
+
+.string-line svg path {
+  stroke-width: 1px;
+  stroke: black;
+  fill: none;
+}
+.box {
+  height: 40px;
+  width: 100%;
+  display: flex;
+  position: relative;
+  top: -20px;
+  z-index: 1;
+}
+.box:hover {
+  height: 150px;
+
+  top: -75px;
+}

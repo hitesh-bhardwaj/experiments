@@ -1,0 +1,160 @@
+{
+  "name": "magnetic-image-trail",
+  "type": "registry:component",
+  "title": "Magnetic Image Trail",
+  "description": "Canvas 2D effect that orbits a cluster of images around the cursor in a diagonal loop. Images scale up in the direction of movement and push forward/upward based on mouse velocity, creating a magnetic pull feel.",
+  "dependencies": [],
+  "registryDependencies": [],
+  "exportName": "MagneticImageTrail",
+  "exportKind": "default",
+  "tier": "pro",
+  "version": "1.1.0",
+  "changelog": [
+    {
+      "version": "1.1.0",
+      "date": "2026-07-22",
+      "summary": "reduce-motion applied",
+      "breaking": false
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-06-04",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "props": [
+    {
+      "name": "trailLength",
+      "type": "number",
+      "default": 18,
+      "description": "Maximum visible images in the trail.",
+      "suggested": true
+    },
+    {
+      "name": "magnetStrength",
+      "type": "number",
+      "default": 1,
+      "description": "Strength of magnetic pull, speed boost, and directional push.",
+      "suggested": true
+    },
+    {
+      "name": "scaleIn",
+      "type": "number",
+      "default": 0.06,
+      "description": "Minimum scale for images entering and leaving the center path.",
+      "suggested": true
+    },
+    {
+      "name": "scaleOut",
+      "type": "number",
+      "default": 1.48,
+      "description": "Maximum directional scale for images pushed away by movement.",
+      "suggested": true
+    },
+    {
+      "name": "lerp",
+      "type": "number",
+      "default": 0.18,
+      "description": "Pointer smoothing amount; higher values follow faster.",
+      "suggested": true
+    },
+    {
+      "name": "size",
+      "type": "number",
+      "default": 1,
+      "description": "Overall image size multiplier.",
+      "suggested": true
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "suggested": true,
+    "defaultOpenGroupId": "content",
+    "layout": {
+      "controlsButtonClassName": "right-4! top-25!"
+    },
+    "panel": {
+      "className": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "controls": [
+      {
+        "name": "trailLength",
+        "label": "Trail Length",
+        "type": "range",
+        "group": "controls",
+        "copyable": true,
+        "min": 1,
+        "max": 18,
+        "step": 1
+      },
+      {
+        "name": "magnetStrength",
+        "label": "Magnet Strength",
+        "type": "range",
+        "group": "controls",
+        "copyable": true,
+        "min": 0,
+        "max": 3,
+        "step": 0.05
+      },
+      {
+        "name": "scaleIn",
+        "label": "Scale In",
+        "type": "range",
+        "group": "motion",
+        "copyable": true,
+        "min": 0,
+        "max": 1,
+        "step": 0.01
+      },
+      {
+        "name": "scaleOut",
+        "label": "Scale Out",
+        "type": "range",
+        "group": "motion",
+        "copyable": true,
+        "min": 0.5,
+        "max": 3,
+        "step": 0.05
+      },
+      {
+        "name": "lerp",
+        "label": "Lerp",
+        "type": "range",
+        "group": "motion",
+        "copyable": true,
+        "min": 0.01,
+        "max": 1,
+        "step": 0.01
+      },
+      {
+        "name": "size",
+        "label": "Size",
+        "type": "range",
+        "group": "content",
+        "copyable": true,
+        "min": 0.1,
+        "max": 3,
+        "step": 0.05
+      }
+    ]
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/magnetic-image-trail/index.tsx"
+    },
+    {
+      "path": "MagneticTrail.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/magnetic-image-trail/MagneticTrail.tsx"
+    },
+    {
+      "path": "createSuspendedRaf.ts",
+      "type": "registry:component",
+      "target": "src/components/effects/magnetic-image-trail/createSuspendedRaf.ts"
+    }
+  ]
+}

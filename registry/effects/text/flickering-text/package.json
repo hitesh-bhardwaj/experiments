@@ -1,0 +1,18 @@
+{
+  "name": "@hyperiux/flickering-text",
+  "version": "1.0.0",
+  "description": "Deterministic per-character text flicker with adjustable correlation and optional glow bloom.",
+  "main": "index.tsx",
+  "files": [
+    "index.tsx",
+    "registry.json"
+  ],
+  "keywords": [
+    "text",
+    "hyperiux"
+  ],
+  "dependencies": {
+    "gsap": "*",
+    "@gsap/react": "*"
+  }
+}

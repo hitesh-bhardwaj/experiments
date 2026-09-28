@@ -1,0 +1,23 @@
+{
+  "name": "@hyperiux/colliding-models",
+  "version": "1.0.1",
+  "description": "Physics-driven colliding 3D connectors with transmission material and postprocessing, built with R3F + Rapier.",
+  "main": "index.tsx",
+  "files": [
+    "index.tsx",
+    "createSuspendedRaf.ts",
+    "registry.json"
+  ],
+  "keywords": [
+    "webgl",
+    "hyperiux"
+  ],
+  "dependencies": {
+    "three": "*",
+    "@react-three/fiber": "*",
+    "@react-three/drei": "*",
+    "@react-three/rapier": "*",
+    "@react-three/postprocessing": "*",
+    "maath": "*"
+  }
+}

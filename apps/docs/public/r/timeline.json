@@ -1,0 +1,103 @@
+{
+  "name": "timeline",
+  "type": "registry:component",
+  "title": "Timeline",
+  "description": "Horizontal scroll timeline with Lenis smoothing, GSAP milestone reveals, and reduced-motion support.",
+  "dependencies": [
+    "@gsap/react",
+    "gsap",
+    "lenis"
+  ],
+  "registryDependencies": [],
+  "exportName": "Timeline",
+  "exportKind": "default",
+  "tier": "free",
+  "version": "1.0.0",
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "date": "2026-08-21",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "props": [
+    {
+      "name": "textColor",
+      "type": "color",
+      "default": "#000000",
+      "description": "Text color used for the timeline title, dates, and milestone descriptions.",
+      "remixer": {
+        "control": "color",
+        "group": "style",
+        "groupTitle": "Style"
+      }
+    },
+    {
+      "name": "mutedTextColor",
+      "type": "color",
+      "default": "#3f3f46",
+      "description": "Secondary text color for descriptions and the period label.",
+      "remixer": {
+        "control": "color",
+        "group": "style",
+        "groupTitle": "Style"
+      }
+    },
+    {
+      "name": "activeColor",
+      "type": "color",
+      "default": "#ff5f00",
+      "description": "Accent color shared by the active timeline line, dots, and milestone stems.",
+      "remixer": {
+        "control": "color",
+        "group": "style",
+        "groupTitle": "Style"
+      }
+    },
+    {
+      "name": "backgroundColor",
+      "type": "color",
+      "default": "#ffffff",
+      "description": "Background color of the timeline section.",
+      "remixer": {
+        "control": "color",
+        "group": "style",
+        "groupTitle": "Style"
+      }
+    },
+    {
+      "name": "duration",
+      "type": "number",
+      "default": 1.2,
+      "description": "Reveal animation and Lenis smoothing duration in seconds.",
+      "remixer": {
+        "control": "range",
+        "group": "scroll",
+        "groupTitle": "Scroll",
+        "min": 0.4,
+        "max": 3,
+        "step": 0.1
+      }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "style",
+    "layout": {
+      "buttonClassName": "right-4! top-25!",
+      "panelClassName": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/timeline/index.tsx",
+      "content": "// Built using Hyperiux Vault: https://vault.hyperiux.com\n\n\"use client\";\nimport Image from \"next/image\";\nimport {\n  type CSSProperties,\n  useRef,\n  useSyncExternalStore,\n} from \"react\";\nimport gsap from \"gsap\";\nimport ScrollTrigger from \"gsap/dist/ScrollTrigger\";\nimport SplitText from \"gsap/dist/SplitText\";\nimport { useGSAP } from \"@gsap/react\";\nimport { ReactLenis } from \"lenis/react\";\n\ngsap.registerPlugin(ScrollTrigger, SplitText);\n\nconst monthOrder = {\n  January: 1,\n  February: 2,\n  March: 3,\n  April: 4,\n  May: 5,\n  June: 6,\n  July: 7,\n  August: 8,\n  September: 9,\n  October: 10,\n  November: 11,\n  December: 12,\n} as const;\n\ntype Month = keyof typeof monthOrder;\n\ntype JourneyItem = {\n  id: string;\n  year: string;\n  month: Month;\n  content: string;\n};\n\ntype PositionRange = readonly [number, number];\ntype SplitTextInstance = InstanceType<typeof SplitText>;\n\ntype TimelineProps = {\n  title?: string;\n  periodLabel?: string;\n  textColor?: string;\n  mutedTextColor?: string;\n  activeColor?: string;\n  backgroundColor?: string;\n  imageUrl?: string;\n  imageAlt?: string;\n  duration?: number;\n  scrollDuration?: number;\n};\n\nconst REDUCED_MOTION_QUERY = \"(prefers-reduced-motion: reduce)\";\n\nfunction subscribeToReducedMotion(callback: () => void) {\n  if (typeof window === \"undefined\") return () => {};\n\n  const mediaQueryList = window.matchMedia(REDUCED_MOTION_QUERY);\n  mediaQueryList.addEventListener(\"change\", callback);\n\n  return () => mediaQueryList.removeEventListener(\"change\", callback);\n}\n\nfunction getReducedMotionSnapshot() {\n  if (typeof window === \"undefined\") return false;\n\n  return window.matchMedia?.(REDUCED_MOTION_QUERY)?.matches ?? false;\n}\n\nfunction getServerReducedMotionSnapshot() {\n  return false;\n}\n\nfunction usePrefersReducedMotion() {\n  return useSyncExternalStore(\n    subscribeToReducedMotion,\n    getReducedMotionSnapshot,\n    getServerReducedMotionSnapshot,\n  );\n}\n\nconst topJourneyData: JourneyItem[] = [\n  {\n    id: \"2020-march\",\n    year: \"2020\",\n    month: \"March\",\n    content: \"Signal research turns scattered notes into a clear product thesis\",\n  },\n  {\n    id: \"2021-july\",\n    year: \"2021\",\n    month: \"July\",\n    content: \"Founding release ships with the first live customer journeys\",\n  },\n  {\n    id: \"2023-april\",\n    year: \"2023\",\n    month: \"April\",\n    content: \"Automation layer connects insight, publishing, and sales motion\",\n  },\n  {\n    id: \"2026-may\",\n    year: \"2026\",\n    month: \"May\",\n    content: \"New markets open with localized launches and faster onboarding\",\n  },\n];\n\nconst bottomJourneyData: JourneyItem[] = [\n  {\n    id: \"2020-november\",\n    year: \"2020\",\n    month: \"November\",\n    content: \"Prototype sprint validates the experience with real operators\",\n  },\n  {\n    id: \"2022-october\",\n    year: \"2022\",\n    month: \"October\",\n    content: \"Community feedback reshapes the roadmap into sharper releases\",\n  },\n  {\n    id: \"2025-september\",\n    year: \"2025\",\n    month: \"September\",\n    content: \"Companion mobile workflows make the timeline travel-ready\",\n  },\n];\n\nconst allJourneyItems: JourneyItem[] = [\n  ...topJourneyData,\n  ...bottomJourneyData,\n].sort((a, b) => {\n  const yearDiff = Number(a.year) - Number(b.year);\n  if (yearDiff !== 0) return yearDiff;\n  return monthOrder[a.month] - monthOrder[b.month];\n});\n\nexport default function Timeline({\n  title = \"Product Storyline\",\n  periodLabel = \"2020-2026\",\n  textColor = \"#000000\",\n  mutedTextColor = \"#3f3f46\",\n  activeColor = \"#ff5f00\",\n  backgroundColor = \"#ffffff\",\n  imageUrl = \"https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1600&q=80\",\n  imageAlt = \"Modern office workspace\",\n\n  duration,\n  scrollDuration = 1.2,\n}: TimelineProps) {\n  const sectionRef = useRef<HTMLElement>(null);\n  const wholeSliderRef = useRef<HTMLDivElement>(null);\n  const reducedMotion = usePrefersReducedMotion();\n  const animationDuration = duration ?? scrollDuration;\n  const normalizedDuration = Math.max(0.2, animationDuration);\n  const sectionStyle = {\n    color: textColor,\n    backgroundColor,\n  } satisfies CSSProperties;\n  const activeStyle = {\n    backgroundColor: activeColor,\n  } satisfies CSSProperties;\n  const mutedTextStyle = {\n    color: mutedTextColor,\n  } satisfies CSSProperties;\n\n  useGSAP(() => {\n    const section = sectionRef.current;\n\n    if (!section) return;\n\n    const isTablet = window.innerWidth >= 642 && window.innerWidth <= 1024;\n    const isMobile = window.innerWidth < 642;\n    const slidePercent = isTablet ? -60 : isMobile ? -57 : -65;\n    const lineWidth = isTablet ? \"75%\" : isMobile ? \"65%\" : \"98%\";\n    const lineStart = isTablet ? \"top 10%\" : isMobile ? \"top top\" : \"top top\";\n    const slideEnd = isMobile ? \"82% 50%\" : \"92% bottom\";\n    const lineEnd = isMobile ? \"80% 50%\" : isTablet ? \"90% bottom\" : \"92% bottom\";\n\n    const tl = gsap.timeline({\n      scrollTrigger: {\n        trigger: section,\n        start: \"2% top\",\n        end: slideEnd,\n        scrub: true,\n      },\n      defaults: {\n        ease: \"none\",\n      },\n    });\n\n    tl.fromTo(\n      wholeSliderRef.current,\n      { xPercent: 0 },\n      { xPercent: slidePercent },\n    );\n\n    if (reducedMotion) {\n      gsap.set(\".journey-line\", { width: lineWidth });\n      return;\n    }\n\n    gsap.to(\".journey-line\", {\n      width: lineWidth,\n      ease: \"none\",\n      scrollTrigger: {\n        trigger: section,\n        start: lineStart,\n        end: lineEnd,\n        scrub: true,\n      },\n    });\n  }, { dependencies: [reducedMotion], scope: sectionRef });\n\n  useGSAP(() => {\n    const section = sectionRef.current;\n\n    if (!section) return;\n\n    const items = allJourneyItems;\n    const isMobileViewport = window.innerWidth < 642;\n    const isTabletViewport =\n      window.innerWidth >= 642 && window.innerWidth <= 1024;\n\n    if (reducedMotion) {\n      items.forEach((item) => {\n        gsap.set(`.jl-${item.id}`, { scaleY: 1 });\n        gsap.set(`.jd-${item.id}`, { scale: 1 });\n        gsap.set(`.title-${item.id}`, { opacity: 1, clearProps: \"transform\" });\n        gsap.set(`.description-${item.id}`, {\n          opacity: 1,\n          clearProps: \"transform\",\n        });\n      });\n      return;\n    }\n\n    items.forEach((item) => {\n      gsap.set(`.jl-${item.id}`, {\n        scaleY: 0,\n        transformOrigin: \"bottom bottom\",\n      });\n      gsap.set(`.jd-${item.id}`, { scale: 0 });\n      gsap.set(`.title-${item.id}`, { opacity: 1 });\n      gsap.set(`.description-${item.id}`, { opacity: 1 });\n    });\n\n    const titleSplits: Partial<Record<string, SplitTextInstance>> = {};\n    const descriptionSplits: Partial<Record<string, SplitTextInstance>> = {};\n\n    items.forEach((item) => {\n      titleSplits[item.id] = new SplitText(`.title-${item.id}`, {\n        type: \"chars, words, lines\",\n        mask: \"lines\",\n      });\n\n      descriptionSplits[item.id] = new SplitText(`.description-${item.id}`, {\n        type: \"chars, words, lines\",\n        mask: \"lines\",\n      });\n    });\n\n    const createItemTimeline = (\n      item: JourneyItem,\n      startPos: number,\n      endPos: number,\n    ) => {\n      const lineSelector = `.jl-${item.id}`;\n      const dotSelector = `.jd-${item.id}`;\n      const titleLines = titleSplits[item.id]?.lines || [];\n      const descriptionLines = descriptionSplits[item.id]?.lines || [];\n\n      const isTop = topJourneyData.some((topItem) => topItem.id === item.id);\n\n      if (!isTop) {\n        gsap.set(lineSelector, { transformOrigin: \"top top\" });\n      }\n\n      const timeline = gsap.timeline({\n        scrollTrigger: {\n          trigger: section,\n          start: `${startPos}% ${\n            isMobileViewport ? \"38%\" : isTabletViewport ? \"top\" : \"20%\"\n          }`,\n          end: `${endPos}% ${\n            isMobileViewport ? \"50%\" : isTabletViewport ? \"40%\" : \"60%\"\n          }`,\n          scrub: true,\n        },\n      });\n\n      timeline\n        .to(lineSelector, {\n          scaleY: 1,\n          duration: normalizedDuration * 0.4,\n        })\n        .to(\n          dotSelector,\n          {\n            scale: 1,\n            duration: normalizedDuration * 0.4,\n          },\n          \"<\",\n        )\n        .fromTo(\n          titleLines,\n          { y: 100 },\n          {\n            y: 0,\n            delay: -0.8 * normalizedDuration,\n            duration: normalizedDuration,\n            stagger: 0.02,\n            ease: \"power2.out\",\n          },\n        )\n        .fromTo(\n          descriptionLines,\n          { y: 100 },\n          {\n            y: 0,\n            duration: normalizedDuration,\n            stagger: 0.02,\n            ease: \"power2.out\",\n          },\n          \"<\",\n        );\n\n      return timeline;\n    };\n\n    const positions: PositionRange[] =\n      window.innerWidth < 642\n        ? [\n            [22, 32],\n            [28, 38],\n            [36, 46],\n            [45, 55],\n            [52, 62],\n            [60, 70],\n            [69, 79],\n          ]\n        : window.innerWidth >= 642 && window.innerWidth <= 1024\n          ? [\n              [16, 27],\n              [24, 36],\n              [35, 47],\n              [45, 57],\n              [55, 67],\n              [62, 74],\n              [70, 82],\n            ]\n          : [\n              [6, 26],\n              [16, 36],\n              [26, 46],\n              [35, 55],\n              [45, 65],\n              [55, 75],\n              [65, 85],\n            ];\n\n    items.forEach((item, index) => {\n      const [startPos, endPos] = positions[index];\n      createItemTimeline(item, startPos, endPos);\n    });\n\n    const handleResize = () => {\n      ScrollTrigger.refresh();\n    };\n\n    window.addEventListener(\"resize\", handleResize);\n\n    return () => {\n      Object.values(titleSplits).forEach((split) => split?.revert?.());\n      Object.values(descriptionSplits).forEach((split) => split?.revert?.());\n      window.removeEventListener(\"resize\", handleResize);\n    };\n  }, { dependencies: [normalizedDuration, reducedMotion], scope: sectionRef });\n\n  const content = (\n    <section\n      ref={sectionRef}\n      id=\"journey\"\n      className=\"h-[200vw] max-[1025px]:h-[400vh] max-md:h-[400vh] w-full relative max-[1025px]:py-[7%]\"\n      style={sectionStyle}\n    >\n      <div className=\"h-screen w-screen flex items-center sticky top-0 pt-[5%] overflow-hidden max-[1025px]:block max-[1025px]:top-[10%] max-md:top-[5%] \">\n        <div\n          ref={wholeSliderRef}\n          className=\"mr-[2vw] flex h-[30vw] w-[240vw] items-center gap-[5vw] px-[5vw] max-[1025px]:h-[70vh] max-[1025px]:w-[400vw] max-[1025px]:flex-col max-[1025px]:items-start max-[1025px]:gap-[2vw] max-[1025px]:px-[5vw] max-md:h-[80vh] max-md:w-[800vw] max-md:px-[7vw]\"\n        >\n          <div className=\"relative h-full w-[30vw] overflow-hidden rounded-[1vw] max-[1025px]:h-[40vw] max-[1025px]:w-[15%] max-[1025px]:rounded-[3vw] max-md:h-[65vw] max-md:w-[85vw] max-md:rounded-[5vw]\">\n            <Image\n              src={imageUrl}\n              alt={imageAlt}\n              width={900}\n              height={900}\n              sizes=\"(max-width: 642px) 85vw, (max-width: 1025px) 40vw, 30vw\"\n              quality={90}\n              className=\"h-full w-full object-cover\"\n            />\n          </div>\n\n          <div className=\"relative h-full w-full  max-[1025px]:h-[50%]\">\n            <div className=\"w-full absolute left-0 top-[49%] tranlate-y-[-50%] flex items-center h-fit\">\n              <div\n                className=\"h-[.8vw] w-[.8vw] shrink-0 rounded-full max-md:h-[2vw] max-md:w-[2vw] max-[1025px]:h-[1.5vw] max-[1025px]:w-[1.5vw]\"\n                style={activeStyle}\n              ></div>\n              <div\n                className=\"-mx-[.4vw] h-px w-[0%] rounded-full journey-line max-md:-mx-[1.5vw] max-[1025px]:-mx-[1.125vw]\"\n                style={activeStyle}\n              ></div>\n              <div\n                className=\"h-[.8vw] w-[.8vw] shrink-0 rounded-full max-md:h-[2vw] max-md:w-[2vw] max-[1025px]:h-[1.5vw] max-[1025px]:w-[1.5vw]\"\n                style={activeStyle}\n              ></div>\n            </div>\n\n            <div className=\"flex h-1/2 w-full items-center justify-start gap-[.5vw]\">\n              <div className=\"h-full w-[20%] pt-[2vw] max-md:h-fit max-md:pt-[5vw]\">\n                <h2 className=\"w-[65%]  text-[3vw] leading-[0.95] max-[1025px]:w-[75%] max-[1025px]:text-[7vw] max-md:text-[8.5vw]\">\n                  {title}\n                </h2>\n              </div>\n\n              <div className=\"w-full flex h-full gap-x-[15vw] max-md:gap-x-[40vw]\">\n                {topJourneyData.map((item) => (\n                  <div\n                    key={`top-${item.id}`}\n                    className=\"relative h-full w-[30vw] px-[3vw]  max-[1025px]:w-[50vw] max-[1025px]:px-[5vw] max-md:flex max-md:w-[70vw] max-md:flex-col max-md:px-[7vw]\"\n                  >\n                    <div className=\"w-full absolute left-0 bottom-0 top-0 h-full\">\n                      <div\n                        className={`size-[1vw] max-md:size-[2.5vw] max-[1025px]:size-[2vw] translate-x-[-50%] relative aspect-square rounded-full jd-${item.id}`}\n                        style={activeStyle}\n                      ></div>\n                      <div\n                        className={`h-[94%] w-px origin-bottom rounded-full jl-${item.id}`}\n                        style={activeStyle}\n                      ></div>\n                    </div>\n\n                    <div className=\"mt-[-1vw] space-y-[1vw] max-[1025px]:mt-[-1.5vw] max-md:mt-[-2vw]\">\n                      <h4\n                        className={`title-${item.id}  text-[2.5vw] leading-none max-[1025px]:text-[5vw] max-md:text-[6.4vw]`}\n                      >\n                        {item.year} {item.month}\n                      </h4>\n                      <p\n                        className={`description-${item.id} w-[90%] text-[1.5vw] leading-[1.15] max-[1025px]:w-[70%] max-[1025px]:text-[3.2vw] max-md:w-[90%] max-md:text-[4.8vw]`}\n                        style={mutedTextStyle}\n                      >\n                        {item.content}\n                      </p>\n                    </div>\n                  </div>\n                ))}\n              </div>\n            </div>\n\n            <div className=\"h-1/2 flex items-center justify-start w-full\">\n              <div className=\"w-[34%] pt-[2vw] max-md:pt-[5vw] max-md:w-[30%] h-full max-[1025px]:pt-[5vw]\">\n                <p\n                  className=\" text-[1.65vw] leading-none max-[1025px]:text-[3vw] max-md:text-[4.2vw]\"\n                  style={mutedTextStyle}\n                >\n                  {periodLabel}\n                </p>\n              </div>\n\n              <div className=\"w-full flex h-full gap-x-[20vw] ml-[7vw] max-md:gap-x-[40vw] max-[1025px]:ml-0 max-md:ml-[7vw]\">\n                {bottomJourneyData.map((item) => (\n                  <div\n                    key={`bottom-${item.id}`}\n                    className=\"relative h-full w-[25vw] px-[3vw]  max-[1025px]:flex max-[1025px]:w-[20%] max-[1025px]:flex-col max-[1025px]:justify-center max-[1025px]:px-[5vw] max-md:w-[70vw] max-md:px-[7vw]\"\n                  >\n                    <div className=\"w-full absolute left-0 bottom-[-1%] h-full\">\n                      <div\n                        className={`h-[94%] origin-top w-px rounded-full max-md:h-full jl-${item.id}`}\n                        style={activeStyle}\n                      ></div>\n                      <div\n                        className={`size-[1vw] max-md:size-[2.5vw] max-[1025px]:size-[2vw] translate-x-[-50%] relative w-auto aspect-square rounded-full jd-${item.id}`}\n                        style={activeStyle}\n                      ></div>\n                    </div>\n\n                    <div className=\"flex h-full w-full flex-col justify-end space-y-[1vw]\">\n                      <h4\n                        className={`title-${item.id}  text-[2.5vw] leading-none max-[1025px]:text-[5vw] max-md:text-[6.4vw]`}\n                      >\n                        {item.year} {item.month}\n                      </h4>\n                      <p\n                        className={`description-${item.id} w-[90%] text-[1.5vw] leading-[1.15] max-[1025px]:w-[70%] max-[1025px]:text-[3.2vw] max-md:w-[90%] max-md:text-[4.8vw]`}\n                        style={mutedTextStyle}\n                      >\n                        {item.content}\n                      </p>\n                    </div>\n                  </div>\n                ))}\n              </div>\n            </div>\n          </div>\n        </div>\n      </div>\n    </section>\n  );\n\n  return (\n    <ReactLenis\n      root\n      options={{\n        duration: reducedMotion\n          ? Math.min(normalizedDuration, 0.6)\n          : normalizedDuration,\n        smoothWheel: true,\n        syncTouch: true,\n        touchMultiplier: 1,\n        wheelMultiplier: 1,\n      }}\n    >\n      {content}\n    </ReactLenis>\n  );\n}\n"
+    }
+  ]
+}

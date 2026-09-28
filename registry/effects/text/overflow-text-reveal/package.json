@@ -1,0 +1,17 @@
+{
+  "name": "@hyperiux/overflow-text-reveal",
+  "version": "1.1.0",
+  "description": "Text lines slide up from hidden overflow with smooth stagger animation on scroll",
+  "main": "index.tsx",
+  "files": [
+    "index.tsx",
+    "registry.json"
+  ],
+  "keywords": [
+    "text",
+    "hyperiux"
+  ],
+  "dependencies": {
+    "gsap": "*"
+  }
+}

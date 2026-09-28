@@ -1,0 +1,139 @@
+{
+  "name": "numeric-tunnel",
+  "type": "registry:component",
+  "title": "Numeric Tunnel",
+  "description": "WebGL loader with a 3D numeric tunnel that crossfades into a chromatic aberration warp effect",
+  "dependencies": [
+    "gsap",
+    "@react-three/fiber",
+    "@react-three/drei",
+    "three"
+  ],
+  "registryDependencies": [],
+  "exportName": "NumericTunnel",
+  "exportKind": "default",
+  "tier": "free",
+  "version": "1.0.1",
+  "changelog": [
+    {
+      "version": "1.0.1",
+      "date": "2026-07-21",
+      "summary": "Add prefers-reduced-motion support: ring rotation and the end-of-tunnel warp/distortion effect are both skipped",
+      "breaking": false
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-07-20",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "props": [
+    {
+      "name": "digitCount",
+      "type": "number",
+      "default": 50,
+      "description": "Number of digits rendered in the tunnel.",
+      "suggested": true
+    },
+    {
+      "name": "speed",
+      "type": "number",
+      "default": 1,
+      "description": "Forward motion speed.",
+      "suggested": true
+    },
+    {
+      "name": "depth",
+      "type": "number",
+      "default": 900,
+      "description": "Visual tunnel depth.",
+      "suggested": true
+    },
+    {
+      "name": "textColor",
+      "type": "string",
+      "default": "#ffffff",
+      "description": "Digit color.",
+      "suggested": true
+    },
+    {
+      "name": "backgroundColor",
+      "type": "string",
+      "default": "#000000",
+      "description": "Tunnel background color.",
+      "suggested": true
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "suggested": true,
+    "defaultOpenGroupId": "controls",
+    "layout": {
+      "controlsButtonClassName": "right-4! top-25!"
+    },
+    "panel": {
+      "className": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "controls": [
+      {
+        "name": "digitCount",
+        "label": "Digit Count",
+        "type": "range",
+        "group": "controls",
+        "copyable": true,
+        "min": 0.1,
+        "max": 540,
+        "step": 0.1
+      },
+      {
+        "name": "speed",
+        "label": "Speed",
+        "type": "range",
+        "group": "motion",
+        "copyable": true,
+        "min": 0,
+        "max": 5,
+        "step": 0.05
+      },
+      {
+        "name": "depth",
+        "label": "Depth",
+        "type": "range",
+        "group": "controls",
+        "copyable": true,
+        "min": 0,
+        "max": 2700,
+        "step": 0.1
+      },
+      {
+        "name": "textColor",
+        "label": "Text Color",
+        "type": "color",
+        "group": "style",
+        "copyable": true
+      },
+      {
+        "name": "backgroundColor",
+        "label": "Background Color",
+        "type": "color",
+        "group": "style",
+        "copyable": true
+      }
+    ]
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/numeric-tunnel/index.tsx",
+      "content": "// Built using Hyperiux Vault: https://vault.hyperiux.com\n\n'use client'\n\nimport React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'\nimport { NumericTunnelLoader } from './NumericTunnelLoader'\n\ninterface NumericTunnelProps {\n digitCount?: number\n speed?: number\n depth?: number\n textColor?: string\n backgroundColor?: string\n}\n\nexport default function NumericTunnel({\n digitCount = 50,\n speed = 1,\n depth = 900,\n textColor = '#ffffff',\n backgroundColor = '#000000',\n}: NumericTunnelProps) {\n const [isComplete, setIsComplete] = useState(false)\n const [tunnelInstance, setTunnelInstance] = useState(0)\n const didMountRef = useRef(false)\n const tunnelConfig = useMemo(\n () => ({ digitCount, speed, depth, textColor, backgroundColor }),\n [backgroundColor, depth, digitCount, speed, textColor]\n )\n\n useEffect(() => {\n if (!didMountRef.current) {\n didMountRef.current = true\n return\n }\n\n setIsComplete(false)\n setTunnelInstance((currentInstance) => currentInstance + 1)\n }, [tunnelConfig])\n\n const handleComplete = useCallback(() => {\n setIsComplete(true)\n }, [])\n\n const handleReplay = useCallback(() => {\n setIsComplete(false)\n setTunnelInstance((currentInstance) => currentInstance + 1)\n }, [])\n\n return (\n <NumericTunnelLoader\n key={tunnelInstance}\n onComplete={handleComplete}\n config={tunnelConfig}\n >\n <div className=\"h-screen w-full bg-white\">\n <h2 className=\"absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-black text-[4vw] font-bold\">HYPERIUX VAULT</h2>\n<button\n  type=\"button\"\n  onClick={handleReplay}\n  className={`absolute top-[calc(50%+5.5rem)] left-1/2 -translate-x-1/2 -translate-y-1/2\n    rounded-full border border-black/10 bg-white/60 px-5 py-2\n    text-sm font-medium text-black backdrop-blur-md\n\n    transition-all duration-300\n    hover:scale-105 hover:border-black/20 hover:bg-white/80\n    active:scale-95\n    ${\n      isComplete\n        ? \"opacity-100\"\n        : \"pointer-events-none opacity-0\"\n    }`}\n>\n  ↻ Replay\n</button>\n </div>\n </NumericTunnelLoader>\n )\n}\n"
+    },
+    {
+      "path": "NumericTunnelLoader.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/numeric-tunnel/NumericTunnelLoader.tsx",
+      "content": "'use client'\n\nimport React, { useEffect, useMemo, useRef, useState, type MutableRefObject, type ReactNode } from 'react'\nimport { Canvas, createPortal, useFrame, useThree, type RootState } from '@react-three/fiber'\nimport { Text, useFBO } from '@react-three/drei'\nimport * as THREE from 'three'\nimport gsap from 'gsap'\n\n// ---- CONFIGURATION ----\nconst TUNNEL_CONFIG = {\n ringCount: 5,\n countPerRing: 10,\n ringRadius: 2,\n ringStartScale: 0.01,\n ringEndScale: 8,\n ringRotateSpeed: 1.2,\n ringFadeInPhase: 0.1,\n ringFullVisiblePhase: 0.7,\n ringFadeOutPhase: 0.9,\n ringFontSize: 0.5,\n ringLetterSpacing: -0.05,\n textColor:'#ffffff',\n crossfadeDuration: 2,\n canvasFadeDuration: 500,\n tunnelFadeOutDelay: 5,\n loaderTickInterval: 40,\n loaderStartDelay: 1200,\n backgroundColor:'#000000'\n}\n\ntype PhaseRef = MutableRefObject<number>\n\ninterface TunnelConfig {\n ringCount: number\n countPerRing: number\n ringRadius: number\n ringStartScale: number\n ringEndScale: number\n ringRotateSpeed: number\n ringFadeInPhase: number\n ringFullVisiblePhase: number\n ringFadeOutPhase: number\n ringFontSize: number\n ringLetterSpacing: number\n textColor: string\n crossfadeDuration: number\n canvasFadeDuration: number\n tunnelFadeOutDelay: number\n loaderTickInterval: number\n loaderStartDelay: number\n backgroundColor: string\n}\n\ninterface TunnelConfigOverrides {\n digitCount?: number\n speed?: number\n depth?: number\n textColor?: string\n backgroundColor?: string\n}\n\nfunction clampNumber(value: unknown, min: number, max: number, fallback: number) {\n const numericValue = Number(value)\n if (!Number.isFinite(numericValue)) return fallback\n return Math.min(max, Math.max(min, numericValue))\n}\n\nfunction createTunnelConfig({\n digitCount = TUNNEL_CONFIG.ringCount * TUNNEL_CONFIG.countPerRing,\n speed = 1,\n depth = 900,\n textColor = TUNNEL_CONFIG.textColor,\n backgroundColor = TUNNEL_CONFIG.backgroundColor,\n}: TunnelConfigOverrides = {}): TunnelConfig {\n const safeDigitCount = Math.round(clampNumber(digitCount, 0, 540, TUNNEL_CONFIG.ringCount * TUNNEL_CONFIG.countPerRing))\n const ringCount = safeDigitCount > 0 ? TUNNEL_CONFIG.ringCount : 0\n const countPerRing = ringCount ? Math.max(1, Math.ceil(safeDigitCount / ringCount)) : 0\n const safeSpeed = clampNumber(speed, 0.1, 5, 1)\n const depthScale = clampNumber(depth, 120, 2700, 900) / 900\n\n return {\n ...TUNNEL_CONFIG,\n countPerRing,\n ringEndScale: TUNNEL_CONFIG.ringEndScale * depthScale,\n ringRotateSpeed: TUNNEL_CONFIG.ringRotateSpeed * safeSpeed,\n loaderTickInterval: TUNNEL_CONFIG.loaderTickInterval / safeSpeed,\n loaderStartDelay: TUNNEL_CONFIG.loaderStartDelay / safeSpeed,\n crossfadeDuration: TUNNEL_CONFIG.crossfadeDuration / safeSpeed,\n tunnelFadeOutDelay: TUNNEL_CONFIG.tunnelFadeOutDelay / safeSpeed,\n textColor,\n backgroundColor,\n }\n}\n\ninterface TunnelRingProps {\n index: number\n loaderValue: number\n tunnelPhaseRef: PhaseRef\n config: TunnelConfig\n}\n\nfunction TunnelRing({ index, loaderValue, tunnelPhaseRef, config }: TunnelRingProps) {\n const groupRef = useRef<THREE.Group | null>(null)\n const ringContentRef = useRef<THREE.Group | null>(null)\n const textMaterialRef = useRef<THREE.MeshBasicMaterial | null>(null)\n const direction = index % 2 === 0 ? 1 : -1\n const reduceMotionRef = useRef(\n typeof window !== 'undefined' &&\n (window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches ?? false)\n )\n\n const textMaterial = useMemo(\n () =>\n new THREE.MeshBasicMaterial({\n color: new THREE.Color(config.textColor),\n transparent: true,\n opacity: 0,\n depthWrite: false,\n }),\n [config.textColor]\n )\n\n useEffect(() => {\n textMaterialRef.current = textMaterial\n return () => {\n textMaterialRef.current = null\n textMaterial.dispose()\n }\n }, [textMaterial])\n\n useEffect(() => {\n const mq = window.matchMedia?.('(prefers-reduced-motion: reduce)')\n if (!mq) return undefined\n const onChange = (event: MediaQueryListEvent) => {\n reduceMotionRef.current = event.matches\n }\n reduceMotionRef.current = mq.matches\n mq.addEventListener?.('change', onChange)\n return () => mq.removeEventListener?.('change', onChange)\n }, [])\n\n useFrame((state: RootState, delta: number) => {\n if (!groupRef.current || !ringContentRef.current) return\n const material = textMaterialRef.current\n if (!material) return\n\n const time = state.clock.getElapsedTime()\n const speed = 0.25 * (config.ringRotateSpeed / TUNNEL_CONFIG.ringRotateSpeed)\n\n // Instead of adding index mapped offset, subtract it to delay spawn.\n // This makes rings wait their turn to start from the center.\n const rawPhase = time * speed - index / config.ringCount\n\n if (rawPhase < 0) {\n groupRef.current.scale.set(0.001, 0.001, 0.001)\n material.opacity = 0\n } else {\n const phase = rawPhase % 1\n\n // Scale calculation\n const scale =\n Math.pow(phase, 3) * config.ringEndScale +\n config.ringStartScale\n\n groupRef.current.scale.set(scale, scale, scale)\n\n // Opacity calculation by phase\n let opacity = 0\n if (phase < config.ringFadeInPhase)\n opacity = phase / config.ringFadeInPhase\n else if (phase <= config.ringFullVisiblePhase)\n opacity = 1\n else if (phase <= config.ringFadeOutPhase)\n opacity = 1 - (phase - config.ringFullVisiblePhase) / (config.ringFadeOutPhase - config.ringFullVisiblePhase)\n else opacity = 0\n\n // Fade out rings as tunnelPhase progresses\n material.opacity = opacity * (1 - tunnelPhaseRef.current)\n }\n\n // Reduced-motion: keep counter, skip ring rotation.\n if (!reduceMotionRef.current) {\n ringContentRef.current.rotation.z += delta * config.ringRotateSpeed * direction\n }\n })\n\n return (\n <group ref={groupRef} position={[0, 0, -index * 0.01]}>\n <group ref={ringContentRef}>\n {Array.from({ length: config.countPerRing }).map((_, i) => {\n const angle = (i / config.countPerRing) * Math.PI * 2\n const x = Math.cos(angle) * config.ringRadius\n const y = Math.sin(angle) * config.ringRadius\n\n return (\n <Text\n key={i}\n position={[x, y, 0]}\n rotation={[0, 0, angle - Math.PI / 2]}\n fontSize={config.ringFontSize}\n anchorX=\"center\"\n anchorY=\"middle\"\n letterSpacing={config.ringLetterSpacing}\n material={textMaterial}\n >\n {loaderValue.toString().padStart(2,'0')}\n </Text>\n )\n })}\n </group>\n </group>\n )\n}\n\ninterface TunnelSceneProps {\n loaderValue: number\n tunnelPhaseRef: PhaseRef\n config: TunnelConfig\n}\n\nfunction TunnelScene({ loaderValue, tunnelPhaseRef, config }: TunnelSceneProps) {\n return (\n <>\n <color attach=\"background\" args={[config.backgroundColor]} />\n {Array.from({ length: config.ringCount }).map((_, i) => (\n <TunnelRing key={i} index={i} loaderValue={loaderValue} tunnelPhaseRef={tunnelPhaseRef} config={config} />\n ))}\n </>\n )\n}\n\ninterface WholeSceneEffectProps {\n children?: ReactNode\n active: boolean\n tunnelPhaseRef: PhaseRef\n}\n\nfunction WholeSceneEffect({ children, active: _active, tunnelPhaseRef }: WholeSceneEffectProps) {\n const { gl, camera, size, viewport } = useThree()\n const portalScene = useMemo(() => new THREE.Scene(), [])\n const fbo = useFBO(size.width, size.height, { samples: 0, depth: false } as any)\n const materialRef = useRef<THREE.ShaderMaterial | null>(null)\n const reduceMotionRef = useRef(\n typeof window !== 'undefined' &&\n (window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches ?? false)\n )\n\n useEffect(() => {\n const mq = window.matchMedia?.('(prefers-reduced-motion: reduce)')\n if (!mq) return undefined\n const onChange = (event: MediaQueryListEvent) => {\n reduceMotionRef.current = event.matches\n }\n reduceMotionRef.current = mq.matches\n mq.addEventListener?.('change', onChange)\n return () => mq.removeEventListener?.('change', onChange)\n }, [])\n\n // Pass tunnelPhase as a uniform for smooth shader transition\n const material = useMemo(() => {\n return new THREE.ShaderMaterial({\n depthTest: false,\n depthWrite: false,\n transparent: true,\n uniforms: {\n tDiffuse: { value: fbo.texture },\n uTime: { value: 0 },\n uStrength: { value: 10.5 },\n uResolution: { value: new THREE.Vector2(size.width, size.height) },\n uTunnelPhase: { value: 0 },\n },\n vertexShader: /* glsl */ `\n varying vec2 vUv;\n varying float vDeform;\n uniform float uTime;\n uniform float uStrength;\n uniform float uTunnelPhase;\n void main() {\n vUv = uv;\n vec3 pos = position;\n\n float isLeft = step(0.0, -pos.x);\n float deform = isLeft * (1.0 - (pos.x + 0.5) * 2.0);\n\n deform *= sin(uTime * 2.4 + pos.y * 7.0 + pos.x * 5.2) * 0.23 * uStrength;\n pos.x += deform * 0.28 * uTunnelPhase;\n pos.z += isLeft * sin(uTime * 1.7 + pos.x * 10.0) * 0.15 * uStrength * uTunnelPhase;\n\n vDeform = deform * uTunnelPhase;\n gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);\n }\n `,\n fragmentShader: /* glsl */ `\n varying vec2 vUv;\n varying float vDeform;\n uniform sampler2D tDiffuse;\n uniform float uTunnelPhase;\n uniform float uTime;\n void main() {\n float aberrationAmount = vDeform * 0.04;\n vec2 offset = vec2(aberrationAmount, 0.0);\n\n vec4 cr = texture2D(tDiffuse, vUv + offset);\n vec4 cg = texture2D(tDiffuse, vUv);\n vec4 cb = texture2D(tDiffuse, vUv - offset);\n\n float alpha = max(cr.a, max(cg.a, cb.a));\n vec4 baseColor = vec4(cr.r, cg.g, cb.b, alpha);\n\n vec3 shiftColor = vec3(\n 0.5 + 0.5 * sin(uTime * 3.0 + vUv.y * 10.0),\n 0.5 + 0.5 * sin(uTime * 2.0 + vUv.x * 10.0 + 2.0),\n 0.5 + 0.5 * sin(uTime * 4.0 + vUv.y * 5.0 + 4.0)\n );\n\n float shiftIntensity = abs(vDeform) * .2;\n\n vec3 finalColor = mix(\n baseColor.rgb,\n baseColor.rgb * shiftColor * 2.5 + shiftColor * alpha * 0.3,\n clamp(shiftIntensity, 0.0, 1.0)\n );\n\n gl_FragColor = vec4(finalColor, alpha * uTunnelPhase);\n }\n `,\n })\n }, [fbo.texture, size.width, size.height])\n\n useEffect(() => {\n materialRef.current = material\n materialRef.current.uniforms.uResolution.value.set(size.width, size.height)\n }, [material, size.width, size.height])\n\n useEffect(() => {\n return () => {\n materialRef.current = null\n material.dispose()\n }\n }, [material])\n\n useFrame((state: RootState) => {\n // always render tunnel pass, then crossfade\n gl.setRenderTarget(fbo)\n gl.clear(true, true, true)\n gl.render(portalScene, camera)\n gl.setRenderTarget(null)\n\n const shaderMaterial = materialRef.current\n if (!shaderMaterial) return\n\n shaderMaterial.uniforms.uTime.value = state.clock.getElapsedTime()\n shaderMaterial.uniforms.uTunnelPhase.value = tunnelPhaseRef.current\n // Reduced-motion: keep the crossfade, skip the warp/distortion strength ramp.\n shaderMaterial.uniforms.uStrength.value = reduceMotionRef.current\n ? 0\n : THREE.MathUtils.lerp(5.5, 1, tunnelPhaseRef.current)\n })\n\n return (\n <>\n {createPortal(children, portalScene)}\n <group>{children}</group>\n <mesh\n scale={[viewport.width, viewport.height, 1]}\n position={[0, 0, 0]}\n renderOrder={10}\n >\n <planeGeometry args={[1, 1, 48, 48]} />\n <primitive object={material} attach=\"material\" />\n </mesh>\n </>\n )\n}\n\ninterface NumericTunnelCanvasProps {\n loaderValue: number\n onComplete?: () => void\n config: TunnelConfig\n}\n\nfunction NumericTunnelCanvas({ loaderValue, onComplete, config }: NumericTunnelCanvasProps) {\n const [effectActive, setEffectActive] = useState(false)\n // Remove useState for canvasOpacity, use a ref instead\n const canvasRef = useRef<HTMLDivElement | null>(null)\n const didScheduleRef = useRef(false)\n const tunnelPhaseRef = useRef(0)\n\n useEffect(() => {\n let anim: number | undefined\n let fadeTimeout: ReturnType<typeof setTimeout> | undefined\n if (loaderValue >= 100 && !didScheduleRef.current) {\n didScheduleRef.current = true\n setEffectActive(true)\n let t = 0\n const duration = config.crossfadeDuration\n const step = () => {\n t += 1 / 60\n tunnelPhaseRef.current = Math.min(t / duration, 1)\n if (t < duration) {\n anim = requestAnimationFrame(step)\n } else {\n fadeTimeout = setTimeout(() => {\n if (onComplete) {\n onComplete()\n return\n }\n // Animate opacity to 0 using GSAP; remove setCanvasOpacity, use ref\n if (canvasRef.current) {\n gsap.to(canvasRef.current, {\n opacity: 0,\n duration: config.canvasFadeDuration / 1000,\n ease:\"power3.inOut\",\n })\n }\n }, config.tunnelFadeOutDelay)\n }\n }\n requestAnimationFrame(step)\n }\n return () => {\n if (anim !== undefined) cancelAnimationFrame(anim)\n if (fadeTimeout !== undefined) clearTimeout(fadeTimeout)\n }\n }, [loaderValue, onComplete])\n\n return (\n <div\n ref={canvasRef}\n className=\"h-full w-full\"\n style={{ backgroundColor: config.backgroundColor }}\n >\n <Canvas\n dpr={1}\n orthographic\n camera={{ zoom: 100, position: [0, 0, 10] }}\n gl={{ powerPreference:'high-performance' }}\n >\n <color attach=\"background\" args={[config.backgroundColor]} />\n <WholeSceneEffect active={effectActive} tunnelPhaseRef={tunnelPhaseRef}>\n <TunnelScene loaderValue={loaderValue} tunnelPhaseRef={tunnelPhaseRef} config={config} />\n </WholeSceneEffect>\n </Canvas>\n </div>\n )\n}\n\ninterface NumericTunnelLoaderProps {\n children?: ReactNode\n onComplete?: () => void\n config?: TunnelConfigOverrides\n}\n\nexport function NumericTunnelLoader({ children, onComplete, config: configOverrides }: NumericTunnelLoaderProps) {\n const [loaderValue, setLoaderValue] = useState(0)\n const [isComplete, setIsComplete] = useState(false)\n const config = useMemo(() => createTunnelConfig(configOverrides), [configOverrides])\n\n useEffect(() => {\n let interval: ReturnType<typeof setInterval> | undefined\n const timeout = setTimeout(() => {\n interval = setInterval(() => {\n setLoaderValue((prev) => (prev >= 100 ? 100 : prev + 1))\n }, config.loaderTickInterval)\n }, config.loaderStartDelay)\n\n return () => {\n clearTimeout(timeout)\n if (interval) clearInterval(interval)\n }\n }, [config.loaderStartDelay, config.loaderTickInterval])\n\n const handleComplete = () => {\n setIsComplete(true)\n if (onComplete) onComplete()\n }\n\n return (\n <div className=\"relative h-screen w-full overflow-hidden\">\n {children}\n {!isComplete && (\n <div className=\"absolute inset-0 z-10\">\n <NumericTunnelCanvas loaderValue={loaderValue} onComplete={handleComplete} config={config} />\n </div>\n )}\n </div>\n )\n}\n"
+    }
+  ]
+}

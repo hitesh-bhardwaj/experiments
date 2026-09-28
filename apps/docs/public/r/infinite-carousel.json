@@ -1,0 +1,121 @@
+{
+  "name": "infinite-carousel",
+  "type": "registry:component",
+  "title": "Infinite Carousel",
+  "description": "Infinitely looping horizontal carousel with GSAP Draggable + inertia, plus mobile-friendly wrap/swiper fallbacks.",
+  "dependencies": [
+    "gsap",
+    "lucide-react"
+  ],
+  "registryDependencies": [],
+  "exportName": "InfiniteCarousel",
+  "exportKind": "default",
+  "tier": "pro",
+  "version": "1.0.1",
+  "changelog": [
+    {
+      "version": "1.0.1",
+      "date": "2026-07-28",
+      "summary": "Added reduced-motion support and configurable carousel controls.",
+      "breaking": false
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-06-04",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "props": [
+    {
+      "name": "draggable",
+      "type": "boolean",
+      "default": true,
+      "description": "Allows dragging the carousel with pointer/touch input.",
+      "remixer": {
+        "control": "checkbox",
+        "group": "behavior",
+        "groupTitle": "Behavior"
+      }
+    },
+    {
+      "name": "gap",
+      "type": "number",
+      "description": "Spacing between carousel items.",
+      "default": 32,
+      "remixer": {
+        "control": "range",
+        "group": "style",
+        "groupTitle": "Style",
+        "min": 0,
+        "max": 1200,
+        "step": 1
+      }
+    },
+    {
+      "name": "cardSize",
+      "type": "number",
+      "description": "Multiplier applied to card width and height.",
+      "default": 1,
+      "remixer": {
+        "control": "range",
+        "group": "style",
+        "groupTitle": "Style",
+        "min": 0.5,
+        "max": 1.6,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "cardWidth",
+      "type": "number",
+      "description": "Desktop card width in pixels.",
+      "default": 512,
+      "remixer": {
+        "control": "range",
+        "group": "style",
+        "groupTitle": "Style",
+        "min": 260,
+        "max": 900,
+        "step": 1
+      }
+    },
+    {
+      "name": "cardHeight",
+      "type": "number",
+      "description": "Card minimum height in viewport height units.",
+      "default": 52,
+      "remixer": {
+        "control": "range",
+        "group": "style",
+        "groupTitle": "Style",
+        "min": 28,
+        "max": 85,
+        "step": 1
+      }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "behavior",
+    "layout": {
+      "buttonClassName": "right-4! top-25!",
+      "panelClassName": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/infinite-carousel/index.tsx"
+    },
+    {
+      "path": "InfiniteCarouselComp.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/infinite-carousel/InfiniteCarouselComp.tsx"
+    }
+  ]
+}

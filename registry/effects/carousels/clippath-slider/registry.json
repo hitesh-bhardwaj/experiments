@@ -1,0 +1,189 @@
+{
+  "name": "clippath-slider",
+  "version": "1.0.1",
+  "changelog": [
+    {
+      "version": "1.0.1",
+      "date": "2026-07-28",
+      "summary": "Added reduced-motion support and customizable slides and cursor styling.",
+      "breaking": false
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-06-04",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "type": "registry:component",
+  "title": "Clip Path Slider",
+  "description": "Fullscreen image slider where transitions sweep via two canvas-drawn radial clip-path arcs. Includes a dual-layer background crossfade, GSAP SplitText line reveals, and a smooth custom cursor that flips direction arrows left/right.",
+  "category": "carousels",
+  "dependencies": [
+    "gsap"
+  ],
+  "registryDependencies": [],
+  "previewUrl": "/demo/clippath-slider",
+  "tier": "pro",
+  "main": "index.tsx",
+  "exportName": "ClipPathSlider",
+  "exportKind": "default",
+  "importPath": "@/components/effects/clippath-slider",
+  "target": "src/components/effects/clippath-slider",
+  "props": [
+    {
+      "name": "slides",
+      "type": "array",
+      "default": [
+        {
+          "name": "Motion Systems",
+          "description": "Crafting immersive motion-driven interfaces with smooth transitions, interactive timelines, and modern animation systems.",
+          "image": "https://picsum.photos/seed/1/800/600"
+        },
+        {
+          "name": "Creative Components",
+          "description": "A curated collection of expressive UI components designed for futuristic web experiences and rapid development.",
+          "image": "https://picsum.photos/seed/2/800/600"
+        },
+        {
+          "name": "Visual Interactions",
+          "description": "Building visually rich interactions with hover effects, layered depth, dynamic layouts, and fluid user feedback.",
+          "image": "https://picsum.photos/seed/3/800/600"
+        },
+        {
+          "name": "Future Interfaces",
+          "description": "Exploring next-generation interface patterns that blend cinematic motion with minimal and functional design.",
+          "image": "https://picsum.photos/seed/4/800/600"
+        },
+        {
+          "name": "Design Engine",
+          "description": "Creating scalable design systems and reusable interface architectures optimized for modern frontend workflows.",
+          "image": "https://picsum.photos/seed/5/800/600"
+        },
+        {
+          "name": "Scroll Experiences",
+          "description": "Designing immersive scroll-based storytelling experiences powered by fluid motion and seamless transitions.",
+          "image": "https://picsum.photos/seed/6/800/600"
+        },
+        {
+          "name": "Interactive Layers",
+          "description": "Combining lighting, gradients, and layered compositions to create premium interactive web experiences.",
+          "image": "https://picsum.photos/seed/7/800/600"
+        }
+      ],
+      "demoDefault": [
+        {
+          "name": "Motion Systems",
+          "description": "Crafting immersive motion-driven interfaces with smooth transitions, interactive timelines, and modern animation systems.",
+          "image": "https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/h-02.jpg"
+        },
+        {
+          "name": "Creative Components",
+          "description": "A curated collection of expressive UI components designed for futuristic web experiences and rapid development.",
+          "image": "https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/h-03.jpg"
+        },
+        {
+          "name": "Visual Interactions",
+          "description": "Building visually rich interactions with hover effects, layered depth, dynamic layouts, and fluid user feedback.",
+          "image": "https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/h-07.jpg"
+        },
+        {
+          "name": "Future Interfaces",
+          "description": "Exploring next-generation interface patterns that blend cinematic motion with minimal and functional design.",
+          "image": "https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/h-08.jpg"
+        },
+        {
+          "name": "Design Engine",
+          "description": "Creating scalable design systems and reusable interface architectures optimized for modern frontend workflows.",
+          "image": "https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/h-09.jpg"
+        },
+        {
+          "name": "Scroll Experiences",
+          "description": "Designing immersive scroll-based storytelling experiences powered by fluid motion and seamless transitions.",
+          "image": "https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/h-10.jpg"
+        },
+        {
+          "name": "Interactive Layers",
+          "description": "Combining lighting, gradients, and layered compositions to create premium interactive web experiences.",
+          "image": "https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/h-06.jpg"
+        }
+      ],
+      "description": "Slides rendered by the clip-path sweep transition (name, description, image).",
+      "copyable": false
+    },
+    {
+      "name": "clueText",
+      "type": "string",
+      "default": "Click either side and watch the next scene cut through.",
+      "description": "Instructional hint shown above the slider."
+    },
+    {
+      "name": "showClue",
+      "type": "boolean",
+      "default": true,
+      "description": "Shows the instructional clue text above the slider.",
+      "remixer": {
+        "control": "checkbox",
+        "group": "content",
+        "groupTitle": "Content"
+      }
+    },
+    {
+      "name": "cursorBg",
+      "type": "color",
+      "default": "#ff5f00",
+      "description": "Background color of the custom directional cursor.",
+      "remixer": {
+        "control": "color",
+        "group": "cursor",
+        "groupTitle": "Cursor"
+      }
+    },
+    {
+      "name": "cursorLineColor",
+      "type": "color",
+      "default": "#ffffff",
+      "description": "Color of the arrow lines inside the custom cursor.",
+      "remixer": {
+        "control": "color",
+        "group": "cursor",
+        "groupTitle": "Cursor"
+      }
+    },
+    {
+      "name": "duration",
+      "type": "number",
+      "description": "Clip-path transition duration.",
+      "default": 0.75,
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0,
+        "max": 5,
+        "step": 0.05
+      }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "content",
+    "layout": {
+      "buttonClassName": "right-4! top-25!",
+      "panelClassName": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "target": "src/components/effects/clippath-slider/index.tsx"
+    },
+    {
+      "path": "ClippathSliderComp.tsx",
+      "target": "src/components/effects/clippath-slider/ClippathSliderComp.tsx"
+    }
+  ]
+}

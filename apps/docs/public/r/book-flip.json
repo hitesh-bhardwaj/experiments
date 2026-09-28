@@ -1,0 +1,117 @@
+{
+  "name": "book-flip",
+  "type": "registry:component",
+  "title": "Book Flip",
+  "description": "3D interactive book viewer with realistic page flips, built with React Three Fiber and Drei.",
+  "dependencies": [
+    "three",
+    "@react-three/fiber",
+    "@react-three/drei",
+    "maath"
+  ],
+  "registryDependencies": [],
+  "exportName": "BookFlip",
+  "exportKind": "default",
+  "tier": "pro",
+  "version": "1.1.0",
+  "changelog": [
+    {
+      "version": "1.1.0",
+      "date": "2026-07-22",
+      "summary": "added reduced-motion",
+      "breaking": false
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-06-04",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "props": [
+    {
+      "name": "pageSpeed",
+      "type": "number",
+      "default": 0.8,
+      "description": "Speed of the page flip animation.",
+      "suggested": true
+    },
+    {
+      "name": "bookScale",
+      "type": "number",
+      "default": 1,
+      "description": "Overall scale of the 3D book.",
+      "suggested": true
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "suggested": true,
+    "defaultOpenGroupId": "motion",
+    "layout": {
+      "controlsButtonClassName": "right-4! top-25!"
+    },
+    "panel": {
+      "className": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "controls": [
+      {
+        "name": "pageSpeed",
+        "label": "Page Speed",
+        "type": "range",
+        "group": "motion",
+        "copyable": true,
+        "min": 0.1,
+        "max": 5,
+        "step": 0.05
+      },
+      {
+        "name": "bookScale",
+        "label": "Book Scale",
+        "type": "range",
+        "group": "controls",
+        "copyable": true,
+        "min": 0.2,
+        "max": 3,
+        "step": 0.05
+      }
+    ]
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/book-flip/index.tsx"
+    },
+    {
+      "path": "Book.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/book-flip/Book.tsx"
+    },
+    {
+      "path": "BookFlip.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/book-flip/BookFlip.tsx"
+    },
+    {
+      "path": "Experience.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/book-flip/Experience.tsx"
+    },
+    {
+      "path": "UI.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/book-flip/UI.tsx"
+    },
+    {
+      "path": "createSuspendedRaf.ts",
+      "type": "registry:component",
+      "target": "src/components/effects/book-flip/createSuspendedRaf.ts"
+    },
+    {
+      "path": "PageContext.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/book-flip/PageContext.tsx"
+    }
+  ]
+}

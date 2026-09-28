@@ -1,0 +1,17 @@
+{
+  "name": "@hyperiux/focus-text",
+  "version": "1.0.0",
+  "description": "Character-by-character text reveal that scales and sharpens into focus with replayable motion.",
+  "main": "index.tsx",
+  "files": [
+    "index.tsx",
+    "registry.json"
+  ],
+  "keywords": [
+    "text",
+    "hyperiux"
+  ],
+  "dependencies": {
+    "gsap": "*"
+  }
+}

@@ -1,0 +1,239 @@
+{
+  "name": "gsap-flip-card",
+  "type": "registry:component",
+  "title": "GSAP Flip Card",
+  "description": "A card stack that expands into a hero image and thumbnail rail with GSAP Flip transitions.",
+  "dependencies": [
+    "gsap"
+  ],
+  "registryDependencies": [],
+  "exportName": "GsapFlipCard",
+  "exportKind": "default",
+  "tier": "free",
+  "version": "1.0.0",
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "date": "2026-09-10",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "props": [
+    {
+      "name": "duration",
+      "type": "number",
+      "default": 0.7,
+      "description": "Card transition duration in seconds.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "min": 0.2,
+        "max": 2,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "rounded",
+      "type": "number",
+      "default": 20,
+      "description": "Card corner radius in pixels.",
+      "remixer": {
+        "control": "range",
+        "group": "layout",
+        "min": 0,
+        "max": 60,
+        "step": 1
+      }
+    },
+    {
+      "name": "stackOffsetX",
+      "type": "number",
+      "default": 3,
+      "description": "Horizontal offset per card in the collapsed desktop stack.",
+      "remixer": {
+        "enabled": false
+      }
+    },
+    {
+      "name": "stackOffsetY",
+      "type": "number",
+      "default": 9,
+      "description": "Vertical offset per card in the collapsed desktop stack.",
+      "remixer": {
+        "enabled": false
+      }
+    },
+    {
+      "name": "stackRotation",
+      "type": "number",
+      "default": 0,
+      "description": "Rotation per card in the collapsed desktop stack, in degrees.",
+      "remixer": {
+        "control": "range",
+        "group": "stack",
+        "min": -15,
+        "max": 15,
+        "step": 1
+      }
+    },
+    {
+      "name": "thumbGap",
+      "type": "number",
+      "default": 12,
+      "description": "Spacing between desktop rail thumbnails in pixels.",
+      "remixer": {
+        "control": "range",
+        "group": "layout",
+        "min": 0,
+        "max": 40,
+        "step": 1
+      }
+    },
+    {
+      "name": "backgroundColor",
+      "type": "color",
+      "default": "#e9e9e7",
+      "description": "Section background color.",
+      "remixer": {
+        "control": "color",
+        "group": "colors"
+      }
+    },
+    {
+      "name": "textColor",
+      "type": "color",
+      "default": "#111111",
+      "description": "Primary text color.",
+      "remixer": {
+        "control": "color",
+        "group": "colors"
+      }
+    },
+    {
+      "name": "mutedColor",
+      "type": "color",
+      "default": "#8a8a86",
+      "description": "Secondary text color.",
+      "remixer": {
+        "control": "color",
+        "group": "colors"
+      }
+    },
+    {
+      "name": "ease",
+      "type": "string",
+      "default": "power3.inOut",
+      "description": "GSAP transition easing.",
+      "remixer": {
+        "enabled": false
+      }
+    },
+    {
+      "name": "showCounter",
+      "type": "boolean",
+      "default": true,
+      "description": "Shows the image counter.",
+      "remixer": {
+        "enabled": false
+      }
+    },
+    {
+      "name": "thumbWidth",
+      "type": "number",
+      "default": 108,
+      "description": "Code-only configuration for thumbWidth."
+    },
+    {
+      "name": "thumbHeight",
+      "type": "number",
+      "default": 120,
+      "description": "Code-only configuration for thumbHeight."
+    },
+    {
+      "name": "heroWidth",
+      "type": "number",
+      "default": 530,
+      "description": "Code-only configuration for heroWidth."
+    },
+    {
+      "name": "heroHeight",
+      "type": "number",
+      "default": 670,
+      "description": "Code-only configuration for heroHeight."
+    },
+    {
+      "name": "captionLines",
+      "type": "number",
+      "default": 2,
+      "description": "Code-only configuration for captionLines."
+    },
+    {
+      "name": "captionFadeDuration",
+      "type": "number",
+      "default": 0.25,
+      "description": "Fade-out duration in seconds for all text sections."
+    },
+    {
+      "name": "captionRevealDuration",
+      "type": "number",
+      "default": 0.55,
+      "description": "Line-reveal duration in seconds for all text sections."
+    },
+    {
+      "name": "captionLineStagger",
+      "type": "number",
+      "default": 0.07,
+      "description": "Stagger between revealed lines across all text sections in seconds."
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "default": "GSAP Flip Card",
+      "description": "Fallback title for items without a title."
+    },
+    {
+      "name": "meta",
+      "type": "string",
+      "default": "Hyperiux Vault / GSAP Flip / React",
+      "description": "Fallback metadata for items without metadata."
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "default": "A pile of cards that fans into a hero and a rail. Tap any frame and the two trade places, same nodes, measured and tweened, never re-mounted.",
+      "description": "Fallback description for items without a description."
+    },
+    {
+      "name": "className",
+      "type": "string",
+      "default": "",
+      "description": "Code-only className."
+    },
+    {
+      "name": "items",
+      "type": "GsapFlipCardItem[]",
+      "description": "Gallery images with optional IDs, alt text, titles, metadata, descriptions and captions; defaults to the built-in gallery."
+    },
+    {
+      "name": "onClose",
+      "type": "() => void",
+      "description": "Called when the gallery closes."
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "motion",
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/gsap-flip-card/index.tsx",
+      "content": "// Built using Hyperiux Vault: https://vault.hyperiux.com\n'use client'\nimport React, {\n  useCallback,\n  useEffect,\n  useLayoutEffect,\n  useMemo,\n  useRef,\n  useState,\n  useSyncExternalStore,\n} from \"react\";\nimport { gsap } from \"gsap\";\nimport { Flip } from \"gsap/dist/Flip\";\nimport { SplitText } from \"gsap/dist/SplitText\";\nimport Image from \"next/image\";\n\ngsap.registerPlugin(Flip, SplitText);\n\nexport interface GsapFlipCardItem {\n  id?: string | number;\n  image: string;\n  alt?: string;\n  caption?: string;\n  title?: string;\n  meta?: string;\n  description?: string;\n}\n\nexport interface GsapFlipCardProps {\n  items?: GsapFlipCardItem[];\n  title?: string;\n  meta?: string;\n  description?: string;\n  backgroundColor?: string;\n  textColor?: string;\n  mutedColor?: string;\n  rounded?: number;\n  thumbWidth?: number;\n  thumbHeight?: number;\n  thumbGap?: number;\n  heroWidth?: number;\n  heroHeight?: number;\n  duration?: number;\n  ease?: string;\n  stackOffsetX?: number;\n  stackOffsetY?: number;\n  stackRotation?: number;\n  showCounter?: boolean;\n  captionLines?: number;\n  captionFadeDuration?: number;\n  captionRevealDuration?: number;\n  captionLineStagger?: number;\n  onClose?: () => void;\n  className?: string;\n}\n\n\n\nconst REDUCED_MOTION_QUERY = \"(prefers-reduced-motion: reduce)\";\n\nfunction prefersReducedMotion() {\n  if (typeof window === \"undefined\") return false;\n  return window.matchMedia?.(REDUCED_MOTION_QUERY)?.matches ?? false;\n}\n\nfunction subscribeToReducedMotion(callback: () => void) {\n  if (typeof window === \"undefined\") return () => {};\n  const mediaQueryList = window.matchMedia(REDUCED_MOTION_QUERY);\n  mediaQueryList.addEventListener(\"change\", callback);\n  return () => mediaQueryList.removeEventListener(\"change\", callback);\n}\n\nfunction getServerReducedMotionSnapshot() {\n  return false;\n}\n\nfunction usePrefersReducedMotion() {\n  return useSyncExternalStore(\n    subscribeToReducedMotion,\n    prefersReducedMotion,\n    getServerReducedMotionSnapshot\n  );\n}\n\n\nconst CAPTION_FONT_VW = 1;\nconst CAPTION_LINE_RATIO = 1.3;\nconst CAPTION_LINE_VW = CAPTION_FONT_VW * CAPTION_LINE_RATIO;\nconst CAPTION_MOBILE_LINE_RATIO = 1.5;\nconst CAPTION_MOBILE_LINE = `${3 * CAPTION_MOBILE_LINE_RATIO}vw`;\nconst CAPTION_MOBILE_LINE_SM = `${4 * CAPTION_MOBILE_LINE_RATIO}vw`;\n\nconst IMAGE_BASE =\n  \"https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/gsap-flip-card\";\n\nconst defaultItems: GsapFlipCardItem[] = [\n  {\n    id: 0,\n    image: `${IMAGE_BASE}/img01.png`,\n    title: \"The Backhand\",\n    meta: \"Tennis / Studio Studies / 01\",\n    description: \"A backhand cuts across a field of red. The player holds the frame in tension, turning a split-second swing into a study of balance, timing, and control.\",\n    alt: 'Tennis player mid-backhand against a red studio backdrop',\n    caption: 'The racquet blurs through the frame while the ball hangs still.',\n  },\n  {\n    id: 1,\n    image: `${IMAGE_BASE}/img02.png`,\n    title: \"Nothing but Net\",\n    meta: \"Basketball / Court Details / 02\",\n    description: \"An orange rim stands sharp against deep blue. The ball meets the net at the tipping point between anticipation and release, with the whole game distilled into one detail.\",\n    alt: 'Basketball dropping through an orange rim on a deep blue background',\n    caption: 'Caught at the rim, one beat before the net gives way.',\n  },\n  {\n    id: 2,\n    image: `${IMAGE_BASE}/img03.png`,\n    title: \"Above Ground\",\n    meta: \"Running / Motion Studies / 03\",\n    description: \"Seen from below, a runner stretches across an open sky. With the ground out of sight, each stride becomes a brief moment of flight, all reach, rhythm, and forward drive.\",\n    alt: 'Runner suspended mid-stride against a clear blue sky',\n    caption: 'Shot from below, mid-stride, with nothing but sky behind.',\n  },\n  {\n    id: 3,\n    image: `${IMAGE_BASE}/img04.png`,\n    title: \"A Different Gear\",\n    meta: \"Cycling / Style in Sport / 04\",\n    description: \"A black suit and a road bike share an acid-green stage. Precise tailoring meets the clean geometry of carbon, bringing the poise of a fashion portrait to the world of cycling.\",\n    alt: 'Cyclist in a black suit holding a road bike against a lime backdrop',\n    caption: 'Tailoring and carbon on acid green, staged like a portrait.',\n  },\n  {\n    id: 4,\n    image: `${IMAGE_BASE}/img05.png`,\n    title: \"After Hours\",\n    meta: \"Eyewear / Athlete Portraits / 05\",\n    description: \"White shield lenses emerge from the shadows. A narrow band of light traces the athlete’s profile, drawing attention to the sculpted eyewear and the quiet focus behind it.\",\n    alt: 'Profile of an athlete wearing white shield sunglasses in low light',\n    caption: 'A hard side light picks out the visor and leaves the rest dark.',\n  },\n];\n\n\nconst GsapFlipCard = ({\n  items = defaultItems,\n  title = \"GSAP Flip Card\",\n  meta = \"Hyperiux Vault / GSAP Flip / React\",\n  description = \"A pile of cards that fans into a hero and a rail. Tap any frame and the two trade places, same nodes, measured and tweened, never re-mounted.\",\n  backgroundColor = \"#e9e9e7\",\n  textColor = \"#111111\",\n  mutedColor = \"#8a8a86\",\n  rounded = 20,\n  thumbWidth = 108,\n  thumbHeight = 120,\n  thumbGap = 12,\n  heroWidth = 530,\n  heroHeight = 670,\n  duration = 0.7,\n  ease = \"power3.inOut\",\n  stackOffsetX = 3,\n  stackOffsetY = 9,\n  stackRotation = 0,\n  showCounter = true,\n  captionLines = 2,\n  captionFadeDuration = 0.25,\n  captionRevealDuration = 0.55,\n  captionLineStagger = 0.07,\n  onClose,\n  className = \"\",\n}: GsapFlipCardProps) => {\n  const reducedMotion = usePrefersReducedMotion();\n\n  const [order, setOrder] = useState<number[]>(() => items.map((_, i) => i));\n  const [opened, setOpened] = useState(false);\n  const [stageWidth, setStageWidth] = useState(0);\n\n  const stageRef = useRef<HTMLDivElement | null>(null);\n  const rootRef = useRef<HTMLDivElement | null>(null);\n  const cardRefs = useRef<Map<number, HTMLElement>>(new Map());\n  const flipStateRef = useRef<Flip.FlipState | null>(null);\n  const isAnimatingRef = useRef(false);\n\n  const selectedItem = items[order[0]];\n  const nextContent = useMemo(() => ({\n    title: selectedItem?.title ?? title,\n    meta: selectedItem?.meta ?? meta,\n    description: selectedItem?.description ?? description,\n    caption: selectedItem?.caption,\n  }), [selectedItem, title, meta, description]);\n  const [shownContent, setShownContent] = useState(nextContent);\n  const contentRef = useRef<HTMLDivElement | null>(null);\n  const captionTweenRef = useRef<gsap.core.Tween | gsap.core.Timeline | null>(null);\n  const captionSplitRef = useRef<SplitText | null>(null);\n\n  const revertCaptionSplit = useCallback(() => {\n    captionSplitRef.current?.revert();\n    captionSplitRef.current = null;\n  }, []);\n\n  const [previousItems, setPreviousItems] = useState(items);\n  if (items !== previousItems) {\n    setPreviousItems(items);\n    setOrder(items.map((_, i) => i));\n  }\n\n  useLayoutEffect(() => {\n    const el = rootRef.current;\n    if (!el) return;\n    const measure = () => setStageWidth(el.clientWidth);\n    measure();\n    const ro = new ResizeObserver(measure);\n    ro.observe(el);\n    return () => ro.disconnect();\n  }, []);\n\n  const registerCard = useCallback((index: number, node: HTMLElement | null) => {\n    if (node) cardRefs.current.set(index, node);\n    else cardRefs.current.delete(index);\n  }, []);\n\n  const orderedCards = useCallback(\n    () => order.map((i) => cardRefs.current.get(i)).filter(Boolean) as HTMLElement[],\n    [order]\n  );\n\n  const isMobile = stageWidth > 0 && stageWidth <= 1025;\n  const isNarrow = stageWidth > 0 && stageWidth < 900;\n  const railCount = Math.max(items.length - 1, 0);\n  const scale = isNarrow ? Math.min(1, stageWidth / 900) : 1;\n\n  const tW = thumbWidth * scale;\n  const tH = thumbHeight * scale;\n  const gap = thumbGap * scale;\n  const hW = Math.min(heroWidth * scale, stageWidth * 0.46);\n  const hH = heroHeight * (hW / heroWidth || 1);\n  const railX = Math.max(24, stageWidth * 0.045);\n  const heroX = stageWidth - hW - railX;\n\n  const stackWidth = Math.min(215 * scale, stageWidth * 0.42);\n  const stackHeight = stackWidth * 1.5;\n\n  const slotBox = useCallback(\n    (slot: number) => {\n      if (slot === 0) {\n        return { x: heroX, y: 0, w: hW, h: hH, r: rounded * scale, z: items.length + 1 };\n      }\n      const railHeight = railCount * tH + (railCount - 1) * gap;\n      const top = -railHeight / 2 + (slot - 1) * (tH + gap);\n      return {\n        x: railX,\n        y: top + tH / 2,\n        w: tW,\n        h: tH,\n        r: rounded * 0.6 * scale,\n        z: items.length - slot,\n      };\n    },\n    [heroX, hW, hH, railX, tW, tH, gap, railCount, rounded, scale, items.length]\n  );\n\n  const select = useCallback(\n    (itemIndex: number) => {\n      if (itemIndex === order[0] || isAnimatingRef.current) return;\n      if (!isMobile) {\n        flipStateRef.current = Flip.getState(orderedCards(), { props: \"borderRadius\" });\n      }\n      setOrder((prev) => {\n        const next = [...prev];\n        const from = next.indexOf(itemIndex);\n        next[from] = next[0];\n        next[0] = itemIndex;\n        return next;\n      });\n    },\n    [order, orderedCards, isMobile]\n  );\n\n  useLayoutEffect(() => {\n    const state = flipStateRef.current;\n    if (!state) return;\n    flipStateRef.current = null;\n    if (reducedMotion || isMobile) return;\n\n    isAnimatingRef.current = true;\n    Flip.from(state, {\n      duration,\n      ease,\n      absolute: true,\n      props: \"borderRadius\",\n      onEnter: (els) => gsap.fromTo(els, { opacity: 0 }, { opacity: 1, duration }),\n      onComplete: () => {\n        isAnimatingRef.current = false;\n      },\n    });\n  }, [order, duration, ease, reducedMotion, isMobile]);\n\n  const open = useCallback(() => {\n    if (opened || isAnimatingRef.current || stageWidth === 0) return;\n\n    if (reducedMotion) {\n      setOpened(true);\n      return;\n    }\n\n    const state = Flip.getState(orderedCards(), { props: \"borderRadius\" });\n    setOpened(true);\n\n    requestAnimationFrame(() => {\n      isAnimatingRef.current = true;\n      Flip.from(state, {\n        duration: duration * 1.0,\n        ease,\n        absolute: true,\n        props: \"borderRadius\",\n        stagger: 0.04,\n        onComplete: () => {\n          isAnimatingRef.current = false;\n        },\n      });\n    });\n  }, [opened, stageWidth, reducedMotion, orderedCards, duration, ease]);\n\n  const close = useCallback(() => {\n    if (!opened || isAnimatingRef.current) return;\n\n    if (reducedMotion) {\n      setOpened(false);\n      onClose?.();\n      return;\n    }\n\n    const state = Flip.getState(orderedCards(), { props: \"borderRadius\" });\n    setOpened(false);\n\n    requestAnimationFrame(() => {\n      isAnimatingRef.current = true;\n      Flip.from(state, {\n        duration: duration * 0.9,\n        ease,\n        absolute: true,\n        props: \"borderRadius\",\n        stagger: { each: 0.035, from: \"end\" },\n        onComplete: () => {\n          isAnimatingRef.current = false;\n        },\n      });\n    });\n    onClose?.();\n  }, [opened, reducedMotion, orderedCards, duration, ease, onClose]);\n\n  const activeContent = reducedMotion ? nextContent : shownContent;\n\n  useEffect(() => {\n    if (reducedMotion || nextContent === shownContent) return;\n\n    const el = contentRef.current;\n    if (!el) {\n      revertCaptionSplit();\n      setShownContent(nextContent);\n      return;\n    }\n\n    captionTweenRef.current?.kill();\n    const fade = gsap.to(el.querySelectorAll(\"[data-card-text]\"), {\n      opacity: 0,\n      y: -8,\n      duration: captionFadeDuration,\n      ease: \"power2.in\",\n      onComplete: () => {\n        revertCaptionSplit();\n        setShownContent(nextContent);\n      },\n    });\n    captionTweenRef.current = fade;\n    return () => { fade.kill(); };\n  }, [nextContent, shownContent, isMobile, reducedMotion, captionFadeDuration, revertCaptionSplit]);\n\n  useLayoutEffect(() => {\n    const el = contentRef.current;\n    if (!el) return;\n    const sections = el.querySelectorAll<HTMLElement>(\"[data-card-text]\");\n\n    if (reducedMotion) {\n      revertCaptionSplit();\n      gsap.set(sections, { opacity: 1, y: 0 });\n      return;\n    }\n\n    captionTweenRef.current?.kill();\n    revertCaptionSplit();\n    gsap.set(sections, { opacity: 1, y: 0 });\n\n    const split = SplitText.create(sections, {\n      type: \"lines\",\n      linesClass: \"hxs-caption-line\",\n      mask: \"lines\",\n    });\n    captionSplitRef.current = split;\n\n    const lines = split.lines;\n    if (!lines?.length) {\n      revertCaptionSplit();\n      return;\n    }\n\n    gsap.set(lines, { yPercent: 100 });\n    captionTweenRef.current = gsap.to(lines, {\n      yPercent: 0,\n      duration: captionRevealDuration,\n      stagger: captionLineStagger,\n      ease: \"power3.out\",\n    });\n\n    return () => {\n      captionTweenRef.current?.kill();\n      revertCaptionSplit();\n    };\n  }, [activeContent, isMobile, reducedMotion, captionRevealDuration, captionLineStagger, revertCaptionSplit]);\n\n  useEffect(() => {\n    const onKey = (e: KeyboardEvent) => {\n      if (e.key === \"Escape\") {\n        close();\n        return;\n      }\n      if (!opened || items.length < 2) return;\n      if (e.key === \"ArrowDown\" || e.key === \"ArrowRight\") select(order[1]);\n      else if (e.key === \"ArrowUp\" || e.key === \"ArrowLeft\") select(order[order.length - 1]);\n    };\n    window.addEventListener(\"keydown\", onKey);\n    return () => window.removeEventListener(\"keydown\", onKey);\n  }, [order, select, close, opened, items.length]);\n\n  if (items.length === 0) return null;\n\n  const heroItemIndex = order[0];\n  const heroItem = items[heroItemIndex];\n  const heroSlotLabel = heroItemIndex + 1;\n\n  const cardStyle = (itemIndex: number): React.CSSProperties => {\n    const slot = order.indexOf(itemIndex);\n\n    if (!opened) {\n      const w = stackWidth;\n      const h = stackHeight;\n      return {\n        position: \"absolute\",\n        left: stageWidth / 2 - w / 2,\n        top: \"50%\",\n        width: w,\n        height: h,\n        borderRadius: rounded * 0.75 * scale,\n        transform: `translateY(-50%) translate(${slot * stackOffsetX}px, ${\n          slot * stackOffsetY\n        }px) rotate(${slot * stackRotation}deg)`,\n        zIndex: items.length - slot,\n      };\n    }\n\n    const box = slotBox(slot);\n    return {\n      position: \"absolute\",\n      left: box.x,\n      top: \"50%\",\n      width: box.w,\n      height: box.h,\n      borderRadius: box.r,\n      transform: `translateY(calc(-50% + ${box.y}px))`,\n      zIndex: box.z,\n    };\n  };\n\n  const chromeStyle: React.CSSProperties = {\n    opacity: opened ? 1 : 0,\n    transition: \"opacity 0.5s ease 0.25s\",\n    pointerEvents: opened ? undefined : \"none\",\n  };\n\n\n  if (isMobile) {\n    return (\n      <div\n        ref={rootRef}\n        className={`hxs-gsap-flip-card relative w-full min-h-svh overflow-hidden ${className}`}\n        style={{ background: backgroundColor, color: textColor }}\n      >\n        <div className=\"min-h-svh px-[5vw] py-[8vw] flex flex-col gap-[6vw]\">\n          {showCounter && (\n            <div className=\"text-[3vw] tracking-[0.02em]\">\n              <span className=\"font-semibold\">\n                {String(heroSlotLabel).padStart(2, \"0\")}\n              </span>\n              <span style={{ color: mutedColor }}>\n                {\" \"}\n                / {String(items.length).padStart(2, \"0\")}\n              </span>\n            </div>\n          )}\n\n          {heroItem && (\n            <div\n\n              className=\"relative w-full flex-1 min-h-[45svh] overflow-hidden bg-[#d8d8d4] shadow-[0_18px_40px_-24px_rgba(0,0,0,0.45)]\"\n              style={{ borderRadius: rounded }}\n            >\n              <Image\n                src={heroItem.image}\n                alt={heroItem.alt ?? \"\"}\n                draggable={false}\n                fill\n                sizes=\"90vw\"\n                priority\n                className=\"object-cover\"\n              />\n            </div>\n          )}\n\n          <div ref={contentRef} className=\"max-[1025px]:pb-[3vh]\">\n            <h2\n              data-card-text\n              className=\"h-[19vw] py-1  max-md:h-[17.85vw] overflow- text-[7vw]  max-md:text-[8.5vw] leading-[1.2] m-0 font-normal tracking-[-0.02em]\"\n            >\n              {activeContent.title}\n            </h2>\n            <p\n              data-card-text\n              className=\"h-[6vw] max-md:h-[5.25vw] leading-[1.5] overflow-hidden text-[3vw] max-md:text-[3.5vw] mt-[3vw] mb-[4vw]\"\n              style={{ color: mutedColor }}\n            >\n              {activeContent.meta}\n            </p>\n            <p data-card-text className=\"h-[21.12vw] max-md:h-[31.35vw] overflow-hidden text-[3.2vw] max-md:text-[3.8vw] leading-[1.65] m-0\">\n              {activeContent.description}\n            </p>\n            <div\n              className=\"overflow-hidden  h-fit max-md:[--hxs-cap-line:var(--hxs-cap-line-sm)]\"\n              style={\n                {\n                  \"--hxs-cap-line\": CAPTION_MOBILE_LINE,\n                  \"--hxs-cap-line-sm\": CAPTION_MOBILE_LINE_SM,\n                  \"--hxs-cap-lines\": captionLines,\n                } as React.CSSProperties\n              }\n            >\n              <p\n                data-card-text\n                className=\"text-[3vw] text-left max-md:text-left max-md:w-[80%] max-md:text-[4vw] w-[80%]  m-0  leading-normal\"\n              >\n                {activeContent.caption}\n              </p>\n            </div>\n          </div>\n\n          <div className=\"grid grid-cols-3 gap-[3vw]\">\n            {order.slice(1).map((itemIndex) => {\n              const item = items[itemIndex];\n              if (!item) return null;\n              return (\n                <button\n                  key={item.id ?? itemIndex}\n                  type=\"button\"\n                  onClick={() => select(itemIndex)}\n                  aria-label={item.alt ?? item.caption ?? `Image ${itemIndex + 1}`}\n                  className=\"relative p-0 border-none overflow-hidden aspect-4/5 w-full bg-[#d8d8d4] [-webkit-tap-highlight-color:transparent]\"\n                  style={{ borderRadius: rounded * 0.6 }}\n                >\n                  <Image\n                    src={item.image}\n                    alt={item.alt ?? \"\"}\n                    draggable={false}\n                    fill\n                    sizes=\"30vw\"\n                    className=\"object-cover\"\n                  />\n                </button>\n              );\n            })}\n          </div>\n        </div>\n      </div>\n    );\n  }\n\n  return (\n    <div\n      ref={rootRef}\n      className={`hxs-gsap-flip-card relative w-full min-h-svh overflow-hidden ${className}`}\n      style={{ background: backgroundColor, color: textColor }}\n    >\n      {showCounter && (\n        <div\n          className=\"absolute top-[2.22vw] left-[2.78vw] text-[0.9vw] tracking-[0.02em] z-60\"\n          style={chromeStyle}\n        >\n          <span className=\"font-semibold\">\n            {String(heroSlotLabel).padStart(2, \"0\")}\n          </span>\n          <span style={{ color: mutedColor }}> / {String(items.length).padStart(2, \"0\")}</span>\n        </div>\n      )}\n\n      <div\n        ref={stageRef}\n        onClick={(e) => {\n          if (e.target === e.currentTarget) close();\n        }}\n        className={`relative w-full min-h-svh ${opened ? \"cursor-pointer\" : \"cursor-default\"}`}\n      >\n        <div\n          ref={contentRef}\n          className={`absolute top-1/2 -translate-y-1/2 max-w-[22.22vw] z-30 pointer-events-none ${\n            isNarrow ? \"hidden\" : \"block\"\n          }`}\n          style={{ ...chromeStyle, left: railX + tW + Math.max(48, stageWidth * 0.06) }}\n        >\n          <h2\n              data-card-text\n            className=\"h-[8vw] overflow-hidden text-[3.2vw] leading-[1.05] font-normal tracking-[-0.02em] m-0\"\n          >\n            {activeContent.title}\n          </h2>\n          <p data-card-text className=\"h-[2.7vw] leading-[1.5] overflow-hidden text-[0.9vw] mt-[0.97vw]  mx-0\" style={{ color: mutedColor }}>\n            {activeContent.meta}\n          </p>\n          <p data-card-text className=\"h-[9.6vw] overflow-hidden text-[0.97vw] leading-[1.65] m-0\">{activeContent.description}</p>\n          <div\n            className=\"overflow-hidden mt-[1vw]\"\n            style={{ height: `${CAPTION_LINE_VW * captionLines}vw` }}\n          >\n\n            <p\n              data-card-text\n              className=\"text-[1vw] w-[80%] text-left leading-[1.3]  m-0 \"\n            >\n              {activeContent.caption}\n            </p>\n          </div>\n        </div>\n\n        {items.map((item, itemIndex) => {\n          const isHero = itemIndex === heroItemIndex;\n          return (\n            <button\n              key={item.id ?? itemIndex}\n              type=\"button\"\n              ref={(n) => registerCard(itemIndex, n)}\n              data-flip-id={`hxs-card-${item.id ?? itemIndex}`}\n              onClick={() => (opened ? select(itemIndex) : open())}\n              aria-label={\n                opened\n                  ? item.alt ?? item.caption ?? `Image ${itemIndex + 1}`\n                  : `Open gallery - ${items.length} images`\n              }\n              aria-current={(opened && isHero) || undefined}\n              tabIndex={!opened ? (itemIndex === order[0] ? 0 : -1) : isHero ? -1 : 0}\n              className={`p-0 border-none bg-[#d8d8d4] overflow-hidden shadow-[0_18px_40px_-24px_rgba(0,0,0,0.45)] [-webkit-tap-highlight-color:transparent] ${\n                !opened || !isHero ? \"cursor-pointer\" : \"cursor-default\"\n              }`}\n              style={cardStyle(itemIndex)}\n            >\n              <Image\n                src={item.image}\n                alt={item.alt ?? \"\"}\n                draggable={false}\n                fill\n                sizes={`${Math.max(Math.round(hW), 1)}px`}\n                className=\"object-cover rounded-[inherit]\"\n              />\n            </button>\n          );\n        })}\n      </div>\n    </div>\n  );\n};\n\nexport default GsapFlipCard;\n"
+    }
+  ]
+}

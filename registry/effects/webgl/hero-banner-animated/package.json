@@ -1,0 +1,29 @@
+{
+  "name": "@hyperiux/hero-banner-animated",
+  "version": "1.1.0",
+  "description": "Immersive WebGL hero with a 3D room, interactive TV screen with pixelated video transition, mouse-tracked lighting, edge blur, and film grain post-processing.",
+  "main": "index.tsx",
+  "files": [
+    "index.tsx",
+    "CustomGrainNoise.tsx",
+    "EdgeBlurEffect.tsx",
+    "RoomModel.tsx",
+    "VideoUI.tsx",
+    "createSuspendedRaf.ts",
+    "registry.json"
+  ],
+  "keywords": [
+    "webgl",
+    "hyperiux"
+  ],
+  "dependencies": {
+    "@react-three/fiber": "*",
+    "@react-three/drei": "*",
+    "@react-three/postprocessing": "*",
+    "postprocessing": "*",
+    "gsap": "*",
+    "three": "*",
+    "motion": "*",
+    "lucide-react": "*"
+  }
+}

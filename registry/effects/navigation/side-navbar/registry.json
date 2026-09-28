@@ -1,0 +1,107 @@
+{
+  "name": "side-navbar",
+  "version": "1.0.0",
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "date": "2026-08-10",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "type": "registry:component",
+  "title": "Side Navbar",
+  "description": "Side-sliding navigation panel with animated hamburger morph, staggered menu reveals, and a cinematic full-screen backdrop",
+  "category": "navigation",
+  "dependencies": [
+    "gsap"
+  ],
+  "registryDependencies": [],
+  "packageName": "@hyperiux/side-navbar",
+  "sourcePath": "apps/docs/src/components/side-navbar",
+  "previewUrl": "/demo/side-navbar",
+  "tier": "pro",
+  "subfolder": true,
+  "main": "index.tsx",
+  "exportName": "SideNavbar",
+  "exportKind": "default",
+  "importPath": "@/components/effects/side-navbar",
+  "target": "src/components/effects/side-navbar",
+  "props": [
+    {
+      "name": "panelWidth",
+      "type": "string",
+      "default": "50%",
+      "description": "Width of the sliding menu panel.",
+      "remixer": {
+        "control": "text",
+        "group": "layout",
+        "groupTitle": "Layout"
+      }
+    },
+    {
+      "name": "openDuration",
+      "type": "number",
+      "default": 0.5,
+      "description": "Duration of the sidebar opening and closing slide.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0.2,
+        "max": 1.5,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "linksStagger",
+      "type": "number",
+      "default": 0.05,
+      "description": "Stagger between the main navigation links as they animate in.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0,
+        "max": 0.3,
+        "step": 0.01
+      }
+    },
+    {
+      "name": "socialsStagger",
+      "type": "number",
+      "default": 0.05,
+      "description": "Stagger between the social links as they animate in.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0,
+        "max": 0.3,
+        "step": 0.01
+      }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "motion",
+    "layout": {
+      "containerClassName": "z-[300]",
+      "buttonClassName": "right-4! top-25!",
+      "panelClassName": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "target": "src/components/effects/side-navbar/index.tsx"
+    },
+    {
+      "path": "Menu.tsx",
+      "target": "src/components/effects/side-navbar/Menu.tsx"
+    }
+  ]
+}

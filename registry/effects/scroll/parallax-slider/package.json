@@ -1,0 +1,17 @@
+{
+  "name": "@hyperiux/parallax-slider",
+  "version": "1.0.1",
+  "description": "Pinned horizontal gallery with clip-path reveals and image parallax",
+  "main": "index.tsx",
+  "files": [
+    "index.tsx",
+    "registry.json"
+  ],
+  "keywords": [
+    "scroll",
+    "hyperiux"
+  ],
+  "dependencies": {
+    "gsap": "*"
+  }
+}

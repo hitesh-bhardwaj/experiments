@@ -1,0 +1,156 @@
+{
+  "name": "mouse-pixelation",
+  "type": "registry:component",
+  "title": "Mouse Pixelation",
+  "description": "Three R3F WebGL mouse-reactive pixelation effects behind a version-switcher header. V1: GLSL pixel-circle shader with animated orbiting circles and GSAP scroll pin. V2: image texture with velocity-driven block displacement. V3: extruded pixel trail grid paired with a deforming bloom-lit cube that auto-cycles neon colors.",
+  "dependencies": [
+    "three",
+    "@react-three/fiber",
+    "@react-three/postprocessing",
+    "gsap"
+  ],
+  "registryDependencies": [],
+  "exportName": "MousePixelation",
+  "exportKind": "default",
+  "tier": "pro",
+  "version": "1.1.0",
+  "changelog": [
+    {
+      "version": "1.1.0",
+      "date": "2026-07-22",
+      "summary": "added reduced-motion",
+      "breaking": false
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-06-04",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "props": [
+    {
+      "name": "gridSize",
+      "type": "number",
+      "default": 35,
+      "description": "Controls the pixel/grid resolution across all three versions."
+    },
+    {
+      "name": "mouseInteraction",
+      "type": "boolean",
+      "default": true,
+      "description": "Enables cursor-driven pixel movement, trails, and cube rotation."
+    },
+    {
+      "name": "lerp",
+      "type": "number",
+      "default": 0.1,
+      "description": "Controls the smoothing amount for mouse-following motion."
+    },
+    {
+      "name": "backgroundColor",
+      "type": "string",
+      "default": "#000000",
+      "description": "Canvas background color for the V1 pixel-circle version."
+    },
+    {
+      "name": "cubeSize",
+      "type": "number",
+      "default": 1,
+      "description": "Scales the cube in the V3 enhanced pixel cube version."
+    },
+    {
+      "name": "gridEmbossing",
+      "type": "number",
+      "default": 1,
+      "description": "Controls the extruded grid depth in the V3 enhanced pixel cube version."
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "content",
+    "layout": {
+      "controlsButtonClassName": "right-4! top-25!"
+    },
+    "panel": {
+      "className": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "controls": [
+      {
+        "name": "gridSize",
+        "label": "Grid Size",
+        "type": "range",
+        "group": "content",
+        "min": 8,
+        "max": 90,
+        "step": 1
+      },
+      {
+        "name": "mouseInteraction",
+        "label": "Mouse Interaction",
+        "type": "toggle",
+        "group": "content"
+      },
+      {
+        "name": "lerp",
+        "label": "Lerp",
+        "type": "range",
+        "group": "motion",
+        "min": 0.01,
+        "max": 0.6,
+        "step": 0.01
+      },
+      {
+        "name": "backgroundColor",
+        "label": "V1 Background",
+        "type": "color",
+        "group": "style"
+      },
+      {
+        "name": "cubeSize",
+        "label": "V3 Cube Size",
+        "type": "range",
+        "group": "style",
+        "min": 0.5,
+        "max": 2.2,
+        "step": 0.05
+      },
+      {
+        "name": "gridEmbossing",
+        "label": "V3 Grid Embossing",
+        "type": "range",
+        "group": "style",
+        "min": 0,
+        "max": 2,
+        "step": 0.05
+      }
+    ]
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/mouse-pixelation/index.tsx"
+    },
+    {
+      "path": "EnhancedPixelCube.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/mouse-pixelation/EnhancedPixelCube.tsx"
+    },
+    {
+      "path": "PixelCircle.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/mouse-pixelation/PixelCircle.tsx"
+    },
+    {
+      "path": "PixelShift.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/mouse-pixelation/PixelShift.tsx"
+    },
+    {
+      "path": "createSuspendedRaf.ts",
+      "type": "registry:component",
+      "target": "src/components/effects/mouse-pixelation/createSuspendedRaf.ts"
+    }
+  ]
+}

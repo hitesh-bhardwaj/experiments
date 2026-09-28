@@ -1,0 +1,17 @@
+{
+  "name": "@hyperiux/gsap-flip-card",
+  "version": "1.0.0",
+  "description": "A card stack that expands into a hero image and thumbnail rail with GSAP Flip transitions.",
+  "main": "index.tsx",
+  "files": [
+    "index.tsx",
+    "registry.json"
+  ],
+  "keywords": [
+    "components",
+    "hyperiux"
+  ],
+  "dependencies": {
+    "gsap": "*"
+  }
+}

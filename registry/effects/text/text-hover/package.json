@@ -1,0 +1,19 @@
+{
+  "name": "@hyperiux/text-hover",
+  "version": "1.0.1",
+  "description": "Expandable text list with hover/click to reveal descriptions and animated corner brackets",
+  "main": "index.tsx",
+  "files": [
+    "index.tsx",
+    "TextHoverComp.tsx",
+    "createSuspendedRaf.ts",
+    "registry.json"
+  ],
+  "keywords": [
+    "text",
+    "hyperiux"
+  ],
+  "dependencies": {
+    "gsap": "*"
+  }
+}

@@ -1,0 +1,130 @@
+{
+  "name": "text-stream",
+  "type": "registry:component",
+  "title": "Text Stream",
+  "description": "Infinite vertical text marquee that accelerates and reverses direction based on scroll velocity, with a hard-edge mask and static prefix label",
+  "dependencies": [
+    "gsap"
+  ],
+  "registryDependencies": [],
+  "exportName": "TextStream",
+  "exportKind": "default",
+  "tier": "pro",
+  "version": "1.0.1",
+  "changelog": [
+    {
+      "version": "1.0.1",
+      "date": "2026-07-30",
+      "summary": "Reworked the props API (speed, stagger, runOnScroll, independent autoplay toggle), added reduced-motion support, and restored default color scheme.",
+      "breaking": false
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-02-10",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "props": [
+    {
+      "name": "speed",
+      "type": "number",
+      "default": 1,
+      "description": "Streaming speed multiplier.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0,
+        "max": 5,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "stagger",
+      "type": "number",
+      "default": 0.08,
+      "description": "Vertical spacing between streamed lines.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0,
+        "max": 0.6,
+        "step": 0.01
+      }
+    },
+    {
+      "name": "textColor",
+      "type": "string",
+      "default": "#ffffff",
+      "description": "Text color.",
+      "remixer": {
+        "control": "color",
+        "group": "style",
+        "groupTitle": "Style"
+      }
+    },
+    {
+      "name": "backgroundColor",
+      "type": "string",
+      "default": "#000000",
+      "description": "Background color behind the stream.",
+      "remixer": {
+        "control": "color",
+        "group": "style",
+        "groupTitle": "Style"
+      }
+    },
+    {
+      "name": "autoplay",
+      "type": "boolean",
+      "default": true,
+      "description": "Keeps the stream drifting on its own when idle.",
+      "remixer": {
+        "control": "checkbox",
+        "group": "behavior",
+        "groupTitle": "Behavior"
+      }
+    },
+    {
+      "name": "runOnScroll",
+      "type": "boolean",
+      "default": true,
+      "description": "Boosts and reverses the stream in response to scroll or wheel input.",
+      "remixer": {
+        "control": "checkbox",
+        "group": "behavior",
+        "groupTitle": "Behavior"
+      }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "motion",
+    "layout": {
+      "buttonClassName": "right-4! top-25!",
+      "panelClassName": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/text-stream/index.tsx"
+    },
+    {
+      "path": "hooks.ts",
+      "type": "registry:component",
+      "target": "src/components/effects/text-stream/hooks.ts"
+    },
+    {
+      "path": "TextStreamComp.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/text-stream/TextStreamComp.tsx"
+    }
+  ]
+}

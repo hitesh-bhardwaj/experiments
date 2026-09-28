@@ -1,0 +1,19 @@
+{
+  "name": "@hyperiux/information-drawer",
+  "version": "1.0.0",
+  "description": "Team profile grid with an animated information drawer and editable panel styling",
+  "main": "index.tsx",
+  "files": [
+    "index.tsx",
+    "InformationDrawerComp.tsx",
+    "registry.json"
+  ],
+  "keywords": [
+    "components",
+    "hyperiux"
+  ],
+  "dependencies": {
+    "gsap": "*",
+    "lenis": "*"
+  }
+}

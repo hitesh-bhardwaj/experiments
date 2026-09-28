@@ -1,0 +1,21 @@
+{
+  "name": "@hyperiux/lines-loader",
+  "version": "1.0.1",
+  "description": "Two GSAP-powered line loaders: staggered horizontal lines wipe from dark to light (Option 1), or a diamond cone that peels away to reveal a hero message (Option 2)",
+  "main": "index.tsx",
+  "files": [
+    "index.tsx",
+    "LinesLoading.tsx",
+    "CenterLinesLoading.tsx",
+    "utils.ts",
+    "registry.json"
+  ],
+  "keywords": [
+    "loaders",
+    "hyperiux"
+  ],
+  "dependencies": {
+    "gsap": "*",
+    "lucide-react": "*"
+  }
+}

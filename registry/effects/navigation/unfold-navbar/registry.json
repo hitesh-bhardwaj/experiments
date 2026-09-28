@@ -1,0 +1,149 @@
+{
+  "name": "unfold-navbar",
+  "version": "1.0.0",
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "date": "2026-09-14",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "type": "registry:component",
+  "title": "Unfold Navbar",
+  "description": "A compact side navigation that unfolds vertically and horizontally, with staggered links and a feature image.",
+  "category": "navigation",
+  "dependencies": [
+    "@gsap/react",
+    "gsap"
+  ],
+  "registryDependencies": [],
+  "previewUrl": "/demo/unfold-navbar",
+  "tier": "pro",
+  "subfolder": true,
+  "main": "index.tsx",
+  "exportName": "UnfoldNavbar",
+  "exportKind": "default",
+  "importPath": "@/components/effects/unfold-navbar",
+  "target": "src/components/effects/unfold-navbar",
+  "files": [
+    {
+      "path": "index.tsx",
+      "target": "src/components/effects/unfold-navbar/index.tsx"
+    }
+  ],
+  "props": [
+    {
+      "name": "backgroundColor",
+      "type": "string",
+      "default": "#ebebeb",
+      "description": "Navbar surface color.",
+      "remixer": {
+        "control": "color",
+        "group": "style",
+        "groupTitle": "Style"
+      }
+    },
+    {
+      "name": "textColor",
+      "type": "string",
+      "default": "#111111",
+      "description": "Main links and menu icon color.",
+      "remixer": {
+        "control": "color",
+        "group": "style",
+        "groupTitle": "Style"
+      }
+    },
+    {
+      "name": "mutedColor",
+      "type": "string",
+      "default": "rgba(0,0,0,0.5)",
+      "description": "Numbers, secondary links, captions, and dimmed links color.",
+      "remixer": {
+        "control": "color",
+        "group": "style",
+        "groupTitle": "Style"
+      }
+    },
+    {
+      "name": "animationSpeed",
+      "type": "number",
+      "default": 1,
+      "description": "Opening and closing speed multiplier. Higher values animate faster.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0.5,
+        "max": 2,
+        "step": 0.1
+      }
+    },
+    {
+      "name": "charStagger",
+      "type": "number",
+      "default": 0.015,
+      "description": "Delay between characters on link hover, in seconds.",
+      "remixer": {
+        "control": "range",
+        "group": "links",
+        "groupTitle": "Links",
+        "min": 0,
+        "max": 0.06,
+        "step": 0.005
+      }
+    },
+    {
+      "name": "showLinkUnderline",
+      "type": "boolean",
+      "default": false,
+      "description": "Show the animated underline on link hover.",
+      "remixer": {
+        "control": "toggle",
+        "group": "links",
+        "groupTitle": "Links"
+      }
+    },
+    {
+      "name": "showNumbers",
+      "type": "boolean",
+      "default": false,
+      "description": "Show numbers beside primary links.",
+      "remixer": {
+        "control": "toggle",
+        "group": "links",
+        "groupTitle": "Links"
+      }
+    },
+    {
+      "name": "dimInactiveLinks",
+      "type": "boolean",
+      "default": true,
+      "description": "Dim other primary links while hovering a row.",
+      "remixer": {
+        "control": "toggle",
+        "group": "links",
+        "groupTitle": "Links"
+      }
+    },
+    {
+      "name": "showFeature",
+      "type": "boolean",
+      "default": true,
+      "description": "Show the feature image and caption.",
+      "remixer": {
+        "control": "toggle",
+        "group": "media",
+        "groupTitle": "Media"
+      }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "style",
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  }
+}

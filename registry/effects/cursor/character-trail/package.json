@@ -1,0 +1,17 @@
+{
+  "name": "@hyperiux/character-trail",
+  "version": "1.0.1",
+  "description": "Cursor wrapper that leaves a snake-like grid trail of character tiles as the mouse moves. Tiles snap to a 50px grid, cycle through a configurable alphabet and color palette, pop in with a spring animation, then stagger-fade out after the cursor idles.",
+  "main": "index.tsx",
+  "files": [
+    "index.tsx",
+    "CharacterTrailComp.tsx",
+    "createSuspendedRaf.ts",
+    "registry.json"
+  ],
+  "keywords": [
+    "cursor",
+    "hyperiux"
+  ],
+  "dependencies": {}
+}

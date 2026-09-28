@@ -1,0 +1,16 @@
+{
+  "name": "@hyperiux/dot-transition",
+  "version": "1.0.0",
+  "description": "Canvas 2D dot grid that grows into a silhouette mask, holds, then shrinks away before cycling to the next image. Click advances the cycle early; respects prefers-reduced-motion.",
+  "main": "index.tsx",
+  "files": [
+    "index.tsx",
+    "createSuspendedRaf.ts",
+    "registry.json"
+  ],
+  "keywords": [
+    "backgrounds",
+    "hyperiux"
+  ],
+  "dependencies": {}
+}

@@ -1,0 +1,15 @@
+{
+  "name": "@hyperiux/spotlight-button",
+  "version": "1.0.0",
+  "description": "Animated orbiting halo button with a glowing border and hover spotlight.",
+  "main": "index.tsx",
+  "files": [
+    "index.tsx",
+    "registry.json"
+  ],
+  "keywords": [
+    "buttons",
+    "hyperiux"
+  ],
+  "dependencies": {}
+}

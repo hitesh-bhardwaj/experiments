@@ -1,0 +1,20 @@
+{
+  "name": "@hyperiux/draggable-canvas",
+  "version": "1.1.0",
+  "description": "Six independently draggable Canvas 2D windows that each reveal a different cropped region of a shared video, creating a parallax masking illusion. GSAP Draggable with InertiaPlugin gives each window smooth throw physics. Includes a minimal coordinate-display cursor.",
+  "main": "index.tsx",
+  "files": [
+    "index.tsx",
+    "DragCursor.tsx",
+    "MaskedContainer.tsx",
+    "createSuspendedRaf.ts",
+    "registry.json"
+  ],
+  "keywords": [
+    "webgl",
+    "hyperiux"
+  ],
+  "dependencies": {
+    "gsap": "*"
+  }
+}

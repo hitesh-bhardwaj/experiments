@@ -1,0 +1,78 @@
+{
+  "name": "scroll-stack",
+  "type": "registry:component",
+  "title": "Scroll Stack",
+  "description": "Successive content cards that hand off focus and fade as the next section enters",
+  "dependencies": [
+    "gsap"
+  ],
+  "registryDependencies": [],
+  "exportName": "ScrollStack",
+  "exportKind": "default",
+  "tier": "pro",
+  "version": "1.1.0",
+  "changelog": [
+    {
+      "version": "1.1.0",
+      "date": "2026-07-21",
+      "summary": "Added prefers-reduced-motion support: cards no longer scale down while stacking (stays at scale 1), remaining crossfade keeps a linear (none) ease",
+      "breaking": false
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-02-10",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "props": [
+    {
+      "name": "sectionBgColor",
+      "type": "color",
+      "default": "#ffffff",
+      "description": "Background color of the section.",
+      "remixer": {
+        "control": "color",
+        "group": "style",
+        "groupTitle": "Style"
+      }
+    },
+    {
+      "name": "cardRadius",
+      "type": "number",
+      "default": 45,
+      "description": "Corner rounding on each card, in px (desktop only - tablet/mobile keep their own responsive radius).",
+      "remixer": {
+        "control": "range",
+        "group": "style",
+        "groupTitle": "Style",
+        "min": 0,
+        "max": 100,
+        "step": 1
+      }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "style",
+    "layout": {
+      "buttonClassName": "right-4! top-25!",
+      "panelClassName": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/scroll-stack/index.tsx"
+    },
+    {
+      "path": "ScrollStackComp.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/scroll-stack/ScrollStackComp.tsx"
+    }
+  ]
+}

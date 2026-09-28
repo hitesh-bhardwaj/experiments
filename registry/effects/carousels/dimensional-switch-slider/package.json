@@ -1,0 +1,18 @@
+{
+  "name": "@hyperiux/dimensional-switch-slider",
+  "version": "1.1.0",
+  "description": "A 3D card-flip carousel with directional text transitions, configurable horizontal/vertical flip axis, custom easing, and pagination.",
+  "main": "index.tsx",
+  "files": [
+    "index.tsx",
+    "registry.json"
+  ],
+  "keywords": [
+    "carousels",
+    "hyperiux"
+  ],
+  "dependencies": {
+    "gsap": "*",
+    "lucide-react": "*"
+  }
+}

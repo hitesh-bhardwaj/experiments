@@ -1,0 +1,136 @@
+{
+  "name": "cursor-move",
+  "version": "1.0.1",
+  "changelog": [
+    {
+      "version": "1.0.1",
+      "date": "2026-07-23",
+      "summary": "Added reduced-motion support and optimized cursor tracking.",
+      "breaking": false
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-06-04",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "type": "registry:component",
+  "title": "Cursor Move",
+  "description": "Fullscreen cursor-follow crosshair + cursor dot with variable font axis mapping and coordinate readout.",
+  "category": "cursor",
+  "dependencies": [],
+  "registryDependencies": [],
+  "previewUrl": "/demo/cursor-move",
+  "coverImage": "cursor-move",
+  "videoUrl": "cursor-move.mp4",
+  "tier": "pro",
+  "main": "index.tsx",
+  "exportName": "CursorMove",
+  "exportKind": "default",
+  "importPath": "@/components/effects/cursor-move",
+  "target": "src/components/effects/cursor-move",
+  "props": [
+    {
+      "name": "text",
+      "type": "string",
+      "default": "hello!",
+      "demoDefault": "Hello!",
+      "description": "Text affected by cursor movement.",
+      "remixer": {
+        "control": "text",
+        "group": "content",
+        "groupTitle": "Content"
+      }
+    },
+    {
+      "name": "showCrosshair",
+      "type": "boolean",
+      "default": true,
+      "description": "Shows the cursor-following crosshair.",
+      "remixer": {
+        "control": "checkbox",
+        "group": "crosshair",
+        "groupTitle": "Crosshair"
+      }
+    },
+    {
+      "name": "crosshairVariant",
+      "type": "string",
+      "default": "solid",
+      "description": "Crosshair line style.",
+      "remixer": {
+        "control": "select",
+        "group": "crosshair",
+        "groupTitle": "Crosshair",
+        "options": [
+          {
+            "label": "Solid",
+            "value": "solid"
+          },
+          {
+            "label": "Dotted",
+            "value": "dotted"
+          },
+          {
+            "label": "Dashed",
+            "value": "dashed"
+          }
+        ]
+      }
+    },
+    {
+      "name": "showCursorDot",
+      "type": "boolean",
+      "default": true,
+      "description": "Shows the small cursor dot.",
+      "remixer": {
+        "control": "checkbox",
+        "group": "crosshair",
+        "groupTitle": "Crosshair"
+      }
+    },
+    {
+      "name": "lerp",
+      "type": "number",
+      "default": 0.2,
+      "description": "Mouse-follow smoothing amount; lower values feel smoother and slower, higher values track faster.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0.01,
+        "max": 1,
+        "step": 0.01
+      }
+    },
+    {
+      "name": "showCoordinates",
+      "type": "boolean",
+      "default": true,
+      "description": "Shows the live x/y coordinate readout.",
+      "remixer": {
+        "control": "checkbox",
+        "group": "content",
+        "groupTitle": "Content"
+      }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "content",
+    "layout": {
+      "buttonClassName": "right-4! top-25!",
+      "panelClassName": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "target": "src/components/effects/cursor-move/index.tsx"
+    }
+  ]
+}

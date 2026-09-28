@@ -1,0 +1,134 @@
+{
+  "name": "rotation-slider",
+  "type": "registry:component",
+  "title": "Rotation Slider",
+  "description": "Scroll-pinned horizontal slider with 3D card rotation, vertical drift, and SplitText caption reveals.",
+  "dependencies": [
+    "gsap",
+    "lucide-react"
+  ],
+  "registryDependencies": [],
+  "exportName": "RotationSlider",
+  "exportKind": "default",
+  "tier": "free",
+  "version": "1.0.1",
+  "changelog": [
+    {
+      "version": "1.0.1",
+      "date": "2026-07-21",
+      "summary": "Added prefers-reduced-motion support: perspective is flattened, the main scroll tracking loses its smoothing lag, and card rotation is cut to 15% strength",
+      "breaking": false
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-07-20",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "props": [
+    {
+      "name": "rotationAmount",
+      "type": "number",
+      "default": 1,
+      "description": "Multiplier on the built-in per-breakpoint rotateY entrance/exit strength as cards scroll by.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0,
+        "max": 2,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "verticalDrift",
+      "type": "number",
+      "default": 1,
+      "description": "Multiplier on the built-in per-breakpoint vertical offset each card travels while scrolling past.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0,
+        "max": 2,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "scrollSmoothing",
+      "type": "number",
+      "default": 1,
+      "description": "GSAP ScrollTrigger scrub value on the main horizontal track - higher lags/smooths more, lower tracks scroll 1:1.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0,
+        "max": 3,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "perspective",
+      "type": "number",
+      "default": 1200,
+      "description": "3D perspective distance, in pixels, applied to the sticky track - lower values look deeper/more distorted.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 400,
+        "max": 3000,
+        "step": 50
+      }
+    },
+    {
+      "name": "showCaptions",
+      "type": "boolean",
+      "default": true,
+      "description": "Shows the text caption overlay on each card.",
+      "remixer": {
+        "control": "checkbox",
+        "group": "style",
+        "groupTitle": "Style"
+      }
+    },
+    {
+      "name": "textColor",
+      "type": "color",
+      "default": "#ffffff",
+      "description": "Color of the card caption text.",
+      "remixer": {
+        "control": "color",
+        "group": "style",
+        "groupTitle": "Style"
+      }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "motion",
+    "layout": {
+      "buttonClassName": "right-4! top-25!",
+      "panelClassName": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/rotation-slider/index.tsx",
+      "content": "// Built using Hyperiux Vault: https://vault.hyperiux.com\n\nimport { RotationSliderComp } from \"./RotationSliderComp\";\n\nexport default function RotationSlider({\n rotationAmount = 1,\n verticalDrift = 1,\n scrollSmoothing = 1,\n perspective = 1200,\n showCaptions = true,\n textColor = \"#ffffff\",\n}) {\n   const images = [\n { src:\"https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/v-01.jpg\", text:\"Initialize Motion Layer\" },\n { src:\"https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/v-02.jpg\", text:\"Inject Depth Matrix\" },\n { src:\"https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/v-03.jpg\", text:\"Sync Scroll Engine\" },\n { src:\"https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/v-04.jpg\", text:\"Calibrate Perspective\" },\n { src:\"https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/v-05.jpg\", text:\"Activate 3D Pipeline\" },\n { src:\"https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/v-06.jpg\", text:\"Bind Interaction Core\" },\n { src:\"https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/v-07.jpg\", text:\"Compute Visual Flow\" },\n { src:\"https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/v-08.jpg\", text:\"Render Adaptive Frames\" },\n { src:\"https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/v-09.jpg\", text:\"Stabilize Motion Curve\" },\n { src:\"https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/v-10.jpg\", text:\"Optimize Transition Graph\" },\n { src:\"https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/h-01.jpg\", text:\"Deploy Experience Layer\" },\n { src:\"https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/h-02.jpg\", text:\"Finalize Hyperiux State\" },\n ];\n\n return (\n <>\n <RotationSliderComp\n images={images}\n rotationAmount={rotationAmount}\n verticalDrift={verticalDrift}\n scrollSmoothing={scrollSmoothing}\n perspective={perspective}\n showCaptions={showCaptions}\n textColor={textColor}\n />\n </>\n );\n}\n"
+    },
+    {
+      "path": "RotationSliderComp.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/rotation-slider/RotationSliderComp.tsx",
+      "content": "\"use client\";\n\nimport React, { forwardRef, useEffect, useLayoutEffect, useRef } from \"react\";\nimport gsap from \"gsap\";\nimport { ScrollTrigger } from \"gsap/ScrollTrigger\";\n\n// True when the user has asked the OS to minimise animation. Safe to call\n// during render - returns false on the server.\nfunction prefersReducedMotion() {\n    if (typeof window === \"undefined\") return false;\n    return window.matchMedia?.(\"(prefers-reduced-motion: reduce)\")?.matches ?? false;\n}\n\n// Reduced motion: a much larger perspective distance flattens the 3D card\n// rotation (less depth distortion) instead of removing it outright.\nconst REDUCED_PERSPECTIVE = \"4800px\";\n\nconst MOBILE_BREAKPOINT = 640;\nconst TABLET_BREAKPOINT = 1025;\n\nconst MOBILE_STEP = 2;\nconst TABLET_STEP = 6;\nconst DESKTOP_STEP = 10;\n\nconst MOBILE_ROTATE_IN = -60;\nconst TABLET_ROTATE_IN = -80;\nconst DESKTOP_ROTATE_IN = -100;\n\nconst MOBILE_ROTATE_OUT = 50;\nconst TABLET_ROTATE_OUT = 65;\nconst DESKTOP_ROTATE_OUT = 80;\n\nconst ROTATE_X_NEGATIVE = 5;\nconst ROTATE_X_POSITIVE = -5;\n\n// Reduced motion: cut the card rotation down a lot (not just the perspective\n// flattening above) - \"reduce a lot\", so a stronger cut than the 25% factor\n// used elsewhere.\nconst ROTATION_REDUCTION_FACTOR = 0.15;\n\nconst useIsomorphicLayoutEffect =\n    typeof window !== \"undefined\" ? useLayoutEffect : useEffect;\n\ngsap.registerPlugin(ScrollTrigger);\n\ninterface RotationSliderImage {\n    src?: string;\n    text?: string;\n}\n\ninterface RotationSliderCompProps {\n    images: RotationSliderImage[];\n    rotationAmount?: number;\n    verticalDrift?: number;\n    scrollSmoothing?: number;\n    perspective?: number;\n    showCaptions?: boolean;\n    textColor?: string;\n}\n\nexport function RotationSliderComp({\n    images,\n    rotationAmount = 1,\n    verticalDrift = 1,\n    scrollSmoothing = 1,\n    perspective = 1200,\n    showCaptions = true,\n    textColor = \"#ffffff\",\n}: RotationSliderCompProps) {\n    const outerRef = useRef<HTMLDivElement | null>(null);\n    const trackRef = useRef<HTMLDivElement | null>(null);\n    const cardsRef = useRef<(HTMLDivElement | null)[]>([]);\n    const wrappersRef = useRef<(HTMLDivElement | null)[]>([]);\n    const reducedMotion = prefersReducedMotion();\n\n    useEffect(() => {\n        const outer = outerRef.current;\n        const track = trackRef.current;\n\n        if (!outer || !track) return;\n\n        const onResize = () => {\n            const travel = track.scrollWidth - window.innerWidth;\n            outer.style.height = `${travel + window.innerHeight}px`;\n        };\n\n        onResize();\n\n        const resizeObserver = new ResizeObserver(onResize);\n\n        resizeObserver.observe(track);\n        window.addEventListener(\"resize\", onResize);\n\n        return () => {\n            resizeObserver.disconnect();\n            window.removeEventListener(\"resize\", onResize);\n        };\n    }, [images]);\n\n    useIsomorphicLayoutEffect(() => {\n        const outer = outerRef.current;\n        const track = trackRef.current;\n\n        if (!outer || !track) return;\n\n        const isMobile = window.innerWidth < MOBILE_BREAKPOINT;\n        const isTablet =\n            window.innerWidth >= MOBILE_BREAKPOINT &&\n            window.innerWidth < TABLET_BREAKPOINT;\n\n        const context = gsap.context(() => {\n            const horizontalTween = gsap.to(track, {\n                x: () => -(track.scrollWidth - window.innerWidth),\n                ease: \"none\",\n                scrollTrigger: {\n                    trigger: outer,\n                    start: \"top top\",\n                    end: () => `+=${track.scrollWidth - window.innerWidth}`,\n                    // Reduced motion: scrub:true tracks scroll position\n                    // directly (no smoothing lag) instead of the ~1s\n                    // catch-up delay - the \"lerp\" here is that scrub value.\n                    scrub: reducedMotion ? true : scrollSmoothing,\n                    invalidateOnRefresh: true,\n                },\n            });\n\n            cardsRef.current.forEach((card, index) => {\n                const wrapper = wrappersRef.current[index];\n\n                if (!card || !wrapper) return;\n\n                const total = images.length;\n                const mid = Math.floor(total / 2);\n\n                const step = (isMobile\n                    ? MOBILE_STEP\n                    : isTablet\n                        ? TABLET_STEP\n                        : DESKTOP_STEP) * verticalDrift;\n\n                let offset: number;\n\n                if (index < mid) {\n                    offset = -((mid - index) * step);\n                } else {\n                    offset = (index - mid + 1) * step;\n                }\n\n                const rotationScale = reducedMotion ? ROTATION_REDUCTION_FACTOR : 1;\n\n                const rotateXValue =\n                    (offset < 0 ? ROTATE_X_NEGATIVE : ROTATE_X_POSITIVE) * rotationScale;\n\n                const rotateInValue =\n                    (isMobile\n                        ? MOBILE_ROTATE_IN\n                        : isTablet\n                            ? TABLET_ROTATE_IN\n                            : DESKTOP_ROTATE_IN) * rotationScale * rotationAmount;\n\n                const rotateOutValue =\n                    (isMobile\n                        ? MOBILE_ROTATE_OUT\n                        : isTablet\n                            ? TABLET_ROTATE_OUT\n                            : DESKTOP_ROTATE_OUT) * rotationScale * rotationAmount;\n\n                const tl = gsap.timeline({\n                    scrollTrigger: {\n                        trigger: wrapper,\n                        containerAnimation: horizontalTween,\n                        start: \"left 100%\",\n                        end: \"right 0%\",\n                        scrub: true,\n                        // markers:true\n                    },\n                });\n\n                tl.fromTo(\n                    card,\n                    {\n                        rotateY: rotateInValue,\n                        rotateX: rotateXValue,\n                        opacity: 0.8,\n                        y: `${offset}vh`,\n                    },\n                    {\n                        rotateY: 0,\n                        rotateX: 0,\n                        opacity: 1,\n                        y: 0,\n                        ease: \"none\",\n                    }\n                ).to(card, {\n                    rotateY: rotateOutValue,\n                    opacity: 0.9,\n                    y: `${-offset}vh`,\n                    ease: \"none\",\n                });\n            });\n\n            ScrollTrigger.refresh();\n        });\n\n        return () => context.revert();\n    }, [images, rotationAmount, verticalDrift, scrollSmoothing]);\n\n    return (\n        <div ref={outerRef} className=\"relative bg-white\">\n            <div\n                className=\"sticky top-0 flex h-screen items-center overflow-hidden\"\n                style={{ perspective: reducedMotion ? REDUCED_PERSPECTIVE : `${perspective}px` }}\n            >\n                <div\n                    ref={trackRef}\n                    className=\"\n            flex h-full items-center will-change-transform\n            gap-[5vw] max-[1025px]:gap-[8vw] max-md:gap-[12vw]\n            pl-[31vw] pr-[31vw]\n            max-[1025px]:pl-[22vw] max-[1025px]:pr-[22vw]\n            max-md:pl-[12vw] max-md:pr-[12.5vw]\n          \"\n                    style={{ transformStyle: \"preserve-3d\" }}\n                >\n                    {images.map((img, index) => (\n                        <div\n                            key={index}\n                            ref={(element) => {\n                                wrappersRef.current[index] = element;\n                            }}\n                            className=\"\n                relative flex h-[45vh] w-[38vw] shrink-0 items-center justify-center\n                max-[1025px]:h-[40vh] max-[1025px]:w-[55vw]\n                max-md:h-[35vh] max-md:w-[75vw]\n                max-[1025px]:[&>div]:h-[40vh] max-[1025px]:[&>div]:w-[50vw]\n                max-md:[&>div]:h-[35vh] max-md:[&>div]:w-[75vw]\n              \"\n                            style={{ transformStyle: \"preserve-3d\" }}\n                        >\n                            <RotationCard\n                                ref={(element) => {\n                                    cardsRef.current[index] = element;\n                                }}\n                                src={img.src}\n                                text={img.text}\n                                index={index}\n                                total={images.length}\n                                showCaptions={showCaptions}\n                                textColor={textColor}\n                            />\n                        </div>\n                    ))}\n                </div>\n               \n            </div>\n        </div>\n    );\n}\n\ninterface RotationCardProps {\n    src?: string;\n    index: number;\n    total: number;\n    text?: string;\n    showCaptions: boolean;\n    textColor: string;\n}\n\nconst RotationCard = forwardRef<HTMLDivElement, RotationCardProps>(({ src, index, total, text, showCaptions, textColor }, ref) => {\n    return (\n        <div\n            ref={ref}\n            className=\"absolute h-[45vh] w-[38vw] origin-right overflow-hidden opacity-0 max-md:h-[35vh] max-md:w-[75vw]\"\n            style={{\n                transformStyle: \"preserve-3d\",\n                zIndex: total - index,\n            }}\n        >\n            <div\n                className=\"relative h-full w-full\"\n                style={{\n                    transformStyle: \"preserve-3d\",\n                }}\n            >\n                <img\n                    src={src}\n                    alt=\"slider\"\n                    className=\"absolute inset-0 h-full w-full object-cover\"\n                />\n            </div>\n\n            {showCaptions && text && (\n                <div\n                    className=\"absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2 text-center text-[1.4vw] font-medium max-[1025px]:text-[2.4vw] max-md:text-[4vw]\"\n                    style={{\n                        color: textColor,\n                        textShadow:\n                            \"0 0.15vw 0.35vw rgba(0,0,0,0.35), 0 0.45vw 1.2vw rgba(0,0,0,0.35)\",\n                    }}\n                >\n                    {text}\n                </div>\n            )}\n        </div>\n    );\n});\n\nRotationCard.displayName = \"RotationCard\";\n"
+    }
+  ]
+}

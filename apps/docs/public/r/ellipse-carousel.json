@@ -1,0 +1,228 @@
+{
+  "name": "ellipse-carousel",
+  "type": "registry:component",
+  "title": "Ellipse Carousel",
+  "description": "Elliptical card carousel with autoplay, drag interaction, mobile-specific ellipse tuning, and an optional center label.",
+  "dependencies": [
+    "gsap"
+  ],
+  "registryDependencies": [],
+  "exportName": "EllipseCarousel",
+  "exportKind": "default",
+  "tier": "free",
+  "version": "1.0.0",
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "date": "2026-08-21",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "props": [
+    {
+      "name": "backgroundColor",
+      "type": "string",
+      "default": "#eeeeee",
+      "description": "Background fill behind the carousel stage.",
+      "remixer": {
+        "control": "color",
+        "group": "appearance",
+        "groupTitle": "Appearance"
+      }
+    },
+    {
+      "name": "centerLabel",
+      "type": "string",
+      "default": "Ellipse Carousel",
+      "description": "Text shown at the center of the ellipse when enabled.",
+      "remixer": {
+        "enabled": false,
+        "control": "text",
+        "group": "appearance",
+        "groupTitle": "Appearance"
+      }
+    },
+    {
+      "name": "showCenterLabel",
+      "type": "boolean",
+      "default": true,
+      "description": "Shows or hides the center label.",
+      "remixer": {
+        "control": "checkbox",
+        "group": "appearance",
+        "groupTitle": "Appearance"
+      }
+    },
+    {
+      "name": "cardWidth",
+      "type": "number",
+      "default": 130,
+      "description": "Card width at the largest active position, in pixels.",
+      "remixer": {
+        "control": "range",
+        "group": "layout",
+        "groupTitle": "Layout",
+        "min": 80,
+        "max": 260,
+        "step": 1
+      }
+    },
+    {
+      "name": "cardHeight",
+      "type": "number",
+      "default": 180,
+      "description": "Card height at the largest active position, in pixels.",
+      "remixer": {
+        "control": "range",
+        "group": "layout",
+        "groupTitle": "Layout",
+        "min": 110,
+        "max": 340,
+        "step": 1
+      }
+    },
+    {
+      "name": "minScale",
+      "type": "number",
+      "default": 0.2,
+      "description": "Minimum scale applied to the farthest cards on the ellipse.",
+      "remixer": {
+        "control": "range",
+        "group": "layout",
+        "groupTitle": "Layout",
+        "min": 0.05,
+        "max": 0.8,
+        "step": 0.01
+      }
+    },
+    {
+      "name": "radiusXRatio",
+      "type": "number",
+      "default": 0.25,
+      "description": "Horizontal ellipse radius as a fraction of the stage width.",
+      "remixer": {
+        "control": "range",
+        "group": "layout",
+        "groupTitle": "Layout",
+        "min": 0.1,
+        "max": 0.5,
+        "step": 0.01
+      }
+    },
+    {
+      "name": "radiusYRatio",
+      "type": "number",
+      "default": 0.36,
+      "description": "Vertical ellipse radius as a fraction of the stage height.",
+      "remixer": {
+        "control": "range",
+        "group": "layout",
+        "groupTitle": "Layout",
+        "min": 0.1,
+        "max": 0.5,
+        "step": 0.01
+      }
+    },
+    {
+      "name": "autoPlay",
+      "type": "boolean",
+      "default": true,
+      "description": "Automatically advances the carousel by one card at a time.",
+      "remixer": {
+        "control": "checkbox",
+        "group": "behavior",
+        "groupTitle": "Behavior"
+      }
+    },
+    {
+      "name": "holdDuration",
+      "type": "number",
+      "default": 1,
+      "description": "Seconds to hold on the active card before advancing.",
+      "remixer": {
+        "control": "range",
+        "group": "behavior",
+        "groupTitle": "Behavior",
+        "min": 0,
+        "max": 3,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "stepDuration",
+      "type": "number",
+      "default": 0.7,
+      "description": "Seconds for the snap transition between cards.",
+      "remixer": {
+        "control": "range",
+        "group": "behavior",
+        "groupTitle": "Behavior",
+        "min": 0.1,
+        "max": 2,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "pauseOnHover",
+      "type": "boolean",
+      "default": true,
+      "description": "Pauses autoplay while hovering a card.",
+      "remixer": {
+        "control": "checkbox",
+        "group": "behavior",
+        "groupTitle": "Behavior"
+      }
+    },
+    {
+      "name": "draggable",
+      "type": "boolean",
+      "default": true,
+      "description": "Allows users to drag the ellipse by hand.",
+      "remixer": {
+        "control": "checkbox",
+        "group": "behavior",
+        "groupTitle": "Behavior"
+      }
+    },
+    {
+      "name": "dragSensitivity",
+      "type": "number",
+      "default": 1,
+      "description": "Multiplier on the carousel's angular drag response.",
+      "remixer": {
+        "control": "range",
+        "group": "behavior",
+        "groupTitle": "Behavior",
+        "min": 0.2,
+        "max": 3,
+        "step": 0.05
+      }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "appearance",
+    "layout": {
+      "buttonClassName": "right-4! top-25!",
+      "panelClassName": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/ellipse-carousel/index.tsx",
+      "content": "// Built using Hyperiux Vault: https://vault.hyperiux.com\nimport EllipseCarouselComp, { type EllipseCarouselProps, type EllipseCarouselItem } from \"./EllipseCarouselComp\";\n\nconst defaultItems: EllipseCarouselItem[] = [\n  { bgColor: \"#f5f5f2\", textColor: \"#111111\", title: \"↑\" },\n  {\n    src: \"https://images.unsplash.com/photo-1500534623283-312aade485b7?w=600&h=900&fit=crop\",\n    alt: \"Coastal landscape painting\",\n  },\n  {\n    src: \"https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=600&h=900&fit=crop\",\n    alt: \"Studio portrait\",\n  },\n  { bgColor: \"#ffffff\", textColor: \"#111111\", title: \"M\" },\n  { bgColor: \"#0a0a0a\", textColor: \"#ffffff\", title: \"⌒\", subtitle: \"Nike\" },\n  { bgColor: \"#f2c94c\", textColor: \"#111111\", title: \"Parks\" },\n  {\n    src: \"https://images.unsplash.com/photo-1519681393784-d120267933ba?w=600&h=900&fit=crop\",\n    alt: \"Mountain range\",\n  },\n  { bgColor: \"#111111\", textColor: \"#ffffff\", title: \"Ext\" },\n  {\n    src: \"https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?w=600&h=900&fit=crop\",\n    alt: \"Night sky\",\n  },\n  { bgColor: \"#dd4b39\", textColor: \"#ffffff\", title: \"ÖH\" },\n  {\n    src: \"https://images.unsplash.com/photo-1506863530036-1efeddceb993?w=600&h=900&fit=crop\",\n    alt: \"Profile portrait\",\n  },\n  { bgColor: \"#2b3a67\", textColor: \"#ffffff\", title: \"SSSIII\" },\n];\n\nexport type { EllipseCarouselItem, EllipseCarouselProps };\n\nconst EllipseCarousel = ({\n  items = defaultItems,\n  centerLabel = \"Ellipse Carousel\",\n  showCenterLabel = true,\n  ...rest\n}: EllipseCarouselProps) => {\n  return (\n    <EllipseCarouselComp\n      items={items}\n      centerLabel={centerLabel}\n      showCenterLabel={showCenterLabel}\n      {...rest}\n    />\n  );\n};\n\nexport default EllipseCarousel;\n"
+    },
+    {
+      "path": "EllipseCarouselComp.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/ellipse-carousel/EllipseCarouselComp.tsx",
+      "content": "'use client'\n\nimport { useCallback, useEffect, useLayoutEffect, useRef, useState } from \"react\";\nimport Image from \"next/image\";\nimport { gsap } from \"gsap\";\n\nconst MOBILE_BREAKPOINT = 768;\nconst MOBILE_RADIUS_X_SCALE = 1.45;\nconst MOBILE_RADIUS_Y_SCALE = 0.82;\nconst MOBILE_CARD_SCALE = 0.75;\n\nconst REDUCED_MOTION_QUERY = \"(prefers-reduced-motion: reduce)\";\n\nfunction usePrefersReducedMotion() {\n  const [reducedMotion, setReducedMotion] = useState(false);\n\n  useEffect(() => {\n    const mediaQuery = window.matchMedia?.(REDUCED_MOTION_QUERY);\n    if (!mediaQuery) return;\n\n    const update = () => setReducedMotion(mediaQuery.matches);\n    update();\n    mediaQuery.addEventListener?.(\"change\", update);\n\n    return () => mediaQuery.removeEventListener?.(\"change\", update);\n  }, []);\n\n  return reducedMotion;\n}\n\nexport interface EllipseCarouselItem {\n  src?: string;\n  alt?: string;\n  bgColor?: string;\n  textColor?: string;\n  title?: string;\n  subtitle?: string;\n}\n\nexport interface EllipseCarouselProps {\n  items?: EllipseCarouselItem[];\n  backgroundColor?: string;\n  centerLabel?: string;\n  showCenterLabel?: boolean;\n  cardWidth?: number;\n  cardHeight?: number;\n  cardAspect?: number;\n  minScale?: number;\n  radiusXRatio?: number;\n  radiusYRatio?: number;\n  autoPlay?: boolean;\n  holdDuration?: number;\n  stepDuration?: number;\n  stepEase?: string;\n  pauseOnHover?: boolean;\n  draggable?: boolean;\n  dragSensitivity?: number;\n  className?: string;\n}\n\nconst EllipseCarousel = ({\n  items = [],\n  backgroundColor = \"#eeeeee\",\n  centerLabel,\n  showCenterLabel = true,\n  cardWidth = 130,\n  cardHeight = 180,\n  cardAspect = 0.9,\n  minScale = 0.2,\n  radiusXRatio = 0.25,\n  radiusYRatio = 0.36,\n  autoPlay = true,\n  holdDuration = 1,\n  stepDuration = 0.7,\n  stepEase = \"power2.inOut\",\n  pauseOnHover = true,\n  draggable = true,\n  dragSensitivity = 1,\n  className = \"\",\n}: EllipseCarouselProps) => {\n  const stageRef = useRef<HTMLDivElement | null>(null);\n  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);\n  const reducedMotion = usePrefersReducedMotion();\n  const [isMobile, setIsMobile] = useState(false);\n  const total = items.length;\n\n  const rotationRef = useRef(0);\n  const hoveredRef = useRef(false);\n  const hoverCountRef = useRef(0);\n  const draggingRef = useRef(false);\n  const lastAngleRef = useRef(0);\n  const dragOriginRef = useRef({ left: 0, top: 0 });\n  const settleTweenRef = useRef<gsap.core.Tween | null>(null);\n  const autoplayTweenRef = useRef<gsap.core.Tween | null>(null);\n  const autoplayDelayRef = useRef<gsap.core.Tween | null>(null);\n\n  const geometryRef = useRef({\n    cx: 0,\n    cy: 0,\n    radiusX: 320,\n    radiusY: 260,\n    cardW: cardWidth,\n    cardH: cardHeight ?? cardWidth / cardAspect,\n  });\n\n  useEffect(() => {\n    const updateIsMobile = () => {\n      setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);\n    };\n\n    updateIsMobile();\n    window.addEventListener(\"resize\", updateIsMobile);\n\n    return () => window.removeEventListener(\"resize\", updateIsMobile);\n  }, []);\n\n  const measure = useCallback(() => {\n    const stage = stageRef.current;\n    if (!stage) return;\n\n    const width = stage.offsetWidth;\n    const height = stage.offsetHeight;\n    const cardScale = isMobile ? MOBILE_CARD_SCALE : 1;\n    const radiusXScale = isMobile ? MOBILE_RADIUS_X_SCALE : 1;\n    const radiusYScale = isMobile ? MOBILE_RADIUS_Y_SCALE : 1;\n\n    geometryRef.current = {\n      cx: width / 2,\n      cy: height / 2,\n      radiusX: width * radiusXRatio * radiusXScale,\n      radiusY: height * radiusYRatio * radiusYScale,\n      cardW: cardWidth * cardScale,\n      cardH: (cardHeight ?? cardWidth / cardAspect) * cardScale,\n    };\n  }, [cardAspect, cardHeight, cardWidth, isMobile, radiusXRatio, radiusYRatio]);\n\n  useLayoutEffect(() => {\n    measure();\n    const stage = stageRef.current;\n    if (!stage || typeof ResizeObserver === \"undefined\") {\n      window.addEventListener(\"resize\", measure);\n      return () => window.removeEventListener(\"resize\", measure);\n    }\n    const observer = new ResizeObserver(measure);\n    observer.observe(stage);\n    return () => observer.disconnect();\n  }, [measure]);\n\n  const render = useCallback(() => {\n    if (!total) return;\n    const { cx, cy, radiusX, radiusY, cardW, cardH } = geometryRef.current;\n    const rotation = rotationRef.current;\n    const step = (Math.PI * 2) / total;\n\n    for (let i = 0; i < total; i += 1) {\n      const card = cardRefs.current[i];\n      if (!card) continue;\n\n      const theta = i * step + rotation;\n      const cosT = Math.cos(theta);\n      const sinT = Math.sin(theta);\n\n      const scale = minScale + (1 - minScale) * ((cosT + 1) / 2);\n      const w = cardW * scale;\n      const h = cardH * scale;\n\n      const x = cx + radiusX * cosT - w / 2;\n      const y = cy + radiusY * sinT - h / 2;\n\n      card.style.width = `${w}px`;\n      card.style.height = `${h}px`;\n      card.style.transform = `translate3d(${x}px, ${y}px, 0)`;\n      card.style.zIndex = `${Math.round(scale * 1000)}`;\n    }\n  }, [minScale, total]);\n\n  const stopAutoplay = useCallback(() => {\n    autoplayDelayRef.current?.kill();\n    autoplayTweenRef.current?.kill();\n    autoplayDelayRef.current = null;\n    autoplayTweenRef.current = null;\n  }, []);\n\n  const scheduleNextStep = useCallback(() => {\n    if (!autoPlay || reducedMotion || !total) return;\n\n    autoplayDelayRef.current = gsap.delayedCall(holdDuration, () => {\n      if (draggingRef.current || (pauseOnHover && hoveredRef.current)) {\n        scheduleNextStep();\n        return;\n      }\n\n      const step = (Math.PI * 2) / total;\n      const state = { r: rotationRef.current };\n      autoplayTweenRef.current = gsap.to(state, {\n        r: state.r - step,\n        duration: stepDuration,\n        ease: stepEase,\n        onUpdate: () => {\n          rotationRef.current = state.r;\n          render();\n        },\n        onComplete: scheduleNextStep,\n      });\n    });\n  }, [autoPlay, holdDuration, pauseOnHover, reducedMotion, render, stepDuration, stepEase, total]);\n\n  useEffect(() => {\n    render();\n    scheduleNextStep();\n    return () => stopAutoplay();\n  }, [render, scheduleNextStep, stopAutoplay]);\n\n  useEffect(() => {\n    const stage = stageRef.current;\n    if (!stage || !draggable || !total) return;\n\n    const pointerAngle = (e: PointerEvent) => {\n      const { cx, cy, radiusX, radiusY } = geometryRef.current;\n      const rect = dragOriginRef.current;\n      const localX = e.clientX - rect.left;\n      const localY = e.clientY - rect.top;\n      return Math.atan2((localY - cy) / radiusY, (localX - cx) / radiusX);\n    };\n\n    const onPointerDown = (e: PointerEvent) => {\n      if (e.button !== 0 && e.pointerType === \"mouse\") return;\n      stopAutoplay();\n      settleTweenRef.current?.kill();\n      settleTweenRef.current = null;\n      draggingRef.current = true;\n      const rect = stage.getBoundingClientRect();\n      dragOriginRef.current = { left: rect.left, top: rect.top };\n      lastAngleRef.current = pointerAngle(e);\n      stage.setPointerCapture(e.pointerId);\n      stage.style.cursor = \"grabbing\";\n    };\n\n    const onPointerMove = (e: PointerEvent) => {\n      if (!draggingRef.current) return;\n      const angle = pointerAngle(e);\n      let delta = angle - lastAngleRef.current;\n      delta = ((delta + Math.PI) % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2) - Math.PI;\n      lastAngleRef.current = angle;\n      rotationRef.current += delta * dragSensitivity;\n      render();\n    };\n\n    const endDrag = (e: PointerEvent) => {\n      if (!draggingRef.current) return;\n      draggingRef.current = false;\n      stage.style.cursor = \"grab\";\n      if (stage.hasPointerCapture(e.pointerId)) stage.releasePointerCapture(e.pointerId);\n\n      const step = (Math.PI * 2) / total;\n      const target = Math.round(rotationRef.current / step) * step;\n      const state = { r: rotationRef.current };\n\n      if (reducedMotion) {\n        rotationRef.current = target;\n        render();\n        scheduleNextStep();\n        return;\n      }\n\n      settleTweenRef.current = gsap.to(state, {\n        r: target,\n        duration: 0.5,\n        ease: \"power3.out\",\n        onUpdate: () => {\n          rotationRef.current = state.r;\n          render();\n        },\n        onComplete: () => {\n          settleTweenRef.current = null;\n          scheduleNextStep();\n        },\n      });\n    };\n\n    stage.addEventListener(\"pointerdown\", onPointerDown);\n    stage.addEventListener(\"pointermove\", onPointerMove);\n    stage.addEventListener(\"pointerup\", endDrag);\n    stage.addEventListener(\"pointercancel\", endDrag);\n\n    return () => {\n      stage.removeEventListener(\"pointerdown\", onPointerDown);\n      stage.removeEventListener(\"pointermove\", onPointerMove);\n      stage.removeEventListener(\"pointerup\", endDrag);\n      stage.removeEventListener(\"pointercancel\", endDrag);\n      settleTweenRef.current?.kill();\n    };\n  }, [dragSensitivity, draggable, reducedMotion, render, scheduleNextStep, stopAutoplay, total]);\n\n  const onCardPointerEnter = useCallback(() => {\n    hoverCountRef.current += 1;\n    hoveredRef.current = true;\n  }, []);\n\n  const onCardPointerLeave = useCallback(() => {\n    hoverCountRef.current = Math.max(0, hoverCountRef.current - 1);\n    hoveredRef.current = hoverCountRef.current > 0;\n  }, []);\n\n  if (!total) return null;\n\n  return (\n    <section\n      className={`relative h-[100dvh] w-full overflow-hidden select-none ${className}`}\n      style={{ backgroundColor }}\n    >\n      <div\n        ref={stageRef}\n        tabIndex={0}\n        role=\"region\"\n        aria-label=\"Ellipse card carousel\"\n        className={`absolute inset-0 touch-pan-y outline-none ${draggable ? \"cursor-grab\" : \"\"}`}\n      >\n        {showCenterLabel && centerLabel ? (\n          <div className=\"pointer-events-none absolute inset-0 z-0 flex items-center justify-center\">\n            <span className=\"text-[3.4vw] font-medium tracking-tight text-black/90\">{centerLabel}</span>\n          </div>\n        ) : null}\n\n        {items.map((item, i) => (\n          <div\n            key={i}\n            ref={(el) => {\n              cardRefs.current[i] = el;\n            }}\n            onPointerEnter={onCardPointerEnter}\n            onPointerLeave={onCardPointerLeave}\n            className=\"absolute left-0 top-0 overflow-hidden shadow-xl will-change-transform\"\n          >\n            {item.src ? (\n              <Image\n                src={item.src}\n                alt={item.alt ?? \"\"}\n                fill\n                sizes={`${Math.round(cardWidth * (isMobile ? MOBILE_CARD_SCALE : 1))}px`}\n                draggable={false}\n                className=\"pointer-events-none select-none object-cover\"\n              />\n            ) : (\n              <div\n                className=\"flex h-full w-full flex-col items-center justify-center gap-1 p-3 text-center\"\n                style={{ backgroundColor: item.bgColor ?? \"#111111\", color: item.textColor ?? \"#ffffff\" }}\n              >\n                {item.title ? <span className=\"text-2xl font-black leading-none\">{item.title}</span> : null}\n                {item.subtitle ? (\n                  <span className=\"text-[0.6rem] uppercase tracking-[0.2em] opacity-70\">{item.subtitle}</span>\n                ) : null}\n              </div>\n            )}\n          </div>\n        ))}\n      </div>\n    </section>\n  );\n};\n\nexport default EllipseCarousel;\n"
+    }
+  ]
+}

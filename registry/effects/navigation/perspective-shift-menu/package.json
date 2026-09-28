@@ -1,0 +1,17 @@
+{
+  "name": "@hyperiux/perspective-shift-menu",
+  "version": "1.0.0",
+  "description": "A full-height nav column that slides in while the page tilts away in 3D, with a nested sub-drawer and per-character link rolls.",
+  "main": "index.tsx",
+  "files": [
+    "index.tsx",
+    "registry.json"
+  ],
+  "keywords": [
+    "navigation",
+    "hyperiux"
+  ],
+  "dependencies": {
+    "gsap": "*"
+  }
+}

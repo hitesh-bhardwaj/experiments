@@ -1,0 +1,17 @@
+{
+  "name": "@hyperiux/blur-text",
+  "version": "1.0.1",
+  "description": "Text that reveals with a blur-to-focus animation on scroll",
+  "main": "index.tsx",
+  "files": [
+    "index.tsx",
+    "registry.json"
+  ],
+  "keywords": [
+    "text",
+    "hyperiux"
+  ],
+  "dependencies": {
+    "motion": "*"
+  }
+}

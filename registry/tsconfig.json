@@ -1,0 +1,35 @@
+{
+  "//": "Local-only config so registry/effects gets TS/TSX editor support and a tsc --noEmit check. Never read by the build/pack scripts and never shipped to consumers - each registry item is plain source with no build step of its own.",
+  "compilerOptions": {
+    "target": "ES2017",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "jsx": "react-jsx",
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "allowJs": true,
+    "typeRoots": ["../apps/docs/node_modules/@types"],
+    "paths": {
+      "react": ["../apps/docs/node_modules/@types/react"],
+      "react/jsx-runtime": ["../apps/docs/node_modules/@types/react/jsx-runtime"],
+      "react/jsx-dev-runtime": ["../apps/docs/node_modules/@types/react/jsx-dev-runtime"],
+      "react-dom": ["../apps/docs/node_modules/@types/react-dom"],
+      "gsap": ["../apps/docs/node_modules/gsap"],
+      "gsap/*": ["../apps/docs/node_modules/gsap/*"],
+      "three": ["../apps/docs/node_modules/@types/three"],
+      "three/webgpu": ["../apps/docs/node_modules/@types/three/build/three.webgpu.d.ts"],
+      "three/tsl": ["../apps/docs/node_modules/@types/three/build/three.tsl.d.ts"],
+      "three/addons/*": ["../apps/docs/node_modules/@types/three/examples/jsm/*"],
+      "three/examples/jsm/*": ["../apps/docs/node_modules/@types/three/examples/jsm/*"],
+      "three/src/*": ["../apps/docs/node_modules/@types/three/src/*"],
+      "lenis/react": ["../apps/docs/node_modules/lenis/dist/lenis-react.d.ts"],
+      "@/*": ["../apps/docs/src/*"],
+      "*": ["../apps/docs/node_modules/*"]
+    }
+  },
+  "include": ["effects/**/*.ts", "effects/**/*.tsx", "../apps/docs/node_modules/styled-jsx/global.d.ts"]
+}

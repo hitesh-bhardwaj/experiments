@@ -1,0 +1,188 @@
+{
+  "name": "shiny-button",
+  "type": "registry:component",
+  "title": "Shiny Button",
+  "description": "Button with a rotating conic-gradient border, masked dot pattern, and inner shimmer that intensifies on hover",
+  "dependencies": [],
+  "registryDependencies": [],
+  "exportName": "ShinyButton",
+  "exportKind": "default",
+  "tier": "free",
+  "version": "1.0.0",
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "date": "2026-09-15",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "props": [
+    {
+      "name": "label",
+      "type": "string",
+      "default": "Get Started",
+      "description": "Button label text.",
+      "remixer": {
+        "control": "text",
+        "group": "content",
+        "groupTitle": "Content"
+      }
+    },
+    {
+      "name": "fillColor",
+      "type": "color",
+      "default": "#000000",
+      "description": "Button fill colour inside the animated border.",
+      "remixer": {
+        "control": "color",
+        "group": "colors",
+        "groupTitle": "Colors"
+      }
+    },
+    {
+      "name": "labelColor",
+      "type": "color",
+      "default": "#ffffff",
+      "description": "Label colour.",
+      "remixer": {
+        "control": "color",
+        "group": "colors",
+        "groupTitle": "Colors"
+      }
+    },
+    {
+      "name": "accentColor",
+      "type": "color",
+      "default": "#ff5f00",
+      "description": "Colour of the rotating border arc, inner shimmer, and hover glow.",
+      "remixer": {
+        "control": "color",
+        "group": "colors",
+        "groupTitle": "Colors"
+      }
+    },
+    {
+      "name": "accentSoftColor",
+      "type": "color",
+      "default": "#ff9253",
+      "description": "Shine colour the border eases into while hovered.",
+      "remixer": {
+        "control": "color",
+        "group": "colors",
+        "groupTitle": "Colors"
+      }
+    },
+    {
+      "name": "sweepDuration",
+      "type": "number",
+      "default": 3,
+      "description": "Seconds for one full rotation of the border gradient.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0.5,
+        "max": 10,
+        "step": 0.5
+      }
+    },
+    {
+      "name": "easeDuration",
+      "type": "number",
+      "default": 0.8,
+      "description": "Seconds for the hover ease into the wider, brighter border.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0.1,
+        "max": 2,
+        "step": 0.1
+      }
+    },
+    {
+      "name": "arcWidth",
+      "type": "number",
+      "default": 5,
+      "description": "Resting width of the bright border arc, as a percentage.",
+      "remixer": {
+        "control": "range",
+        "group": "border",
+        "groupTitle": "Border",
+        "min": 1,
+        "max": 30,
+        "step": 1
+      }
+    },
+    {
+      "name": "cornerRadius",
+      "type": "number",
+      "default": 32,
+      "description": "Corner radius in pixels; 32 and above render as a full pill at the default height.",
+      "remixer": {
+        "control": "range",
+        "group": "border",
+        "groupTitle": "Border",
+        "min": 0,
+        "max": 32,
+        "step": 1
+      }
+    },
+    {
+      "name": "showSpeckle",
+      "type": "boolean",
+      "default": true,
+      "description": "Shows the masked dot pattern layer.",
+      "remixer": {
+        "control": "checkbox",
+        "group": "effects",
+        "groupTitle": "Effects"
+      }
+    },
+    {
+      "name": "showSheen",
+      "type": "boolean",
+      "default": true,
+      "description": "Shows the rotating inner sheen.",
+      "remixer": {
+        "control": "checkbox",
+        "group": "effects",
+        "groupTitle": "Effects"
+      }
+    },
+    {
+      "name": "speckleOpacity",
+      "type": "number",
+      "default": 0.4,
+      "description": "Strength of the dot pattern layer.",
+      "remixer": {
+        "control": "range",
+        "group": "effects",
+        "groupTitle": "Effects",
+        "min": 0,
+        "max": 1,
+        "step": 0.05
+      }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "colors",
+    "layout": {
+      "buttonClassName": "right-4! top-25!",
+      "panelClassName": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/shiny-button/index.tsx",
+      "content": "// Built using Hyperiux Vault: https://vault.hyperiux.com\n\n\"use client\";\n\nimport type React from \"react\";\nimport { useId, useSyncExternalStore } from \"react\";\n\nconst REDUCED_MOTION_QUERY = \"(prefers-reduced-motion: reduce)\";\n\nfunction prefersReducedMotion() {\n  if (typeof window === \"undefined\") return false;\n  return window.matchMedia?.(REDUCED_MOTION_QUERY)?.matches ?? false;\n}\n\nfunction subscribeToReducedMotion(callback: () => void) {\n  if (typeof window === \"undefined\") return () => {};\n  const mediaQueryList = window.matchMedia(REDUCED_MOTION_QUERY);\n  mediaQueryList.addEventListener(\"change\", callback);\n  return () => mediaQueryList.removeEventListener(\"change\", callback);\n}\n\nfunction getServerReducedMotionSnapshot() {\n  return false;\n}\n\nfunction usePrefersReducedMotion() {\n  return useSyncExternalStore(\n    subscribeToReducedMotion,\n    prefersReducedMotion,\n    getServerReducedMotionSnapshot,\n  );\n}\n\ninterface ShinyButtonProps {\n  label?: string;\n  onClick?: () => void;\n  className?: string;\n  fillColor?: string;\n  labelColor?: string;\n  accentColor?: string;\n  accentSoftColor?: string;\n  sweepDuration?: number;\n  easeDuration?: number;\n  arcWidth?: number;\n  cornerRadius?: number;\n  showSpeckle?: boolean;\n  showSheen?: boolean;\n  speckleOpacity?: number;\n}\n\nexport function ShinyButton({\n  label = \"Get Started\",\n  onClick,\n  className = \"\",\n  fillColor = \"#000000\",\n  labelColor = \"#ffffff\",\n  accentColor = \"#ff5f00\",\n  accentSoftColor = \"#ff9253\",\n  sweepDuration = 3,\n  easeDuration = 0.8,\n  arcWidth = 5,\n  cornerRadius = 32,\n  showSpeckle = true,\n  showSheen = true,\n  speckleOpacity = 0.4,\n}: ShinyButtonProps) {\n  const reducedMotion = usePrefersReducedMotion();\n  const instanceId = useId().replace(/[^a-zA-Z0-9]/g, \"\");\n  const scope = `gleam-edge-${instanceId}`;\n\n  const css = `\n    @property --gradient-angle-${instanceId} {\n      syntax: \"<angle>\";\n      initial-value: 0deg;\n      inherits: false;\n    }\n    @property --gradient-angle-offset-${instanceId} {\n      syntax: \"<angle>\";\n      initial-value: 0deg;\n      inherits: false;\n    }\n    @property --gradient-percent-${instanceId} {\n      syntax: \"<percentage>\";\n      initial-value: ${arcWidth}%;\n      inherits: false;\n    }\n    @property --gradient-shine-${instanceId} {\n      syntax: \"<color>\";\n      initial-value: white;\n      inherits: false;\n    }\n\n    .${scope} {\n      --gleam-base: ${fillColor};\n      --gleam-inset: #1a1818;\n      --gleam-label: ${labelColor};\n      --gleam-accent: ${accentColor};\n      --gleam-accent-soft: ${accentSoftColor};\n      --animation: gradient-angle-${instanceId} linear infinite;\n      --duration: ${sweepDuration}s;\n      --shadow-size: 2px;\n      --transition: ${easeDuration}s cubic-bezier(0.25, 1, 0.5, 1);\n\n      isolation: isolate;\n      position: relative;\n      overflow: hidden;\n      cursor: pointer;\n      outline-offset: 4px;\n      padding: 1.25rem 2.5rem;\n      font-size: 1.125rem;\n      line-height: 1.2;\n      font-weight: 500;\n      border: 1px solid transparent;\n      border-radius: ${cornerRadius}px;\n      color: var(--gleam-label);\n      background:\n        linear-gradient(var(--gleam-base), var(--gleam-base)) padding-box,\n        conic-gradient(\n          from calc(var(--gradient-angle-${instanceId}) - var(--gradient-angle-offset-${instanceId})),\n          transparent,\n          var(--gleam-accent) var(--gradient-percent-${instanceId}),\n          var(--gradient-shine-${instanceId}) calc(var(--gradient-percent-${instanceId}) * 2),\n          var(--gleam-accent) calc(var(--gradient-percent-${instanceId}) * 3),\n          transparent calc(var(--gradient-percent-${instanceId}) * 4)\n        ) border-box;\n      box-shadow: inset 0 0 0 1px var(--gleam-inset);\n      transition: var(--transition);\n      transition-property:\n        --gradient-angle-offset-${instanceId},\n        --gradient-percent-${instanceId},\n        --gradient-shine-${instanceId};\n    }\n\n    .${scope}::before,\n    .${scope}::after,\n    .${scope} span::before {\n      content: \"\";\n      pointer-events: none;\n      position: absolute;\n      inset-inline-start: 50%;\n      inset-block-start: 50%;\n      translate: -50% -50%;\n      z-index: -1;\n    }\n\n    .${scope}:active {\n      translate: 0 1px;\n    }\n\n    .${scope}::before {\n      --size: calc(100% - var(--shadow-size) * 3);\n      --position: 2px;\n      --space: calc(var(--position) * 2);\n      width: var(--size);\n      height: var(--size);\n      background: radial-gradient(\n        circle at var(--position) var(--position),\n        white calc(var(--position) / 4),\n        transparent 0\n      ) padding-box;\n      background-size: var(--space) var(--space);\n      background-repeat: space;\n      mask-image: conic-gradient(\n        from calc(var(--gradient-angle-${instanceId}) + 45deg),\n        black,\n        transparent 10% 90%,\n        black\n      );\n      border-radius: inherit;\n      opacity: ${showSpeckle ? speckleOpacity : 0};\n      z-index: -1;\n    }\n\n    .${scope}::after {\n      --animation: shimmer-${instanceId} linear infinite;\n      width: 100%;\n      aspect-ratio: 1;\n      background: linear-gradient(\n        -50deg,\n        transparent,\n        var(--gleam-accent),\n        transparent\n      );\n      mask-image: radial-gradient(circle at bottom, transparent 40%, black);\n      opacity: ${showSheen ? 0.6 : 0};\n    }\n\n    .${scope} span {\n      z-index: 1;\n    }\n\n    .${scope} span::before {\n      --size: calc(100% + 1rem);\n      width: var(--size);\n      height: var(--size);\n      box-shadow: inset 0 -1ex 2rem 4px var(--gleam-accent);\n      opacity: 0;\n      transition: opacity var(--transition);\n      animation: calc(var(--duration) * 1.5) breathe-${instanceId} linear infinite;\n    }\n\n    .${scope},\n    .${scope}::before,\n    .${scope}::after {\n      animation:\n        var(--animation) var(--duration),\n        var(--animation) calc(var(--duration) / 0.4) reverse paused;\n      animation-composition: add;\n    }\n\n    .${scope}:is(:hover, :focus-visible) {\n      --gradient-percent-${instanceId}: 20%;\n      --gradient-angle-offset-${instanceId}: 95deg;\n      --gradient-shine-${instanceId}: var(--gleam-accent-soft);\n    }\n\n    .${scope}:is(:hover, :focus-visible),\n    .${scope}:is(:hover, :focus-visible)::before,\n    .${scope}:is(:hover, :focus-visible)::after {\n      animation-play-state: running;\n    }\n\n    .${scope}:is(:hover, :focus-visible) span::before {\n      opacity: 1;\n    }\n\n    @keyframes gradient-angle-${instanceId} {\n      to {\n        --gradient-angle-${instanceId}: 360deg;\n      }\n    }\n\n    @keyframes shimmer-${instanceId} {\n      to {\n        rotate: 360deg;\n      }\n    }\n\n    @keyframes breathe-${instanceId} {\n      from,\n      to {\n        scale: 1;\n      }\n      50% {\n        scale: 1.2;\n      }\n    }\n\n    @media (prefers-reduced-motion: reduce) {\n      .${scope},\n      .${scope}::before,\n      .${scope}::after,\n      .${scope} span::before {\n        animation: none !important;\n      }\n\n      .${scope}:is(:hover, :focus-visible),\n      .${scope}:is(:hover, :focus-visible)::before,\n      .${scope}:is(:hover, :focus-visible)::after {\n        animation-play-state: paused !important;\n      }\n\n      .${scope}:is(:hover, :focus-visible) span::before {\n        opacity: 0;\n      }\n\n      .${scope} {\n        transition: none;\n      }\n    }\n  `;\n\n  return (\n    <>\n      <style>{css}</style>\n      <button\n        type=\"button\"\n        className={`${scope} ${className}`}\n        onClick={onClick}\n        aria-label={label}\n        data-reduced-motion={reducedMotion ? \"true\" : undefined}\n      >\n        <span>{label}</span>\n      </button>\n    </>\n  );\n}\n\nexport default ShinyButton;\n"
+    }
+  ]
+}

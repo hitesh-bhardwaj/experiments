@@ -1,0 +1,17 @@
+{
+  "name": "@hyperiux/char-stagger-primary-button",
+  "version": "1.1.0",
+  "description": "Primary button with staggered character animation on hover",
+  "main": "index.tsx",
+  "files": [
+    "index.tsx",
+    "registry.json"
+  ],
+  "keywords": [
+    "buttons",
+    "hyperiux"
+  ],
+  "dependencies": {
+    "lucide-react": "*"
+  }
+}

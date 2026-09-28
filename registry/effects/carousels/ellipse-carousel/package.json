@@ -1,0 +1,18 @@
+{
+  "name": "@hyperiux/ellipse-carousel",
+  "version": "1.0.0",
+  "description": "Elliptical card carousel with autoplay, drag interaction, mobile-specific ellipse tuning, and an optional center label.",
+  "main": "index.tsx",
+  "files": [
+    "index.tsx",
+    "EllipseCarouselComp.tsx",
+    "registry.json"
+  ],
+  "keywords": [
+    "carousels",
+    "hyperiux"
+  ],
+  "dependencies": {
+    "gsap": "*"
+  }
+}

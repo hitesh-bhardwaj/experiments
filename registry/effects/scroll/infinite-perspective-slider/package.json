@@ -1,0 +1,19 @@
+{
+  "name": "@hyperiux/infinite-perspective-slider",
+  "version": "1.0.1",
+  "description": "Looping perspective gallery with wheel and drag input plus split-text hover reveals",
+  "main": "index.tsx",
+  "files": [
+    "index.tsx",
+    "InfinitePerspectiveSliderComp.tsx",
+    "createSuspendedRaf.ts",
+    "registry.json"
+  ],
+  "keywords": [
+    "scroll",
+    "hyperiux"
+  ],
+  "dependencies": {
+    "gsap": "*"
+  }
+}

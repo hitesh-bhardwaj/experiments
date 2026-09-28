@@ -1,0 +1,173 @@
+{
+  "name": "glowing-text",
+  "type": "registry:component",
+  "title": "Glowing Text",
+  "description": "Terminal-style typewriter text where the active line types in bold glow and settles to a dim, regular weight once complete.",
+  "dependencies": [],
+  "registryDependencies": [],
+  "exportName": "GlowingText",
+  "exportKind": "default",
+  "tier": "free",
+  "version": "1.1.0",
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "date": "2026-08-14",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "props": [
+    {
+      "name": "textColor",
+      "type": "string",
+      "default": "#d8d8d8",
+      "description": "Base text color.",
+      "remixer": {
+        "control": "color",
+        "group": "colors",
+        "groupTitle": "Colors"
+      }
+    },
+    {
+      "name": "glowColor",
+      "type": "string",
+      "default": "#ffffff",
+      "description": "Glow and scan color.",
+      "remixer": {
+        "control": "color",
+        "group": "colors",
+        "groupTitle": "Colors"
+      }
+    },
+    {
+      "name": "backgroundColor",
+      "type": "string",
+      "default": "#0b0d0e",
+      "description": "Background color.",
+      "remixer": {
+        "control": "color",
+        "enabled": false,
+        "group": "colors",
+        "groupTitle": "Colors"
+      }
+    },
+    {
+      "name": "fontSize",
+      "type": "number",
+      "default": 2.2,
+      "description": "Body text size in vw units.",
+      "remixer": {
+        "control": "range",
+        "group": "type",
+        "groupTitle": "Type",
+        "min": 1.2,
+        "max": 5,
+        "step": 0.1
+      }
+    },
+    {
+      "name": "letterSpacing",
+      "type": "number",
+      "default": 0.08,
+      "description": "Letter spacing in em units.",
+      "remixer": {
+        "control": "range",
+        "group": "type",
+        "groupTitle": "Type",
+        "min": 0,
+        "max": 0.28,
+        "step": 0.01
+      }
+    },
+    {
+      "name": "lineHeight",
+      "type": "number",
+      "default": 1.55,
+      "description": "Body line height.",
+      "remixer": {
+        "control": "range",
+        "group": "type",
+        "groupTitle": "Type",
+        "min": 1,
+        "max": 2.2,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "glowIntensity",
+      "type": "number",
+      "default": 0.7,
+      "description": "Glow strength.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0.1,
+        "max": 1.5,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "characterStagger",
+      "type": "number",
+      "default": 0.045,
+      "description": "Delay between each character starting its reveal.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0.01,
+        "max": 0.12,
+        "step": 0.005
+      }
+    },
+    {
+      "name": "revealDuration",
+      "type": "number",
+      "default": 0.5,
+      "description": "How long each character takes to fade in and settle.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0.15,
+        "max": 1.2,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "lineGap",
+      "type": "number",
+      "default": 0.15,
+      "description": "Extra pause after a line's last word before the next line starts.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0,
+        "max": 1,
+        "step": 0.05
+      }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "motion",
+    "layout": {
+      "buttonClassName": "right-4! top-25!",
+      "panelClassName": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/glowing-text/index.tsx",
+      "content": "// Built using Hyperiux Vault: https://vault.hyperiux.com\n\n\"use client\";\n\nimport { useMemo, type CSSProperties } from \"react\";\n\ntype GlowingTextProps = {\n  eyebrow?: string;\n  text?: string;\n  textColor?: string;\n  glowColor?: string;\n  backgroundColor?: string;\n  fontSize?: number;\n  letterSpacing?: number;\n  lineHeight?: number;\n  glowIntensity?: number;\n  characterStagger?: number;\n  revealDuration?: number;\n  lineGap?: number;\n  className?: string;\n};\n\ntype CharStyle = CSSProperties & {\n  \"--char-delay\": string;\n  \"--char-duration\": string;\n};\n\ntype Token = { text: string; isSpace: boolean; start: number };\n\nconst DEFAULT_EYEBROW = \"VAULT TRANSMISSION\";\nconst DEFAULT_TEXT =\n  \"Connection established with Hyperiux Vault,\\nDecrypting premium component signatures,\\nMotion presets verified and ready to ship,\\nWelcome in. Build something that glows.\";\nconst SETTLED_WEIGHT = 300;\n\nfunction withAlpha(color: string, alpha: number) {\n  if (/^#[0-9a-f]{6}$/i.test(color)) {\n    const red = Number.parseInt(color.slice(1, 3), 16);\n    const green = Number.parseInt(color.slice(3, 5), 16);\n    const blue = Number.parseInt(color.slice(5, 7), 16);\n    return `rgba(${red}, ${green}, ${blue}, ${alpha})`;\n  }\n\n  return color;\n}\n\nfunction tokenizeWithOffsets(value: string): Token[] {\n  const matches = value.match(/\\s+|\\S+/g) ?? [];\n  let offset = 0;\n\n  return matches.map((text) => {\n    const start = offset;\n    offset += Array.from(text).length;\n    return { text, isSpace: /^\\s/.test(text), start };\n  });\n}\n\nexport default function GlowingText({\n  eyebrow = DEFAULT_EYEBROW,\n  text = DEFAULT_TEXT,\n  textColor = \"#d8d8d8\",\n  glowColor = \"#ffffff\",\n  backgroundColor = \"#0b0d0e\",\n  fontSize = 2.2,\n  letterSpacing = 0.08,\n  lineHeight = 1.55,\n  glowIntensity = 0.7,\n  characterStagger = 0.045,\n  revealDuration = 0.5,\n  lineGap = 0.15,\n  className = \"\",\n}: GlowingTextProps) {\n  const glowSoft = withAlpha(glowColor, Math.min(0.48, glowIntensity * 0.48));\n  const glowHard = withAlpha(glowColor, Math.min(0.9, glowIntensity * 0.9));\n  const dimEnd = withAlpha(textColor, 0.4);\n  const stagger = Math.max(characterStagger, 0.01);\n  const duration = Math.max(revealDuration, 0.1);\n\n  const eyebrowTokens = useMemo(() => tokenizeWithOffsets(eyebrow), [eyebrow]);\n  const lineTokens = useMemo(() => text.split(\"\\n\").map(tokenizeWithOffsets), [text]);\n\n  const lineCharDelays = useMemo(() => {\n    let elapsed = 0;\n\n    return lineTokens.map((tokens) => {\n      const charCount = tokens.reduce((total, token) => total + Array.from(token.text).length, 0);\n      const delays = Array.from({ length: charCount }, (_, index) => elapsed + index * stagger);\n      const lineDuration = charCount > 0 ? (charCount - 1) * stagger + duration : 0;\n      elapsed += lineDuration + Math.max(lineGap, 0);\n      return delays;\n    });\n  }, [lineTokens, stagger, duration, lineGap]);\n\n  const renderTokens = (tokens: Token[], keyPrefix: string, delayFor: (charIndex: number) => number) =>\n    tokens.map((token, tokenIndex) => {\n      if (token.isSpace) {\n        return <span key={`${keyPrefix}-space-${tokenIndex}`}>{token.text}</span>;\n      }\n\n      return (\n        <span key={`${keyPrefix}-word-${tokenIndex}`} className=\"glowing-text-word\">\n          {Array.from(token.text).map((character, charIndex) => (\n            <span\n              key={`${keyPrefix}-char-${tokenIndex}-${charIndex}`}\n              aria-hidden=\"true\"\n              className=\"glowing-text-char\"\n              style={\n                {\n                  \"--char-delay\": `${delayFor(token.start + charIndex)}s`,\n                  \"--char-duration\": `${duration}s`,\n                } as CharStyle\n              }\n            >\n              {character}\n            </span>\n          ))}\n        </span>\n      );\n    });\n\n  return (\n    <section\n      className={`glowing-text-root relative flex min-h-screen w-full items-center overflow-hidden px-6 py-24 ${className}`}\n      style={\n        {\n          \"--glow-text\": textColor,\n          \"--glow-text-dim-end\": dimEnd,\n          \"--glow-soft\": glowSoft,\n          \"--glow-hard\": glowHard,\n          \"--glow-settled-weight\": SETTLED_WEIGHT,\n          backgroundColor,\n          backgroundPosition: \"center\",\n          backgroundRepeat: \"no-repeat\",\n          backgroundSize: \"cover\",\n        } as CSSProperties\n      }\n    >\n      <div className=\"pointer-events-none absolute inset-0 opacity-70\">\n        <div className=\"absolute inset-0 bg-[linear-gradient(115deg,transparent_0%,rgba(255,255,255,0.03)_28%,transparent_46%),linear-gradient(165deg,rgba(255,255,255,0.05)_0%,transparent_30%)]\" />\n        <div className=\"absolute inset-0 bg-[repeating-linear-gradient(0deg,rgba(255,255,255,0.035)_0px,rgba(255,255,255,0.035)_1px,transparent_1px,transparent_5px)] opacity-20\" />\n      </div>\n\n      <div className=\"relative z-10 mx-auto w-full max-w-[92vw]\">\n        <div\n          className=\"glowing-text-eyebrow mb-8 font-mono uppercase\"\n          aria-label={eyebrow}\n          style={{\n            fontSize: `clamp(0.9rem, ${fontSize * 0.52}vw, 2.1rem)`,\n            letterSpacing: `${letterSpacing + 0.28}em`,\n          }}\n        >\n          {renderTokens(eyebrowTokens, \"eyebrow\", (charIndex) => charIndex * stagger)}\n        </div>\n\n        <div className=\"mb-9 h-px w-24 bg-[var(--glow-text)] opacity-60 shadow-[0_0_18px_var(--glow-soft)]\" />\n\n        <div\n          className=\"glowing-text-copy font-mono\"\n          style={{\n            fontSize: `clamp(1.25rem, ${fontSize}vw, 4.75rem)`,\n            letterSpacing: `${letterSpacing}em`,\n            lineHeight,\n          }}\n        >\n          {lineTokens.map((tokens, lineIndex) => (\n            <div key={`line-${lineIndex}`} className=\"glowing-text-line\">\n              {renderTokens(tokens, `line-${lineIndex}`, (charIndex) => lineCharDelays[lineIndex][charIndex])}\n            </div>\n          ))}\n        </div>\n      </div>\n\n      <style>{`\n        .glowing-text-root {\n          color: var(--glow-text);\n        }\n\n        .glowing-text-word {\n          display: inline-block;\n          white-space: nowrap;\n        }\n\n        .glowing-text-char {\n          display: inline-block;\n          color: var(--glow-text);\n          opacity: 0;\n          font-weight: var(--glow-settled-weight);\n          text-shadow: none;\n          animation: glowing-char-reveal var(--char-duration) ease-out var(--char-delay) forwards;\n        }\n\n        @keyframes glowing-char-reveal {\n          0% {\n            color: var(--glow-text);\n            opacity: 0;\n            font-weight: var(--glow-settled-weight);\n            text-shadow: none;\n          }\n\n          55% {\n            color: var(--glow-text);\n            opacity: 1;\n            font-weight: var(--glow-settled-weight);\n            text-shadow:\n              0 0 7px var(--glow-hard),\n              0 0 18px var(--glow-hard),\n              0 0 34px var(--glow-hard);\n          }\n\n          80% {\n            font-weight: var(--glow-settled-weight);\n          }\n\n          100% {\n            color: var(--glow-text-dim-end);\n            opacity: 0.72;\n            font-weight: var(--glow-settled-weight);\n            text-shadow: none;\n          }\n        }\n\n        @media (prefers-reduced-motion: reduce) {\n          .glowing-text-char {\n            color: var(--glow-text-dim-end);\n            font-weight: var(--glow-settled-weight);\n            text-shadow: none;\n            animation: glowing-char-fade-in 0.4s ease-out forwards;\n          }\n        }\n\n        @keyframes glowing-char-fade-in {\n          from {\n            opacity: 0;\n          }\n\n          to {\n            opacity: 0.72;\n          }\n        }\n      `}</style>\n    </section>\n  );\n}\n"
+    }
+  ]
+}

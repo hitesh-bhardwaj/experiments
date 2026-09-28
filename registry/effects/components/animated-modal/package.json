@@ -1,0 +1,19 @@
+{
+  "name": "@hyperiux/animated-modal",
+  "version": "1.0.1",
+  "description": "Backdrop-blurred fullscreen modal with escape, backdrop, and close-button support",
+  "main": "index.tsx",
+  "files": [
+    "index.tsx",
+    "AnimatedModalContent.tsx",
+    "ScrollablePopupContent.tsx",
+    "registry.json"
+  ],
+  "keywords": [
+    "components",
+    "hyperiux"
+  ],
+  "dependencies": {
+    "lucide-react": "*"
+  }
+}

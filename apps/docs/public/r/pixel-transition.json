@@ -1,0 +1,113 @@
+{
+  "name": "pixel-transition",
+  "type": "registry:component",
+  "title": "Pixel Transition",
+  "description": "Canvas 2D page transition that fills and clears a grid of pixels in a diagonal wave. Leave sweeps pixels up from the bottom-right; enter clears them from the top-left. Supports an optional content shift blur effect.",
+  "dependencies": [
+    "gsap",
+    "next-transition-router"
+  ],
+  "registryDependencies": [],
+  "exportName": "PixelTransition",
+  "exportKind": "default",
+  "tier": "pro",
+  "version": "1.1.0",
+  "changelog": [
+    {
+      "version": "1.1.0",
+      "date": "2026-07-21",
+      "summary": "Added reduced-motion route fallback with short opacity fades.",
+      "breaking": false
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-02-10",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "props": [
+    {
+      "name": "cols",
+      "type": "number",
+      "default": 30,
+      "description": "Pixel grid columns.",
+      "remixer": {
+        "control": "range",
+        "group": "grid",
+        "groupTitle": "Grid",
+        "min": 8,
+        "max": 80,
+        "step": 1
+      }
+    },
+    {
+      "name": "rows",
+      "type": "number",
+      "default": 40,
+      "description": "Pixel grid rows.",
+      "remixer": {
+        "control": "range",
+        "group": "grid",
+        "groupTitle": "Grid",
+        "min": 8,
+        "max": 100,
+        "step": 1
+      }
+    },
+    {
+      "name": "pixelColor",
+      "type": "string",
+      "default": "#111111",
+      "description": "Color used to draw each transition pixel.",
+      "remixer": {
+        "control": "color",
+        "group": "surface",
+        "groupTitle": "Surface"
+      }
+    },
+    {
+      "name": "duration",
+      "type": "number",
+      "default": 1,
+      "description": "Duration multiplier for the leave and enter pixel sweeps.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0.25,
+        "max": 3,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "enableContentShift",
+      "type": "boolean",
+      "default": false,
+      "description": "Adds content scale/blur during the transition.",
+      "remixer": {
+        "control": "checkbox",
+        "group": "behavior",
+        "groupTitle": "Behavior"
+      }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "grid",
+    "layout": {
+      "buttonClassName": "right-4! top-25!",
+      "panelClassName": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/pixel-transition/index.tsx"
+    }
+  ]
+}

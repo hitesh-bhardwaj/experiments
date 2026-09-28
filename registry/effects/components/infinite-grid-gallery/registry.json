@@ -1,0 +1,141 @@
+{
+  "name": "infinite-grid-gallery",
+  "version": "1.0.1",
+  "type": "registry:component",
+  "title": "Infinite Grid Gallery",
+  "description": "Infinite scrollable grid gallery with expandable overlay, thumbnails rail, and smooth open/close transitions.",
+  "category": "components",
+  "dependencies": [],
+  "registryDependencies": [],
+  "previewUrl": "/demo/infinite-grid-gallery",
+  "coverImage": "infinite-grid-gallery",
+  "videoUrl": "infinite-grid-gallery.mp4",
+  "tier": "pro",
+  "main": "index.tsx",
+  "exportName": "InfiniteGridGallery",
+  "exportKind": "default",
+  "importPath": "@/components/effects/infinite-grid-gallery",
+  "target": "src/components/effects/infinite-grid-gallery",
+  "files": [
+    {
+      "path": "index.tsx",
+      "target": "src/components/effects/infinite-grid-gallery/index.tsx"
+    },
+    {
+      "path": "InfiniteGrid.tsx",
+      "target": "src/components/effects/infinite-grid-gallery/InfiniteGrid.tsx"
+    },
+    {
+      "path": "util.ts",
+      "target": "src/components/effects/infinite-grid-gallery/util.ts"
+    },
+    {
+      "path": "createSuspendedRaf.ts",
+      "target": "src/components/effects/infinite-grid-gallery/createSuspendedRaf.ts"
+    }
+  ],
+  "changelog": [
+    {
+      "version": "1.0.1",
+      "date": "2026-07-21",
+      "summary": "Add prefers-reduced-motion support",
+      "breaking": false
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-07-20",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "props": [
+    {
+      "name": "images",
+      "type": "array",
+      "default": [],
+      "description": "Images rendered in the infinite grid.",
+      "suggested": true
+    },
+    {
+      "name": "columns",
+      "type": "number",
+      "default": 4,
+      "description": "Desktop grid column count.",
+      "suggested": true
+    },
+    {
+      "name": "gap",
+      "type": "number",
+      "default": 44,
+      "description": "Spacing between grid images.",
+      "suggested": true
+    },
+    {
+      "name": "speed",
+      "type": "number",
+      "default": 1,
+      "description": "Grid movement speed.",
+      "suggested": true
+    },
+    {
+      "name": "imageScale",
+      "type": "number",
+      "default": 1,
+      "description": "Scale applied to gallery images.",
+      "suggested": true
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "suggested": true,
+    "defaultOpenGroupId": "controls",
+    "layout": {
+      "controlsButtonClassName": "right-4! top-25!"
+    },
+    "panel": {
+      "className": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "controls": [
+      {
+        "name": "columns",
+        "label": "Columns",
+        "type": "range",
+        "group": "controls",
+        "copyable": true,
+        "min": 1,
+        "max": 8,
+        "step": 1
+      },
+      {
+        "name": "gap",
+        "label": "Gap",
+        "type": "range",
+        "group": "controls",
+        "copyable": true,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      },
+      {
+        "name": "speed",
+        "label": "Speed",
+        "type": "range",
+        "group": "motion",
+        "copyable": true,
+        "min": 0.05,
+        "max": 5,
+        "step": 0.05
+      },
+      {
+        "name": "imageScale",
+        "label": "Image Scale",
+        "type": "range",
+        "group": "controls",
+        "copyable": true,
+        "min": 0.5,
+        "max": 2,
+        "step": 0.05
+      }
+    ]
+  }
+}

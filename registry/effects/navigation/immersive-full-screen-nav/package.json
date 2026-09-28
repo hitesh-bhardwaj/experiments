@@ -1,0 +1,20 @@
+{
+  "name": "@hyperiux/immersive-full-screen-nav",
+  "version": "1.1.0",
+  "description": "Clip-path powered full-screen navigation overlay with animated hamburger transitions",
+  "main": "index.tsx",
+  "files": [
+    "index.tsx",
+    "CustomNavbar.tsx",
+    "FullscreenNav.tsx",
+    "useFocusTrap.ts",
+    "registry.json"
+  ],
+  "keywords": [
+    "navigation",
+    "hyperiux"
+  ],
+  "dependencies": {
+    "gsap": "*"
+  }
+}

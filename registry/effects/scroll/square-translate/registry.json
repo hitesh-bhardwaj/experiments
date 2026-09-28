@@ -1,0 +1,125 @@
+{
+  "name": "square-translate",
+  "version": "1.0.1",
+  "changelog": [
+    {
+      "version": "1.0.1",
+      "date": "2026-07-21",
+      "summary": "Added prefers-reduced-motion support: only the item currently aligned with the cube shifts (other items stay at their initial position instead of rippling), and the shift moves only the row's text, not its border",
+      "breaking": false
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-07-20",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "type": "registry:component",
+  "title": "Square Translate",
+  "description": "Scroll-driven list where a rotating square marker tracks progress and nudges nearby rows",
+  "category": "scroll",
+  "dependencies": [
+    "gsap"
+  ],
+  "registryDependencies": [],
+  "previewUrl": "/demo/square-translate",
+  "coverImage": "square-translate",
+  "videoUrl": "square-translate.mp4",
+  "tier": "pro",
+  "main": "index.tsx",
+  "exportName": "SquareTranslate",
+  "exportKind": "default",
+  "importPath": "@/components/effects/square-translate",
+  "target": "src/components/effects/square-translate",
+  "props": [
+    {
+      "name": "translateValue",
+      "type": "number",
+      "default": 55,
+      "description": "Translate distance for the row currently aligned with the square.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0,
+        "max": 160,
+        "step": 1
+      }
+    },
+    {
+      "name": "totalTranslateImpact",
+      "type": "number",
+      "default": 3,
+      "description": "How many neighboring rows ripple outward from the square.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 1,
+        "max": 8,
+        "step": 1
+      }
+    },
+    {
+      "name": "maxRotation",
+      "type": "number",
+      "default": 360,
+      "description": "Total rotation the square completes over the scroll track.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0,
+        "max": 1080,
+        "step": 15
+      }
+    },
+    {
+      "name": "transitionDuration",
+      "type": "number",
+      "default": 0.4,
+      "description": "Tween duration for the square and row movement on each scroll update.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0.05,
+        "max": 1.2,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "squareColor",
+      "type": "color",
+      "default": "#FB450F",
+      "description": "Color of the translated square marker.",
+      "remixer": {
+        "control": "color",
+        "group": "style",
+        "groupTitle": "Style"
+      }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "motion",
+    "layout": {
+      "buttonClassName": "right-4! top-25!",
+      "panelClassName": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "target": "src/components/effects/square-translate/index.tsx"
+    },
+    {
+      "path": "SquareTranslateComp.tsx",
+      "target": "src/components/effects/square-translate/SquareTranslateComp.tsx"
+    }
+  ]
+}

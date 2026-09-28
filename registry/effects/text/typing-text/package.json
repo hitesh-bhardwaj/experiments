@@ -1,0 +1,15 @@
+{
+  "name": "@hyperiux/typing-text",
+  "version": "1.1.3",
+  "description": "Vault-themed typewriter text with sequential, cascade, looping, and shape-shifting cursor variants.",
+  "main": "index.tsx",
+  "files": [
+    "index.tsx",
+    "registry.json"
+  ],
+  "keywords": [
+    "text",
+    "hyperiux"
+  ],
+  "dependencies": {}
+}

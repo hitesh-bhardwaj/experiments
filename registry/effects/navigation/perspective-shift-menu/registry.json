@@ -1,0 +1,174 @@
+{
+  "name": "perspective-shift-menu",
+  "version": "1.0.0",
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "date": "2026-09-16",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "type": "registry:component",
+  "title": "Perspective Shift Menu",
+  "description": "A full-height nav column that slides in while the page tilts away in 3D, with a nested sub-drawer and per-character link rolls.",
+  "category": "navigation",
+  "dependencies": [
+    "gsap"
+  ],
+  "registryDependencies": [],
+  "previewUrl": "/demo/perspective-shift-menu",
+  "tier": "pro",
+  "subfolder": true,
+  "main": "index.tsx",
+  "exportName": "PerspectiveShiftMenu",
+  "exportKind": "default",
+  "importPath": "@/components/effects/perspective-shift-menu",
+  "target": "src/components/effects/perspective-shift-menu",
+  "files": [
+    {
+      "path": "index.tsx",
+      "target": "src/components/effects/perspective-shift-menu/index.tsx"
+    }
+  ],
+  "props": [
+    {
+      "name": "animationSpeed",
+      "type": "number",
+      "default": 1,
+      "description": "Opening and closing speed multiplier. Higher values animate faster.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0.5,
+        "max": 2,
+        "step": 0.1
+      }
+    },
+    {
+      "name": "tiltAngle",
+      "type": "number",
+      "default": 20,
+      "description": "How far the page rotates away, in degrees. 0 slides without tilting.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0,
+        "max": 45,
+        "step": 1
+      }
+    },
+    {
+      "name": "linkStagger",
+      "type": "number",
+      "default": 0,
+      "description": "Delay between nav links as they enter, in seconds.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0,
+        "max": 0.15,
+        "step": 0.005
+      }
+    },
+    {
+      "name": "charStagger",
+      "type": "number",
+      "default": 0.007,
+      "description": "Delay between characters on link hover, in seconds.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0,
+        "max": 0.05,
+        "step": 0.001
+      }
+    },
+    {
+      "name": "panelWidth",
+      "type": "number",
+      "default": 22,
+      "description": "Nav column width, in vw.",
+      "remixer": {
+        "control": "range",
+        "group": "layout",
+        "groupTitle": "Layout",
+        "min": 15,
+        "max": 40,
+        "step": 1
+      }
+    },
+    {
+      "name": "drawerWidth",
+      "type": "number",
+      "default": 18,
+      "description": "Sub-drawer width, in vw.",
+      "remixer": {
+        "control": "range",
+        "group": "layout",
+        "groupTitle": "Layout",
+        "min": 12,
+        "max": 35,
+        "step": 1
+      }
+    },
+    {
+      "name": "panelColor",
+      "type": "string",
+      "default": "#ffffff",
+      "description": "Nav column and sub-drawer surface color.",
+      "remixer": {
+        "control": "color",
+        "group": "colors",
+        "groupTitle": "Colors"
+      }
+    },
+    {
+      "name": "textColor",
+      "type": "string",
+      "default": "#111111",
+      "description": "Links, headings, and menu icon color.",
+      "remixer": {
+        "control": "color",
+        "group": "colors",
+        "groupTitle": "Colors"
+      }
+    },
+    {
+      "name": "voidColor",
+      "type": "string",
+      "default": "#0e0e0e",
+      "description": "The void behind the page as it tilts away.",
+      "remixer": {
+        "control": "color",
+        "group": "colors",
+        "groupTitle": "Colors"
+      }
+    },
+    {
+      "name": "dimOpacity",
+      "type": "number",
+      "default": 0.4,
+      "description": "How strongly the receded page is dimmed, 0 to 1.",
+      "remixer": {
+        "control": "range",
+        "group": "colors",
+        "groupTitle": "Colors",
+        "min": 0,
+        "max": 0.8,
+        "step": 0.05
+      }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "motion",
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  }
+}

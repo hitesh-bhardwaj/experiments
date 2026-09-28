@@ -1,0 +1,23 @@
+{
+  "name": "@hyperiux/interactive-arrows",
+  "version": "1.1.0",
+  "description": "Canvas 2D collection of six cursor-reactive arrow and line effects: a hover-push arrow grid, an opacity-fade variant, a smooth-easing sparse grid, a particle-lines dot field, a persistent lines field, and a playful full-screen grid with center cutout.",
+  "main": "index.tsx",
+  "files": [
+    "index.tsx",
+    "arrows.tsx",
+    "ArrowsLimit.tsx",
+    "ArrowsOpacity.tsx",
+    "ArrowsPlay.tsx",
+    "lines.tsx",
+    "points.tsx",
+    "utils.ts",
+    "createSuspendedRaf.ts",
+    "registry.json"
+  ],
+  "keywords": [
+    "cursor",
+    "hyperiux"
+  ],
+  "dependencies": {}
+}

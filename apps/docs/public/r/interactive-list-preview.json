@@ -1,0 +1,111 @@
+{
+  "name": "interactive-list-preview",
+  "type": "registry:component",
+  "title": "Interactive List Preview",
+  "description": "Hover-driven table list that reveals clipped images with a sliding highlight bar and mix-blend-mode difference inversion effect",
+  "dependencies": [
+    "gsap"
+  ],
+  "registryDependencies": [],
+  "exportName": "InteractiveListPreview",
+  "exportKind": "default",
+  "tier": "free",
+  "version": "1.0.1",
+  "changelog": [
+    {
+      "version": "1.0.1",
+      "date": "2026-07-30",
+      "summary": "Added reduced motion support.",
+      "breaking": false
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-07-21",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "props": [
+    {
+      "name": "imageSize",
+      "type": "number",
+      "description": "Scale multiplier for the hover preview image.",
+      "default": 1,
+      "remixer": {
+        "control": "range",
+        "group": "style",
+        "groupTitle": "Style",
+        "min": 0.5,
+        "max": 2,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "duration",
+      "type": "number",
+      "description": "Preview image reveal and hide duration.",
+      "default": 0.6,
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0.1,
+        "max": 2,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "smoothness",
+      "type": "number",
+      "description": "Highlight and row text transition smoothing duration.",
+      "default": 0.35,
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0.05,
+        "max": 1.5,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "lerp",
+      "type": "number",
+      "description": "Pointer-follow smoothing amount; higher values track faster.",
+      "default": 0.18,
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0.02,
+        "max": 1,
+        "step": 0.01
+      }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "motion",
+    "layout": {
+      "buttonClassName": "right-4! top-25!",
+      "panelClassName": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/interactive-list-preview/index.tsx",
+      "content": "// Built using Hyperiux Vault: https://vault.hyperiux.com\n\nimport React, { type ComponentProps } from 'react'\nimport InteractiveListPreviewComp from './InteractiveListPreviewComp';\n\ntype InteractiveListPreviewProps = Omit<ComponentProps<typeof InteractiveListPreviewComp>, 'items'>\n\nconst InteractiveListPreview = ({\n  imageSize,\n  duration,\n  smoothness,\n  lerp,\n}: InteractiveListPreviewProps) => {\n  return (\n    <>\n      <div className='flex items-center flex-col gap-20 max-md:gap-20 max-md:py-[15%] max-[1025px]:py-[10%] justify-center h-screen max-[1025px]:h-full bg-neutral-900'>\n\n        <div className='text-center space-y-[1vw] max-[1025px]:space-y-[4vw]'>\n          <h2 className='font-mono text-[4vw] max-[1025px]:text-center  max-md:px-10  text-white max-[1025px]:text-5xl max-md:text-4xl capitalize'>\n            Elevating interaction through motion\n          </h2>\n          <p>\n            Hover on the list to see the effect\n          </p>\n\n        </div>\n\n        <InteractiveListPreviewComp\n          items={projects}\n          imageSize={imageSize}\n          duration={duration}\n          smoothness={smoothness}\n          lerp={lerp}\n        />\n      </div>\n    </>\n  )\n}\n\nexport default InteractiveListPreview;\n\nconst projects = [\n  {\n    client:\"AURORA UI\",\n    platform:\"NEXT.JS\",\n    services:\"Motion Design, GSAP, Page Transitions, UI Systems\",\n    img:\"https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/v-01.jpg\",\n  },\n  {\n    client:\"NEON FLOW\",\n    platform:\"REACT\",\n    services:\"Interactive UI, Scroll Animations, Effects Library\",\n    img:\"https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/v-02.jpg\",\n  },\n  {\n    client:\"GLASSMORPH\",\n    platform:\"NEXT.JS\",\n    services:\"Glass UI, Components, Motion Architecture\",\n    img:\"https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/v-03.jpg\",\n  },\n  {\n    client:\"VOID SYSTEM\",\n    platform:\"CUSTOM WEBGL\",\n    services:\"Shaders, Creative Development, Visual Effects\",\n    img:\"https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/v-04.jpg\",\n  },\n  {\n    client:\"HYPER SCROLL\",\n    platform:\"FRAMER MOTION\",\n    services:\"Scroll Storytelling, Motion Systems, Interactions\",\n    img:\"https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/v-05.jpg\",\n  },\n  {\n    client:\"KINETIC LAB\",\n    platform:\"THREE.JS\",\n    services:\"3D Interfaces, Motion UI, WebGL Experiences\",\n    img:\"https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/v-06.jpg\",\n  },\n  {\n    client:\"PIXEL GRID\",\n    platform:\"TAILWIND CSS\",\n     services:\"Design Systems, UI Engineering, Responsive Layouts\",\n    img:\"https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/v-07.jpg\",\n  },\n  {\n    client:\"MOTION CORE\",\n    platform:\"HEADLESS CMS\",\n    services:\"Reusable Components, Motion Engine, Performance\",\n    img:\"https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/v-08.jpg\",\n  },\n  {\n    client:\"INTERFACE X\",\n    platform:\"NEXT.JS\",\n       services:\"Immersive UI, Creative Coding, Transitions, Effects\",\n    img:\"https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/v-09.jpg\",\n  },\n  {\n    client:\"HYPERIUX\",\n    platform:\"UI LIBRARY\",\n   services:\"Animations, Interactive Components, Futuristic Experiences\",\n    img:\"https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/v-10.jpg\",\n  },\n];\n"
+    },
+    {
+      "path": "InteractiveListPreviewComp.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/interactive-list-preview/InteractiveListPreviewComp.tsx",
+      "content": "\"use client\";\n\nimport { useEffect, useRef } from \"react\";\nimport type { MouseEvent as ReactMouseEvent } from \"react\";\nimport gsap from \"gsap\";\n\nconst DEFAULT_IMAGE_Z_INDEX = 10;\nconst DEFAULT_IMAGE_SIZE = 1;\nconst DEFAULT_DURATION = 0.6;\nconst DEFAULT_SMOOTHNESS = 0.35;\nconst DEFAULT_LERP = 0.18;\nconst BASE_IMAGE_WIDTH_REM = 19.5;\nconst BASE_IMAGE_HEIGHT_REM = 22.5;\nconst IMAGE_OFFSET_MULTIPLIER = 20;\nconst ACTIVE_ROW_TEXT_COLOR = \"#000000\";\nconst INACTIVE_ROW_TEXT_COLOR = \"#ffffff\";\nconst IMAGE_HIDDEN_CLIP_PATH = \"inset(50%)\";\nconst IMAGE_VISIBLE_CLIP_PATH = \"inset(0%)\";\nconst IMAGE_VISIBILITY_HIDDEN = \"hidden\";\nconst IMAGE_VISIBILITY_VISIBLE = \"visible\";\n\nfunction clampNumber(value: number, min: number, max: number, fallback: number) {\n  const number = Number(value);\n  if (!Number.isFinite(number)) return fallback;\n  return Math.min(Math.max(number, min), max);\n}\n\n/**\n * @typedef {Object} InteractiveListPreviewCompProps\n * @property {InteractiveListItem[]} items\n */\n\n/** @param {InteractiveListPreviewCompProps} props */\nexport default function InteractiveListPreviewComp({\n  items,\n  imageSize = DEFAULT_IMAGE_SIZE,\n  duration = DEFAULT_DURATION,\n  smoothness = DEFAULT_SMOOTHNESS,\n  lerp = DEFAULT_LERP,\n}: any) {\n  const imageRefs = useRef<any[]>([]);\n  const imageContainerRef = useRef<any>(null);\n  const tableRef = useRef<any>(null);\n  const highlightRef = useRef<any>(null);\n  const rowRefs = useRef<Record<number, any>>({});\n  const pendingLeaveRef = useRef<Record<number, boolean>>({});\n  const tweenGenerationRef = useRef<Record<number, number>>({});\n  const activeIndexRef = useRef<number | null>(null);\n  const zIndexRef = useRef(DEFAULT_IMAGE_Z_INDEX);\n  const pointerTargetRef = useRef({ x: 0, y: 0 });\n  const pointerCurrentRef = useRef({ x: 0, y: 0 });\n  const reduceMotionRef = useRef(\n    typeof window !== \"undefined\" &&\n      (window.matchMedia?.(\"(prefers-reduced-motion: reduce)\")?.matches ?? false)\n  );\n  const safeImageSize = clampNumber(imageSize, 0.5, 2, DEFAULT_IMAGE_SIZE);\n  const safeDuration = clampNumber(duration, 0.1, 2, DEFAULT_DURATION);\n  const safeSmoothness = clampNumber(smoothness, 0.05, 1.5, DEFAULT_SMOOTHNESS);\n  const safeLerp = clampNumber(lerp, 0.02, 1, DEFAULT_LERP);\n\n  useEffect(() => {\n    const mq = window.matchMedia?.(\"(prefers-reduced-motion: reduce)\");\n    if (!mq) return;\n\n    const onChange = (event: MediaQueryListEvent) => {\n      reduceMotionRef.current = event.matches;\n      if (event.matches && imageContainerRef.current) {\n        gsap.killTweensOf(imageContainerRef.current);\n        gsap.set(imageContainerRef.current, { x: 0, y: 0 });\n        pointerTargetRef.current = { x: 0, y: 0 };\n        pointerCurrentRef.current = { x: 0, y: 0 };\n      }\n    };\n\n    reduceMotionRef.current = mq.matches;\n    if (mq.matches && imageContainerRef.current) {\n      gsap.set(imageContainerRef.current, { x: 0, y: 0 });\n      pointerTargetRef.current = { x: 0, y: 0 };\n      pointerCurrentRef.current = { x: 0, y: 0 };\n    }\n    mq.addEventListener?.(\"change\", onChange);\n    return () => mq.removeEventListener?.(\"change\", onChange);\n  }, []);\n\n  useEffect(() => {\n    let frameId: number;\n\n    const tick = () => {\n      const imageContainer = imageContainerRef.current;\n\n      if (imageContainer && !reduceMotionRef.current) {\n        const current = pointerCurrentRef.current;\n        const target = pointerTargetRef.current;\n\n        current.x += (target.x - current.x) * safeLerp;\n        current.y += (target.y - current.y) * safeLerp;\n\n        gsap.set(imageContainer, {\n          x: current.x,\n          y: current.y,\n        });\n      }\n\n      frameId = requestAnimationFrame(tick);\n    };\n\n    frameId = requestAnimationFrame(tick);\n\n    return () => cancelAnimationFrame(frameId);\n  }, [safeLerp]);\n\n  useEffect(() => {\n    imageRefs.current.forEach((imageElement: any) => {\n      if (!imageElement) return;\n\n      if (reduceMotionRef.current) {\n        // Reduced-motion: opacity only - keep full clip, start hidden.\n        gsap.set(imageElement, {\n          clipPath: IMAGE_VISIBLE_CLIP_PATH,\n          opacity: 0,\n          visibility: IMAGE_VISIBILITY_HIDDEN,\n        });\n      } else {\n        gsap.set(imageElement, {\n          clipPath: IMAGE_HIDDEN_CLIP_PATH,\n          visibility: IMAGE_VISIBILITY_HIDDEN,\n        });\n      }\n    });\n\n    if (!highlightRef.current) return;\n\n    gsap.set(highlightRef.current, {\n      opacity: 0,\n      y: 0,\n      height: 0,\n    });\n  }, []);\n\n  /** @param {number} index */\n  const getNextTweenGeneration = (index: number) => {\n    tweenGenerationRef.current[index] =\n      (tweenGenerationRef.current[index] || 0) + 1;\n\n    return tweenGenerationRef.current[index];\n  };\n\n  /**\n   * @param {number} index\n   * @param {HTMLDivElement|null} element\n   */\n  const setImageRef = (index: number, element: HTMLDivElement | null) => {\n    imageRefs.current[index] = element;\n  };\n\n  /**\n   * @param {number} index\n   * @param {string} color\n   */\n  const setRowTextColor = (index: number, color: string) => {\n    const rowElement = rowRefs.current[index];\n\n    if (!rowElement) return;\n\n    gsap.to(rowElement.querySelectorAll(\"td\"), {\n      color,\n      duration: safeSmoothness,\n      ease: \"power2.out\",\n      overwrite: \"auto\",\n    });\n  };\n\n  /** @param {HTMLTableRowElement|null} rowElement */\n  const moveHighlightToRow = (rowElement: HTMLTableRowElement | null) => {\n    const tableElement = tableRef.current;\n    const highlightElement = highlightRef.current;\n\n    if (!tableElement || !highlightElement || !rowElement) return;\n\n    const tableBounds = tableElement.getBoundingClientRect();\n    const rowBounds = rowElement.getBoundingClientRect();\n\n    gsap.to(highlightElement, {\n      y: rowBounds.top - tableBounds.top,\n      height: rowBounds.height,\n      opacity: 1,\n      duration: safeSmoothness,\n      ease: \"power3.out\",\n      overwrite: \"auto\",\n    });\n  };\n\n  /** @param {number} index */\n  const animateImageOut = (index: number) => {\n    const imageElement = imageRefs.current[index];\n\n    if (!imageElement) return;\n\n    const tweenGeneration = getNextTweenGeneration(index);\n    const reduceMotion = reduceMotionRef.current;\n\n    gsap.killTweensOf(imageElement);\n\n    gsap.to(imageElement, {\n      ...(reduceMotion\n        ? { opacity: 0 }\n        : { clipPath: IMAGE_HIDDEN_CLIP_PATH, opacity: 0 }),\n      duration: reduceMotion ? Math.min(safeSmoothness, 0.35) : safeDuration,\n      ease: reduceMotion ? \"power2.out\" : \"power3.inOut\",\n      onComplete: () => {\n        if (tweenGenerationRef.current[index] !== tweenGeneration) return;\n\n        gsap.set(imageElement, {\n          visibility: IMAGE_VISIBILITY_HIDDEN,\n        });\n      },\n    });\n  };\n\n  /**\n   * @param {HTMLTableRowElement} rowElement\n   * @param {number} index\n   */\n  const onRowEnter = (rowElement: HTMLTableRowElement, index: number) => {\n    const imageElement = imageRefs.current[index];\n\n    if (!imageElement) return;\n\n    const reduceMotion = reduceMotionRef.current;\n    const previousIndex = activeIndexRef.current;\n\n    pendingLeaveRef.current[index] = false;\n    rowRefs.current[index] = rowElement;\n\n    // Reduced-motion: only one image at a time - fade the previous out first.\n    if (reduceMotion && previousIndex !== null && previousIndex !== index) {\n      pendingLeaveRef.current[previousIndex] = false;\n      animateImageOut(previousIndex);\n    }\n\n    zIndexRef.current += 1;\n\n    const tweenGeneration = getNextTweenGeneration(index);\n\n    gsap.killTweensOf(imageElement);\n\n    if (reduceMotion) {\n      gsap.set(imageElement, {\n        zIndex: zIndexRef.current,\n        visibility: IMAGE_VISIBILITY_VISIBLE,\n        clipPath: IMAGE_VISIBLE_CLIP_PATH,\n        opacity: 0,\n      });\n\n      gsap.to(imageElement, {\n        opacity: 1,\n        duration: Math.min(safeSmoothness, 0.35),\n        ease: \"power2.out\",\n        onComplete: () => {\n          if (tweenGenerationRef.current[index] !== tweenGeneration) return;\n          if (!pendingLeaveRef.current[index]) return;\n\n          pendingLeaveRef.current[index] = false;\n          animateImageOut(index);\n        },\n      });\n    } else {\n      gsap.set(imageElement, {\n        zIndex: zIndexRef.current,\n        visibility: IMAGE_VISIBILITY_VISIBLE,\n        clipPath: IMAGE_HIDDEN_CLIP_PATH,\n        opacity: 1,\n      });\n\n      gsap.to(imageElement, {\n        clipPath: IMAGE_VISIBLE_CLIP_PATH,\n        opacity: 1,\n        duration: safeDuration,\n        ease: \"power2.inOut\",\n        onComplete: () => {\n          if (tweenGenerationRef.current[index] !== tweenGeneration) return;\n          if (!pendingLeaveRef.current[index]) return;\n\n          pendingLeaveRef.current[index] = false;\n          animateImageOut(index);\n        },\n      });\n    }\n\n    if (previousIndex !== null && previousIndex !== index) {\n      setRowTextColor(previousIndex, INACTIVE_ROW_TEXT_COLOR);\n    }\n\n    activeIndexRef.current = index;\n\n    setRowTextColor(index, ACTIVE_ROW_TEXT_COLOR);\n    moveHighlightToRow(rowElement);\n  };\n\n  /** @param {number} index */\n  const onRowLeave = (index: number) => {\n    const imageElement = imageRefs.current[index];\n\n    if (!imageElement) return;\n\n    if (gsap.isTweening(imageElement)) {\n      pendingLeaveRef.current[index] = true;\n      return;\n    }\n\n    animateImageOut(index);\n  };\n\n  const onTableLeave = () => {\n    if (activeIndexRef.current !== null) {\n      setRowTextColor(activeIndexRef.current, INACTIVE_ROW_TEXT_COLOR);\n      activeIndexRef.current = null;\n    }\n\n    if (!highlightRef.current) return;\n\n    gsap.to(highlightRef.current, {\n      opacity: 0,\n      duration: safeSmoothness,\n      ease: \"power2.out\",\n      overwrite: \"auto\",\n    });\n\n    pointerTargetRef.current = { x: 0, y: 0 };\n  };\n\n  /** @param {import('react').MouseEvent<HTMLDivElement>} event */\n  const onMouseMove = (event: ReactMouseEvent<HTMLDivElement>) => {\n    // Reduced-motion: no cursor parallax on the preview images.\n    if (reduceMotionRef.current) return;\n    if (!imageContainerRef.current) return;\n\n    const bounds = event.currentTarget.getBoundingClientRect();\n    const x = (event.clientX - bounds.left) / bounds.width - 0.5;\n    const y = (event.clientY - bounds.top) / bounds.height - 0.5;\n\n    pointerTargetRef.current = {\n      x: x * IMAGE_OFFSET_MULTIPLIER,\n      y: y * IMAGE_OFFSET_MULTIPLIER,\n    };\n  };\n\n  return (\n    <>\n      <div\n        className=\"relative min-h-[50vh] w-full overflow-hidden bg-neutral-900 font-mono text-white max-[1025px]:hidden\"\n        onMouseMove={onMouseMove}\n      >\n        <div\n          ref={highlightRef}\n          className=\"pointer-events-none absolute inset-x-0 top-0 z-10 bg-white\"\n        />\n\n        <div\n          ref={imageContainerRef}\n          className=\"pointer-events-none absolute inset-0 z-20\"\n          style={{ mixBlendMode: \"difference\" }}\n        >\n          {items.map((item: any, index: number) => (\n            <div\n              key={`${item.client}-${index}`}\n              ref={(element) => setImageRef(index, element)}\n              className=\"invisible absolute left-[35%] top-1/2 h-90 w-78 -translate-y-1/2\"\n              style={{\n                width: `${BASE_IMAGE_WIDTH_REM * safeImageSize}rem`,\n                height: `${BASE_IMAGE_HEIGHT_REM * safeImageSize}rem`,\n                willChange: \"clip-path, opacity\",\n                zIndex: DEFAULT_IMAGE_Z_INDEX,\n              }}\n            >\n              <img src={item.img} alt=\"hover-item-image\" className=\"absolute inset-0 h-full w-full object-cover\" />\n            </div>\n          ))}\n        </div>\n\n        <div\n          ref={tableRef}\n          className=\"relative w-full\"\n          onMouseLeave={onTableLeave}\n        >\n          <table className=\"relative z-30 w-full table-fixed border-collapse\">\n            <colgroup>\n              <col style={{ width: \"20%\" }} />\n              <col style={{ width: \"20%\" }} />\n              <col style={{ width: \"20%\" }} />\n              <col style={{ width: \"40%\" }} />\n            </colgroup>\n\n            <tbody>\n              {items.map((item: any, index: number) => (\n                <tr\n                  key={`${item.client}-${index}`}\n                  onMouseEnter={(event) =>\n                    onRowEnter(event.currentTarget, index)\n                  }\n                  onMouseLeave={() => onRowLeave(index)}\n                >\n                  <td className=\"whitespace-nowrap px-6 py-3 text-xs uppercase tracking-widest\">\n                    {item.client}\n                  </td>\n\n                  <td className=\"whitespace-nowrap px-6 py-3 text-xs uppercase tracking-widest\">\n                    {item.platform}\n                  </td>\n\n                  <td className=\"whitespace-nowrap px-6 py-3 text-center text-xs uppercase tracking-widest\">\n                   \n                  </td>\n\n                  <td className=\"whitespace-nowrap px-6 py-3 text-xs uppercase tracking-widest\">\n                    {item.services}\n                  </td>\n                </tr>\n              ))}\n\n              <tr>\n                <td colSpan={4} className=\"p-0\" />\n              </tr>\n            </tbody>\n          </table>\n        </div>\n      </div>\n\n      <div className=\"hidden w-full bg-neutral-900 font-mono text-white max-[1025px]:block\">\n        {items.map((item: any, index: number) => (\n          <div key={`${item.client}-${index}`} className=\"flex border-b border-white/10\">\n            <div className=\"flex w-1/2 flex-col justify-between gap-3 p-4\">\n              <div className=\"flex flex-col gap-1\">\n                <p className=\"font-bold uppercase tracking-widest max-md:text-sm max-[1025px]:text-xl\">\n                  {item.client}\n                </p>\n\n                {item.platform && (\n                  <p className=\"uppercase tracking-widest text-white/60 max-md:text-xs max-[1025px]:text-lg\">\n                    {item.platform}\n                  </p>\n                )}\n\n                <p className=\"leading-relaxed text-white/50 max-md:text-xs max-[1025px]:text-base\">\n                  {item.services}\n                </p>\n              </div>\n\n             \n            </div>\n\n            <div className=\"relative aspect-3/4 h-full w-1/2 max-[1025px]:h-[30vh]\">\n              <img\n                src={item.img}\n                alt={item.client}\n                className=\"absolute inset-0 h-full w-full object-cover\"\n              />\n            </div>\n          </div>\n        ))}\n      </div>\n    </>\n  );\n}\n"
+    }
+  ]
+}

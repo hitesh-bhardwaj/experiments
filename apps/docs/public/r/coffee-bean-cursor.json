@@ -1,0 +1,153 @@
+{
+  "name": "coffee-bean-cursor",
+  "type": "registry:component",
+  "title": "Coffee Bean Cursor",
+  "description": "Mouse-reactive 3D coffee bean flow with velocity-based lighting and fluid drift",
+  "dependencies": [
+    "@react-three/drei",
+    "@react-three/fiber",
+    "three"
+  ],
+  "registryDependencies": [],
+  "exportName": "CoffeeBeanCursor",
+  "exportKind": "default",
+  "tier": "pro",
+  "version": "1.1.0",
+  "changelog": [
+    {
+      "version": "1.1.0",
+      "date": "2026-07-22",
+      "summary": "reduce-motion applied",
+      "breaking": false
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-06-04",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "props": [
+    {
+      "name": "beanCount",
+      "type": "number",
+      "default": 300,
+      "description": "Number of beans in the flowing cursor field.",
+      "suggested": true
+    },
+    {
+      "name": "beanColor",
+      "type": "string",
+      "default": "#392416",
+      "description": "Coffee bean color.",
+      "suggested": true
+    },
+    {
+      "name": "size",
+      "type": "number",
+      "default": 22,
+      "description": "Rendered bean size.",
+      "suggested": true
+    },
+    {
+      "name": "rotationSpeed",
+      "type": "number",
+      "default": 1,
+      "description": "Rotation speed for each bean.",
+      "suggested": true
+    },
+    {
+      "name": "mouseInteraction",
+      "type": "boolean",
+      "default": true,
+      "description": "Enables mouse-reactive bean movement.",
+      "suggested": true
+    },
+    {
+      "name": "scatterIntensity",
+      "type": "number",
+      "default": 1,
+      "description": "Strength and radius of the mouse scatter force.",
+      "suggested": true
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "suggested": true,
+    "defaultOpenGroupId": "controls",
+    "layout": {
+      "controlsButtonClassName": "right-4! top-25!"
+    },
+    "panel": {
+      "className": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "controls": [
+      {
+        "name": "beanCount",
+        "label": "Bean Count",
+        "type": "range",
+        "group": "controls",
+        "copyable": true,
+        "min": 0,
+        "max": 600,
+        "step": 1
+      },
+      {
+        "name": "beanColor",
+        "label": "Bean Color",
+        "type": "color",
+        "group": "style",
+        "copyable": true
+      },
+      {
+        "name": "size",
+        "label": "Size",
+        "type": "range",
+        "group": "content",
+        "copyable": true,
+        "min": 1,
+        "max": 80,
+        "step": 1
+      },
+      {
+        "name": "rotationSpeed",
+        "label": "Rotation Speed",
+        "type": "range",
+        "group": "motion",
+        "copyable": true,
+        "min": 0,
+        "max": 5,
+        "step": 0.05
+      },
+      {
+        "name": "mouseInteraction",
+        "label": "Mouse Interaction",
+        "type": "toggle",
+        "group": "motion",
+        "copyable": true
+      },
+      {
+        "name": "scatterIntensity",
+        "label": "Scatter Intensity",
+        "type": "range",
+        "group": "motion",
+        "copyable": true,
+        "min": 0,
+        "max": 3,
+        "step": 0.05
+      }
+    ]
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/coffee-bean-cursor/index.tsx"
+    },
+    {
+      "path": "createSuspendedRaf.ts",
+      "type": "registry:component",
+      "target": "src/components/effects/coffee-bean-cursor/createSuspendedRaf.ts"
+    }
+  ]
+}

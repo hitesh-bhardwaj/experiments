@@ -1,0 +1,19 @@
+{
+  "name": "@hyperiux/strip-slider",
+  "version": "1.0.0",
+  "description": "WebGL image slider that splits each slide into vertical strips, transitioning with a staggered wave distortion using Three.ts shader materials and GSAP",
+  "main": "index.tsx",
+  "files": [
+    "index.tsx",
+    "StripSliderComp.tsx",
+    "createSuspendedRaf.ts",
+    "registry.json"
+  ],
+  "keywords": [
+    "webgl",
+    "hyperiux"
+  ],
+  "dependencies": {
+    "three": "*"
+  }
+}

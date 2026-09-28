@@ -1,0 +1,104 @@
+{
+  "name": "text-cloning",
+  "type": "registry:component",
+  "title": "Text Cloning",
+  "description": "Canvas 2D effect that renders 9 depth-layered clones of any text string, offset by mouse parallax to create a 3D depth illusion. Includes a live text input and a subtle star-field background.",
+  "dependencies": [],
+  "registryDependencies": [],
+  "exportName": "TextCloning",
+  "exportKind": "default",
+  "tier": "pro",
+  "version": "1.0.1",
+  "changelog": [
+    {
+      "version": "1.0.1",
+      "date": "2026-07-30",
+      "summary": "Added reduced-motion support and reworked the props API (cloneCount, offset, colors, textSize) while keeping live text editing on the demo page.",
+      "breaking": false
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-02-10",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "props": [
+    {
+      "name": "cloneCount",
+      "type": "number",
+      "default": 9,
+      "description": "Number of text clone layers rendered.",
+      "remixer": {
+        "control": "range",
+        "group": "controls",
+        "groupTitle": "Controls",
+        "min": 1,
+        "max": 24,
+        "step": 1
+      }
+    },
+    {
+      "name": "offset",
+      "type": "number",
+      "default": 220,
+      "description": "Maximum pointer parallax distance between clone layers.",
+      "remixer": {
+        "control": "range",
+        "group": "controls",
+        "groupTitle": "Controls",
+        "min": 0,
+        "max": 420,
+        "step": 5
+      }
+    },
+    {
+      "name": "textColor",
+      "type": "string",
+      "default": "#f5f5f5",
+      "description": "Clone and center text color.",
+      "remixer": {
+        "control": "color",
+        "group": "style",
+        "groupTitle": "Style"
+      }
+    },
+    {
+      "name": "textSize",
+      "type": "number",
+      "default": 1,
+      "description": "Text size multiplier.",
+      "remixer": {
+        "control": "range",
+        "group": "style",
+        "groupTitle": "Style",
+        "min": 0.4,
+        "max": 1.8,
+        "step": 0.05
+      }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "controls",
+    "layout": {
+      "buttonClassName": "right-4! top-25!",
+      "panelClassName": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/text-cloning/index.tsx"
+    },
+    {
+      "path": "createSuspendedRaf.ts",
+      "type": "registry:component",
+      "target": "src/components/effects/text-cloning/createSuspendedRaf.ts"
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "name": "pixelated-image-effect",
+  "type": "registry:component",
+  "title": "Pixelated Image Effect",
+  "description": "SVG filter-based image pixelation that reacts to cursor position - pixel size grows and shrinks as you move across the image",
+  "dependencies": [],
+  "registryDependencies": [],
+  "exportName": "PixelatedImageEffect",
+  "exportKind": "default",
+  "tier": "free",
+  "version": "1.1.0",
+  "changelog": [
+    {
+      "version": "1.1.0",
+      "date": "2026-07-22",
+      "summary": "reduce-motion applied",
+      "breaking": false
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-06-04",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "props": [
+    {
+      "name": "src",
+      "type": "string",
+      "default": "https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/v-02.jpg",
+      "description": "Image source URL."
+    },
+    {
+      "name": "pixelSize",
+      "type": "number",
+      "default": 16,
+      "description": "Baseline pixel size for the SVG pixelation filter.",
+      "remixer": {
+        "control": "range",
+        "group": "controls",
+        "groupTitle": "Controls",
+        "min": 1,
+        "max": 64,
+        "step": 1
+      }
+    },
+    {
+      "name": "duration",
+      "type": "number",
+      "default": 0.25,
+      "description": "Smoothing duration for pixel-size changes.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0,
+        "max": 2,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "mouseReactivity",
+      "type": "number",
+      "default": 1,
+      "description": "Strength of cursor-driven pixelation changes.",
+      "remixer": {
+        "control": "range",
+        "group": "controls",
+        "groupTitle": "Controls",
+        "min": 0,
+        "max": 2,
+        "step": 0.05
+      }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "controls",
+    "layout": {
+      "buttonClassName": "right-4! top-25!",
+      "panelClassName": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/pixelated-image-effect/index.tsx",
+      "content": "// Built using Hyperiux Vault: https://vault.hyperiux.com\n\n\"use client\";\n\nimport { useEffect, useId, useRef, useState, type PointerEvent as ReactPointerEvent } from \"react\";\n\nfunction usePrefersReducedMotion() {\n  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);\n\n  useEffect(() => {\n    const mediaQuery = window.matchMedia(\"(prefers-reduced-motion: reduce)\");\n    const update = () => setPrefersReducedMotion(mediaQuery.matches);\n    update();\n    mediaQuery.addEventListener(\"change\", update);\n    return () => mediaQuery.removeEventListener(\"change\", update);\n  }, []);\n\n  return prefersReducedMotion;\n}\n\ninterface PixelateSvgFilterProps {\n  id?: string;\n  size?: number;\n  crossLayers?: boolean;\n}\n\nexport function PixelateSvgFilter({\n  id: idProp,\n  size: propSize = 16,\n  crossLayers = false\n}: PixelateSvgFilterProps) {\n  const generatedId = `pixelate-filter-${useId().replace(/:/g, \"\")}`;\n  const id = idProp ?? generatedId;\n  const size = Math.max(2, propSize);\n  return (\n    <svg\n      aria-hidden=\"true\"\n      className=\"pointer-events-none absolute h-0 w-0 overflow-hidden\"\n    >\n      <defs>\n        <filter id={id} x=\"0\" y=\"0\" width=\"1\" height=\"1\">\n          {/* Base pixelation */}\n          <feConvolveMatrix\n            kernelMatrix=\"1 1 1\n 1 1 1\n 1 1 1\"\n            result=\"AVG\"\n          />\n\n          <feFlood x=\"1\" y=\"1\" width=\"1\" height=\"1\" />\n\n          <feComposite\n            operator=\"arithmetic\"\n            k1=\"0\"\n            k2=\"1\"\n            k3=\"0\"\n            k4=\"0\"\n            width={size}\n            height={size}\n          />\n\n          <feTile result=\"TILE\" />\n\n          <feComposite\n            in=\"AVG\"\n            in2=\"TILE\"\n            operator=\"in\"\n          />\n\n          <feMorphology\n            operator=\"dilate\"\n            radius={size / 2}\n            result=\"NORMAL\"\n          />\n\n          {crossLayers && (\n            <>\n              {/* Horizontal fallback */}\n              <feConvolveMatrix\n                kernelMatrix=\"1 1 1\n 1 1 1\n 1 1 1\"\n                result=\"AVG\"\n              />\n              <feFlood x=\"1\" y=\"1\" width=\"1\" height=\"1\" />\n              <feComposite\n                in2=\"SourceGraphic\"\n                operator=\"arithmetic\"\n                k1=\"0\"\n                k2=\"1\"\n                k3=\"0\"\n                k4=\"0\"\n                width={size / 2}\n                height={size}\n              />\n              <feTile result=\"TILE\" />\n              <feComposite in=\"AVG\" in2=\"TILE\" operator=\"in\" />\n              <feMorphology\n                operator=\"dilate\"\n                radius={size / 2}\n                result=\"FALLBACKX\"\n              />\n\n              {/* Vertical fallback */}\n              <feConvolveMatrix\n                kernelMatrix=\"1 1 1\n 1 1 1\n 1 1 1\"\n                result=\"AVG\"\n              />\n              <feFlood x=\"1\" y=\"1\" width=\"1\" height=\"1\" />\n              <feComposite\n                in2=\"SourceGraphic\"\n                operator=\"arithmetic\"\n                k1=\"0\"\n                k2=\"1\"\n                k3=\"0\"\n                k4=\"0\"\n                width={size}\n                height={size / 2}\n              />\n              <feTile result=\"TILE\" />\n              <feComposite in=\"AVG\" in2=\"TILE\" operator=\"in\" />\n              <feMorphology\n                operator=\"dilate\"\n                radius={size / 2}\n                result=\"FALLBACKY\"\n              />\n\n              <feMerge>\n                <feMergeNode in=\"FALLBACKX\" />\n                <feMergeNode in=\"FALLBACKY\" />\n                <feMergeNode in=\"NORMAL\" />\n              </feMerge>\n            </>\n          )}\n\n          {!crossLayers && <feMergeNode in=\"NORMAL\" />}\n        </filter>\n      </defs>\n    </svg>\n  );\n}\n\ninterface PixelatedImageEffectProps {\n  src?: string;\n  alt?: string;\n  imageClassName?: string;\n  pixelSize?: number;\n  duration?: number;\n  mouseReactivity?: number;\n}\n\nexport default function PixelatedImageEffect({\n  src = \"https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/v-02.jpg\",\n  pixelSize = 16,\n  duration = 0.25,\n  mouseReactivity = 1,\n  imageClassName = \"\",\n}: PixelatedImageEffectProps) {\n  const imageRef = useRef<HTMLDivElement | null>(null);\n  const isTouching = useRef(false);\n  const animationRef = useRef<number | null>(null);\n  const [renderedPixelSize, setRenderedPixelSize] = useState(pixelSize);\n  const [targetPixelSize, setTargetPixelSize] = useState(pixelSize);\n  const pixelateFilterId = `pixelate-filter-${useId().replace(/:/g, \"\")}`;\n  const prefersReducedMotion = usePrefersReducedMotion();\n  const fallbackSrc = \"https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/v-02.jpg\";\n  const resolvedSrc = typeof src === \"string\" && src.trim() ? src.trim() : fallbackSrc;\n  const resolvedPixelSize = Math.min(Math.max(Number(pixelSize) || 16, 1), 64);\n  const resolvedDuration = Math.max(Number(duration) || 0, 0);\n  const resolvedMouseReactivity = Math.min(Math.max(Number(mouseReactivity) || 0, 0), 2);\n\n  useEffect(() => {\n    setTargetPixelSize(resolvedPixelSize);\n  }, [resolvedPixelSize]);\n\n  useEffect(() => {\n    if (animationRef.current !== null) cancelAnimationFrame(animationRef.current);\n\n    if (resolvedDuration === 0) {\n      setRenderedPixelSize(targetPixelSize);\n      return undefined;\n    }\n\n    const startValue = renderedPixelSize;\n    const distance = targetPixelSize - startValue;\n    const startTime = performance.now();\n    const durationMs = resolvedDuration * 1000;\n\n    const animate = (time: number) => {\n      const progress = Math.min((time - startTime) / durationMs, 1);\n      const eased = 1 - Math.pow(1 - progress, 3);\n      setRenderedPixelSize(startValue + distance * eased);\n\n      if (progress < 1) {\n        animationRef.current = requestAnimationFrame(animate);\n      }\n    };\n\n    animationRef.current = requestAnimationFrame(animate);\n\n    return () => {\n      if (animationRef.current !== null) cancelAnimationFrame(animationRef.current);\n    };\n  }, [resolvedDuration, targetPixelSize]);\n\n  const updatePixel = (event: ReactPointerEvent<HTMLDivElement>) => {\n    if (!imageRef.current) return;\n\n    const rect = imageRef.current.getBoundingClientRect();\n    const x = event.clientX - rect.left;\n\n    const pointerPixelSize = Math.min(Math.max(x / 30, 1), 64);\n    const nextPixelSize =\n      resolvedPixelSize + (pointerPixelSize - resolvedPixelSize) * resolvedMouseReactivity;\n    setTargetPixelSize(Math.min(Math.max(nextPixelSize, 1), 64));\n  };\n\n  const handlePointerDown = (event: ReactPointerEvent<HTMLDivElement>) => {\n    isTouching.current = true;\n    updatePixel(event);\n  };\n\n  const handlePointerMove = (event: ReactPointerEvent<HTMLDivElement>) => {\n    if (event.pointerType === \"touch\" && !isTouching.current) return;\n    updatePixel(event);\n  };\n\n  const handlePointerUp = () => {\n    isTouching.current = false;\n  };\n\n  return (\n    <div className=\"relative flex h-dvh w-dvw pt-6 flex-col gap-15 items-center justify-center\">\n\n      <h1 className=\"text-5xl text-center max-[1025px]:hidden w-[45%] mt-10\">\n        Move cursor left in the image block for a clear image, right for more pixelation.\n      </h1>\n\n      <h2 className=\"hidden max-[1025px]:block  w-[60%] text-center mx-auto text-2xl\">\n        Click left in image block for clear image, right for more pixelated\n\n      </h2>\n\n      <PixelateSvgFilter\n        id={pixelateFilterId}\n        size={renderedPixelSize}\n        crossLayers\n      />\n\n      <div\n        ref={imageRef}\n        className=\"relative h-[55vh] w-full max-md:max-w-[90%] overflow-hidden max-[1025px]:max-w-[90%] max-w-lg touch-none\"\n        style={{ filter: `url(#${pixelateFilterId})` }}\n        onPointerDown={handlePointerDown}\n        onPointerMove={handlePointerMove}\n        onPointerUp={handlePointerUp}\n        onPointerLeave={handlePointerUp}\n      >\n        {/* eslint-disable-next-line @next/next/no-img-element */}\n        <img\n          src={resolvedSrc}\n          alt=\"\"\n          className={`object-cover absolute inset-0 ${imageClassName}`.trim()}\n        />\n      </div>\n      {prefersReducedMotion && (\n        <div\n          aria-live=\"polite\"\n          className=\"pointer-events-none fixed bottom-4 right-4 z-40 w-fit max-w-65 rounded-md border border-white/15 bg-white/5 p-3 text-center  backdrop-blur-sm max-[1025px]:hidden\"\n        >\n          <h2 className=\"text-sm leading-none text-white\">\n            The pixels keep shifting.\n          </h2>\n          <p className=\"mt-2 text-xs leading-5 text-white/65\">\n            Pixelated Image Effect changes pixelation based on cursor\n            position in real time. Since the transition is driven entirely by\n            motion, reduced motion can&apos;t be applied here.\n          </p>\n        </div>\n      )}\n    </div>\n  );\n}\n"
+    }
+  ]
+}

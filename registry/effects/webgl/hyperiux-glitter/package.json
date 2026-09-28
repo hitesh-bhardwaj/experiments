@@ -1,0 +1,23 @@
+{
+  "name": "@hyperiux/hyperiux-glitter",
+  "version": "1.0.1",
+  "description": "Glittery particle logo concept with morphing model particles, cursor trail particles, and bloom postprocessing.",
+  "main": "index.tsx",
+  "files": [
+    "index.tsx",
+    "MorphingParticleModelNew.tsx",
+    "MouseTrailParticles.tsx",
+    "createSuspendedRaf.ts",
+    "registry.json"
+  ],
+  "keywords": [
+    "webgl",
+    "hyperiux"
+  ],
+  "dependencies": {
+    "three": "*",
+    "@react-three/fiber": "*",
+    "@react-three/drei": "*",
+    "@react-three/postprocessing": "*"
+  }
+}

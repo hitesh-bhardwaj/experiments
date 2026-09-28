@@ -1,0 +1,208 @@
+{
+  "name": "focus-text",
+  "type": "registry:component",
+  "title": "Focus Text",
+  "description": "Character-by-character text reveal that scales and sharpens into focus with replayable motion.",
+  "dependencies": [
+    "gsap"
+  ],
+  "registryDependencies": [],
+  "exportName": "FocusText",
+  "exportKind": "default",
+  "tier": "free",
+  "version": "1.0.0",
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "date": "2026-08-17",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "props": [
+    {
+      "name": "backgroundColor",
+      "type": "string",
+      "default": "#000000",
+      "description": "Background color.",
+      "remixer": {
+        "control": "color",
+        "enabled": false,
+        "group": "colors",
+        "groupTitle": "Colors"
+      }
+    },
+    {
+      "name": "textColor",
+      "type": "string",
+      "default": "#ffffff",
+      "description": "Text color.",
+      "remixer": {
+        "control": "color",
+        "group": "colors",
+        "groupTitle": "Colors"
+      }
+    },
+    {
+      "name": "fontSize",
+      "type": "number",
+      "default": 4.5,
+      "description": "Text size in vw units.",
+      "remixer": {
+        "control": "range",
+        "group": "type",
+        "groupTitle": "Type",
+        "min": 2,
+        "max": 8,
+        "step": 0.1
+      }
+    },
+    {
+      "name": "characterStagger",
+      "type": "number",
+      "default": 0.05,
+      "description": "Delay between each character reveal.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0.01,
+        "max": 0.12,
+        "step": 0.005
+      }
+    },
+    {
+      "name": "revealDuration",
+      "type": "number",
+      "default": 3.2,
+      "description": "Duration of each character reveal.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0.2,
+        "max": 1.5,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "startScale",
+      "type": "number",
+      "default": 0.4,
+      "description": "Starting scale before characters settle.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0.2,
+        "max": 1,
+        "step": 0.01
+      }
+    },
+    {
+      "name": "blurAmount",
+      "type": "number",
+      "default": 18,
+      "description": "Initial blur amount in pixels.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0,
+        "max": 30,
+        "step": 1
+      }
+    },
+    {
+      "name": "holdDuration",
+      "type": "number",
+      "default": 1.2,
+      "description": "Pause duration after the full reveal completes.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0,
+        "max": 3,
+        "step": 0.1
+      }
+    },
+    {
+      "name": "loop",
+      "type": "boolean",
+      "default": false,
+      "description": "Automatically replay the animation on a loop.",
+      "remixer": {
+        "control": "checkbox",
+        "group": "behavior",
+        "groupTitle": "Behavior"
+      }
+    },
+    {
+      "name": "scrub",
+      "type": "boolean",
+      "default": false,
+      "description": "Links the reveal to scroll progress instead of playing on mount. Disables looping and the replay button.",
+      "remixer": {
+        "enabled": false,
+        "control": "checkbox",
+        "group": "behavior",
+        "groupTitle": "Behavior"
+      }
+    },
+    {
+      "name": "scrollStart",
+      "type": "string",
+      "default": "top 80%",
+      "description": "ScrollTrigger start value used when scrub is enabled.",
+      "remixer": {
+        "enabled": false,
+        "control": "text",
+        "group": "behavior",
+        "groupTitle": "Behavior"
+      }
+    },
+    {
+      "name": "scrollEnd",
+      "type": "string",
+      "default": "bottom 20%",
+      "description": "ScrollTrigger end value used when scrub is enabled.",
+      "remixer": {
+        "enabled": false,
+        "control": "text",
+        "group": "behavior",
+        "groupTitle": "Behavior"
+      }
+    },
+    {
+      "name": "showReplayButton",
+      "type": "boolean",
+      "default": true,
+      "description": "Shows the built-in replay button inside the component.",
+      "remixer": {
+        "control": "checkbox",
+        "group": "behavior",
+        "groupTitle": "Behavior"
+      }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "motion",
+    "layout": {
+      "buttonClassName": "right-4! top-25!",
+      "panelClassName": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/focus-text/index.tsx",
+      "content": "// Built using Hyperiux Vault: https://vault.hyperiux.com\n\n\"use client\";\n\nimport { useEffect, useMemo, useRef, useState } from \"react\";\nimport gsap from \"gsap\";\nimport { ScrollTrigger } from \"gsap/ScrollTrigger\";\nimport { CustomEase } from \"gsap/CustomEase\";\n\ngsap.registerPlugin(ScrollTrigger, CustomEase);\n\nconst FOCUS_EASE = CustomEase.create(\"focusTextEase\", \"0.16,1,0.3,1\");\n\ninterface FocusTextProps {\n  text?: string;\n  className?: string;\n  fontSize?: number;\n  characterStagger?: number;\n  revealDuration?: number;\n  startScale?: number;\n  blurAmount?: number;\n  holdDuration?: number;\n  loop?: boolean;\n  scrub?: boolean;\n  scrollStart?: string;\n  scrollEnd?: string;\n  backgroundColor?: string;\n  textColor?: string;\n  showReplayButton?: boolean;\n}\n\nconst DEFAULT_TEXT =\n  \"Built for seamless interactions.\\nDesigned with thoughtful motion.\\nMade to feel unforgettable.\";\nconst DEFAULT_CHARACTER_STAGGER = 0.05;\nconst REDUCED_MOTION_DURATION = 0.3;\n\nexport default function FocusText({\n  text = DEFAULT_TEXT,\n  className = \"\",\n  fontSize = 4.5,\n  characterStagger = DEFAULT_CHARACTER_STAGGER,\n  revealDuration = 3.2,\n  startScale = 0.4,\n  blurAmount = 18,\n  holdDuration = 1.2,\n  loop = false,\n  scrub = false,\n  scrollStart = \"top 80%\",\n  scrollEnd = \"bottom 20%\",\n  backgroundColor = \"#000000\",\n  textColor = \"#ffffff\",\n  showReplayButton = true,\n}: FocusTextProps) {\n  const sectionRef = useRef<HTMLElement | null>(null);\n  const tweenRef = useRef<gsap.core.Tween | null>(null);\n  const [isPlaying, setIsPlaying] = useState(true);\n\n  const lines = useMemo(\n    () =>\n      text.split(\"\\n\").map((line) => {\n        const words = line.split(\" \");\n\n        return words.map((word) => Array.from(word));\n      }),\n    [text],\n  );\n\n  const totalCharacterCount = useMemo(\n    () =>\n      lines.reduce(\n        (lineTotal, words) =>\n          lineTotal + words.reduce((wordTotal, word) => wordTotal + word.length, 0),\n        0,\n      ),\n    [lines],\n  );\n\n  const totalRevealDuration = useMemo(\n    () => revealDuration + DEFAULT_CHARACTER_STAGGER * Math.max(totalCharacterCount - 1, 0),\n    [revealDuration, totalCharacterCount],\n  );\n\n  const effectiveRevealDuration = useMemo(\n    () =>\n      Math.max(\n        0.12,\n        totalRevealDuration - characterStagger * Math.max(totalCharacterCount - 1, 0),\n      ),\n    [characterStagger, totalCharacterCount, totalRevealDuration],\n  );\n\n  useEffect(() => {\n    const section = sectionRef.current;\n    if (!section) return;\n\n    const prefersReducedMotion =\n      typeof window.matchMedia === \"function\" &&\n      window.matchMedia(\"(prefers-reduced-motion: reduce)\").matches;\n\n    const ctx = gsap.context(() => {\n      const characters = Array.from(\n        section.querySelectorAll<HTMLElement>(\"[data-focus-char]\"),\n      );\n      if (!characters.length) return;\n\n      // The heading renders at opacity 0 to avoid a flash of unstyled\n      // characters before GSAP applies the from-state.\n      gsap.set(section.querySelector(\"[data-focus-heading]\"), { opacity: 1 });\n\n      if (prefersReducedMotion) {\n        // No scale, no blur, no per-character stagger, no loop and never\n        // tied to scroll position - just a short fade to the final state.\n        tweenRef.current = gsap.fromTo(\n          characters,\n          { opacity: 0 },\n          {\n            opacity: 1,\n            duration: REDUCED_MOTION_DURATION,\n            ease: \"none\",\n            onStart: () => setIsPlaying(true),\n            onComplete: () => setIsPlaying(false),\n          },\n        );\n\n        return;\n      }\n\n      tweenRef.current = gsap.fromTo(\n        characters,\n        {\n          opacity: 0,\n          scale: startScale,\n          filter: `blur(${blurAmount}px)`,\n        },\n        {\n          opacity: 1,\n          scale: 1,\n          filter: \"blur(0px)\",\n          duration: effectiveRevealDuration,\n          stagger: characterStagger,\n          ease: FOCUS_EASE,\n          // Scrubbing hands playback to the scroll position, so looping and\n          // the hold between cycles no longer apply.\n          repeat: !scrub && loop ? -1 : 0,\n          repeatDelay: holdDuration,\n          onStart: () => setIsPlaying(true),\n          onRepeat: () => setIsPlaying(true),\n          onComplete: () => setIsPlaying(false),\n          scrollTrigger: scrub\n            ? {\n                trigger: section,\n                start: scrollStart,\n                end: scrollEnd,\n                scrub: true,\n              }\n            : undefined,\n        },\n      );\n    }, section);\n\n    return () => {\n      ctx.revert();\n      tweenRef.current = null;\n    };\n  }, [\n    lines,\n    characterStagger,\n    effectiveRevealDuration,\n    startScale,\n    blurAmount,\n    holdDuration,\n    loop,\n    scrub,\n    scrollStart,\n    scrollEnd,\n  ]);\n\n  const handleReplay = () => {\n    tweenRef.current?.restart(false, false);\n  };\n\n  return (\n    <section\n      ref={sectionRef}\n      className={`relative flex min-h-screen w-full items-center overflow-hidden px-6 ${className}`}\n      style={{\n        backgroundColor,\n        backgroundPosition: \"center\",\n        backgroundRepeat: \"no-repeat\",\n        backgroundSize: \"cover\",\n      }}\n    >\n      <h1\n        data-focus-heading\n        className=\"m-0 w-full  font-black uppercase leading-none tracking-tight opacity-0\"\n        style={{\n          fontSize: `clamp(2rem, ${fontSize}vw, 8rem)`,\n          color: textColor,\n        }}\n      >\n        {lines.map((words, lineIndex) => (\n          <span key={`line-${lineIndex}`} className=\"block\">\n            {words.map((word, wordIndex) => (\n              <span key={`line-${lineIndex}-word-${wordIndex}`}>\n                <span className=\"inline-block whitespace-nowrap\">\n                  {word.map((character, charIndex) => (\n                    <span\n                      key={`${lineIndex}-${wordIndex}-${charIndex}`}\n                      data-focus-char\n                      className=\"inline-block\"\n                      style={{\n                        willChange: \"transform, filter, opacity\",\n                        transformOrigin: \"50% 50%\",\n                        backfaceVisibility: \"hidden\",\n                      }}\n                    >\n                      {character}\n                    </span>\n                  ))}\n                </span>\n                {wordIndex < words.length - 1 ? (\n                  <span aria-hidden=\"true\" className=\"whitespace-pre\">\n                    {\" \"}\n                  </span>\n                ) : null}\n              </span>\n            ))}\n          </span>\n        ))}\n      </h1>\n\n      {showReplayButton && !scrub && (\n        <button\n          type=\"button\"\n          onClick={handleReplay}\n          className=\"absolute inset-x-0 bottom-8 mx-auto inline-flex w-fit items-center justify-center rounded-full border border-white/20 bg-white/8 px-5 py-2.5 font-mono text-[11px] uppercase tracking-[0.28em] text-white transition hover:border-white/40 hover:bg-white/14\"\n        >\n          Replay animation\n        </button>\n      )}\n    </section>\n  );\n}\n"
+    }
+  ]
+}

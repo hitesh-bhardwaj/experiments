@@ -1,0 +1,17 @@
+{
+  "name": "@hyperiux/stack-loader",
+  "version": "1.0.1",
+  "description": "Stack-to-spread image intro loader with GSAP SplitText word animations and staggered image choreography",
+  "main": "index.tsx",
+  "files": [
+    "index.tsx",
+    "registry.json"
+  ],
+  "keywords": [
+    "loaders",
+    "hyperiux"
+  ],
+  "dependencies": {
+    "gsap": "*"
+  }
+}

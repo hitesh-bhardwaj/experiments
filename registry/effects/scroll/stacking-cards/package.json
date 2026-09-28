@@ -1,0 +1,19 @@
+{
+  "name": "@hyperiux/stacking-cards",
+  "version": "1.0.1",
+  "description": "Full-screen card sequence that stacks, tilts, and reveals the next scene on scroll",
+  "main": "index.tsx",
+  "files": [
+    "index.tsx",
+    "StackingCardComp.tsx",
+    "registry.json"
+  ],
+  "keywords": [
+    "scroll",
+    "hyperiux"
+  ],
+  "dependencies": {
+    "gsap": "*",
+    "lenis": "*"
+  }
+}

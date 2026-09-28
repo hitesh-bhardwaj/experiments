@@ -1,0 +1,101 @@
+{
+  "name": "parallax-slider",
+  "type": "registry:component",
+  "title": "Parallax Slider",
+  "description": "Pinned horizontal gallery with clip-path reveals and image parallax",
+  "dependencies": [
+    "gsap"
+  ],
+  "registryDependencies": [],
+  "exportName": "ParallaxSlider",
+  "exportKind": "default",
+  "tier": "pro",
+  "version": "1.0.1",
+  "changelog": [
+    {
+      "version": "1.0.1",
+      "date": "2026-07-21",
+      "summary": "Added prefers-reduced-motion support: per-image parallax range and scale are reduced to 25% strength, and the clip-path reveal loses its eased curve; main horizontal navigation is unaffected",
+      "breaking": false
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-07-20",
+      "summary": "Initial release",
+      "breaking": false
+    }
+  ],
+  "props": [
+    {
+      "name": "bgColor",
+      "type": "color",
+      "default": "#111111",
+      "description": "Slider background color.",
+      "remixer": {
+        "control": "color",
+        "group": "style",
+        "groupTitle": "Style"
+      }
+    },
+    {
+      "name": "parallaxAmount",
+      "type": "number",
+      "default": 25,
+      "description": "Percent horizontal shift each image parallaxes as it crosses the viewport.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0,
+        "max": 60,
+        "step": 1
+      }
+    },
+    {
+      "name": "slideGap",
+      "type": "number",
+      "default": 1.6,
+      "description": "Gap between slides, in vw.",
+      "remixer": {
+        "control": "range",
+        "group": "layout",
+        "groupTitle": "Layout",
+        "min": 0,
+        "max": 10,
+        "step": 0.1
+      }
+    },
+    {
+      "name": "scrub",
+      "type": "number",
+      "default": 1,
+      "description": "GSAP ScrollTrigger scrub value on the main horizontal track - higher lags/smooths more, lower tracks scroll 1:1.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0,
+        "max": 3,
+        "step": 0.05
+      }
+    }
+  ],
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "motion",
+    "layout": {
+      "buttonClassName": "right-4! top-25!",
+      "panelClassName": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  },
+  "files": [
+    {
+      "path": "index.tsx",
+      "type": "registry:component",
+      "target": "src/components/effects/parallax-slider/index.tsx"
+    }
+  ]
+}

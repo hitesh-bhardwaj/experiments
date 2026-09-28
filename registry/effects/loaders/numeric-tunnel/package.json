@@ -1,0 +1,21 @@
+{
+  "name": "@hyperiux/numeric-tunnel",
+  "version": "1.0.1",
+  "description": "WebGL loader with a 3D numeric tunnel that crossfades into a chromatic aberration warp effect",
+  "main": "index.tsx",
+  "files": [
+    "index.tsx",
+    "NumericTunnelLoader.tsx",
+    "registry.json"
+  ],
+  "keywords": [
+    "loaders",
+    "hyperiux"
+  ],
+  "dependencies": {
+    "gsap": "*",
+    "@react-three/fiber": "*",
+    "@react-three/drei": "*",
+    "three": "*"
+  }
+}
