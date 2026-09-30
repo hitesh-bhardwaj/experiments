@@ -54,7 +54,6 @@ export default function DemoHeader({
         if (!response.ok) {
           throw new Error(`Failed to load effect index: ${response.status}`);
         }
-
         const data = await response.json();
         const canonicalSlug = getEffectRouteSlug(demoSlug);
         const effect = data.effects?.find(
