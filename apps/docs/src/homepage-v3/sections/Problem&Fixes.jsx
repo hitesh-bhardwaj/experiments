@@ -165,15 +165,15 @@ export default function ProblemFixes() {
   return (
     <section
       ref={sectionRef}
-      className="relative z-200 mt-[12vw] max-md:mt-[-8vw] w-full overflow-hidden px-[3vw] pb-[10%] text-white max-[1025px]:px-[5vw] max-md:px-[6vw] max-md:py-24 max-sm:px-5 max-sm:py-20"
+      className="relative z-200 mt-[-13vw] max-md:mt-[-8vw] w-full overflow-hidden px-[3vw] pb-[10%] text-white max-[1025px]:px-[5vw] max-md:px-[6vw] max-md:py-24 max-sm:px-5 max-sm:py-20"
     >
       <div className="mx-auto relative z-200 flex w-full flex-col items-center">
-        <div className="w-full text-center">
+        <div className=" text-center w-[70%]">
           <LineReveal as='h2' className="t96 w-full">
             Good Motion is{' '}
-            <span className="gradient-text-animate">Harder</span> Than It Looks
+            <span className="gradient-text-animate">Harder</span> Than it Looks
           </LineReveal>
-          <SplitLine delay={.25} as='p' className="text24 mx-auto mt-[3.5vw] max-w-[60vw] leading-[1.55] text-white max-[1025px]:mt-[4vw] max-[1025px]:max-w-[85vw] max-md:mt-[5vw] max-md:max-w-[85vw] max-md:text-sm max-sm:mt-[10vw] max-sm:max-w-full max-sm:leading-[1.3]">
+          <SplitLine delay={.25} as='p' className="text24 mx-auto mt-[3.5vw] max-w-[55vw] leading-[1.55] text-white max-[1025px]:mt-[4vw] max-[1025px]:max-w-[85vw] max-md:mt-[5vw] max-md:max-w-[85vw] max-md:text-sm max-sm:mt-[10vw] max-sm:max-w-full max-sm:leading-[1.3]">
           Anyone can add a fade. What&apos;s hard is everything around it. Get timing, restraint, or performance wrong, and the moment meant to impress becomes the reason the site feels worse. Most teams see that risk and drop their ambitions to play it safe. And your interface ends up looking like everyone else&apos;s.  Vault is engineered around that discipline by default, not as an afterthought.
           </SplitLine>
         </div>

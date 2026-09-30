@@ -1,0 +1,188 @@
+/* Preview chrome for demo pages (from "GSAP Flip Card — Live preview"). Every class is `pc-`.
+   Fonts come from three tokens so the host can hand it its own faces. */
+.pc {
+  --pc-accent: #FF6B00;
+  --pc-ease: cubic-bezier(.16, 1, .3, 1);
+  --pc-display: var(--font-neue-haas, 'Aeonik Pro'), system-ui, sans-serif;
+  --pc-text: var(--font-neue-haas, 'Avenir Next'), system-ui, sans-serif;
+  --pc-code: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-family: var(--pc-text);
+  color: #cfcfcf;
+}
+.pc *, .pc *::before, .pc *::after { box-sizing: border-box; }
+.pc button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; padding: 0; }
+.pc a { color: inherit; text-decoration: none; }
+.pc [hidden] { display: none !important; }
+.pc-label { font-family: var(--pc-text); font-weight: 600; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; margin: 0; }
+
+/* ---------- bar ---------- */
+.pc-bar {
+  position: fixed; z-index: 9020; top: 16px; left: 50%;
+  display: flex; align-items: center; gap: 4px; padding: 6px; border-radius: 14px;
+  background: rgba(18, 18, 18, .78);
+  box-shadow: inset 0 0 0 1px rgba(244, 244, 244, .1), 0 20px 60px -20px rgba(0, 0, 0, .7);
+  -webkit-backdrop-filter: blur(18px) saturate(140%); backdrop-filter: blur(18px) saturate(140%);
+  transform: translate(-50%, 0); transition: transform .8s var(--pc-ease), opacity .8s var(--pc-ease);
+  white-space: nowrap;
+}
+.pc-bar.pc-away { transform: translate(-50%, -140%); opacity: 0; }
+.pc-bb {
+  display: inline-flex !important; align-items: center; justify-content: center; gap: 8px;
+  height: 38px; min-width: 38px; padding: 0 10px !important; border-radius: 9px;
+  color: #cfcfcf !important; transition: background-color .4s, color .4s;
+}
+.pc-bb:hover { background: rgba(244, 244, 244, .08) !important; color: #fff !important; }
+.pc-bb svg { width: 17px; height: 17px; }
+.pc-bb[aria-checked="true"], .pc-bb[aria-pressed="true"] { background: rgba(255, 107, 0, .16) !important; color: var(--pc-accent) !important; }
+.pc-bb:focus-visible, .pc-cpy:focus-visible { outline: 2px solid #F4F4F4; outline-offset: 2px; }
+.pc-nm { font-family: var(--pc-display); font-size: 15px; color: #f1f1f1; letter-spacing: -.01em; }
+.pc-bd {
+  height: 24px; padding: 0 9px; margin: 0 6px 0 2px; border-radius: 6px; display: inline-flex; align-items: center;
+  font-weight: 600; font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase;
+}
+.pc-bd-free { background: rgba(244, 244, 244, .9); color: #1D1D1D; }
+.pc-bd-pro { background: var(--pc-accent); color: #141414; }
+.pc-sep { width: 1px; height: 22px; background: rgba(244, 244, 244, .1); margin: 0 4px; }
+.pc-devs { display: flex; gap: 2px; }
+.pc-cpy {
+  height: 38px; margin-left: 4px; padding: 0 16px !important; border-radius: 9px;
+  background: var(--pc-accent) !important; color: #141414 !important;
+  font-weight: 600; font-size: 11px; letter-spacing: .14em; text-transform: uppercase;
+  box-shadow: 0 8px 26px -8px rgba(255, 107, 0, .7);
+  transition: transform .5s var(--pc-ease), box-shadow .5s var(--pc-ease), background-color .4s;
+}
+.pc-cpy:hover { background: #ff7d1f !important; transform: translateY(-1px); box-shadow: 0 12px 34px -8px rgba(255, 107, 0, .9); }
+.pc.pc-spin [data-act="replay"] svg { animation: pc-spin .7s var(--pc-ease); }
+@keyframes pc-spin { from { transform: rotate(0); } to { transform: rotate(-360deg); } }
+
+/* ---------- device stage: real-size iframe, scaled to fit ---------- */
+.pc-stage {
+  position: fixed; z-index: 9000; inset: 0; display: grid; place-items: center;
+  padding: 84px 24px 56px; background: #0c0c0c;
+  opacity: 0; visibility: hidden; transition: opacity .6s var(--pc-ease), visibility 0s .6s;
+}
+.pc.pc-dev .pc-stage { opacity: 1; visibility: visible; transition: opacity .6s var(--pc-ease), visibility 0s; }
+.pc-frame {
+  position: relative; overflow: hidden; border-radius: 22px; background: #111;
+  box-shadow: 0 0 0 1px rgba(244, 244, 244, .1), 0 0 0 10px #161616, 0 0 0 11px rgba(244, 244, 244, .08), 0 60px 120px -30px #000;
+  transform: scale(.96); transition: width .9s var(--pc-ease), height .9s var(--pc-ease), transform .9s var(--pc-ease);
+}
+.pc.pc-dev .pc-frame { transform: none; }
+.pc-frame iframe { position: absolute; left: 0; top: 0; border: 0; transform-origin: 0 0; background: #fff; }
+.pc-dims { position: absolute; left: 50%; bottom: 20px; transform: translateX(-50%); color: #6a6a6a; }
+html[data-pc-dev] { overflow: hidden; }
+
+/* ---------- pull tag: a real tag hanging on a cord ---------- */
+.pc-pull {
+  position: fixed; z-index: 9020; top: 0; left: 50%; padding: 0 12px 10px !important;
+  transform: translate(-50%, -110%); transition: transform .9s cubic-bezier(.34, 1.4, .64, 1);
+  -webkit-tap-highlight-color: transparent;
+}
+.pc-pull.pc-in { transform: translate(-50%, 0); }
+.pc-hang { display: flex; flex-direction: column; align-items: center; transform-origin: 50% 0; }
+.pc-pull.pc-in .pc-hang { animation: pc-hangIn 2.2s cubic-bezier(.3, 0, .3, 1), pc-sway 4.2s ease-in-out 2.2s infinite; }
+.pc-cord {
+  display: block; width: 1.5px; height: 16px; margin-bottom: -8px; border-radius: 1px; position: relative; z-index: 2;
+  background: linear-gradient(#5a5a5a, #8a8a8a); transition: height .7s cubic-bezier(.34, 1.56, .64, 1);
+}
+.pc-tag {
+  position: relative; display: flex; align-items: center; gap: 9px; padding: 13px 14px 9px 12px;
+  border-radius: 9px 9px 12px 12px; background: linear-gradient(#232323, #1a1a1a);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .07), inset 0 0 0 1px rgba(244, 244, 244, .05), 0 14px 28px -10px rgba(0, 0, 0, .55), 0 3px 6px rgba(0, 0, 0, .25);
+}
+.pc-eyelet {
+  position: absolute; top: 4px; left: 50%; width: 6px; height: 6px; margin-left: -3px; border-radius: 50%;
+  background: #0d0d0d; box-shadow: 0 0 0 1.5px #6a6a6a, inset 0 1px 1px rgba(0, 0, 0, .8);
+}
+.pc-tag .pc-label { color: #cfcfcf; font-size: 10.5px; letter-spacing: .18em; line-height: 1; }
+.pc-chev3 { width: 11px; height: 17px; }
+.pc-pull:hover .pc-cord, .pc-pull:focus-visible .pc-cord { height: 22px; }
+.pc-pull:hover .pc-hang, .pc-pull:focus-visible .pc-hang { animation-play-state: paused; }
+.pc-pull:focus-visible { outline: none; }
+.pc-pull:focus-visible .pc-tag { box-shadow: inset 0 1px 0 rgba(255, 255, 255, .07), 0 0 0 2px #F4F4F4, 0 14px 28px -10px rgba(0, 0, 0, .55); }
+@keyframes pc-hangIn { 0% { transform: rotate(9deg); } 18% { transform: rotate(-6deg); } 36% { transform: rotate(3.8deg); } 54% { transform: rotate(-2.2deg); } 72% { transform: rotate(1.1deg); } 88% { transform: rotate(-.5deg); } 100% { transform: rotate(0); } }
+@keyframes pc-sway { 0%, 100% { transform: rotate(-.9deg); } 50% { transform: rotate(.9deg); } }
+
+/* ---------- props panel ---------- */
+.pc-panel {
+  position: fixed; z-index: 9021; top: 78px; right: 16px; bottom: 16px; width: min(344px, calc(100vw - 32px));
+  display: flex; flex-direction: column; gap: 14px; padding: 18px 16px 16px; border-radius: 16px;
+  background: rgba(18, 18, 18, .86);
+  box-shadow: inset 0 0 0 1px rgba(244, 244, 244, .1), 0 30px 80px -20px #000;
+  -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px);
+  overflow: hidden;
+}
+.pc-panel.pc-in { animation: pc-panelIn .8s var(--pc-ease); }
+@keyframes pc-panelIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: none; } }
+.pc-panel-h { display: flex; justify-content: space-between; align-items: center; padding-left: 4px; }
+.pc-panel-h .pc-label { color: #8a8a8a; }
+.pc-panel-body { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; }
+.pc-panel-body::-webkit-scrollbar { display: none; }
+
+/* vanilla props UI (the HTML demo); the app portals its RemixerPanel here instead */
+.pc-ctl { display: grid; gap: 4px; margin-bottom: 18px; }
+.pc-ctl label { display: flex; justify-content: space-between; color: #cfcfcf; font-size: 13px; }
+.pc-ctl code { font-family: var(--pc-code); color: #FFB27A; }
+.pc-ctl output { font-family: var(--pc-code); color: #fff; }
+.pc-ctl input[type=range] { -webkit-appearance: none; appearance: none; width: 100%; height: 22px; background: transparent; margin: 4px 0 0; }
+.pc-ctl input[type=range]::-webkit-slider-runnable-track { height: 2px; background: rgba(244, 244, 244, .16); }
+.pc-ctl input[type=range]::-moz-range-track { height: 2px; background: rgba(244, 244, 244, .16); }
+.pc-ctl input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 14px; margin-top: -6px; border-radius: 50%; background: var(--pc-accent); }
+.pc-ctl input[type=range]::-moz-range-thumb { width: 14px; height: 14px; border: 0; border-radius: 50%; background: var(--pc-accent); }
+.pc-code { border-radius: 10px; background: #0b0b0b; box-shadow: inset 0 0 0 1px rgba(244, 244, 244, .08); overflow: hidden; margin-bottom: 14px; }
+.pc-code-h { display: flex; justify-content: space-between; align-items: center; padding: 8px 10px 8px 14px; border-bottom: 1px solid rgba(244, 244, 244, .06); color: #8a8a8a; }
+.pc-code pre { margin: 0; padding: 12px 14px; font-family: var(--pc-code); font-size: 12px; line-height: 1.7; color: #d8d8d8; white-space: pre-wrap; }
+.pc-tl { color: #bdbdbd; text-decoration: underline; text-decoration-color: rgba(244, 244, 244, .2); text-underline-offset: 4px; }
+
+/* ---------- shortcuts ---------- */
+.pc-keys {
+  position: fixed; z-index: 9021; top: 78px; left: 50%; transform: translateX(-50%);
+  padding: 18px 20px; border-radius: 14px; min-width: 280px; display: grid; gap: 12px;
+  background: rgba(18, 18, 18, .9); box-shadow: inset 0 0 0 1px rgba(244, 244, 244, .1);
+  -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px);
+}
+.pc-keys > .pc-label { color: #8a8a8a; }
+.pc-keys dl { display: grid; gap: 8px; margin: 0; }
+.pc-keys dl div { display: flex; justify-content: space-between; gap: 24px; font-size: 14px; color: #cfcfcf; }
+.pc-keys dt { font-family: var(--pc-code); font-size: 12px; padding: 2px 7px; border-radius: 5px; background: rgba(244, 244, 244, .08); color: #fff; }
+.pc-keys dd { margin: 0; }
+
+/* ---------- reduced-motion note, tooltip, toast ---------- */
+.pc-rm-note {
+  position: fixed; z-index: 9018; left: 50%; bottom: 20px; transform: translateX(-50%); margin: 0;
+  display: flex; align-items: center; gap: 10px; padding: 10px 16px; border-radius: 999px;
+  background: #1D1D1D; color: #F4F4F4; font-size: 14px; font-weight: 500;
+  box-shadow: 0 0 0 1px rgba(244, 244, 244, .14), 0 16px 40px -12px rgba(0, 0, 0, .6);
+}
+.pc-rm-note i { width: 8px; height: 8px; border-radius: 50%; background: var(--pc-accent); }
+.pc.pc-dev .pc-rm-note { bottom: auto; top: 78px; }
+.pc-tip {
+  position: fixed; z-index: 9040; left: 0; top: 0; display: flex; align-items: center; gap: 10px; max-width: 280px;
+  padding: 8px 10px 8px 12px; border-radius: 9px; background: #F4F4F4; color: #1D1D1D;
+  font: 500 13px/1.35 var(--pc-text); box-shadow: 0 14px 34px -10px rgba(0, 0, 0, .55);
+  opacity: 0; pointer-events: none; transform: translateY(-4px); transition: opacity .2s, transform .35s var(--pc-ease);
+}
+.pc-tip.pc-on { opacity: 1; transform: none; }
+.pc-tip kbd {
+  flex-shrink: 0; min-width: 22px; height: 22px; padding: 0 6px; border-radius: 6px; display: grid; place-items: center;
+  background: #1D1D1D; color: #F4F4F4; font: 600 11.5px/1 var(--pc-code);
+}
+.pc-toast {
+  position: fixed; z-index: 9030; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom, 0px)); max-width: calc(100vw - 2rem);
+  padding: 12px 18px; border-radius: 8px; background: #1f1f1f; color: #F4F4F4; font-size: 14px;
+  box-shadow: inset 0 0 0 1px rgba(244, 244, 244, .1), 0 20px 40px -12px #000;
+  transform: translate(-50%, 240%); transition: transform 1s var(--pc-ease);
+}
+.pc-toast.pc-on, .pc-toast.is-on { transform: translate(-50%, 0); }
+
+/* ---------- simulated reduced motion: flatten CSS motion everywhere except the chrome ---------- */
+html[data-pc-rm] body *:not(.pc, .pc *) { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; scroll-behavior: auto !important; }
+
+/* ---------- inside the device iframe the chrome and the old launcher stay out ---------- */
+html[data-pc-embed] .pc { display: none !important; }
+
+@media (max-width: 760px) {
+  .pc-nm, .pc-bd, .pc-cpy, .pc-keys-btn, .pc-sep { display: none !important; }
+  .pc-bar { top: 10px; }
+  .pc-stage { padding: 70px 12px 44px; }
+}

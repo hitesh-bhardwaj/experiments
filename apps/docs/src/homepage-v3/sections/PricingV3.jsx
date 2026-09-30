@@ -1,6 +1,6 @@
 "use client";
 
-import React, { memo, useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
@@ -11,6 +11,7 @@ import {
     hasScrollToPricingCardsIntent,
 } from "@/lib/pricingScrollIntent";
 import ButtonV3 from "../components/ButtonV3";
+import PriceDigit from "../components/PriceDigit";
 import { ScrambleText } from "../components/HoverLinkV3";
 import LineReveal from "@/components/Animations/LineReveal";
 import SplitLine from "@/components/WebsiteComps/SplitLine";
@@ -41,55 +42,6 @@ const PRO_FEATURES = [
     "Dependency, performance & reduced-motion notes per effect",
     "Code you own, commercial-friendly",
 ];
-
-const DIGITS = [...Array(10).keys()];
-
-/** A single price digit on a vertical reel, so the number rolls on plan change. */
-const PriceDigit = memo(function PriceDigit({ digit, visible = true, plan }) {
-    const reelRef = useRef(null);
-    const hasMounted = useRef(false);
-    const lap = useRef(0);
-
-    useEffect(() => {
-        if (!reelRef.current) return;
-
-        // The reel holds two laps of 0-9, so a slot whose digit is the same in
-        // both plans (the middle 9s of 1999 -> 17990) still has somewhere to
-        // travel: it rolls a full turn into the other lap.
-        const rest = -Number(digit) * 5;
-
-        // First paint rests on the right digit instead of animating up to it.
-        if (!hasMounted.current) {
-            hasMounted.current = true;
-            gsap.set(reelRef.current, { yPercent: rest });
-            return;
-        }
-
-        lap.current = lap.current === 0 ? 1 : 0;
-
-        gsap.to(reelRef.current, {
-            yPercent: rest - lap.current * 50,
-            duration: 0.55,
-            ease: "power3.out",
-        });
-    }, [digit, plan]);
-
-    return (
-        <span
-            aria-hidden="true"
-            className="relative inline-block h-[1em] w-[0.56em] overflow-hidden leading-none transition-[width,opacity] duration-300"
-            style={{ width: visible ? undefined : 0, opacity: visible ? 1 : 0 }}
-        >
-            <span ref={reelRef} className="flex  flex-col will-change-transform">
-                {DIGITS.concat(DIGITS).map((d, i) => (
-                    <span key={i} className="flex h-[1em] items-center justify-center">
-                        {d}
-                    </span>
-                ))}
-            </span>
-        </span>
-    );
-});
 
 function PriceDigits({ monthlyAmount, yearlyAmount, isYearly }) {
     const monthlyDigits = String(monthlyAmount).split("");
@@ -230,6 +182,11 @@ export default function PricingV3({ isIndia = false, auth = false }) {
     const planLabel = isYearly ? "Yearly" : "Monthly";
     const planPrice = isYearly ? yearlyAmount : monthlyAmount;
 
+    // The pricing hero's plan stacks relabel their titles from this.
+    useEffect(() => {
+        window.dispatchEvent(new CustomEvent("vault:billing", { detail: { yearly: isYearly } }));
+    }, [isYearly]);
+
     // Anything that links here wanting to land on the cards (VaultHeader's
     // "Upgrade to Pro", the dashboard, CliTokenManager, etc.) needs a manual
     // scroll for two independent reasons: Lenis owns scroll and resets
@@ -306,7 +263,7 @@ export default function PricingV3({ isIndia = false, auth = false }) {
         <section
             ref={container}
             id="pricing"
-            className="relative z-10 w-full bg-foreground max-md:mt-[-40vw]!  mt-[-20vw] pt-0!  text-background max-md:py-[14vw] max-sm:py-[20vw]"
+            className="relative z-10 w-full bg-foreground max-md:mt-[-40vw]!   py-[7vw]  text-background max-md:py-[14vw] max-sm:py-[20vw]"
         >
             {/* HEADING */}
             <div className="text-center w-full">

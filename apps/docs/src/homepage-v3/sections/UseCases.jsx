@@ -18,7 +18,7 @@ const mark =
 
 function UseCaseBox({ item }) {
   return (
-    <article className="use-case-box relative w-full -mt-px border border-grey ">
+    <article className="use-case-box relative w-full -mt-px border border-grey bg-background/40">
       {/* TITLE */}
       <div className="relative border-b border-grey px-[2vw] py-[2.5vw] max-[1025px]:px-[3vw] max-[1025px]:py-[3.5vw] max-md:px-[4vw] max-md:py-[5vw] max-sm:px-[6vw] max-sm:py-[7vw]">
         <span className={`${mark} -top-px -left-px border-t border-l`} />
@@ -84,7 +84,7 @@ export default function UseCases({ useCases }) {
   return (
     <div
       ref={container}
-      className="h-fit w-full mt-[-15vw] max-[1025px]:mt-0 max-[1025px]:flex-col max-[1025px]:gap-[6vw] max-[1025px]:pb-[0vw]! max-md:pb-[30vw]! flex justify-between self-padd items-start overflow-x-clip text-white max-md:mt-0 max-md:flex-col max-md:gap-[8vw]"
+      className="h-fit w-full mt-[8vw] max-[1025px]:mt-[10vw] max-[1025px]:flex-col max-[1025px]:gap-[6vw] max-[1025px]:pb-[0vw]! max-md:mt-[16vw] max-md:pb-[30vw]! flex justify-between self-padd items-start overflow-x-clip text-white max-md:flex-col max-md:gap-[8vw]"
     >
       <MaskTextReveal stagger={0.08} scrub={false} duration={2} className="w-[40vw] sticky top-[20vh] max-[1025px]:static max-[1025px]:w-full max-[1025px]:mb-[6vw]! max-md:static max-md:w-full max-md:mb-[10vw]!">
         <h2 className="text64 font-neue-haas">

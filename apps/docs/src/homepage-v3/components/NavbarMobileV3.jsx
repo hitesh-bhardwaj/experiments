@@ -1,5 +1,7 @@
 "use client";
 
+import SoundToggle from "./SoundToggle";
+import TutorialVideoButton from "./TutorialVideoButton";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -17,9 +19,11 @@ const useIsoLayoutEffect =
 
 const CLOSED_CLIP = "inset(0% 0% 100% 0%)";
 const OPEN_CLIP = "inset(0% 0% 0% 0%)";
+const SHOW_HEADER_TUTORIAL = false;
+const SHOW_HEADER_SEARCH = false;
 
 // Same items, same order, as the desktop bar (NavbarV3.jsx): Effects,
-// Templates, Docs, Pricing, Github - "section" rows expand an accordion in
+// Templates, Docs, Pricing, Community, Github - "section" rows expand an accordion in
 // place, "link" rows are plain links. One ordered list (rather than the old
 // separate SECTIONS/LINKS arrays rendered one after the other) so Templates
 // can sit between Effects and Docs instead of always trailing both menus.
@@ -28,6 +32,7 @@ const NAV_ROWS = [
   { type: "link", label: "Templates", href: "/templates" },
   { type: "section", key: "docs", label: "Docs" },
   { type: "link", label: "Pricing", href: "/pricing" },
+  { type: "link", label: "Community", href: "/community" },
   { type: "link", label: "Github", href: "https://github.com/hyperiux" },
 ];
 
@@ -256,7 +261,7 @@ export default function NavbarMobileV3({
       <div
         // Translucent rather than solid: the hero's ASCII field keeps moving
         // under the bar, and the blur is what keeps the logo readable over it.
-        className={`fixed top-0 left-0 z-1000 hidden max-[1025px]:flex w-full items-center justify-between border-b border-white/8 bg-background/60 px-[6vw] py-[5vw] backdrop-blur-xl transition-[transform,translate,opacity] duration-500 ease-out motion-reduce:transition-none md:px-[3.5vw] md:py-[2.5vw]  ${!intro
+        className={`fixed top-0 left-0 z-1000 hidden max-[1025px]:flex w-full items-center justify-between border-b border-white/8 bg-background/30 px-[6vw] py-[5vw] backdrop-blur-xl transition-[transform,translate,opacity] duration-500 ease-out motion-reduce:transition-none md:px-[3.5vw] md:py-[2.5vw]  ${!intro
           ? "pointer-events-none translate-y-0 opacity-0"
           : visible || open
             ? "translate-y-0 opacity-100"
@@ -277,28 +282,40 @@ export default function NavbarMobileV3({
         </Link>
 
         <div className="flex items-center gap-[3vw] md:gap-[2vw]">
-          <button
-            type="button"
-            onClick={handleSearch}
-            aria-label="Search effects"
-            // Trails the logo on the way in, same as the hamburger beside it.
-            className={`relative flex size-[10vw] shrink-0 items-center justify-center bg-grey text-primary transition-opacity duration-500 delay-200 ease-out motion-reduce:transition-none md:size-[5vw] ${intro ? "opacity-100" : "opacity-0"}`}
-          >
-            <svg
-              className="size-[4.5vw] shrink-0 md:size-[2.4vw]"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              aria-hidden="true"
+          {SHOW_HEADER_TUTORIAL && (
+            <TutorialVideoButton
+              className={`relative flex size-[10vw] shrink-0 items-center justify-center bg-grey/30 text-primary backdrop-blur-md transition-opacity duration-500 delay-200 ease-out motion-reduce:transition-none md:size-[5vw] ${intro ? "opacity-100" : "opacity-0"}`}
+              iconClassName="size-[4.5vw] md:size-[2.4vw]"
+            />
+          )}
+          <SoundToggle
+            size={40}
+            className={`bg-[#121212]/30 backdrop-blur-md transition-opacity duration-500 delay-200 ease-out motion-reduce:transition-none ${intro ? "opacity-100" : "opacity-0"}`}
+          />
+          {SHOW_HEADER_SEARCH && (
+            <button
+              type="button"
+              onClick={handleSearch}
+              aria-label="Search effects"
+              // Trails the logo on the way in, same as the hamburger beside it.
+              className={`relative flex size-[10vw] shrink-0 items-center justify-center bg-grey/30 text-primary backdrop-blur-md transition-opacity duration-500 delay-200 ease-out motion-reduce:transition-none md:size-[5vw] ${intro ? "opacity-100" : "opacity-0"}`}
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-              />
-            </svg>
-          </button>
+              <svg
+                className="size-[4.5vw] shrink-0 md:size-[2.4vw]"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                />
+              </svg>
+            </button>
+          )}
 
           <button
             type="button"

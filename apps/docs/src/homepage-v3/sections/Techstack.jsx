@@ -53,7 +53,7 @@ export default function Techstack() {
                     </MaskTextReveal>
                 </div>
                 <div className="flex items-start max-[1025px]:justify-center max-md:justify-center max-sm:items-start gap-0">
-                    <div className="flex flex-col bg-background z-2 relative max-sm:flex- w-[19vw] max-[1025px]:w-[38%] max-md:w-[40%] max-sm:w-[50%] strip-1 translate-y-[5%]">
+                    <div className="flex flex-col bg-background/30 z-2 relative max-sm:flex- w-[19vw] max-[1025px]:w-[38%] max-md:w-[40%] max-sm:w-[50%] strip-1 translate-y-[5%]">
                         <StatCard
                             label="Effects"
                             className="min-h-[24vw] max-[1025px]:min-h-[32vw] max-md:min-h-[42vw] max-sm:min-h-[56vw]"
@@ -84,7 +84,7 @@ export default function Techstack() {
                             <ThreeMark className={"size-[5vw] max-[1025px]:size-[7vw] max-md:size-[8vw] max-sm:size-[11vw]"} />
                         </StatCard>
                     </div>
-                    <div className="translate-y-[20%] max-[1025px]:w-[38%] max-md:w-[40%] flex flex-col max-[1025px]:mt-[6vw] max-md:mt-8  w-[19vw] strip-2  z-4 relative bg-background translate-x-[-.3%] max-sm:w-[50%]">
+                    <div className="translate-y-[20%] max-[1025px]:w-[38%] max-md:w-[40%] flex flex-col max-[1025px]:mt-[6vw] max-md:mt-8  w-[19vw] strip-2  z-4 relative bg-background/30 translate-x-[-.3%] max-sm:w-[50%]">
                         <StatCard
                             label="Free"
                             className="min-h-[24vw] max-[1025px]:min-h-[32vw] max-md:min-h-[42vw] max-sm:min-h-[56vw]"

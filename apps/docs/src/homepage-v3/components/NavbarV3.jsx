@@ -1,4 +1,6 @@
 "use client";
+import SoundToggle from "./SoundToggle";
+import TutorialVideoButton, { TutorialVideoHost } from "./TutorialVideoButton";
 import { HyperiuxLogo } from "@/utils/Icons";
 import React, { useRef, useState, useCallback, useEffect } from "react";
 import ButtonV3 from "./ButtonV3";
@@ -16,6 +18,8 @@ import Link from "next/link";
 // and the bar comes in on that beat - this is what covers an exit that never
 // gets there (the burst, or the loader bailing out early).
 const INTRO_DELAY_MS = 2400;
+const SHOW_HEADER_TUTORIAL = false;
+const SHOW_HEADER_SEARCH = false;
 
 // isSignedIn defaults to signed-out (not Clerk-aware by itself) since this
 // component is also rendered on marketing routes with no ClerkProvider in
@@ -162,7 +166,7 @@ export default function NavbarV3({
         {/* Everything that isn't the logo trails it, so the mark reads as
             having been there first and the bar as assembling around it. */}
         <div
-          className={`flex bg-[#121212] text20 px-[1.5vw] py-[1vw] absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 items-center gap-[2.5vw] transition-opacity duration-500 delay-200 ease-out motion-reduce:transition-none ${introReady ? "opacity-100" : "opacity-0"}`}
+          className={`flex bg-[#121212]/60 text20 px-[1.5vw] py-[1vw] absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 items-center gap-[2.5vw] backdrop-blur-md transition-opacity duration-500 delay-200 ease-out motion-reduce:transition-none ${introReady ? "opacity-100" : "opacity-0"}`}
         >
           <div
             className="flex"
@@ -218,14 +222,21 @@ export default function NavbarV3({
           >
             <HoverLinkV3 href="/pricing" text="Pricing" />
           </div>
-          <div
+          {/* <div
+            className="flex"
+            onPointerEnter={closeOnHover}
+            onFocusCapture={closeOnHover}
+          >
+            <HoverLinkV3 href="/community" text="Community" />
+          </div> */}
+          {/* <div
             className="flex"
             onPointerEnter={closeOnHover}
             onFocusCapture={closeOnHover}
           >
             <HoverLinkV3 href="/blog" text="Blog" />
-          </div>
-          <div
+          </div> */}
+          {/* <div
             className="flex"
             onPointerEnter={closeOnHover}
             onFocusCapture={closeOnHover}
@@ -235,37 +246,43 @@ export default function NavbarV3({
               target_blank
               text="Github"
             />
-          </div>
+          </div> */}
         </div>
         <div
           className={`flex items-center gap-2 transition-opacity duration-500 delay-200 ease-out motion-reduce:transition-none ${introReady ? "opacity-100" : "opacity-0"}`}
         >
-          <button
-            type="button"
-            onClick={openSearch}
-            className="group flex py-[.86vw] cursor-pointer items-center gap-4  bg-[#121212]! px-3 text-xs text-white backdrop-blur-md transition-colors duration-300 hover:bg-white/10 hover:border-[#ff5f00] hover:text-forground max-md:hidden max-md:gap-3"
-            aria-label="Search effects"
-          >
-            <div className="flex items-center gap-2">
-              <svg
-                className="h-4 w-4 shrink-0 text-current"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                />
-              </svg>
-            </div>
+          {SHOW_HEADER_TUTORIAL && (
+            <TutorialVideoButton className="self-stretch bg-[#121212]/60 px-3.5 backdrop-blur-md hover:bg-white/10 max-md:hidden" />
+          )}
+          <SoundToggle className="self-stretch bg-[#121212]/60! backdrop-blur-md transition-colors duration-300 max-md:hidden" />
+          {SHOW_HEADER_SEARCH && (
+            <button
+              type="button"
+              onClick={openSearch}
+              className="group flex cursor-pointer items-center gap-4 bg-[#121212]/60 px-3 py-[.86vw] text-xs text-white backdrop-blur-md transition-colors duration-300 hover:bg-white/10 hover:text-forground max-md:hidden max-md:gap-3"
+              aria-label="Search effects"
+            >
+              <div className="flex items-center gap-2">
+                <svg
+                  className="h-4 w-4 shrink-0 text-current"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                  />
+                </svg>
+              </div>
 
-            <kbd className="space-x-2 rounded bg-foreground/20 px-1.5 py-0.5 text-sm text-current max-md:hidden">
-              ⌘ K
-            </kbd>
-          </button>
+              <kbd className="space-x-2 rounded bg-foreground/20 px-1.5 py-0.5 text-sm text-current max-md:hidden">
+                ⌘ K
+              </kbd>
+            </button>
+          )}
           {isSignedIn || cachedSignedIn ? (
             <Link
               href="/dashboard"
@@ -290,6 +307,7 @@ export default function NavbarV3({
       />
 
       <GlobalSearch effects={effects} externalOpen={openTrigger} />
+      <TutorialVideoHost />
     </>
   );
 }

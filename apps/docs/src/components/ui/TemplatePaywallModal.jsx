@@ -42,6 +42,7 @@ function RazorpayButtonV3({ variant = "orange", label, className = "", ...razorp
     >
       <RazorpayCheckoutButton
         {...razorpayProps}
+        data-sound-kind={variant === "outline" ? "secondary" : "primary"}
         className={buttonV3ClassName({
           variant,
           className: `disabled:pointer-events-none disabled:opacity-60 ${className}`,

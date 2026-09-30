@@ -355,6 +355,7 @@ export function ExitIntentInviteModal() {
                     <button
                       type="submit"
                       disabled={isSubmitting}
+                      data-sound-kind="primary"
                       className={buttonV3ClassName({
                         className: "w-fit disabled:pointer-events-none disabled:opacity-60",
                       })}

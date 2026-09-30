@@ -15,6 +15,11 @@ import {
   markLoaderV3Played,
 } from "./loader-v3-state";
 import { lockScrollV3, unlockScrollV3, useScrollLockLenis } from "./scroll-lock-v3";
+import {
+  ButtonV3Chrome,
+  buttonV3ClassName,
+} from "./ButtonV3";
+import { useInteraction } from "./InteractionProvider";
 
 // Background static glyphs. The wordmark weaves HYPERIUX letters;
 // this string is only the noise behind it.
@@ -85,6 +90,27 @@ function skipLoaderNow() {
   unlockScrollV3();
 }
 
+function LoaderEntryButton({ label, onClick }) {
+  const [hovered, setHovered] = useState(false);
+
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      onPointerEnter={() => setHovered(true)}
+      onPointerLeave={() => setHovered(false)}
+      data-sound-kind="secondary"
+      className={buttonV3ClassName({
+        variant: "outline",
+        className:
+          "min-w-[13rem] justify-between bg-background/70 text-white backdrop-blur-md max-sm:w-full",
+      })}
+    >
+      <ButtonV3Chrome label={label} hovered={hovered} />
+    </button>
+  );
+}
+
 /**
  * @param {"dock"|"burst"} exitMode - how the mark leaves. `dock` collapses it
  *   onto the navbar's logo and hands over to the real svg; `burst` blows it out
@@ -94,6 +120,8 @@ function skipLoaderNow() {
 export default function LoaderV3({ exitMode = "dock" }) {
   const [done, setDone] = useState(false);
   const [run, setRun] = useState(false);
+  const [entryChosen, setEntryChosen] = useState(false);
+  const { setSound } = useInteraction();
 
   const rootRef = useRef(null);
   const backdropRef = useRef(null);
@@ -104,6 +132,11 @@ export default function LoaderV3({ exitMode = "dock" }) {
   const fieldRef = useRef({ progress: 0, exit: 0, clear: 0 });
 
   useScrollLockLenis();
+
+  const chooseEntry = (soundEnabled) => {
+    setSound(soundEnabled);
+    setEntryChosen(true);
+  };
 
   useLayoutEffect(() => {
     if (shouldSkipLoader()) {
@@ -286,7 +319,6 @@ export default function LoaderV3({ exitMode = "dock" }) {
   return (
     <div
       ref={rootRef}
-      aria-hidden="true"
       className="fixed inset-0 z-1000 overflow-hidden"
     >
       {/* The lock above can only start once this has hydrated, and the markup
@@ -306,7 +338,25 @@ export default function LoaderV3({ exitMode = "dock" }) {
       <canvas
         ref={canvasRef}
         className="absolute inset-0 block h-full w-full"
+        aria-hidden="true"
       />
+      {!entryChosen ? (
+        <div className="absolute inset-x-0 bottom-[7vh] z-10 mx-auto flex w-full max-w-[44rem] flex-col items-center gap-4 px-6 text-center max-sm:bottom-[5vh]">
+          <p className="font-neue-haas text-sm uppercase tracking-[0.22em] text-white/45">
+            Headphones recommended
+          </p>
+          <div className="flex w-full items-center justify-center gap-4 max-sm:flex-col">
+            <LoaderEntryButton
+              label="Enter with sound"
+              onClick={() => chooseEntry(true)}
+            />
+            <LoaderEntryButton
+              label="Enter quietly"
+              onClick={() => chooseEntry(false)}
+            />
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }

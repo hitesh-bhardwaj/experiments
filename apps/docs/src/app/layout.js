@@ -1,6 +1,6 @@
 import "@/lib/progress-event-polyfill";
 import localFont from "next/font/local";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, IBM_Plex_Mono } from "next/font/google";
 import { Suspense } from "react";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/next";
@@ -23,6 +23,7 @@ import WorkWithHyperiuxModal from "@/components/WebsiteComps/modals/WorkWithHype
 import { ExitIntentInviteModal } from "@/components/WebsiteComps/modals/ExitIntentInviteModal";
 import { CookieConsentNudge } from "@/components/WebsiteComps/CookieConsentNudge";
 import PageTransition from "@/components/PageTransition/PageTransition";
+import SiteInteractions from "@/components/WebsiteComps/SiteInteractions";
 
 const neueHaasUnica = localFont({
   src: [
@@ -38,6 +39,41 @@ const neueHaasUnica = localFont({
     },
   ],
   variable: "--font-neue-haas",
+  display: "swap",
+  preload: false,
+});
+
+// Homepage faces (Theremin): Aeonik Pro for display, Avenir Next for text.
+// Scoped to the homepage by the .home-type class in globals.css.
+const aeonikPro = localFont({
+  src: [
+    { path: "../../public/assets/fonts/AeonikPro-Light.woff2", weight: "300", style: "normal" },
+    { path: "../../public/assets/fonts/AeonikPro-Regular.woff2", weight: "400", style: "normal" },
+    { path: "../../public/assets/fonts/AeonikPro-Medium.woff2", weight: "500", style: "normal" },
+    { path: "../../public/assets/fonts/AeonikPro-Bold.woff2", weight: "700", style: "normal" },
+  ],
+  variable: "--font-aeonik",
+  display: "swap",
+  preload: false,
+});
+
+const avenirNext = localFont({
+  src: [
+    { path: "../../public/assets/fonts/AvenirNextCyr-Light.woff2", weight: "300", style: "normal" },
+    { path: "../../public/assets/fonts/AvenirNextCyr-Regular.woff2", weight: "400", style: "normal" },
+    { path: "../../public/assets/fonts/AvenirNextCyr-Medium.woff2", weight: "500", style: "normal" },
+    { path: "../../public/assets/fonts/AvenirNextCyr-Bold.woff2", weight: "700", style: "normal" },
+  ],
+  variable: "--font-avenir",
+  display: "swap",
+  preload: false,
+});
+
+// Theremin's code face (homepage code windows), as --font-code in .home-type
+const plexMono = IBM_Plex_Mono({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--font-plex-mono",
   display: "swap",
   preload: false,
 });
@@ -78,7 +114,7 @@ export default function RootLayout({ children }) {
   return (
     <html
       lang="en"
-      className={`${neueHaasUnica.variable} ${geistSans.variable} ${geistMono.variable} antialiased`}
+      className={`${neueHaasUnica.variable} ${aeonikPro.variable} ${avenirNext.variable} ${plexMono.variable} ${geistSans.variable} ${geistMono.variable} antialiased`}
     >
       <head>
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
@@ -98,7 +134,7 @@ export default function RootLayout({ children }) {
         /> */}
         {/* <meta name="msvalidate.01" content="96AF31CC0830CC17D577425F2D8CEE36" /> */}
       </head>
-      <body className="min-h-dvh bg-background text-foreground">
+      <body className="min-h-dvh text-foreground">
         <noscript>
           <iframe
             src="https://www.googletagmanager.com/ns.html?id=GTM-NCDH9PHF"
@@ -119,30 +155,35 @@ export default function RootLayout({ children }) {
         <ImageObjectJsonLd />
         <WebsiteJsonLd />
         <SoftwareApplicationJsonLd />
-        <PageTransition />
-        <CookieConsentNudge />
-        {/* CustomAnimationFormProvider adds no DOM of its own (just a
-            Context.Provider) - it wraps children so any page's
-            CustomAnimationFormTrigger can reach the single globally-mounted
-            modal below via local state instead of a URL round-trip. */}
-        <CustomAnimationFormProvider>
-          {children}
-          {/* LazyRecaptchaProvider mounts only when a modal opens - never
-              wrap page children or the homepage remounts when reCAPTCHA
-              arms. ExitIntentInviteModal has to live inside this provider
-              (not on the homepage route itself) so its executeRecaptcha()
-              call actually has a <ReCaptchaProvider> ancestor - it gates
-              itself back down to homepage-only via usePathname(). */}
-          <LazyRecaptchaProvider>
-            <Suspense>
-              <CustomAnimationFormModal />
-            </Suspense>
-            <Suspense>
-              <WorkWithHyperiuxModal />
-            </Suspense>
-            <ExitIntentInviteModal />
-          </LazyRecaptchaProvider>
-        </CustomAnimationFormProvider>
+        {/* One sound engine + liquid cursor, the full-page dotted grid and
+            fluid, and the sound toggle - mounted here so they survive client
+            navigation. Wraps PageTransition so it can play the route whoosh. */}
+        <SiteInteractions>
+          <PageTransition />
+          <CookieConsentNudge />
+          {/* CustomAnimationFormProvider adds no DOM of its own (just a
+              Context.Provider) - it wraps children so any page's
+              CustomAnimationFormTrigger can reach the single globally-mounted
+              modal below via local state instead of a URL round-trip. */}
+          <CustomAnimationFormProvider>
+            {children}
+            {/* LazyRecaptchaProvider mounts only when a modal opens - never
+                wrap page children or the homepage remounts when reCAPTCHA
+                arms. ExitIntentInviteModal has to live inside this provider
+                (not on the homepage route itself) so its executeRecaptcha()
+                call actually has a <ReCaptchaProvider> ancestor - it gates
+                itself back down to homepage-only via usePathname(). */}
+            <LazyRecaptchaProvider>
+              <Suspense>
+                <CustomAnimationFormModal />
+              </Suspense>
+              <Suspense>
+                <WorkWithHyperiuxModal />
+              </Suspense>
+              <ExitIntentInviteModal />
+            </LazyRecaptchaProvider>
+          </CustomAnimationFormProvider>
+        </SiteInteractions>
         <Analytics />
         <SpeedInsights />
         <DeferredGTM />

@@ -1,7 +1,7 @@
 "use client";
 import React, { Suspense } from "react";
 import ButtonV3 from "../components/ButtonV3";
-import Piano from "../components/Piano";
+// import Piano from "../components/Piano";
 import SplitLine from "@/components/WebsiteComps/SplitLine";
 import { useWorkWithHyperiuxModal } from "@/components/WebsiteComps/modals/WorkWithHyperiuxModal";
 import LineReveal from "@/components/Animations/LineReveal";
@@ -67,11 +67,11 @@ export default function CTAV3() {
         </Suspense>
       </div>
 
-      <Piano
+      {/* <Piano
         count={75}
         song="here-for-you"
         className="h-[18vw] max-[1025px]:hidden max-md:hidden z-0 w-[50vw] absolute bottom-0 right-0 pointer-events-none flex justify-between items-end"
-      />
+      /> */}
     </section>
   );
 }

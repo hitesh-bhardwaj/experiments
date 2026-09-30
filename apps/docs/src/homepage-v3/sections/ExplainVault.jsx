@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from 'react'
 import LinkButton from '@/components/WebsiteComps/LinkButton'
 import InstallationProcess from '../components/InstallationProcess'
+import { openTutorialVideo } from '../components/TutorialVideoButton'
 import TextFillPixelV3 from '../components/TextFillPixelV3'
 import ScrambleTextV3 from '../components/ScrambleTextV3'
 import { useFadeUp } from '@/components/Animations/gsapAnimations'
@@ -85,12 +86,10 @@ export default function ExplainVault() {
                 wrapperClassName="w-[88%]"
                 containerClassName="py-[15vw] font-neue-haas max-md:py-24"
             />
-            <div className='w-full  h-fit px-[3vw] max-[1025px]:px-[5vw]' id="code-block">
+            {/* <div className='w-full  h-fit px-[3vw] max-[1025px]:px-[5vw]' id="code-block">
                 <InstallationProcess />
 
                 <div className='flex w-full justify-center max-md:justify-center mt-[2vw] max-md:mt-0'>
-                    {/* No `fadeup` on this container: the scramble is this
-                        line's entrance, and a fade would run underneath it. */}
                     <div
                         ref={workflowRef}
                         className="text18 max-md:text-center text-light-grey font-geist-mono [--scramble-flash:var(--primary)] [--scramble-pre:var(--primary)] "
@@ -98,11 +97,11 @@ export default function ExplainVault() {
                         <ScrambleTextV3 text={WORKFLOW_TEXT} active={active} armed={armed} />
                         &nbsp;
                         <span className="fadeup inline-block">
-                            <LinkButton underline={true} className='max-md:mt-[2vw]' href={"#Workflow"} shimmer shimmerColor="var(--primary)" tilted={false} showArrow text={"See How it Works"} />
+                            <LinkButton underline={true} className='max-md:mt-[2vw]' href={"#"} onClick={openTutorialVideo} shimmer shimmerColor="var(--primary)" tilted={false} showArrow text={"See How it Works"} />
                         </span>
                     </div>
                 </div>
-            </div>
+            </div> */}
         </section>
     )
 }

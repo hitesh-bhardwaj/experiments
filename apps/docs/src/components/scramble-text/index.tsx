@@ -172,12 +172,18 @@ const ScrambleText = ({
 '>-0.2'
  );
 
- ScrollTrigger.create({
+ const trigger = ScrollTrigger.create({
  trigger: el,
  start,
  once: true,
  onEnter: () => tl.play(),
  });
+
+ const rect = el.getBoundingClientRect();
+ if (rect.top < window.innerHeight && rect.bottom > 0 && tl.progress() === 0) {
+ tl.play(0);
+ trigger.kill();
+ }
  }, elRef);
 
  return () => ctx.revert();

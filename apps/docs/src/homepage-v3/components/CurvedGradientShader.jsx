@@ -147,12 +147,18 @@ void main() {
   // against the #050505 page. Put the floor back on the page background.
   col = max(col, BG);
 
-  gl_FragColor = vec4(col, 1.0);
+  // Transparent everywhere but the band, so the site's dotted grid and fluid
+  // show through. Alpha is how far red has climbed from BG toward PRIMARY
+  // (red is 1.0 in PRIMARY); the premultiplied colour is chosen so that,
+  // composited over the #050505 page, the band lands on exactly \`col\`.
+  float a = clamp((col.r - BG.r) / (1.0 - BG.r), 0.0, 1.0);
+  gl_FragColor = vec4(max(col - BG * (1.0 - a), 0.0), a);
 }
 `;
 
 const CONTEXT_OPTIONS = {
-  alpha: false,
+  alpha: true,
+  premultipliedAlpha: true,
   antialias: false,
   depth: false,
   stencil: false,
@@ -559,7 +565,7 @@ export default function CurvedGradientShader({
       ref={wrapRef}
       aria-hidden="true"
       style={overscanStyle}
-      className={`pointer-events-none absolute inset-x-0 z-0 ${overscan === 1 ? "inset-y-0" : ""} bg-background ${className}`}
+      className={`pointer-events-none absolute inset-x-0 z-0 ${overscan === 1 ? "inset-y-0" : ""} ${className}`}
     />
   );
 }

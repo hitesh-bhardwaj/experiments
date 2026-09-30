@@ -7,9 +7,10 @@ import { useGSAP } from "@gsap/react";
 import LazyVideo from "@/components/WebsiteComps/LazyVideo";
 import { prefersReducedMotion } from "@/lib/motion";
 
-const VIDEO_SRC =
-  "https://h1r7ltksnzlh2a5c.public.blob.vercel-storage.com/videos/tutorial-new.mp4";
-const VIDEO_POSTER = "/assets/videos/tutorial_new_poster.webp";
+import {
+  TUTORIAL_VIDEO_POSTER as VIDEO_POSTER,
+  TUTORIAL_VIDEO_SRC as VIDEO_SRC,
+} from "../components/tutorial-video";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger, useGSAP);

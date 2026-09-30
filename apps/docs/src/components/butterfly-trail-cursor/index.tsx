@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useEffect, useMemo, useState } from 'react'
+import { Suspense, useRef, useEffect, useMemo, useState } from 'react'
 import { Canvas, useFrame, useThree, useLoader } from '@react-three/fiber'
 import { useGLTF } from '@react-three/drei'
 import * as THREE from 'three'
@@ -38,7 +38,7 @@ function ButterflyPool({
 	const activeCountRef = useRef(0)
 	const lastSpawnTime = useRef(0)
 	const clockTimeRef = useRef(0)
-	const { size } = useThree()
+	const { size, gl } = useThree()
 	const resolvedCount = Math.max(0, Math.round(Number(butterflyCount) || 0))
 	const resolvedTrailDistance = Math.max(0, Number(trailDistance) || 0)
 	const resolvedSize = Math.max(1, Number(butterflySize) || 1)
@@ -158,8 +158,14 @@ function ButterflyPool({
 			if (!force && now - lastSpawnTime.current < SPAWN_THROTTLE) return
 			lastSpawnTime.current = now
 
-			const x = (clientX / size.width) * 10 - 5
-			const y = -(clientY / size.height) * 6 + 3
+			// Canvas-relative, so it also works when the canvas isn't full-screen
+			// (e.g. embedded in a card); pointers outside the canvas are ignored
+			const rect = gl.domElement.getBoundingClientRect()
+			const localX = clientX - rect.left
+			const localY = clientY - rect.top
+			if (localX < 0 || localY < 0 || localX > rect.width || localY > rect.height) return
+			const x = (localX / rect.width) * 10 - 5
+			const y = -(localY / rect.height) * 6 + 3
 			const count = Math.max(1, Math.ceil(resolvedCount / 4))
 			const spread = resolvedTrailDistance / 12
 			const createdAt = clockTimeRef.current
@@ -218,7 +224,7 @@ function ButterflyPool({
 			window.removeEventListener('pointermove', handlePointerMove)
 			window.removeEventListener('pointerdown', handlePointerDown)
 		}
-	}, [resolvedCount, resolvedTrailDistance, scale, size])
+	}, [resolvedCount, resolvedTrailDistance, scale, size, gl])
 
 	return <primitive object={poolGroup} />
 }
@@ -245,14 +251,19 @@ export default function ButterflyTrailCursor({
 	butterflyCount = 14,
 	trailDistance = 18,
 	wingColor = '#ffffff',
+	backgroundColor = '#EAEAE9',
 	size = 28,
 	followSpeed = 0.18,
+	embedded = false,
 }: {
 	butterflyCount?: number
 	trailDistance?: number
 	wingColor?: string
+	backgroundColor?: string
 	size?: number
 	followSpeed?: number
+	/** Fill the parent (not the screen) and drop the title and the reduced-motion note */
+	embedded?: boolean
 }) {
 	const rootRef = useRef<HTMLDivElement | null>(null)
 	const [frameloop, setFrameloop] = useState<'always' | 'never'>('always')
@@ -270,10 +281,10 @@ export default function ButterflyTrailCursor({
 	return (
 		<div
 			ref={rootRef}
-			className="w-full h-screen relative bg-[#EAEAE9]"
-			style={{ backgroundColor: '#EAEAE9' }}
+			className={`w-full relative bg-[#EAEAE9] ${embedded ? 'h-full' : 'h-screen'}`}
+			style={{ backgroundColor }}
 		>
-			<div className="pointer-events-none absolute left-1/2 top-1/2 z-10 w-[min(90vw,760px)] -translate-x-1/2 -translate-y-1/2 text-center text-[#111111]">
+			{!embedded && <div className="pointer-events-none absolute left-1/2 top-1/2 z-10 w-[min(90vw,760px)] -translate-x-1/2 -translate-y-1/2 text-center text-[#111111]">
 				<h1 className="text-5xl font-semibold leading-none tracking-tight max-[1025px]:text-4xl max-md:text-3xl">
 					Butterfly Trail Cursor
 				</h1>
@@ -283,30 +294,35 @@ export default function ButterflyTrailCursor({
 				<p className="mt-4 hidden text-sm font-medium uppercase tracking-[0.18em] text-black/55 max-md:block">
 					Click to see butterflies spawn
 				</p>
-			</div>
+			</div>}
 
 			<Canvas
-				style={{ backgroundColor: '#EAEAE9' }}
+				style={{ backgroundColor }}
 				camera={{ position: [0, 0, 5], fov: 75 }}
 				gl={{ antialias: false, powerPreference: 'high-performance', alpha: true }}
 				onCreated={({ gl }) => {
-					gl.setClearColor(new THREE.Color('#EAEAE9'), 1)
+					gl.setClearColor(new THREE.Color(backgroundColor), 1)
 				}}
 				dpr={[1, 1]}
 				performance={{ min: 0.5 }}
 				frameloop={frameloop}
 			>
-				<color attach="background" args={['#EAEAE9']} />
-				<ButterflyTrail
-					butterflyCount={butterflyCount}
-					trailDistance={trailDistance}
-					wingColor={wingColor}
-					butterflySize={size}
-					followSpeed={followSpeed}
-				/>
+				<color attach="background" args={[backgroundColor]} />
+				{/* The model loads through useGLTF, which suspends. Catch it inside
+				    the canvas, or the suspension escapes to the page, which hides and
+				    tears down the renderer (the context is lost) before showing it again. */}
+				<Suspense fallback={null}>
+					<ButterflyTrail
+						butterflyCount={butterflyCount}
+						trailDistance={trailDistance}
+						wingColor={wingColor}
+						butterflySize={size}
+						followSpeed={followSpeed}
+					/>
+				</Suspense>
 			</Canvas>
 
-			{prefersReducedMotion && (
+			{prefersReducedMotion && !embedded && (
 				<div
 					aria-live="polite"
 					className="pointer-events-none fixed bottom-4 right-4 z-40 w-fit max-w-65 rounded-md border border-black/10 bg-white/10 backdrop-blur-sm p-3 text-center max-[1025px]:hidden"

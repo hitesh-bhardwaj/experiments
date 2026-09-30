@@ -4,6 +4,7 @@ import React, { useCallback, useEffect, useRef } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import gsap from 'gsap'
 import { useLenis } from 'lenis/react'
+import { useInteraction } from '@/homepage-v3/components/InteractionProvider'
 
 /** Bayer 8x8 ordered-dither matrix for retro halftone dissolve effect */
 const BAYER = [
@@ -153,6 +154,7 @@ export default function PageTransition() {
   const pathname = usePathname()
   const router = useRouter()
   const lenis = useLenis()
+  const { sound } = useInteraction()
 
   const prevPathRef = useRef(pathname)
   const isFirstRenderRef = useRef(true)
@@ -273,6 +275,9 @@ export default function PageTransition() {
     progressRef.current.cover = 0
     progressRef.current.exit = 0
 
+    // Silent until the visitor has turned sound on (the engine gates itself)
+    sound?.whoosh()
+
     gsap.set(containerRef.current, { display: 'block', pointerEvents: 'all' })
     if (logoRef.current) {
       gsap.set(logoRef.current, { opacity: 0, scale: 0.9 })
@@ -305,7 +310,7 @@ export default function PageTransition() {
       // Execute route change while screen is flooded with dithered orange & pixel squares
       router.push(targetPath)
     })
-  }, [draw, router])
+  }, [draw, router, sound])
 
   const revealScreen = useCallback(() => {
     if (!containerRef.current) {

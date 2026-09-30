@@ -4,6 +4,7 @@ import React, { useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
 import { useFadeUp } from "@/components/Animations/gsapAnimations";
+import { prefersReducedMotion } from "@/lib/motion";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -27,7 +28,7 @@ function TerminalTick({ dataKey }) {
     <svg
       data-tick-key={dataKey}
       viewBox="0 0 18 18"
-      className="h-[1.05vw] w-[1.05vw] max-[1025px]:h-[2vw] max-[1025px]:w-[2vw] shrink-0 text-[#5AC382] opacity-0 max-md:h-4 max-md:w-4"
+      className="size-3.5 shrink-0 text-[#63d69a] opacity-0"
       fill="none"
       aria-hidden="true"
     >
@@ -45,14 +46,14 @@ function TerminalTick({ dataKey }) {
 function Panel({ title, children, className = "" }) {
   return (
     <div
-      className={`overflow-hidden   bg-grey/30! shadow-[0_20px_80px_rgba(0,0,0,0.35)]  ${className}`}
+      className={`overflow-hidden bg-[rgba(20,20,20,.86)] shadow-[inset_0_0_0_1px_rgba(244,244,244,.08)] backdrop-blur-[10px] ${className}`}
     >
-      <div className="flex h-[3vw] items-center max-sm:gap-[4vw] gap-[1vw] bg-[#272727] px-[1.4vw] max-[1025px]:h-[5.5vw] max-[1025px]:px-[2.4vw] max-md:h-12 max-md:px-5">
-        <p className="font-mono text18 text-secondary max-md:text-sm">
+      <div className="flex h-[30px] items-center border-b border-white/6 px-3">
+        <p className="text-[11px] text-[#8a8a8a]">
           {title}
         </p>
       </div>
-      <div className="p-[1.6vw] max-[1025px]:p-[2.6vw] max-md:p-5">{children}</div>
+      <div data-panel-body className="px-[14px] py-3">{children}</div>
     </div>
   );
 }
@@ -60,19 +61,19 @@ function Panel({ title, children, className = "" }) {
 function TreeFolder({ label, depth = 0 }) {
   return (
     <div
-      className="flex items-center gap-3 text-white/80"
+      className="flex items-center gap-3 text-[#bdbdbd]"
       style={{ paddingLeft: `${depth * 1.35}vw` }}
     >
       <svg
         viewBox="0 0 24 24"
-        className="h-[1.1vw] w-[1.1vw] max-[1025px]:h-[2vw] max-[1025px]:w-[2vw] shrink-0 text-[#3b82f6] max-md:h-4 max-md:w-4"
+        className="size-3.5 shrink-0 text-[#3b82f6]"
         fill="none"
         stroke="currentColor"
         strokeWidth="1.7"
       >
         <path d="M3 7.5A1.5 1.5 0 0 1 4.5 6H10l2 2h7.5A1.5 1.5 0 0 1 21 9.5v8A1.5 1.5 0 0 1 19.5 19h-15A1.5 1.5 0 0 1 3 17.5z" />
       </svg>
-      <span className="font-mono text-[1.05vw] max-[1025px]:text-[1.8vw] max-md:text-[15px]">{label}</span>
+      <span className="font-[family-name:var(--font-code)] text-[12px] leading-[1.9]">{label}</span>
     </div>
   );
 }
@@ -87,7 +88,7 @@ function TreeFile({ label, depth = 0, className = "", right = null, dataKey }) {
       <div className="flex min-w-0 items-center gap-3">
         <svg
           viewBox="0 0 24 24"
-          className="h-[1.05vw] w-[1.05vw] max-[1025px]:h-[2vw] max-[1025px]:w-[2vw] shrink-0 text-[#c084fc] max-md:h-4 max-md:w-4"
+          className="size-3.5 shrink-0 text-[#c084fc]"
           fill="none"
           stroke="currentColor"
           strokeWidth="1.7"
@@ -95,7 +96,7 @@ function TreeFile({ label, depth = 0, className = "", right = null, dataKey }) {
           <path d="M7 3.75h6l4 4v12.5H7A1.25 1.25 0 0 1 5.75 19V5A1.25 1.25 0 0 1 7 3.75z" />
           <path d="M13 3.75V8h4.25" />
         </svg>
-        <span className="truncate font-mono text-[1.05vw] max-[1025px]:text-[1.8vw] text-[#ff7a1a] max-md:text-[15px]">
+        <span className="truncate font-[family-name:var(--font-code)] text-[12px] leading-[1.9] text-[#bdbdbd]">
           {label}
         </span>
       </div>
@@ -104,8 +105,14 @@ function TreeFile({ label, depth = 0, className = "", right = null, dataKey }) {
   );
 }
 
-export default function InstallationProcess() {
+// `play` hands the start to the parent (Why Vault starts it when its card
+// becomes the active item); left undefined, the sequence starts itself on
+// scroll.
+export default function InstallationProcess({ id = "code-block", play }) {
   const sectionRef = useRef(null);
+  const playSequenceRef = useRef(null);
+  const playedRef = useRef(false);
+  const parentControlled = play !== undefined;
 
   const terminalRefs = useRef({});
   const codeRefs = useRef({});
@@ -337,11 +344,12 @@ export default function InstallationProcess() {
         if (!rowEl) return;
         timeline.fromTo(
           rowEl,
-          { opacity: 0, y: 10, backgroundColor: "rgba(34,197,94,0)" },
-          { opacity: 1, y: 0, backgroundColor: "rgba(34,197,94,0.24)", duration: 0.2, ease: "power2.out" },
+          { opacity: 0, y: 10, backgroundColor: "rgba(99,214,154,0)" },
+          { opacity: 1, y: 0, backgroundColor: "rgba(99,214,154,0.24)", duration: 0.2, ease: "power2.out" },
           position
         );
-        timeline.to(rowEl, { backgroundColor: "rgba(255,255,255,0)", duration: 0.3, ease: "power2.out" }, ">-0.02");
+        // Settles on Theremin's faint green for an added row
+        timeline.to(rowEl, { backgroundColor: "rgba(99,214,154,0.1)", duration: 0.3, ease: "power2.out" }, ">-0.02");
       };
 
       const typeColoredLine = (timeline, lineEl, tokens, position) => {
@@ -422,7 +430,7 @@ export default function InstallationProcess() {
         }, ">");
 
         // Code block reveals - typed with per-token syntax colours
-        const W = "rgba(255,255,255,0.7)";
+        const W = "#bdbdbd"; // Theremin's code text
         typeColoredLine(tl, codeRefs.current.line1, [
           { text: "import",                            color: "#939393" },
           { text: " ",                                 color: W },
@@ -462,10 +470,14 @@ export default function InstallationProcess() {
       const playSequence = () => {
         masterTlRef.current?.kill();
         masterTlRef.current = buildSequence();
-        masterTlRef.current.play(0);
+        // Reduced motion: land on the finished state instead of typing it out
+        if (prefersReducedMotion()) masterTlRef.current.progress(1);
+        else masterTlRef.current.play(0);
       };
 
       resetState();
+      playSequenceRef.current = playSequence;
+      if (parentControlled) return undefined;
 
       const trigger = ScrollTrigger.create({
         trigger: section,
@@ -478,66 +490,75 @@ export default function InstallationProcess() {
     }, section);
 
     return () => {
+      playSequenceRef.current = null;
+      playedRef.current = false;
       masterTlRef.current?.kill();
       ctx.revert();
     };
-  }, []);
+  }, [parentControlled]);
+
+  // Parent-controlled start: plays the first time `play` turns true, once
+  useLayoutEffect(() => {
+    if (!play || playedRef.current || !playSequenceRef.current) return;
+    playedRef.current = true;
+    playSequenceRef.current();
+  }, [play]);
 
   return (
     <section
-      id="code-block"
+      id={id || undefined}
       ref={sectionRef}
       className="relative w-full overflow-hidden text-white max-md:px-0 max-md:py-20 max-sm:py-0 max-sm:pb-8"
     >
       <div className="mx-auto w-full max-w-450">
-        <div className="grid grid-cols-[0.92fr_1.08fr] gap-[1.4vw] max-[1025px]:grid-cols-1 max-[1025px]:gap-[3vw] max-md:grid-cols-1 max-md:gap-5">
+        <div className="grid grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] gap-[1.4vw] max-[1025px]:grid-cols-1 max-[1025px]:gap-[3vw] max-md:gap-5">
           {/* LEFT COLUMN - terminal + code */}
           <div className="flex flex-col gap-[1.4vw] max-[1025px]:contents max-md:contents">
             <Panel title="amazing_project" className="fadeup min-h-[25vw] max-[1025px]:min-h-[42vw] max-sm:min-h-[40vh] max-md:min-h-[30vh] ">
-              <div className="space-y-[0.8vw] font-mono text-[1.02vw] leading-[1.9] max-[1025px]:space-y-[1.4vw] max-[1025px]:text-[1.8vw] max-md:space-y-2 max-md:text-[14px]">
+              <div className="font-[family-name:var(--font-code)] text-[12px] leading-[1.9] text-[#bdbdbd]">
                 <div className="flex items-center gap-2">
-                  <span data-terminal-key="dollar1" className="text-[#ff9f43]">$</span>
-                  <span data-terminal-key="init" className="text-white/90" />
+                  <span data-terminal-key="dollar1" className="text-[#FF6B00]">$</span>
+                  <span data-terminal-key="init" className="text-[#bdbdbd]" />
                 </div>
 
                 <div className="flex items-center gap-2">
                   <TerminalTick dataKey="created" />
-                  <span data-terminal-key="created" className="text-[#5AC382]" />
+                  <span data-terminal-key="created" className="text-[#63d69a]" />
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <span data-terminal-key="dollar2" className="text-[#ff9f43]">$</span>
-                  <span data-terminal-key="add" className="text-white/90" />
+                  <span data-terminal-key="dollar2" className="text-[#FF6B00]">$</span>
+                  <span data-terminal-key="add" className="text-[#bdbdbd]" />
                 </div>
 
                 <div className="flex items-center gap-2">
                   <span className="text-white/0">•</span>
-                  <span data-terminal-key="resolving" className="text-white/45" />
+                  <span data-terminal-key="resolving" className="text-[#666]" />
                 </div>
 
                 <div className="flex items-center gap-2">
                   <TerminalTick dataKey="added" />
-                  <span data-terminal-key="added" className="text-[#5AC382]" />
+                  <span data-terminal-key="added" className="text-[#63d69a]" />
                 </div>
 
                 <div className="flex items-center gap-2">
                   <span className="text-white/0">•</span>
-                  <span data-terminal-key="reduced" className="text-white/45" />
+                  <span data-terminal-key="reduced" className="text-[#666]" />
                 </div>
 
                 <div className="flex items-center gap-2">
                   <TerminalTick dataKey="done" />
-                  <span data-terminal-key="done" className="text-[#5AC382]" />
+                  <span data-terminal-key="done" className="text-[#63d69a]" />
                   <span
                     data-terminal-key="doneCursor"
-                    className="inline-block h-[1.15em] w-[0.45em] bg-[#ff7a1a] opacity-0"
+                    className="inline-block h-[1.15em] w-[0.45em] bg-[#FF6B00] opacity-0"
                   />
                 </div>
               </div>
             </Panel>
 
-            <Panel title="app/page.jsx" className="fadeup min-h-[20vw] max-[1025px]:min-h-[28vw] max-[1025px]:order-last max-md:min-h-[20vh] max-sm:min-h-[25vh] max-md:order-last">
-              <div className="space-y-[0.55vw] font-mono text-[1vw] leading-[1.95] text-white/78 max-[1025px]:space-y-[1vw] max-[1025px]:text-[1.7vw] max-md:space-y-1 max-md:text-[13px]">
+            <Panel title="app/page.jsx" className={`fadeup min-h-[20vw] max-[1025px]:min-h-[28vw] max-[1025px]:order-last max-md:min-h-[20vh] max-sm:min-h-[25vh] max-md:order-last`}>
+              <div className="font-[family-name:var(--font-code)] text-[12px] leading-[1.9] text-[#bdbdbd]">
                 <div data-code-key="line1" />
                 <div data-code-key="line2" />
                 <div data-code-key="line3" />
@@ -556,12 +577,12 @@ export default function InstallationProcess() {
                 <TreeFolder label="app" depth={0} />
                 <div>
                   <div className="relative ml-[0.38vw] border-l border-white/10 pl-[1.2vw] max-[1025px]:ml-[0.7vw] max-[1025px]:pl-[2vw] max-md:ml-1.5 max-md:pl-3">
-                    <div className="flex items-center gap-3 text-white/80">
-                      <svg viewBox="0 0 24 24" className="h-[1.05vw] w-[1.05vw] max-[1025px]:h-[2vw] max-[1025px]:w-[2vw] shrink-0 text-[#c084fc] max-md:h-4 max-md:w-4" fill="none" stroke="currentColor" strokeWidth="1.7">
+                    <div className="flex items-center gap-3 text-[#bdbdbd]">
+                      <svg viewBox="0 0 24 24" className="size-3.5 shrink-0 text-[#c084fc]" fill="none" stroke="currentColor" strokeWidth="1.7">
                         <path d="M7 3.75h6l4 4v12.5H7A1.25 1.25 0 0 1 5.75 19V5A1.25 1.25 0 0 1 7 3.75z" />
                         <path d="M13 3.75V8h4.25" />
                       </svg>
-                      <span className="font-mono text-[1.05vw] max-[1025px]:text-[1.8vw] text-white/76 max-md:text-[15px]">page.jsx</span>
+                      <span className="font-[family-name:var(--font-code)] text-[12px] leading-[1.9]">page.jsx</span>
                     </div>
                   </div>
                 </div>
@@ -590,12 +611,12 @@ export default function InstallationProcess() {
                             right={
                               <span
                                 data-file-key="addedBadge1"
-                                className="rounded-full  px-3 py-1 font-mono text-[0.95vw] max-[1025px]:text-[1.6vw] text-[#5AC382] opacity-0 max-md:text-xs"
+                                className="rounded-full  px-3 py-1 font-[family-name:var(--font-code)] text-[12px] text-[#63d69a] opacity-0"
                               >
                                 + Added
                               </span>
                             }
-                            className="bg-[linear-gradient(90deg,rgba(255,122,26,0.01),rgba(34,197,94,0.2))]"
+                            className="bg-[rgba(99,214,154,.1)]"
                           />
 
                           <TreeFile
@@ -604,12 +625,12 @@ export default function InstallationProcess() {
                             right={
                               <span
                                 data-file-key="addedBadge2"
-                                className="rounded-full  px-3 py-1 max-sm:text-nowrap font-mono text-[0.95vw] max-[1025px]:text-[1.6vw] text-[#5AC382] opacity-0 max-md:text-xs"
+                                className="rounded-full  px-3 py-1 max-sm:text-nowrap font-[family-name:var(--font-code)] text-[12px] text-[#63d69a] opacity-0"
                               >
                                 + Added
                               </span>
                             }
-                            className="bg-[linear-gradient(90deg,rgba(255,122,26,0.01),rgba(34,197,94,0.2))]"
+                            className="bg-[rgba(99,214,154,.1)]"
                           />
 
                           <TreeFile
@@ -618,12 +639,12 @@ export default function InstallationProcess() {
                             right={
                               <span
                                 data-file-key="addedBadge3"
-                                className="rounded-full  px-3 py-1 font-mono text-[0.95vw] max-[1025px]:text-[1.6vw] text-[#5AC382] opacity-0 max-md:text-xs"
+                                className="rounded-full  px-3 py-1 font-[family-name:var(--font-code)] text-[12px] text-[#63d69a] opacity-0"
                               >
                                 + Added
                               </span>
                             }
-                            className="bg-[linear-gradient(90deg,rgba(255,122,26,0.01),rgba(34,197,94,0.2))]"
+                            className="bg-[rgba(99,214,154,.1)]"
                           />
 
                         </div>
@@ -633,7 +654,7 @@ export default function InstallationProcess() {
                 </div>
 
                 <div className="pt-[1vw] max-[1025px]:pt-[2vw] max-md:pt-3">
-                  <p className="font-mono text-[1.02vw] max-[1025px]:text-[1.8vw] text-white/42 max-md:text-sm">ui</p>
+                  <p className="font-[family-name:var(--font-code)] text-[12px] leading-[1.9] text-[#666]">ui</p>
                 </div>
               </div>
             </Panel>

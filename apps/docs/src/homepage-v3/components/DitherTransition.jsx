@@ -110,6 +110,12 @@ function packHex(hex, over) {
  * @param {number}  cellSize       Dot size in CSS pixels.
  * @param {number}  gamma          >1 thins the dots out faster, <1 keeps them denser.
  * @param {boolean} flip           Dissolve upward instead of downward.
+ * @param {boolean} invert         Paint the gaps instead of the dots, so the
+ *                                 dots are see-through. With no background on
+ *                                 the band, the page behind it (the dotted grid
+ *                                 and fluid) shows where the dots would be:
+ *                                 dotColor is then the section being left, and
+ *                                 the band ends fully transparent.
  * @param {boolean} scrub          Build on scroll. False renders the finished state.
  * @param {string}  mobileStartTriggers `start` used below 768px.
  * @param {string}  mobileEndTriggers   `end` used below 768px.
@@ -131,6 +137,7 @@ export default function DitherTransition({
   cellSize = 3,
   gamma = 1,
   flip = true,
+  invert = false,
   scrub = true,
   markers = false,
   start = "top bottom",
@@ -251,11 +258,12 @@ export default function DitherTransition({
           const raw = clamp01(
             (front - (flip ? 1 - depth : depth)) / front + hold[x] + flood,
           );
-          if (raw <= 0) continue;
+          if (raw <= 0 && !invert) continue;
 
-          const coverage = gammaLut[(raw * (GAMMA_STEPS - 1)) | 0];
+          const coverage = raw > 0 ? gammaLut[(raw * (GAMMA_STEPS - 1)) | 0] : 0;
           const threshold = (BAYER[rowBase + (x & 7)] + 0.5) / 64;
-          if (coverage <= threshold) continue;
+          // A cell is painted where the dither puts a dot - or, inverted, a gap
+          if ((coverage > threshold) === invert) continue;
 
           let colour = dot;
           if (useAccent) {
@@ -288,7 +296,9 @@ export default function DitherTransition({
             }
           }
 
-          const alpha = coverage < tail ? ((coverage * invTail * 255) | 0) : 255;
+          // Painted share of the cell's neighbourhood: its dots, or inverted, its gaps
+          const painted = invert ? 1 - coverage : coverage;
+          const alpha = painted < tail ? ((painted * invTail * 255) | 0) : 255;
           pixels[offset + x] = (colour & 0x00ffffff) | (alpha << 24);
         }
       }
@@ -309,6 +319,7 @@ export default function DitherTransition({
     waveBreath,
     buildEnd,
     flip,
+    invert,
   ]);
 
   const resize = useCallback(() => {

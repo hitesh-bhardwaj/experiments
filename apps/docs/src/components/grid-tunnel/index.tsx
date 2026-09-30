@@ -62,6 +62,17 @@ const GridTunnel = ({
   depth = 1000,
   lineColor = "#9ca3af",
   backgroundColor = "#ffffff",
+  interactive = true,
+  className = undefined,
+}: {
+  images?: string[];
+  gridSize?: number;
+  speed?: number;
+  depth?: number;
+  lineColor?: string;
+  backgroundColor?: string;
+  interactive?: boolean;
+  className?: string;
 }) => {
   return (
    <GridTunnelComp
@@ -71,6 +82,8 @@ const GridTunnel = ({
      depth={depth}
      lineColor={lineColor}
      backgroundColor={backgroundColor}
+     interactive={interactive}
+     className={className}
    />
   )
 }

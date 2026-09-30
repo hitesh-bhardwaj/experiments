@@ -1,9 +1,12 @@
 "use client";
 
+import { Fragment, useCallback, useEffect, useState } from "react";
 import { buildRemixerDemoCode } from "./build-remixer-code";
-import RemixerLauncher from "./RemixerLauncher";
 import { useRemixerControls } from "./useRemixerControls";
-import type { RegistryRemixerDemoProps, RemixerControl, RemixerGroup } from "./types";
+import PreviewChrome from "@/components/preview-chrome/PreviewChrome";
+import { PreviewChromeProvider } from "@/components/preview-chrome/PreviewChromeContext";
+import { onEmbedValues, readEmbed } from "@/components/preview-chrome/src/preview-chrome";
+import type { RegistryRemixerDemoProps, RemixerControl, RemixerGroup, RemixerValues } from "./types";
 
 function toGroupTitle(value: string) {
   return value
@@ -37,23 +40,14 @@ function getGroupsFromRemixerControls(controls: RemixerControl[] = []) {
   return [...groupMap.values()];
 }
 
-const legacyLauncherLayoutTokens = new Set([
-  "right-4!",
-  "top-25!",
-  "right-0!",
-  "top-[132px]!",
-  "h-[calc(100%-102px)]!",
-  "h-[calc(100%-132px)]!",
-  "w-[344px]!",
-]);
-
-function removeLegacyLauncherLayoutClasses(className?: string) {
-  if (!className) return "";
-
-  return className
-    .split(/\s+/)
-    .filter((token) => token && !legacyLauncherLayoutTokens.has(token))
-    .join(" ");
+// `?embed=1` is the device iframe the preview chrome opens for Tablet / Phone;
+// `?rm=1` asks it to preview reduced motion. Read before the effect mounts so
+// matchMedia already answers for reduced motion on the first render.
+function useEmbedMode() {
+  const [mode] = useState(() =>
+    typeof window === "undefined" ? { embed: false, rm: false } : readEmbed(),
+  );
+  return mode;
 }
 
 export default function RegistryRemixerDemo({
@@ -64,51 +58,61 @@ export default function RegistryRemixerDemo({
   copyCodeOptions,
 }: RegistryRemixerDemoProps) {
   const remixerConfig = registry?.remixer ?? {};
-  const layoutConfig = remixerConfig.layout ?? {};
-  const panelConfig = remixerConfig.panel ?? {};
   const remixerGroups =
     remixerConfig.groups ?? getGroupsFromRemixerControls(remixerConfig.controls);
   const {
     groups,
     values,
     initialValues,
+    setValues,
     updateValue,
     resetValues,
   } = useRemixerControls({ groups: remixerGroups, props: registry?.props ?? [] });
+  const { embed } = useEmbedMode();
+  const [replayKey, setReplayKey] = useState(0);
 
-  const effect = render ? render(values) : Component ? <Component {...values} /> : null;
+  // Inside the device iframe, props edited in the host's panel arrive here.
+  useEffect(() => {
+    if (!embed) return undefined;
+    return onEmbedValues((incoming: RemixerValues) =>
+      setValues((current) => ({ ...current, ...incoming })),
+    );
+  }, [embed, setValues]);
+
+  const replay = useCallback(() => setReplayKey((k) => k + 1), []);
+
+  // The keyed fragment remounts only the effect, so Replay restarts its intro.
+  const effectNode = render ? render(values) : Component ? <Component {...values} /> : null;
+  const effect = effectNode ? <Fragment key={replayKey}>{effectNode}</Fragment> : null;
   const buildCode = copyCodeOptions?.buildCode;
 
+  const copyCode = () =>
+    buildCode
+      ? buildCode({ registry, values, initialValues, groups })
+      : buildRemixerDemoCode({
+          registry,
+          values,
+          initialValues,
+          groups,
+          ...copyCodeOptions,
+        });
+
   return (
-    <>
+    <PreviewChromeProvider value>
       {children ? children({ values, effect }) : effect}
-      {remixerConfig.enabled ? (
-        <RemixerLauncher
+      {embed ? null : (
+        <PreviewChrome
+          registry={registry}
           groups={groups}
           values={values}
+          hasProps={!!remixerConfig.enabled}
           onChange={updateValue}
-          onCopyCode={() =>
-            buildCode
-              ? buildCode({ registry, values, initialValues, groups })
-              : buildRemixerDemoCode({
-                  registry,
-                  values,
-                  initialValues,
-                  groups,
-                  ...copyCodeOptions,
-                })
-          }
+          onCopyCode={remixerConfig.enabled ? copyCode : undefined}
           onReset={resetValues}
+          onReplay={replay}
           defaultOpenGroupId={remixerConfig.defaultOpenGroupId}
-          buttonClassName={removeLegacyLauncherLayoutClasses(
-            layoutConfig.buttonClassName ?? layoutConfig.controlsButtonClassName,
-          )}
-          panelClassName={removeLegacyLauncherLayoutClasses(
-            layoutConfig.panelClassName ?? panelConfig.className,
-          )}
-          containerClassName={layoutConfig.containerClassName as string | undefined}
         />
-      ) : null}
-    </>
+      )}
+    </PreviewChromeProvider>
   );
 }

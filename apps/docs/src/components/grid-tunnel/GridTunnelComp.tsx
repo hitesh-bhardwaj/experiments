@@ -29,6 +29,9 @@ const DEFAULT_GRID_SIZE = 24;
 const DEFAULT_DEPTH = 1000;
 const DEFAULT_LINE_COLOR = "#9ca3af";
 const DEFAULT_BACKGROUND_COLOR = "#ffffff";
+// Embedded mode (interactive = false): page-scroll pixels to wheel delta, and idle drift
+const PAGE_SCROLL_FACTOR = 0.6;
+const IDLE_DRIFT = 0.02;
 
 function clampNumber(value: unknown, min: number, max: number, fallback: number) {
   const number = Number(value);
@@ -42,12 +45,14 @@ function resolveTunnelConfig({
   depth = DEFAULT_DEPTH,
   lineColor = DEFAULT_LINE_COLOR,
   backgroundColor = DEFAULT_BACKGROUND_COLOR,
+  interactive = true,
 }: {
   gridSize?: number;
   speed?: number;
   depth?: number;
   lineColor?: string;
   backgroundColor?: string;
+  interactive?: boolean;
 }) {
   const resolvedGridSize = Math.round(
     clampNumber(gridSize, 6, 48, DEFAULT_GRID_SIZE)
@@ -66,6 +71,7 @@ function resolveTunnelConfig({
       typeof backgroundColor === "string" && backgroundColor
         ? backgroundColor
         : DEFAULT_BACKGROUND_COLOR,
+    interactive,
     fogFar: THREE.MathUtils.mapLinear(resolvedDepth, 100, 3000, 38, 180),
     cameraFar: Math.max(1000, resolvedDepth + 120),
   };
@@ -436,6 +442,19 @@ function InfiniteScrollCamera({ config }: { config: ReturnType<typeof resolveTun
       touchState.current.active = false;
     };
 
+    // Embedded (not interactive): the page's own scrolling drives the tunnel,
+    // and wheel/touch are left alone so the page keeps scrolling normally
+    if (!config.interactive) {
+      let lastY = window.scrollY;
+      const onPageScroll = () => {
+        const y = window.scrollY;
+        applyDelta(-(y - lastY) * config.scrollSpeed * PAGE_SCROLL_FACTOR);
+        lastY = y;
+      };
+      window.addEventListener("scroll", onPageScroll, { passive: true });
+      return () => window.removeEventListener("scroll", onPageScroll);
+    }
+
     window.addEventListener("wheel", preventPageScroll, { passive: false });
     window.addEventListener("touchstart", onTouchStart, { passive: true });
     window.addEventListener("touchmove", onTouchMove, { passive: false });
@@ -498,6 +517,9 @@ function InfiniteScrollCamera({ config }: { config: ReturnType<typeof resolveTun
       return;
     }
 
+    // Embedded: a slow forward drift keeps it alive while the page is still
+    if (!config.interactive) scrollVelocity.current -= IDLE_DRIFT * delta;
+
     // Decay velocity so the tunnel eases out after scrolling stops.
     const damping = Math.exp(-SCROLL_DAMPING * delta);
     scrollVelocity.current *= damping;
@@ -557,6 +579,9 @@ interface GridTunnelCompProps {
   depth?: number;
   lineColor?: string;
   backgroundColor?: string;
+  /** false: no wheel/touch capture; the page's scroll drives the tunnel (for embedding) */
+  interactive?: boolean;
+  className?: string;
 }
 
 const FALLBACK_IMAGES = [
@@ -617,6 +642,8 @@ export default function GridTunnelComp({
   depth = DEFAULT_DEPTH,
   lineColor = DEFAULT_LINE_COLOR,
   backgroundColor = DEFAULT_BACKGROUND_COLOR,
+  interactive = true,
+  className = "relative h-screen w-full overflow-hidden",
 }: GridTunnelCompProps) {
   const rootRef = useRef<HTMLElement | null>(null);
   const [frameloop, setFrameloop] = useState<'always' | 'never' | 'demand'>("always");
@@ -629,8 +656,9 @@ export default function GridTunnelComp({
         depth,
         lineColor,
         backgroundColor,
+        interactive,
       }),
-    [backgroundColor, depth, gridSize, lineColor, speed]
+    [backgroundColor, depth, gridSize, interactive, lineColor, speed]
   );
   // Validate image URLs on the client before passing to the three.js Image loader.
   // This prevents CORS/network failures from flooding the loader with bad URLs.
@@ -710,7 +738,7 @@ export default function GridTunnelComp({
   return (
     <section
       ref={rootRef}
-      className="relative h-screen w-full overflow-hidden"
+      className={className}
       style={{ backgroundColor: config.backgroundColor }}
     >
       <Canvas

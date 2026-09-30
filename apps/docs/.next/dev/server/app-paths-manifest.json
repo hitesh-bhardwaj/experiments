@@ -1,1 +1,5 @@
-{}
+{
+  "/api/media-proxy/route": "app/api/media-proxy/route.js",
+  "/(marketing)/page": "app/(marketing)/page.js",
+  "/(marketing)/demo/sticky-content-wrapper/page": "app/(marketing)/demo/sticky-content-wrapper/page.js"
+}

@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import { useLayoutEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
+import HeroToolsStrip from "../components/HeroToolsStrip";
 import SplitText from "gsap/SplitText";
 import { useGSAP } from "@gsap/react";
 
@@ -13,6 +14,7 @@ import { prefersReducedMotion } from "@/lib/motion";
 import { isLighthouseOrHeadless, isSoftwareRenderer, shouldSkipRealtimeGPU } from "@/lib/audit";
 import { unlockScrollV3, useScrollLockLenis } from "../components/scroll-lock-v3";
 import { useFadeUp } from "@/components/Animations/gsapAnimations";
+import { EasterEggDot } from "../components/easter-egg/EasterEgg";
 
 if (typeof window !== "undefined") {
     gsap.registerPlugin(ScrollTrigger, SplitText);
@@ -54,13 +56,17 @@ function hideIntroTargets(...els) {
     gsap.set(els.filter(Boolean), { autoAlpha: 0, visibility: "hidden" });
 }
 
-const ASCII_FALLBACK = (
-    <div className="absolute inset-0 bg-background" aria-hidden />
+// Transparent: the site-wide dotted grid + fluid (SiteBackground) shows
+// through while the ribbons load, or instead of them on audits.
+const BACKGROUND_FALLBACK = (
+    <div className="absolute inset-0" aria-hidden />
 );
 
-const CubeBackgroundAscii = dynamic(
-    () => import("../components/CubeBackgroundAscii"),
-    { ssr: false, loading: () => ASCII_FALLBACK },
+// Theremin glass ribbons (see lib/theremin-ribbons). Loaded
+// client-only so three.js stays out of the server bundle and the first chunk.
+const HeroRibbons = dynamic(
+    () => import("../components/HeroRibbons"),
+    { ssr: false, loading: () => BACKGROUND_FALLBACK },
 );
 
 function shouldBypassHeroIntroForAudit() {
@@ -69,46 +75,24 @@ function shouldBypassHeroIntroForAudit() {
 
 export default function Hero() {
     const rootRef = useRef(null);
-    const layerRef = useRef(null);
-    const overlayRef = useRef(null);
     const canvasRef = useRef(null);
     const headingRef = useRef(null);
     const copyRef = useRef(null);
     const actionsRef = useRef(null);
     const coverRef = useRef(null);
     const loaderComplete = useLoaderV3Complete();
-    // Start conservative: visible copy, no WebGL chunk. Layout effect below
-    // enables the real intro only after client signals prove this is not PSI.
     const [playIntro, setPlayIntro] = useState(false);
     const [skipGPU, setSkipGPU] = useState(true);
-    // Mobile gets a plain <video> instead of the ASCII canvas (which itself
-    // renders from a video texture) - same 768px cutoff the parallax
-    // matchMedia below already uses. Starts false (desktop-first) so SSR
-    // and first client paint agree; the layout effect below corrects it
-    // before paint, same pattern as skipGPU.
-    const [isMobile, setIsMobile] = useState(false);
 
     useScrollLockLenis();
 
     const introRef = useRef(0);
 
     useLayoutEffect(() => {
-        // The headline ships painted rather than hidden, because it is the
-        // largest thing on the page and therefore what LCP measures: markup
-        // that hides it means the metric cannot be recorded until the intro
-        // plays it in, seconds later, behind a loader. What nobody may see is
-        // the paint it gets credited with - hence the cover, which is in the
-        // same server HTML and comes off here, in the same breath as the copy
-        // is settled either way. The loader's own backdrop is not enough to
-        // lean on: it is a separate component and takes itself down when *it*
-        // hydrates, which can be several frames before this runs, and the
-        // headline is on screen for every one of them.
         const dropCover = () => gsap.set(coverRef.current, { display: "none" });
 
         if (shouldBypassHeroIntroForAudit() || prefersReducedMotion()) {
             introRef.current = 1;
-            // No intro on this path, so nothing else will ever settle the copy.
-            // Put it back before paint.
             revealIntroTargets(
                 headingRef.current,
                 copyRef.current,
@@ -129,18 +113,8 @@ export default function Hero() {
         // without risking a hydration mismatch.
         // eslint-disable-next-line react-hooks/set-state-in-effect
         setSkipGPU(shouldSkipRealtimeGPU());
-        setIsMobile(window.matchMedia("(max-width: 767px)").matches);
         setPlayIntro(true);
     }, []);
-
-    // `playIntro` is false on the first client render for *both* reasons: the
-    // intro is genuinely off (audit/reduced-motion, decided in the layout
-    // effect above, which returns early and reveals there), or it is simply
-    // one tick from being switched on. Revealing here cannot tell those apart,
-    // and revealing in the second case is what put the copy on screen for a
-    // few frames before the intro hid it again to animate - the flash on
-    // reload. The layout effect owns the reveal for the paths that skip the
-    // intro, so this effect only has to set the canvas scalar.
     useGSAP(
         () => {
             introRef.current = playIntro ? 0 : 1;
@@ -152,12 +126,6 @@ export default function Hero() {
         () => {
             if (!playIntro || !loaderComplete) return;
 
-            // Clear the markup's `visibility: hidden` before splitting. SplitText
-            // measures line boxes to decide where the copy wraps, and a hidden
-            // element still lays out but is the wrong thing to measure against
-            // once the intro is about to write its own per-line transforms. The
-            // elements stay invisible either way - the `gsap.set` calls below
-            // immediately re-hide the pieces the timeline animates in.
             revealIntroTargets(
                 headingRef.current,
                 copyRef.current,
@@ -242,118 +210,40 @@ export default function Hero() {
         { dependencies: [playIntro && loaderComplete], scope: rootRef }
     );
 
-    useGSAP(
-        () => {
-            if (!playIntro) return;
-            const mm = gsap.matchMedia();
-
-            const recede = () => {
-                gsap
-                    .timeline({
-                        defaults: { ease: "none" },
-                        scrollTrigger: {
-                            start: 0,
-                            end: () => window.innerHeight * 0.9,
-                            scrub: true,
-                            invalidateOnRefresh: true,
-                        },
-                    })
-                    .fromTo(
-                        layerRef.current,
-                        { scale: 1, rotate: 0,  },
-                        { scale: 0.7, rotate: '5deg' },
-                        0
-                    )
-                    .fromTo(overlayRef.current, { opacity: 0 }, { opacity: 0.65 }, 0);
-            };
-
-            mm.add("(min-width: 768px)", () => recede(14));
-            mm.add("(max-width: 767px)", () => recede(6));
-
-            return () => mm.revert();
-        },
-        { scope: rootRef, dependencies: [playIntro] }
-    );
-    useGSAP(
-        () => {
-            if (!playIntro) return;
-            const mm = gsap.matchMedia();
-
-            const recede = (blur) => {
-                gsap
-                    .timeline({
-                        defaults: { ease: "none" },
-                        scrollTrigger: {
-                            // Scale starts immediately; blur waits a beat so the
-                            // hero recedes first and only then goes soft.
-                            start: () => window.innerHeight * 0.28,
-                            end: () => window.innerHeight * 0.9,
-                            scrub: true,
-                            invalidateOnRefresh: true,
-                        },
-                    })
-                    .fromTo(
-                        layerRef.current,
-                        { filter: "blur(0px)" },
-                        { filter: `blur(${blur}px)` },
-                        0
-                    );
-            };
-
-            mm.add("(min-width: 768px)", () => recede(14));
-            mm.add("(max-width: 767px)", () => recede(6));
-
-            return () => mm.revert();
-        },
-        { scope: rootRef, dependencies: [playIntro] }
-    );
-
     useFadeUp()
 
     return (
-        <main
-            ref={rootRef}
-            className="relative h-dvh max-[1025px]:h-fit! max-[1025px]:min-h-screen w-screen overflow-hidden bg-background"
-        >
-            <div ref={layerRef} className="absolute  inset-0 origin-center max-md:w-full will-change-transform">
-                <div ref={canvasRef} className="absolute inset-0 will-change-transform">
-                    {isMobile ? (
-                        <video
-                            className="absolute inset-0 h-full w-full object-cover"
-                            src="/assets/videos/home_bg_vid.mp4"
-                            poster="/assets/videos/home_bg_vid_poster.webp"
-                            autoPlay
-                            muted
-                            loop
-                            playsInline
-                        />
-                    ) : skipGPU ? (
-                        ASCII_FALLBACK
-                    ) : (
-                        <CubeBackgroundAscii intro={introRef} />
-                    )}
-                </div>
-                <div className="pointer-events-none max-md:w-full absolute inset-0 z-10 flex items-center p-[3vw] max-[1025px]:p-[6vw] max-md:items-end max-md:p-6 max-sm:p-5">
-                    <div className="space-y-[3vw] relative z-10 w-full max-[1025px]:space-y-[4vw] max-md:space-y-4 ">
-                        <div className="flex flex-col h-fit font-neue-haas w-full items-start max-sm:gap-2 max-md:gap-5">
-                            {/* No INTRO_HIDDEN here, unlike the copy and the
-                                actions below: this is the LCP element, and it
-                                has to reach the screen with the server's HTML
-                                to be measured at all. The layout effect above
-                                hides it at hydration. */}
-                            <h1 ref={headingRef} className="relative max-md:text-[13vw]! t96 mt-[1vw] w-[55vw] max-[1025px]:mt-0 max-[1025px]:w-[85%] max-md:mt-0 max-md:w-[95%] max-sm:w-full">
-                                The Interaction Layer Your Website is <span className="gradient-text-animate">Missing.</span>
-                            </h1>
-                        </div>
+        <main ref={rootRef} className="relative w-full overflow-x-clip">
+            {/* Viewport-sized and pinned while the hero and its tools strip
+                scroll by, like Theremin's fixed canvas: the camera frames the
+                ribbons against the screen, so a taller canvas would shrink
+                them. The negative margin keeps it out of the layout flow. */}
+            <div ref={canvasRef} className="pointer-events-auto sticky top-0 -mb-[100dvh] h-dvh w-full">
+                {skipGPU ? (
+                    BACKGROUND_FALLBACK
+                ) : (
+                    <HeroRibbons play={playIntro && loaderComplete} />
+                )}
+            </div>
+            <div className="pointer-events-none relative z-10 flex min-h-dvh flex-col justify-end px-[3vw] pt-[8vw] pb-[5vw] max-[1025px]:px-[6vw] max-[1025px]:pt-[30vw] max-[1025px]:pb-[8vw] max-md:px-6 max-md:pt-32 max-md:pb-10 max-sm:px-5">
+                <div className="grid grid-cols-[minmax(0,1.5fr)_minmax(0,0.7fr)] items-end gap-[3vw] max-[1025px]:grid-cols-1 max-[1025px]:gap-[4vw] max-md:gap-5">
+                    {/* No INTRO_HIDDEN here, unlike the copy and the actions
+                        below: this is the LCP element, and it has to reach the
+                        screen with the server's HTML to be measured at all. The
+                        layout effect above hides it at hydration. */}
+                    <h1 ref={headingRef} className="relative font-aeonik max-md:text-[13vw]! t96 max-w-[53vw] leading-[1.2]! max-[1025px]:max-w-[90%] max-md:max-w-full text-[#F4F4F4]">
+                        The Interaction Layer Your Website is <span className="gradient-text-animate">Missing</span><EasterEggDot className="pointer-events-auto" />
+                    </h1>
 
-                        <p ref={copyRef} style={INTRO_HIDDEN} className="text22 text-secondary w-[42vw] max-[1025px]:w-[75%] max-md:w-[80%] max-sm:w-full max-md:text-left max-sm:text-left">
-                          Source-first scroll systems, cursor effects, text reveals, page transitions, loaders, backgrounds, and WebGL scenes for React and Next.js. Installed as real files in your project, not a dependency you rent.
+                    <div className="flex flex-col gap-[2vw] pb-[0.6vw] max-[1025px]:gap-[4vw] max-[1025px]:pb-0 max-md:gap-5">
+                        <p ref={copyRef} style={INTRO_HIDDEN} className="text-[15px] leading-[1.65] text-[#C9C9C9] max-w-[36ch] max-[1025px]:w-[75%] max-sm:w-full max-md:text-left max-sm:text-left">
+                            Source-first scroll systems, cursor effects, text reveals, page transitions, loaders, backgrounds, and WebGL scenes for React and Next.js. Installed as real files in your project, not a dependency you rent.
                         </p>
 
                         <div
                             ref={actionsRef}
                             style={INTRO_HIDDEN}
-                            className="pointer-events-auto flex max-sm:pt-4 max-sm:flex-col w-fit max-sm:w-full gap-[1vw] max-[1025px]:gap-[2.5vw] max-md:pb-[5vw] max-md:w-full max-md:gap-5"
+                            className="pointer-events-auto flex max-sm:pt-4 max-sm:flex-col w-fit max-sm:w-full gap-[1vw] max-[1025px]:gap-[2.5vw] max-md:w-full max-md:gap-5"
                         >
                             <ButtonV3
                                 text="Read Docs"
@@ -363,7 +253,7 @@ export default function Hero() {
                             />
                             <ButtonV3
                                 text="Browse All Effects"
-                                      href="/effects"
+                                href="/effects"
                                 variant="orange"
                                 scrollOffset={-1000}
                                 className="max-sm:w-full max-sm:justify-center"
@@ -372,13 +262,7 @@ export default function Hero() {
                     </div>
                 </div>
             </div>
-            <div
-                ref={overlayRef}
-                className="pointer-events-none absolute inset-0 z-20 bg-background opacity-0"
-            />
-            {/* Over everything the hero paints, for exactly as long as it takes
-                this to hydrate. It is what lets the headline ship visible
-                without ever being seen that way - see the layout effect. */}
+            <HeroToolsStrip />
             <div
                 ref={coverRef}
                 aria-hidden="true"

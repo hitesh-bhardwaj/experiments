@@ -1,29 +1,24 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import useIsMobile from "@/hooks/useIsMobile";
 import Link from "next/link";
-import dynamic from "next/dynamic";
 
 import { UnlockIcon } from "@/components/WebsiteComps/Icons";
 import ShimmerText from "@/components/WebsiteComps/ShimmerText";
 import Input from "@/components/animated-form/Input";
 import LinkButton from "@/components/WebsiteComps/LinkButton";
-import Image from "next/image";
 import LineReveal from "@/components/Animations/LineReveal";
 import SplitLine from "@/components/WebsiteComps/SplitLine";
 import { useFadeUp } from "@/components/Animations/gsapAnimations";
-import { shouldSkipRealtimeGPU } from "@/lib/audit";
+import { isLighthouseOrHeadless, isSoftwareRenderer } from "@/lib/audit";
+import { useInteraction } from "../components/InteractionProvider";
+// import { EggHint } from "../components/easter-egg/EasterEgg";
 import ButtonV3 from "../components/ButtonV3";
-
-const FlowFieldHero = dynamic(
-  () => import("@/components/Homepage/FlowFieldPlane"),
-  { ssr: false },
-);
 
 const vaultFooterLinks = [
   { label: "Documentation", href: "/docs" },
   { label: "Pricing", href: "/pricing" },
+  { label: "Community", href: "/community" },
   { label: "NPM", href: "https://www.npmjs.com/package/hyperiux" },
   { label: "MCP", href: "/docs/mcp" },
 ];
@@ -94,25 +89,38 @@ export default function FooterV3() {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState("idle"); // idle | loading | success | error
   const [errorMessage, setErrorMessage] = useState("");
-  const [webglMounted, setWebglMounted] = useState(false);
-  const { isMobile } = useIsMobile();
+  const ribbonCanvasRef = useRef(null);
+  const { sound } = useInteraction();
 
   useFadeUp(footerRef);
 
+  // Hero ribbons, mirrored (footer pose). Loaded on demand so three.js stays
+  // out of the footer's chunk; they only render while the footer is near.
+  // Audits and software GPUs get no WebGL context at all.
   useEffect(() => {
-    if (isMobile || shouldSkipRealtimeGPU()) return;
-    const id =
-      "requestIdleCallback" in window
-        ? window.requestIdleCallback(() => setWebglMounted(true), {
-          timeout: 2000,
-        })
-        : window.setTimeout(() => setWebglMounted(true), 300);
+    if (isLighthouseOrHeadless() || isSoftwareRenderer()) return undefined;
+
+    let ribbons = null;
+    let cancelled = false;
+    import("../lib/theremin-ribbons").then(
+      ({ mountThereminRibbons }) => {
+        if (cancelled || !footerRef.current || !ribbonCanvasRef.current) return;
+        try {
+          ribbons = mountThereminRibbons(footerRef.current, ribbonCanvasRef.current, {
+            pose: "footer",
+            sound,
+          });
+        } catch (err) {
+          console.warn("[FooterV3] WebGL unavailable, ribbons disabled.", err);
+        }
+      },
+    );
+
     return () => {
-      "cancelIdleCallback" in window
-        ? window.cancelIdleCallback(id)
-        : window.clearTimeout(id);
+      cancelled = true;
+      ribbons?.destroy();
     };
-  }, [isMobile]);
+  }, [sound]); // sound is stable (created once by the provider)
 
   const handleSubscribe = async (event) => {
     event.preventDefault();
@@ -153,28 +161,18 @@ export default function FooterV3() {
       id="footer"
       className="relative z-200 py-[7vw]  w-full overflow-hidden max-[1025px]:px-[5vw] max-[1025px]:py-[10vw] max-sm:mt-16 px-[3.5vw] max-sm:px-[7vw] max-sm:py-[15vw] max-[1025px]:bg-[#111110]"
     >
-      {!isMobile ? (
-        <div className="absolute inset-0 top-0 z-1 pointer-events-auto">
-          {webglMounted && (
-            <FlowFieldHero texturePath="/assets/textures/orange-1.webp" />
-          )}
-        </div>
-      ) : (
-        <div className="absolute inset-0 top-0 z-1 pointer-events-auto w-full h-[30%]">
-          <Image
-            loading="lazy"
-            className="w-full h-full object-cover"
-            width={400}
-            height={800}
-            src={"/assets/homepage/footer-bg-img-mob.webp"}
-            alt="footer-img"
-          />
-        </div>
-      )}
+      {/* One viewport tall and pinned to the top: the footer pose parks a small
+          ribbon cluster in the top-right corner. The bottom fades out so the
+          arcs never end on a hard line. */}
+      <canvas
+        ref={ribbonCanvasRef}
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-0 z-0 block h-svh w-full mask-[linear-gradient(to_top,transparent,#000_40%)]"
+      />
       <div className="w-full max-md:space-y-[6vw] max-sm:space-y-[8vw] h-fit relative z-3">
         <LineReveal
           as="h2"
-          className="t96 font-neue-haas pointer-events-auto max-[1025px]:w-full max-sm:w-full max-sm:px-0! w-[80%]"
+          className="text-[4vw] font-aeonik pointer-events-auto max-[1025px]:w-full max-sm:w-full max-sm:px-0! w-[60%]"
         >
           Build the Interaction Layer Your Website is Missing.
         </LineReveal>
@@ -207,7 +205,8 @@ export default function FooterV3() {
         </div>
       </div>
       <p className="text-center text18 absolute bottom-[2vw] max-[1025px]:bottom-[4vw] max-[1025px]:w-[90vw] max-sm:bottom-[10vw] left-[4%] text-light-grey z-4 max-md:w-[80vw] max-sm:left-[11%] max-sm:text-[3.5vw]!">
-        © 2026 Hyperiux. All rights reserved. · Vault is built by Hyperiux · Small motion. Big signal.
+        © 2026 Hyperiux. All rights reserved. Psst, the first sentence is hiding something .
+        {/* <EggHint className="ml-2" /> */}
       </p>
       {/* ── Footer links grid ── */}
       <div className="relative z-3 mt-[10vw] max-[1025px]:mt-[14vw] max-sm:mt-[25vw] ">
@@ -324,10 +323,9 @@ export default function FooterV3() {
             <div className="flex items-center gap-[1vw] max-[1025px]:gap-2 max-md:gap-2">
               <span className="size-[0.45vw] max-[1025px]:size-2 max-md:size-2  bg-[#ff5f00]" />
               <span className="text24 text-[#B3B3B3] font-heading">
-                New effects, in your inbox.
+                New effects, in your inbox
               </span>
             </div>
-            <div className="w-full h-px border-t  border-foreground/50" />
             <p className="text18 leading-[1.45] max-w-[25vw] mb-[1vw] max-[1025px]:max-w-full max-[1025px]:mb-[2vw] max-md:max-w-full max-sm:mb-[6vw] text-[#979797]">
               Every new drop, plus the occasional behind-the-scenes build. No
               spam. Unsubscribe anytime.
@@ -345,20 +343,18 @@ export default function FooterV3() {
                   <Input
                     type="email"
                     value={email}
-                    label={"Email"}
-                    labelBg="bg-[#111210]! text-[#979797]!"
                     onChange={(event) => {
                       setEmail(event.target.value);
                       if (status === "error") setStatus("idle");
                     }}
-                    placeholder=""
+                    placeholder="Email"
                     aria-label="Email address"
                     disabled={status === "loading"}
                     style={{
                       "--input-autofill-bg": "#111210",
                       "--input-autofill-text": "#ffffff",
                     }}
-                    className="min-w-0 flex-1 rounded-none border border-grey bg-transparent! px-[1.2vw] py-[0.6vw] max-[1025px]:px-[2vw] max-[1025px]:py-[1.2vw] max-md:px-4 max-md:py-3 text18 outline-none placeholder:text-light-grey/70 focus:border-white/30 disabled:opacity-50 text-white"
+                    className="h-auto min-w-0 flex-1 rounded-none border-0 border-b border-foreground/50 bg-transparent! px-0 py-[0.6vw] max-[1025px]:py-[1.2vw] max-md:py-3 text18 text-white outline-none placeholder:text-light-grey/70 focus:border-white/70 disabled:opacity-50"
                   />
                   <LinkButton
                     href="#"
@@ -380,7 +376,6 @@ export default function FooterV3() {
           </div>
         </div>
       </div>
-      <div className="absolute  bottom-0 left-0 z-2 h-[70%] w-full bg-linear-to-b from-transparent via-[#111210] to-[#111210] max-sm:h-full" />
     </footer>
   );
 }

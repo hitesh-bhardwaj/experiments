@@ -37,6 +37,8 @@ const UI_CARDS = [
   },
 ];
 
+// The principle cards that slide in under the wave. Rendered inside
+// SignalSection (one section with the wave), not on its own.
 export default function NotAnotherUIKit() {
   useEffect(() => {
     let ctx = gsap.context(() => {
@@ -98,12 +100,12 @@ export default function NotAnotherUIKit() {
   }, []);
 
   return (
-    <section id="uikit-section" className="w-full h-[250vh] pt-[15vw] text-white max-[1025px]:overflow-hidden max-[1025px]:h-fit max-[1025px]:py-[10%] max-md:overflow-hidden max-md:h-fit max-sm:py-[25%] max-md:py-[12%] relative z-20">
-        <div>
+    <div id="uikit-section" className="w-full h-[250vh] text-white max-[1025px]:overflow-hidden max-[1025px]:h-fit max-[1025px]:py-[10%] max-md:overflow-hidden max-md:h-fit max-sm:py-[25%] max-md:py-[12%] relative z-20">
+        {/* <div>
             <LineReveal as="h2" className="t96 w-[90vw] font-neue-haas max-[1025px]:w-full max-md:text-center max-md:w-full mx-auto text-center">
                Not <span className='gradient-text-animate'>Another UI Kit.</span>  Not a Side Project.
             </LineReveal>
-        </div>
+        </div> */}
 
       {/* Use Case Cards */}
       <div className="w-screen h-screen sticky mt-[-60vh]  max-sm:mt-[8vh] top-0  overflow-hidden px-[3vw] max-[1025px]:h-fit max-[1025px]:static max-[1025px]:mt-[10vw] max-[1025px]:pb-[4vw] max-[1025px]:overflow-x-scroll max-[1025px]:overflow-y-hidden max-[1025px]:pr-[5vw] max-md:h-fit max-md:static max-md:mt-[12vw] max-md:pb-[4vw] max-md:overflow-x-scroll mobile-scrollbar max-md:pr-[7vw] z-15 ">
@@ -111,7 +113,7 @@ export default function NotAnotherUIKit() {
           {UI_CARDS.map((card) => (
             <div
               key={card.id}
-              className="w-[28vw] h-fit flex flex-col relative use-case justify-between max-[1025px]:w-[45vw] max-sm:w-[70vw] max-md:w-[55vw]"
+              className="w-[28vw] h-fit flex flex-col relative use-case justify-between max-[1025px]:w-[45vw] max-sm:w-[70vw] max-md:w-[55vw] bg-background/40"
             >
               {/* Always visible top orange bar */}
               <div className="w-full h-[0.5vw] bg-[#ff5f00] max-[1025px]:h-[0.8vw] max-md:h-[1vw] max-sm:h-[1.5vw] shrink-0" />
@@ -119,11 +121,11 @@ export default function NotAnotherUIKit() {
               {/* Expanding card content */}
               <div className="w-full h-[37vw] border border-grey content-container overflow-hidden max-[1025px]:h-[52vw] max-sm:h-[40vh] max-md:h-[60vw]">
                 <div className="p-[2.5vw] flex flex-col justify-between h-full max-[1025px]:p-[4vw] max-md:p-[5vw]">
-                  <h3 className="text64 font-neue-haas max-sm:text-[6.5vw]! max-sm:w-[80%]">
+                  <h3 className="text-[3vw] font-aeonik max-sm:text-[6.5vw]! max-sm:w-[80%]">
                     {card.title}
                   </h3>
 
-                  <p className="text24 font-neue-haas max-sm:text-[4vw]! max-sm:leading-[1.2]">
+                  <p className="text24 font-avenir max-sm:text-[4vw]! max-sm:leading-[1.2]">
                     {card.text}
                   </p>
                 </div>
@@ -132,6 +134,6 @@ export default function NotAnotherUIKit() {
           ))}
         </div>
       </div>
-    </section>
+    </div>
   );
 }

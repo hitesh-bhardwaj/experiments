@@ -1,42 +1,18 @@
 import { headers } from "next/headers";
 import VaultShell from "@/Layouts/VaultShell";
 import { getSearchIndexEffects } from "@/lib/search-index";
-import Hero from "@/components/Pricing/Hero";
-import GlowingPlatesDeferred from "@/Experience/GlowingPlatesDeferred";
-import Footer from "@/components/Homepage/Footer";
-import CTA2 from "@/components/Homepage/CTA2";
-import PricingCompareTable from "@/components/Pricing/PricingCompareTable";
-import PricingLicense from "@/components/Pricing/PricingLicense";
+import PricingHero from "@/components/Pricing/pricing-hero/PricingHero";
 import { FAQJSONLD, WebpageJsonLd } from "@/lib/json-ld";
-import FAQs from "@/components/Homepage/FAQs";
-import Pricing from "@/components/Pricing/Pricing";
 import { createPageMetadata } from "@/lib/seo-metadata";
 import FAQV3 from "@/homepage-v3/sections/FAQV3";
-import UseCases from "@/homepage-v3/sections/UseCases";
-import PricingV3 from "@/homepage-v3/sections/PricingV3";
-import DitherTransition from "@/homepage-v3/components/DitherTransition";
 import FooterV3 from "@/homepage-v3/sections/FooterV3";
-import CubeBackgroundAscii from "@/homepage-v3/components/CubeBackgroundAscii";
-const USE_CASES = [
-  {
-    id: 1,
-    title: "Commercial use",
-    text: "Free effects are commercial-friendly where marked in the license. Pro is built for production use on client sites, SaaS products, and internal tools alike.",
-    link: "/effects",
-  },
-  {
-    id: 2,
-    title: "Ownership",
-    text: "Every effect you install is source-first - the files land in your repository. You inspect, adapt, and maintain them like the rest of your front end, with no runtime dependency on Hyperiux.",
-    link: "/effects/free",
-  },
-  {
-    id: 3,
-    title: "Team & agency use",
-    text: "Pro is licensed per seat by default. Agencies and teams working across multiple client projects should use agency licensing rather than sharing one login.",
-    link: "#",
-  },
-];
+import UseCases from "@/homepage-v3/sections/UseCases";
+import PricingPlans from "@/components/Pricing/exploded/PricingPlans";
+import PricingFinder from "@/components/Pricing/exploded/PricingFinder";
+import PricingCredits from "@/components/Pricing/exploded/PricingCredits";
+import PricingCompare from "@/components/Pricing/exploded/PricingCompare";
+import PricingPromise from "@/components/Pricing/exploded/PricingPromise";
+import "@/components/Pricing/exploded/exploded.css";
 
 export const metadata = createPageMetadata({
   title: "Hyperiux Vault Pricing | Pro React Effects Library",
@@ -62,43 +38,17 @@ export default async function PricingPage() {
       <FAQJSONLD faqs={faqItems} />
       <VaultShell effects={effects}>
         <main id="main-content">
-          <Hero />
-          <CubeBackgroundAscii
-            debug={false}
-            src="/homepage-v3/pricing/new/3.mp4"
-            config={{
-              charSet: "hyperiux",
-              charColumns: 179,
-              charZoom: 1.01,
-              charGap: 0.35,
-              dither: 0.45,
-              glyphGain: 2.4,
-              videoScale: 1.36,
-              videoOffsetX: 0.28,
-              videoOffsetY: 0,
-              levelsLow: 0.43,
-              levelsHigh: 1,
-              brightnessMap: 0.8,
-              rampLow: 0,
-              rampHigh: 0.63,
-              invert: false,
-            }}
-          />
-          <DitherTransition
-            mobileEndTriggers={"bottom -50%"}
-            className="h-[46vw]  max-[1025px]:h-[150vw]! bg-background "
-          />
-          <div className="max-[1025px]:mt-[-50vw] max-md:mt-0">
-          <PricingV3 isIndia={isIndia} auth />
-
-          </div>
-          <DitherTransition
-            dotColor="#050505"
-            accentColor="#eaeaea"
-            className="h-[70vw] mt-[-5vw] max-[1025px]:h-[150vw]! bg-foreground"
-          />
-          <div className="mt-[-35vw]">
-            <PricingCompareTable isIndia={isIndia} />
+          <PricingHero isIndia={isIndia} />
+          {/* .pr-x scopes the exploded-tiers styles to these sections only */}
+          <div className="pr-x">
+            <PricingPlans isIndia={isIndia} auth />
+            <PricingFinder isIndia={isIndia} />
+            {/* Credits, Compare and Promise share one light sheet, as in the concept */}
+            <div className="sheet">
+              <PricingCredits />
+              <PricingCompare isIndia={isIndia} />
+              <PricingPromise />
+            </div>
           </div>
           <UseCases useCases={USE_CASES} />
           <div className="max-md:mt-[-30vw]!  ">
@@ -111,6 +61,27 @@ export default async function PricingPage() {
     </>
   );
 }
+const USE_CASES = [
+  {
+    id: 1,
+    title: "Commercial use",
+    text: "Free effects are commercial-friendly where marked in the license. Pro is built for production use on client sites, SaaS products, and internal tools alike.",
+    link: "/effects",
+  },
+  {
+    id: 2,
+    title: "Ownership",
+    text: "Every effect you install is source-first - the files land in your repository. You inspect, adapt, and maintain them like the rest of your front end, with no runtime dependency on Hyperiux.",
+    link: "/effects/free",
+  },
+  {
+    id: 3,
+    title: "Team & agency use",
+    text: "Pro is licensed per seat by default. Agencies and teams working across multiple client projects should use agency licensing rather than sharing one login.",
+    link: "mailto:hello@hyperiux.com",
+  },
+];
+
 const faqItems = [
   {
     id: "faq1",

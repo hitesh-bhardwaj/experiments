@@ -4,6 +4,7 @@ import { useLenis } from "lenis/react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import { usePreviewChromeActive } from "@/components/preview-chrome/PreviewChromeContext";
 import LinkButton from "../link-button";
 import Button from "./Button";
 import { getEffectRouteSlug } from "@/lib/effect-slugs";
@@ -84,6 +85,9 @@ export default function DemoHeader({
     };
   }, [demoSlug, href]);
 
+
+  const chromeActive = usePreviewChromeActive();
+  if (chromeActive) return null;
 
   return (
     <>

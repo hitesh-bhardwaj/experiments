@@ -37,6 +37,7 @@ body {
   --color-grey: var(--grey);
   --color-light-grey: var(--light-grey);
   --font-neue-haas: var(--font-neue-haas);
+  --font-avenir: var(--font-avenir);
   --font-geist: var(--font-geist-sans);
   --font-geist-mono: var(--font-geist-mono);
   --font-geist: var(--font-geist-sans);
@@ -51,8 +52,14 @@ body {
 
 html,
 body {
-  background: var(--background);
   color: var(--foreground);
+}
+
+/* Only <html> paints the page colour. The site-wide dotted grid + fluid
+   (SiteBackground.jsx) is fixed at z-index -1, which paints above the root
+   background but would sit under an opaque <body>. */
+html {
+  background: var(--background);
 }
 
 html {
@@ -90,9 +97,76 @@ h1,
 h2,
 h3,
 h4 {
-  font-family: var(--font-neue-haas), system-ui, sans-serif;
+  font-family: var(--font-aeonik), system-ui, sans-serif;
   font-weight: 400;
   line-height: 1.2;
+}
+
+/* Homepage type (Theremin): the same variables, faces, weights and scale.
+   Display = Aeonik Pro at 400 with tight tracking; text = Avenir Next at 16px.
+   Re-pointing --font-neue-haas moves every inherited and font-neue-haas
+   element onto the text face in one go. The size classes map onto
+   Theremin's scale (.d1 / .d2 / .d3 / lead / body), fluid via clamp(), so
+   they replace the vw sizes and their breakpoint overrides here. Unlayered,
+   so it outranks Tailwind's font utilities inside the homepage only
+   (important utilities, e.g. max-md:text-[13vw]!, still win). */
+.home-type {
+  --font-code: var(--font-plex-mono), "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  --font-display: var(--font-aeonik), "Aeonik Pro", system-ui, sans-serif;
+  --font-text: var(--font-avenir), "Avenir Next", system-ui, sans-serif;
+  --font-neue-haas: var(--font-avenir);
+  --font-geist-sans: var(--font-avenir);
+  --font-geist: var(--font-avenir);
+  --font-geist-mono: var(--font-avenir);
+  font-family: var(--font-text);
+  font-size: 16px;
+  line-height: 1.6;
+}
+.home-type :is(h1, h2, h3, h4),
+.home-type :is(.t96, .text64, .text80, .text110, .text120, .text140) {
+  font-family: var(--font-display);
+}
+/* The size classes set their own (unlayered) tracking and leading globally,
+   so Theremin's display values have to be unlayered for them too */
+.home-type :is(.t96, .text64, .text80, .text110, .text120, .text140) {
+  letter-spacing: -0.035em;
+  line-height: 1.02;
+}
+/* Display weight and tracking sit in the base layer, so a heading's own
+   utility (e.g. font-medium on the plan names) can still override them */
+@layer base {
+  .home-type :is(h1, h2, h3, h4),
+  .home-type :is(.t96, .text64, .text80, .text110, .text120, .text140) {
+    font-weight: 400;
+    letter-spacing: -0.035em;
+    line-height: 1.02;
+  }
+}
+.home-type .t96 { font-size: clamp(2.6rem, 6.4vw, 6.6rem); }   /* .d1 */
+.home-type .text64 { font-size: clamp(2.2rem, 4.6vw, 4.6rem); } /* .d2 */
+.home-type :is(.text32, .text34) { font-size: clamp(1.6rem, 2.6vw, 2.6rem); } /* .d3 */
+.home-type .text24 { font-size: 17px; line-height: 1.45; }      /* lead */
+.home-type :is(.text22, .text20, .text18) { font-size: 16px; line-height: 1.65; } /* body */
+
+.single-gradient-text .word {
+  background-image: linear-gradient(to right, #ff8400, #ff4100, #ff8400);
+  background-size: 300% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: gradient-text-move 10s ease-in-out infinite alternate;
+}
+
+.single-gradient-text .word:nth-child(1) {
+  background-position: 0% center;
+}
+
+.single-gradient-text .word:nth-child(2) {
+  background-position: 50% center;
+}
+
+.single-gradient-text .word:nth-child(3) {
+  background-position: 100% center;
 }
 
 /* Scrollbars */
@@ -540,6 +614,51 @@ input:-webkit-autofill:active {
   }
 }
 
+/* Easter egg (components/easter-egg): the hero dot's glint, the game's
+   entrance and its game-over lines */
+@keyframes hx-egg-glint {
+  0%, 86%, 100% { text-shadow: none; }
+  92% { text-shadow: 0 0 14px rgba(255, 107, 0, .9); }
+}
+@keyframes hx-pop {
+  from { opacity: 0; transform: scale(.96) translateY(20px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes hx-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes hx-up {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* Why Vault demo tabs: the tab you leave fades to grey before settling back
+   to its resting dark colour */
+@keyframes hx-tab-release {
+  0% { color: #F4F4F4; }
+  45% { color: #8a8a8a; }
+  100% { color: #1D1D1D; }
+}
+
+/* Modals (tutorial video, ribbon unlock card): a soft scale + fade in and out */
+@keyframes hx-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes hx-fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+@keyframes hx-scale-in {
+  from { opacity: 0; transform: scale(.94); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes hx-scale-out {
+  from { opacity: 1; transform: none; }
+  to { opacity: 0; transform: scale(.96); }
+}
+
 @keyframes shimmer {
   100% {
     transform: translateX(100%);
@@ -555,6 +674,24 @@ input:-webkit-autofill:active {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* One continuous gradient across a split phrase (LineReveal's
+   gradient-text-single): each word shows its slice of a phrase-wide gradient
+   (--g-w wide, the word --g-x into it). LineReveal tweens --g-shift on the
+   phrase, so the drift is shared by every word. */
+@property --g-shift {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 0px;
+}
+.gradient-text-single-word {
+  background-image: linear-gradient(to right, #ff8400, #ff4100, #ff8400);
+  background-size: calc(var(--g-w) * 3) 100%;
+  background-position: calc(var(--g-shift) - var(--g-x)) center;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 @keyframes gradient-text-move {

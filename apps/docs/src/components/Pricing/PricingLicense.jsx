@@ -26,7 +26,7 @@ const cards = [
 
 export default function PricingLicense() {
   return (
-    <section className="w-full bg-[#0e0e0e] text-white px-[5vw] py-[8vw] max-[1025px]:px-[6vw] max-[1025px]:py-[16vw]">
+    <section className="w-full text-white px-[5vw] py-[8vw] max-[1025px]:px-[6vw] max-[1025px]:py-[16vw]">
 
       {/* Heading */}
       <LineReveal

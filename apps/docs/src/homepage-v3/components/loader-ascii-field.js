@@ -261,11 +261,11 @@ function scaleStepOf(spread) {
 
 function monoFamily() {
   const variable = getComputedStyle(document.documentElement)
-    .getPropertyValue("--font-geist-mono")
+    .getPropertyValue("--font-avenir")
     .trim();
   return variable
-    ? `${variable}, ui-monospace, monospace`
-    : "ui-monospace, monospace";
+    ? `${variable}, system-ui, sans-serif`
+    : "system-ui, sans-serif";
 }
 
 /**

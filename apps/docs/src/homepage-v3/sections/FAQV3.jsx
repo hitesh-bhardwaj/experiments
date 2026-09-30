@@ -10,7 +10,6 @@ import React, {
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-import { ChevronRight } from "lucide-react";
 import { prefersReducedMotion } from "@/lib/motion";
 import LinkButton from "@/components/WebsiteComps/LinkButton";
 import LineReveal from "@/components/Animations/LineReveal";
@@ -151,8 +150,7 @@ function FAQRow({ item, isOpen, onToggle, index }) {
 
   return (
     <div
-      className={`faq-v3-row group cursor-pointer border-grey px-[2.5vw] py-[2vw] max-[1025px]:px-[3.5vw] max-[1025px]:py-[3vw] max-[1025px]:px-[4vw] max-[1025px]:py-[4vw] max-md:px-[6vw] max-md:py-[6vw] ${index > 0 ? "border-t" : ""
-        } ${index >= INITIAL_COUNT ? "faq-v3-row-extra" : ""}`}
+      className={`faq-v3-row group relative cursor-pointer px-[2.5vw] py-[2vw] text-background max-[1025px]:px-[3.5vw] max-[1025px]:py-[3vw] max-[1025px]:px-[4vw] max-[1025px]:py-[4vw] max-md:px-[6vw] max-md:py-[6vw] ${index >= INITIAL_COUNT ? "faq-v3-row-extra" : ""}`}
       role="button"
       tabIndex={0}
       aria-expanded={isOpen}
@@ -161,18 +159,21 @@ function FAQRow({ item, isOpen, onToggle, index }) {
       onClick={handleClick}
       onKeyDown={handleKeyDown}
     >
-      <div className="flex w-full items-start gap-[1.5vw] max-[1025px]:gap-[2.5vw] max-[1025px]:gap-[3vw] max-md:gap-[4vw]">
-        <ChevronRight
-          size={18}
-          strokeWidth={1.5}
-          aria-hidden="true"
-          className={`mt-[0.55vw] shrink-0 transition-[rotate,color] duration-500 ease-out group-hover:text-white motion-reduce:transition-none max-[1025px]:mt-[1vw] max-[1025px]:mt-[1vw] max-md:mt-[1.5vw] ${isOpen ? "rotate-90 text-white" : "rotate-0 text-light-grey"
-            }`}
-        />
-
+      <div className="flex w-full items-start justify-between gap-[1.5vw] max-[1025px]:gap-[3vw] max-md:gap-[4vw]">
         <h3 className="text-[1.55vw] font-neue-haas flex-1 leading-tight max-[1025px]:text-[3.4vw] max-md:text-[5.2vw]">
           {item.question}
         </h3>
+        <span
+          aria-hidden="true"
+          className={`relative mt-[0.55vw] size-[1.1vw] shrink-0 transition-[color,transform] duration-700 ease-out group-hover:rotate-180 group-hover:text-primary motion-reduce:transition-none max-[1025px]:mt-[1vw] max-[1025px]:size-[2.4vw] max-md:mt-[1.5vw] max-md:size-[4vw] ${isOpen ? "rotate-180 text-primary" : "rotate-0 text-background/45"
+            }`}
+        >
+          <span className="absolute left-0 top-1/2 h-px w-full -translate-y-1/2 bg-current" />
+          <span
+            className={`absolute left-1/2 top-0 h-full w-px -translate-x-1/2 bg-current transition-transform duration-700 ease-out motion-reduce:transition-none ${isOpen ? "rotate-90" : "rotate-0"
+              }`}
+          />
+        </span>
       </div>
 
       <div
@@ -188,13 +189,23 @@ function FAQRow({ item, isOpen, onToggle, index }) {
         <div
           ref={innerRef}
           style={{ opacity: initiallyOpen ? 1 : 0 }}
-          className="pt-[1.2vw] pl-[2.8vw] max-[1025px]:pt-[2vw] max-[1025px]:pl-[5vw] max-[1025px]:pt-[2.5vw] max-[1025px]:pl-[7vw] max-md:pt-[4vw] max-md:pl-[8vw]"
+          className="pt-[1.2vw] pr-[2.8vw] max-[1025px]:pt-[2.5vw] max-[1025px]:pr-[7vw] max-md:pt-[4vw] max-md:pr-[8vw]"
         >
-          <p className="text22 font-neue-haas w-[85%] text-white leading-[1.45] max-[1025px]:w-full max-[1025px]:w-[90%] max-[1025px]:text-[2.2vw] max-md:w-full max-md:text-[4vw]">
+          <p className="text22 font-neue-haas w-[85%] text-background/70 leading-[1.45] max-[1025px]:w-full max-[1025px]:w-[90%] max-[1025px]:text-[2.2vw] max-md:w-full max-md:text-[4vw]">
             {item.answer}
           </p>
         </div>
       </div>
+
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-background/18"
+      />
+      <span
+        aria-hidden="true"
+        className={`pointer-events-none absolute inset-x-0 bottom-0 h-px origin-left bg-primary transition-transform duration-700 ease-out motion-reduce:transition-none group-hover:scale-x-100 ${isOpen ? "scale-x-100" : "scale-x-0"
+          }`}
+      />
     </div>
   );
 }
@@ -262,7 +273,7 @@ export default function FAQV3({ faqItems, translateTop = true }) {
     <section
       ref={container}
       id="faq"
-      className={`h-fit w-full self-padd ${translateTop ? "translate-y-[-35vw] max-[1025px]:translate-y-[-80vw]!" : ""} relative  max-[1025px]:mt-0!  my-[7vw]  text-white max-[1025px]:py-[15vw] max-md:py-[22vw]`}
+      className="relative z-10 h-fit w-full bg-foreground py-[7vw] text-background max-[1025px]:mt-0! max-[1025px]:px-[5vw] max-[1025px]:py-[15vw] max-md:py-[22vw]"
     >
 
 
@@ -274,7 +285,7 @@ export default function FAQV3({ faqItems, translateTop = true }) {
       </LineReveal>
 
 
-      <div className="w-[90%] max-[1025px]:w-full max-[1025px]:w-full mx-auto border border-grey">
+      <div className="w-[90%] max-[1025px]:w-full max-[1025px]:w-full mx-auto">
         {visibleItems.map((item, index) => (
           <FAQRow
             key={item.id}
@@ -294,11 +305,13 @@ export default function FAQV3({ faqItems, translateTop = true }) {
             href="#"
             onClick={() => setIsExpanded(true)}
             shimmer
+            shimmerBaseColor="#050505"
+            shimmerColor="var(--primary)"
             tilted={false}
           underline={true}
             showArrow
             text="View More"
-            className="max-md:text34"
+            className="text-background max-md:text34"
           />
         </div>
       )}

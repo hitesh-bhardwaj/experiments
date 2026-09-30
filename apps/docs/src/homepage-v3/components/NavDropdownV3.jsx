@@ -23,7 +23,7 @@ function MenuItem({ item, onNavigate }) {
       leading={
         <NavMenuIconV3
           src={item.icon}
-          className="size-[1.2vw] text-light-grey transition-colors duration-300 group-hover:text-primary motion-reduce:transition-none"
+          className="size-[1.2vw] text-[#f4f4f4] transition-colors duration-300 group-hover:text-primary motion-reduce:transition-none"
         />
       }
       className="relative isolate px-[0.8vw] py-[0.55vw] text18 leading-[1.15] text-white/75 hover:text-white"
@@ -280,7 +280,7 @@ export default function NavDropdownV3({ panel, onNavigate }) {
       <div
         key={visible}
         ref={panelRef}
-        className="pointer-events-auto w-max max-w-full border border-white/10 bg-[#121212] will-change-[clip-path,transform]"
+        className="pointer-events-auto w-max max-w-full border border-white/10 bg-[#121212]/60 backdrop-blur-md will-change-[clip-path,transform]"
       >
         <div ref={contentRef} className="flex min-h-[19vw] w-full">
           {menu.columns.map((column, index) => (
@@ -298,7 +298,7 @@ export default function NavDropdownV3({ panel, onNavigate }) {
 
               <p
                 data-nav-v3-head
-                className="border-b border-white/10 bg-white/2 px-[1.5vw] py-[0.85vw] text18 flex items-center gap-[1vw] text-light-grey capitalize"
+                className="border-b border-white/10 bg-white/2 px-[1.5vw] py-[0.85vw] text18 flex items-center gap-[1vw] text-[#f4f4f4] capitalize"
               >
 
                 <span className="size-[.6vw] font-neue-haas bg-primary inline-block" />
