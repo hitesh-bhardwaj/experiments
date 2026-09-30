@@ -125,16 +125,20 @@ export default function PreviewChrome({
 
   if (!chrome || !hasProps || !groups.length) return null;
 
-  return createPortal(
-    <RemixerPanel
-      isExpanded
-      groups={groups}
-      values={values}
-      onChange={onChange}
-      onCopyCode={onCopyCode}
-      onReset={onReset}
-      defaultOpenGroupId={defaultOpenGroupId}
-    />,
-    chrome.panelBody,
+  return (
+    <>
+      {createPortal(
+        <RemixerPanel
+          isExpanded
+          groups={groups}
+          values={values}
+          onChange={onChange}
+          onCopyCode={onCopyCode}
+          onReset={onReset}
+          defaultOpenGroupId={defaultOpenGroupId}
+        />,
+        chrome.panelBody,
+      )}
+    </>
   );
 }

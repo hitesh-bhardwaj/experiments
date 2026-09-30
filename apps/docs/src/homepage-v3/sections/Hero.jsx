@@ -225,7 +225,7 @@ export default function Hero() {
                     <HeroRibbons play={playIntro && loaderComplete} />
                 )}
             </div>
-            <div className="pointer-events-none relative z-10 flex min-h-dvh flex-col justify-end px-[3vw] pt-[8vw] pb-[5vw] max-[1025px]:px-[6vw] max-[1025px]:pt-[30vw] max-[1025px]:pb-[8vw] max-md:px-6 max-md:pt-32 max-md:pb-10 max-sm:px-5">
+            <div className="pointer-events-none relative z-10 mx-auto flex min-h-dvh w-full max-w-[1536px] flex-col justify-end px-[3vw] pt-[8vw] pb-[5vw] max-[1025px]:px-[6vw] max-[1025px]:pt-[30vw] max-[1025px]:pb-[8vw] max-md:px-6 max-md:pt-32 max-md:pb-10 max-sm:px-5">
                 <div className="grid grid-cols-[minmax(0,1.5fr)_minmax(0,0.7fr)] items-end gap-[3vw] max-[1025px]:grid-cols-1 max-[1025px]:gap-[4vw] max-md:gap-5">
                     {/* No INTRO_HIDDEN here, unlike the copy and the actions
                         below: this is the LCP element, and it has to reach the

@@ -1,5 +1,8 @@
 {
-  "/api/effects/search-index/route": "app/api/effects/search-index/route.js",
   "/(marketing)/page": "app/(marketing)/page.js",
-  "/(marketing)/demo/sticky-content-wrapper/page": "app/(marketing)/demo/sticky-content-wrapper/page.js"
+  "/_not-found/page": "app/_not-found/page.js",
+  "/(marketing)/demo/gsap-flip-card/page": "app/(marketing)/demo/gsap-flip-card/page.js",
+  "/(app)/(workspace)/effects/[slug]/[effectSlug]/page": "app/(app)/(workspace)/effects/[slug]/[effectSlug]/page.js",
+  "/(app)/(workspace)/docs/page": "app/(app)/(workspace)/docs/page.js",
+  "/(app)/(workspace)/docs/installation/page": "app/(app)/(workspace)/docs/installation/page.js"
 }

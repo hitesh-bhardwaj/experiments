@@ -108,7 +108,7 @@ export default function SignalSection() {
             <div className="pointer-events-none sticky top-0 z-30  -mb-[100vh] h-screen" aria-hidden="true">
                 <canvas ref={canvasRef} className="block size-full" />
             </div>
-            <div ref={waveAreaRef} className="relative z-1 mx-auto h-[80vh] max-w-[1440px] px-[clamp(1.25rem,3vw,3rem)] pt-[clamp(7rem,18vh,12rem)] pb-[clamp(6rem,14vh,10rem)]">
+            <div ref={waveAreaRef} className="relative z-1 mx-auto h-[80vh] max-w-[1536px] px-[clamp(1.25rem,3vw,3rem)] pt-[clamp(7rem,18vh,12rem)] pb-[clamp(6rem,14vh,10rem)]">
                 <div className="grid min-h-[62vh] grid-cols-2 items-start gap-12 max-[1000px]:min-h-[50vh] max-[1000px]:grid-cols-1">
                     <div>
                         <h2 className="fadeup  max-w-[30vw] font-aeonik text-[3.85vw] font-normal leading-[1.02] tracking-[-.035em]">

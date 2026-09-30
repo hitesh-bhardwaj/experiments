@@ -200,7 +200,7 @@ module.exports = require("path");
 var __webpack_require__ = require("./webpack-runtime.js");
 __webpack_require__.C(exports);
 var __webpack_exec__ = (moduleId) => (__webpack_require__(__webpack_require__.s = moduleId))
-var __webpack_exports__ = __webpack_require__.X(0, ["vendor-chunks/next","vendor-chunks/@opentelemetry","vendor-chunks/@swc","vendor-chunks/@clerk"], () => (__webpack_exec__("(middleware)/./node_modules/next/dist/build/webpack/loaders/next-middleware-loader.js?absolutePagePath=%2FUsers%2Fvidushisaxena%2FDocuments%2FGitHub%2Fvault-new%2Fapps%2Fdocs%2Fsrc%2Fproxy.js&page=%2Fproxy&rootDir=%2FUsers%2Fvidushisaxena%2FDocuments%2FGitHub%2Fvault-new%2Fapps%2Fdocs&matchers=&preferredRegion=&middlewareConfig=e30%3D!")));
+var __webpack_exports__ = __webpack_require__.X(0, ["vendor-chunks/next","vendor-chunks/@swc","vendor-chunks/@clerk","vendor-chunks/@opentelemetry"], () => (__webpack_exec__("(middleware)/./node_modules/next/dist/build/webpack/loaders/next-middleware-loader.js?absolutePagePath=%2FUsers%2Fvidushisaxena%2FDocuments%2FGitHub%2Fvault-new%2Fapps%2Fdocs%2Fsrc%2Fproxy.js&page=%2Fproxy&rootDir=%2FUsers%2Fvidushisaxena%2FDocuments%2FGitHub%2Fvault-new%2Fapps%2Fdocs&matchers=&preferredRegion=&middlewareConfig=e30%3D!")));
 module.exports = __webpack_exports__;
 
 })();

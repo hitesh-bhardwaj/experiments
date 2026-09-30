@@ -4,7 +4,7 @@
  *   · a floating glass bar at the top: ← back to the effect page · Free/Pro badge · Desktop / Tablet / Phone
  *     · Replay · Reduced motion · Props · Shortcuts · Copy props
  *   · the bar tucks away after ~3s idle and a "Controls" tag drops in on a cord (sways); click it,
- *     press any key or move to the top edge to bring the bar back
+ *     to bring the bar back
  *   · Props opens a side panel; the host fills `chrome.panelBody` (the app portals its RemixerPanel in)
  *   · Tablet / Phone show the page in a real device-sized iframe (media queries fire), scaled to fit
  *   · Reduced motion makes matchMedia('(prefers-reduced-motion: reduce)') match, then replays
@@ -99,12 +99,12 @@ export function mountPreviewChrome(opts = {}) {
     <button class="pc-bb" type="button" data-act="replay" aria-label="Replay the animation" data-tip="Replay the animation" data-key="R">${svg('replay')}</button>
     <button class="pc-bb" type="button" data-act="rm" aria-pressed="false" aria-label="Preview reduced motion" data-tip="Preview reduced motion" data-key="M">${svg('rm')}</button>
     ${hasProps ? `<button class="pc-bb" type="button" data-act="props" aria-pressed="false" aria-label="Edit props" data-tip="Edit props" data-key="P">${svg('props')}</button>` : ''}
-    <button class="pc-bb pc-keys-btn" type="button" data-act="keys" aria-label="Keyboard shortcuts" data-tip="Keyboard shortcuts" data-key="?">${svg('keys')}</button>
-    ${onCopy ? `<button class="pc-cpy pc-label" type="button" data-act="copy" aria-label="Copy your props as JSX" data-tip="Copies your edited props as JSX. Grab the component code from the effect page.">Copy props</button>` : ''}
+    <button class="pc-bb pc-keys-btn" type="button" data-act="keys" aria-label="Keyboard shortcuts" aria-pressed="false" data-tip="Keyboard shortcuts" data-key="?">${svg('keys')}</button>
+    ${onCopy ? `<button class="pc-cpy" type="button" data-act="copy" aria-label="Copy your props as JSX" data-tip="Copies your edited props as JSX. Grab the component code from the effect page."><span class="pc-cpy-fx" aria-hidden="true"></span><span class="pc-cpy-t" aria-hidden="true"><span>Copy props</span><span>Copy props</span></span><span class="pc-cpy-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><path d="M5 12h13M13 6l6 6-6 6"/></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span></button>` : ''}
   </header>
-  <button class="pc-pull" type="button" aria-label="Show preview controls" data-tip="Pull for controls · or press any key" hidden><span class="pc-hang"><span class="pc-cord" aria-hidden="true"></span><span class="pc-tag"><span class="pc-eyelet" aria-hidden="true"></span><svg class="pc-chev3" viewBox="0 0 16 24" aria-hidden="true"><defs><linearGradient id="pc-beam" gradientUnits="userSpaceOnUse" x1="0" y1="-6" x2="0" y2="22" spreadMethod="repeat"><stop offset="0" stop-color="#FF6B00" stop-opacity=".2"/><stop offset=".3" stop-color="#FF6B00" stop-opacity=".2"/><stop offset=".58" stop-color="#FF6B00" stop-opacity="1"/><stop offset=".86" stop-color="#FF6B00" stop-opacity=".2"/><stop offset="1" stop-color="#FF6B00" stop-opacity=".2"/><animateTransform attributeName="gradientTransform" type="translate" from="0 0" to="0 28" dur="1.6s" repeatCount="indefinite"/></linearGradient></defs><g fill="none" stroke="url(#pc-beam)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3.5l5 5 5-5"/><path d="M3 9.5l5 5 5-5"/><path d="M3 15.5l5 5 5-5"/></g></svg><span class="pc-label">Controls</span></span></span></button>
+  <button class="pc-pull" type="button" aria-label="Show preview controls" data-tip="Show controls" hidden><span class="pc-hang"><span class="pc-cord" aria-hidden="true"></span><span class="pc-tag"><span class="pc-eyelet" aria-hidden="true"></span><svg class="pc-chev3" viewBox="0 0 16 24" aria-hidden="true"><defs><linearGradient id="pc-beam" gradientUnits="userSpaceOnUse" x1="0" y1="-6" x2="0" y2="22" spreadMethod="repeat"><stop offset="0" stop-color="#FF6B00" stop-opacity=".2"/><stop offset=".3" stop-color="#FF6B00" stop-opacity=".2"/><stop offset=".58" stop-color="#FF6B00" stop-opacity="1"/><stop offset=".86" stop-color="#FF6B00" stop-opacity=".2"/><stop offset="1" stop-color="#FF6B00" stop-opacity=".2"/><animateTransform attributeName="gradientTransform" type="translate" from="0 0" to="0 28" dur="1.6s" repeatCount="indefinite"/></linearGradient></defs><g fill="none" stroke="url(#pc-beam)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3.5l5 5 5-5"/><path d="M3 9.5l5 5 5-5"/><path d="M3 15.5l5 5 5-5"/></g></svg><span class="pc-label">Controls</span></span></span></button>
   <aside class="pc-panel" aria-label="Props" hidden data-lenis-prevent data-lenis-prevent-wheel data-lenis-prevent-touch>
-    <div class="pc-panel-h"><p class="pc-label">Props</p><button class="pc-bb" type="button" data-act="close-props" aria-label="Close props">✕</button></div>
+    <div class="pc-panel-h" data-tip="Drag to move"><p class="pc-label">Props</p><button class="pc-bb" type="button" data-act="close-props" aria-label="Close props">✕</button></div>
     <div class="pc-panel-body"></div>
   </aside>
   <div class="pc-keys" hidden><p class="pc-label">Shortcuts</p><dl>
@@ -179,7 +179,39 @@ export function mountPreviewChrome(opts = {}) {
     $('[data-act="props"]')?.setAttribute('aria-pressed', String(v));
     if (v) { panel.classList.remove('pc-in'); void panel.offsetWidth; panel.classList.add('pc-in'); }
   }
-  const toggleKeys = () => { keys.hidden = !keys.hidden; };
+  // Drag the panel by its header; it stays inside the viewport.
+  let drag = null;
+  on($('.pc-panel-h'), 'pointerdown', (e) => {
+    if (e.button || e.target.closest('button')) return;
+    const r = panel.getBoundingClientRect();
+    drag = { dx: e.clientX - r.left, dy: e.clientY - r.top, id: e.pointerId };
+    e.currentTarget.setPointerCapture(e.pointerId);
+    panel.classList.add('pc-dragging');
+    e.preventDefault();
+  });
+  on($('.pc-panel-h'), 'pointermove', (e) => {
+    if (!drag || e.pointerId !== drag.id) return;
+    const x = Math.max(8, Math.min(innerWidth - panel.offsetWidth - 8, e.clientX - drag.dx));
+    const y = Math.max(8, Math.min(innerHeight - 48, e.clientY - drag.dy));
+    panel.style.left = `${x}px`; panel.style.top = `${y}px`; panel.style.right = 'auto';
+  });
+  const endDrag = () => { drag = null; panel.classList.remove('pc-dragging'); };
+  on($('.pc-panel-h'), 'pointerup', endDrag); on($('.pc-panel-h'), 'pointercancel', endDrag);
+
+  // Glow follows the pointer across the copy button.
+  const cpy = $('.pc-cpy');
+  if (cpy) on(cpy, 'pointermove', (e) => {
+    const r = cpy.getBoundingClientRect();
+    cpy.style.setProperty('--mx', `${e.clientX - r.left}px`); cpy.style.setProperty('--my', `${e.clientY - r.top}px`);
+  });
+
+  let keysT;
+  function toggleKeys(v = keys.hidden) {
+    clearTimeout(keysT);
+    $('[data-act="keys"]')?.setAttribute('aria-pressed', String(v));
+    if (v) { keys.hidden = false; keys.classList.remove('pc-out'); void keys.offsetWidth; keys.classList.add('pc-in'); }
+    else if (!keys.hidden) { keys.classList.remove('pc-in'); keys.classList.add('pc-out'); keysT = setTimeout(() => { keys.hidden = true; keys.classList.remove('pc-out'); }, 260); }
+  }
 
   async function copy() {
     if (!onCopy) return;
@@ -205,10 +237,12 @@ export function mountPreviewChrome(opts = {}) {
   /* ---------- the bar tucks into a pull tag while you watch ---------- */
   let idle;
   function tuck() {
+    hideTip();
     bar.classList.add('pc-away'); bar.setAttribute('aria-hidden', 'true'); bar.inert = true;
     pull.hidden = false; requestAnimationFrame(() => pull.classList.add('pc-in'));
   }
   function wake() {
+    if (bar.classList.contains('pc-away')) hideTip();
     bar.classList.remove('pc-away'); bar.removeAttribute('aria-hidden'); bar.inert = false;
     pull.classList.remove('pc-in');
     setTimeout(() => { if (!bar.classList.contains('pc-away')) pull.hidden = true; }, 500);
@@ -220,14 +254,12 @@ export function mountPreviewChrome(opts = {}) {
   }
   on(pull, 'click', () => { wake(); if (matchMedia('(pointer:fine)').matches) bar.querySelector('.pc-bb')?.focus({ preventScroll: true }); note(3); });
   on(bar, 'pointerenter', wake); on(bar, 'focusin', wake);
-  on(window, 'pointermove', (e) => { if (e.clientY < 70 && bar.classList.contains('pc-away')) wake(); }, { passive: true });
 
   on(document, 'keydown', (e) => {
     const t = e.target;
     if (t && (t.closest?.('input,textarea,select,[contenteditable="true"]'))) return;
     if (e.metaKey || e.ctrlKey || e.altKey) return;
     const k = e.key.toLowerCase();
-    if (bar.classList.contains('pc-away') && k !== 'tab') wake();
     if (k === 'r') replay();
     else if (k === 'p') setPanel(panel.hidden);
     else if (k === 'm') setRM(!rmOn);
@@ -235,7 +267,7 @@ export function mountPreviewChrome(opts = {}) {
     else if (k === '2') setDev('tablet');
     else if (k === '3') setDev('phone');
     else if (k === '?' || (k === '/' && e.shiftKey)) toggleKeys();
-    else if (k === 'escape') { if (!keys.hidden) keys.hidden = true; else if (!panel.hidden) setPanel(false); else if (dev !== 'full') setDev('full'); }
+    else if (k === 'escape') { if (!keys.hidden) toggleKeys(false); else if (!panel.hidden) setPanel(false); else if (dev !== 'full') setDev('full'); }
   });
 
   /* ---------- tooltips: one floating element, hover + keyboard focus ---------- */
@@ -248,7 +280,7 @@ export function mountPreviewChrome(opts = {}) {
     let y = r.bottom + 10; if (y + th > innerHeight - 10) y = r.top - th - 10;
     tip.style.left = `${x}px`; tip.style.top = `${y}px`; tip.classList.add('pc-on');
   }
-  function hideTip() { cur = null; tip.classList.remove('pc-on'); }
+  function hideTip() { clearTimeout(tipT); cur = null; tip.classList.remove('pc-on'); }
   on(root, 'pointerover', (e) => {
     const el = e.target.closest?.('[data-tip]'); if (el === cur) return;
     clearTimeout(tipT); if (!el) { hideTip(); return; } tipT = setTimeout(() => showTip(el), 140);
@@ -263,11 +295,12 @@ export function mountPreviewChrome(opts = {}) {
   return {
     root,
     panelBody: $('.pc-panel-body'),
+    copy,
     setPanel, setDevice: setDev, replay, showToast, postValues,
     get device() { return dev; },
     get reducedMotion() { return rmOn; },
     destroy() {
-      offs.forEach((f) => f()); clearTimeout(idle); clearTimeout(toastT); clearTimeout(tipT);
+      offs.forEach((f) => f()); clearTimeout(idle); clearTimeout(toastT); clearTimeout(tipT); clearTimeout(keysT);
       if (rmOn) simulateReducedMotion(false);
       document.documentElement.removeAttribute('data-pc'); document.documentElement.removeAttribute('data-pc-dev');
       root.remove();

@@ -1,7 +1,7 @@
 import { homepage } from "./util";
 
 const DEFAULT_R2_ORIGIN =
-  process.env.NEXT_PUBLIC_DEV_URL;
+  process.env.NEXT_PUBLIC_DEV_URL || "";
 
 export function resolveMediaUrl(
   rawMediaUrl,

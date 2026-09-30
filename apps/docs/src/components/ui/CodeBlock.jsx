@@ -1,7 +1,14 @@
 "use client";
 
 import "highlight.js/styles/night-owl.css";
-import { createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
+import {
+    PACKAGE_MANAGERS,
+    getPackageManager,
+    getPackageManagerVariants,
+    setPackageManager,
+    subscribePackageManager,
+} from "@/lib/package-manager";
 // lib/core + explicit registrations instead of the full "highlight.js" build,
 // which bundles all 150+ grammars (~300KB of Mathematica/ISBL/GML/... nobody
 // renders). Every language= value used across the site maps to one of these.
@@ -138,6 +145,35 @@ function getVariantFilename(filename, variant) {
     return `${filename}.jsx`;
 }
 
+// npm / pnpm / yarn / bun tabs; the choice is shared by every block and remembered.
+function PackageManagerTabs({ value }) {
+    return (
+        <div role="tablist" aria-label="Package manager" className="flex items-center gap-1">
+            {PACKAGE_MANAGERS.map((pm) => {
+                const active = pm === value;
+                return (
+                    <button
+                        key={pm}
+                        type="button"
+                        role="tab"
+                        aria-selected={active}
+                        onClick={() => setPackageManager(pm)}
+                        className={`relative h-7 cursor-pointer px-2.5 font-mono text-xs lowercase tracking-normal transition-colors duration-300 ${
+                            active ? "text-primary" : "text-white/50 hover:text-white"
+                        }`}
+                    >
+                        {pm}
+                        <span
+                            aria-hidden="true"
+                            className={`absolute inset-x-2.5 -bottom-2 h-px bg-primary transition-transform duration-300 origin-left ${active ? "scale-x-100" : "scale-x-0"}`}
+                        />
+                    </button>
+                );
+            })}
+        </div>
+    );
+}
+
 function CopyLimitOverlay({ message, ctaHref }) {
     return (
         <div className="absolute inset-0 z-20 flex flex-col items-center justify-center gap-3 bg-white/10 px-6 py-6 text-center backdrop-blur-md">
@@ -181,7 +217,9 @@ export function CodeBlock({
     const setVariant = sharedLanguage ? sharedLanguage.setVariant : setLocalVariant;
     const activeLanguage = isJsVariant ? variant : language;
 
-    const rawCode = variant === "tsx" && tsxCode ? tsxCode : code;
+    const pmVariants = useMemo(() => (language === "bash" || language === "sh" ? getPackageManagerVariants(code) : null), [code, language]);
+    const packageManager = useSyncExternalStore(subscribePackageManager, getPackageManager, () => "npm");
+    const rawCode = pmVariants ? pmVariants[packageManager] : variant === "tsx" && tsxCode ? tsxCode : code;
     const displayCode = copyLocked ? LOCKED_CODE_SAMPLE : rawCode || "";
     const displayFilename = isJsVariant ? getVariantFilename(filename, variant) : filename;
 
@@ -197,7 +235,7 @@ export function CodeBlock({
         }
     }, [displayCode, activeLanguage]);
 
-    const shouldShowHeader = !hideHeaderWhenNoFilename || Boolean(filename);
+    const shouldShowHeader = !hideHeaderWhenNoFilename || Boolean(filename) || Boolean(pmVariants);
 
     // Copy button clicks aren't the only way code leaves this block - a
     // manual select + Cmd/Ctrl-C never touches CopyBtn, so the native
@@ -224,7 +262,11 @@ export function CodeBlock({
             >
                 {shouldShowHeader ? (
                     <div className="sticky top-0 z-10 flex items-center justify-between bg-[#484848] px-4 py-2">
-                        <span className="text-lg text-white max-md:text-sm">{displayFilename || ""}</span>
+                        {pmVariants ? (
+                            <PackageManagerTabs value={packageManager} />
+                        ) : (
+                            <span className="text-lg text-white max-md:text-sm">{displayFilename || ""}</span>
+                        )}
                         <div className="flex items-center gap-2">
                             {isJsVariant && showLanguageToggle && (
                                 <LanguageDropdown value={variant} onChange={setVariant} />

@@ -1,7 +1,7 @@
 "use client";
 
 import { Fragment, useCallback, useEffect, useState } from "react";
-import { buildRemixerDemoCode } from "./build-remixer-code";
+import { buildRemixerJsx } from "./build-remixer-code";
 import { useRemixerControls } from "./useRemixerControls";
 import PreviewChrome from "@/components/preview-chrome/PreviewChrome";
 import { PreviewChromeProvider } from "@/components/preview-chrome/PreviewChromeContext";
@@ -89,13 +89,7 @@ export default function RegistryRemixerDemo({
   const copyCode = () =>
     buildCode
       ? buildCode({ registry, values, initialValues, groups })
-      : buildRemixerDemoCode({
-          registry,
-          values,
-          initialValues,
-          groups,
-          ...copyCodeOptions,
-        });
+      : buildRemixerJsx({ componentName: String(registry?.title ?? registry?.name ?? ""), values, groups });
 
   return (
     <PreviewChromeProvider value>

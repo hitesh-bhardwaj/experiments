@@ -6,7 +6,6 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { usePreviewChromeActive } from "@/components/preview-chrome/PreviewChromeContext";
 import LinkButton from "../link-button";
-import Button from "./Button";
 import { getEffectRouteSlug } from "@/lib/effect-slugs";
 import ButtonV3 from "@/homepage-v3/components/ButtonV3";
 

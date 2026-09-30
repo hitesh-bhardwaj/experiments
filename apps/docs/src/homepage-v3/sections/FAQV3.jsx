@@ -285,7 +285,7 @@ export default function FAQV3({ faqItems, translateTop = true }) {
       </LineReveal>
 
 
-      <div className="w-[90%] max-[1025px]:w-full max-[1025px]:w-full mx-auto">
+      <div className="mx-auto w-[90%] max-w-[1536px] max-[1025px]:w-full">
         {visibleItems.map((item, index) => (
           <FAQRow
             key={item.id}

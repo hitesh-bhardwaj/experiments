@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { Check, ChevronDown, Copy, RotateCcw } from "lucide-react";
 import styles from "./remixer-panel.module.css";
 import type { RemixerControl, RemixerOption, RemixerPanelProps } from "./types";
@@ -48,6 +48,93 @@ function clampNumber(value: number, control: RemixerControl) {
   return nextValue;
 }
 
+function getFillPercent(value: number, control: RemixerControl) {
+  const min = typeof control.min === "number" ? control.min : 0;
+  const max = typeof control.max === "number" ? control.max : 100;
+  if (max <= min) return 0;
+  return Math.min(100, Math.max(0, ((value - min) / (max - min)) * 100));
+}
+
+const LERP = 0.22;
+
+function roundToStep(value: number, control: RemixerControl) {
+  const step = typeof control.step === "number" && control.step > 0 ? control.step : 1;
+  const min = typeof control.min === "number" ? control.min : 0;
+  const decimals = (String(step).split(".")[1] ?? "").length;
+  return Number((Math.round((value - min) / step) * step + min).toFixed(decimals));
+}
+
+// Range input whose thumb, fill and emitted value ease toward the dragged
+// position instead of jumping. Outside changes (typed value, Reset) snap.
+function SmoothRange({
+  control,
+  value,
+  onChange,
+}: {
+  control: RemixerControl;
+  value: number;
+  onChange: (value: number) => void;
+}) {
+  const [display, setDisplay] = useState(value);
+  const displayRef = useRef(value);
+  const targetRef = useRef(value);
+  const emittedRef = useRef(value);
+  const frameRef = useRef(0);
+  const onChangeRef = useRef(onChange);
+  onChangeRef.current = onChange;
+
+  useEffect(() => {
+    if (value === emittedRef.current) return;
+    cancelAnimationFrame(frameRef.current);
+    frameRef.current = 0;
+    targetRef.current = displayRef.current = emittedRef.current = value;
+    setDisplay(value);
+  }, [value]);
+
+  useEffect(() => () => cancelAnimationFrame(frameRef.current), []);
+
+  const tick = () => {
+    const target = targetRef.current;
+    let next = displayRef.current + (target - displayRef.current) * LERP;
+    const range = (control.max ?? 100) - (control.min ?? 0) || 1;
+    if (Math.abs(target - next) < range * 0.001) next = target;
+    displayRef.current = next;
+    setDisplay(next);
+    const emitted = next === target ? target : roundToStep(next, control);
+    if (emitted !== emittedRef.current) {
+      emittedRef.current = emitted;
+      onChangeRef.current(emitted);
+    }
+    frameRef.current = next === target ? 0 : requestAnimationFrame(tick);
+  };
+
+  const reduceMotion =
+    typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  return (
+    <input
+      type="range"
+      min={control.min}
+      max={control.max}
+      step="any"
+      value={display}
+      onChange={(event) => {
+        const next = roundToStep(Number(event.target.value), control);
+        targetRef.current = next;
+        if (reduceMotion) {
+          displayRef.current = emittedRef.current = next;
+          setDisplay(next);
+          onChangeRef.current(next);
+          return;
+        }
+        if (!frameRef.current) frameRef.current = requestAnimationFrame(tick);
+      }}
+      className={styles.range}
+      style={{ "--fill": `${getFillPercent(display, control)}%` } as CSSProperties}
+    />
+  );
+}
+
 function ControlField({
   control,
   value,
@@ -62,7 +149,7 @@ function ControlField({
   if (control.type === "checkbox" || control.type === "toggle") {
     return (
       <button type="button" onClick={() => onChange(!value)} className={`${styles.field} ${styles.toggleRow}`}>
-        <span className={styles.fieldLabel}>{control.label}</span>
+        <span className={styles.fieldLabel}>{control.id ?? control.label}</span>
         <span className={`${styles.checkboxOuter} ${value ? styles.checkboxSelected : ""}`}>
           <span className={styles.checkboxInner} />
         </span>
@@ -75,7 +162,7 @@ function ControlField({
     return (
       <div className={styles.field}>
         <div className={styles.fieldRow}>
-          <span className={styles.fieldLabel}>{control.label}</span>
+          <span className={styles.fieldLabel}>{control.id ?? control.label}</span>
           <input
             key={colorValue}
             type="text"
@@ -108,7 +195,7 @@ function ControlField({
     return (
       <div className={styles.field}>
         <div className={styles.fieldRow}>
-          <span className={styles.fieldLabel}>{control.label}</span>
+          <span className={styles.fieldLabel}>{control.id ?? control.label}</span>
           <span className={styles.fieldValue}>{displayValue}</span>
         </div>
         {control.description ? <p className={styles.fieldDescription}>{control.description}</p> : null}
@@ -141,7 +228,7 @@ function ControlField({
     return (
       <label className={styles.field}>
         <div className={styles.fieldRow}>
-          <span className={styles.fieldLabel}>{control.label}</span>
+          <span className={styles.fieldLabel}>{control.id ?? control.label}</span>
           <span className={styles.fieldValue}>{displayValue}</span>
         </div>
         {control.description ? <p className={styles.fieldDescription}>{control.description}</p> : null}
@@ -163,7 +250,7 @@ function ControlField({
     return (
       <label className={styles.field}>
         <div className={styles.fieldRow}>
-          <span className={styles.fieldLabel}>{control.label}</span>
+          <span className={styles.fieldLabel}>{control.id ?? control.label}</span>
           <span className={styles.fieldValue}>{displayValue}</span>
         </div>
         {control.description ? <p className={styles.fieldDescription}>{control.description}</p> : null}
@@ -177,7 +264,7 @@ function ControlField({
     return (
       <label className={styles.field}>
         <div className={styles.fieldRow}>
-          <span className={styles.fieldLabel}>{control.label}</span>
+          <span className={styles.fieldLabel}>{control.id ?? control.label}</span>
           <span className={styles.fieldValue}>{control.type}</span>
         </div>
         {control.description ? <p className={styles.fieldDescription}>{control.description}</p> : null}
@@ -201,7 +288,7 @@ function ControlField({
     return (
       <label className={styles.field}>
         <div className={styles.fieldRow}>
-          <span className={styles.fieldLabel}>{control.label}</span>
+          <span className={styles.fieldLabel}>{control.id ?? control.label}</span>
           <span className={styles.fieldValue}>{displayValue}</span>
         </div>
         {control.description ? <p className={styles.fieldDescription}>{control.description}</p> : null}
@@ -215,7 +302,7 @@ function ControlField({
   return (
     <label className={styles.field}>
       <div className={styles.fieldRow}>
-        <span className={styles.fieldLabel}>{control.label}</span>
+        <span className={styles.fieldLabel}>{control.id ?? control.label}</span>
         <input
           type="number"
           min={control.min}
@@ -235,17 +322,25 @@ function ControlField({
         />
       </div>
       {control.description ? <p className={styles.fieldDescription}>{control.description}</p> : null}
-      <input
-        type="range"
-        min={control.min}
-        max={control.max}
-        step={control.step ?? 1}
-        value={numberValue}
-        onChange={(event) => onChange(Number(event.target.value))}
-        className={styles.range}
-      />
+      <SmoothRange control={control} value={numberValue} onChange={onChange} />
     </label>
   );
+}
+
+// Light JSX colouring for the "Your props" block: tag, prop, value.
+function CodeLine({ line }: { line: string }) {
+  const tag = line.match(/^(\s*)(<\/?[\w.]+|\/>)(.*)$/);
+  if (tag) return <>{tag[1]}<span className={styles.codeTag}>{tag[2]}</span>{tag[3]}</>;
+  const prop = line.match(/^(\s*)([\w$]+)=(\{)?(.*?)(\})?$/);
+  if (prop) {
+    return (
+      <>
+        {prop[1]}<span className={styles.codeProp}>{prop[2]}</span>=
+        {prop[3]}<span className={prop[3] ? styles.codeValue : styles.codeString}>{prop[4]}</span>{prop[5]}
+      </>
+    );
+  }
+  return <>{line}</>;
 }
 
 export default function RemixerPanel({
@@ -262,6 +357,8 @@ export default function RemixerPanel({
     defaultOpenGroupId ?? availableGroups[0]?.id ?? null,
   );
   const [copied, setCopied] = useState(false);
+  // Recomputed each render so it tracks every slider move.
+  const code = onCopyCode?.() ?? "";
 
   const handleCopy = async () => {
     if (!onCopyCode) return;
@@ -310,13 +407,29 @@ export default function RemixerPanel({
             </section>
           );
         })}
+        {code ? (
+          <div className={styles.codeBlock}>
+            <div className={styles.codeHeader}>
+              <span className={styles.codeTitle}>Your props</span>
+              <button type="button" onClick={handleCopy} className={styles.codeCopy}>
+                {copied ? <Check className={styles.actionIcon} /> : <Copy className={styles.actionIcon} />}
+                <span>{copied ? "Copied" : "Copy"}</span>
+              </button>
+            </div>
+            <pre className={styles.codePre}>
+              <code>
+                {code.split("\n").map((line, index) => (
+                  <span key={index} className={styles.codeLine}>
+                    <CodeLine line={line} />
+                  </span>
+                ))}
+              </code>
+            </pre>
+          </div>
+        ) : null}
       </div>
       <div className={styles.footer}>
         <div className={styles.footerActions}>
-          <button type="button" onClick={handleCopy} className={styles.footerButton}>
-            {copied ? <Check className={styles.actionIcon} /> : <Copy className={styles.actionIcon} />}
-            <span className={styles.footerButtonText}>{copied ? "Copied" : "Copy Props"}</span>
-          </button>
           <button type="button" onClick={onReset} className={styles.footerButton}>
             <RotateCcw className={styles.actionIcon} />
             <span className={styles.footerButtonText}>Reset</span>

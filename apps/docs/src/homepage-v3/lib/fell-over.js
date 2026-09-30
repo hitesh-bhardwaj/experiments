@@ -143,7 +143,12 @@ export function createFellOver(canvas, options = {}) {
   }
   function faceGrad(ch, sz) {
     const gr = g.createLinearGradient(0, -sz * 0.4, 0, sz * 0.4);
-    if (ch === '0') { gr.addColorStop(0, '#FF9A57'); gr.addColorStop(0.5, '#FF6B00'); gr.addColorStop(1, '#C85200'); } else { gr.addColorStop(0, '#FFFFFF'); gr.addColorStop(0.55, '#E9E7E3'); gr.addColorStop(1, '#B9B6B0'); }
+    if (ch === '0') {
+      // Same stops as the homepage's .gradient-text-animate
+      const hg = g.createLinearGradient(-sz * 0.35, 0, sz * 0.35, 0);
+      hg.addColorStop(0, '#FF8400'); hg.addColorStop(0.5, '#FF4100'); hg.addColorStop(1, '#FF8400');
+      return hg;
+    } else { gr.addColorStop(0, '#FFFFFF'); gr.addColorStop(0.55, '#E9E7E3'); gr.addColorStop(1, '#B9B6B0'); }
     return gr;
   }
   let last = performance.now();

@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { Manrope } from "next/font/google";
 import Matter from "matter-js";
 import { createFellOver } from "../lib/fell-over";
-import { suggestPages } from "../lib/suggest-pages";
+import { getSearchTerms, suggestPages } from "../lib/suggest-pages";
 import { useInteraction } from "./InteractionProvider";
 
 // The physics digits are drawn on a canvas in an 800 weight. The site's own
@@ -37,7 +37,12 @@ export default function SiteNotFound({ pages = [] }) {
     const quipTimerRef = useRef(0);
     const { sound } = useInteraction();
     const asked = usePathname() || "/";
-    const suggestions = useMemo(() => suggestPages(asked, pages), [asked, pages]);
+    // Query params aren't in usePathname; read them after mount.
+    const [search, setSearch] = useState("");
+    useEffect(() => setSearch(window.location.search), [asked]);
+    const terms = useMemo(() => getSearchTerms(asked, search), [asked, search]);
+    const suggestions = useMemo(() => suggestPages(asked, pages, { search, limit: 3 }), [asked, pages, search]);
+    const matched = suggestions.matched;
 
     const [standing, setStanding] = useState(false);
     const [grabbed, setGrabbed] = useState(false);
@@ -92,7 +97,13 @@ export default function SiteNotFound({ pages = [] }) {
 
             {revealed && (
                 <section className="fixed top-[var(--hintY,62vh)] left-1/2 z-2 grid w-[min(620px,calc(100vw-40px))] -translate-x-1/2 justify-items-center gap-4 text-center" aria-live="polite">
-                    <p className={`text-[16.5px] text-[#bdbdbd] ${riseIn}`}>Shame the page still doesn’t exist. Try one of these:</p>
+                    <p className={`text-[16.5px] text-[#bdbdbd] ${riseIn}`}>
+                        {matched ? (
+                            <>Shame the page still doesn’t exist. Here’s what we have for <span className="gradient-text-animate">“{terms.join(" ")}”</span>:</>
+                        ) : (
+                            <>Shame the page still doesn’t exist. Try one of these:</>
+                        )}
+                    </p>
                     <ul className={`flex flex-wrap justify-center gap-2 ${riseIn} [animation-delay:.08s]`}>
                         {suggestions.map((p) => (
                             <li key={p.href}>

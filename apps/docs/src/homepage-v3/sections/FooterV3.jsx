@@ -169,7 +169,7 @@ export default function FooterV3() {
         aria-hidden="true"
         className="pointer-events-none absolute inset-x-0 top-0 z-0 block h-svh w-full mask-[linear-gradient(to_top,transparent,#000_40%)]"
       />
-      <div className="w-full max-md:space-y-[6vw] max-sm:space-y-[8vw] h-fit relative z-3">
+      <div className="mx-auto w-full max-w-[1536px] max-md:space-y-[6vw] max-sm:space-y-[8vw] h-fit relative z-3">
         <LineReveal
           as="h2"
           className="text-[4vw] font-aeonik pointer-events-auto max-[1025px]:w-full max-sm:w-full max-sm:px-0! w-[60%]"

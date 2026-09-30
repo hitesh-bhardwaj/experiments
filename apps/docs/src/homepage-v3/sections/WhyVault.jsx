@@ -70,7 +70,7 @@ export default function WhyVault() {
             aria-label="Why Vault"
             className="relative mx-auto max-w-[calc(100%-2*clamp(0px,1vw,16px))] bg-[#F4F4F4] font-neue-haas text-[#1D1D1D]"
         >
-            <div className="mx-auto grid max-w-[1440px] grid-cols-[minmax(0,.8fr)_minmax(0,1.6fr)] gap-8 px-[clamp(1.25rem,3vw,3rem)] pt-[clamp(5rem,14vh,9rem)] pb-[clamp(4rem,10vh,7rem)] max-[1000px]:grid-cols-1">
+            <div className="mx-auto grid max-w-[1536px] grid-cols-[minmax(0,.8fr)_minmax(0,1.6fr)] gap-8 px-[clamp(1.25rem,3vw,3rem)] pt-[clamp(5rem,14vh,9rem)] pb-[clamp(4rem,10vh,7rem)] max-[1000px]:grid-cols-1">
                 <p className="fadeup max-w-[15vw] text-[1.1vw] leading-[1.45]">
                     Production-grade motion, without the production complexity.
                 </p>
@@ -79,7 +79,7 @@ export default function WhyVault() {
                 </LineReveal>
             </div>
 
-            <div className="mx-auto grid max-w-[1440px] grid-cols-[minmax(0,.8fr)_minmax(0,1.6fr)] gap-8 px-[clamp(1.25rem,3vw,3rem)] pb-[clamp(6rem,16vh,10rem)] max-[1000px]:grid-cols-1">
+            <div className="mx-auto grid max-w-[1536px] grid-cols-[minmax(0,.8fr)_minmax(0,1.6fr)] gap-8 px-[clamp(1.25rem,3vw,3rem)] pb-[clamp(6rem,16vh,10rem)] max-[1000px]:grid-cols-1">
                 <nav className="sticky top-[26vh] grid gap-[18px] self-start max-[1000px]:hidden" aria-label="Why Vault">
                     {/* <p className="mb-2.5 inline-flex items-center gap-2.5 text-[11px] font-semibold tracking-[.14em] text-[#6B6B6B] uppercase before:size-[5px] before:rounded-full before:bg-primary before:content-['']">
                         Why Vault

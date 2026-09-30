@@ -121,8 +121,8 @@ export default function PricingPlansHome() {
     };
 
     return (
-        <section ref={rootRef} id="pricing" className="relative bg-white font-neue-haas text-[#1D1D1D]">
-            <div className="mx-auto flex max-w-[1440px] flex-wrap items-end justify-between gap-8 px-[5vw] pt-[clamp(6rem,15vh,9rem)] pb-[clamp(2.5rem,6vh,4rem)]">
+        <section ref={rootRef} id="pricing" className="relative bg-white font-avenir text-[#1D1D1D]">
+            <div className="mx-auto flex max-w-[1536px] flex-wrap items-end justify-between gap-8 px-[5vw] pt-[clamp(6rem,15vh,9rem)] pb-[clamp(2.5rem,6vh,4rem)]">
                 <LineReveal as="h2" className="max-w-[60vw] text-[clamp(2.2rem,4.6vw,4.6rem)] leading-[1.02] font-normal tracking-[-.035em]">
                     Two Plans.<br/> <span className="gradient-text-animate gradient-text-single">Every Moment Covered.</span>
                 </LineReveal>
@@ -156,7 +156,7 @@ export default function PricingPlansHome() {
                 </div>
             </div>
 
-            <div className="mx-auto grid max-w-[1440px] grid-cols-2 gap-3.5 px-[8vw] max-[1000px]:grid-cols-1 pt-[3vw]">
+            <div className="mx-auto grid max-w-[1536px] grid-cols-2 gap-3.5 px-[8vw] max-[1000px]:grid-cols-1 pt-[3vw]">
                 {PLANS.map((plan) => {
                     const dark = plan.id === "plus";
                     return (
@@ -214,17 +214,17 @@ export default function PricingPlansHome() {
                 })}
             </div>
 
-            <ul className="mx-auto mt-7 flex max-w-[1440px] flex-wrap justify-center gap-x-7 gap-y-2.5 px-[clamp(1.25rem,3vw,3rem)] text-[11px] font-semibold tracking-[.14em] text-[#6B6B6B] uppercase">
+            <ul className="mx-auto mt-7 flex max-w-[1536px] flex-wrap justify-center gap-x-7 gap-y-2.5 px-[clamp(1.25rem,3vw,3rem)] text-[11px] font-semibold tracking-[.14em] text-[#6B6B6B] uppercase">
                 {ASSURANCES.map((a) => (
                     <li key={a} className="flex items-center gap-2"><Tick />{a}</li>
                 ))}
             </ul>
 
-            <div className="fadeup relative mx-auto mt-[clamp(3rem,8vh,5rem)] flex max-w-[calc(1440px-2*clamp(1.25rem,3vw,3rem))] flex-wrap items-center justify-between gap-4 border border-[#1D1D1D]/15 px-6 py-5 max-[1440px]:mx-[clamp(1.25rem,3vw,3rem)]">
-                {/* <CornerMarks /> */}
+            {/* <div className="fadeup relative  mt-[clamp(3rem,8vh,5rem)] flex  mx-auto flex-wrap items-center justify-between gap-4 border border-[#1D1D1D]/15 px-6 py-5 max-[1536px]:mx-[clamp(1.25rem,3vw,3rem)]">
+                <CornerMarks />
                 <p className="text-[#6B6B6B]"><b className="font-bold text-[#1D1D1D]">Just exploring?</b> The Free Core has 50+ production-ready effects, free forever. No account needed.</p>
                 <ButtonV3 href="/effects/free" text="Browse Free Effects" variant="outline" className={LIGHT_OUTLINE} />
-            </div>
+            </div> */}
             <div className="h-[clamp(6rem,14vh,9rem)]" aria-hidden="true" />
         </section>
     );

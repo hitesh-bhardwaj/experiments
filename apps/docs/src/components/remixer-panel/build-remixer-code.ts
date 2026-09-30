@@ -32,3 +32,28 @@ export function buildRemixerDemoCode({
 ${propLines}
 } as const;`;
 }
+
+function toComponentName(value = "Effect") {
+  const name = value.replace(/[^a-z0-9]+/gi, " ").trim().split(/\s+/)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1)).join("");
+  return /^[A-Z]/.test(name) ? name : `Effect${name}`;
+}
+
+// `<Effect prop={value} />` for the current values - what the panel shows and copies.
+export function buildRemixerJsx({
+  componentName,
+  values,
+  groups,
+}: {
+  componentName?: string;
+  values: RemixerValues;
+  groups: RemixerGroup[];
+}) {
+  const name = toComponentName(componentName);
+  const entries = Object.entries(getCopyableRemixerValues(values, groups));
+  if (!entries.length) return `<${name} />`;
+  const lines = entries.map(([key, value]) =>
+    typeof value === "string" ? `  ${key}=${JSON.stringify(value)}` : `  ${key}={${JSON.stringify(value)}}`,
+  );
+  return `<${name}\n${lines.join("\n")}\n/>`;
+}

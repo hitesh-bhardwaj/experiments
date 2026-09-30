@@ -153,7 +153,7 @@ export default function ExploreTheEffects() {
         <section
             ref={container}
             id="explore-the-effects"
-            className="relative w-full overflow-x-clip px-[3.5vw] py-[7vw] pt-[20vw] text-center max-[1025px]:px-[5vw] max-md:px-[6vw] max-sm:px-[7vw] space-y-[3vw]"
+            className="relative mx-auto w-full max-w-[1536px] overflow-x-clip px-[3.5vw] py-[7vw] pt-[20vw] text-center max-[1025px]:px-[5vw] max-md:px-[6vw] max-sm:px-[7vw] space-y-[3vw]"
         >
             <LineReveal as="h2" className="mx-auto w-[60vw]  font-aeonik text-[3.85vw] max-[1025px]:w-full">
                 Explore the Moments Your Website is <span className="gradient-text-animate">Missing.</span>
