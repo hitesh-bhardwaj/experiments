@@ -81,7 +81,6 @@ const CATEGORIES = [
 // Card slide on a category change: out toward the side you're leaving, in
 // from the side you're heading to
 const SLIDE_PX = 80;
-const SLIDE_OUT_S = 0.35;
 const SLIDE_IN_S = 1.1;
 const SLIDE_STAGGER = 0.06;
 const EASE = "cubic-bezier(.16,1,.3,1)";
@@ -97,7 +96,6 @@ export default function ExploreTheEffects() {
 
     useFadeUp(container);
     const directionRef = useRef(1);
-    const busyRef = useRef(false);
     const { sound } = useInteraction();
     const [tab, setTab] = useState(0); // the selected tab (drives the pill)
     const [shown, setShown] = useState(0); // the cards on screen (lags during the slide-out)
@@ -127,38 +125,27 @@ export default function ExploreTheEffects() {
         gsap.fromTo(
             cards,
             { opacity: 0, x: SLIDE_PX * directionRef.current },
-            { opacity: 1, x: 0, duration: SLIDE_IN_S, stagger: SLIDE_STAGGER, ease: "expo.out", onComplete: () => { busyRef.current = false; } },
+            { opacity: 1, x: 0, duration: SLIDE_IN_S, stagger: SLIDE_STAGGER, ease: "expo.out" },
         );
     }, { scope: container, dependencies: [shown] });
 
+    // Instant: the tab and its cards switch on click, and the new cards slide in
     const choose = (i) => {
-        if (i === tab || busyRef.current) return;
+        if (i === tab) return;
         directionRef.current = i > tab ? 1 : -1;
+        gsap.killTweensOf(gridRef.current.children);
         setTab(i);
+        setShown(i);
         sound?.note?.(i);
-        if (prefersReducedMotion()) {
-            setShown(i);
-            return;
-        }
-        // Current cards slide out first, then the new set takes their place
-        busyRef.current = true;
-        gsap.to(gridRef.current.children, {
-            opacity: 0,
-            x: -SLIDE_PX * directionRef.current,
-            duration: SLIDE_OUT_S,
-            stagger: SLIDE_STAGGER,
-            ease: "power2.in",
-            onComplete: () => setShown(i),
-        });
     };
 
     return (
         <section
             ref={container}
             id="explore-the-effects"
-            className="relative mx-auto w-full max-w-[1536px] overflow-x-clip px-[3.5vw] py-[7vw] pt-[20vw] text-center max-md:px-[6vw] max-sm:px-[7vw] space-y-[2vw] max-md:space-y-8 max-md:pt-32 max-md:pb-20"
+            className="relative mx-auto w-full max-w-[1536px] overflow-x-clip px-[3.5vw] pb-[12vw] pt-[20vw] text-center max-md:px-[6vw] max-sm:px-[7vw] space-y-[2vw] max-md:space-y-8 max-md:pt-32 max-md:pb-20"
         >
-            <LineReveal as="h2" className="mx-auto w-[60vw] font-aeonik text-[3.85vw] max-md:w-full max-md:text-[9vw]">
+            <LineReveal as="h2" className="mx-auto w-[60vw] font-aeonik text-[5vw] max-md:w-full max-md:text-[9vw]">
                 Explore the Moments Your Website is <span className="gradient-text-animate">Missing.</span>
             </LineReveal>
 
@@ -167,14 +154,14 @@ export default function ExploreTheEffects() {
                 role="tablist"
                 aria-label="Effect categories"
                 data-fadeup-delay="0.1"
-                className="fadeup relative mt-[34px] inline-flex max-w-full max-md:overflow-x-auto gap-0.5 border border-grey bg-black/30 p-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+                className="fadeup relative mt-[34px] inline-flex max-w-full max-md:overflow-x-auto gap-0.5 border border-grey bg-black/30 p-[3px] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
             >
                 {/* <CornerMarks /> */}
                 {/* Sliding active pill, framed like the cards */}
                 <span
                     ref={pillRef}
                     aria-hidden="true"
-                    className="absolute top-1 bottom-1 left-0 border border-grey bg-white/10 transition-[transform,width] duration-[600ms] motion-reduce:transition-none"
+                    className="absolute inset-y-0.75 left-0 border border-grey bg-white/10 transition-[transform,width] duration-[600ms] motion-reduce:transition-none"
                     style={{ transitionTimingFunction: EASE }}
                 >
                     {/* <CornerMarks /> */}
@@ -187,7 +174,7 @@ export default function ExploreTheEffects() {
                         aria-selected={tab === i}
                         aria-controls="explore-the-effects-panel"
                         onClick={() => choose(i)}
-                        className={`relative z-1 h-10 shrink-0 px-5 font-mono text-[13px] font-medium tracking-normal uppercase transition-colors duration-[600ms] ${tab === i ? "text-[#F4F4F4]" : "text-white/50 hover:text-white/80"}`}
+                        className={`relative z-1 h-[30px] shrink-0 px-3.5 font-mono text-[11px] font-medium tracking-wide uppercase transition-colors duration-[600ms] ${tab === i ? "text-[#F4F4F4]" : "text-white/50 hover:text-white/80"}`}
                     >
                         {category.label}
                     </button>
@@ -216,7 +203,7 @@ export default function ExploreTheEffects() {
                                 <h3 className="font-avenir text-[clamp(1.25rem,1.6vw,1.6rem)] font-normal tracking-[-.02em]">{item.title}</h3>
                                 <p className="mt-2 text-[15px] leading-normal text-white/60">{item.text}</p>
                             </div>
-                            <LinkButton href={item.href} text="Try now" underline underlineClassName="mt-0.5" className="text18 text-white" />
+                            <LinkButton href={item.href} text="Explore" underline tilted={false} underlineClassName="mt-0" className="text18 text-white hover:text-primary transition-colors duration-300" />
                         </div>
                     </article>
                 ))}

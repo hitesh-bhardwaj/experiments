@@ -25,6 +25,7 @@ export default function CodeCard({ play }) {
     return (
         <div
             ref={cardRef}
+            data-sound-flow="on"
             className="relative isolate overflow-hidden bg-[#141414] p-3.5 text-white md:aspect-[16/11] md:[&>section]:h-full md:[&>section>div]:h-full md:[&>section>div>div]:h-full md:[&_.fadeup]:min-h-0! md:[&_.fadeup]:flex-1 md:[&_.fadeup]:overflow-hidden [&_[data-panel-body]]:[overflow-wrap:anywhere] [&_[data-panel-body]_*]:min-w-0"
         >
             {/* The engine sizes itself from this (invisible) canvas; only the ink shows */}

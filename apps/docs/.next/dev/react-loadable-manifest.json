@@ -1,16 +1,4 @@
 {
-  "../node_modules/@clerk/nextjs/dist/esm/app-router/client/ClerkProvider.js -> ./keyless-creator-reader.js": {
-    "id": "../node_modules/@clerk/nextjs/dist/esm/app-router/client/ClerkProvider.js -> ./keyless-creator-reader.js",
-    "files": [
-      "static/chunks/_app-pages-browser_node_modules_clerk_nextjs_dist_esm_app-router_client_keyless-creator-reader_js.js"
-    ]
-  },
-  "../node_modules/@clerk/nextjs/dist/esm/app-router/client/keyless-cookie-sync.js -> ../keyless-actions.js": {
-    "id": "../node_modules/@clerk/nextjs/dist/esm/app-router/client/keyless-cookie-sync.js -> ../keyless-actions.js",
-    "files": [
-      "static/chunks/_app-pages-browser_node_modules_clerk_nextjs_dist_esm_app-router_keyless-actions_js.js"
-    ]
-  },
   "../node_modules/@react-three/drei/core/VideoTexture.js -> hls.js": {
     "id": "../node_modules/@react-three/drei/core/VideoTexture.js -> hls.js",
     "files": []
@@ -23,12 +11,6 @@
     "id": "components/WebsiteComps/SiteInteractions.jsx -> @/homepage-v3/components/SiteBackground",
     "files": [
       "static/chunks/_app-pages-browser_src_homepage-v3_components_SiteBackground_jsx.js"
-    ]
-  },
-  "components/layout/VaultHeader.jsx -> ./ProfileDropDown": {
-    "id": "components/layout/VaultHeader.jsx -> ./ProfileDropDown",
-    "files": [
-      "static/chunks/_app-pages-browser_src_components_layout_ProfileDropDown_jsx.js"
     ]
   },
   "homepage-v3/components/why-vault/CursorDemo.jsx -> @/components/butterfly-trail-cursor": {

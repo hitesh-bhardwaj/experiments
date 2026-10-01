@@ -70,10 +70,10 @@ const EASE = "cubic-bezier(.16,1,.3,1)";
 // ButtonV3's outline variant is built for dark sections; on this light sheet it's a line button
 const LIGHT_OUTLINE = "border-[#1D1D1D]/40! bg-transparent! text-[#1D1D1D]!";
 
-function Tick({ dark = false }) {
+function Tick() {
     return (
-        <i className={`mt-px grid size-5 place-items-center ${dark ? "bg-primary/20" : "bg-primary/15"} text-primary`}>
-            <svg viewBox="0 0 24 24" className="size-3" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <i className="mt-px grid size-5 place-items-center bg-primary text-white">
+            <svg viewBox="0 0 24 24" className="size-3.5" fill="none" stroke="currentColor" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <path d="M5 12.5l4.2 4L19 7" />
             </svg>
         </i>
@@ -121,18 +121,18 @@ export default function PricingPlansHome() {
     };
 
     return (
-        <section ref={rootRef} id="pricing" className="relative bg-white font-avenir text-[#1D1D1D]">
+        <section ref={rootRef} id="pricing" data-sound-flow="off" className="relative bg-white font-avenir text-[#1D1D1D]">
             <div className="mx-auto flex max-w-[1536px] flex-wrap items-end justify-between gap-8 px-[5vw] max-md:px-5 max-md:gap-6 pt-[clamp(6rem,15vh,9rem)] pb-[clamp(2.5rem,6vh,4rem)]">
                 <LineReveal as="h2" className="max-w-[60vw] max-md:max-w-full text-[clamp(2.2rem,4.6vw,4.6rem)] leading-[1.02] font-normal tracking-[-.035em]">
                     Two Plans.<br/> <span className="gradient-text-animate gradient-text-single">Every Moment Covered.</span>
                 </LineReveal>
 
-                <div ref={billRef} role="radiogroup" aria-label="Billing period" className="fadeup relative isolate inline-flex border border-[#1D1D1D]/15 bg-[#ececec] p-1">
+                <div ref={billRef} role="radiogroup" aria-label="Billing period" className="fadeup relative isolate inline-flex border border-[#1D1D1D]/15 bg-[#ececec] p-1.5">
                     {/* <CornerMarks /> */}
                     <i
                         ref={pillRef}
                         aria-hidden="true"
-                        className="absolute top-1 bottom-1 left-0 z-0 bg-[#1D1D1D] transition-[transform,width] duration-[800ms] motion-reduce:transition-none"
+                        className="absolute top-1.5 bottom-1.5 left-0 z-0 bg-[#1D1D1D] transition-[transform,width] duration-[800ms] motion-reduce:transition-none"
                         style={{ transitionTimingFunction: EASE }}
                     />
                     {BILLING.map((b) => {
@@ -144,11 +144,11 @@ export default function PricingPlansHome() {
                                 role="radio"
                                 aria-checked={on}
                                 onClick={() => choose(b.id)}
-                                className={`relative z-1 inline-flex h-10 items-center gap-2.5 px-[18px] text-[11px] font-semibold tracking-[.14em] uppercase transition-colors duration-700 ${on ? "text-[#F4F4F4]" : "text-[#6B6B6B]"}`}
+                                className={`relative z-1 inline-flex h-10 items-center gap-2.5 px-[18px] text-[11px] font-medium tracking-[.14em] uppercase transition-colors duration-700 ${on ? "text-[#F4F4F4]" : "text-[#6B6B6B]"}`}
                             >
                                 {b.label}
                                 {b.save && (
-                                    <span className={`px-[7px] py-[3px] transition-colors duration-700 ${on ? "bg-primary text-[#141414]" : "bg-primary/20 text-[#B84A00]"}`}>{b.save}</span>
+                                    <span className={`px-[7px] py-[3px] transition-colors duration-700 ${on ? "bg-primary text-[#141414]" : "bg-primary/20 text-primary/70"}`}>{b.save}</span>
                                 )}
                             </button>
                         );
@@ -168,7 +168,7 @@ export default function PricingPlansHome() {
                             {/* <CornerMarks /> */}
                             {dark && <span aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(80%_60%_at_100%_0%,rgba(255,107,0,.4),transparent_60%)]" />}
                             {plan.badge && (
-                                <span className="absolute top-[22px] right-[22px] z-1 bg-primary px-2.5 py-1.5 text-[11px] font-semibold tracking-[.14em] text-[#141414] uppercase max-sm:static max-sm:self-start">
+                                <span className="text-shimmer absolute top-[22px] right-[22px] z-1 text-[11px] font-medium tracking-[.14em] uppercase max-sm:static max-sm:self-start">
                                     {plan.badge}
                                 </span>
                             )}
@@ -188,15 +188,15 @@ export default function PricingPlansHome() {
                             </div>
 
                             <p data-period-copy className={`relative min-h-[1.5em] text-[14.5px] ${dark ? "text-[#a9a9a9]" : "text-[#6B6B6B]"}`}>{plan.billLine[period]}</p>
-                            <p data-period-copy className={`relative self-start px-[11px] py-[7px] text-[11px] font-semibold tracking-[.14em] uppercase ${dark ? "bg-primary/15 text-[#FFB27A]" : "bg-primary/10 text-[#B84A00]"}`}>
+                            <p data-period-copy className={`relative self-start px-[11px] py-[7px] text-[11px] font-medium tracking-[.14em] uppercase ${dark ? "bg-primary/15" : "bg-primary/10"} text-primary/70`}>
                                 {plan.chip[period]}
                             </p>
 
                             <ul className="relative mt-1.5 grid flex-1 content-start gap-[13px] text-[15.5px]">
                                 {plan.features.map((f, i) => (
                                     <li key={i} className="grid grid-cols-[22px_minmax(0,1fr)] items-start gap-2.5">
-                                        <Tick dark={dark} />
-                                        <span data-period-copy={f.text ? undefined : ""} className="[&_b]:font-bold">{f.text ?? f[period]}</span>
+                                        <Tick />
+                                        <span data-period-copy={f.text ? undefined : ""} className="[&_b]:font-medium">{f.text ?? f[period]}</span>
                                     </li>
                                 ))}
                             </ul>
@@ -207,15 +207,16 @@ export default function PricingPlansHome() {
                                 variant={plan.cta.variant}
                                 className={`relative mt-2.5 w-fit self-start justify-center ${plan.cta.variant === "outline" ? LIGHT_OUTLINE : ""}`}
                             />
-                            {plan.yearlyNote && period === "y" && (
-                                <p className="relative -mt-1 text-left text-[9px] font-medium tracking-[.14em] text-[#FFB27A] uppercase">{plan.yearlyNote}</p>
-                            )}
+                            {/* Same line reserved in every card, so the buttons sit level */}
+                            <p aria-hidden={!plan.yearlyNote} className="relative -mt-1 min-h-[1.5em] text-left text-[9px] font-medium tracking-[.14em] text-primary/70 uppercase">
+                                {plan.yearlyNote ?? ""}
+                            </p>
                         </article>
                     );
                 })}
             </div>
 
-            <ul className="mx-auto mt-7 flex max-w-[1536px] flex-wrap justify-center gap-x-7 gap-y-2.5 px-[clamp(1.25rem,3vw,3rem)] text-[11px] font-semibold tracking-[.14em] text-[#6B6B6B] uppercase">
+            <ul className="mx-auto mt-7 flex max-w-[1536px] flex-wrap justify-center gap-x-7 gap-y-2.5 px-[clamp(1.25rem,3vw,3rem)] text-[11px] font-medium tracking-[.14em] text-[#6B6B6B] uppercase">
                 {ASSURANCES.map((a) => (
                     <li key={a} className="flex items-center gap-2"><Tick />{a}</li>
                 ))}

@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 
-// Theremin-style cursor for the homepage: a ring with "Hold to explode", shown
+// Theremin-style cursor for the homepage: a ring with "Hold to explore", shown
 // only over the hero / footer ribbons. Links, buttons and anything marked
 // data-cursor-off show nothing extra. The native cursor always stays visible;
 // the ring trails alongside it. Fine pointers only.
@@ -11,6 +11,17 @@ const CLICKABLE = "a[href],button,input,select,textarea,[role=button],[role=tab]
 const HOLD_ZONES = "#hero-v3,#footer";
 const HOLD_SKIP = "a,button,input,textarea,select,label,[role=button],[role=tab],[role=radio],h1,h2,h3,p";
 const LERP = 0.22;
+// Text in the hold zones: hidden over it even when it ignores the pointer
+// (the hero copy sits in a pointer-events: none layer over the canvas)
+const TEXT_IN_ZONE = "h1,h2,h3,h4,p,li,blockquote,figcaption,[data-cursor-text]";
+
+function overText(zone, x, y) {
+    for (const el of zone.querySelectorAll(TEXT_IN_ZONE)) {
+        const r = el.getBoundingClientRect();
+        if (r.width && x >= r.left && x <= r.right && y >= r.top && y <= r.bottom) return true;
+    }
+    return false;
+}
 
 export default function CursorV3() {
     const rootRef = useRef(null);
@@ -38,15 +49,15 @@ export default function CursorV3() {
                 return setMode("off");
             }
             const zone = target.closest(HOLD_ZONES);
-            if (zone && !target.closest(HOLD_SKIP)) {
+            if (zone && !target.closest(HOLD_SKIP) && !overText(zone, pos.x, pos.y)) {
                 // Already in pieces: the particles follow the pointer, so invite that instead
                 if (zone.querySelector("[data-ribbons-shattered]") || zone.hasAttribute("data-ribbons-shattered")) {
                     delete root.dataset.charging;
-                    return setMode("hold", "Interact");
+                    return setMode("hold", " ");
                 }
                 // Charging: the ring's primary stroke fills in step with the ribbons' hold
                 if (holding) root.dataset.charging = ""; else delete root.dataset.charging;
-                return setMode("hold", holding ? "Keep holding" : "Hold to explode");
+                return setMode("hold", holding ? "" : "Hold to explore");
             }
             delete root.dataset.charging;
             return setMode("off");

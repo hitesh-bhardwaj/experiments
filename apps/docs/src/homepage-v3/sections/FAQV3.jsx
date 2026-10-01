@@ -268,6 +268,7 @@ export default function FAQV3({ faqItems, translateTop = true }) {
     <section
       ref={container}
       id="faq"
+      data-sound-flow="off"
       className="relative z-10 h-fit px-[7vw] w-full bg-foreground py-[7vw] text-background max-md:mt-0! max-md:px-[5vw] max-md:py-[22vw]"
     >
 

@@ -996,3 +996,14 @@ html.loader-first-visit body {
 @media (prefers-reduced-motion: reduce) {
   .hx-cursor-ring, .hx-cursor-label { transition: opacity .2s; }
 }
+
+/* Running shimmer on text (e.g. the "Most complete" badge): primary with a light band sweeping across */
+.text-shimmer {
+  background-image: linear-gradient(110deg, var(--primary) 0%, var(--primary) 40%, #ffe2c8 50%, var(--primary) 60%, var(--primary) 100%);
+  background-size: 250% 100%;
+  -webkit-background-clip: text; background-clip: text;
+  color: transparent; -webkit-text-fill-color: transparent;
+  animation: text-shimmer 3.2s linear infinite;
+}
+@keyframes text-shimmer { from { background-position: 100% 0; } to { background-position: -150% 0; } }
+@media (prefers-reduced-motion: reduce) { .text-shimmer { animation: none; } }

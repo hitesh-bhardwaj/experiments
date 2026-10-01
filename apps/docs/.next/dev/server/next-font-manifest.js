@@ -1,1 +1,1 @@
-self.__NEXT_FONT_MANIFEST="{\"pages\":{},\"app\":{\"/Users/vidushisaxena/Documents/GitHub/vault-new/apps/docs/src/app/layout\":[],\"/Users/vidushisaxena/Documents/GitHub/vault-new/apps/docs/src/app/not-found\":[\"static/media/ae8a78eb5415b966-s.p.woff2\"]},\"appUsingSizeAdjust\":true,\"pagesUsingSizeAdjust\":false}"
+self.__NEXT_FONT_MANIFEST="{\"pages\":{},\"app\":{\"/Users/vidushisaxena/Documents/GitHub/vault-new/apps/docs/src/app/layout\":[]},\"appUsingSizeAdjust\":true,\"pagesUsingSizeAdjust\":false}"

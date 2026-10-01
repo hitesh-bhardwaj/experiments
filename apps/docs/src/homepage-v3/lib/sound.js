@@ -73,6 +73,8 @@ export function createSound() {
     [car, mod, tr].forEach((o) => { o.start(t); o.stop(t + len + 0.1); });
   }
   const CH = [[41, 53, 57, 60, 64, 67], [40, 52, 55, 59, 62, 66], [38, 50, 53, 57, 60, 64], [36, 48, 52, 55, 59, 62]];
+  // Background score level (was 1) - 20% softer
+  const MUSIC_LEVEL = 0.8;
   const PENTA = [72, 74, 77, 79, 81, 84, 86, 89];
   function emitPulse(v) { listeners.forEach((fn) => { try { fn(v); } catch (e) { /* ignore */ } }); }
   function chord() {
@@ -123,7 +125,7 @@ export function createSound() {
       const t = ctx.currentTime; music.gain.cancelScheduledValues(t); music.gain.setValueAtTime(music.gain.value, t);
       if (on) {
         if (ctx.state === 'suspended') ctx.resume();
-        music.gain.linearRampToValueAtTime(1, t + 4); sfx.gain.setValueAtTime(1, t);
+        music.gain.linearRampToValueAtTime(MUSIC_LEVEL, t + 4); sfx.gain.setValueAtTime(1, t);
         clearInterval(chordT); clearTimeout(dropT); chord(); chordT = setInterval(chord, 8000); dropT = setTimeout(drops, 3000);
       } else {
         music.gain.linearRampToValueAtTime(0, t + 1.5); sfx.gain.setValueAtTime(0, t + 0.05); clearInterval(chordT); clearTimeout(dropT);
@@ -144,9 +146,10 @@ export function createSound() {
       if (kind === 'nav') {
         const s2 = ctx.createBufferSource(), bp = ctx.createBiquadFilter(), g = ctx.createGain();
         s2.buffer = noise; bp.type = 'bandpass'; bp.frequency.value = 1800 + i * 120; bp.Q.value = 6;
-        g.gain.setValueAtTime(0.09, t); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.06);
+        // Same voice as before, scaled ×2.2 to sit level with the button hovers (0.04)
+        g.gain.setValueAtTime(0.2, t); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.06);
         s2.connect(bp); bp.connect(g); g.connect(sfx); s2.start(t, Math.random() * 3); s2.stop(t + 0.08);
-        kal(m - 12, t, 0.018, sfx, p);
+        kal(m - 12, t, 0.04, sfx, p);
       } else if (kind === 'primary') bellG(m, 0.04, p);
       else if (kind === 'secondary') kal(m, t, 0.04, sfx, p);
       else if (kind === 'card') { kal(m - 12, t, 0.045, sfx, p); kal(m - 5, t + 0.07, 0.02, sfx, p); }
@@ -261,10 +264,12 @@ function hoverKind(t) {
  * homepage), click on buttons/links, and the swish that follows pointer speed. Returns an unwire function.
  */
 export function wireSoundUI(sound, { root = document, hover = 'a,button,[role=tab],input[type=range],[data-sound-hover]', click = 'a,button,[data-sound-click]' } = {}) {
-  const onOver = (e) => { const t = e.target.closest && e.target.closest(hover); if (t && !t.contains(e.relatedTarget)) sound.hover(e.clientX / innerWidth, hoverKind(t)); };
-  const onClick = (e) => { if (e.target.closest && e.target.closest(click)) sound.click(); };
+  // Opt-outs: data-sound-hover="off" / data-sound-click="off" on an element or any ancestor
+  const onOver = (e) => { const t = e.target.closest && e.target.closest(hover); if (t && !t.contains(e.relatedTarget) && !t.closest('[data-sound-hover="off"]')) sound.hover(e.clientX / innerWidth, hoverKind(t)); };
+  const onClick = (e) => { const t = e.target.closest && e.target.closest(click); if (t && !t.closest('[data-sound-click="off"]')) sound.click(); };
   let lx = -1, ly = -1, raf = 0, speed = 0;
-  const onMove = (e) => { if (lx >= 0) speed = Math.max(speed, Math.hypot(e.clientX - lx, e.clientY - ly)); lx = e.clientX; ly = e.clientY; };
+  // No swish over still, light sections: data-sound-flow="off" (nearest marker wins, so "on" re-enables inside)
+  const onMove = (e) => { const f = e.target.closest && e.target.closest('[data-sound-flow]'); if (f && f.dataset.soundFlow === 'off') { lx = e.clientX; ly = e.clientY; return; } if (lx >= 0) speed = Math.max(speed, Math.hypot(e.clientX - lx, e.clientY - ly)); lx = e.clientX; ly = e.clientY; };
   const tick = () => { raf = requestAnimationFrame(tick); sound.flow(speed / 55); speed *= 0.8; };
   root.addEventListener('pointerover', onOver);
   root.addEventListener('click', onClick, true);

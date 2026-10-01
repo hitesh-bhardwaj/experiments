@@ -5,7 +5,7 @@ import gsap from "gsap";
 import { prefersReducedMotion } from "@/lib/motion";
 import { EASINGS } from "./why-vault-data";
 
-const TUNE_TEXT = "Small motion. Big signal.";
+const TUNE_TEXT = "Tune it until it feels right.";
 const WORDS = TUNE_TEXT.split(" ");
 const label = "text-[11px] font-semibold uppercase tracking-[.14em]";
 const range =
@@ -42,6 +42,8 @@ function SmoothRange({ min, max, step, value, label, onChange, onRelease }) {
     return (
         <input
             type="range"
+            data-sound-hover="off"
+            data-sound-click="off"
             min={min}
             max={max}
             step="any"
@@ -120,6 +122,7 @@ export default function TuneCard({ replayKey }) {
                                 key={value}
                                 type="button"
                                 aria-pressed={ease === value}
+                                data-sound-hover="off"
                                 onClick={() => { setEase(value); replay(duration, stagger, value); }}
                                 className={`h-7 px-2.5 text-xs shadow-[inset_0_0_0_1px_rgba(29,29,29,.1)] transition-colors duration-[600ms] ${ease === value ? "bg-[#1D1D1D] text-[#F4F4F4]" : ""}`}
                             >

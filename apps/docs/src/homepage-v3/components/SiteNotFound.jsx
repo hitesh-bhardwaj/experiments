@@ -3,20 +3,20 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Manrope } from "next/font/google";
 import Matter from "matter-js";
 import { createFellOver } from "../lib/fell-over";
 import { getSearchTerms, suggestPages } from "../lib/suggest-pages";
 import { useInteraction } from "./InteractionProvider";
 
-// The physics digits are drawn on a canvas in an 800 weight. The site's own
-// face only ships 400/500, so Manrope 800 is loaded for this page alone.
-// next/font renames the family, so the canvas is handed the real name.
-const manrope = Manrope({ weight: "800", subsets: ["latin"], display: "swap" });
-const FELL_OPTIONS = {
-    font: `800 {s}px ${manrope.style.fontFamily}, system-ui, sans-serif`,
-    fontLoad: `800 100px ${manrope.style.fontFamily}`,
-};
+// The physics digits are drawn on a canvas in Aeonik Pro Bold. next/font
+// renames the family behind --font-aeonik, so the real name is read at mount.
+function aeonikOptions() {
+    const family = getComputedStyle(document.body).getPropertyValue("--font-aeonik").trim() || "system-ui";
+    return {
+        font: `700 {s}px ${family}, system-ui, sans-serif`,
+        fontLoad: `700 100px ${family}`,
+    };
+}
 
 const QUICK_LINKS = [
     { label: "Effects", href: "/effects" },
@@ -66,7 +66,7 @@ export default function SiteNotFound({ pages = [] }) {
             onQuip: showQuip,
             onDone: () => { sound?.reform?.(); setStanding(true); setRevealed(true); },
             onUndone: () => setStanding(false),
-            ...FELL_OPTIONS,
+            ...aeonikOptions(),
         });
         fellRef.current = fell;
         return () => {
@@ -82,7 +82,7 @@ export default function SiteNotFound({ pages = [] }) {
     };
 
     return (
-        <main className="fixed inset-0 bg-[#141414] font-neue-haas text-[#F4F4F4]">
+        <main className="fixed inset-0 bg-[#141414] font-aeonik text-[#F4F4F4]">
             <canvas ref={canvasRef} className="fixed inset-0 block h-screen w-screen touch-none [&.can]:cursor-grab [&.grab]:cursor-grabbing" aria-hidden="true" />
 
             <header className="pointer-events-none fixed inset-x-0 top-[var(--headY,18vh)] z-2 text-center">

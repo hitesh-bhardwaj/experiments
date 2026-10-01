@@ -29,11 +29,8 @@ const DEFAULTS = {
   respectReducedMotion: true,
   onLevel: null,                                  // (level 0..1, y 0..1, bright 0..1) => void, every frame while visible
   onPluck: null,                                  // (y 0..1, amount) => void
+  trail: true,                                    // the fading 'pulsar' history behind the line
 };
-
-// Resting string: extra damping and a gentle pull back to the flat line (per half-step)
-const SETTLE_DAMPING = 0.975;
-const SETTLE_PULL = 0.995;
 
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 
@@ -66,12 +63,13 @@ export function createSignalWave(canvas, options = {}) {
       transparent: true, depthWrite: false, blending: T.AdditiveBlending, side: T.DoubleSide, uniforms: { uGlow: { value: 1 }, uFlare: { value: 0 } },
       vertexShader: 'attribute float aK;varying vec2 vUv;varying float vK;void main(){vUv=uv;vK=aK;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
       fragmentShader: 'uniform float uGlow,uFlare;varying vec2 vUv;varying float vK;void main(){float d=abs(vUv.y-.5)*2.;float edge=smoothstep(0.,.08,vUv.x)*smoothstep(1.,.92,vUv.x);' +
-        (trail ? 'float a=exp(-d*d*4.)*(1.-vK)*.55*uGlow*edge;vec3 c=mix(vec3(1.,.28,0.),vec3(.55,.12,0.),vK);gl_FragColor=vec4(c*a,1.);}'
-               : 'float core=exp(-d*d*40.);float glow=exp(-d*d*3.)*.55;vec3 c=vec3(1.,.22,0.)*(glow+uFlare*.6)+vec3(1.,.78,.55)*core*(1.+uFlare);gl_FragColor=vec4(c*edge*uGlow,1.);}'),
+        (trail ? 'float a=exp(-d*d*4.)*(1.-vK)*.55*uGlow*edge;vec3 c=mix(vec3(1.,.28,0.),vec3(.55,.12,0.),vK);vec3 o=c*a;gl_FragColor=vec4(o,max(o.r,max(o.g,o.b)));}'
+               : 'float core=exp(-d*d*40.);float glow=exp(-d*d*3.)*.55;vec3 c=vec3(1.,.22,0.)*(glow+uFlare*.6)+vec3(1.,.78,.55)*core*(1.+uFlare);vec3 o=c*edge*uGlow;gl_FragColor=vec4(o,min(1.,max(o.r,max(o.g,o.b))));}'),
     });
   }
   const mainGeo = strip(1), trailGeo = strip(HM), mainMat = mat(false), trailMat = mat(true);
-  G.add(new T.Mesh(trailGeo, trailMat)); const mm = new T.Mesh(mainGeo, mainMat); mm.renderOrder = 2; G.add(mm);
+  if (o.trail) G.add(new T.Mesh(trailGeo, trailMat));
+  const mm = new T.Mesh(mainGeo, mainMat); mm.renderOrder = 2; G.add(mm);
 
   /* ---- pointer → local coordinates on the string's plane ---- */
   const mouse = { x: 0, y: 0, sx: 0, sy: 0, on: false };
@@ -104,7 +102,7 @@ export function createSignalWave(canvas, options = {}) {
   }
 
   /* ---- simulation + drawing ---- */
-  let charge = 0;
+  let charge = 0, time = 0;
   function sim(dt) {
     let i, j; const hit = mouse.on && local(); let yN = 0.5;
     if (hit) {
@@ -117,11 +115,10 @@ export function createSignalWave(canvas, options = {}) {
       st.lx = lp.x; st.ly = lp.y; st.has = true; yN = clamp((lp.y + 2.6) / 5.2, 0, 1);
     } else { st.has = false; st.prox *= 0.92; }
     if (charge > 0 && st.idx >= 0) { const peak = clamp(st.ly, -2.6, 2.6); for (j = 1; j < N - 1; j++) { const t2 = tri(j, st.idx, N * 0.38); y[j] += (peak * t2 - y[j]) * 0.07 * charge; v[j] *= 1 - 0.2 * charge; } st.flare = Math.max(st.flare, charge * 0.7); }
-    // Untouched (no pointer on the string, no hold), the string settles back to a flat line instead of
-    // being driven forever; plucks, holds and the soundtrack's chords still set it ringing.
-    const damping = hit || charge > 0 ? 0.9925 : SETTLE_DAMPING;
-    for (let s = 0; s < 2; s++) { for (i = 1; i < N - 1; i++) { v[i] += (y[i - 1] + y[i + 1] - 2 * y[i]) * 0.42; v[i] *= damping; } for (i = 1; i < N - 1; i++) y[i] += v[i]; }
-    if (!hit && charge === 0) for (i = 1; i < N - 1; i++) y[i] *= SETTLE_PULL;
+    // As in the prototype: constant damping plus a tiny travelling sine force, so the string
+    // always ripples gently on its own
+    time += dt;
+    for (let s = 0; s < 2; s++) { for (i = 1; i < N - 1; i++) { v[i] += (y[i - 1] + y[i + 1] - 2 * y[i]) * 0.42 + Math.sin(i * 0.06 + time * 1.1) * 0.0004; v[i] *= 0.9925; } for (i = 1; i < N - 1; i++) y[i] += v[i]; }
     let e = 0; for (i = 0; i < N; i++) e += Math.abs(v[i]); e = Math.min(1, e / (N * 0.02)); st.energy += (e - st.energy) * 0.08; st.flare *= Math.pow(0.35, dt);
     if (++frameN % 2 === 0) { hist[hi].set(y); hi = (hi + 1) % HM; }
     const P = mainGeo.attributes.position.array;
@@ -130,9 +127,11 @@ export function createSignalWave(canvas, options = {}) {
       P[b] = x + nx * w2; P[b + 1] = yy + ny * w2; P[b + 2] = 0; P[b + 3] = x - nx * w2; P[b + 4] = yy - ny * w2; P[b + 5] = 0;
     }
     mainGeo.attributes.position.needsUpdate = true;
+    if (o.trail) {
     const Q = trailGeo.attributes.position.array;
     for (let k = 0; k < HM; k++) { const h = hist[(hi - 1 - k + HM * 2) % HM], zz = -(k + 1) * 0.5, oy = (k + 1) * 0.12; for (i = 0; i < N; i++) { const b2 = (k * N + i) * 6, x2 = X(i), y2 = h[i] * 0.92 + oy; Q[b2] = x2; Q[b2 + 1] = y2 + 0.035; Q[b2 + 2] = zz; Q[b2 + 3] = x2; Q[b2 + 4] = y2 - 0.035; Q[b2 + 5] = zz; } }
     trailGeo.attributes.position.needsUpdate = true;
+    }
     mainMat.uniforms.uFlare.value = st.flare; trailMat.uniforms.uGlow.value = 1 + st.flare * 1.5;
     o.onLevel && o.onLevel(mouse.on ? st.prox * 0.45 + st.energy * 0.6 + charge * 0.4 : 0, yN, st.energy + charge * 0.6);
   }

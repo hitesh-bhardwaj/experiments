@@ -396,20 +396,16 @@ export default function LoaderV3({ exitMode = "dock" }) {
           wide at 43/351 tall (92vw on phones), so its lower edge is half that
           height below the middle of the screen. */}
       <div ref={entryRef} className="absolute inset-x-0 top-[calc(50%+min(5.02vw,98px)+2.5rem)] z-10 mx-auto flex w-full max-w-[44rem] flex-col items-center gap-4 px-6 text-center max-md:top-[calc(50%+5.64vw+2rem)]">
-          <div className="flex items-center justify-center gap-3 max-md:flex-col max-md:items-stretch">
+          <div className="flex items-center justify-center">
             <LoaderEntryButton
-              label="Enter With Sound"
+              label="Enter the Vault"
               variant="orange"
               onClick={() => chooseEntry(true)}
             />
-            <LoaderEntryButton
-              label="Enter Quietly"
-              onClick={() => chooseEntry(false)}
-            />
           </div>
-          <p className="font-neue-haas text-[10px] uppercase tracking-[0.22em] text-white/40">
+          {/* <p className="font-neue-haas text-[10px] uppercase tracking-[0.22em] text-white/40">
             Headphones recommended
-          </p>
+          </p> */}
       </div>
     </div>
   );

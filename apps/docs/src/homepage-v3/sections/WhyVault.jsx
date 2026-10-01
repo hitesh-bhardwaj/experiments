@@ -7,7 +7,6 @@ import { useGSAP } from "@gsap/react";
 import { useLenis } from "lenis/react";
 import LineReveal from "@/components/Animations/LineReveal";
 import { useFadeUp } from "@/components/Animations/gsapAnimations";
-import { useInteraction } from "../components/InteractionProvider";
 import CodeCard from "../components/why-vault/CodeCard";
 import MomentsCard from "../components/why-vault/MomentsCard";
 import TuneCard from "../components/why-vault/TuneCard";
@@ -22,7 +21,6 @@ const CARD_TOP_GAP = 20;
 export default function WhyVault() {
     const rootRef = useRef(null);
     const lenis = useLenis();
-    const { sound } = useInteraction();
     const [active, setActive] = useState(0);
     const [activations, setActivations] = useState(() => WHY_VAULT_ITEMS.map(() => 0));
 
@@ -37,16 +35,13 @@ export default function WhyVault() {
                 end: "bottom 55%",
                 onToggle: (self) => {
                     if (!self.isActive) return;
-                    setActive((current) => {
-                        if (current !== index) sound?.note?.(index);
-                        return index;
-                    });
+                    setActive(index);
                     // Counts activations so the tune card can replay each time
                     setActivations((counts) => counts.map((n, i) => (i === index ? n + 1 : n)));
                 },
             });
         });
-    }, { scope: rootRef, dependencies: [sound] });
+    }, { scope: rootRef });
 
     const goTo = (index) => {
         const panel = rootRef.current.querySelector(`[data-wv-panel="${index}"]`);
@@ -57,7 +52,7 @@ export default function WhyVault() {
 
     // Each item's card, by id, so the list can grow or shrink freely
     const renderCard = (id, i) => {
-        if (id === "moments") return <MomentsCard onTab={() => sound?.note?.(1)} />;
+        if (id === "moments") return <MomentsCard />;
         if (id === "tune") return <TuneCard replayKey={activations[i]} />;
         // The install walkthrough over its own orange fluid; types once, on first activation
         return <CodeCard play={activations[i] > 0} />;
@@ -68,10 +63,11 @@ export default function WhyVault() {
             ref={rootRef}
             id="why"
             aria-label="Why Vault"
+            data-sound-flow="off"
             className="relative mx-auto max-w-[calc(100%-2*clamp(0px,1vw,16px))] bg-[#F4F4F4] font-neue-haas text-[#1D1D1D]"
         >
             <div className="mx-auto grid max-w-[1536px] grid-cols-[minmax(0,.8fr)_minmax(0,1.6fr)] gap-8 px-[clamp(1.25rem,3vw,3rem)] pt-[clamp(5rem,14vh,9rem)] pb-[clamp(4rem,10vh,7rem)] max-md:grid-cols-1">
-                <p className="fadeup max-w-[max(15vw,14rem)] text-[max(1.1vw,0.875rem)] leading-[1.45] max-md:max-w-[36ch]">
+                <p className="fadeup max-w-[max(15vw,14rem)] text-[max(1.1vw,0.875rem)] leading-[1.45] max-md:max-w-[36ch] mt-3">
                     Production-grade motion, without the production complexity.
                 </p>
                 <LineReveal as="h2" className="text-[clamp(2.2rem,4.6vw,4.6rem)] leading-[1.02] font-normal! tracking-[-.035em] font-aeonik!">
@@ -80,7 +76,7 @@ export default function WhyVault() {
             </div>
 
             <div className="mx-auto grid max-w-[1536px] grid-cols-[minmax(0,.8fr)_minmax(0,1.6fr)] gap-8 px-[clamp(1.25rem,3vw,3rem)] pb-[clamp(6rem,16vh,10rem)] max-md:grid-cols-1">
-                <nav className="sticky top-[26vh] grid gap-[18px] self-start max-md:hidden" aria-label="Why Vault">
+                <nav className="sticky top-1/2 -translate-y-1/2 grid gap-[18px] self-start max-md:hidden" aria-label="Why Vault">
                     {/* <p className="mb-2.5 inline-flex items-center gap-2.5 text-[11px] font-semibold tracking-[.14em] text-[#6B6B6B] uppercase before:size-[5px] before:rounded-full before:bg-primary before:content-['']">
                         Why Vault
                     </p> */}

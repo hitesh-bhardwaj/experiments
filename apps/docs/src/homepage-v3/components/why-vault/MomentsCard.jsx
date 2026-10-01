@@ -2,14 +2,15 @@
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { isLighthouseOrHeadless, isSoftwareRenderer } from "@/lib/audit";
+import Link from "next/link";
 import CursorDemo from "./CursorDemo";
 import ScrollDemo from "./ScrollDemo";
 import TextDemo from "./TextDemo";
 
 const TABS = [
-    { id: "scroll", label: "Scroll", effect: "Scroll Distortion" },
-    { id: "cursor", label: "Cursor", effect: "Butterfly Trail Cursor" },
-    { id: "text", label: "Text", effect: "Rectangular Text Reveal" },
+    { id: "scroll", label: "Scroll", effect: "Scroll Distortion", href: "/effects/scroll-effects/scroll-distortion" },
+    { id: "cursor", label: "Cursor", effect: "Butterfly Trail Cursor", href: "/effects/cursor-effects/butterfly-trail-cursor" },
+    { id: "text", label: "Text", effect: "Rectangular Text Reveal", href: "/effects/text-animations/rectangular-text-reveal" },
 ];
 // Mount the demos well before the card arrives so they are already running when it does
 const NEAR_VIEWPORT = "150% 0px";
@@ -21,7 +22,7 @@ function Demo({ tab }) {
 }
 
 // 01 "150+ components": live Vault effects behind Cursor · Text · Scroll tabs
-export default function MomentsCard({ onTab }) {
+export default function MomentsCard() {
     const cardRef = useRef(null);
     const tabsRef = useRef(null);
     const pillRef = useRef(null);
@@ -61,7 +62,7 @@ export default function MomentsCard({ onTab }) {
     }, [tab]);
 
     return (
-        <div ref={cardRef} className="relative aspect-[16/11] overflow-hidden bg-[#141414] text-[#F4F4F4] max-md:aspect-[4/5]">
+        <div ref={cardRef} data-sound-hover="off" className="group/moments relative aspect-[16/11] overflow-hidden bg-[#141414] text-[#F4F4F4] max-md:aspect-[4/5]">
             <div className="absolute inset-0">
                 {near && (!needsWebGL || canRunWebGL) ? (
                     <Demo key={tab} tab={tab} />
@@ -87,7 +88,6 @@ export default function MomentsCard({ onTab }) {
                             if (t.id === tab) return;
                             setLeaving(tab);
                             setTab(t.id);
-                            onTab?.();
                         }}
                         className={`relative z-1 h-[30px] px-3.5 font-avenir text-[13px] transition-colors duration-[600ms] ease-[cubic-bezier(.16,1,.3,1)] ${tab === t.id ? "text-[#F4F4F4]" : "text-[#1D1D1D]"} ${leaving === t.id && tab !== t.id ? "motion-safe:animate-[hx-tab-release_.9s_ease-out_both]" : ""}`}
                     >
@@ -95,9 +95,12 @@ export default function MomentsCard({ onTab }) {
                     </button>
                 ))}
             </div>
-            <p className="pointer-events-none absolute bottom-4 left-4 z-10 bg-black/50 px-2.5 py-1 text-[11px] font-semibold tracking-[.14em] text-white/80 uppercase backdrop-blur-sm">
+            <Link
+                href={current.href}
+                className="absolute bottom-4 left-4 z-10 text-[10px] font-normal tracking-[.12em] text-white/70 uppercase underline-offset-4 transition-colors duration-700 ease-[cubic-bezier(.16,1,.3,1)] hover:text-white hover:underline focus-visible:text-white focus-visible:underline"
+            >
                 {current.effect}
-            </p>
+            </Link>
         </div>
     );
 }
