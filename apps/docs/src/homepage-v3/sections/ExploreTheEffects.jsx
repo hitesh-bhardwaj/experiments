@@ -4,6 +4,7 @@ import { useLayoutEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import LineReveal from "@/components/Animations/LineReveal";
+import { useFadeUp } from "@/components/Animations/gsapAnimations";
 import LazyVideo from "@/components/WebsiteComps/LazyVideo";
 import LinkButton from "@/components/WebsiteComps/LinkButton";
 import CornerMarks from "@/homepage-v3/components/CornerMarks";
@@ -93,6 +94,8 @@ export default function ExploreTheEffects() {
     const tabsRef = useRef(null);
     const pillRef = useRef(null);
     const gridRef = useRef(null);
+
+    useFadeUp(container);
     const directionRef = useRef(1);
     const busyRef = useRef(false);
     const { sound } = useInteraction();
@@ -153,9 +156,9 @@ export default function ExploreTheEffects() {
         <section
             ref={container}
             id="explore-the-effects"
-            className="relative mx-auto w-full max-w-[1536px] overflow-x-clip px-[3.5vw] py-[7vw] pt-[20vw] text-center max-[1025px]:px-[5vw] max-md:px-[6vw] max-sm:px-[7vw] space-y-[3vw]"
+            className="relative mx-auto w-full max-w-[1536px] overflow-x-clip px-[3.5vw] py-[7vw] pt-[20vw] text-center max-md:px-[6vw] max-sm:px-[7vw] space-y-[2vw] max-md:space-y-8 max-md:pt-32 max-md:pb-20"
         >
-            <LineReveal as="h2" className="mx-auto w-[60vw]  font-aeonik text-[3.85vw] max-[1025px]:w-full">
+            <LineReveal as="h2" className="mx-auto w-[60vw] font-aeonik text-[3.85vw] max-md:w-full max-md:text-[9vw]">
                 Explore the Moments Your Website is <span className="gradient-text-animate">Missing.</span>
             </LineReveal>
 
@@ -163,7 +166,8 @@ export default function ExploreTheEffects() {
                 ref={tabsRef}
                 role="tablist"
                 aria-label="Effect categories"
-                className="relative mt-[34px] inline-flex max-w-full gap-0.5 border border-grey bg-black/30 p-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+                data-fadeup-delay="0.1"
+                className="fadeup relative mt-[34px] inline-flex max-w-full max-md:overflow-x-auto gap-0.5 border border-grey bg-black/30 p-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
             >
                 {/* <CornerMarks /> */}
                 {/* Sliding active pill, framed like the cards */}
@@ -183,7 +187,7 @@ export default function ExploreTheEffects() {
                         aria-selected={tab === i}
                         aria-controls="explore-the-effects-panel"
                         onClick={() => choose(i)}
-                        className={`relative z-1 h-10 shrink-0 px-5 font-avenir text-[13px] font-semibold tracking-[.14em] uppercase transition-colors duration-[600ms] ${tab === i ? "text-[#F4F4F4]" : "text-white/50 hover:text-white/80"}`}
+                        className={`relative z-1 h-10 shrink-0 px-5 font-mono text-[13px] font-medium tracking-normal uppercase transition-colors duration-[600ms] ${tab === i ? "text-[#F4F4F4]" : "text-white/50 hover:text-white/80"}`}
                     >
                         {category.label}
                     </button>
@@ -195,7 +199,8 @@ export default function ExploreTheEffects() {
                 id="explore-the-effects-panel"
                 role="tabpanel"
                 aria-live="polite"
-                className="mx-auto mt-12 grid max-w-[1280px] grid-cols-2 gap-4 text-left max-[1025px]:grid-cols-1"
+                data-fadeup-delay="0.2"
+                className="fadeup mx-auto mt-4 grid max-w-[1280px] grid-cols-2 gap-4 text-left max-md:grid-cols-1"
             >
                 {CATEGORIES[shown].effects.map((item) => (
                     <article
@@ -211,7 +216,7 @@ export default function ExploreTheEffects() {
                                 <h3 className="font-avenir text-[clamp(1.25rem,1.6vw,1.6rem)] font-normal tracking-[-.02em]">{item.title}</h3>
                                 <p className="mt-2 text-[15px] leading-normal text-white/60">{item.text}</p>
                             </div>
-                            <LinkButton href={item.href} text="Try now" underline className="text18 text-white" />
+                            <LinkButton href={item.href} text="Try now" underline underlineClassName="mt-0.5" className="text18 text-white" />
                         </div>
                     </article>
                 ))}

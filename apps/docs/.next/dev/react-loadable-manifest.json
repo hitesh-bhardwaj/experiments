@@ -37,10 +37,10 @@
       "static/chunks/_app-pages-browser_src_components_butterfly-trail-cursor_index_tsx.js"
     ]
   },
-  "homepage-v3/components/why-vault/ScrollDemo.jsx -> @/components/grid-tunnel": {
-    "id": "homepage-v3/components/why-vault/ScrollDemo.jsx -> @/components/grid-tunnel",
+  "homepage-v3/components/why-vault/ScrollDemo.jsx -> @/components/scroll-distortion": {
+    "id": "homepage-v3/components/why-vault/ScrollDemo.jsx -> @/components/scroll-distortion",
     "files": [
-      "static/chunks/_app-pages-browser_src_components_grid-tunnel_index_tsx.js"
+      "static/chunks/_app-pages-browser_src_components_scroll-distortion_index_tsx.js"
     ]
   },
   "homepage-v3/sections/FooterV3.jsx -> ../lib/theremin-ribbons": {

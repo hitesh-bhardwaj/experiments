@@ -40,7 +40,6 @@ const WORDMARK_GLYPHS = Array.from("HYPERIUX");
 const STATIC_COLOR = "#1a1a1a";
 const REVEAL_COLOR = "#ff5f00";
 const FLASH_COLOR = "#ffffff";
-const COUNTER_COLOR = "#ffffff";
 // What the mark cools to on its way out. The orange is the loader's own accent
 // and carrying it across the hero would read as a second colour crossing the
 // screen; grey lets the particles pass over the ASCII field instead of
@@ -527,16 +526,43 @@ export function createAsciiLoaderField(canvas, state, options = {}) {
     rebuild();
   };
 
-  const paintCounter = (w, h, alpha) => {
-    const pct = String(Math.round(state.progress * 100)).padStart(3, "0");
-    const counterSize = w < MOBILE_BREAKPOINT ? 12 : 14;
+  const labelFamily = (() => {
+    const v = getComputedStyle(document.body).getPropertyValue("--font-neue-haas").trim();
+    return v ? `${v}, system-ui, sans-serif` : "system-ui, sans-serif";
+  })();
+
+  // Status line in place of a percentage: "Opening the vault" with three
+  // dots blinking in turn, then "Vault is open" once loading reaches 100.
+  const paintCounter = (w, h, alpha, now) => {
+    const full = Math.round(state.progress * 100) >= 100;
+    const text = full ? "VAULT IS OPEN" : "OPENING THE VAULT";
+
     ctx.save();
-    ctx.globalAlpha = alpha;
-    ctx.font = `${counterSize}px ${fontFamily}`;
-    ctx.textAlign = "center";
     ctx.textBaseline = "bottom";
-    ctx.fillStyle = COUNTER_COLOR;
-    ctx.fillText(pct, w / 2, h - 30);
+    // Same face, size, weight and colour as "Headphones recommended"
+    ctx.fillStyle = "#ffffff";
+    ctx.font = `400 10px ${labelFamily}`;
+    if ("letterSpacing" in ctx) ctx.letterSpacing = "0.22em";
+    const base = alpha * 0.4;
+    ctx.globalAlpha = base;
+
+    if (full) {
+      ctx.textAlign = "center";
+      ctx.fillText(text, w / 2, h - 30);
+    } else {
+      // Centre text + dots as one unit so the line doesn't shift
+      const dotsW = ctx.measureText("...").width;
+      const textW = ctx.measureText(text).width;
+      const x = (w - textW - dotsW) / 2;
+      ctx.textAlign = "left";
+      ctx.fillText(text, x, h - 30);
+      const dotW = dotsW / 3;
+      const step = Math.floor(now / 350) % 4; // 0..3 dots lit, then reset
+      for (let i = 0; i < 3; i++) {
+        ctx.globalAlpha = base * (i < step ? 1 : 0.25);
+        ctx.fillText(".", x + textW + i * dotW, h - 30);
+      }
+    }
     ctx.restore();
     // Reset main font
     ctx.font = `${fontSize}px ${fontFamily}`;
@@ -804,7 +830,7 @@ export function createAsciiLoaderField(canvas, state, options = {}) {
     // leaves with the static when docking: it belongs to the loading screen, so
     // it can't still be sitting there once the screen has emptied.
     const counterAlpha = 1 - clamp01(Math.max(exit / 0.3, clear));
-    if (counterAlpha > 0) paintCounter(w, h, counterAlpha);
+    if (counterAlpha > 0) paintCounter(w, h, counterAlpha, now);
   };
 
   const tick = (now) => {

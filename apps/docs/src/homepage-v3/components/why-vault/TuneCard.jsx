@@ -9,10 +9,64 @@ const TUNE_TEXT = "Small motion. Big signal.";
 const WORDS = TUNE_TEXT.split(" ");
 const label = "text-[11px] font-semibold uppercase tracking-[.14em]";
 const range =
-    "col-span-full h-[22px] w-full cursor-pointer appearance-none bg-transparent [&::-moz-range-thumb]:size-3.5 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-primary [&::-moz-range-track]:h-0.5 [&::-moz-range-track]:bg-[#1D1D1D]/15 [&::-webkit-slider-runnable-track]:h-0.5 [&::-webkit-slider-runnable-track]:bg-[#1D1D1D]/15 [&::-webkit-slider-thumb]:-mt-1.5 [&::-webkit-slider-thumb]:size-3.5 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-primary";
+    "col-span-full h-[22px] w-full cursor-pointer appearance-none bg-transparent [&::-moz-range-thumb]:size-3.5 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-primary [&::-moz-range-track]:h-0.5 [&::-moz-range-track]:bg-transparent [&::-webkit-slider-runnable-track]:h-0.5 [&::-webkit-slider-runnable-track]:bg-[linear-gradient(90deg,var(--primary)_var(--fill),rgba(29,29,29,.15)_var(--fill))] [&::-moz-range-progress]:h-0.5 [&::-moz-range-progress]:bg-primary [&::-moz-range-track]:h-0.5 [&::-moz-range-track]:bg-[#1D1D1D]/15 [&::-webkit-slider-thumb]:-mt-1.5 [&::-webkit-slider-thumb]:size-3.5 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-primary";
 
 // 03 "Tune everything": duration, stagger and easing controls that replay a
 // word reveal. Replays when the item becomes active (`replayKey` changes).
+// Range whose thumb and primary fill ease toward the dragged value instead of
+// snapping. The value itself updates straight away (labels stay exact).
+function SmoothRange({ min, max, step, value, label, onChange, onRelease }) {
+    const [display, setDisplay] = useState(value);
+    const displayRef = useRef(value);
+    const targetRef = useRef(value);
+    const rafRef = useRef(0);
+
+    useEffect(() => () => cancelAnimationFrame(rafRef.current), []);
+
+    const tick = () => {
+        const target = targetRef.current;
+        let next = displayRef.current + (target - displayRef.current) * 0.18;
+        if (Math.abs(target - next) < (max - min) * 0.0005) next = target;
+        displayRef.current = next;
+        setDisplay(next);
+        rafRef.current = next === target ? 0 : requestAnimationFrame(tick);
+    };
+
+    const snap = (v) => {
+        const decimals = (String(step).split(".")[1] ?? "").length;
+        return Math.min(max, Math.max(min, Number((Math.round((v - min) / step) * step + min).toFixed(decimals))));
+    };
+
+    const fill = ((display - min) / (max - min)) * 100;
+
+    return (
+        <input
+            type="range"
+            min={min}
+            max={max}
+            step="any"
+            value={display}
+            aria-label={label}
+            aria-valuetext={String(value)}
+            className={range}
+            style={{ "--fill": `${fill}%` }}
+            onChange={(e) => {
+                const v = snap(+e.target.value);
+                targetRef.current = v;
+                onChange(v);
+                if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
+                    displayRef.current = v;
+                    setDisplay(v);
+                } else if (!rafRef.current) {
+                    rafRef.current = requestAnimationFrame(tick);
+                }
+            }}
+            onPointerUp={() => onRelease(targetRef.current)}
+            onKeyUp={() => onRelease(targetRef.current)}
+        />
+    );
+}
+
 export default function TuneCard({ replayKey }) {
     const wordsRef = useRef([]);
     const [duration, setDuration] = useState(1.4);
@@ -52,13 +106,11 @@ export default function TuneCard({ replayKey }) {
             <div className="grid content-center gap-5 p-6">
                 <label className={`grid grid-cols-[1fr_auto] gap-y-1.5 text-[#6B6B6B] font-medium! ${label}`}>
                     Duration <output className="text-[#1D1D1D]">{duration.toFixed(2)}s</output>
-                    <input type="range" min="0.4" max="3" step="0.05" value={duration} aria-label="Duration" className={range}
-                        onChange={(e) => setDuration(+e.target.value)} onPointerUp={(e) => replay(+e.currentTarget.value)} onKeyUp={(e) => replay(+e.currentTarget.value)} />
+                    <SmoothRange min={0.4} max={3} step={0.05} value={duration} label="Duration" onChange={setDuration} onRelease={(v) => replay(v)} />
                 </label>
                 <label className={`grid grid-cols-[1fr_auto] gap-y-1.5 text-[#6B6B6B] font-medium! ${label}`}>
                     Stagger <output className="text-[#1D1D1D]">{stagger.toFixed(3)}s</output>
-                    <input type="range" min="0" max="0.2" step="0.005" value={stagger} aria-label="Stagger" className={range}
-                        onChange={(e) => setStagger(+e.target.value)} onPointerUp={(e) => replay(duration, +e.currentTarget.value)} onKeyUp={(e) => replay(duration, +e.currentTarget.value)} />
+                    <SmoothRange min={0} max={0.2} step={0.005} value={stagger} label="Stagger" onChange={setStagger} onRelease={(v) => replay(duration, v)} />
                 </label>
                 <div className="font-medium!">
                     <span className={`text-[#6B6B6B] font-medium! ${label}`}>Easing</span>

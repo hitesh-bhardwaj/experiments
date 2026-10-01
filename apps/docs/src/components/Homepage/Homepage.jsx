@@ -18,6 +18,7 @@ import LoaderV3 from "@/homepage-v3/components/LoaderV3";
 import DitherTransition from "@/homepage-v3/components/DitherTransition";
 import ScrollTopOnLoad from "@/homepage-v3/components/ScrollTopOnLoad";
 import SmallMotion from "@/homepage-v3/sections/SmallMotion";
+import CursorV3 from "@/homepage-v3/components/CursorV3";
 
 const USE_CASES = [
   {
@@ -62,6 +63,7 @@ export default function Homepage({ faqItems, effects = [] }) {
   return (
     <div className="home-type">
       <LoaderV3 />
+      <CursorV3 />
       <NavbarV3 effects={effects} introOnLoader />
       {/* Theremin's scroll feel: a slower glide, a slightly stronger wheel */}
       <LenisSmoothScroll lerp={0.065} wheelMultiplier={0.85} />

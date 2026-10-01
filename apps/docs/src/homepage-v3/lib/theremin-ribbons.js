@@ -58,9 +58,12 @@ const MAX_POINTER_STEP = 40; // px of pointer movement one frame can register
 
 const POSE = {
   ribbons: { rp: [2.2, -4.6, 0], rr: [-0.28, -0.42, 0.22], rs: 1.12 },
-  ribbons_m: { rp: [1.2, -3.4, -2], rr: [-0.28, -0.42, 0.22], rs: 0.95 },
+  ribbons_m: { rp: [2.5, -1.8, -2], rr: [-0.28, -0.42, 0.22], rs: 0.95 },
   // Footer: a small cluster in the top-right corner
   footer: { rp: [9.4, 0.6, 0], rr: [-0.28, -0.42, 0.22], rs: 0.56 },
+  // Phones: on the right edge like desktop, mostly off-screen so a slice shows
+  // (the camera sees about ±3.9 units across there). Same rotation as desktop.
+  footer_m: { rp: [6.2, 1.5, 0], rr: [-0.28, -0.42, 0.22], rs: 0.5 },
 };
 
 const RIBBON_VERT_PARS = /* glsl */ `
@@ -362,6 +365,13 @@ export function mountThereminRibbons(host, canvas, { pose = "hero", sound = null
   // Shatter state machine
   const SH = { mode: 0, t: 0 };
   let mouseSpeed = 0, sparkling = false;
+  // Lets the page (the homepage cursor) know whether this scene is in pieces.
+  // Marked on the hero's <main> / the <footer>, plus a window event.
+  function announce(shattered) {
+    const zone = host.closest("main, footer, section") || host;
+    if (shattered) zone.dataset.ribbonsShattered = ""; else delete zone.dataset.ribbonsShattered;
+    dispatchEvent(new CustomEvent("hx-ribbons-state", { detail: { shattered } }));
+  }
   function startShatter() {
     for (let n = 0; n < SN; n++) {
       const k = n * 3, sp = 2.2 + sR[n] * 5.5;
@@ -373,6 +383,7 @@ export function mountThereminRibbons(host, canvas, { pose = "hero", sound = null
       sVel[k] = sDir[k] * im; sVel[k + 1] = sDir[k + 1] * im; sVel[k + 2] = sDir[k + 2] * im;
     }
     SH.mode = 1; SH.t = 0;
+    announce(true);
     shards.visible = true;
     SU.uAlpha.value = 1;
     ribMat.opacity = 0;
@@ -448,7 +459,7 @@ export function mountThereminRibbons(host, canvas, { pose = "hero", sound = null
       const f = clamp(SH.t / CROSSFADE_S, 0, 1), e = f * f * (3 - 2 * f);
       ribMat.opacity = e;
       SU.uAlpha.value = 1 - e;
-      if (f >= 1) { SH.mode = 0; shards.visible = false; ribMat.opacity = 1; }
+      if (f >= 1) { SH.mode = 0; shards.visible = false; ribMat.opacity = 1; announce(false); }
     }
   }
 
@@ -476,8 +487,17 @@ export function mountThereminRibbons(host, canvas, { pose = "hero", sound = null
   const charge = { v: 0 };
   let press = null, chargeTween = null, overOk = false, lastX = -1, lastY = -1;
   let played = !isHero || reduced;
+  // The hero canvas is sticky, so its lower part can sit under the next
+  // section. Interaction (hover, tap, hold, sound) counts wherever the hero
+  // is still visible - even a thin strip at the top - but not below it.
+  const heroSection = isHero ? host.closest("main, section") : null;
+  const heroActive = (clientY = lastY) => !heroSection || clientY < heroSection.getBoundingClientRect().bottom;
   const checkTarget = (target) => {
-    overOk = finePointer && played && !!target && host.contains(target) && !target.closest?.(HOLD_EXCLUDE);
+    // In the hero, anything layered over the canvas (the tools strip, the
+    // empty space under it) counts too, like Theremin; links, buttons and
+    // text still keep their own behaviour via HOLD_EXCLUDE.
+    const inside = !!target && (host.contains(target) || (!!heroSection && heroSection.contains(target)));
+    overOk = finePointer && played && heroActive() && inside && !target.closest?.(HOLD_EXCLUDE);
   };
 
   // Pointer relative to the canvas, clamped to its edges (a pointer far
@@ -490,7 +510,7 @@ export function mountThereminRibbons(host, canvas, { pose = "hero", sound = null
     mouse.cy = clientY - r.top;
     mouse.x = clamp((mouse.cx / r.width) * 2 - 1, -1, 1);
     mouse.y = clamp((mouse.cy / r.height) * 2 - 1, -1, 1);
-    mouse.on = mouse.cx >= 0 && mouse.cy >= 0 && mouse.cx <= r.width && mouse.cy <= r.height;
+    mouse.on = heroActive(clientY) && mouse.cx >= 0 && mouse.cy >= 0 && mouse.cx <= r.width && mouse.cy <= r.height;
   };
   const onPointerMove = (e) => {
     updatePointer(e.clientX, e.clientY);
@@ -513,6 +533,29 @@ export function mountThereminRibbons(host, canvas, { pose = "hero", sound = null
       },
     });
   };
+  // Shatter ripple: the ribbons vanish into shards on release, so the
+  // surface ripple has nothing to ride on - draw the wave over the canvas.
+  const shockwave = (clientX, clientY) => {
+    if (reduced || clientX < 0) return;
+    const r = host.getBoundingClientRect();
+    const x = clientX - r.left, y = clientY - r.top;
+    [0, 0.12, 0.26].forEach((delay, i) => {
+      const ring = document.createElement("span");
+      ring.setAttribute("aria-hidden", "true");
+      Object.assign(ring.style, {
+        position: "absolute", left: `${x}px`, top: `${y}px`, width: "40px", height: "40px",
+        margin: "-20px 0 0 -20px", borderRadius: "50%", pointerEvents: "none", zIndex: "2",
+        border: `${i === 0 ? 2 : 1}px solid ${i === 1 ? "rgba(255,255,255,.55)" : "rgba(255,107,0,.85)"}`,
+        boxShadow: i === 0 ? "0 0 40px rgba(255,107,0,.45), inset 0 0 30px rgba(255,107,0,.25)" : "none",
+        opacity: "0",
+      });
+      host.appendChild(ring);
+      gsap.fromTo(ring, { scale: 0.2, opacity: 1 }, {
+        scale: 26 + i * 6, opacity: 0, duration: 1.6 + i * 0.25, delay, ease: "expo.out",
+        onComplete: () => ring.remove(),
+      });
+    });
+  };
   const onPointerUp = () => {
     if (!press) return;
     const p = press;
@@ -524,6 +567,7 @@ export function mountThereminRibbons(host, canvas, { pose = "hero", sound = null
       tap();
       sound?.tap?.();
     } else if (release(full) && full) {
+      shockwave(lastX, lastY);
       sound?.release?.("shatter");
       later(() => onUnlock?.("shatter"), UNLOCK_DELAY_MS);
     }
@@ -540,6 +584,14 @@ export function mountThereminRibbons(host, canvas, { pose = "hero", sound = null
     else if (!run && raf) { cancelAnimationFrame(raf); raf = 0; }
   };
   const onScroll = () => {
+    // Scrolled past the hero mid-hold: let go quietly, no shatter.
+    if (press && !heroActive()) {
+      const p = press;
+      press = null;
+      p.tw.kill();
+      if (p.sounding) sound?.holdEnd?.(false);
+      chargeTween = gsap.to(charge, { v: 0, duration: 1.4, ease: "expo.out" });
+    }
     if (lastX >= 0) {
       updatePointer(lastX, lastY);
       checkTarget(document.elementFromPoint(lastX, lastY));
@@ -565,7 +617,9 @@ export function mountThereminRibbons(host, canvas, { pose = "hero", sound = null
 
   // Animation loop
   const state = { introT: isHero && !reduced ? 1 : 0 };
-  const basePose = isHero ? POSE.ribbons : POSE.footer;
+  // Start in the pose for this screen shape, so nothing glides across on load
+  const startNarrow = (canvas.clientWidth || innerWidth) / (canvas.clientHeight || innerHeight) < NARROW_ASPECT;
+  const basePose = isHero ? (startNarrow ? POSE.ribbons_m : POSE.ribbons) : (startNarrow ? POSE.footer_m : POSE.footer);
   const cur = { rp: new THREE.Vector3().fromArray(basePose.rp), rr: new THREE.Vector3().fromArray(basePose.rr), rs: basePose.rs };
   let scrollV = 0, lastScroll = window.scrollY, scrollWave = 0, lastScrollStreak = 0, hoverAmp = 0, lastMx = -1, lastMy = -1, idleT = 3;
   // The loop pauses off-screen, so on resume the scroll it missed must not
@@ -581,7 +635,8 @@ export function mountThereminRibbons(host, canvas, { pose = "hero", sound = null
     raf = requestAnimationFrame(frame);
     const dt = Math.min(clock.getDelta(), 0.05);
     const time = (uTime.value += dt);
-    const P = isHero ? (camera.aspect < NARROW_ASPECT ? POSE.ribbons_m : POSE.ribbons) : POSE.footer;
+    const narrow = camera.aspect < NARROW_ASPECT;
+    const P = isHero ? (narrow ? POSE.ribbons_m : POSE.ribbons) : (narrow ? POSE.footer_m : POSE.footer);
     const k = 1 - Math.pow(0.12, dt);
     cur.rp.lerp(tmpV.fromArray(P.rp), k);
     cur.rr.lerp(tmpV.fromArray(P.rr), k);

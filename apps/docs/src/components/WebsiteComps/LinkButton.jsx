@@ -35,6 +35,7 @@ export default function LinkButton({
   onClick,
   id,
   underline = 'w-full',
+  underlineClassName = "mt-1",
   ...props
 }) {
   const underlineRef = useRef(null);
@@ -156,7 +157,7 @@ export default function LinkButton({
           {underline ? (
             <div
               ref={underlineRef}
-              className="absolute left-0 top-full mt-1 h-px w-full bg-current"
+              className={`absolute left-0 top-full h-px w-full bg-current ${underlineClassName}`}
             />
           ) : null}
         </span>

@@ -249,9 +249,10 @@ export function createSound() {
 function hoverKind(t) {
   const explicit = t.closest('[data-sound-kind]');
   if (explicit) return explicit.dataset.soundKind;
-  if (t.closest('header, nav, [role=dialog][aria-label*="menu" i]')) return 'nav';
+  // Footer links share the header dropdown's voice
+  if (t.closest('header, nav, footer, [role=dialog][aria-label*="menu" i]')) return 'nav';
   if (t.closest('[role=tab], [role=tablist], article')) return 'card';
-  if (t.closest('footer, #faq, details')) return 'link';
+  if (t.closest('#faq, details')) return 'link';
   return '';
 }
 

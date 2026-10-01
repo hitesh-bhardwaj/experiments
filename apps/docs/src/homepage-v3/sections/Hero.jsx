@@ -27,43 +27,20 @@ const AT_HEADING = 1;
 const AT_COPY = 2.3;
 const AT_ACTIONS = 2.75;
 
-// The intro animates these in from nothing, so they ship hidden in the markup
-// rather than being hidden by the effect below. Hiding them in JS leaves them
-// painted and visible for the frames between first paint and hydration - which
-// is long enough on a cold load to read the headline through the loader before
-// it mounts. `visibility` (not `display`) so they still take up layout and the
-// hero never reflows when they appear, and it is exactly what GSAP's
-// `autoAlpha` writes, so the intro's own `autoAlpha: 1` clears it for free.
-//
-// The headline is the exception and ships painted - it is the LCP element, and
-// hidden markup puts the metric behind the whole loader. See the layout effect,
-// which hides it at hydration instead.
 const INTRO_HIDDEN = { visibility: "hidden" };
-
-// Any path that decides the intro will not run has to put the copy back -
-// hidden markup must never be allowed to stay hidden. Writes `visibility`
-// explicitly rather than clearing the inline value: SplitText's `revert()`
-// restores whatever the inline style attribute held when it split, and an
-// element with no inline `visibility` reverts to visible - which is the flash
-// of un-animated copy between the effect re-running and re-hiding.
 function revealIntroTargets(...els) {
     gsap.set(els.filter(Boolean), { autoAlpha: 1, visibility: "visible" });
 }
 
-// The mirror of the above, for the frames where the intro is about to run but
-// has not yet written its own start state.
 function hideIntroTargets(...els) {
     gsap.set(els.filter(Boolean), { autoAlpha: 0, visibility: "hidden" });
 }
 
-// Transparent: the site-wide dotted grid + fluid (SiteBackground) shows
-// through while the ribbons load, or instead of them on audits.
+
 const BACKGROUND_FALLBACK = (
     <div className="absolute inset-0" aria-hidden />
 );
 
-// Theremin glass ribbons (see lib/theremin-ribbons). Loaded
-// client-only so three.js stays out of the server bundle and the first chunk.
 const HeroRibbons = dynamic(
     () => import("../components/HeroRibbons"),
     { ssr: false, loading: () => BACKGROUND_FALLBACK },
@@ -213,7 +190,7 @@ export default function Hero() {
     useFadeUp()
 
     return (
-        <main ref={rootRef} className="relative w-full overflow-x-clip">
+        <main ref={rootRef} id="hero-v3" className="relative w-full overflow-x-clip">
             {/* Viewport-sized and pinned while the hero and its tools strip
                 scroll by, like Theremin's fixed canvas: the camera frames the
                 ribbons against the screen, so a taller canvas would shrink
@@ -225,25 +202,25 @@ export default function Hero() {
                     <HeroRibbons play={playIntro && loaderComplete} />
                 )}
             </div>
-            <div className="pointer-events-none relative z-10 mx-auto flex min-h-dvh w-full max-w-[1536px] flex-col justify-end px-[3vw] pt-[8vw] pb-[5vw] max-[1025px]:px-[6vw] max-[1025px]:pt-[30vw] max-[1025px]:pb-[8vw] max-md:px-6 max-md:pt-32 max-md:pb-10 max-sm:px-5">
-                <div className="grid grid-cols-[minmax(0,1.5fr)_minmax(0,0.7fr)] items-end gap-[3vw] max-[1025px]:grid-cols-1 max-[1025px]:gap-[4vw] max-md:gap-5">
+            <div className="pointer-events-none relative z-10 mx-auto flex min-h-dvh w-full max-w-[1536px] flex-col justify-end px-[3vw] pt-[8vw] pb-[5vw] max-md:px-6 max-md:pt-32 max-md:pb-10 max-sm:px-5">
+                <div className="grid grid-cols-[minmax(0,1.5fr)_minmax(0,0.7fr)] items-end gap-[3vw] max-md:grid-cols-1 max-md:gap-5">
                     {/* No INTRO_HIDDEN here, unlike the copy and the actions
                         below: this is the LCP element, and it has to reach the
                         screen with the server's HTML to be measured at all. The
                         layout effect above hides it at hydration. */}
-                    <h1 ref={headingRef} className="relative font-aeonik max-md:text-[13vw]! t96 max-w-[53vw] leading-[1.2]! max-[1025px]:max-w-[90%] max-md:max-w-full text-[#F4F4F4]">
+                    <h1 ref={headingRef} className="relative font-aeonik max-md:text-[13vw]! t96 max-w-[53vw] leading-[1.2]! max-md:max-w-full text-[#F4F4F4]">
                         The Interaction Layer Your Website is <span className="gradient-text-animate">Missing</span><EasterEggDot className="pointer-events-auto" />
                     </h1>
 
-                    <div className="flex flex-col gap-[2vw] pb-[0.6vw] max-[1025px]:gap-[4vw] max-[1025px]:pb-0 max-md:gap-5">
-                        <p ref={copyRef} style={INTRO_HIDDEN} className="text-[15px] leading-[1.65] text-[#C9C9C9] max-w-[36ch] max-[1025px]:w-[75%] max-sm:w-full max-md:text-left max-sm:text-left">
+                    <div className="flex flex-col gap-[2vw] pb-[0.6vw] max-md:pb-0 max-md:gap-5">
+                        <p ref={copyRef} style={INTRO_HIDDEN} className="text-[15px] leading-[1.65] text-[#C9C9C9] max-w-[36ch] max-md:w-[75%] max-sm:w-full max-md:text-left">
                             Source-first scroll systems, cursor effects, text reveals, page transitions, loaders, backgrounds, and WebGL scenes for React and Next.js. Installed as real files in your project, not a dependency you rent.
                         </p>
 
                         <div
                             ref={actionsRef}
                             style={INTRO_HIDDEN}
-                            className="pointer-events-auto flex max-sm:pt-4 max-sm:flex-col w-fit max-sm:w-full gap-[1vw] max-[1025px]:gap-[2.5vw] max-md:w-full max-md:gap-5"
+                            className="pointer-events-auto flex max-sm:pt-4 max-sm:flex-col w-fit max-sm:w-full gap-[1vw] max-md:w-full max-md:gap-5"
                         >
                             <ButtonV3
                                 text="Read Docs"

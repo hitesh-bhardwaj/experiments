@@ -177,6 +177,9 @@ interface ScrollDistortionProps {
   rgbShift?: number;
   distortionScale?: number;
   transitionDuration?: number;
+  /** Fill the parent instead of the viewport. Slides follow the page scroll
+   *  (the box's progress through the viewport) instead of hijacking the wheel. */
+  contained?: boolean;
 }
 
 export default function ScrollDistortion({
@@ -186,6 +189,7 @@ export default function ScrollDistortion({
   distortionScale,
   transitionDuration,
   shaderConfig = EMPTY_SHADER_CONFIG,
+  contained = false,
   displacementSrc = "https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/distortion-noise.jpg",
 }: ScrollDistortionProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -289,8 +293,11 @@ export default function ScrollDistortion({
       ...(reducedMotion ? { strength: 0, rgbShift: 0, scale: 0 } : {}),
     };
 
-    const width = window.innerWidth;
-    const height = window.innerHeight;
+    const getSize = () =>
+      contained
+        ? { w: containerElement.clientWidth || 1, h: containerElement.clientHeight || 1 }
+        : { w: window.innerWidth, h: window.innerHeight };
+    const { w: width, h: height } = getSize();
 
     const scene = new THREE.Scene();
 
@@ -401,7 +408,7 @@ export default function ScrollDistortion({
       textTimelineRef.current = null;
 
       gsap.killTweensOf(allChars);
-      gsap.set(".text-container", { opacity: 1 });
+      gsap.set(containerElement.parentElement?.querySelector(".text-container") ?? [], { opacity: 1 });
 
       // Reduced motion: no vertical slide at all - chars stay put, only
       // autoAlpha (opacity) ever changes.
@@ -651,8 +658,7 @@ export default function ScrollDistortion({
     setIsSceneReady(true);
 
     const onResize = () => {
-      const nextWidth = window.innerWidth;
-      const nextHeight = window.innerHeight;
+      const { w: nextWidth, h: nextHeight } = getSize();
 
       renderer.setSize(nextWidth, nextHeight);
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, MAX_PIXEL_RATIO));
@@ -669,14 +675,39 @@ export default function ScrollDistortion({
       material.uniforms.u_resolution.value.set(nextWidth, nextHeight);
     };
 
-    window.addEventListener("wheel", onWheel, { passive: false });
-    window.addEventListener("touchstart", onTouchStart, { passive: true });
-    window.addEventListener("touchmove", onTouchMove, { passive: true });
-    window.addEventListener("resize", onResize);
+    let resizeObserver: ResizeObserver | null = null;
+
+    // Embedded: the page scrolls normally; the slide is picked from how far the
+    // box has travelled through the viewport (entering at the bottom → first
+    // slide, leaving at the top → last).
+    const onPageScroll = () => {
+      const r = containerElement.getBoundingClientRect();
+      const vh = window.innerHeight;
+      const progress = Math.min(1, Math.max(0, (vh - r.top) / (vh + r.height)));
+      const index = Math.min(sections.length - 1, Math.floor(progress * sections.length));
+      if (index === targetIndexRef.current) return;
+      // Mid-transition, just retarget: the running tween hands off to it.
+      targetIndexRef.current = index;
+      if (!isTransitioningRef.current) transitionTo(index);
+    };
+
+    if (contained) {
+      resizeObserver = new ResizeObserver(onResize);
+      resizeObserver.observe(containerElement);
+      window.addEventListener("scroll", onPageScroll, { passive: true });
+      onPageScroll();
+    } else {
+      window.addEventListener("wheel", onWheel, { passive: false });
+      window.addEventListener("touchstart", onTouchStart, { passive: true });
+      window.addEventListener("touchmove", onTouchMove, { passive: true });
+      window.addEventListener("resize", onResize);
+    }
 
     const textRefGroups = textRefs.current;
 
     return () => {
+      resizeObserver?.disconnect();
+      window.removeEventListener("scroll", onPageScroll);
       window.removeEventListener("wheel", onWheel);
       window.removeEventListener("touchstart", onTouchStart);
       window.removeEventListener("touchmove", onTouchMove);
@@ -710,10 +741,17 @@ export default function ScrollDistortion({
     rgbShift,
     distortionScale,
     transitionDuration,
+    contained,
   ]);
 
   return (
-    <section className="fixed inset-0 h-screen w-screen overflow-hidden bg-black">
+    <section
+      className={
+        contained
+          ? "@container absolute inset-0 h-full w-full overflow-hidden bg-black"
+          : "fixed inset-0 h-screen w-screen overflow-hidden bg-black"
+      }
+    >
       <div className="hidden">
         {objectUrls?.slice(0, sections.length).map((url, index) => (
           <div key={`${resolveImageSource(sections[index]?.src)}-${index}`}>
@@ -766,12 +804,12 @@ export default function ScrollDistortion({
       )}
 
       <div ref={containerRef} className="absolute inset-0 h-full w-full" />
-      <h1 className="sr-only">Scroll Distortion</h1>
+      {contained ? null : <h1 className="sr-only">Scroll Distortion</h1>}
       <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center overflow-hidden text-container opacity-0">
         {splitSections.map((section, sectionIndex) => (
           <h2
             key={`${section.text}-${sectionIndex}`}
-            className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 text-[10vw] leading-none text-white"
+            className={`absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 ${contained ? "text-[10cqw]" : "text-[10vw]"} leading-none text-white`}
             aria-label={section.text}
           >
             {section.chars.map((char, charIndex) => (

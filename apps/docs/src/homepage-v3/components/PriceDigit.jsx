@@ -5,34 +5,48 @@ import gsap from "gsap";
 import { prefersReducedMotion } from "@/lib/motion";
 
 const DIGITS = [...Array(10).keys()];
+const REEL_DIGITS = DIGITS.concat(DIGITS, DIGITS);
+const REST_LAP = 10;
+const ROLL_LAP = 20;
 
 /** A single price digit on a vertical reel, so the number rolls on plan change. */
 const PriceDigit = memo(function PriceDigit({ digit, visible = true, plan }) {
     const reelRef = useRef(null);
     const hasMounted = useRef(false);
-    const lap = useRef(0);
+    const currentDigitRef = useRef(Number(digit) || 0);
 
     useEffect(() => {
         if (!reelRef.current) return;
 
-        // The reel holds two laps of 0-9, so a slot whose digit is the same in
-        // both plans (the middle 9s of 1999 -> 17990) still has somewhere to
-        // travel: it rolls a full turn into the other lap.
-        const rest = -Number(digit) * 5;
+        const nextDigit = Number(digit) || 0;
+        const restIndex = REST_LAP + nextDigit;
+        const rollIndex = nextDigit <= currentDigitRef.current
+            ? ROLL_LAP + nextDigit
+            : REST_LAP + nextDigit;
 
         // First paint rests on the right digit instead of animating up to it.
         if (!hasMounted.current) {
             hasMounted.current = true;
-            gsap.set(reelRef.current, { yPercent: rest });
+            currentDigitRef.current = nextDigit;
+            gsap.set(reelRef.current, { y: `${-restIndex}em` });
             return;
         }
 
-        lap.current = lap.current === 0 ? 1 : 0;
+        if (prefersReducedMotion()) {
+            currentDigitRef.current = nextDigit;
+            gsap.set(reelRef.current, { y: `${-restIndex}em` });
+            return;
+        }
 
+        gsap.killTweensOf(reelRef.current);
         gsap.to(reelRef.current, {
-            yPercent: rest - lap.current * 50,
-            duration: prefersReducedMotion() ? 0 : 0.55,
-            ease: "power3.out",
+            y: `${-rollIndex}em`,
+            duration: 0.72,
+            ease: "power3.inOut",
+            onComplete: () => {
+                currentDigitRef.current = nextDigit;
+                gsap.set(reelRef.current, { y: `${-restIndex}em` });
+            },
         });
     }, [digit, plan]);
 
@@ -42,8 +56,8 @@ const PriceDigit = memo(function PriceDigit({ digit, visible = true, plan }) {
             className="relative inline-block h-[1em] w-[0.56em] overflow-hidden leading-none transition-[width,opacity] duration-300"
             style={{ width: visible ? undefined : 0, opacity: visible ? 1 : 0 }}
         >
-            <span ref={reelRef} className="flex  flex-col will-change-transform">
-                {DIGITS.concat(DIGITS).map((d, i) => (
+            <span ref={reelRef} className="flex flex-col will-change-transform">
+                {REEL_DIGITS.map((d, i) => (
                     <span key={i} className="flex h-[1em] items-center justify-center">
                         {d}
                     </span>

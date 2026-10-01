@@ -947,3 +947,52 @@ html.loader-first-visit body {
     font-size: 4.6vw;
   }
 }
+
+/* ---------- homepage cursor (CursorV3) ---------- */
+
+.hx-cursor {
+  position: fixed; left: 0; top: 0; z-index: 9500; pointer-events: none;
+  will-change: transform;
+}
+.hx-cursor-ring {
+  position: absolute; left: 0; top: 0; width: 44px; height: 44px; margin: -22px 0 0 -22px;
+  display: grid; place-items: center; border-radius: 50%;
+  border: 1.5px solid rgba(244, 244, 244, .35); background: transparent;
+  transform: scale(.4); opacity: 0;
+  transition:
+    transform .5s cubic-bezier(.16,1,.3,1), opacity .3s,
+    width .5s cubic-bezier(.16,1,.3,1), height .5s cubic-bezier(.16,1,.3,1), margin .5s cubic-bezier(.16,1,.3,1),
+    background-color .4s, border-color .4s, backdrop-filter .4s;
+}
+/* Hold progress: a primary stroke over the ring, filling clockwise.
+   Timed like the ribbons' charge: 0.2s delay, 1.9s, accelerating (power2.in). */
+.hx-cursor-charge { position: absolute; inset: -1.5px; width: calc(100% + 3px); height: calc(100% + 3px); transform: rotate(-90deg); overflow: visible; }
+.hx-cursor-charge circle {
+  fill: none; stroke: var(--primary, #ff6b00); stroke-width: 1.5; stroke-linecap: butt;
+  stroke-dasharray: 100; stroke-dashoffset: 100; opacity: 0;
+  /* Round caps leave a dot even at 0 length, so the stroke is hidden outright when idle */
+  transition: stroke-dashoffset .35s cubic-bezier(.16,1,.3,1), opacity .2s .15s;
+}
+.hx-cursor[data-charging] .hx-cursor-charge circle {
+  stroke-dashoffset: 0; opacity: 1;
+  transition: stroke-dashoffset 1.9s cubic-bezier(.55,.085,.68,.53) .2s, opacity 0s .2s;
+}
+.hx-cursor-eyes { display: flex; gap: 14px; transition: opacity .25s; }
+.hx-cursor-eyes i { width: 4px; height: 4px; border-radius: 50%; background: #fff; }
+.hx-cursor-label {
+  position: absolute; left: 0; top: 0; white-space: nowrap;
+  font-family: var(--font-neue-haas), system-ui, sans-serif;
+  font-size: 10px; font-weight: 500; letter-spacing: .2em; text-transform: uppercase; color: rgba(244, 244, 244, .7);
+  opacity: 0; transform: translate(-50%, 34px);
+  transition: opacity .3s, transform .5s cubic-bezier(.16,1,.3,1);
+}
+
+/* hold zone: the ring with its eyes, the hint underneath */
+.hx-cursor[data-mode="hold"] .hx-cursor-ring { transform: scale(1); opacity: 1; }
+.hx-cursor[data-mode="hold"] .hx-cursor-label { opacity: 1; transform: translate(-50%, 30px); }
+.hx-cursor[data-mode="hold"][data-pressed] .hx-cursor-ring { transform: scale(.8); }
+
+@media (pointer: coarse) { .hx-cursor { display: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .hx-cursor-ring, .hx-cursor-label { transition: opacity .2s; }
+}

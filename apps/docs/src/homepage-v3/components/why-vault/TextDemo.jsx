@@ -41,7 +41,7 @@ export default function TextDemo() {
                     direction="left"
                     baseColor="#FF6B00"
                     overlayColor="#F4F4F4"
-                    className="font-avenir text-[3.2vw] font-normal leading-[1.02] tracking-[-.03em] text-[#F4F4F4] uppercase max-[1025px]:text-[6vw] max-md:text-[8vw]"
+                    className="font-avenir text-[3.2vw] font-normal leading-[1.02] tracking-[-.03em] text-[#F4F4F4] uppercase max-md:text-[8vw]"
                 >
                     {TEXT}
                 </RectangularTextReveal>

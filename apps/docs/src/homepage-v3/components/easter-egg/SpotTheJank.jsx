@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
 import CornerMarks from "../CornerMarks";
+import { ButtonV3Chrome, buttonV3ClassName } from "../ButtonV3";
 import { BADGES, CYCLE_S, FLAW_KEYS, FLAWS, SCENES, drawScene, lerp } from "./jank-scenes";
 
 const STORAGE = { best: "hx-jank-best", badges: "hx-jank-badges" };
@@ -13,13 +14,13 @@ const WRONG_PAUSE_MS = 2600;
 const MAX_LIVES = 3;
 const MAX_DPR = 2;
 const FOCUS_DELAY_MS = 200;
+const EXIT_MS = 320;
 
 // Engines without the jank voices get the closest game sound instead
 const JANK_FALLBACK = { right: "catch", wrong: "bug", streak: "level", start: "open", over: "over" };
 
 const label = "text-[11px] font-semibold uppercase tracking-[.14em]";
 const btnBase = `inline-flex h-11 items-center px-5 no-underline transition-[box-shadow,background-color] duration-[600ms] ease-[cubic-bezier(.16,1,.3,1)] ${label}`;
-const btnPrimary = `${btnBase} bg-[linear-gradient(115deg,#E85A00,#FF6B00_40%,#FF9142)] text-[#141414] hover:shadow-[0_14px_44px_-10px_rgba(255,107,0,.75)]`;
 const btnGhost = `${btnBase} bg-white/5 text-[#F4F4F4] shadow-[inset_0_0_0_1px_rgba(244,244,244,.14)] hover:shadow-[inset_0_0_0_1px_rgba(255,107,0,.6)]`;
 
 function readSaved() {
@@ -56,9 +57,13 @@ export default function SpotTheJank({ onClose, sound, toast, realHref = "/effect
     const startBtnRef = useRef(null);
     const againBtnRef = useRef(null);
     const dialogRef = useRef(null);
+    const closeTimerRef = useRef(0);
     const sizeRef = useRef({ W: 0, H: 0, pr: 1, font: "system-ui, sans-serif" });
     const nextTimerRef = useRef(0);
 
+    const [closing, setClosing] = useState(false);
+    const [startHovered, setStartHovered] = useState(false);
+    const [againHovered, setAgainHovered] = useState(false);
     const [screen, setScreen] = useState("start"); 
     const [hud, setHud] = useState({ score: 0, streak: 0, lives: MAX_LIVES, round: 0, best: savedInit.best });
     const [reveal, setReveal] = useState(null); 
@@ -189,6 +194,12 @@ export default function SpotTheJank({ onClose, sound, toast, realHref = "/effect
         nextRound();
     }, [measure, nextRound, sfx]);
 
+    const requestClose = useCallback(() => {
+        if (closing) return;
+        setClosing(true);
+        closeTimerRef.current = setTimeout(onClose, EXIT_MS);
+    }, [closing, onClose]);
+
     // Open: lock page scroll, focus the start button
     useEffect(() => {
         sfx("start");
@@ -196,6 +207,7 @@ export default function SpotTheJank({ onClose, sound, toast, realHref = "/effect
         const focusTimer = setTimeout(() => startBtnRef.current?.focus(), FOCUS_DELAY_MS);
         return () => {
             clearTimeout(focusTimer);
+            clearTimeout(closeTimerRef.current);
             clearTimeout(nextTimerRef.current);
             runRef.current.state = "idle";
             document.documentElement.style.overflow = "";
@@ -240,7 +252,7 @@ export default function SpotTheJank({ onClose, sound, toast, realHref = "/effect
     // Keys: Esc closes, ←/→ (or a/b, 1/2) pick, Tab stays inside the dialog
     useEffect(() => {
         const onKey = (e) => {
-            if (e.key === "Escape") { e.preventDefault(); onClose(); return; }
+            if (e.key === "Escape") { e.preventDefault(); requestClose(); return; }
             if (["ArrowLeft", "a", "1"].includes(e.key)) { e.preventDefault(); choose(0); }
             if (["ArrowRight", "b", "2"].includes(e.key)) { e.preventDefault(); choose(1); }
             if (e.key !== "Tab") return;
@@ -252,7 +264,7 @@ export default function SpotTheJank({ onClose, sound, toast, realHref = "/effect
         };
         window.addEventListener("keydown", onKey, true);
         return () => window.removeEventListener("keydown", onKey, true);
-    }, [onClose, choose]);
+    }, [requestClose, choose]);
 
     const share = () => {
         const text = `I scored ${runRef.current.score} in Spot the Jank, the hidden game on Hyperiux Vault. Think your eye is sharper?`;
@@ -271,18 +283,18 @@ export default function SpotTheJank({ onClose, sound, toast, realHref = "/effect
             role="dialog"
             aria-modal="true"
             aria-labelledby="stj-title"
-            className="fixed inset-0 z-[2147482000] grid place-items-center bg-[rgba(8,8,8,.78)] p-[clamp(12px,3vw,40px)] font-neue-haas leading-relaxed text-[#F4F4F4] backdrop-blur-[18px] backdrop-saturate-[1.4]"
+            className={`fixed inset-0 z-[2147482000] grid place-items-center bg-[rgba(8,8,8,.78)] p-[clamp(12px,3vw,40px)] font-neue-haas leading-relaxed text-[#F4F4F4] backdrop-blur-[18px] backdrop-saturate-[1.4] ${closing ? "motion-safe:animate-[hx-fade-out_.32s_ease-in_both]" : "motion-safe:animate-[hx-fade-in_.5s_ease-out_both]"}`}
             data-lenis-prevent
-            onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+            onClick={(e) => { if (e.target === e.currentTarget) requestClose(); }}
         >
-            <div className="relative grid aspect-[16/10] max-h-[calc(100vh-24px)] w-[min(1040px,100%)] grid-rows-[auto_auto_1fr_auto] border border-grey bg-[#0f0f0f] px-[clamp(16px,3vw,40px)] pt-16 pb-[26px] shadow-[0_60px_120px_-40px_rgba(255,107,0,.35)] motion-safe:animate-[hx-pop_1.2s_cubic-bezier(.16,1,.3,1)_both] max-md:aspect-auto max-md:h-[calc(100vh-24px)]">
+            <div className={`relative grid aspect-[16/10] max-h-[calc(100vh-24px)] w-[min(1040px,100%)] grid-rows-[auto_auto_1fr_auto] border border-grey bg-[#0f0f0f] px-[clamp(16px,3vw,40px)] pt-16 pb-[26px] shadow-[0_60px_120px_-40px_rgba(255,107,0,.35)] max-md:aspect-auto max-md:h-[calc(100vh-24px)] ${closing ? "motion-safe:animate-[hx-scale-out_.32s_cubic-bezier(.7,0,.84,0)_both]" : "motion-safe:animate-[hx-scale-in_.8s_cubic-bezier(.16,1,.3,1)_both]"}`}>
                 {/* <CornerMarks /> */}
                 <div className={`pointer-events-none absolute inset-x-0 top-0 flex items-center gap-[clamp(12px,3vw,34px)] px-[22px] py-[18px] text-[#8a8a8a] max-md:flex-wrap max-md:gap-y-1 max-md:pr-[70px] ${label}`} aria-hidden="true">
                     {[["Score", hud.score], ["Streak", hud.streak], ["Lives", lives], ["Round", hud.round], ["Best", hud.best]].map(([name, value]) => (
                         <span key={name}>{name} <b className="ml-1.5 font-semibold text-[#F4F4F4] tabular-nums">{value}</b></span>
                     ))}
                 </div>
-                <button type="button" onClick={onClose} aria-label="Close game" className={`absolute top-3 right-4 z-20 h-[30px] border border-grey bg-[#0f0f0f] px-2.5 text-[#F4F4F4] transition-colors duration-500 hover:border-primary hover:text-white ${label}`}>
+                <button type="button" onClick={requestClose} aria-label="Close game" className={`absolute top-3 right-4 z-20 h-[30px] border border-grey bg-[#0f0f0f] px-2.5 text-[#F4F4F4] transition-colors duration-500 hover:border-primary hover:text-white ${label}`}>
                     Esc
                 </button>
 
@@ -331,7 +343,18 @@ export default function SpotTheJank({ onClose, sound, toast, realHref = "/effect
                             Two versions of the same interaction play side by side. One is Vault-smooth. The other hides a flaw: dropped frames, stiff easing, layout shift, sloppy stagger. Pick the smooth one before time runs out. The flaws get subtler as you go.
                         </p>
                         <p className={`text-[#6d6d6d] ${label}`}>Click a panel or press ← / → · 3 lives</p>
-                        <button ref={startBtnRef} type="button" onClick={start} className={btnPrimary}>Train my eye</button>
+                        <button
+                            ref={startBtnRef}
+                            type="button"
+                            onClick={start}
+                            onMouseEnter={() => setStartHovered(true)}
+                            onMouseLeave={() => setStartHovered(false)}
+                            onFocus={() => setStartHovered(true)}
+                            onBlur={() => setStartHovered(false)}
+                            className={buttonV3ClassName({ variant: "outline" })}
+                        >
+                            <ButtonV3Chrome label="Train my eye" hovered={startHovered} />
+                        </button>
                     </div>
                 )}
 
@@ -348,8 +371,19 @@ export default function SpotTheJank({ onClose, sound, toast, realHref = "/effect
                             ))}
                         </ul>
                         <div className="flex flex-wrap justify-center gap-2">
-                            <button ref={againBtnRef} type="button" onClick={start} className={btnPrimary}>Play again</button>
-                            <Link href={realHref} onClick={onClose} className={btnGhost}>See how Vault avoids jank</Link>
+                            <button
+                                ref={againBtnRef}
+                                type="button"
+                                onClick={start}
+                                onMouseEnter={() => setAgainHovered(true)}
+                                onMouseLeave={() => setAgainHovered(false)}
+                                onFocus={() => setAgainHovered(true)}
+                                onBlur={() => setAgainHovered(false)}
+                                className={buttonV3ClassName({ variant: "outline" })}
+                            >
+                                <ButtonV3Chrome label="Play again" hovered={againHovered} />
+                            </button>
+                            <Link href={realHref} onClick={requestClose} className={btnGhost}>See how Vault avoids jank</Link>
                             <button type="button" onClick={share} className={btnGhost}>Copy score</button>
                         </div>
                     </div>

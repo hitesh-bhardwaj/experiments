@@ -9,10 +9,11 @@ import { prefersReducedMotion } from "@/lib/motion";
 import { createAsciiLoaderField } from "./loader-ascii-field";
 import { measureNavLogoTarget } from "./loader-dock-target";
 import {
-  hasLoaderV3Played,
+  // hasLoaderV3Played, // see shouldSkipLoader()
   markLoaderV3Complete,
   markLoaderV3Handoff,
   markLoaderV3Played,
+  setLoaderV3Waiting,
 } from "./loader-v3-state";
 import { lockScrollV3, unlockScrollV3, useScrollLockLenis } from "./scroll-lock-v3";
 import {
@@ -29,10 +30,8 @@ const WORDMARK_CHARS = "HYPERIUX@#10";
 // The counter runs to 92 on its own, then only closes the last 8 once the page
 // has actually finished loading - so the number tracks something real instead
 // of sitting at 100 while assets are still coming in.
-const SETTLE_DURATION = 1.6;
-const CLOSE_DURATION = 0.45;
 // Never hold the page longer than this, however slow the load is.
-const MAX_WAIT_MS = 3000;
+const MAX_WAIT_MS = 10000;
 
 // Exit: one scalar drives the whole thing, whichever way the field leaves.
 //
@@ -77,7 +76,9 @@ const BACKDROP_DURATION = 0.75;
 function shouldSkipLoader() {
   if (typeof window === "undefined") return false;
   return (
-    hasLoaderV3Played() ||
+    // Once-per-session gate (sessionStorage) disabled for now so the loader
+    // plays on every load. Restore this line to bring the gate back.
+    // hasLoaderV3Played() ||
     prefersReducedMotion() ||
     isLighthouseOrHeadless() ||
     isSoftwareRenderer()
@@ -90,7 +91,7 @@ function skipLoaderNow() {
   unlockScrollV3();
 }
 
-function LoaderEntryButton({ label, onClick }) {
+function LoaderEntryButton({ label, onClick, variant = "outline" }) {
   const [hovered, setHovered] = useState(false);
 
   return (
@@ -99,11 +100,11 @@ function LoaderEntryButton({ label, onClick }) {
       onClick={onClick}
       onPointerEnter={() => setHovered(true)}
       onPointerLeave={() => setHovered(false)}
-      data-sound-kind="secondary"
+      data-sound-kind={variant === "outline" ? "secondary" : "primary"}
       className={buttonV3ClassName({
-        variant: "outline",
+        variant,
         className:
-          "min-w-[13rem] justify-between bg-background/70 text-white backdrop-blur-md max-sm:w-full",
+          `justify-between ${variant === "outline" ? "bg-background/70 text-white backdrop-blur-md" : ""} text-[13px]! max-md:text-[13px]! py-1.5! max-md:py-1.5! max-md:px-4! [--btn-pad:14px]! max-md:[--btn-pad:14px]! [--btn-arrow:10px]!`,
       })}
     >
       <ButtonV3Chrome label={label} hovered={hovered} />
@@ -120,7 +121,11 @@ function LoaderEntryButton({ label, onClick }) {
 export default function LoaderV3({ exitMode = "dock" }) {
   const [done, setDone] = useState(false);
   const [run, setRun] = useState(false);
-  const [entryChosen, setEntryChosen] = useState(false);
+  // Resolved by either entry button; the mark waits for it before leaving.
+  const entryRef = useRef(null);
+  const entryResolveRef = useRef(null);
+  const entryChosenRef = useRef(false);
+  const tickerOffRef = useRef(null);
   const { setSound } = useInteraction();
 
   const rootRef = useRef(null);
@@ -135,7 +140,10 @@ export default function LoaderV3({ exitMode = "dock" }) {
 
   const chooseEntry = (soundEnabled) => {
     setSound(soundEnabled);
-    setEntryChosen(true);
+    if (entryRef.current) gsap.set(entryRef.current, { pointerEvents: "none" });
+    entryChosenRef.current = true;
+    setLoaderV3Waiting(false);
+    entryResolveRef.current?.();
   };
 
   useLayoutEffect(() => {
@@ -152,6 +160,8 @@ export default function LoaderV3({ exitMode = "dock" }) {
     // navigates away mid-loader has already seen the intro, and re-running it
     // on the way back is exactly what the gate is here to prevent.
     markLoaderV3Played();
+    // Header / hero fallbacks hold until the visitor picks an entry button
+    setLoaderV3Waiting(true);
     setRun(true);
   }, []);
 
@@ -183,32 +193,64 @@ export default function LoaderV3({ exitMode = "dock" }) {
         wordmarkChars: WORDMARK_CHARS,
       });
 
-      // ── Phase 1: Build - progress runs 0 → 0.92 while the page loads ──
-      const settle = gsap
-        .timeline()
-        .to(field, {
-          progress: 0.92,
-          duration: SETTLE_DURATION,
-          ease: "power1.out",
-        });
+      // ── Phase 1: Build - progress follows the page's real loading ──
+      // 10% to start, +25% once the DOM is parsed, +15% once fonts are ready,
+      // up to +50% as scripts / stylesheets / images finish, 100% on `load`.
+      // MAX_WAIT_MS is the safety net for a request that never settles.
+      const milestones = { dom: document.readyState !== "loading", fonts: false, load: document.readyState === "complete" };
+      const onDom = () => { milestones.dom = true; };
+      const onLoad = () => { milestones.load = true; };
+      if (!milestones.dom) document.addEventListener("DOMContentLoaded", onDom, { once: true });
+      if (!milestones.load) window.addEventListener("load", onLoad, { once: true });
+      (document.fonts?.ready ?? Promise.resolve()).then(() => { milestones.fonts = true; });
+      waitTimeout = window.setTimeout(onLoad, MAX_WAIT_MS);
 
-      const pageReady = new Promise((resolve) => {
-        if (document.readyState === "complete") {
-          resolve();
-          return;
-        }
-        window.addEventListener("load", resolve, { once: true });
+      const assetFraction = () => {
+        const urls = [
+          ...[...document.scripts].map((el) => el.src),
+          ...[...document.querySelectorAll('link[rel="stylesheet"]')].map((el) => el.href),
+        ].filter(Boolean);
+        const loaded = new Set(performance.getEntriesByType("resource").map((entry) => entry.name));
+        const images = [...document.images];
+        const total = urls.length + images.length;
+        if (!total) return 1;
+        const done = urls.filter((url) => loaded.has(url)).length + images.filter((img) => img.complete).length;
+        return done / total;
+      };
+
+      const targetProgress = () => {
+        if (milestones.load) return 1;
+        const value = 0.1 + (milestones.dom ? 0.25 : 0) + (milestones.fonts ? 0.15 : 0) + assetFraction() * 0.5;
+        return Math.min(0.97, value); // the last stretch is held for `load`
+      };
+
+      // Counter eases toward the real figure, never backwards, and resolves at 100.
+      const counted = new Promise((resolve) => {
+        const tick = () => {
+          if (cancelled) return;
+          const target = Math.max(field.progress, targetProgress());
+          field.progress += (target - field.progress) * 0.08;
+          if (target === 1 && field.progress > 0.995) {
+            field.progress = 1;
+            gsap.ticker.remove(tick);
+            resolve();
+          }
+        };
+        gsap.ticker.add(tick);
+        tickerOffRef.current = () => gsap.ticker.remove(tick);
+      }).finally(() => {
+        document.removeEventListener("DOMContentLoaded", onDom);
+        window.removeEventListener("load", onLoad);
       });
 
-      const capped = Promise.race([
-        pageReady,
-        new Promise((resolve) => {
-          waitTimeout = window.setTimeout(resolve, MAX_WAIT_MS);
-        }),
-      ]);
+      // ── Phase 2: Close - hand the mark over, uncover the hero. Holds on the
+      // mark (counter at 100) until one of the entry buttons is chosen.
+      const entered = new Promise((resolve) => {
+        if (entryChosenRef.current) resolve();
+        else entryResolveRef.current = resolve;
+      });
 
-      // ── Phase 2: Close - finish the counter, hand the mark over, uncover hero
-      Promise.all([settle, capped]).then(() => {
+      Promise.all([counted, entered]).then(() => {
         if (cancelled) return;
 
         const tl = gsap.timeline({
@@ -217,17 +259,13 @@ export default function LoaderV3({ exitMode = "dock" }) {
           },
         });
 
-        // Finish the progress counter → 100
-        tl.to(field, {
-          progress: 1,
-          duration: CLOSE_DURATION,
-          ease: "power2.inOut",
-        });
+        // The counter already reached 100 before the click; only a short beat remains.
+        const closeDuration = 0;
 
         // Brief beat, then the field leaves - collapsing onto the navbar's logo,
         // or bursting outward from the centre.
         const docking = exitMode === "dock";
-        const clearStart = CLOSE_DURATION + 0.15;
+        const clearStart = closeDuration + 0.15;
         const exitDuration = docking ? DOCK_DURATION : BURST_DURATION;
         // Docking empties the screen first: the static dissolves, and only then
         // does the mark move. Bursting takes the static with it, so there is
@@ -235,6 +273,17 @@ export default function LoaderV3({ exitMode = "dock" }) {
         const exitStart = docking
           ? clearStart + CLEAR_DURATION - CLEAR_OVERLAP
           : clearStart;
+
+        // The entry buttons leave with the mark: same start, same duration,
+        // drifting up as it goes. Clicks stop as soon as the counter closes.
+        if (entryRef.current) {
+          tl.to(entryRef.current, {
+            autoAlpha: 0,
+            y: -24,
+            duration: exitDuration * 0.6,
+            ease: "power2.inOut",
+          }, exitStart);
+        }
 
         if (docking) {
           tl.to(
@@ -308,6 +357,8 @@ export default function LoaderV3({ exitMode = "dock" }) {
       return () => {
         cancelled = true;
         window.clearTimeout(waitTimeout);
+        tickerOffRef.current?.();
+        setLoaderV3Waiting(false);
         destroyField();
       };
     },
@@ -319,6 +370,7 @@ export default function LoaderV3({ exitMode = "dock" }) {
   return (
     <div
       ref={rootRef}
+      data-cursor-off
       className="fixed inset-0 z-1000 overflow-hidden"
     >
       {/* The lock above can only start once this has hydrated, and the markup
@@ -340,23 +392,25 @@ export default function LoaderV3({ exitMode = "dock" }) {
         className="absolute inset-0 block h-full w-full"
         aria-hidden="true"
       />
-      {!entryChosen ? (
-        <div className="absolute inset-x-0 bottom-[7vh] z-10 mx-auto flex w-full max-w-[44rem] flex-col items-center gap-4 px-6 text-center max-sm:bottom-[5vh]">
-          <p className="font-neue-haas text-sm uppercase tracking-[0.22em] text-white/45">
-            Headphones recommended
-          </p>
-          <div className="flex w-full items-center justify-center gap-4 max-sm:flex-col">
+      {/* Sits just under the canvas wordmark: it is centred, min(82vw, 1600px)
+          wide at 43/351 tall (92vw on phones), so its lower edge is half that
+          height below the middle of the screen. */}
+      <div ref={entryRef} className="absolute inset-x-0 top-[calc(50%+min(5.02vw,98px)+2.5rem)] z-10 mx-auto flex w-full max-w-[44rem] flex-col items-center gap-4 px-6 text-center max-md:top-[calc(50%+5.64vw+2rem)]">
+          <div className="flex items-center justify-center gap-3 max-md:flex-col max-md:items-stretch">
             <LoaderEntryButton
-              label="Enter with sound"
+              label="Enter With Sound"
+              variant="orange"
               onClick={() => chooseEntry(true)}
             />
             <LoaderEntryButton
-              label="Enter quietly"
+              label="Enter Quietly"
               onClick={() => chooseEntry(false)}
             />
           </div>
-        </div>
-      ) : null}
+          <p className="font-neue-haas text-[10px] uppercase tracking-[0.22em] text-white/40">
+            Headphones recommended
+          </p>
+      </div>
     </div>
   );
 }

@@ -3,6 +3,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { isLighthouseOrHeadless, isSoftwareRenderer } from "@/lib/audit";
 import { useFadeUp } from "@/components/Animations/gsapAnimations";
+import LineReveal from "@/components/Animations/LineReveal";
 import ButtonV3 from "../components/ButtonV3";
 import { useInteraction } from "../components/InteractionProvider";
 import NotAnotherUIKit from "./NotAnotherUIKit";
@@ -24,8 +25,9 @@ export default function SignalSection() {
 
     useLayoutEffect(() => {
         // WebGL capability is only knowable on the client, after hydration
+        // Phones skip the wave entirely (the canvas is hidden there too)
         // eslint-disable-next-line react-hooks/set-state-in-effect
-        setWebgl(!(isLighthouseOrHeadless() || isSoftwareRenderer()));
+        setWebgl(!(isLighthouseOrHeadless() || isSoftwareRenderer()) && window.matchMedia("(min-width: 768px)").matches);
     }, []);
 
     useEffect(() => {
@@ -105,22 +107,22 @@ export default function SignalSection() {
             {/* One viewport-sized canvas, pinned for the whole section and on
                 top of it, so the wave is never clipped by a section edge or
                 covered by the cards. Pointer events pass through to the page. */}
-            <div className="pointer-events-none sticky top-0 z-30  -mb-[100vh] h-screen" aria-hidden="true">
+            <div className="pointer-events-none sticky top-0 z-30 -mb-[100vh] h-screen max-md:hidden" aria-hidden="true">
                 <canvas ref={canvasRef} className="block size-full" />
             </div>
-            <div ref={waveAreaRef} className="relative z-1 mx-auto h-[80vh] max-w-[1536px] px-[clamp(1.25rem,3vw,3rem)] pt-[clamp(7rem,18vh,12rem)] pb-[clamp(6rem,14vh,10rem)]">
-                <div className="grid min-h-[62vh] grid-cols-2 items-start gap-12 max-[1000px]:min-h-[50vh] max-[1000px]:grid-cols-1">
+            <div ref={waveAreaRef} className="relative z-40! mx-auto h-[80vh]  max-w-[1536px] px-[clamp(1.25rem,3vw,3rem)] pt-[clamp(7rem,18vh,12rem)] pb-[clamp(6rem,0vh,10rem)] max-md:h-fit">
+                <div className="grid min-h-[62vh] grid-cols-2 items-start gap-12 max-md:min-h-fit max-md:grid-cols-1">
                     <div>
-                        <h2 className="fadeup  max-w-[30vw] font-aeonik text-[3.85vw] font-normal leading-[1.02] tracking-[-.035em]">
-                            Small Motion.<br/> <span className="gradient-text-animate">Big Signal.</span>
-                        </h2>
-                        <div className="fadeup mt-[4vw] flex flex-wrap gap-4" data-fadeup-delay="0.16">
-                            <ButtonV3 href="/effects" text="Browse effects" />
-                            <ButtonV3 variant="outline" href="/docs" text="Read the docs" />
+                        <LineReveal as="h2" className="max-w-[30vw] font-aeonik text-[3.85vw] max-md:max-w-full max-md:text-[11vw] font-normal leading-[1.02] tracking-[-.035em]">
+                            Small Motion.<br/> <span className="gradient-text-animate gradient-text-single">Big Signal.</span>
+                        </LineReveal>
+                        <div className="fadeup mt-[4vw] flex flex-wrap gap-4 max-md:mt-8 max-sm:flex-col max-sm:items-start" data-fadeup-delay="0.16">
+                            <ButtonV3 href="/effects" text="Browse Effects" />
+                            <ButtonV3 variant="outline" href="/docs" text="Read the Docs" />
                         </div>
                     </div>
                     {/* The wave centres on this empty column */}
-                    <div ref={anchorRef} className="min-h-[40vh] self-stretch" aria-hidden="true" />
+                    <div ref={anchorRef} className="min-h-[40vh] self-stretch max-md:hidden" aria-hidden="true" />
                 </div>
             </div>
             {/* "Not another UI kit": the principle cards, part of this section */}

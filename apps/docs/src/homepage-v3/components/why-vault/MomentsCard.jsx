@@ -7,7 +7,7 @@ import ScrollDemo from "./ScrollDemo";
 import TextDemo from "./TextDemo";
 
 const TABS = [
-    { id: "scroll", label: "Scroll", effect: "Grid Tunnel" },
+    { id: "scroll", label: "Scroll", effect: "Scroll Distortion" },
     { id: "cursor", label: "Cursor", effect: "Butterfly Trail Cursor" },
     { id: "text", label: "Text", effect: "Rectangular Text Reveal" },
 ];

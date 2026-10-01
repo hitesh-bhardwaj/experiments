@@ -150,7 +150,7 @@ function FAQRow({ item, isOpen, onToggle, index }) {
 
   return (
     <div
-      className={`faq-v3-row group relative cursor-pointer px-[2.5vw] py-[2vw] text-background max-[1025px]:px-[3.5vw] max-[1025px]:py-[3vw] max-[1025px]:px-[4vw] max-[1025px]:py-[4vw] max-md:px-[6vw] max-md:py-[6vw] ${index >= INITIAL_COUNT ? "faq-v3-row-extra" : ""}`}
+      className={`faq-v3-row group relative cursor-pointer px-[0.5vw] py-[2vw] text-background max-md:px-[6vw] max-md:py-[6vw] ${index >= INITIAL_COUNT ? "faq-v3-row-extra" : ""}`}
       role="button"
       tabIndex={0}
       aria-expanded={isOpen}
@@ -159,13 +159,13 @@ function FAQRow({ item, isOpen, onToggle, index }) {
       onClick={handleClick}
       onKeyDown={handleKeyDown}
     >
-      <div className="flex w-full items-start justify-between gap-[1.5vw] max-[1025px]:gap-[3vw] max-md:gap-[4vw]">
-        <h3 className="text-[1.55vw] font-neue-haas flex-1 leading-tight max-[1025px]:text-[3.4vw] max-md:text-[5.2vw]">
+      <div className="flex w-full items-start justify-between gap-[1.5vw] max-md:gap-[4vw]">
+        <h3 className="text-[1.55vw] font-neue-haas flex-1 leading-tight max-md:text-[5.2vw]">
           {item.question}
         </h3>
         <span
           aria-hidden="true"
-          className={`relative mt-[0.55vw] size-[1.1vw] shrink-0 transition-[color,transform] duration-700 ease-out group-hover:rotate-180 group-hover:text-primary motion-reduce:transition-none max-[1025px]:mt-[1vw] max-[1025px]:size-[2.4vw] max-md:mt-[1.5vw] max-md:size-[4vw] ${isOpen ? "rotate-180 text-primary" : "rotate-0 text-background/45"
+          className={`relative mt-[0.55vw] size-[1.1vw] shrink-0 transition-[color,transform] duration-700 ease-out group-hover:rotate-180 group-hover:text-primary motion-reduce:transition-none max-md:mt-[1.5vw] max-md:size-[4vw] ${isOpen ? "rotate-180 text-primary" : "rotate-0 text-background/45"
             }`}
         >
           <span className="absolute left-0 top-1/2 h-px w-full -translate-y-1/2 bg-current" />
@@ -189,9 +189,9 @@ function FAQRow({ item, isOpen, onToggle, index }) {
         <div
           ref={innerRef}
           style={{ opacity: initiallyOpen ? 1 : 0 }}
-          className="pt-[1.2vw] pr-[2.8vw] max-[1025px]:pt-[2.5vw] max-[1025px]:pr-[7vw] max-md:pt-[4vw] max-md:pr-[8vw]"
+          className="pt-[1.2vw] pr-[2.8vw] max-md:pt-[4vw] max-md:pr-[8vw]"
         >
-          <p className="text22 font-neue-haas w-[85%] text-background/70 leading-[1.45] max-[1025px]:w-full max-[1025px]:w-[90%] max-[1025px]:text-[2.2vw] max-md:w-full max-md:text-[4vw]">
+          <p className="text22 font-neue-haas w-[85%] text-background/70 leading-[1.45] max-md:w-full max-md:text-[4vw]">
             {item.answer}
           </p>
         </div>
@@ -227,22 +227,17 @@ export default function FAQV3({ faqItems, translateTop = true }) {
         return;
       }
 
-      gsap.fromTo(
-        rows,
-        { opacity: 0, y: "2vw" },
-        {
+      // Same fade-up as the rest of the page: each row rises as it reaches the viewport
+      gsap.set(rows, { opacity: 0, y: 50 });
+      rows.forEach((row) => {
+        gsap.to(row, {
           opacity: 1,
           y: 0,
-          duration: 0.8,
-          stagger: 0.08,
+          duration: 1.2,
           ease: "power3.out",
-          scrollTrigger: {
-            trigger: container.current,
-            start: "top 80%",
-            once: true,
-          },
-        },
-      );
+          scrollTrigger: { trigger: row, start: "top 90%", once: true },
+        });
+      });
     },
     { scope: container },
   );
@@ -262,8 +257,8 @@ export default function FAQV3({ faqItems, translateTop = true }) {
 
       gsap.fromTo(
         rows,
-        { opacity: 0, y: "2vw" },
-        { opacity: 1, y: 0, duration: 0.8, stagger: 0.08, ease: "power3.out" },
+        { opacity: 0, y: 50 },
+        { opacity: 1, y: 0, duration: 1.2, stagger: 0.08, ease: "power3.out" },
       );
     },
     { scope: container, dependencies: [isExpanded] },
@@ -273,19 +268,19 @@ export default function FAQV3({ faqItems, translateTop = true }) {
     <section
       ref={container}
       id="faq"
-      className="relative z-10 h-fit w-full bg-foreground py-[7vw] text-background max-[1025px]:mt-0! max-[1025px]:px-[5vw] max-[1025px]:py-[15vw] max-md:py-[22vw]"
+      className="relative z-10 h-fit px-[7vw] w-full bg-foreground py-[7vw] text-background max-md:mt-0! max-md:px-[5vw] max-md:py-[22vw]"
     >
 
 
       <LineReveal
         as="h2"
-        className="t96 text-center font-neue-haas mb-[7vw] max-[1025px]:mt-[30vw]  relative z-110 max-[1025px]:mb-[8vw]  max-md:mb-[12vw] max-[1025px]:w-full"
+        className="t96 text-center font-aeonik mb-[7vw]  relative z-110  max-md:mb-[12vw] max-md:w-full"
       >
         Questions, <span className="gradient-text-animate">Answered.</span>
       </LineReveal>
 
 
-      <div className="mx-auto w-[90%] max-w-[1536px] max-[1025px]:w-full">
+      <div className="mx-auto  max-w-[1536px] max-md:w-full">
         {visibleItems.map((item, index) => (
           <FAQRow
             key={item.id}
@@ -300,18 +295,16 @@ export default function FAQV3({ faqItems, translateTop = true }) {
       </div>
 
       {!isExpanded && faqItems.length > INITIAL_COUNT && (
-        <div className="flex w-full items-center  justify-center mt-[3vw] max-[1025px]:mt-[5vw] max-[1025px]:mt-[7vw] max-md:mt-[10vw]">
+        <div className="faq-v3-row flex w-full items-center  justify-center mt-[3vw] max-md:mt-[10vw]">
           <LinkButton
             href="#"
             onClick={() => setIsExpanded(true)}
-            shimmer
-            shimmerBaseColor="#050505"
-            shimmerColor="var(--primary)"
             tilted={false}
           underline={true}
             showArrow
             text="View More"
-            className="text-background max-md:text34"
+            underlineClassName="mt-0.5"
+            className="text-[#7a7a7a]! hover:text-background! transition-colors duration-300 max-md:text34"
           />
         </div>
       )}

@@ -29,6 +29,18 @@ export function markLoaderV3Handoff() {
   window.dispatchEvent(new CustomEvent(LOADER_V3_HANDOFF_EVENT));
 }
 
+// Set while the loader is on screen waiting for the visitor to pick an entry
+// button. Fallback timers below hold off for as long as it stays set, so the
+// header / hero never appear behind a loader that is still up.
+export function setLoaderV3Waiting(waiting) {
+  if (typeof window === "undefined") return;
+  window.__HYPERIUX_V3_LOADER_WAITING__ = waiting;
+}
+
+function isLoaderV3Waiting() {
+  return typeof window !== "undefined" && window.__HYPERIUX_V3_LOADER_WAITING__ === true;
+}
+
 export function isLoaderV3Complete() {
   return (
     typeof window !== "undefined" &&
@@ -88,10 +100,18 @@ function useLoaderFlag(event, isSet, fallbackMs) {
 
     // The loader is running normally - no rush, just fall open if it never
     // reports back.
-    const fallback =
-      !already && Number.isFinite(fallbackMs)
-        ? window.setTimeout(onFire, fallbackMs)
-        : 0;
+    // Re-arms while the loader is still waiting on the visitor.
+    let fallback = 0;
+    const tryFallback = () => {
+      if (isLoaderV3Waiting()) {
+        fallback = window.setTimeout(tryFallback, 500);
+        return;
+      }
+      onFire();
+    };
+    if (!already && Number.isFinite(fallbackMs)) {
+      fallback = window.setTimeout(tryFallback, fallbackMs);
+    }
 
     return () => {
       window.removeEventListener(event, onFire);

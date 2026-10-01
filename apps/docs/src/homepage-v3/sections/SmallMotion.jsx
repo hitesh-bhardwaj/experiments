@@ -91,9 +91,9 @@ export default function SmallMotion() {
     }, [])
 
     return (
-        <section ref={sectionRef} className='h-[200vh] max-md:h-[200vh] mt-[-5vw] max-sm:h-[200vh] w-full relative'>
-            <div className='h-screen w-full max-sm:w-[85vw] max-md:w-[85vw] max-md:mx-auto sticky top-0 flex items-center justify-center overflow-hidden'>
-                <h2 ref={textRef} className='text-[15vw] max-md:text-[12vw] max-sm:text-[13vw] max-sm:font-medium! absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full text-center font-black'>Small Motion.</h2>
+        <section ref={sectionRef} className='h-[200vh] mt-[-5vw] w-full relative'>
+            <div className='h-screen max-md:h-svh w-full max-md:w-[85vw] max-md:mx-auto sticky top-0 flex items-center justify-center overflow-hidden'>
+                <h2 ref={textRef} className='text-[15vw] max-md:text-[12vw] max-sm:text-[13vw] max-sm:font-medium! leading-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full text-center font-black'>Small Motion.</h2>
                 <h2 ref={textRef2} className='text-[17vw] w-full text-center absolute max-sm:text-[13vw] max-md:text-[12vw] max-sm:font-medium! left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 leading-none text-primary font-black'>Big Signal.</h2>
             </div>
         </section>

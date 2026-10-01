@@ -122,8 +122,8 @@ export default function PricingPlansHome() {
 
     return (
         <section ref={rootRef} id="pricing" className="relative bg-white font-avenir text-[#1D1D1D]">
-            <div className="mx-auto flex max-w-[1536px] flex-wrap items-end justify-between gap-8 px-[5vw] pt-[clamp(6rem,15vh,9rem)] pb-[clamp(2.5rem,6vh,4rem)]">
-                <LineReveal as="h2" className="max-w-[60vw] text-[clamp(2.2rem,4.6vw,4.6rem)] leading-[1.02] font-normal tracking-[-.035em]">
+            <div className="mx-auto flex max-w-[1536px] flex-wrap items-end justify-between gap-8 px-[5vw] max-md:px-5 max-md:gap-6 pt-[clamp(6rem,15vh,9rem)] pb-[clamp(2.5rem,6vh,4rem)]">
+                <LineReveal as="h2" className="max-w-[60vw] max-md:max-w-full text-[clamp(2.2rem,4.6vw,4.6rem)] leading-[1.02] font-normal tracking-[-.035em]">
                     Two Plans.<br/> <span className="gradient-text-animate gradient-text-single">Every Moment Covered.</span>
                 </LineReveal>
 
@@ -156,12 +156,13 @@ export default function PricingPlansHome() {
                 </div>
             </div>
 
-            <div className="mx-auto grid max-w-[1536px] grid-cols-2 gap-3.5 px-[8vw] max-[1000px]:grid-cols-1 pt-[3vw]">
-                {PLANS.map((plan) => {
+            <div className="mx-auto grid max-w-[1536px] grid-cols-2 gap-3.5 px-[8vw] max-md:grid-cols-1 max-md:px-5 max-md:pt-6 pt-[3vw]">
+                {PLANS.map((plan, planIndex) => {
                     const dark = plan.id === "plus";
                     return (
                         <article
                             key={plan.id}
+                            data-fadeup-delay={planIndex * 0.12}
                             className={`fadeup relative flex flex-col gap-[18px] border p-[clamp(1.8rem,3vw,2.8rem)] ${dark ? "border-[#1D1D1D] bg-[#1D1D1D] text-[#F4F4F4]" : "border-[#1D1D1D]/15 bg-white"}`}
                         >
                             {/* <CornerMarks /> */}

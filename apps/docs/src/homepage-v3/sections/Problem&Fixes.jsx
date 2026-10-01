@@ -8,7 +8,7 @@ import FadeTextV3 from '../components/FadeTextV3'
 import DrawCheckV3 from '../components/DrawCheckV3'
 import DrawCrossV3 from '../components/DrawCrossV3'
 import LineReveal from '@/components/Animations/LineReveal'
-import SplitLine from '@/components/WebsiteComps/SplitLine'
+import { useFadeUp } from '@/components/Animations/gsapAnimations'
 
 if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger)
@@ -58,6 +58,7 @@ const cards = [
 
 export default function ProblemFixes() {
   const sectionRef = useRef(null)
+  useFadeUp(sectionRef)
   const cardsRef = useRef(null)
   const [activeIndex, setActiveIndex] = useState(-1)
   const [armed, setArmed] = useState(false)
@@ -165,22 +166,22 @@ export default function ProblemFixes() {
   return (
     <section
       ref={sectionRef}
-      className="relative z-200 mt-[-13vw] max-md:mt-[-8vw] w-full overflow-hidden px-[3vw] pb-[10%] text-white max-[1025px]:px-[5vw] max-md:px-[6vw] max-md:py-24 max-sm:px-5 max-sm:py-20"
+      className="relative z-200 mt-[-13vw] max-md:mt-[-8vw] w-full overflow-hidden px-[3vw] pb-[10%] text-white max-md:px-[6vw] max-md:py-24  max-sm:py-20"
     >
       <div className="mx-auto relative z-200 flex w-full max-w-[1536px] flex-col items-center">
-        <div className=" text-center w-[70%]">
+        <div className=" text-center w-[70%] max-md:w-full">
           <LineReveal as='h2' className="t96 w-full">
             Good Motion is{' '}
             <span className="gradient-text-animate">Harder</span> Than it Looks
           </LineReveal>
-          <SplitLine delay={.25} as='p' className="text24 mx-auto mt-[3.5vw] max-w-[55vw] leading-[1.55] text-white max-[1025px]:mt-[4vw] max-[1025px]:max-w-[85vw] max-md:mt-[5vw] max-md:max-w-[85vw] max-md:text-sm max-sm:mt-[10vw] max-sm:max-w-full max-sm:leading-[1.3]">
+          <p data-fadeup-delay="0.2" className="fadeup text24 mx-auto mt-[3.5vw] max-w-[55vw] leading-[1.55] text-white max-md:mt-[5vw] max-md:w-full max-md:max-w-full max-md:text-sm max-sm:mt-[10vw] max-sm:leading-[1.3]">
           Anyone can add a fade. What&apos;s hard is everything around it. Get timing, restraint, or performance wrong, and the moment meant to impress becomes the reason the site feels worse. Most teams see that risk and drop their ambitions to play it safe. And your interface ends up looking like everyone else&apos;s.  Vault is engineered around that discipline by default, not as an afterthought.
-          </SplitLine>
+          </p>
         </div>
 
         <div
           ref={cardsRef}
-          className="mt-[8vw] h-fit w-[85vw] space-y-[1vw] max-[1025px]:mt-[10vw] max-[1025px]:w-full max-[1025px]:space-y-[2vw] max-md:mt-20 max-md:w-full max-md:space-y-5 max-sm:mt-20 max-sm:space-y-5"
+          className="mt-[8vw] h-fit w-[85vw] space-y-[1vw] max-md:mt-20 max-md:w-full max-md:space-y-5 max-sm:mt-20 max-sm:space-y-5"
         >
           <div className="text24 flex w-full items-center justify-between px-[.5vw] max-sm:text-sm">
             <p>The Risks</p>
@@ -190,11 +191,11 @@ export default function ProblemFixes() {
           {cards.map((item, index) => (
             <div
               key={item.title}
-              className="tension-card bg-grey/30 flex items-center justify-between p-[.7vw] pr-[1.5vw] max-[1025px]:p-[2vw] max-md:p-3 max-sm:p-2 max-sm:pr-2"
+              className="tension-card bg-grey/30 flex items-center justify-between p-[.7vw] pr-[1.5vw] max-md:p-3 max-sm:p-2 max-sm:pr-2"
             >
-              <div className="flex min-w-0 flex-1 items-center max-[1025px]:flex-col max-[1025px]:items-start max-[1025px]:gap-[2vw] max-md:flex-col max-md:items-start max-md:gap-3 max-sm:gap-2.5">
+              <div className="flex min-w-0 flex-1 items-center max-md:flex-col max-md:items-start max-md:gap-3 max-sm:gap-2.5">
 
-                <div className="flex w-[25vw] pl-[1vw] shrink-0 items-center gap-[1vw] max-[1025px]:w-auto max-[1025px]:gap-[2vw] max-md:gap-4 max-sm:w-auto max-sm:gap-2.5">
+                <div className="flex w-[25vw] pl-[1vw] shrink-0 items-center gap-[1vw] max-md:w-auto max-md:gap-4 max-sm:gap-2.5">
 
                   <FadeTextV3
                     as="p"
@@ -205,7 +206,7 @@ export default function ProblemFixes() {
                   >
                     {item.label}
                   </FadeTextV3>
-                  <div className="flex size-[3vw] shrink-0 items-center justify-center bg-background p-1 max-[1025px]:size-[5vw] max-md:size-8 max-sm:size-9">
+                  <div className="flex size-[3vw] shrink-0 items-center justify-center bg-background p-1 max-md:size-8 max-sm:size-9">
                     <DrawCrossV3
                       active={index <= activeIndex}
                       armed={armed}
@@ -213,7 +214,7 @@ export default function ProblemFixes() {
                     />
                   </div>
                 </div>
-                <p className="text-light-grey font-mono text18 max-[1025px]:w-[90%] max-[1025px]:flex-none max-[1025px]:px-0 max-md:text-[3vw]! max-md:pr-0! min-w-0 flex-1 px-[2vw] text-left [--scramble-flash:var(--primary)] [--scramble-pre:var(--primary)] max-sm:w-[75%] max-sm:flex-none max-sm:px-0">
+                <p className="text-light-grey font-mono text18 max-md:w-[90%] max-md:flex-none max-md:px-0 max-md:text-[clamp(0.8rem,2.6vw,1rem)]! max-md:pr-0! min-w-0 flex-1 px-[2vw] text-left [--scramble-flash:var(--primary)] [--scramble-pre:var(--primary)] max-sm:w-[75%]">
                   <ScrambleTextV3
                     text={item.description}
                     active={index <= activeIndex}
@@ -222,17 +223,17 @@ export default function ProblemFixes() {
                 </p>
               </div>
 
-              <div className="flex w-[13vw] shrink-0 items-center gap-[1vw] max-[1025px]:w-auto max-[1025px]:max-w-[40%] justify-end max-[1025px]:gap-[2vw] max-md:w-[38%] max-md:max-w-[40%] max-sm:w-[42%] max-sm:max-w-[48%] max-sm:gap-2">
+              <div className="flex w-[13vw] shrink-0 items-center gap-[1vw] justify-end max-md:gap-3 max-md:w-[38%] max-md:max-w-[40%] max-sm:w-[42%] max-sm:max-w-[48%] max-sm:gap-2">
 
                 <FadeTextV3
                   as="p"
-                  className="text24 whitespace-nowrap capitalize max-[1025px]:whitespace-normal max-[1025px]:max-w-[10ch] max-[1025px]:text-right max-[1025px]:leading-[1.15] max-sm:text-base!"
+                  className="text24 whitespace-nowrap capitalize max-md:whitespace-normal max-md:max-w-[10ch] max-md:text-right max-md:leading-[1.15] max-sm:text-base!"
                   active={index <= activeIndex}
                   armed={armed}
                 >
                   {item.title}
                 </FadeTextV3>
-                <div className="flex size-[3vw] shrink-0 items-center justify-center bg-background p-2.5 max-[1025px]:size-[5vw] max-md:size-8 max-sm:size-9">
+                <div className="flex size-[3vw] shrink-0 items-center justify-center bg-background p-2.5 max-md:size-8 max-sm:size-9">
                   <DrawCheckV3
                     active={index <= activeIndex}
                     armed={armed}
