@@ -135,6 +135,15 @@ function SmoothRange({
   );
 }
 
+// Drawn with stroke-dashoffset (pathLength=1), so the tick strokes in when checked.
+function CheckTick() {
+  return (
+    <svg viewBox="0 0 12 12" aria-hidden="true" className={styles.checkboxInner}>
+      <path d="M2 6.5 4.8 9 10 3" pathLength={1} />
+    </svg>
+  );
+}
+
 function ControlField({
   control,
   value,
@@ -151,7 +160,7 @@ function ControlField({
       <button type="button" onClick={() => onChange(!value)} className={`${styles.field} ${styles.toggleRow}`}>
         <span className={styles.fieldLabel}>{control.id ?? control.label}</span>
         <span className={`${styles.checkboxOuter} ${value ? styles.checkboxSelected : ""}`}>
-          <span className={styles.checkboxInner} />
+          <CheckTick />
         </span>
       </button>
     );
@@ -213,7 +222,7 @@ function ControlField({
                 className={`${styles.checkboxOption} ${isSelected ? styles.checkboxOptionSelected : ""}`}
               >
                 <span className={`${styles.checkboxOuter} ${isSelected ? styles.checkboxSelected : ""}`}>
-                  <span className={styles.checkboxInner} />
+                  <CheckTick />
                 </span>
                 <span className={styles.checkboxText}>{optionLabel}</span>
               </button>

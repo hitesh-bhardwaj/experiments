@@ -6,7 +6,7 @@ import {
   FAQTitle,
   FAQWrapper,
 } from "@/components/animated-faq";
-import DemoHeader from "@/components/WebsiteComps/DemoHeader";
+import DemoHeader from "@/components/preview-chrome/DemoHeader";
 
 const faqItems = [
   {
@@ -57,7 +57,7 @@ const defaultOpenItems = faqItems
 export default function DemoContent() {
   return (
     <>
-      <DemoHeader textColor="#ffffff" logoColor="#ffffff" />
+      <DemoHeader />
 
       <section className="bg-black h-screen px-8 py-20 text-white">
         <div className="max-w-5xl mx-auto text-center text-white mb-12">

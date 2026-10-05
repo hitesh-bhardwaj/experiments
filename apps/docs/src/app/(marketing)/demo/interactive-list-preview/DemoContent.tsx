@@ -1,7 +1,7 @@
 "use client";
 
 import InteractiveListPreview from "@/components/interactive-list-preview";
-import DemoHeader from "@/components/WebsiteComps/DemoHeader";
+import DemoHeader from "@/components/preview-chrome/DemoHeader";
 import RegistryRemixerDemo from "@/components/remixer-panel/RegistryRemixerDemo";
 
 export default function DemoContent({ registry }: { registry: any }) {
@@ -13,7 +13,7 @@ export default function DemoContent({ registry }: { registry: any }) {
     >
       {({ effect }) => (
         <>
-          <DemoHeader textColor='#ffffff' logoColor='#FFFFFF' />
+          <DemoHeader />
           {effect}
         </>
       )}

@@ -1,6 +1,6 @@
 "use client";
 
-import DemoHeader from "@/components/WebsiteComps/DemoHeader";
+import DemoHeader from "@/components/preview-chrome/DemoHeader";
 import PhantomImageTrail from "@/components/phantom-image-trail";
 import RegistryRemixerDemo from "@/components/remixer-panel/RegistryRemixerDemo";
 

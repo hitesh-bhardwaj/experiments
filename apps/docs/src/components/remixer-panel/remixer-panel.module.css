@@ -4,7 +4,7 @@
   --remixer-border: rgba(255, 255, 255, 0.12);
   --remixer-border-strong: rgba(255, 255, 255, 0.22);
   --remixer-text: var(--foreground);
-  --remixer-text-muted: color-mix(in srgb, var(--foreground) 72%, transparent);
+  --remixer-text-muted: #ffffffb7;
   --remixer-text-soft: color-mix(in srgb, var(--foreground) 52%, transparent);
   --remixer-text-dim: color-mix(in srgb, var(--foreground) 30%, transparent);
   --remixer-accent: color-mix(in srgb, var(--foreground) 94%, transparent);
@@ -294,8 +294,13 @@
   font-size: 11px;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.28em;
+  letter-spacing: 0.15em;
   color: var(--remixer-text-muted);
+  transition: color 160ms ease;
+}
+
+.groupOpen .groupTitle {
+  color: #ff5f00;
 }
 
 .groupChevron {
@@ -307,7 +312,7 @@
 
 .groupOpen .groupChevron {
   transform: rotate(180deg);
-  color: var(--remixer-text);
+  color: #ff5f00;
 }
 
 .groupBody {
@@ -341,6 +346,9 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   /* border-radius: 0; */
   background: transparent;
+  /* padding-top: 0rem !important; */
+  padding-bottom: 1.5rem !important;
+
   padding: 1.1rem 1.25rem;
   opacity: 0;
   transform: translateX(12px);
@@ -406,17 +414,17 @@
   align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
-  margin-bottom: 0.85rem;
+  margin-bottom: 0rem;
 }
 
 .fieldLabel {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-family: var(--font-plex-mono), "IBM Plex Mono", ui-monospace, Menlo, monospace;
   font-size: 0.9rem;
   color: #fff;
 }
 
 .fieldValue {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-family: var(--font-plex-mono), "IBM Plex Mono", ui-monospace, Menlo, monospace;
   font-size: 11px;
   line-height: 1;
   letter-spacing: 0.14em;
@@ -432,7 +440,7 @@
   background: transparent;
   color: var(--foreground);
   padding: 0;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-family: var(--font-plex-mono), "IBM Plex Mono", ui-monospace, Menlo, monospace;
   font-size: 11px;
   line-height: 1;
   letter-spacing: 0;
@@ -457,8 +465,8 @@
 }
 
 .fieldDescription {
-  margin-top: 0.65rem;
-  margin-bottom: 0.85rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
   font-size: 12px;
   line-height: 1.4;
   color: var(--remixer-text-dim);
@@ -566,7 +574,7 @@
   background: transparent;
   color: var(--foreground);
   padding: 0.4rem 0.15rem;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-family: var(--font-plex-mono), "IBM Plex Mono", ui-monospace, Menlo, monospace;
   font-size: 11px;
   line-height: 1;
   letter-spacing: 0.16em;
@@ -682,40 +690,44 @@
 }
 
 .checkboxOuter {
-  width: 1.5rem;
-  height: 1.5rem;
+  width: 1rem;
+  height: 1rem;
   border: 1px solid rgba(255, 255, 255, 0.45);
-  /* border-radius: 4px; */
   display: inline-flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
   background: rgba(0, 0, 0, 0.28);
+  transition: border-color 160ms ease, background-color 160ms ease;
 }
 
+/* the tick draws itself in when checked */
 .checkboxInner {
-  width: 0.58rem;
-  height: 0.58rem;
-  /* border-radius: 2px; */
-  background: transparent;
-  transition: background-color 160ms ease, transform 160ms ease, clip-path 160ms ease;
-  clip-path: polygon(14% 54%, 0 68%, 42% 100%, 100% 24%, 85% 10%, 41% 67%);
-  transform: scale(0.72);
+  width: 0.7rem;
+  height: 0.7rem;
+  fill: none;
+  stroke: #ff5f00;
+  stroke-width: 2.4;
+  stroke-linecap: square;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 220ms cubic-bezier(0.65, 0, 0.35, 1);
 }
 
 .checkboxSelected {
-  border-color: rgba(255, 255, 255, 0.7);
-  background: rgba(255, 255, 255, 0.14);
+  border-color: #ff5f00;
+  background: rgba(255, 95, 0, 0.1);
 }
 
 .checkboxSelected .checkboxInner {
-  background: #fff;
-  transform: scale(1);
+  stroke-dashoffset: 0;
+  transition-delay: 60ms;
 }
 
-.checkboxOptionSelected .checkboxInner {
-  background: #fff;
-  transform: scale(1);
+@media (prefers-reduced-motion: reduce) {
+  .checkboxInner {
+    transition: none;
+  }
 }
 
 .checkboxText {
@@ -986,7 +998,7 @@
   margin: 0;
   padding: 0.9rem;
   overflow-x: auto;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-family: var(--font-plex-mono), "IBM Plex Mono", ui-monospace, Menlo, monospace;
   font-size: 12px;
   line-height: 1.7;
   color: #d8d8d8;

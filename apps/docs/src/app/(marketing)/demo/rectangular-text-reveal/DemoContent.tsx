@@ -2,7 +2,7 @@
 
 import RectangularTextReveal from "@/components/rectangular-text-reveal";
 import RegistryRemixerDemo from "@/components/remixer-panel/RegistryRemixerDemo";
-import DemoHeader from "@/components/WebsiteComps/DemoHeader";
+import DemoHeader from "@/components/preview-chrome/DemoHeader";
 import { ReactLenis } from "lenis/react";
 
 const showcaseSections = [

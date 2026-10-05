@@ -5,6 +5,7 @@ import RegistryRemixerDemo from "@/components/remixer-panel/RegistryRemixerDemo"
 import type { RegistryLike } from "@/components/remixer-panel/types";
 import DisplacementNavbar from "@/components/displacement-navbar";
 import CharStaggerPrimaryButton from "@/components/char-stagger-primary-button";
+import DemoHeader from "@/components/preview-chrome/DemoHeader";
 
 const DEMO_CHILDREN = (
   <div className="relative flex h-[90vh] flex-col items-center justify-center gap-10 px-[1.7vw] max-[1025px]:px-[5vw] min-[769px]:max-[1025px]:px-[2.6vw]">
@@ -42,10 +43,12 @@ export default function DemoContent({ registry }: { registry: RegistryLike }) {
       component={DisplacementNavbar}
       copyCodeOptions={{ propsVariableName: "displacementNavbarProps" }}
     >
-      {({ effect }) =>
-       
-        isValidElement(effect) ? cloneElement(effect as React.ReactElement<{ children?: React.ReactNode }>, { children: DEMO_CHILDREN }) : effect
-      }
+      {({ effect }) => (
+        <>
+          <DemoHeader />
+          {isValidElement(effect) ? cloneElement(effect as React.ReactElement<{ children?: React.ReactNode }>, { children: DEMO_CHILDREN }) : effect}
+        </>
+      )}
     </RegistryRemixerDemo>
   );
 }

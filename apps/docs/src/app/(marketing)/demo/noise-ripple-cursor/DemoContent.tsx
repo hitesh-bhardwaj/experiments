@@ -4,7 +4,7 @@ import NoiseRippleCursor from "@/components/noise-ripple-cursor";
 import LenisSmoothScroll from "@/components/SmoothScroll/LenisScroll";
 import HeadAnim from "@/components/Animations/HeadAnim";
 import SplitLine from "@/components/WebsiteComps/SplitLine";
-import DemoHeader from "@/components/WebsiteComps/DemoHeader";
+import DemoHeader from "@/components/preview-chrome/DemoHeader";
 import RegistryRemixerDemo from "@/components/remixer-panel/RegistryRemixerDemo";
 
 export default function DemoContent({ registry }: { registry: any }) {
@@ -17,7 +17,7 @@ export default function DemoContent({ registry }: { registry: any }) {
       {({ effect }) => (
         <>
           <LenisSmoothScroll />
-          <DemoHeader logoColor="#FFFFFF" textColor="#ffffff" />
+          <DemoHeader />
           <div className="min-h-screen w-full relative bg-[]">
             <section className="h-screen w-full relative">
               <HeadAnim animateOnScroll={false}>

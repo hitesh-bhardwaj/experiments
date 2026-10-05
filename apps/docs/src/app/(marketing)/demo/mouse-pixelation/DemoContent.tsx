@@ -2,7 +2,7 @@
 
 import MousePixelation from "@/components/mouse-pixelation";
 import RegistryRemixerDemo from "@/components/remixer-panel/RegistryRemixerDemo";
-import DemoHeader from "@/components/WebsiteComps/DemoHeader";
+import DemoHeader from "@/components/preview-chrome/DemoHeader";
 
 export default function DemoContent({ registry }: { registry: any }) {
   return (
@@ -13,7 +13,7 @@ export default function DemoContent({ registry }: { registry: any }) {
     >
       {({ effect }) => (
         <main className="relative min-h-screen w-screen overflow-hidden bg-black">
-          <DemoHeader logoColor="#FFFFFF" textColor="white" />
+          <DemoHeader />
           {effect}
         </main>
       )}

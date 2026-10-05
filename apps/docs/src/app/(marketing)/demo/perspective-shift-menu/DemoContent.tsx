@@ -6,6 +6,7 @@ import RegistryRemixerDemo from "@/components/remixer-panel/RegistryRemixerDemo"
 import type { RegistryLike } from "@/components/remixer-panel/types";
 import PerspectiveShiftMenu from "@/components/perspective-shift-menu";
 import type { PerspectiveShiftMenuProps } from "@/components/perspective-shift-menu";
+import DemoHeader from "@/components/preview-chrome/DemoHeader";
 
 const BACKGROUND_IMAGE =
   "https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/h-24.jpg";
@@ -77,7 +78,14 @@ const DemoContent = ({ registry }: { registry: RegistryLike }) => {
           <Hero />
         </PerspectiveShiftMenu>
       )}
-    />
+    >
+      {({ effect }) => (
+        <>
+          <DemoHeader />
+          {effect}
+        </>
+      )}
+    </RegistryRemixerDemo>
   );
 };
 

@@ -413,7 +413,7 @@ export function VaultHeader({
       {/* Desktop header - untouched, >1025px only (or never, when mobileOnly). */}
       <header
         ref={desktopHeaderRef}
-        className={`fixed left-0 right-0 top-(--announcement-offset) transition-[top] duration-300 ease-out z-50 px-[2vw] py-5 ${mobileOnly ? "hidden" : "max-[1025px]:hidden"} ${isScrolled ? "bg-black/20 shadow-md backdrop-blur-sm" : ""
+        className={`fixed left-0 right-0 top-(--announcement-offset) transition-[top] duration-300 ease-out z-50 px-[2vw] py-3.5 ${mobileOnly ? "hidden" : "max-[1025px]:hidden"} ${isScrolled ? "bg-black/20 backdrop-blur-sm" : ""
           }`}
       >
         <div className="flex h-full items-center justify-end gap-3">

@@ -1,6 +1,6 @@
 "use client";
 
-import DemoHeader from "@/components/WebsiteComps/DemoHeader";
+import DemoHeader from "@/components/preview-chrome/DemoHeader";
 import RegistryRemixerDemo from "@/components/remixer-panel/RegistryRemixerDemo";
 import GridScale from "@/components/grid-scale";
 
@@ -13,7 +13,7 @@ export default function DemoContent({ registry }: { registry: any }) {
     >
       {({ effect }) => (
         <>
-          <DemoHeader textColor="#ffffff" />
+          <DemoHeader />
           {effect}
         </>
       )}

@@ -4,7 +4,7 @@ import HeadAnim from "@/components/Animations/HeadAnim";
 import RegistryRemixerDemo from "@/components/remixer-panel/RegistryRemixerDemo";
 import SpotlightText from "@/components/spotlight-text";
 import SplitLine from "@/components/WebsiteComps/SplitLine";
-import DemoHeader from "@/components/WebsiteComps/DemoHeader";
+import DemoHeader from "@/components/preview-chrome/DemoHeader";
 
 export default function DemoContent({ registry }: { registry: any }) {
   return (
@@ -20,7 +20,7 @@ export default function DemoContent({ registry }: { registry: any }) {
     >
       {({ effect }) => (
         <>
-          <DemoHeader logoColor="#FFFFFF" textColor="#ffffff" />
+          <DemoHeader />
           <div className="mx-auto flex h-screen flex-col items-center justify-center gap-25 max-sm:h-full max-sm:gap-10 max-sm:py-5">
             <div className="mx-auto w-[40%] space-y-5 max-md:w-[70%] max-sm:w-[70%] max-sm:pt-17">
               <HeadAnim>

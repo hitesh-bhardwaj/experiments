@@ -2,7 +2,7 @@
 
 import ParallaxImageAnimation from "@/components/parallax-image-animation";
 import { ReactLenis } from "lenis/react";
-import DemoHeader from "@/components/WebsiteComps/DemoHeader";
+import DemoHeader from "@/components/preview-chrome/DemoHeader";
 import HeadAnim from "@/components/Animations/HeadAnim";
 import SplitLine from "@/components/WebsiteComps/SplitLine";
 import RegistryRemixerDemo from "@/components/remixer-panel/RegistryRemixerDemo";
@@ -107,7 +107,7 @@ export default function DemoContent({ registry }: { registry: any }) {
     >
       {({ effect }) => (
         <ReactLenis root>
-          <DemoHeader textColor="#ffffff" logoColor="#FFFFFF" />
+          <DemoHeader />
           <section className="w-screen h-screen bg-black text-white flex flex-col gap-[7vw] max-sm:gap-[12vw] items-center justify-center">
             <HeadAnim>
               <h1 className="text-[4vw] max-md:text-[5.5vw] font-medium max-sm:text-[8.5vw] w-[70%] text-center">

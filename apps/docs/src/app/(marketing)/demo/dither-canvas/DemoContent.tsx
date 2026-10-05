@@ -1,6 +1,6 @@
 "use client";
 
-import DemoHeader from "@/components/WebsiteComps/DemoHeader";
+import DemoHeader from "@/components/preview-chrome/DemoHeader";
 import DitherCanvas from "@/components/dither-canvas";
 import RegistryRemixerDemo from "@/components/remixer-panel/RegistryRemixerDemo";
 
@@ -13,7 +13,7 @@ export default function DemoContent({ registry }: { registry: any }) {
     >
       {({ effect }) => (
         <main className="relative min-h-screen w-screen overflow-hidden bg-black">
-          <DemoHeader logoColor="#FFFFFF" textColor="#ffffff" />
+          <DemoHeader />
           {effect}
         </main>
       )}

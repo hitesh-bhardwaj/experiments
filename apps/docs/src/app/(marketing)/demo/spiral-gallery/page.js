@@ -1,11 +1,11 @@
-import DemoHeader from '@/components/WebsiteComps/DemoHeader'
+import DemoHeader from "@/components/preview-chrome/DemoHeader"
 import { getDemoPageMetadata } from "@/lib/demo-metadata";
 import SpiralGallery from '../../../../components/spiral-gallery';
 
 const page = () => {
  return (
  <div>
-    <DemoHeader logoColor='#FFFFFF' textColor='#ffffff' />
+    <DemoHeader />
  <SpiralGallery/>
  </div>
  )

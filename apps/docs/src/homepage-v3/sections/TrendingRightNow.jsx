@@ -71,7 +71,7 @@ function TrendingEffectCard({ effect, priority = false }) {
       prefetch={false}
       draggable={false}
       ref={cardRef}
-      className="group relative block h-full w-full overflow-hidden bg-[#161616]"
+      className="group relative block h-full w-full overflow-hidden bg-[#161616]/40"
     >
       <span className="absolute left-5 top-3 z-10 bg-[#2B2B2B] px-3 py-[0.1vw] text-[0.8vw]  tracking-[0.06em] text-white max-md:text-[3vw] max-[1025px]:text-[2vw] max-md:px-4 max-md:py-1.5 ">
         {categoryLabel}
@@ -273,7 +273,7 @@ export default function TrendingRightNow({ effects = [] }) {
 
   return (
     <section className="relative w-full overflow-hidden  px-14 pt-16 pb-4 max-md:px-0 max-md:pt-12">
-      <div className="mb-7 flex items-center max-sm:px-5 justify-between max-md:mb-5">
+      <div className="mb-7 flex items-center max-md:px-5 justify-between max-md:mb-5">
         <h2 className=" text-2xl font-medium text-foreground">
           Trending
         </h2>
@@ -301,7 +301,7 @@ export default function TrendingRightNow({ effects = [] }) {
         </div>
       </div>
 
-      <div className="w-full bg-[#1E1E1E] py-12 mt-8 relative overflow-hidden">
+      <div className="w-full bg-black/20 backdrop-blur-lg backd py-12 mt-8 relative overflow-hidden">
         <div
           ref={trackRef}
           onPointerEnter={() => {
@@ -335,8 +335,8 @@ export default function TrendingRightNow({ effects = [] }) {
             </div>
           ))}
         </div>
-        <div className="absolute top-0 left-0 w-[10vw] h-full pointer-events-none bg-gradient-to-r from-[#050505] to-transparent z-20 " />
-        <div className="absolute top-0 right-0 w-[10vw] h-full pointer-events-none bg-gradient-to-l from-[#050505] to-transparent z-20" />
+        {/* <div className="absolute top-0 left-0 w-[10vw] h-full pointer-events-none bg-gradient-to-r from-[#050505] to-transparent z-20 " />
+        <div className="absolute top-0 right-0 w-[10vw] h-full pointer-events-none bg-gradient-to-l from-[#050505] to-transparent z-20" /> */}
       </div>
     </section>
   );

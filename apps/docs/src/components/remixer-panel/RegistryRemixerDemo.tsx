@@ -3,9 +3,8 @@
 import { Fragment, useCallback, useEffect, useState } from "react";
 import { buildRemixerJsx } from "./build-remixer-code";
 import { useRemixerControls } from "./useRemixerControls";
-import PreviewChrome from "@/components/preview-chrome/PreviewChrome";
-import { PreviewChromeProvider } from "@/components/preview-chrome/PreviewChromeContext";
-import { onEmbedValues, readEmbed } from "@/components/preview-chrome/src/preview-chrome";
+import { DemoHeaderProvider } from "@/components/preview-chrome/DemoHeader";
+import { onEmbedValues, readEmbed } from "@/components/preview-chrome/embed";
 import type { RegistryRemixerDemoProps, RemixerControl, RemixerGroup, RemixerValues } from "./types";
 
 function toGroupTitle(value: string) {
@@ -40,7 +39,7 @@ function getGroupsFromRemixerControls(controls: RemixerControl[] = []) {
   return [...groupMap.values()];
 }
 
-// `?embed=1` is the device iframe the preview chrome opens for Tablet / Phone;
+// `?embed=1` is the device iframe DemoHeader opens for Tablet / Phone;
 // `?rm=1` asks it to preview reduced motion. Read before the effect mounts so
 // matchMedia already answers for reduced motion on the first render.
 function useEmbedMode() {
@@ -91,22 +90,22 @@ export default function RegistryRemixerDemo({
       ? buildCode({ registry, values, initialValues, groups })
       : buildRemixerJsx({ componentName: String(registry?.title ?? registry?.name ?? ""), values, groups });
 
+  // The page's <DemoHeader /> reads this: the registry, the props panel and replay.
+  const header = {
+    registry,
+    groups,
+    values,
+    hasProps: !!remixerConfig.enabled,
+    onChange: updateValue,
+    onCopyCode: remixerConfig.enabled ? copyCode : undefined,
+    onReset: resetValues,
+    onReplay: replay,
+    defaultOpenGroupId: remixerConfig.defaultOpenGroupId,
+  };
+
   return (
-    <PreviewChromeProvider value>
+    <DemoHeaderProvider value={header}>
       {children ? children({ values, effect }) : effect}
-      {embed ? null : (
-        <PreviewChrome
-          registry={registry}
-          groups={groups}
-          values={values}
-          hasProps={!!remixerConfig.enabled}
-          onChange={updateValue}
-          onCopyCode={remixerConfig.enabled ? copyCode : undefined}
-          onReset={resetValues}
-          onReplay={replay}
-          defaultOpenGroupId={remixerConfig.defaultOpenGroupId}
-        />
-      )}
-    </PreviewChromeProvider>
+    </DemoHeaderProvider>
   );
 }

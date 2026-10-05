@@ -64,7 +64,7 @@ import TextStream from "@/components/text-stream";
 import VideoPlayer from "@/components/video-player";
 import WebglSlider from "@/components/webgl-slider";
 import ZoomSlider from "@/components/zoom-slider";
-import DemoHeader from "@/components/WebsiteComps/DemoHeader";
+import DemoHeader from "@/components/preview-chrome/DemoHeader";
 import RegistryRemixerDemo from "./RegistryRemixerDemo";
 import type { RegistryLike, RemixerValues, SuggestedPreviewProps } from "./types";
 
@@ -141,7 +141,6 @@ export default function SuggestedEffectRemixerDemo({
   slug: string;
 }) {
   const Component = components[slug];
-  const hideDemoHeader = registry?.category === "navigation" || slug === "lines-loader";
 
   if (!Component) return null;
 
@@ -163,7 +162,7 @@ export default function SuggestedEffectRemixerDemo({
     >
       {({ effect }) => (
         <>
-          {hideDemoHeader ? null : <DemoHeader logoColor="#ffffff" textColor="#ffffff" />}
+          <DemoHeader />
           {effect}
         </>
       )}

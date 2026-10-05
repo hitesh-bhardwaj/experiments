@@ -1,6 +1,6 @@
 "use client";
 
-import DemoHeader from "@/components/WebsiteComps/DemoHeader";
+import DemoHeader from "@/components/preview-chrome/DemoHeader";
 import RegistryRemixerDemo from "@/components/remixer-panel/RegistryRemixerDemo";
 import LenisSmoothScroll from "@/components/SmoothScroll/LenisScroll";
 import StackSpread from "@/components/stack-spread";
@@ -24,7 +24,7 @@ export default function DemoContent({
     <RegistryRemixerDemo registry={registry} component={StackSpread}>
       {({ effect }) => (
         <>
-          <DemoHeader logoColor="#141414" textColor="#141414" />
+          <DemoHeader />
           <ScrollBottom textColor="text-black" />
           <LenisSmoothScroll />
           {effect}

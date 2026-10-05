@@ -902,7 +902,7 @@ export function VaultContent({
                           transition-colors duration-300 
                           ${isSelected
                           ? "bg-[#ff5f00] text-black hover:text-black hover:bg-[#ff5f00]"
-                          : "bg-[#161616] text-[#FFFFFF] hover:text-black hover:bg-[#ff5f00]"
+                          : "bg-black/20 backdrop-blur-lg text-[#FFFFFF] hover:text-black hover:bg-[#ff5f00]"
                         }
                         `}
                     >

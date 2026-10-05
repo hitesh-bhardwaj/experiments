@@ -1,7 +1,7 @@
 "use client";
 
 import CursorMove from "@/components/cursor-move";
-import DemoHeader from "@/components/WebsiteComps/DemoHeader";
+import DemoHeader from "@/components/preview-chrome/DemoHeader";
 import RegistryRemixerDemo from "@/components/remixer-panel/RegistryRemixerDemo";
 
 export default function DemoContent({ registry }: { registry: any }) {
@@ -19,7 +19,7 @@ export default function DemoContent({ registry }: { registry: any }) {
     >
       {({ effect }) => (
         <>
-          <DemoHeader logoColor="#FFFFFF" textColor="#ffffff" />
+          <DemoHeader />
           {effect}
           <div className="absolute bottom-[3vw] left-1/2 -translate-x-1/2 z-40 bg-white/8 backdrop-blur-sm px-4 py-2 rounded-full text-white text-[1.05vw] max-md:hidden shadow-lg w-[52vw] text-center">
             Glide your cursor over the screen - the crosshair dances, the letters bend, and the coordinates responds.

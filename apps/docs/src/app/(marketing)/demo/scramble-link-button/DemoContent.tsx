@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import ScrambleLinkButton from "@/components/scramble-link-button";
-import DemoHeader from "@/components/WebsiteComps/DemoHeader";
+import DemoHeader from "@/components/preview-chrome/DemoHeader";
 import RegistryRemixerDemo from "@/components/remixer-panel/RegistryRemixerDemo";
 
 export default function DemoContent({ registry }: { registry: any }) {
@@ -23,7 +23,7 @@ export default function DemoContent({ registry }: { registry: any }) {
     >
       {({ effect }) => (
         <>
-          <DemoHeader textColor="#ffffff" logoColor="#FFFFFF" />
+          <DemoHeader />
           <div className="h-screen w-screen flex items-center justify-center relative">
             <div className="space-y-20 relative z-10 text-center -mt-20">
               <div className="space-y-4">

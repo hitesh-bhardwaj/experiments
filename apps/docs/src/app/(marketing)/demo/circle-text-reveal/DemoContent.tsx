@@ -2,7 +2,7 @@
 
 import CircleTextReveal from "@/components/circle-text-reveal";
 import RegistryRemixerDemo from "@/components/remixer-panel/RegistryRemixerDemo";
-import DemoHeader from "@/components/WebsiteComps/DemoHeader";
+import DemoHeader from "@/components/preview-chrome/DemoHeader";
 
 export default function DemoContent({ registry }: { registry: any }) {
   return (

@@ -2,6 +2,7 @@
 
 import DottedTrail from "@/components/dotted-trail";
 import RegistryRemixerDemo from "@/components/remixer-panel/RegistryRemixerDemo";
+import DemoHeader from "@/components/preview-chrome/DemoHeader";
 
 export default function DemoContent({ registry }: { registry: any }) {
   return (
@@ -12,6 +13,7 @@ export default function DemoContent({ registry }: { registry: any }) {
     >
       {({ effect }) => (
         <>
+          <DemoHeader />
           {effect}
           <div className="absolute bottom-[3vw] left-1/2 -translate-x-1/2 z-40  rounded-full bg-black/10 px-4 py-2 w-[30vw] text-center text-[1.1vw] text-black/70 backdrop-blur-md max-[1025px]:hidden">
             Move your cursor across the grid - the trail follows, blending from

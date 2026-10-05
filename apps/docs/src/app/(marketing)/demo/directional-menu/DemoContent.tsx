@@ -2,6 +2,7 @@
 
 import DirectionalMenu from "@/components/directional-menu";
 import RegistryRemixerDemo from "@/components/remixer-panel/RegistryRemixerDemo";
+import DemoHeader from "@/components/preview-chrome/DemoHeader";
 
 export default function DemoContent({ registry }: { registry: any }) {
   return (
@@ -12,6 +13,7 @@ export default function DemoContent({ registry }: { registry: any }) {
     >
       {({ effect }) => (
         <div className="relative min-h-screen bg-black">
+          <DemoHeader />
           {effect}
           <div className="pointer-events-none absolute inset-x-0 top-[25%] z-10 px-6 text-center">
             <h1 className="mx-auto text-[10vw] leading-none tracking-[-0.06em] text-white sm:text-[11vw] md:text-[7rem]">

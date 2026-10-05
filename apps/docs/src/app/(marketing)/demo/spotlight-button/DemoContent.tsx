@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { Sparkles } from "lucide-react";
 import SpotlightButton from "@/components/spotlight-button";
-import DemoHeader from "@/components/WebsiteComps/DemoHeader";
+import DemoHeader from "@/components/preview-chrome/DemoHeader";
 import RegistryRemixerDemo from "@/components/remixer-panel/RegistryRemixerDemo";
 
 export default function DemoContent({ registry }: { registry: any }) {
@@ -24,7 +24,7 @@ export default function DemoContent({ registry }: { registry: any }) {
     >
       {({ effect }) => (
         <>
-          <DemoHeader logoColor="#ffffff" textColor="#ffffff" />
+          <DemoHeader />
           <div className="relative flex h-screen w-screen items-center justify-center">
             <div className="relative z-10 flex flex-col items-center gap-20 text-center">
               <div className="flex flex-col gap-4">

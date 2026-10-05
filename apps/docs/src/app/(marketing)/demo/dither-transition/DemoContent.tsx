@@ -8,7 +8,7 @@ import { ReactLenis, useLenis } from "lenis/react";
 import DitherTransition from "@/components/dither-transition";
 import FlickeringText from "@/components/flickering-text";
 import FocusText from "@/components/focus-text";
-import DemoHeader from "@/components/WebsiteComps/DemoHeader";
+import DemoHeader from "@/components/preview-chrome/DemoHeader";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -66,7 +66,7 @@ function Demo() {
 
   return (
     <main ref={rootRef} className="bg-white">
-      <DemoHeader logoColor="#ffffff" textColor="#ffffff" />
+      <DemoHeader />
 
       <FlickeringText
         className="demo-text-effect dither-demo-flicker bg-[#050505]"

@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import AnimatedToggle from "@/components/animated-toggle";
-import DemoHeader from "@/components/WebsiteComps/DemoHeader";
+import DemoHeader from "@/components/preview-chrome/DemoHeader";
 import RegistryRemixerDemo from "@/components/remixer-panel/RegistryRemixerDemo";
 
 export default function DemoContent({ registry }: { registry: any }) {
@@ -14,7 +14,7 @@ export default function DemoContent({ registry }: { registry: any }) {
     >
       {({ effect }) => (
         <>
-          <DemoHeader textColor="white" logoColor="#FFFFFF" />
+          <DemoHeader />
           <section className="min-h-dvh w-full flex items-center relative justify-center">
             <div className="absolute top-0 inset-x-0 z-1 pt-[6vw] px-[7vw] space-y-[1vw] text-center max-md:pt-[14vw] max-md:space-y-[3vw]">
               <h1 className="text-[5vw] text-white max-sm:text-[11vw] max-md:text-[7vw] max-sm:text-center">

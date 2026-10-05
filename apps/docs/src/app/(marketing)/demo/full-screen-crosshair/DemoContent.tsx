@@ -2,7 +2,7 @@
 
 import HeadAnim from "@/components/Animations/HeadAnim";
 import FullScreenCrosshair from "@/components/full-screen-crosshair";
-import DemoHeader from "@/components/WebsiteComps/DemoHeader";
+import DemoHeader from "@/components/preview-chrome/DemoHeader";
 import RegistryRemixerDemo from "@/components/remixer-panel/RegistryRemixerDemo";
 import SplitLine from "@/components/WebsiteComps/SplitLine";
 
@@ -15,7 +15,7 @@ export default function DemoContent({ registry }: { registry: any }) {
     >
       {({ effect }) => (
         <main className="h-screen w-screen relative bg-[#211951] text-[#826fffaa]">
-          <DemoHeader logoColor="#FFFFFF" textColor="#ffffff" />
+          <DemoHeader />
           {effect}
           <HeadAnim>
             <h1 className="w-full h-full flex items-center justify-center text-center text-[3.5vw] font-medium max-md:text-[6.5vw]">

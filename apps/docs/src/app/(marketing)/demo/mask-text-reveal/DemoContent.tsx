@@ -1,7 +1,7 @@
 "use client";
 
 import RegistryRemixerDemo from "@/components/remixer-panel/RegistryRemixerDemo";
-import DemoHeader from "@/components/WebsiteComps/DemoHeader";
+import DemoHeader from "@/components/preview-chrome/DemoHeader";
 import ScrollBottom from "@/components/WebsiteComps/ScrollBottom";
 import { ReactLenis } from "lenis/react";
 import MaskTextWrapper from "./MaskTextWrapper";
@@ -15,7 +15,7 @@ export default function DemoContent({ registry }: { registry: any }) {
     >
       {({ effect }) => (
         <ReactLenis root>
-          <DemoHeader logoColor="#ffffff" textColor="#ffffff" />
+          <DemoHeader />
           <ScrollBottom
             textColor="text-black"
             className="bottom-[3%] z-20 gap-[0.5vw]"

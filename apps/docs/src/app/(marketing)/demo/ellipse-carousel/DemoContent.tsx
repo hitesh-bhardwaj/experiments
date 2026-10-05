@@ -2,7 +2,7 @@
 
 import EllipseCarousel from "@/components/ellipse-carousel";
 import RegistryRemixerDemo from "@/components/remixer-panel/RegistryRemixerDemo";
-import DemoHeader from "@/components/WebsiteComps/DemoHeader";
+import DemoHeader from "@/components/preview-chrome/DemoHeader";
 
 export default function DemoContent({ registry }: { registry: any }) {
   return (
@@ -13,7 +13,7 @@ export default function DemoContent({ registry }: { registry: any }) {
     >
       {({ effect }) => (
         <main className="relative min-h-screen">
-          <DemoHeader logoColor="#111111" textColor="#111111" />
+          <DemoHeader />
           {effect}
         </main>
       )}

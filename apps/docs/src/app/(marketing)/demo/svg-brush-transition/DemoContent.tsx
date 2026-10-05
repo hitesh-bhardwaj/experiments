@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import RegistryRemixerDemo from "@/components/remixer-panel/RegistryRemixerDemo";
 import type { RegistryLike } from "@/components/remixer-panel/types";
 import SVGBrushTransition from "@/components/svg-brush-transition";
-import DemoHeader from "@/components/WebsiteComps/DemoHeader";
+import DemoHeader from "@/components/preview-chrome/DemoHeader";
 
 export default function DemoContent({
   children,
@@ -18,7 +18,6 @@ export default function DemoContent({
       registry={registry}
       render={(values) => (
         <SVGBrushTransition {...values}>
-          <DemoHeader />
           {children}
         </SVGBrushTransition>
       )}
@@ -26,6 +25,13 @@ export default function DemoContent({
         includeDemoHeader: false,
         propsVariableName: "svgBrushTransitionProps",
       }}
-    />
+    >
+      {({ effect }) => (
+        <>
+          <DemoHeader />
+          {effect}
+        </>
+      )}
+    </RegistryRemixerDemo>
   );
 }

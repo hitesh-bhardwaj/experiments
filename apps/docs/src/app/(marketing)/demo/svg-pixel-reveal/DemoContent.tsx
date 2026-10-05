@@ -3,7 +3,7 @@
 import HeadAnim from "@/components/Animations/HeadAnim";
 import LenisSmoothScroll from "@/components/SmoothScroll/LenisScroll";
 import SVGPixelReveal from "@/components/svg-pixel-reveal";
-import DemoHeader from "@/components/WebsiteComps/DemoHeader";
+import DemoHeader from "@/components/preview-chrome/DemoHeader";
 import SplitLine from "@/components/WebsiteComps/SplitLine";
 import RegistryRemixerDemo from "@/components/remixer-panel/RegistryRemixerDemo";
 
@@ -25,7 +25,7 @@ export default function DemoContent({ registry }: { registry: any }) {
       {({ effect }) => (
         <>
           <LenisSmoothScroll />
-          <DemoHeader logoColor="#FFFFFF" textColor="#ffffff" />
+          <DemoHeader />
           <main className="h-full bg-neutral-950 text-white">
             <section className="flex min-h-[40vh] max-sm:h-[30vh] items-center justify-center px-6">
               <div className="w-fit text-center space-y-[1vw]">

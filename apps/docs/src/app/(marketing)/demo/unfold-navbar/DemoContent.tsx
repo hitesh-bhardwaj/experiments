@@ -5,6 +5,7 @@ import type { RegistryLike } from "@/components/remixer-panel/types";
 import Image from "next/image";
 import UnfoldNavbar from "@/components/unfold-navbar";
 import Button from "@/components/WebsiteComps/Button";
+import DemoHeader from "@/components/preview-chrome/DemoHeader";
 
 const BACKGROUND_IMAGE =
   "https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/h-22.jpg";
@@ -56,6 +57,7 @@ const DemoContent = ({ registry }: { registry: RegistryLike }) => {
         </p>
       </div>
 
+      <DemoHeader />
       {effect}
     </main>
       )}

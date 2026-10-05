@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import PixelTransition from "@/components/pixel-transition";
 import RegistryRemixerDemo from "@/components/remixer-panel/RegistryRemixerDemo";
 import type { RegistryLike } from "@/components/remixer-panel/types";
-import DemoHeader from "@/components/WebsiteComps/DemoHeader";
+import DemoHeader from "@/components/preview-chrome/DemoHeader";
 
 export default function DemoContent({
   children,
@@ -18,7 +18,6 @@ export default function DemoContent({
       registry={registry}
       render={(values) => (
         <PixelTransition {...values}>
-          <DemoHeader />
           {children}
         </PixelTransition>
       )}
@@ -26,6 +25,13 @@ export default function DemoContent({
         includeDemoHeader: false,
         propsVariableName: "pixelTransitionProps",
       }}
-    />
+    >
+      {({ effect }) => (
+        <>
+          <DemoHeader />
+          {effect}
+        </>
+      )}
+    </RegistryRemixerDemo>
   );
 }

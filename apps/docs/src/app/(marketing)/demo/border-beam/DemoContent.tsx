@@ -1,7 +1,7 @@
 "use client";
 
 import BorderBeam from "@/components/border-beam";
-import DemoHeader from "@/components/WebsiteComps/DemoHeader";
+import DemoHeader from "@/components/preview-chrome/DemoHeader";
 import RegistryRemixerDemo from "@/components/remixer-panel/RegistryRemixerDemo";
 import { ArrowUpRight, X } from "lucide-react";
 import Image from "next/image";
@@ -15,7 +15,7 @@ export default function DemoContent({ registry }: { registry: any }) {
     >
       {({ effect }) => (
         <>
-          <DemoHeader logoColor="#000000" textColor="#000000" />
+          <DemoHeader />
           <main className="h-screen overflow-hidden bg-[#eef2f4] text-black">
             <section className="relative box-border flex h-screen w-full px-8 pb-8 pt-[8vw] max-md:items-center max-md:justify-center max-[1025px]:items-center max-[1025px]:justify-center">
               <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,rgba(15,23,42,0.16)_1px,transparent_0)] bg-[length:64px_64px]" />

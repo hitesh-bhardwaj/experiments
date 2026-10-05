@@ -443,3 +443,5 @@ mirror the same source into the public `hyperiux-components` repo.
 ## License
 
 Free effects are MPL 2.0 licensed. Pro effects require an active subscription and are not redistributable.
+
+

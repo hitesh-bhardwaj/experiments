@@ -780,8 +780,13 @@ html.loader-first-visit body {
   opacity: 0;
 }
 
+/* `backwards`, not `both`: a fill-forwards opacity animation stays in effect
+   after it ends, and Chrome treats that as a backdrop root, so the card's
+   backdrop-blur stops seeing the site background. The resting state comes
+   from `opacity: 1` here instead. */
 .effect-card-shell.card-entered {
-  animation: card-enter 0.65s cubic-bezier(0.22, 1, 0.36, 1) both;
+  opacity: 1;
+  animation: card-enter 0.65s cubic-bezier(0.22, 1, 0.36, 1) backwards;
   animation-delay: var(--card-delay, 0s);
 }
 
@@ -1007,3 +1012,23 @@ html.loader-first-visit body {
 }
 @keyframes text-shimmer { from { background-position: 100% 0; } to { background-position: -150% 0; } }
 @media (prefers-reduced-motion: reduce) { .text-shimmer { animation: none; } }
+
+/* ---------- DemoHeader (src/components/preview-chrome/DemoHeader.jsx) ---------- */
+/* the page stays still while a Tablet / Phone preview covers it */
+html[data-pc-dev] { overflow: hidden; }
+/* simulated reduced motion: flatten CSS motion everywhere except the header itself */
+html[data-pc-rm] body *:not([data-demo-header], [data-demo-header] *) {
+  animation-duration: .001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: .001ms !important;
+  scroll-behavior: auto !important;
+}
+
+/* Underline that undraws to the right, then redraws from the left (404 page links).
+   Pair with a background-image underline: bg-[linear-gradient(currentColor,currentColor)]. */
+@keyframes hx-underline-redraw {
+  0% { background-size: 100% 1px; background-position: 100% 100%; }
+  50% { background-size: 0% 1px; background-position: 100% 100%; }
+  50.01% { background-size: 0% 1px; background-position: 0% 100%; }
+  100% { background-size: 100% 1px; background-position: 0% 100%; }
+}

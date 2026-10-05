@@ -2,6 +2,7 @@
 
 import StackLoader from "@/components/stack-loader";
 import RegistryRemixerDemo from "@/components/remixer-panel/RegistryRemixerDemo";
+import DemoHeader from "@/components/preview-chrome/DemoHeader";
 
 export default function DemoContent({ registry }: { registry: any }) {
   return (
@@ -9,6 +10,13 @@ export default function DemoContent({ registry }: { registry: any }) {
       registry={registry}
       component={StackLoader}
       copyCodeOptions={{ propsVariableName: "stackLoaderProps" }}
-    />
+    >
+      {({ effect }) => (
+        <>
+          <DemoHeader />
+          {effect}
+        </>
+      )}
+    </RegistryRemixerDemo>
   );
 }

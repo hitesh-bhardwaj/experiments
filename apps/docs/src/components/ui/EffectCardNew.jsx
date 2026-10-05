@@ -149,14 +149,14 @@ export function EffectCard({
         transition: "opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1)",
         willChange: hasAppeared ? "auto" : "opacity",
       }}
-      className="group relative block w-full cursor-pointer "
+      className="group relative block w-full cursor-pointer  "
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
 
 
-      <div className="pointer-events-none  relative aspect-3/2  px-[1.8vw] pt-[1.8vw] max-md:px-[4vw] max-md:pt-[4vw] overflow-hidden  bg-[#161616] max-md:aspect-4/3.5">
-        <div className=" w-full relative h-[80%] overflow-hidden bg-[#202020] max-md:h-[70%]">
+      <div className="pointer-events-none  relative aspect-3/2  px-[1.8vw] pt-[1.8vw] max-md:px-[4vw] max-md:pt-[4vw] overflow-hidden  bg-black/20 backdrop-blur-lg max-md:aspect-4/3.5">
+        <div className=" w-full relative h-[80%] overflow-hidden max-md:h-[70%]">
           {coverImage && !imageError ? (
             <Image
               src={coverImage}
@@ -217,10 +217,10 @@ export function EffectCard({
 
      
       <div className="pointer-events-none mt-4 relative flex items-start justify-between gap-4 px-3 pt-3 pb-1.5 max-[1025px]:pt-5 max-md:gap-3 max-md:px-2 max-md:pt-2">
-        <span className="pointer-events-none max-sm:hidden absolute -top-px -left-px h-1.5 w-1.5 border-t border-l border-primary opacity-0 transition-opacity duration-300 group-hover:opacity-100 max-[1025px]:opacity-100 max-md:h-3 max-md:w-3" />
+        {/* <span className="pointer-events-none max-sm:hidden absolute -top-px -left-px h-1.5 w-1.5 border-t border-l border-primary opacity-0 transition-opacity duration-300 group-hover:opacity-100 max-[1025px]:opacity-100 max-md:h-3 max-md:w-3" />
         <span className="pointer-events-none max-sm:hidden absolute -top-px -right-px h-1.5 w-1.5 border-t border-r border-primary opacity-0 transition-opacity duration-300 group-hover:opacity-100 max-[1025px]:opacity-100 max-md:h-3 max-md:w-3" />
         <span className="pointer-events-none max-sm:hidden absolute -bottom-px -left-px h-1.5 w-1.5 border-b border-l border-primary opacity-0 transition-opacity duration-300 group-hover:opacity-100 max-[1025px]:opacity-100 max-md:h-3 max-md:w-3" />
-        <span className="pointer-events-none max-sm:hidden absolute -bottom-px -right-px h-1.5 w-1.5 border-b border-r border-primary opacity-0 transition-opacity duration-300 group-hover:opacity-100 max-[1025px]:opacity-100 max-md:h-3 max-md:w-3" />
+        <span className="pointer-events-none max-sm:hidden absolute -bottom-px -right-px h-1.5 w-1.5 border-b border-r border-primary opacity-0 transition-opacity duration-300 group-hover:opacity-100 max-[1025px]:opacity-100 max-md:h-3 max-md:w-3" /> */}
 
         <div className="flex min-w-0 flex-col gap-0.5">
           <h3 className="truncate  text-[1.25vw] max-md:text-[3vw] max-sm:text-[4.5vw] font-medium leading-[1.2]! text-white max-md:text-base">

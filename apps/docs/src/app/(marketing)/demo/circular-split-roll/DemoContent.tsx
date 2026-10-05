@@ -1,7 +1,7 @@
 "use client";
 
 import CircularSplitRoll from "@/components/circular-split-roll";
-import DemoHeader from "@/components/WebsiteComps/DemoHeader";
+import DemoHeader from "@/components/preview-chrome/DemoHeader";
 import ScrollBottom from "@/components/WebsiteComps/ScrollBottom";
 import RegistryRemixerDemo from "@/components/remixer-panel/RegistryRemixerDemo";
 
@@ -14,7 +14,7 @@ export default function DemoContent({ registry }: { registry: any }) {
     >
       {({ effect }) => (
         <>
-          <DemoHeader textColor="#ffffff" logoColor="#FFFFFF" />
+          <DemoHeader />
           <div className="max-md:block flex flex-col justify-center items-center gap-[2vw] text-center max-sm:pt-[18vw] pt-[10vw] sr-only">
             <h1 className="text-[7vw] max-sm:text-[11vw]">
               Circular Split Roll

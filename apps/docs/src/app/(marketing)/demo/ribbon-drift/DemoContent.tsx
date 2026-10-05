@@ -1,7 +1,7 @@
 "use client";
 
 import RibbonDrift from "@/components/ribbon-drift";
-import DemoHeader from "@/components/WebsiteComps/DemoHeader";
+import DemoHeader from "@/components/preview-chrome/DemoHeader";
 import ScrollBottom from "@/components/WebsiteComps/ScrollBottom";
 import RegistryRemixerDemo from "@/components/remixer-panel/RegistryRemixerDemo";
 

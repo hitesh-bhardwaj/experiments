@@ -1,6 +1,6 @@
 "use client";
 
-import DemoHeader from "@/components/WebsiteComps/DemoHeader";
+import DemoHeader from "@/components/preview-chrome/DemoHeader";
 import DottedGrid from "@/components/dotted-grid";
 import RegistryRemixerDemo from "@/components/remixer-panel/RegistryRemixerDemo";
 
@@ -13,7 +13,7 @@ export default function DemoContent({ registry }: { registry: any }) {
     >
       {({ effect }) => (
         <>
-          <DemoHeader logoColor="#FFFFFF" textColor="#ffffff" />
+          <DemoHeader />
           {effect}
         </>
       )}

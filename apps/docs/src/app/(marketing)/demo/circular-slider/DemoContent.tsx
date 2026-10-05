@@ -1,7 +1,7 @@
 "use client";
 
 import CircularSlider from "@/components/circular-slider";
-import DemoHeader from "@/components/WebsiteComps/DemoHeader";
+import DemoHeader from "@/components/preview-chrome/DemoHeader";
 import RegistryRemixerDemo from "@/components/remixer-panel/RegistryRemixerDemo";
 
 const defaultItems = [
@@ -63,7 +63,7 @@ export default function DemoContent({ registry }: { registry: any }) {
     >
       {({ effect }) => (
         <main className="min-h-screen text-white">
-          <DemoHeader logoColor="#ffffff" textColor="#ffffff" />
+          <DemoHeader />
           {effect}
         </main>
       )}

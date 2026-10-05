@@ -2,7 +2,7 @@
 
 import VariableTextProximity from "@/components/variable-text-proximity";
 import RegistryRemixerDemo from "@/components/remixer-panel/RegistryRemixerDemo";
-import DemoHeader from "@/components/WebsiteComps/DemoHeader";
+import DemoHeader from "@/components/preview-chrome/DemoHeader";
 
 export default function DemoContent({ registry }: { registry: any }) {
   return (
@@ -13,7 +13,7 @@ export default function DemoContent({ registry }: { registry: any }) {
     >
       {({ effect }) => (
         <main className="relative min-h-screen overflow-hidden bg-[#080808] text-white">
-          <DemoHeader logoColor="#ffffff" textColor="#ffffff" />
+          <DemoHeader />
           {effect}
         </main>
       )}

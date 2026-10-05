@@ -3,6 +3,7 @@
 import Link from "next/link";
 import ImmersiveFullscreenNav from "@/components/immersive-full-screen-nav";
 import RegistryRemixerDemo from "@/components/remixer-panel/RegistryRemixerDemo";
+import DemoHeader from "@/components/preview-chrome/DemoHeader";
 
 export default function DemoContent({ registry }: { registry: any }) {
   return (
@@ -13,6 +14,7 @@ export default function DemoContent({ registry }: { registry: any }) {
     >
       {({ effect }) => (
         <div className="relative min-h-screen bg-white">
+          <DemoHeader />
           {effect}
           <main className="flex h-screen items-center justify-center bg-white max-sm:px-[7vw] text-center">
             <div className="max-w-5xl mx-auto text-center text-black">

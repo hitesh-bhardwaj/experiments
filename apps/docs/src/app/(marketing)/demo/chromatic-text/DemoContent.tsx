@@ -2,7 +2,7 @@
 
 import ChromaticText from "@/components/chromatic-text";
 import RegistryRemixerDemo from "@/components/remixer-panel/RegistryRemixerDemo";
-import DemoHeader from "@/components/WebsiteComps/DemoHeader";
+import DemoHeader from "@/components/preview-chrome/DemoHeader";
 import { ReactLenis } from "lenis/react";
 
 export default function DemoContent({ registry }: { registry: any }) {
@@ -15,7 +15,7 @@ export default function DemoContent({ registry }: { registry: any }) {
       {({ effect }) => (
         <ReactLenis root>
           <main className="relative min-h-screen overflow-hidden bg-[#111111] text-white">
-            <DemoHeader logoColor="#FFFFFF" textColor="#ffffff" />
+            <DemoHeader />
             {effect}
           </main>
         </ReactLenis>

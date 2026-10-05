@@ -2,7 +2,7 @@
 
 import GlitchyText from "@/components/glitchy-text";
 import RegistryRemixerDemo from "@/components/remixer-panel/RegistryRemixerDemo";
-import DemoHeader from "@/components/WebsiteComps/DemoHeader";
+import DemoHeader from "@/components/preview-chrome/DemoHeader";
 import SplitLine from "@/components/WebsiteComps/SplitLine";
 
 export default function DemoContent({ registry }: { registry: any }) {
@@ -14,7 +14,7 @@ export default function DemoContent({ registry }: { registry: any }) {
     >
       {({ effect }) => (
         <main className="relative min-h-screen overflow-hidden bg-black text-white">
-          <DemoHeader logoColor="#FFFFFF" textColor="#ffffff" />
+          <DemoHeader />
           {effect}
           <SplitLine
             as="p"

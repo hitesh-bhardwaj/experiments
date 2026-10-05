@@ -3,7 +3,7 @@
 import { useState } from "react";
 import TypingText from "@/components/typing-text";
 import RegistryRemixerDemo from "@/components/remixer-panel/RegistryRemixerDemo";
-import DemoHeader from "@/components/WebsiteComps/DemoHeader";
+import DemoHeader from "@/components/preview-chrome/DemoHeader";
 
 export default function DemoContent({ registry }: { registry: any }) {
   const [replayKey, setReplayKey] = useState(0);
@@ -17,7 +17,7 @@ export default function DemoContent({ registry }: { registry: any }) {
     >
       {({ effect }) => (
         <main className="relative min-h-screen overflow-hidden bg-[#121212] text-white">
-          <DemoHeader logoColor="#FFFFFF" textColor="#ffffff" />
+          <DemoHeader />
           {effect}
           <div className="pointer-events-none absolute inset-x-0 bottom-8 z-20 flex justify-center px-6">
             <button

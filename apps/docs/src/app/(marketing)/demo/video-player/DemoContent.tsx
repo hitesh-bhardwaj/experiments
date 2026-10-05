@@ -1,7 +1,7 @@
 "use client";
 
 import VideoPlayer from "@/components/video-player";
-import DemoHeader from "@/components/WebsiteComps/DemoHeader";
+import DemoHeader from "@/components/preview-chrome/DemoHeader";
 import SplitLine from "@/components/WebsiteComps/SplitLine";
 import RegistryRemixerDemo from "@/components/remixer-panel/RegistryRemixerDemo";
 
@@ -21,7 +21,7 @@ export default function DemoContent({ registry }: { registry: any }) {
     >
       {({ effect }) => (
         <>
-          <DemoHeader logoColor='#FFFFFF' textColor="#ffffff" />
+          <DemoHeader />
           <section className="flex min-h-screen w-screen items-center max-md:items-start bg-[#111111] p-[5vw] max-md:h-auto max-md:py-[8vw] max-md:pt-24 max-sm:pt-24 max-md:pb-[8vw] max-sm:px-[5vw] max-sm:py-[12vw]">
             <div className="flex w-full justify-between gap-[5vw] max-md:flex-col max-md:gap-[6vw] max-sm:gap-[8vw]">
               {/* LEFT VIDEO */}

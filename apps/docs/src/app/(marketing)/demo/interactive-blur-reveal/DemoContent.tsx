@@ -2,7 +2,7 @@
 
 import InteractiveBlurReveal from "@/components/interactive-blur-reveal";
 import RegistryRemixerDemo from "@/components/remixer-panel/RegistryRemixerDemo";
-import DemoHeader from "@/components/WebsiteComps/DemoHeader";
+import DemoHeader from "@/components/preview-chrome/DemoHeader";
 
 export default function DemoContent({ registry }: { registry: any }) {
   return (
@@ -22,7 +22,7 @@ export default function DemoContent({ registry }: { registry: any }) {
       {({ effect }) => (
         <main className="relative h-dvh w-dvw overflow-hidden bg-black text-white">
           {effect}
-          <DemoHeader logoColor="#FFFFFF" textColor="#ffffff" />
+          <DemoHeader />
           <div className="pointer-events-none fixed inset-0 z-10 h-screen w-screen">
             <section className="flex h-full w-full flex-col items-start justify-center px-10">
               <div>

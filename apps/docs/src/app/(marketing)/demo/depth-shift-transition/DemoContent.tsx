@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import DepthShiftTransition from "@/components/depth-shift-transition";
 import RegistryRemixerDemo from "@/components/remixer-panel/RegistryRemixerDemo";
 import type { RegistryLike } from "@/components/remixer-panel/types";
-import DemoHeader from "@/components/WebsiteComps/DemoHeader";
+import DemoHeader from "@/components/preview-chrome/DemoHeader";
 
 export default function DemoContent({
   children,
@@ -25,7 +25,6 @@ export default function DemoContent({
               inside, the header would get dragged around by the page-fly-away
               animation and duplicated by the leave clone - hoisting it out keeps
               it genuinely fixed and out of the cloned subtree. */}
-          <DemoHeader logoColor="#ffffff" />
           <DepthShiftTransition {...values}>
             {children}
           </DepthShiftTransition>
@@ -35,6 +34,13 @@ export default function DemoContent({
         includeDemoHeader: false,
         propsVariableName: "depthShiftTransitionProps",
       }}
-    />
+    >
+      {({ effect }) => (
+        <>
+          <DemoHeader />
+          {effect}
+        </>
+      )}
+    </RegistryRemixerDemo>
   );
 }

@@ -2,7 +2,7 @@
 
 import InfiniteGridGallery from "@/components/infinite-grid-gallery";
 import RegistryRemixerDemo from "@/components/remixer-panel/RegistryRemixerDemo";
-import DemoHeader from "@/components/WebsiteComps/DemoHeader";
+import DemoHeader from "@/components/preview-chrome/DemoHeader";
 
 export default function DemoContent({ registry }: { registry: any }) {
   return (
@@ -13,7 +13,7 @@ export default function DemoContent({ registry }: { registry: any }) {
     >
       {({ effect }) => (
         <>
-          <DemoHeader logoColor="#1a1a1a" textColor="#1a1a1a" />
+          <DemoHeader />
           {effect}
         </>
       )}

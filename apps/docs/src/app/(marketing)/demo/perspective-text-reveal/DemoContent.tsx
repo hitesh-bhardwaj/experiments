@@ -1,7 +1,7 @@
 "use client";
 
 import RegistryRemixerDemo from "@/components/remixer-panel/RegistryRemixerDemo";
-import DemoHeader from "@/components/WebsiteComps/DemoHeader";
+import DemoHeader from "@/components/preview-chrome/DemoHeader";
 import ScrollBottom from "@/components/WebsiteComps/ScrollBottom";
 import PerspectiveTextWrapper from "./PerspectiveTextWrapper";
 
@@ -14,7 +14,7 @@ export default function DemoContent({ registry }: { registry: any }) {
     >
       {({ effect }) => (
         <>
-          <DemoHeader logoColor="#FFFFFF" textColor="#ffffff" />
+          <DemoHeader />
           {effect}
         </>
       )}

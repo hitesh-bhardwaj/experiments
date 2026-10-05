@@ -6,6 +6,7 @@ import DonutParticles from "@/components/donut-particles";
 import RegistryRemixerDemo from "@/components/remixer-panel/RegistryRemixerDemo";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
+import DemoHeader from "@/components/preview-chrome/DemoHeader";
 
 export default function DemoContent({ registry }: { registry: any }) {
   return (
@@ -16,6 +17,7 @@ export default function DemoContent({ registry }: { registry: any }) {
     >
       {({ effect }) => (
         <main className="relative min-h-screen overflow-hidden bg-black">
+          <DemoHeader />
           {effect}
           <div className="relative z-20 flex h-full w-full items-center max-md:items-start">
             <div className="absolute bottom-10 left-0 w-full max-w-2xl px-10 max-md:top-10 max-md:bottom-auto max-md:px-6 max-sm:px-4">

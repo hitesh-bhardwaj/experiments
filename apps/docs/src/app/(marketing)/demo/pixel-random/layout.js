@@ -1,5 +1,5 @@
 import React from "react";
-import DemoHeader from "@/components/WebsiteComps/DemoHeader";
+import DemoHeader from "@/components/preview-chrome/DemoHeader";
 import PixelRandomTransition from "@/components/pixel-random";
 
 export const metadata = {

@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import PageFlipTransition from "@/components/page-flip-transition";
 import RegistryRemixerDemo from "@/components/remixer-panel/RegistryRemixerDemo";
 import type { RegistryLike } from "@/components/remixer-panel/types";
-import DemoHeader from "@/components/WebsiteComps/DemoHeader";
+import DemoHeader from "@/components/preview-chrome/DemoHeader";
 
 export default function DemoContent({
   children,
@@ -18,7 +18,6 @@ export default function DemoContent({
       registry={registry}
       render={(values) => (
         <PageFlipTransition {...values}>
-          <DemoHeader />
           {children}
         </PageFlipTransition>
       )}
@@ -26,6 +25,13 @@ export default function DemoContent({
         includeDemoHeader: false,
         propsVariableName: "pageFlipTransitionProps",
       }}
-    />
+    >
+      {({ effect }) => (
+        <>
+          <DemoHeader />
+          {effect}
+        </>
+      )}
+    </RegistryRemixerDemo>
   );
 }

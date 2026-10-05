@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import AscendTransition from "@/components/ascend-transition";
 import RegistryRemixerDemo from "@/components/remixer-panel/RegistryRemixerDemo";
 import type { RegistryLike } from "@/components/remixer-panel/types";
-import DemoHeader from "@/components/WebsiteComps/DemoHeader";
+import DemoHeader from "@/components/preview-chrome/DemoHeader";
 
 export default function DemoContent({
   children,
@@ -23,7 +23,6 @@ export default function DemoContent({
               applies transform/position:fixed directly to its content wrapper
               and clones that subtree on leave, so a position:fixed header
               nested inside gets dragged around and duplicated mid-transition. */}
-          <DemoHeader logoColor="#FFFFFF" textColor="#ffffff" />
           <AscendTransition {...values}>
             {children}
           </AscendTransition>
@@ -33,6 +32,13 @@ export default function DemoContent({
         includeDemoHeader: false,
         propsVariableName: "ascendTransitionProps",
       }}
-    />
+    >
+      {({ effect }) => (
+        <>
+          <DemoHeader />
+          {effect}
+        </>
+      )}
+    </RegistryRemixerDemo>
   );
 }

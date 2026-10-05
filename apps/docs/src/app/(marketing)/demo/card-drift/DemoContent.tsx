@@ -1,6 +1,6 @@
 "use client";
 
-import DemoHeader from "@/components/WebsiteComps/DemoHeader";
+import DemoHeader from "@/components/preview-chrome/DemoHeader";
 import CardDrift from "@/components/card-drift";
 import RegistryRemixerDemo from "@/components/remixer-panel/RegistryRemixerDemo";
 
@@ -13,7 +13,7 @@ export default function DemoContent({ registry }: { registry: any }) {
     >
       {({ effect }) => (
         <>
-          <DemoHeader logoColor='#FFFFFF' textColor='white'/>
+          <DemoHeader />
           {effect}
           <div className='absolute bottom-2 translate-x-[-50%] left-1/2  rounded-xl   text-white bg-white/10 px-4 py-2 max-md:bottom-5 text-center backdrop-blur-md'>
             Grab any card and move it around

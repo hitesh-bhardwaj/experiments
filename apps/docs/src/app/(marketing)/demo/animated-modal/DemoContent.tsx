@@ -3,7 +3,7 @@
 import AnimatedModal from "@/components/animated-modal";
 import HeadAnim from "@/components/Animations/HeadAnim";
 import LenisSmoothScroll from "@/components/SmoothScroll/LenisScroll";
-import DemoHeader from "@/components/WebsiteComps/DemoHeader";
+import DemoHeader from "@/components/preview-chrome/DemoHeader";
 import SplitLine from "@/components/WebsiteComps/SplitLine";
 import RegistryRemixerDemo from "@/components/remixer-panel/RegistryRemixerDemo";
 

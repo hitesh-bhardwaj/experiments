@@ -17,7 +17,10 @@ export function FilterMenu({
   options = FILTER_OPTIONS,
   variant = "icon",
   panelClassName = "",
+  // "light" restyles the trigger and panel for light surfaces (the v4 listing sheet).
+  tone = "dark",
 }) {
+  const light = tone === "light";
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [menuPos, setMenuPos] = useState(null);
@@ -120,7 +123,9 @@ export function FilterMenu({
           : undefined
       }
       className={[
-        "space-y-1.5 min-w-44 border border-white/10 bg-[#1a1a1a]  p-1.5",
+        light
+          ? "space-y-1.5 min-w-44 border border-[rgba(29,29,29,.1)] bg-white p-1.5 shadow-[0_20px_40px_-20px_rgba(0,0,0,.35)]"
+          : "space-y-1.5 min-w-44 border border-white/10 bg-black/20  p-1.5",
         menuPos ? "fixed z-9999" : "absolute left-0 top-full mt-2 z-30",
         panelClassName,
       ]
@@ -140,7 +145,7 @@ export function FilterMenu({
             {showDivider && (
               <span
                 aria-hidden="true"
-                className="my-1.5 block h-px w-full bg-white/10"
+                className={`my-1.5 block h-px w-full ${light ? "bg-black/10" : "bg-white/10"}`}
               />
             )}
             <button
@@ -151,7 +156,7 @@ export function FilterMenu({
                 onSelect(cat);
                 setOpen(false);
               }}
-              className="group relative isolate flex w-full items-center  px-4 py-2.5 text-left max-md:text-[4vw] text-[1vw] cursor-pointer"
+              className={`group relative isolate flex w-full items-center  px-4 py-2.5 text-left cursor-pointer ${light ? "text-sm" : "max-md:text-[4vw] text-[1vw]"}`}
             >
               <span
                 aria-hidden="true"
@@ -159,7 +164,7 @@ export function FilterMenu({
                   }`}
               />
               <span
-                className={`relative z-10 leading-none transition-colors duration-200 ${highlighted ? "text-[#111111]" : "text-foreground"
+                className={`relative z-10 leading-none transition-colors duration-200 ${highlighted ? "text-[#111111]" : light ? "text-[#1D1D1D]" : "text-foreground"
                   }`}
               >
                 {getLabel(cat)}
@@ -180,14 +185,20 @@ export function FilterMenu({
         aria-haspopup="menu"
         aria-expanded={open}
         aria-label="Filter effects"
-        className={`
+        className={
+          light
+            ? `relative flex h-9.5 cursor-pointer items-center justify-center gap-2 px-4 text-sm transition-colors duration-300 ${activeFilter
+              ? "bg-[#ff5f00] text-black"
+              : "bg-white text-[#1D1D1D] shadow-[inset_0_0_0_1px_rgba(29,29,29,.1)] hover:bg-[#ff5f00] hover:text-black"
+            }`
+            : `
           px-6 py-3  relative max-md:px-7 max-md:py-3
           backdrop-blur-[6px] flex items-center gap-2 justify-center
           cursor-pointer transition-colors duration-300 text-[1vw] max-md:text-[4vw] max-[1025px]:text-[2.5vw]
           ${activeFilter
-            ? "bg-[#ff5f00] text-black hover:bg-[#ff5f00]"
-            : "bg-[#161616] text-[#ffffff] hover:text-black hover:bg-[#ff5f00]"
-          }
+              ? "bg-[#ff5f00] text-black hover:bg-[#ff5f00]"
+              : "bg-black/20 backdrop-blur-lg text-[#ffffff] hover:text-black hover:bg-[#ff5f00]"
+            }
         `}
       >
         {variant === "label" ? (
@@ -200,7 +211,7 @@ export function FilterMenu({
           </>
         ) : (
           <>
-            <svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg" className="max-md:h-[4vw] h-[1vw] max-[1025px]:h-[2.5vw]">
+            <svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg" className={light ? "h-3 w-4" : "max-md:h-[4vw] h-[1vw] max-[1025px]:h-[2.5vw]"}>
               <g clipPath="url(#clip0_491_803)">
                 <rect width="16" height="2" rx="1" fill="currentColor" />
                 <rect x="3" y="5" width="10" height="2" rx="1" fill="currentColor" />

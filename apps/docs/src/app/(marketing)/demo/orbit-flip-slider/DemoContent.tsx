@@ -2,6 +2,7 @@
 
 import OrbitFlipSlider from "@/components/orbit-flip-slider";
 import RegistryRemixerDemo from "@/components/remixer-panel/RegistryRemixerDemo";
+import DemoHeader from "@/components/preview-chrome/DemoHeader";
 
 export default function DemoContent({ registry }: { registry: any }) {
   return (
@@ -10,7 +11,12 @@ export default function DemoContent({ registry }: { registry: any }) {
       component={OrbitFlipSlider}
       copyCodeOptions={{ propsVariableName: "orbitFlipSliderProps" }}
     >
-      {({ effect }) => effect}
+      {({ effect }) => (
+        <>
+          <DemoHeader />
+          {effect}
+        </>
+      )}
     </RegistryRemixerDemo>
   );
 }

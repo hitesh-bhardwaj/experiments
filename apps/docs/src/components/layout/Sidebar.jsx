@@ -83,7 +83,7 @@ function NavIconLink({
       target={external ? "_blank" : undefined}
       rel={external ? "noopener noreferrer" : undefined}
       className={`group relative flex h-10 items-center gap-3 px-4 py-[1.5vw] text22 font-medium text-white/90 transition-[width,color] duration-300 ease-out hover:text-white ${
-        isExpanded ? "w-[18.5vw]" : "w-[3.8vw]"
+        isExpanded ? "w-[18vw]" : "w-[3.6vw]"
       }`}
     >
       <span
@@ -129,7 +129,7 @@ function SectionButton({
       onClick={onClick}
       onMouseEnter={onMouseEnter}
       className={`group relative flex h-10 cursor-pointer items-center rounded-md px-4 py-[1.5vw] text-left text22 font-medium text-white/90 transition-[width,color] duration-300 ease-out hover:text-white ${
-        isExpanded ? "w-[18.5vw]" : "w-[3.8vw]"
+        isExpanded ? "w-[18vw]" : "w-[3.6vw]"
       } ${isExpanded ? "gap-3" : "gap-1.5"}`}
     >
       <span
@@ -549,7 +549,7 @@ export function Sidebar({
 
   return (
     <aside
-      className={`sticky bottom-0 left-0 top-0 z-51 h-screen bg-[#0E0E0E] text-white max-[1025px]:hidden ${
+      className={`sticky bottom-0 left-0 top-0 z-51 h-screen bg-black/20 backdrop-blur-lg text-white max-[1025px]:hidden ${
         disableInitialTransition
           ? "transition-none"
           : "transition-[width] duration-300 ease-out"
@@ -573,7 +573,7 @@ export function Sidebar({
           isExpanded ? "overflow-hidden" : "overflow-visible"
         }`}
       >
-        <div className="mb-10 flex h-16 w-full items-center justify-start overflow-hidden border-b border-white/10 px-4">
+        <div className="mb-10 flex h-16 w-full items-center justify-start overflow-hidden border-b border-white/10 px-3.5">
           <Link
             prefetch={false}
             href="/"
