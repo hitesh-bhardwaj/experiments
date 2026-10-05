@@ -64,12 +64,13 @@ export function createFellOver(canvas, options = {}) {
   function dims() {
     dpr = Math.min(devicePixelRatio || 1, 2); Wd = innerWidth; Ht = innerHeight;
     canvas.width = Math.round(Wd * dpr); canvas.height = Math.round(Ht * dpr);
-    DH = Math.round(Math.min(Ht * 0.24, Wd * 0.2)); GM = {};
-    const cx = Wd / 2, cy = Ht * 0.42, sp = DH * 0.8;
+    // Phones get relatively bigger digits; tall (portrait) screens sit the group a little higher.
+    DH = Math.round(Math.min(Ht * 0.24, Wd * (Wd < 768 ? 0.31 : 0.2))); GM = {};
+    const cx = Wd / 2, cy = Ht * (Ht > Wd ? 0.36 : 0.4), sp = DH * 0.8;
     if (!slots.length) slots = [{ ch: '4', b: null }, { ch: '0', b: null }, { ch: '4', b: null }];
     slots.forEach((s, i) => { s.x = cx + (i - 1) * sp; s.y = cy; });
     const half = metrics('4').h / 2, R = o.layoutRoot.style;
-    R.setProperty('--headY', cy - half - Math.max(90, DH * 0.55) + 'px'); R.setProperty('--hintY', cy + half + 34 + 'px');
+    R.setProperty('--headY', cy - half - Math.max(52, DH * 0.38) + 'px'); R.setProperty('--hintY', cy + half + Math.max(18, DH * 0.12) + 'px');
   }
   const floorY = () => Ht;
   function buildWalls() {

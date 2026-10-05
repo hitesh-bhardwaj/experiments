@@ -26,7 +26,9 @@ const MORE_LINKS = [
 ];
 const QUIP_MS = 3600;
 
-const label = "text-[1.15vw] max-md:text-[4.5vw] max-[1025px]:text-[2.2vw]";
+const label = "text-[15px] max-md:text-sm";
+// ButtonV3 scales with the viewport; here it stays one compact size on every screen.
+const COMPACT_BTN = "py-2! text-sm! max-md:px-4! max-md:text-[13px]! [--btn-pad:14px]! [--btn-gap:8px]! [--btn-square:6px]! [--btn-arrow:12px]!";
 const riseIn = "motion-safe:animate-[hx-up_1s_cubic-bezier(.16,1,.3,1)_both]";
 
 // "This page fell over": drag 4 0 4 back onto the line (or skip the physics),
@@ -102,21 +104,21 @@ export default function SiteNotFound({ pages = [] }) {
 
             {revealed && (
                 <section className="fixed top-[var(--hintY,62vh)] left-1/2 z-2 grid w-[min(720px,calc(100vw-40px))] -translate-x-1/2 justify-items-center text-center" aria-live="polite">
-                    <p className={`text-[17px] text-[#bdbdbd] max-md:text-[4vw] ${riseIn}`}>Shame the page still doesn’t exist.</p>
-                    <ul className={`mt-10 flex flex-wrap justify-center gap-4 max-md:mt-7 max-md:gap-2.5 ${riseIn} [animation-delay:.08s]`}>
+                    <p className={`text-[15px] text-[#bdbdbd] max-md:text-sm ${riseIn}`}>Shame the page still doesn’t exist.</p>
+                    <ul className={`mt-6 flex flex-wrap justify-center gap-2.5 max-md:mt-5 max-md:gap-2 ${riseIn} [animation-delay:.08s]`}>
                         {suggestions.map((p) => (
                             <li key={p.href}>
-                                <Link href={p.href} className="inline-flex h-10 items-center border border-white/15 bg-white/[.04] px-5 text-[15px] text-[#F4F4F4] no-underline transition-[background-color,border-color] duration-400 hover:border-primary/60 hover:bg-primary/10 focus-visible:border-primary/60 focus-visible:bg-primary/10">
+                                <Link href={p.href} className="inline-flex h-9 items-center border border-white/15 bg-white/[.04] px-4 text-sm text-[#F4F4F4] max-md:h-8.5 max-md:px-3 max-md:text-[13px] no-underline transition-[background-color,border-color] duration-400 hover:border-primary/60 hover:bg-primary/10 focus-visible:border-primary/60 focus-visible:bg-primary/10">
                                     {p.label}
                                 </Link>
                             </li>
                         ))}
                     </ul>
-                    <div className={`mt-6 flex flex-wrap justify-center gap-2.5 ${riseIn} [animation-delay:.16s]`}>
-                        <ButtonV3 text="Back to home" href="/" />
-                        <ButtonV3 text="Browse effects" href="/effects" variant="outline" className="bg-transparent!" />
+                    <div className={`mt-5 flex flex-wrap justify-center gap-2 max-md:mt-4 ${riseIn} [animation-delay:.16s]`}>
+                        <ButtonV3 text="Back to home" href="/" className={COMPACT_BTN} />
+                        <ButtonV3 text="Browse effects" href="/effects" variant="outline" className={`bg-transparent! ${COMPACT_BTN}`} />
                     </div>
-                    <p className={`mt-5 text-white/60 ${riseIn} [animation-delay:.24s] text-[1vw] max-md:text-[4vw] max-[1025px]:text-[2vw]`}>
+                    <p className={`mt-4 text-sm text-white/60 max-md:text-[13px] ${riseIn} [animation-delay:.24s]`}>
                         Or try{" "}
                         {MORE_LINKS.map((l, i) => (
                             <span key={l.href}>
