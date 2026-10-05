@@ -15,7 +15,7 @@ import {
   markLoaderV3Played,
   setLoaderV3Waiting,
 } from "./loader-v3-state";
-import { lockScrollV3, unlockScrollV3, useScrollLockLenis } from "./scroll-lock-v3";
+import { lockScrollV3, resetScrollTopV3, unlockScrollV3, useScrollLockLenis } from "./scroll-lock-v3";
 import {
   ButtonV3Chrome,
   buttonV3ClassName,
@@ -142,6 +142,8 @@ export default function LoaderV3({ exitMode = "dock" }) {
     setSound(soundEnabled);
     if (entryRef.current) gsap.set(entryRef.current, { pointerEvents: "none" });
     entryChosenRef.current = true;
+    // Whatever was scrolled while the loader was up, enter on the hero
+    resetScrollTopV3();
     setLoaderV3Waiting(false);
     entryResolveRef.current?.();
   };

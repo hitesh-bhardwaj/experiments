@@ -15,12 +15,21 @@ const LERP = 0.22;
 // (the hero copy sits in a pointer-events: none layer over the canvas)
 const TEXT_IN_ZONE = "h1,h2,h3,h4,p,li,blockquote,figcaption,[data-cursor-text]";
 
+// Text boxes are measured once per scroll / resize, not on every pointer move:
+// reading layout right after the cursor writes forced a reflow each move and
+// made the WebGL scene stutter under the hero copy.
+const textRects = new WeakMap();
+function measureText(zone) {
+    const rects = [...zone.querySelectorAll(TEXT_IN_ZONE)].map((el) => el.getBoundingClientRect()).filter((r) => r.width);
+    textRects.set(zone, rects);
+    return rects;
+}
 function overText(zone, x, y) {
-    for (const el of zone.querySelectorAll(TEXT_IN_ZONE)) {
-        const r = el.getBoundingClientRect();
-        if (r.width && x >= r.left && x <= r.right && y >= r.top && y <= r.bottom) return true;
-    }
-    return false;
+    const rects = textRects.get(zone) ?? measureText(zone);
+    return rects.some((r) => x >= r.left && x <= r.right && y >= r.top && y <= r.bottom);
+}
+function clearTextRects() {
+    document.querySelectorAll(HOLD_ZONES).forEach((zone) => textRects.delete(zone));
 }
 
 export default function CursorV3() {
@@ -88,7 +97,7 @@ export default function CursorV3() {
         const onDown = () => { holding = true; if (mode === "hold") resolve(lastTarget); root.dataset.pressed = ""; };
         const onUp = () => { holding = false; resolve(lastTarget); delete root.dataset.pressed; };
         // Content scrolls under a still pointer
-        const onScroll = () => { if (pos.x > -100) { lastTarget = document.elementFromPoint(pos.x, pos.y); resolve(lastTarget); } };
+        const onScroll = () => { clearTextRects(); if (pos.x > -100) { lastTarget = document.elementFromPoint(pos.x, pos.y); resolve(lastTarget); } };
         const onLeave = () => setMode("off");
         // Ribbons shattered / re-formed under a still pointer
         const onRibbons = () => { if (lastTarget) resolve(lastTarget); };
@@ -97,6 +106,7 @@ export default function CursorV3() {
         addEventListener("pointerdown", onDown);
         addEventListener("pointerup", onUp);
         addEventListener("scroll", onScroll, { passive: true });
+        addEventListener("resize", clearTextRects);
         document.addEventListener("pointerleave", onLeave);
         addEventListener("hx-ribbons-state", onRibbons);
         return () => {
@@ -106,6 +116,7 @@ export default function CursorV3() {
             removeEventListener("pointerdown", onDown);
             removeEventListener("pointerup", onUp);
             removeEventListener("scroll", onScroll);
+            removeEventListener("resize", clearTextRects);
             document.removeEventListener("pointerleave", onLeave);
         };
     }, []);

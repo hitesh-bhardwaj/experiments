@@ -37,7 +37,7 @@ export function setLoaderV3Waiting(waiting) {
   window.__HYPERIUX_V3_LOADER_WAITING__ = waiting;
 }
 
-function isLoaderV3Waiting() {
+export function isLoaderV3Waiting() {
   return typeof window !== "undefined" && window.__HYPERIUX_V3_LOADER_WAITING__ === true;
 }
 

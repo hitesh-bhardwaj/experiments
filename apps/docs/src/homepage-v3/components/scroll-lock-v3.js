@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { useLenis } from "lenis/react";
+import { isLoaderV3Waiting } from "./loader-v3-state";
 
 /**
  * Holds the page still from the loader's first frame until the hero's intro has
@@ -33,6 +34,11 @@ import { useLenis } from "lenis/react";
 const FAILSAFE_MS = 15000;
 
 let locked = false;
+// Last wheel / touch scroll seen while locked: trackpad momentum keeps firing
+// for a while after the fingers lift, and must not land once the lock lifts.
+let lastScrollInput = 0;
+const QUIET_MS = 250;
+const noteInput = () => { lastScrollInput = performance.now(); };
 let lenisInstance = null;
 let failsafeId = 0;
 
@@ -41,19 +47,46 @@ export function lockScrollV3() {
 
   locked = true;
   document.documentElement.style.overflow = "hidden";
+  addEventListener("wheel", noteInput, { passive: true });
+  addEventListener("touchmove", noteInput, { passive: true });
   lenisInstance?.stop?.();
 
-  failsafeId = window.setTimeout(unlockScrollV3, FAILSAFE_MS);
+  failsafeId = window.setTimeout(failsafe, FAILSAFE_MS);
+}
+
+// Holds off while the loader is still waiting on the visitor's click
+function failsafe() {
+  if (isLoaderV3Waiting()) {
+    failsafeId = window.setTimeout(failsafe, 1000);
+    return;
+  }
+  unlockScrollV3();
+}
+
+/** Jump to the very top, through Lenis when it's running, so the hero is what the visitor enters on. */
+export function resetScrollTopV3() {
+  if (typeof window === "undefined") return;
+  lenisInstance?.scrollTo?.(0, { immediate: true, force: true });
+  window.scrollTo(0, 0);
 }
 
 export function unlockScrollV3() {
   if (typeof document === "undefined" || !locked) return;
+  // Still scrolling (momentum included)? Wait for it to go quiet first.
+  if (performance.now() - lastScrollInput < QUIET_MS) {
+    window.setTimeout(unlockScrollV3, QUIET_MS);
+    return;
+  }
+  removeEventListener("wheel", noteInput);
+  removeEventListener("touchmove", noteInput);
 
   locked = false;
   window.clearTimeout(failsafeId);
   failsafeId = 0;
 
   document.documentElement.style.overflow = "";
+  // Anything that slipped through while locked is undone: enter on the hero
+  if (window.scrollY > 0) window.scrollTo(0, 0);
   // Lenis parks `targetScroll` on the real position while stopped, so it picks
   // up from where the page actually is rather than from everything the user
   // wheeled at it in the meantime.

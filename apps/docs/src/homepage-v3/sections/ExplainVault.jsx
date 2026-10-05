@@ -82,8 +82,8 @@ export default function ExplainVault() {
                 stagger={40}
                 bandFraction={0.65}
                 settleBlend={0.45}
-                className="text64"
-                wrapperClassName="w-[88%]"
+                className="text-[2.6vw] max-md:text-[6vw]"
+                wrapperClassName="w-[62%] max-md:w-full"
                 containerClassName="py-[15vw] font-neue-haas max-md:py-24"
             />
             {/* <div className='w-full  h-fit px-[3vw] max-[1025px]:px-[5vw]' id="code-block">

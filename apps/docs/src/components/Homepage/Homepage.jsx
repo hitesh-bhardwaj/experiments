@@ -72,8 +72,8 @@ export default function Homepage({ faqItems, effects = [] }) {
         <Hero />
         <div className="relative z-10">
           <WhyVault />
-          {/* <ExplainVault/> */}
-          <SmallMotion/>
+          <ExplainVault/>
+          {/* <SmallMotion/> */}
           {/* <Techstack /> */}
           {/* <CurvedGradient /> */}
           <ProblemFixes />

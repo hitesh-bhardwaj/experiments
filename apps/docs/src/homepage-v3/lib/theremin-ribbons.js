@@ -1,15 +1,3 @@
-/**
- * Theremin glass ribbons: seven clear-coated bands with a liquid trailing
- * hover, a click ripple that fires a streak, and press-and-hold to shatter
- * them into glass grains that linger (and can be stirred) before reforming.
- *
- *   const ribbons = mountThereminRibbons(section, canvas, { pose: 'hero', sound, onUnlock });
- *   ribbons.play();     // hero: rise in (the footer starts settled)
- *   ribbons.destroy();  // disposes GL resources and every listener
- *
- * The canvas is transparent, so whatever is behind it shows through. Every
- * sound call is optional: engines without a method stay silent for it.
- */
 import * as THREE from "three";
 import gsap from "gsap";
 
@@ -60,10 +48,11 @@ const POSE = {
   ribbons: { rp: [2.2, -4.6, 0], rr: [-0.28, -0.42, 0.22], rs: 1.12 },
   ribbons_m: { rp: [2.5, -1.8, -2], rr: [-0.28, -0.42, 0.22], rs: 0.95 },
   // Footer: a small cluster in the top-right corner
-  footer: { rp: [9.4, 0.6, 0], rr: [-0.28, -0.42, 0.22], rs: 0.56 },
+  // Turned counter-clockwise from the original 0.22 so the open ends close the gap on the right
+  footer: { rp: [10.2, 0.6, 0], rr: [-0.28, -0.42, 0.79], rs: 0.56 },
   // Phones: on the right edge like desktop, mostly off-screen so a slice shows
   // (the camera sees about ±3.9 units across there). Same rotation as desktop.
-  footer_m: { rp: [6.2, 1.5, 0], rr: [-0.28, -0.42, 0.22], rs: 0.5 },
+  footer_m: { rp: [6.2, 1.5, 0], rr: [-0.28, -0.42, 0.35], rs: 0.5 },
 };
 
 const RIBBON_VERT_PARS = /* glsl */ `
@@ -78,8 +67,6 @@ const RIBBON_VERT_PARS = /* glsl */ `
   varying float vRip;
 `;
 
-// Pushes each vertex along its radial direction: the pointer's trailing bulge
-// and wake, the click ripple, an idle swell, the hold tremor and the scroll wave.
 const RIBBON_VERT_DISPLACE = /* glsl */ `
   #include <begin_vertex>
   vec3 wp = (modelMatrix * vec4(transformed, 1.)).xyz;
@@ -115,16 +102,19 @@ const RIBBON_FRAG_EMISSIVE = /* glsl */ `
 `;
 
 const STREAK_VERT = /* glsl */ `
+  ${RIBBON_VERT_PARS}
   varying float vU;
 
   void main() {
     vU = uv.x;
-    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.);
+    ${RIBBON_VERT_DISPLACE}
+    // Ride on the ribbon's front face, not its centre line (it's ${RIBBON_THICKNESS} deep),
+    // or the tube sits buried inside the ribbon and fails the depth test
+    transformed.z += ${(RIBBON_THICKNESS / 2 + 0.04).toFixed(3)};
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(transformed, 1.);
   }
 `;
 
-// Additive glow on a transparent canvas: alpha carries the brightness
-// (premultiplied), so dark parts of the tube leave the page untouched.
 const STREAK_FRAG = /* glsl */ `
   uniform float uHead;
   uniform float uLen;
@@ -298,7 +288,8 @@ export function mountThereminRibbons(host, canvas, { pose = "hero", sound = null
 
     const streakMat = new THREE.ShaderMaterial({
       transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, premultipliedAlpha: true,
-      uniforms: { uHead: { value: -1 }, uLen: { value: 0.16 } },
+      // Shares the ribbon's uniform objects, so both bend together
+      uniforms: { ...RU, uHead: { value: -1 }, uLen: { value: 0.16 } },
       vertexShader: STREAK_VERT, fragmentShader: STREAK_FRAG,
     });
     const streakGeo = new THREE.TubeGeometry(curve, 420, 0.035, 6, false);
@@ -616,7 +607,9 @@ export function mountThereminRibbons(host, canvas, { pose = "hero", sound = null
   onResize();
 
   // Animation loop
-  const state = { introT: isHero && !reduced ? 1 : 0 };
+  // No rise-in: the hero model already sits in its final place under the loader,
+  // so when the loader clears it's simply there (HeroRibbons fades it in)
+  const state = { introT: 0 };
   // Start in the pose for this screen shape, so nothing glides across on load
   const startNarrow = (canvas.clientWidth || innerWidth) / (canvas.clientHeight || innerHeight) < NARROW_ASPECT;
   const basePose = isHero ? (startNarrow ? POSE.ribbons_m : POSE.ribbons) : (startNarrow ? POSE.footer_m : POSE.footer);
@@ -657,20 +650,18 @@ export function mountThereminRibbons(host, canvas, { pose = "hero", sound = null
     ribbons.rotation.set(
       // Scroll speed only nudges the tilt: capped, so a fast flick can't swing the model off its axis
       cur.rr.x + mouse.sy * 0.06 + clamp(scrollV, -MAX_TILT_SCROLL, MAX_TILT_SCROLL) * 0.0008,
-      cur.rr.y + mouse.sx * 0.1,
+      cur.rr.y + mouse.sx * 0.18,
       // The slow turn with page scroll belongs to the hero; at the footer (far
       // down the page) it would add a whole extra radian of twist
-      cur.rr.z + Math.sin(time * 0.12) * 0.03 + (isHero ? sy * 0.00006 : 0) + ch * 0.12,
+      cur.rr.z + Math.sin(time * 0.12) * 0.03 + ch * 0.12,
     );
 
     // Scroll: the hero unfurls and rises as it's left; the footer settles as it arrives
     scrollWave = lerp(scrollWave, clamp(scrollV / 26, -1.3, 1.3), 0.07);
-    if (isHero) {
-      const hp = clamp(sy / window.innerHeight, 0, 1.6);
-      ribbons.rotation.z += hp * 0.2;
-      ribbons.position.y += hp * 0.9;
-      ribbons.position.x -= hp * 0.35;
-    } else {
+    // The hero holds its pose while scrolling (only the scroll ripple reacts)
+    if (!isHero) {
+      // Drifts left / right with the pointer
+      ribbons.position.x += mouse.sx * 0.6;
       // Settles into its corner as the footer arrives (scaled to the small pose)
       const fr = clamp(host.getBoundingClientRect().top / window.innerHeight, -1, 1);
       ribbons.rotation.z += fr * 0.3;

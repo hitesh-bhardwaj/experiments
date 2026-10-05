@@ -114,7 +114,7 @@ export default function TextFillPixelV3({
   wrapperClassName = 'w-[95%] sm:w-[88%] md:w-[90%]',
   containerClassName = '',
   id = 'text-fill-pixel-v3',
-  start = '15% 75%',
+  start = '20% 80%',
   end = '85% 45%',
   pixelSize = 3,
   stagger = 12,
