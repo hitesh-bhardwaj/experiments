@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import gsap from "gsap";
 import { isLighthouseOrHeadless, isSoftwareRenderer } from "@/lib/audit";
 import { useFadeUp } from "@/components/Animations/gsapAnimations";
 import LineReveal from "@/components/Animations/LineReveal";
@@ -17,16 +18,12 @@ export default function SignalSection() {
     const sectionRef = useRef(null);
     const canvasRef = useRef(null);
     const anchorRef = useRef(null);
-    const waveAreaRef = useRef(null);
     const { sound } = useInteraction();
     const [webgl, setWebgl] = useState(false);
 
     useFadeUp(sectionRef);
 
     useLayoutEffect(() => {
-        // WebGL capability is only knowable on the client, after hydration
-        // Phones skip the wave entirely (the canvas is hidden there too)
-        // eslint-disable-next-line react-hooks/set-state-in-effect
         setWebgl(!(isLighthouseOrHeadless() || isSoftwareRenderer()) && window.matchMedia("(min-width: 768px)").matches);
     }, []);
 
@@ -41,9 +38,10 @@ export default function SignalSection() {
             if (disposed) return;
             try {
                 wave = createSignalWave(canvasRef.current, {
+
                     anchor: anchorRef.current,
-                    // Only the wave's own block plays the string, not the cards below it
-                    hitArea: waveAreaRef.current,
+                    zone: section,
+                    hitArea: section,
                     onLevel: sound?.theremin ? (level, y, b) => sound.theremin(level, y, b) : null,
                     onPluck: sound?.pluckString ? (y, a) => sound.pluckString(y, a) : null,
                 }).start();
@@ -55,17 +53,20 @@ export default function SignalSection() {
             // Press and hold
             let pressedAt = 0;
             let raf = 0;
-            let charge = 0;
+            const charge = { v: 0 };
+            let decay = null;
             const tick = () => {
                 raf = requestAnimationFrame(tick);
                 const progress = (performance.now() - pressedAt - HOLD_DEAD_ZONE_MS) / HOLD_CHARGE_MS;
-                charge = progress > 0 ? Math.min(1, progress) ** 2 : 0;
-                wave.setCharge(charge);
+                charge.v = progress > 0 ? Math.min(1, progress) ** 2 : 0;
+                wave.setCharge(charge.v);
             };
             const onDown = (e) => {
-                if (e.button !== 0 || e.target.closest("a,button,input")) return;
+                // Same exclusions as the prototype's ring cursor
+                if (e.button !== 0 || e.target.closest("a,button,input,h1,h2,h3,p")) return;
                 pressedAt = performance.now();
-                charge = 0;
+                decay?.kill();
+                charge.v = 0;
                 sound?.holdStart?.();
                 raf = requestAnimationFrame(tick);
             };
@@ -74,14 +75,15 @@ export default function SignalSection() {
                 cancelAnimationFrame(raf);
                 const held = performance.now() - pressedAt;
                 pressedAt = 0;
-                const full = charge > FULL_CHARGE;
+                const full = charge.v > FULL_CHARGE;
                 sound?.holdEnd?.(full);
                 if (held < TAP_MAX_MS) wave.tap();
                 else {
                     const kind = wave.release(full);
                     if (kind) sound?.release?.(kind);
                 }
-                wave.setCharge(0);
+                // The charge eases back out, still pulling the line as it fades
+                decay = gsap.to(charge, { v: 0, duration: 1.4, ease: "expo.out", onUpdate: () => wave.setCharge(charge.v) });
             };
             section.addEventListener("pointerdown", onDown);
             window.addEventListener("pointerup", onUp);
@@ -89,10 +91,8 @@ export default function SignalSection() {
                 section.removeEventListener("pointerdown", onDown);
                 window.removeEventListener("pointerup", onUp);
                 cancelAnimationFrame(raf);
+                decay?.kill();
             });
-
-            // Soundtrack chords pluck the string
-            if (sound?.onPulse) offs.push(sound.onPulse((v) => wave.pulse(v)));
         });
 
         return () => {
@@ -103,14 +103,14 @@ export default function SignalSection() {
     }, [sound, webgl]); // sound is stable (created once by the provider)
 
     return (
-        <section ref={sectionRef} id="signal" className="relative isolate text-[#F4F4F4]">
-            {/* One viewport-sized canvas, pinned for the whole section and on
-                top of it, so the wave is never clipped by a section edge or
-                covered by the cards. Pointer events pass through to the page. */}
-            <div className="pointer-events-none sticky top-0 z-30 -mb-[100vh] h-screen max-md:hidden" aria-hidden="true">
-                <canvas ref={canvasRef} className="block size-full" />
+        <section ref={sectionRef} id="signal" className="relative z-20 text-[#F4F4F4]">
+           
+            <div className="pointer-events-none absolute inset-x-0 -top-[100vh] -bottom-[100vh] z-50 max-md:hidden" aria-hidden="true">
+                <div className="sticky top-0 h-screen">
+                    <canvas ref={canvasRef} className="block size-full" />
+                </div>
             </div>
-            <div ref={waveAreaRef} className="relative z-40! mx-auto h-[80vh]  max-w-[1536px] px-[clamp(1.25rem,3vw,3rem)] pt-[clamp(7rem,18vh,12rem)] pb-[clamp(6rem,0vh,10rem)] max-md:h-fit">
+            <div className="relative z-[60]! mx-auto h-[80vh]  max-w-[1536px] px-[clamp(1.25rem,3vw,3rem)] pt-[clamp(7rem,18vh,12rem)] pb-[clamp(6rem,0vh,10rem)] max-md:h-fit">
                 <div className="grid min-h-[62vh] grid-cols-2 items-start gap-12 max-md:min-h-fit max-md:grid-cols-1">
                     <div>
                         <LineReveal as="h2" className="max-w-[30vw] font-aeonik text-[3.85vw] max-md:max-w-full max-md:text-[11vw] font-normal leading-[1.02] tracking-[-.035em]">
@@ -121,7 +121,7 @@ export default function SignalSection() {
                             <ButtonV3 variant="outline" href="/docs" text="Read the Docs" />
                         </div>
                     </div>
-                    {/* The wave centres on this empty column */}
+                    {/* The line centres on this empty column, beside the heading */}
                     <div ref={anchorRef} className="min-h-[40vh] self-stretch max-md:hidden" aria-hidden="true" />
                 </div>
             </div>

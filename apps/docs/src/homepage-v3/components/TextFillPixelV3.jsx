@@ -23,11 +23,6 @@ function hashNoise(x, y) {
   return ((h ^ (h >>> 16)) >>> 0) / 4294967295;
 }
 
-/**
- * Stable per-cell threshold for the orange dissolve edge.
- * Deterministic + evenly spread so the pixel front thins as a density ramp
- * instead of blotching or boiling frame-to-frame.
- */
 function cellThreshold(x, y) {
   const ordered = (BAYER[(y & 7) * 8 + (x & 7)] + 0.5) / 64;
 
@@ -97,14 +92,6 @@ function measureGlyphs(node, text, originX, originY) {
   return glyphs;
 }
 
-/**
- * Scroll-driven text fill: each character floods along an axis.
- *
- * Soft ordered-dither density (Bayer dissolve): solid behind the crest,
- * thinning scatter into dim ahead of it. `primaryColor` is the dithered fill;
- * `textColor` settles in smoothly behind. `direction` picks the axis -
- * `"up"` (bottom→top) or `"right"` (left→right, reading order still line by line).
- */
 export default function TextFillPixelV3({
   text = "Design systems should feel effortless, not like you're fighting your own components every time you build.",
   textColor = '#ffffff',

@@ -59,17 +59,18 @@ const lerp = (a, b, t) => a + (b - a) * t;
 const NOOP_API = { highlight() {}, launch() {}, destroy() {} };
 
 export function mountCrowd(canvas, opts = {}) {
-  const { THREE: T, zoneRoot = document, reducedMotion = false, small = false } = opts;
+  const { THREE: T, zoneRoot = document, reducedMotion = false, small = false, sound = null, getFluid = () => null, onToast = null } = opts;
   if (!T) throw new Error("mountCrowd: pass { THREE }");
 
   // Renderer and scene
   let renderer;
   try {
-    renderer = new T.WebGLRenderer({ canvas, antialias: false, alpha: true, powerPreference: "high-performance" });
+    renderer = new T.WebGLRenderer({ canvas, antialias: false, alpha: false, powerPreference: "high-performance" });
   } catch {
     return NOOP_API;
   }
-  renderer.setClearColor(0x000000, 0);
+  // As the prototype: an opaque #111 canvas behind the page, the dots add light onto it
+  renderer.setClearColor(0x111111);
   const scene = new T.Scene();
   const camera = new T.PerspectiveCamera(32, 1, 0.1, 200);
   camera.position.set(0, 0, 20);
@@ -83,6 +84,8 @@ export function mountCrowd(canvas, opts = {}) {
   const hotTarget = new Float32Array(N);
   const rnd = new Float32Array(N);
   const grp = new Uint8Array(N);
+  const logo = new Float32Array(N * 3);
+  let hasLogo = false;
   for (let i = 0; i < N; i++) {
     const th = Math.random() * 6.283;
     const ph = Math.acos(2 * Math.random() - 1);
@@ -106,6 +109,7 @@ export function mountCrowd(canvas, opts = {}) {
   const mat = new T.ShaderMaterial({
     transparent: true,
     depthWrite: false,
+    // Prototype material + shader verbatim
     blending: T.AdditiveBlending,
     uniforms,
     vertexShader: VERTEX_SHADER,
@@ -137,7 +141,7 @@ export function mountCrowd(canvas, opts = {}) {
   window.addEventListener("pointermove", onPointerMove, { passive: true });
   document.addEventListener("pointerleave", onPointerLeave);
 
-  const state = { pulse: 0, joinIdx: -1, covered: false, running: false };
+  const state = { pulse: 0, joinIdx: -1, covered: false, running: false, logoMix: 0 };
 
   // Resize
   const onResize = () => {
@@ -198,7 +202,12 @@ export function mountCrowd(canvas, opts = {}) {
     const damp = Math.pow(0.955, dt * 60);
     const ringR = narrow ? RING_RADIUS_NARROW : RING_RADIUS;
     const spd = Math.min(1, mouse.speed / 25);
-    const pull = 1.4 + ringMix * 1.4;
+    // Hold: the charge eases the crowd into the Hyperiux wordmark (prototype)
+    const ch = charge.v;
+    state.logoMix += ((hasLogo && ch > 0.02 ? Math.min(1, ch * 1.4) : 0) - state.logoMix) * Math.min(1, dt * 3);
+    const logoMix = state.logoMix;
+    const pull = 1.4 + ringMix * 1.4 + logoMix * 7;
+    let stir = 0;
 
     for (let i = 0; i < N; i++) {
       const q = i * 3;
@@ -218,14 +227,20 @@ export function mountCrowd(canvas, opts = {}) {
         hy = lerp(hy, center.y + Math.sin(an) * rr * 0.9, ringMix);
         hz = lerp(hz, center.z + home[q + 2] * 0.3, ringMix);
       }
+      if (logoMix > 0.01) {
+        hx = lerp(hx, center.x + logo[q], logoMix);
+        hy = lerp(hy, center.y + logo[q + 1], logoMix);
+        hz = lerp(hz, center.z + logo[q + 2], logoMix);
+      }
       ax += (hx - x) * pull;
       ay += (hy - y) * pull;
       az += (hz - z) * pull;
 
       // School-of-fish cursor: gather and swirl
-      if (hasMouse) {
+      if (hasMouse && logoMix < 0.5) {
         const dx = hit.x - x, dy = hit.y - y, d2 = dx * dx + dy * dy;
         if (d2 < GATHER_RADIUS_SQ) {
+          stir++;
           const f = 1 - d2 / GATHER_RADIUS_SQ;
           const inv = 1 / Math.sqrt(d2 + 0.05);
           ax += dx * inv * f * (2.2 + spd * 3) - dy * inv * f * (3 + spd * 6);
@@ -245,6 +260,8 @@ export function mountCrowd(canvas, opts = {}) {
     }
     geo.attributes.position.needsUpdate = true;
     geo.attributes.aHot.needsUpdate = true;
+    // Prototype: Sound.sparkle, transposed like its zones (crowd2 → 'orb', -3)
+    sound?.sparkle?.(hasMouse ? Math.min(1, stir / (N * 0.06)) * (0.3 + spd) : 0, mouse.cx / innerWidth, zone === "crowd2" ? -3 : 0);
   };
 
   const render = () => renderer.render(scene, camera);
@@ -267,6 +284,7 @@ export function mountCrowd(canvas, opts = {}) {
     raf = requestAnimationFrame(frame);
   };
   const stop = () => {
+    sound?.sparkle?.(0, 0.5);
     state.running = false;
     cancelAnimationFrame(raf);
   };
@@ -278,14 +296,39 @@ export function mountCrowd(canvas, opts = {}) {
     render();
   };
 
-  // Click scatters the crowd (only on the dark sections, not on controls)
-  const onPointerDown = (e) => {
-    if (reducedMotion || state.covered || e.button !== 0) return;
-    if (e.target.closest?.("a,button,input,label,.sheet")) return;
-    if (!toWorld(e.clientX, e.clientY, hit)) return;
+  // Wordmark targets: /hyperiux-wordmark.svg rasterised and sampled, one point per particle
+  (() => {
+    const img = new Image();
+    img.onload = () => {
+      const W2 = 900, H2 = 120, cv = document.createElement("canvas");
+      cv.width = W2; cv.height = H2;
+      const g = cv.getContext("2d");
+      const scale = Math.min((W2 - 20) / img.width, (H2 - 12) / img.height);
+      const w = img.width * scale, h = img.height * scale;
+      g.drawImage(img, (W2 - w) / 2, (H2 - h) / 2, w, h);
+      const d = g.getImageData(0, 0, W2, H2).data, L = [];
+      for (let y = 0; y < H2; y++) for (let x = 0; x < W2; x++) if (d[(y * W2 + x) * 4 + 3] > 120) L.push(x, y);
+      if (!L.length) return;
+      for (let n = 0; n < N; n++) {
+        const j2 = ((Math.random() * L.length) / 2 | 0) * 2;
+        logo[n * 3] = (L[j2] / W2 - 0.5) * 10;
+        logo[n * 3 + 1] = -(L[j2 + 1] / H2 - 0.5) * 10 * (H2 / W2);
+        logo[n * 3 + 2] = (Math.random() - 0.5) * 0.4;
+      }
+      hasLogo = true;
+    };
+    img.src = "/hyperiux-wordmark.svg";
+  })();
+
+  // Click scatters; press and hold charges the crowd into the wordmark, and a
+  // full charge explodes it on release (prototype). Dark sections only, never on controls.
+  const HOLD_DELAY = 0.2, HOLD_DURATION = 1.9, FULL_CHARGE = 0.985;
+  const charge = { v: 0 };
+  let press = null, chargeRaf = 0;
+  const scatter = (x, y) => {
     for (let i = 0; i < N; i++) {
       const k = i * 3;
-      const dx = pos[k] - hit.x, dy = pos[k + 1] - hit.y, dz = pos[k + 2];
+      const dx = pos[k] - x, dy = pos[k + 1] - y, dz = pos[k + 2];
       const f = 5 / (dx * dx + dy * dy + dz * dz + 0.4);
       vel[k] += dx * f;
       vel[k + 1] += dy * f;
@@ -293,6 +336,73 @@ export function mountCrowd(canvas, opts = {}) {
     }
     state.pulse = 0.6;
   };
+  const explode = () => {
+    for (let i = 0; i < N; i++) {
+      const k = i * 3, a = rnd[i] * 6.283;
+      vel[k] += Math.cos(a) * (4 + rnd[i] * 6);
+      vel[k + 1] += Math.sin(a) * (4 + rnd[i] * 6);
+      vel[k + 2] += (rnd[i] - 0.5) * 6;
+    }
+    state.pulse = 1.4;
+    state.logoMix = 0;
+  };
+  const chargeTick = () => {
+    if (!press) return;
+    // power2.in after a short delay, like the homepage hold
+    const t = Math.min(1, Math.max(0, (performance.now() - press.t) / 1000 - HOLD_DELAY) / HOLD_DURATION);
+    charge.v = t * t;
+    // Prototype: the hold sound starts with the charge; the fluid swirls under the pointer
+    if (!press.sounding && (performance.now() - press.t) / 1000 >= HOLD_DELAY) { press.sounding = true; sound?.holdStart?.(); }
+    getFluid()?.setVortex?.(mouse.cx, mouse.cy, charge.v * 0.6);
+    chargeRaf = requestAnimationFrame(chargeTick);
+  };
+  // Prototype: gsap.to(charge, { v: 0, duration: 1.4, ease: "expo.out" })
+  const easeChargeOut = () => {
+    const from = charge.v, t0 = performance.now();
+    const tick = () => {
+      if (press) return;
+      const t = Math.min(1, (performance.now() - t0) / 1400);
+      charge.v = from * (1 - (t >= 1 ? 1 : 1 - Math.pow(2, -10 * t)));
+      if (t < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  };
+  const onPointerDown = (e) => {
+    if (reducedMotion || state.covered || e.button !== 0) return;
+    // Same exclusions as the prototype's ring cursor (EX)
+    if (e.target.closest?.("a,button,input,label,form,h1,h2,h3,p,[data-zone='sheet'],.sheet,header,nav")) return;
+    if (!toWorld(e.clientX, e.clientY, hit)) return;
+    press = { t: performance.now(), x: hit.x, y: hit.y, sounding: false };
+    cancelAnimationFrame(chargeRaf);
+    chargeRaf = requestAnimationFrame(chargeTick);
+  };
+  const onPointerUp = (e) => {
+    if (!press) return;
+    const p = press;
+    press = null;
+    cancelAnimationFrame(chargeRaf);
+    const fluid = getFluid();
+    const quick = performance.now() - p.t < 220, full = charge.v > FULL_CHARGE;
+    const ex = e?.clientX ?? mouse.cx, ey = e?.clientY ?? mouse.cy;
+    if (p.sounding) sound?.holdEnd?.(full);
+    fluid?.setVortex?.(ex, ey, 0);
+    if (quick) {
+      // Prototype: World.tap + Field.splash + Sound.tap
+      scatter(p.x, p.y);
+      fluid?.splash?.(ex, ey);
+      sound?.crowdTap?.();
+    } else {
+      fluid?.burst?.(ex, ey, full ? 1.6 : 0.6 + charge.v);
+      if (full) {
+        explode();
+        sound?.release?.("shatter");
+        onToast?.("That\u2019s what a crowd can build.");
+      } else scatter(p.x, p.y);
+    }
+    easeChargeOut();
+  };
+  addEventListener("pointerup", onPointerUp);
+  addEventListener("pointercancel", onPointerUp);
   zoneRoot.addEventListener("pointerdown", onPointerDown);
 
   window.addEventListener("resize", onResize);
@@ -344,6 +454,9 @@ export function mountCrowd(canvas, opts = {}) {
       document.removeEventListener("pointerleave", onPointerLeave);
       window.removeEventListener("resize", onResize);
       zoneRoot.removeEventListener("pointerdown", onPointerDown);
+      removeEventListener("pointerup", onPointerUp);
+      removeEventListener("pointercancel", onPointerUp);
+      cancelAnimationFrame(chargeRaf);
       geo.dispose();
       mat.dispose();
       renderer.dispose();

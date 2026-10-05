@@ -1,7 +1,6 @@
 "use client";
 
 import DocsContent from "@/components/DocsContent/DocsContent";
-import Heading from "@/components/DocsContent/Heading";
 import Heading2 from "@/components/DocsContent/Heading2";
 import Heading3 from "@/components/DocsContent/Heading3";
 import Para from "@/components/DocsContent/Para";
@@ -98,12 +97,6 @@ export default function DocsMcp() {
 
   return (
     <DocsContent className="max-w-none mx-0">
-      <Heading>Hyperiux MCP Server</Heading>
-
-      <Para>
-        Give your AI coding assistant live, accurate knowledge of the entire
-        Hyperiux Vault effect catalog.
-      </Para>
 
       <Para>
         <code>hyperiux-mcp-server</code> is an{" "}

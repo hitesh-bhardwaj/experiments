@@ -1,7 +1,6 @@
 "use client";
 
 import DocsContent from "@/components/DocsContent/DocsContent";
-import Heading from "@/components/DocsContent/Heading";
 import Heading2 from "@/components/DocsContent/Heading2";
 import Para from "@/components/DocsContent/Para";
 import DocsList, { DocsListItem } from "@/components/DocsContent/List";
@@ -48,9 +47,6 @@ export default function DocsIntro() {
 
   return (
     <DocsContent className="max-w-none mx-0">
-      <Heading>Introduction</Heading>
-
-      <Para>Effects for the parts of your site that people actually remember.</Para>
 
       <Para>
         Hyperiux Vault is a library of creative interaction patterns for React and Next.js

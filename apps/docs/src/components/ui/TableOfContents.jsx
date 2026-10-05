@@ -279,7 +279,7 @@ export function TableOfContents({
       />
 
       <div
-        className={`pointer-events-none absolute top-1/2 w-[18vw] -translate-y-1/2 bg-[#161616] p-2 opacity-0 shadow-2xl transition-all duration-300 ease-out group-hover:pointer-events-auto group-hover:opacity-100 max-h-[60vh] overflow-hidden ${isLeft ? "left-[calc(100%+1rem)]" : "right-[calc(100%+1rem)]"
+        className={`pointer-events-none absolute top-1/2 w-[18vw] -translate-y-1/2 bg-[#F4F4F4] p-2 opacity-0 shadow-2xl transition-all duration-300 ease-out group-hover:pointer-events-auto group-hover:opacity-100 max-h-[60vh] overflow-hidden ${isLeft ? "left-[calc(100%+1rem)]" : "right-[calc(100%+1rem)]"
           }`}
       >
         <ul
@@ -306,7 +306,7 @@ export function TableOfContents({
                     className={`absolute inset-0 -z-10 origin-top bg-[#ff5f00] transition-transform duration-300 ease-out motion-reduce:transition-none ${highlighted ? "scale-y-100" : "scale-y-0"
                       }`}
                   />
-                  <span className="relative z-10 block px-3 py-2 text20 font-medium leading-tight text-white">
+                  <span className="relative z-10 block px-3 py-2 text20 font-medium leading-tight text-[#1D1D1D]">
                     {item.text}
                   </span>
                 </Link>
@@ -330,7 +330,7 @@ export function TableOfContents({
                   "block h-0.5 rounded-full transition-all duration-300 ease-out",
                   activeId === item.id
                     ? "w-8 bg-primary"
-                    : "w-8 bg-[#272727] hover:w-8 hover:bg-[#272727]",
+                    : "w-8 bg-white/40 hover:w-8 hover:bg-white",
                 ].join(" ")}
               />
             </Link>

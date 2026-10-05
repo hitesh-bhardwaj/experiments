@@ -78,7 +78,7 @@ export default function CommunityFamiliar() {
       });
     });
     if (prefersReducedMotion()) return;
-    root.querySelectorAll(".spy-panel .card").forEach((card) => {
+    root.querySelectorAll("[data-panel] > :first-child").forEach((card) => {
       gsap.from(card, { opacity: 0, y: 60, duration: 2, ease: "expo.out", scrollTrigger: { trigger: card, start: "top 90%" } });
     });
   }, { scope: rootRef, dependencies: [sound] });
@@ -93,40 +93,52 @@ export default function CommunityFamiliar() {
   };
 
   return (
-    <div ref={rootRef} className="sheet" data-zone="sheet">
-      <section className="familiar" aria-labelledby="fam-h">
-        <p className="eyebrow label fadeup" id="fam-h">Sound familiar?</p>
-        <ol className="fam-list">
+    <div ref={rootRef} className="relative z-1 mx-auto max-w-[calc(100%-2*clamp(0px,1vw,16px))] bg-[#F4F4F4] text-[#1D1D1D]" data-zone="sheet">
+      <section className="mx-auto max-w-[1536px] px-[clamp(1.25rem,3vw,3rem)] pt-[clamp(6rem,16vh,10rem)] pb-[clamp(5rem,12vh,8rem)]" aria-labelledby="fam-h">
+        {/* <p className="eyebrow label fadeup" id="fam-h">Sound familiar?</p> */}
+        <ol className="mt-12 grid">
           {FAMILIAR.map((item, i) => (
-            <li key={item.text} data-fam className={lit === i ? "lit" : ""}>
-              <span className="fam-n label">{String(i + 1).padStart(2, "0")}</span>
-              <p>
+            <li
+              key={item.text}
+              data-fam
+              className={`grid grid-cols-[70px_minmax(0,1fr)] items-baseline gap-4 border-t border-[rgba(29,29,29,.1)] py-[clamp(1.4rem,3vh,2rem)] last:border-b max-sm:grid-cols-[44px_minmax(0,1fr)]`}
+            >
+              <span className={`font-avenir text-[11px] font-medium tracking-[.14em] uppercase transition-colors duration-1200 ease-[cubic-bezier(.16,1,.3,1)] ${lit === i ? "text-primary" : "text-[#B4B4B4]"}`}>
+                {String(i + 1).padStart(2, "0")}
+              </span>
+              <p className={`font-aeonik font-normal tracking-[-.035em] leading-[1.02] text-[clamp(1.5rem,3vw,2.9rem)] leading-[1.12] tracking-[-.03em] transition-colors duration-1200 ease-[cubic-bezier(.16,1,.3,1)] ${lit === i ? "text-[#1D1D1D]" : "text-[#B4B4B4]"}`}>
                 {item.text}
-                {item.em && <> <em>{item.em}</em>{item.after}</>}
+                {item.em && <> <em className="text-primary not-italic">{item.em}</em>{item.after}</>}
               </p>
             </li>
           ))}
         </ol>
-        <LineReveal as="h2" className="display d2 fam-close">
-          You’re not the only one. <span className="gradient-text-animate">There’s a room for this.</span>
+        <LineReveal as="h2" className={`font-aeonik font-normal tracking-[-.035em] leading-[1.02]  text-[clamp(2.2rem,4.6vw,4.6rem)] mt-[clamp(4rem,10vh,7rem)]! max-w-[45vw] max-[1025px]:max-w-[80vw] max-md:max-w-full`}>
+          You’re not the only one. <span className="gradient-text-animate gradient-text-single">There’s a room for this.</span>
         </LineReveal>
       </section>
 
-      <div className="spy" id="why">
-        <div className="spy-nav">
-          <p className="eyebrow label">Why join</p>
+      <div className="mx-auto grid max-w-[1536px] grid-cols-[minmax(0,.8fr)_minmax(0,1.6fr)] gap-8 px-[clamp(1.25rem,3vw,3rem)] pb-[clamp(6rem,16vh,10rem)] max-[1025px]:grid-cols-1" id="why">
+        <div className="sticky top-[26vh] grid justify-items-start gap-4.5 self-start max-[1025px]:hidden">
+          {/* <p className="eyebrow label">Why join</p> */}
           {PANELS.map((p, i) => (
-            <button key={p.nav} type="button" className={spy === i ? "on" : ""} aria-current={spy === i ? "true" : undefined} onClick={() => goToPanel(i)}>
+            <button
+              key={p.nav}
+              type="button"
+              aria-current={spy === i ? "true" : undefined}
+              onClick={() => goToPanel(i)}
+              className={`font-aeonik font-normal tracking-[-.035em] leading-[1.02] text-left text-[clamp(1.5rem,2.3vw,2.2rem)] transition-colors duration-900 ease-[cubic-bezier(.16,1,.3,1)] ${spy === i ? "text-[#1D1D1D]" : "text-[#B4B4B4] hover:text-[#8a8a8a]"}`}
+            >
               {p.nav}
             </button>
           ))}
         </div>
-        <div className="spy-panels">
+        <div className="grid gap-[clamp(8rem,22vh,14rem)]">
           {PANELS.map(({ title, text, Card }, i) => (
-            <article key={title} className="spy-panel" data-panel={i}>
+            <article key={title} data-panel={i}>
               <Card joined={joined} />
-              <h3>{title}</h3>
-              <p className="body">{text}</p>
+              <h3 className={`font-aeonik font-normal tracking-[-.035em] leading-[1.02] mt-7 text-[clamp(1.25rem,1.6vw,1.5rem)]`}>{title}</h3>
+              <p className={`max-w-[40vw] max-[1025px]:max-w-[60ch] max-md:max-w-full text-base leading-[1.65] text-[#9C9C9C] mt-3`}>{text}</p>
             </article>
           ))}
         </div>

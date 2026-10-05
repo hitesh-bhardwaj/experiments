@@ -121,10 +121,6 @@ export default function ProblemFixes() {
           const t = i * STEP
 
           for (let j = i; j < total; j++) {
-            // Each card gets one y tween per step, so the tweens must abut
-            // rather than overlap: a timeline renders children in reverse order
-            // when scrubbed backwards, which would hand the overlap to the
-            // previous tween and snap the card by a fraction of a row.
             tl.to(
               cardEls[j],
               { y: -(j - i) * rowHeight, duration: STEP, ease: 'power1.out' },

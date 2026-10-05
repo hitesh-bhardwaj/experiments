@@ -143,15 +143,21 @@ export function TeardownCard() {
   };
 
   return (
-    <div ref={cardRef} className="card td">
-      <div className="card-glow" />
-      <div className="td-stage"><canvas ref={canvasRef} className="td-canvas" aria-hidden="true" /></div>
-      <div className="td-track">
-        <div className="td-keys" aria-hidden="true">
-          {TD_KEYS.map((k) => <i key={k} className={progress >= k - 0.001 ? "on" : ""} style={{ left: `${k * 100}%` }} />)}
+    <div ref={cardRef} className={`relative aspect-[16/11] overflow-hidden bg-[#141414] text-[#F4F4F4] max-sm:aspect-[4/5] grid grid-rows-[1fr_auto_auto]`}>
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_90%_at_85%_110%,rgba(255,107,0,.45),transparent_55%),radial-gradient(90%_70%_at_0%_0%,rgba(255,255,255,.06),transparent_60%)]" />
+      <div className="relative min-h-0"><canvas ref={canvasRef} className="absolute inset-0 size-full font-aeonik" aria-hidden="true" /></div>
+      <div className="relative flex items-center gap-3.5 border-t border-[rgba(244,244,244,.08)] px-5 py-3">
+        <div className="absolute top-1/2 right-[84px] left-5 h-0" aria-hidden="true">
+          {TD_KEYS.map((k) => (
+            <i
+              key={k}
+              className={`absolute -top-[5px] -ml-[5px] size-2.5 rotate-45 shadow-[inset_0_0_0_1px_rgba(255,107,0,.6)] ${progress >= k - 0.001 ? "bg-primary" : "bg-[#2c2c2c]"}`}
+              style={{ left: `${k * 100}%` }}
+            />
+          ))}
         </div>
         <input
-          className="td-scrub"
+          className="relative z-1 flex-1 accent-primary"
           type="range"
           min="0"
           max={SCRUB_MAX}
@@ -161,12 +167,12 @@ export function TeardownCard() {
           onPointerUp={() => { manualUntilRef.current = performance.now() + MANUAL_HOLD_MS; }}
           aria-label="Scrub the teardown timeline"
         />
-        <span className="td-time label">{(progress * TD_DURATION).toFixed(2)}s</span>
+        <span className={`font-avenir text-[11px] font-medium tracking-[.14em] uppercase min-w-[54px] text-right text-[#9c9c9c] tabular-nums`}>{(progress * TD_DURATION).toFixed(2)}s</span>
       </div>
-      <pre className="td-code" aria-hidden="true">
+      <pre className="relative m-0 overflow-hidden border-t border-[rgba(244,244,244,.06)] px-5 pt-3 pb-4 font-mono text-xs leading-[1.75] whitespace-pre text-[#7a7a7a] max-sm:px-3.5 max-sm:text-[10.5px]" aria-hidden="true">
         {TD_LINES.map((parts, i) => (
-          <span key={i} className={i === Math.min(TD_LINES.length - 1, phase) ? "hl" : ""}>
-            {parts.map((part, j) => (Array.isArray(part) ? <span key={j} className="k">{part[1]}</span> : part))}
+          <span key={i} className={i === Math.min(TD_LINES.length - 1, phase) ? "bg-[rgba(255,107,0,.16)] text-[#F4F4F4] shadow-[-20px_0_0_rgba(255,107,0,.16),20px_0_0_rgba(255,107,0,.16)]" : ""}>
+            {parts.map((part, j) => (Array.isArray(part) ? <span key={j} className="text-[#FFB27A]">{part[1]}</span> : part))}
             {i < TD_LINES.length - 1 ? "\n" : ""}
           </span>
         ))}
@@ -206,17 +212,26 @@ export function VoteCard() {
   };
 
   return (
-    <div className="card vote">
-      <div className="card-glow" />
-      <p className="vote-h label">Up next in the vault · you decide</p>
-      <ul ref={listRef} className="vote-list">
+    <div className={`relative aspect-[16/11] overflow-hidden bg-[#141414] text-[#F4F4F4] max-sm:aspect-[4/5] flex flex-col p-[clamp(18px,3vw,30px)]`}>
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_90%_at_85%_110%,rgba(255,107,0,.45),transparent_55%),radial-gradient(90%_70%_at_0%_0%,rgba(255,255,255,.06),transparent_60%)]" />
+      <p className={`font-avenir text-[11px] font-medium tracking-[.14em] uppercase relative mb-3.5 text-[#9c9c9c]`}>Up next in the vault · you decide</p>
+      <ul ref={listRef} className="relative grid gap-2">
         {order.map((i) => {
           const on = voted.includes(i);
           return (
-            <li key={i} data-idea={i} className={on ? "voted" : ""}>
-              <span className="vi-t">{VOTE_IDEAS[i].title}</span>
-              <span className="vi-d">{VOTE_IDEAS[i].text}</span>
-              <button className="vi-b label" type="button" aria-pressed={on} onClick={() => toggle(i)}>
+            <li
+              key={i}
+              data-idea={i}
+              className={`grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-3.5 gap-y-0.5 px-4 py-3.5 transition-[background-color,box-shadow] duration-700 ease-[cubic-bezier(.16,1,.3,1)] ${on ? "bg-[rgba(255,107,0,.1)] shadow-[inset_0_0_0_1px_rgba(255,107,0,.45)]" : "bg-[rgba(244,244,244,.04)] shadow-[inset_0_0_0_1px_rgba(244,244,244,.08)]"}`}
+            >
+              <span className="font-aeonik text-lg text-[#F4F4F4]">{VOTE_IDEAS[i].title}</span>
+              <span className="col-start-1 text-[13px] text-[#8c8c8c]">{VOTE_IDEAS[i].text}</span>
+              <button
+                type="button"
+                aria-pressed={on}
+                onClick={() => toggle(i)}
+                className={`font-avenir text-[11px] font-medium tracking-[.14em] uppercase col-start-2 row-span-2 row-start-1 h-[34px] px-3.5 transition-[background-color,color,box-shadow] duration-600 ease-[cubic-bezier(.16,1,.3,1)] ${on ? "bg-primary text-[#141414]" : "text-[#d8d8d8] shadow-[inset_0_0_0_1px_rgba(244,244,244,.16)] hover:shadow-[inset_0_0_0_1px_rgba(255,107,0,.6)]"}`}
+              >
                 {on ? "Voted ✓" : "Vote"}
               </button>
             </li>
@@ -259,17 +274,26 @@ export function CritiqueCard() {
   }, CRIT_LOOP_S * 1000 * 0.6);
 
   return (
-    <div ref={cardRef} className="card crit">
-      <div className="card-glow" />
-      <div className="crit-stage">
-        <canvas ref={canvasRef} className="crit-canvas" aria-hidden="true" />
-        <span className="crit-tag label">Example thread · work in progress</span>
+    <div ref={cardRef} className={`relative aspect-[16/11] overflow-hidden bg-[#141414] text-[#F4F4F4] max-sm:aspect-[4/5] grid grid-rows-[1fr_auto]`}>
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_90%_at_85%_110%,rgba(255,107,0,.45),transparent_55%),radial-gradient(90%_70%_at_0%_0%,rgba(255,255,255,.06),transparent_60%)]" />
+      <div className="relative">
+        <canvas ref={canvasRef} className="absolute inset-0 size-full" aria-hidden="true" />
+        <span className={`font-avenir text-[11px] font-medium tracking-[.14em] uppercase absolute top-[18px] left-5 text-[#8c8c8c]`}>Example thread · work in progress</span>
       </div>
-      <div className="crit-line">
-        <i ref={playRef} className="crit-play" />
+      <div className="relative mx-6 mb-[22px] h-16 border-t border-[rgba(244,244,244,.12)]">
+        <i ref={playRef} className="absolute -top-px left-0 h-px w-0 bg-primary" />
         {CRIT_PINS.map((pin, i) => (
-          <button key={pin.who} type="button" className={`pin${activePin === i ? " on" : ""}`} style={{ left: `${pin.at * 100}%` }}>
-            <span className="pop"><b>{pin.who}</b> {pin.text}</span>
+          <button
+            key={pin.who}
+            type="button"
+            style={{ left: `${pin.at * 100}%` }}
+            className={`group/pin absolute -top-[9px] -ml-[9px] size-[18px] bg-primary transition-shadow duration-600 ease-[cubic-bezier(.16,1,.3,1)] hover:shadow-[0_0_0_7px_rgba(255,107,0,.28)] focus-visible:shadow-[0_0_0_7px_rgba(255,107,0,.28)] ${activePin === i ? "shadow-[0_0_0_7px_rgba(255,107,0,.28)]" : "shadow-[0_0_0_4px_rgba(255,107,0,.18)]"}`}
+          >
+            <span
+              className={`pointer-events-none absolute bottom-[calc(100%+12px)] w-[250px] bg-[#F4F4F4] px-3.5 py-3 text-left text-[13px] leading-[1.45] text-[#1D1D1D] transition-opacity duration-500 ease-[cubic-bezier(.16,1,.3,1)] group-hover/pin:opacity-100 group-focus-visible/pin:opacity-100 max-sm:w-[200px] ${activePin === i ? "opacity-100" : "opacity-0"} ${i === 0 ? "left-0 -ml-5" : i === CRIT_PINS.length - 1 ? "right-0 -mr-5" : "left-1/2 -translate-x-1/2"}`}
+            >
+              <b className="mb-0.5 block font-bold text-[#B34A00]">{pin.who}</b> {pin.text}
+            </span>
           </button>
         ))}
       </div>
@@ -280,12 +304,12 @@ export function CritiqueCard() {
 // 04 featured: the spotlight card, addressed to the visitor once they join
 export function FeaturedCard({ joined }) {
   return (
-    <div className="card feat">
-      <div className="card-glow" />
-      <div className="feat-card">
-        <p className="label feat-k">Featured on Vault · this week</p>
-        <p className="feat-t">Your work<br />could be here.</p>
-        <p className="feat-by label">by <span className="feat-name">{joined ? "you, founding member" : "you"}</span></p>
+    <div className={`relative aspect-[16/11] overflow-hidden bg-[#141414] text-[#F4F4F4] max-sm:aspect-[4/5] grid place-items-center p-[clamp(18px,4vw,40px)]`}>
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_90%_at_85%_110%,rgba(255,107,0,.45),transparent_55%),radial-gradient(90%_70%_at_0%_0%,rgba(255,255,255,.06),transparent_60%)]" />
+      <div className="relative flex aspect-[4/5] w-[min(78%,420px)] flex-col justify-end gap-2.5 overflow-hidden bg-[linear-gradient(160deg,#241206,#140a04_55%,#0f0f0f)] p-[26px] shadow-[inset_0_0_0_1.5px_rgba(255,107,0,.45)] after:absolute after:-top-[30%] after:-right-[30%] after:aspect-square after:w-4/5 after:rounded-full after:bg-[radial-gradient(circle,rgba(255,107,0,.45),transparent_65%)] after:content-['']">
+        <p className={`font-avenir text-[11px] font-medium tracking-[.14em] uppercase relative text-[#FFB27A]`}>Featured on Vault · this week</p>
+        <p className="relative font-aeonik text-[clamp(1.8rem,3vw,2.6rem)] leading-[1.05] tracking-[-.03em] text-[#F4F4F4]">Your work<br />could be here.</p>
+        <p className={`font-avenir text-[11px] font-medium tracking-[.14em] uppercase relative text-[#9c9c9c]`}>by <span className="text-[#F4F4F4]">{joined ? "you, founding member" : "you"}</span></p>
       </div>
     </div>
   );

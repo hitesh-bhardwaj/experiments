@@ -10,16 +10,17 @@
  *   Hold    : pulls the line into a peak under the pointer as the charge builds.
  *   Release : partial = pluck; full = the whole string snaps into a big standing wave → returns 'signal'.
  *
- * The canvas covers its section (absolute, inset 0); the wave centres on an anchor element and
- * keeps the same on-screen scale whatever the section height is. Needs `three`.
+ * The canvas should be pinned to the viewport so the line is never clipped. The line sits beside
+ * `anchor` and scrolls with it; it is playable while `zone` crosses the middle of the screen. Needs `three`.
  *
  *   import { createSignalWave } from './signal-wave.js';
- *   const wave = createSignalWave(canvas, { anchor, onLevel: sound.theremin, onPluck: sound.pluckString }).start();
+ *   const wave = createSignalWave(canvas, { anchor, zone, onLevel: sound.theremin, onPluck: sound.pluckString }).start();
  */
 import * as THREE from 'three';
 
 const DEFAULTS = {
-  anchor: null,                                   // element the wave centres on vertically (default: canvas parent)
+  anchor: null,                                   // element the line sits beside: it centres on it and scrolls with it
+  zone: null,                                     // section that owns the line: it is playable while this crosses the viewport middle (prototype's 'orb' zone)
   hitArea: null,                                  // element the pointer must be over to touch the string (default: the canvas)
   quality: 'auto',                                // 'auto' | 'high' | 'low'
   maxPixelRatio: null,
@@ -40,7 +41,7 @@ export function createSignalWave(canvas, options = {}) {
   const mq = (q) => matchMedia(q).matches;
   const small = o.quality === 'low' || (o.quality === 'auto' && (mq('(max-width: 760px)') || (navigator.hardwareConcurrency || 8) <= 4));
   const reduced = o.respectReducedMotion && mq('(prefers-reduced-motion: reduce)');
-  const anchor = o.anchor || canvas.parentElement;
+  const zone = o.zone || canvas.parentElement, anchor = o.anchor || zone;
 
   const renderer = new T.WebGLRenderer({ canvas, antialias: !small, alpha: true, premultipliedAlpha: true, powerPreference: 'high-performance' });
   renderer.setClearColor(0x000000, 0);
@@ -60,11 +61,13 @@ export function createSignalWave(canvas, options = {}) {
   }
   function mat(trail) {
     return new T.ShaderMaterial({
-      transparent: true, depthWrite: false, blending: T.AdditiveBlending, side: T.DoubleSide, uniforms: { uGlow: { value: 1 }, uFlare: { value: 0 } },
+      // Prototype shader, additive (ONE, ONE). Alpha follows each pixel's brightness (also added), so
+      // the canvas is valid premultiplied colour: a glow with alpha 0 is dropped by Safari / Firefox.
+      transparent: true, depthWrite: false, blending: T.CustomBlending, blendEquation: T.AddEquation, blendSrc: T.OneFactor, blendDst: T.OneFactor, blendSrcAlpha: T.OneFactor, blendDstAlpha: T.OneFactor, side: T.DoubleSide, uniforms: { uGlow: { value: 1 }, uFlare: { value: 0 } },
       vertexShader: 'attribute float aK;varying vec2 vUv;varying float vK;void main(){vUv=uv;vK=aK;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
       fragmentShader: 'uniform float uGlow,uFlare;varying vec2 vUv;varying float vK;void main(){float d=abs(vUv.y-.5)*2.;float edge=smoothstep(0.,.08,vUv.x)*smoothstep(1.,.92,vUv.x);' +
         (trail ? 'float a=exp(-d*d*4.)*(1.-vK)*.55*uGlow*edge;vec3 c=mix(vec3(1.,.28,0.),vec3(.55,.12,0.),vK);vec3 o=c*a;gl_FragColor=vec4(o,max(o.r,max(o.g,o.b)));}'
-               : 'float core=exp(-d*d*40.);float glow=exp(-d*d*3.)*.55;vec3 c=vec3(1.,.22,0.)*(glow+uFlare*.6)+vec3(1.,.78,.55)*core*(1.+uFlare);vec3 o=c*edge*uGlow;gl_FragColor=vec4(o,min(1.,max(o.r,max(o.g,o.b))));}'),
+               : 'float core=exp(-d*d*40.);float glow=exp(-d*d*3.)*.55;vec3 c=vec3(1.,.22,0.)*(glow+uFlare*.6)+vec3(1.,.78,.55)*core*(1.+uFlare);vec3 o=c*edge*uGlow;gl_FragColor=vec4(o,max(o.r,max(o.g,o.b)));}'),
     });
   }
   const mainGeo = strip(1), trailGeo = strip(HM), mainMat = mat(false), trailMat = mat(true);
@@ -86,7 +89,7 @@ export function createSignalWave(canvas, options = {}) {
   const updatePointer = () => {
     const r = canvas.getBoundingClientRect(), h = (o.hitArea || canvas).getBoundingClientRect();
     mouse.x = ((pointer.x - r.left) / r.width) * 2 - 1; mouse.y = ((pointer.y - r.top) / r.height) * 2 - 1;
-    mouse.on = pointer.inPage && pointer.x >= h.left && pointer.x <= h.right && pointer.y >= h.top && pointer.y <= h.bottom;
+    mouse.on = inZone && pointer.inPage && pointer.x >= h.left && pointer.x <= h.right && pointer.y >= h.top && pointer.y <= h.bottom;
   };
   const onMove = (e) => { pointer.x = e.clientX; pointer.y = e.clientY; pointer.inPage = true; updatePointer(); };
   const onLeavePage = () => { pointer.inPage = false; mouse.on = false; };
@@ -114,7 +117,7 @@ export function createSignalWave(canvas, options = {}) {
       } else st.prox *= 0.9;
       st.lx = lp.x; st.ly = lp.y; st.has = true; yN = clamp((lp.y + 2.6) / 5.2, 0, 1);
     } else { st.has = false; st.prox *= 0.92; }
-    if (charge > 0 && st.idx >= 0) { const peak = clamp(st.ly, -2.6, 2.6); for (j = 1; j < N - 1; j++) { const t2 = tri(j, st.idx, N * 0.38); y[j] += (peak * t2 - y[j]) * 0.07 * charge; v[j] *= 1 - 0.2 * charge; } st.flare = Math.max(st.flare, charge * 0.7); }
+    if (inZone && charge > 0 && st.idx >= 0) { const peak = clamp(st.ly, -2.6, 2.6); for (j = 1; j < N - 1; j++) { const t2 = tri(j, st.idx, N * 0.38); y[j] += (peak * t2 - y[j]) * 0.07 * charge; v[j] *= 1 - 0.2 * charge; } st.flare = Math.max(st.flare, charge * 0.7); }
     // As in the prototype: constant damping plus a tiny travelling sine force, so the string
     // always ripples gently on its own
     time += dt;
@@ -133,22 +136,30 @@ export function createSignalWave(canvas, options = {}) {
     trailGeo.attributes.position.needsUpdate = true;
     }
     mainMat.uniforms.uFlare.value = st.flare; trailMat.uniforms.uGlow.value = 1 + st.flare * 1.5;
-    o.onLevel && o.onLevel(mouse.on ? st.prox * 0.45 + st.energy * 0.6 + charge * 0.4 : 0, yN, st.energy + charge * 0.6);
+    o.onLevel && o.onLevel(inZone ? st.prox * 0.45 + st.energy * 0.6 + charge * 0.4 : 0, yN, st.energy + charge * 0.6);
   }
 
-  const cur = { op: new T.Vector3(), os: 0.001 };
+  /* ---- the line is playable (and sounds) while its zone crosses the viewport middle, as in the prototype ---- */
+  let inZone = false;
+  function updateZone() { const vh = innerHeight, r = zone.getBoundingClientRect(); inZone = r.top < vh * 0.6 && r.bottom > vh * 0.4; }
+
+  const pose0 = () => (innerWidth / innerHeight < 0.9 ? o.poseMobile : o.pose);
+  const cur = { op: new T.Vector3().fromArray(pose0().op), os: pose0().os };
   let raf = 0, running = false, visible = true, last = performance.now();
   function frame(now) {
     raf = requestAnimationFrame(frame);
     const dt = Math.min(0.05, (now - last) / 1000); last = now;
     if (!visible || document.hidden) { o.onLevel && o.onLevel(0, 0.5, 0); return; }
-    updatePointer();
-    const P = innerWidth / innerHeight < 0.9 ? o.poseMobile : o.pose, k = 1 - Math.pow(0.12, dt);
+    updateZone(); updatePointer();
+    const P = pose0(), k = 1 - Math.pow(0.12, dt);
     cur.op.lerp(tv.fromArray(P.op), k); cur.os += (P.os - cur.os) * k;
-    const cr = canvas.getBoundingClientRect(), ar = anchor.getBoundingClientRect(), dz = camera.position.z - cur.op.z;
-    const upp = (2 * dz * Math.tan((camera.fov * Math.PI) / 360)) / H, fy = -(ar.top + ar.height / 2 - cr.top - H / 2) * upp;
+    // Sit beside the anchor and scroll with it. The picture is shifted in screen space (view offset)
+    // rather than moving the line in 3D, so the camera angle, and the trail's perspective, stay
+    // exactly as in the prototype's viewport-centred pose.
+    const cr = canvas.getBoundingClientRect(), ar = anchor.getBoundingClientRect(), dyPx = ar.top + ar.height / 2 - cr.top - H / 2;
+    camera.setViewOffset(W, H, 0, -dyPx, W, H);
     mouse.sx += (mouse.x - mouse.sx) * 0.03; mouse.sy += (mouse.y - mouse.sy) * 0.03;
-    G.position.set(cur.op.x, cur.op.y + fy, cur.op.z); G.scale.setScalar(Math.max(0.001, cur.os)); G.rotation.set(mouse.sy * 0.06, mouse.sx * 0.1, 0);
+    G.position.copy(cur.op); G.scale.setScalar(Math.max(0.001, cur.os)); G.rotation.set(mouse.sy * 0.06, mouse.sx * 0.1, 0);
     sim(dt);
     renderer.render(scene, camera);
   }
@@ -162,7 +173,7 @@ export function createSignalWave(canvas, options = {}) {
     addEventListener('resize', resize);
     if (o.pauseOffscreen && typeof IntersectionObserver !== 'undefined') { io = new IntersectionObserver((es) => { visible = es[0].isIntersecting; }); io.observe(canvas); }
     resize(); last = performance.now();
-    if (reduced) { cur.os = (innerWidth / innerHeight < 0.9 ? o.poseMobile : o.pose).os; frame(last); cancelAnimationFrame(raf); running = false; return api; }
+    if (reduced) { frame(last); cancelAnimationFrame(raf); running = false; return api; }
     raf = requestAnimationFrame(frame); return api;
   }
   function stop() {
@@ -181,10 +192,10 @@ export function createSignalWave(canvas, options = {}) {
     setCharge(c) { charge = clamp(c, 0, 1); },
     /** end a hold; full = the whole string snaps into a standing wave → returns 'signal' */
     release(full) {
-      const c = charge; charge = 0;
+      // charge is not reset here: the caller eases it back to 0 (prototype: 1.4s expo.out)
       if (!full) { api.tap(); return null; }
       for (let j = 1; j < N - 1; j++) v[j] += -y[j] * 0.5 + Math.sin((j / N) * Math.PI * 3) * 0.25;
-      st.flare = 1.6; return c >= 0 ? 'signal' : null;
+      st.flare = 1.6; return 'signal';
     },
     /** music pulse (sound.onPulse): a small pluck in the middle */
     pulse(vv = 1) { const mid = (N / 2) | 0; for (let j = 1; j < N - 1; j++) y[j] += tri(j, mid + ((Math.random() - 0.5) * N * 0.6) | 0, 10) * 0.25 * vv; },

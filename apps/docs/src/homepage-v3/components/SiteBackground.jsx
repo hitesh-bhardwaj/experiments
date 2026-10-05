@@ -8,6 +8,10 @@ import { createFluidField } from "../lib/fluid-field";
 const LOW_QUALITY_FLUID = { cell: 22, iterations: 8 };
 const LOW_CORE_COUNT = 4;
 
+// The live fluid, so page effects can splash / burst / swirl it (e.g. the Community crowd)
+let siteFluid = null;
+export const getSiteFluid = () => siteFluid;
+
 function isLowQualityDevice() {
     return (
         window.matchMedia("(max-width: 760px)").matches ||
@@ -29,7 +33,8 @@ export default function SiteBackground() {
             dots: dotsRef.current,
             ...(isLowQualityDevice() ? LOW_QUALITY_FLUID : null),
         }).start();
-        return () => fluid.destroy();
+        siteFluid = fluid;
+        return () => { if (siteFluid === fluid) siteFluid = null; fluid.destroy(); };
     }, []);
 
     return (

@@ -52,7 +52,8 @@ export default function DocsTable({
         ? "[--docs-table-border:rgba(147,147,147,0.28)] [--docs-table-header-bg:rgba(255,255,255,0.08)] [--docs-table-header-color:rgba(255,255,255,0.9)] [--docs-table-cell-color:rgba(255,255,255,0.68)]"
         : colorVariant === "outline"
           ? "[--docs-table-border:rgba(255,255,255,0.22)] [--docs-table-header-bg:transparent] [--docs-table-header-color:#fff] [--docs-table-cell-color:rgba(255,255,255,0.76)]"
-          : "[--docs-table-border:rgba(255,255,255,0.14)] [--docs-table-header-bg:#272727] [--docs-table-header-color:#fff] [--docs-table-cell-color:rgba(255,255,255,0.76)]";
+          : // Default: the docs content sits on the light sheet - dark text and rules, dark header
+            "[--docs-table-border:rgba(29,29,29,0.14)] [--docs-table-header-bg:#272727] [--docs-table-header-color:#fff] [--docs-table-cell-color:rgba(29,29,29,0.82)]";
 
   return (
     <div
@@ -70,7 +71,7 @@ export default function DocsTable({
     )}
   >
     {caption ? (
-      <caption className="px-4 py-3 text-left text-sm text-white/60">
+      <caption className="px-4 py-3 text-left text-sm text-[#6B6B6B]">
         {caption}
       </caption>
     ) : null}
@@ -102,7 +103,7 @@ export default function DocsTable({
         <tr
           key={rowIdx}
           className={cx(
-            "align-top border-b border-white/10",
+            "align-top border-b border-(--docs-table-border)",
             bodyRowClassName
           )}
         >

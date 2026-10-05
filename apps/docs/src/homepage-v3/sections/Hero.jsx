@@ -85,10 +85,6 @@ export default function Hero() {
             actionsRef.current
         );
         dropCover();
-        // GPU capability detection reads WebGL context / renderer info that
-        // only exists client-side - can't be a lazy useState initializer
-        // without risking a hydration mismatch.
-        // eslint-disable-next-line react-hooks/set-state-in-effect
         setSkipGPU(shouldSkipRealtimeGPU());
         setPlayIntro(true);
     }, []);
@@ -165,11 +161,6 @@ export default function Hero() {
             return () => {
                 heading.revert();
                 copy.revert();
-                // `revert()` puts the original nodes back with whatever inline
-                // style they carried at split time. Re-assert the hidden start
-                // state so a re-run of this effect (both its dependencies flip
-                // during hydration, so it does re-run) cannot paint the copy
-                // fully visible for the frames before it sets up again.
                 hideIntroTargets(
                     headingRef.current,
                     copyRef.current,
@@ -178,12 +169,6 @@ export default function Hero() {
                 unlockScrollV3();
             };
         },
-        // One dependency, not two. `playIntro` and `loaderComplete` flip at
-        // different moments during hydration, so listing both re-runs this
-        // effect - tearing the SplitText down and rebuilding it - the instant
-        // the second one lands. The effect only ever does work when both are
-        // true, and neither goes back to false, so the conjunction is the real
-        // trigger and it fires exactly once.
         { dependencies: [playIntro && loaderComplete], scope: rootRef }
     );
 
@@ -191,10 +176,6 @@ export default function Hero() {
 
     return (
         <main ref={rootRef} id="hero-v3" className="relative w-full overflow-x-clip">
-            {/* Viewport-sized and pinned while the hero and its tools strip
-                scroll by, like Theremin's fixed canvas: the camera frames the
-                ribbons against the screen, so a taller canvas would shrink
-                them. The negative margin keeps it out of the layout flow. */}
             <div ref={canvasRef} className="pointer-events-auto sticky top-0 -mb-[100dvh] h-dvh w-full">
                 {skipGPU ? (
                     BACKGROUND_FALLBACK

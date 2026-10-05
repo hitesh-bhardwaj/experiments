@@ -50,13 +50,24 @@ export default function JoinedToast() {
   };
 
   return (
-    <div ref={ref} className="joined" role="status" aria-live="polite">
-      <span className="label eyebrow joined-k">You’re on the list</span>
-      <strong>Welcome to the crowd.</strong>
-      <p>That bright dot joining the swarm? That’s you.{matched} We’ll email you when your invite is ready.</p>
-      <div className="row">
-        <button type="button" className="joined-share label" onClick={share}>{copied ? "Invite copied ✓" : "Invite a friend"}</button>
-        <button type="button" className="cta3 label" onClick={dismissCelebration}><span className="t3">Close</span></button>
+    <div
+      ref={ref}
+      role="status"
+      aria-live="polite"
+      className="fixed bottom-[calc(72px+env(safe-area-inset-bottom,0px))] left-1/2 z-80 grid w-[min(440px,calc(100vw-2rem))] -translate-x-1/2 gap-2.5 bg-[rgba(22,22,22,.78)] px-6 py-[22px] text-left shadow-[inset_0_1px_0_rgba(255,255,255,.12),inset_0_0_0_1px_rgba(99,214,154,.35),0_30px_80px_-20px_rgba(255,107,0,.45)] backdrop-blur-[22px] backdrop-saturate-[160%]"
+    >
+      <span className={`font-avenir text-[11px] font-medium tracking-[.14em] uppercase inline-flex items-center gap-2.5 text-[#9C9C9C] before:size-[5px] before:rounded-full before:bg-primary before:content-[''] text-[#FFB27A]!`}>You’re on the list</span>
+      <strong className="font-aeonik text-[26px] font-medium tracking-[-.03em]">Welcome to the crowd.</strong>
+      <p className="text-sm text-[#b8b8b8]">That bright dot joining the swarm? That’s you.{matched} We’ll email you when your invite is ready.</p>
+      <div className="mt-1.5 flex items-center justify-between gap-3">
+        <button
+          type="button"
+          onClick={share}
+          className={`font-avenir text-[11px] font-medium tracking-[.14em] uppercase h-10 bg-[rgba(244,244,244,.05)] px-4 shadow-[inset_0_0_0_1px_rgba(244,244,244,.14)] transition-shadow duration-600 ease-[cubic-bezier(.16,1,.3,1)] hover:shadow-[inset_0_0_0_1px_rgba(255,107,0,.6)]`}
+        >
+          {copied ? "Invite copied ✓" : "Invite a friend"}
+        </button>
+        <button type="button" className={`group relative inline-flex h-11 items-center opacity-85 transition-opacity duration-600 ease-[cubic-bezier(.16,1,.3,1)] hover:opacity-100 font-avenir text-[11px] font-medium tracking-[.14em] uppercase`} onClick={dismissCelebration}><span className="pb-[3px] bg-[linear-gradient(var(--primary),var(--primary)),linear-gradient(rgba(244,244,244,.25),rgba(244,244,244,.25))] bg-no-repeat bg-[position:0_100%,0_100%] bg-[size:0%_1px,100%_1px] transition-[background-size] duration-800 ease-[cubic-bezier(.16,1,.3,1)] group-hover:bg-[size:100%_1px,100%_1px]">Close</span></button>
       </div>
     </div>
   );

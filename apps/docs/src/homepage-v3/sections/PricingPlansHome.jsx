@@ -80,10 +80,6 @@ function Tick() {
     );
 }
 
-// "Two plans. Every moment covered.": the pricing concept's plans block on a
-// light sheet, in the homepage's edgy language - square corners, grey
-// borders and orange corner marks. One Quarterly/Yearly toggle rolls every
-// price and swaps the billing lines, chips and credit counts.
 export default function PricingPlansHome() {
     const rootRef = useRef(null);
     const billRef = useRef(null);
@@ -93,7 +89,6 @@ export default function PricingPlansHome() {
 
     useFadeUp(rootRef);
 
-    // Sliding pill under the chosen period
     useLayoutEffect(() => {
         const bill = billRef.current;
         const place = () => {
@@ -108,7 +103,6 @@ export default function PricingPlansHome() {
         return () => ro.disconnect();
     }, [period]);
 
-    // Period-dependent copy fades back in when the period changes
     useGSAP(() => {
         if (prefersReducedMotion()) return;
         gsap.fromTo("[data-period-copy]", { opacity: 0 }, { opacity: 1, duration: 0.8, ease: "power2.out" });
@@ -221,12 +215,6 @@ export default function PricingPlansHome() {
                     <li key={a} className="flex items-center gap-2"><Tick />{a}</li>
                 ))}
             </ul>
-
-            {/* <div className="fadeup relative  mt-[clamp(3rem,8vh,5rem)] flex  mx-auto flex-wrap items-center justify-between gap-4 border border-[#1D1D1D]/15 px-6 py-5 max-[1536px]:mx-[clamp(1.25rem,3vw,3rem)]">
-                <CornerMarks />
-                <p className="text-[#6B6B6B]"><b className="font-bold text-[#1D1D1D]">Just exploring?</b> The Free Core has 50+ production-ready effects, free forever. No account needed.</p>
-                <ButtonV3 href="/effects/free" text="Browse Free Effects" variant="outline" className={LIGHT_OUTLINE} />
-            </div> */}
             <div className="h-[clamp(6rem,14vh,9rem)]" aria-hidden="true" />
         </section>
     );

@@ -7,7 +7,6 @@ import LineReveal from "@/components/Animations/LineReveal";
 import { useFadeUp } from "@/components/Animations/gsapAnimations";
 import LazyVideo from "@/components/WebsiteComps/LazyVideo";
 import LinkButton from "@/components/WebsiteComps/LinkButton";
-import CornerMarks from "@/homepage-v3/components/CornerMarks";
 import { useInteraction } from "@/homepage-v3/components/InteractionProvider";
 import { prefersReducedMotion } from "@/lib/motion";
 import { resolveEffectVideoUrl, resolveMediaUrl, resizeR2ImageUrl } from "@/lib/media";
@@ -78,16 +77,11 @@ const CATEGORIES = [
     },
 ];
 
-// Card slide on a category change: out toward the side you're leaving, in
-// from the side you're heading to
 const SLIDE_PX = 80;
 const SLIDE_IN_S = 1.1;
 const SLIDE_STAGGER = 0.06;
 const EASE = "cubic-bezier(.16,1,.3,1)";
 
-// "Explore the moments your website is missing": category tabs with a
-// sliding pill over four real Vault effects, each card a preview video on the
-// left and its title, copy and link on the right
 export default function ExploreTheEffects() {
     const container = useRef(null);
     const tabsRef = useRef(null);
@@ -100,7 +94,6 @@ export default function ExploreTheEffects() {
     const [tab, setTab] = useState(0); // the selected tab (drives the pill)
     const [shown, setShown] = useState(0); // the cards on screen (lags during the slide-out)
 
-    // The pill sits under the selected tab and follows it on resize
     useLayoutEffect(() => {
         const tabs = tabsRef.current;
         const place = () => {
@@ -115,7 +108,6 @@ export default function ExploreTheEffects() {
         return () => ro.disconnect();
     }, [tab]);
 
-    // New cards slide in from the side we're heading to
     useGSAP(() => {
         const cards = gridRef.current.children;
         if (prefersReducedMotion()) {

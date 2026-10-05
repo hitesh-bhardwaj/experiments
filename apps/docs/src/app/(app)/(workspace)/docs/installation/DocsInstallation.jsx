@@ -1,7 +1,6 @@
 "use client";
 
 import DocsContent from "@/components/DocsContent/DocsContent";
-import Heading from "@/components/DocsContent/Heading";
 import Heading2 from "@/components/DocsContent/Heading2";
 import Para from "@/components/DocsContent/Para";
 import DocsList, { DocsListItem } from "@/components/DocsContent/List";
@@ -86,9 +85,6 @@ export default function DocsInstallation() {
 
   return (
     <DocsContent className="max-w-none mx-0">
-      <Heading>Installation Guide</Heading>
-
-      <Para>Install the effect. Own the files.</Para>
 
       <Para>
         Hyperiux Vault is not designed as a heavy package that quietly expands inside your

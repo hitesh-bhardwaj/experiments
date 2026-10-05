@@ -33,13 +33,13 @@ export default function CommunityStack() {
 
   useGSAP(() => {
     if (prefersReducedMotion()) return;
-    gsap.from(".chip", {
+    gsap.from("[data-chip]", {
       opacity: 0,
       y: 18,
       duration: 1.4,
       ease: "expo.out",
       stagger: CHIP_STAGGER,
-      scrollTrigger: { trigger: ".chips", start: "top 88%" },
+      scrollTrigger: { trigger: "[data-chips]", start: "top 88%" },
     });
   }, { scope: rootRef });
 
@@ -51,23 +51,30 @@ export default function CommunityStack() {
   };
 
   return (
-    <section ref={rootRef} className="wrap stack-sec" id="stack" data-zone="crowd2">
-      <p className="eyebrow label fadeup">Find your people</p>
-      <LineReveal as="h2" className="display d2">
-        What do you <span className="gradient-text-animate">build with?</span>
+    <section ref={rootRef} className={`mx-auto max-w-[1536px] px-[clamp(1.25rem,3vw,3rem)] relative z-1 py-[clamp(12rem,30vh,18rem)] text-center max-md:py-28`} id="stack" data-zone="crowd2" data-hold-zone>
+      {/* <p className="eyebrow label fadeup">Find your people</p> */}
+      <LineReveal as="h2" className={`font-aeonik font-normal tracking-[-.035em] leading-[1.02] mt-[22px] text-[clamp(2.2rem,4.6vw,4.6rem)] mx-auto`}>
+        What do you <span className="gradient-text-animate gradient-text-single">build with?</span>
       </LineReveal>
-      <p className="body stack-sub fadeup">
+      <p className={`max-w-[40vw] max-[1025px]:max-w-[60ch] max-md:max-w-full text-base leading-[1.65] text-[#9C9C9C] fadeup mx-auto mt-[3vw] max-md:mt-6`}>
         Pick your stack. Watch your corner of the crowd light up. We’ll use it to match you with the
         right channels, teardowns and people.
       </p>
-      <div className="chips" role="group" aria-label="Your stack">
+      <div data-chips className="mx-auto mt-11 flex max-w-[760px] flex-wrap justify-center gap-2.5" role="group" aria-label="Your stack">
         {STACKS.map((name, i) => (
-          <button key={name} type="button" className="chip label" aria-pressed={stack.includes(name)} onClick={() => toggle(name, i)}>
+          <button
+            key={name}
+            type="button"
+            data-chip
+            aria-pressed={stack.includes(name)}
+            onClick={() => toggle(name, i)}
+            className={`font-avenir text-[11px] font-medium tracking-[.14em] uppercase h-11 px-5 backdrop-blur-[10px] transition-[background-color,color,box-shadow] duration-700 ease-[cubic-bezier(.16,1,.3,1)] ${stack.includes(name) ? "bg-primary text-[#141414] shadow-[0_10px_30px_-10px_rgba(255,107,0,.7)]" : "bg-[rgba(20,20,20,.55)] text-[#d8d8d8] shadow-[inset_0_0_0_1px_rgba(244,244,244,.14)] hover:shadow-[inset_0_0_0_1px_rgba(255,107,0,.6)]"}`}
+          >
             {name}
           </button>
         ))}
       </div>
-      <p className="chip-read label" aria-live="polite">{readout(stack)}</p>
+      <p className={`font-avenir text-[11px] font-medium tracking-[.14em] uppercase mt-[26px] min-h-[1.4em] text-[#FFB27A]`} aria-live="polite">{readout(stack)}</p>
     </section>
   );
 }

@@ -89,7 +89,7 @@ export default function DemoHeader({
 
   return (
     <>
-      <header className={`fixed left-0 backdrop-blur-sm top-0  z-300 w-full px-10 max-[1025px]:px-5 max-[1025px]:py-6 max-md:py-3 py-2 transition-transform duration-500 ease-out max-md:pt-4 max-[1025px]:pt-6 ${isHidden ? "-translate-y-full" : "translate-y-0"}`}>
+      <header data-demo-header className={`fixed left-0 backdrop-blur-sm top-0  z-300 w-full px-10 max-[1025px]:px-5 max-[1025px]:py-6 max-md:py-3 py-2 transition-transform duration-500 ease-out max-md:pt-4 max-[1025px]:pt-6 ${isHidden ? "-translate-y-full" : "translate-y-0"}`}>
         <div className="flex items-center justify-between gap-4">
           <div className="min-w-0">
             <Link

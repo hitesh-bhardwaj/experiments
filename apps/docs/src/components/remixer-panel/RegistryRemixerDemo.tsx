@@ -16,7 +16,7 @@ function toGroupTitle(value: string) {
     .replace(/\b\w/g, (letter) => letter.toUpperCase());
 }
 
-function getGroupsFromRemixerControls(controls: RemixerControl[] = []) {
+export function getGroupsFromRemixerControls(controls: RemixerControl[] = []) {
   if (!controls.length) return undefined;
 
   const groupMap = new Map<string, RemixerGroup>();

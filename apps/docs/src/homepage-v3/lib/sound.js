@@ -22,7 +22,7 @@ const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 
 export function createSound() {
   const AC = window.AudioContext || window.webkitAudioContext;
-  let ctx = null, master, music, sfx, on = false, noise = null, chordT = null, dropT = null, ci = 0, lastHover = 0, swish = null, hold = null, thV = null;
+  let ctx = null, master, music, sfx, on = false, noise = null, chordT = null, dropT = null, ci = 0, lastHover = 0, swish = null, hold = null, thV = null, spark = null;
   const listeners = new Set();
 
   const mtof = (m) => 440 * Math.pow(2, (m - 69) / 12);
@@ -84,6 +84,8 @@ export function createSound() {
     g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(0.05, t + 2); g.gain.linearRampToValueAtTime(0, t + 8); o.connect(g); g.connect(music); o.start(t); o.stop(t + 8.2);
   }
   /* kalimba: struck partials with fast decay (Theremin's hover voice for buttons, nav and cards) */
+  // The prototype transposes the signal section's theremin + plucks by -3 semitones (ZONE_TR.orb)
+  const SIGNAL_TR = -3;
   function kal(m, t, vol, dest, p) {
     const f = mtof(m);
     [[1, 1, 0.9], [2.99, 0.28, 0.25], [5.4, 0.1, 0.12]].forEach(([ratio, amp, len]) => {
@@ -182,6 +184,15 @@ export function createSound() {
     },
     /** fully charged ping */
     ready() { if (!on) return; const t = ctx.currentTime; droplet(84, 0.04, sfx, -0.2); droplet(91, 0.03, sfx, 0.2, t + 0.06); },
+    /** Community crowd (prototype): glassy shimmer while the cursor stirs the swarm. amt 0..1, x 0..1, tr = zone transpose */
+    sparkle(amt, x = 0.5, tr = 0) {
+      if (!on || !ctx) return; const t = ctx.currentTime;
+      if (!spark) { const s = ctx.createBufferSource(); s.buffer = noise; s.loop = true; const hp = ctx.createBiquadFilter(); hp.type = 'bandpass'; hp.frequency.value = 6500; hp.Q.value = 0.8; const g = ctx.createGain(); g.gain.value = 0; s.connect(hp); hp.connect(g); g.connect(sfx); s.start(); spark = { g, hp }; }
+      spark.g.gain.setTargetAtTime(Math.min(0.05, amt * 0.05), t, 0.12); spark.hp.frequency.setTargetAtTime(5000 + amt * 3000, t, 0.2);
+      if (Math.random() < amt * 0.55) { const m = PENTA[(Math.random() * PENTA.length) | 0] + 24 + tr, o = ctx.createOscillator(), gg = ctx.createGain(), d = 0.05 + Math.random() * 0.12; o.frequency.value = mtof(m); gg.gain.setValueAtTime(0, t); gg.gain.linearRampToValueAtTime(0.012 + amt * 0.012, t + 0.003); gg.gain.exponentialRampToValueAtTime(0.0001, t + d); const pn = pan((x || 0.5) * 2 - 1 + (Math.random() - 0.5) * 0.6); o.connect(gg); gg.connect(pn); pn.connect(sfx); o.start(t); o.stop(t + d + 0.02); }
+    },
+    /** Community crowd (prototype): the tap that scatters the swarm */
+    crowdTap() { if (!on) return; const t = ctx.currentTime; droplet(74, 0.05, sfx, 0); ep(62, t + 0.02, 0.03, sfx, 0, 3); ep(69, t + 0.08, 0.018, sfx, 0.2, 3); },
     /** quick tap on an interactive scene */
     tap() { if (!on) return; const t = ctx.currentTime; droplet(79, 0.06, sfx, 0); droplet(86, 0.03, sfx, 0.3, t + 0.07); ep(67, t + 0.02, 0.025, sfx, 0, 2.2); },
     /** the payoff: impact → 'shatter' sparkle rain or 'signal' sonar pings → reverse swell → resolving chord */
@@ -214,14 +225,14 @@ export function createSound() {
         o.connect(f); o2.connect(g2); g2.connect(f); f.type = 'lowpass'; f.frequency.value = 1600; g.gain.value = 0; f.connect(g); g.connect(sfx);
         [o, o2, vib].forEach((n) => n.start()); thV = { o, o2, vg, f, g };
       }
-      const sc = [57, 60, 62, 64, 67, 69, 72, 74, 76, 79, 81], fr = mtof(sc[clamp(Math.round((1 - (y ?? 0.5)) * (sc.length - 1)), 0, sc.length - 1)]);
+      const sc = [57, 60, 62, 64, 67, 69, 72, 74, 76, 79, 81], fr = mtof(sc[clamp(Math.round((1 - (y ?? 0.5)) * (sc.length - 1)), 0, sc.length - 1)] + SIGNAL_TR);
       thV.o.frequency.setTargetAtTime(fr, t, 0.06); thV.o2.frequency.setTargetAtTime(fr, t, 0.06); thV.vg.gain.setTargetAtTime(fr * 0.012 * Math.min(1, level * 2), t, 0.3);
       thV.g.gain.setTargetAtTime(on ? clamp(level, 0, 1) * 0.06 : 0, t, 0.12); thV.f.frequency.setTargetAtTime(900 + (bright || 0) * 2400, t, 0.2);
     },
     /** pluck of the wave string at height y (0 = top) */
     pluckString(y, amt = 1) {
-      if (!on) return; const t = ctx.currentTime, sc = [57, 60, 62, 64, 67, 69, 72, 74, 76], m = sc[clamp(Math.round((1 - (y ?? 0.5)) * (sc.length - 1)), 0, sc.length - 1)];
-      ep(m, t, 0.04 * amt, sfx, 0, 3); droplet(m + 12, 0.02 * amt, sfx, 0);
+      if (!on) return; const t = ctx.currentTime, sc = [57, 60, 62, 64, 67, 69, 72, 74, 76], m = sc[clamp(Math.round((1 - (y ?? 0.5)) * (sc.length - 1)), 0, sc.length - 1)] + SIGNAL_TR;
+      ep(m, t, 0.04 * amt, sfx, 0, 3); kal(m + 12, t, 0.02 * amt, sfx, 0);
     },
     /** "Ship at 60" game sounds: catch (pitched by combo), bug, level, power, over, open */
     gameSfx(ev, combo) {
@@ -240,7 +251,7 @@ export function createSound() {
       const g = ctx.createGain(); g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(0.12, t + 0.7); g.gain.exponentialRampToValueAtTime(0.0001, t + 2); s.connect(f); f.connect(g); g.connect(sfx); s.start(t); s.stop(t + 2.1);
     },
     /** close the audio context entirely (SPA teardown) */
-    destroy() { api.set(false); clearInterval(chordT); clearTimeout(dropT); listeners.clear(); document.removeEventListener('visibilitychange', onVis); thV = null; if (ctx) ctx.close(); ctx = null; },
+    destroy() { api.set(false); clearInterval(chordT); clearTimeout(dropT); listeners.clear(); document.removeEventListener('visibilitychange', onVis); thV = null;  spark = null; if (ctx) ctx.close(); ctx = null; },
   };
   return api;
 }

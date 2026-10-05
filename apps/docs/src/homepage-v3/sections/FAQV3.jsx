@@ -81,7 +81,8 @@ const OPEN_DURATION = 0.6;
 //   },
 // ];
 
-function FAQRow({ item, isOpen, onToggle, index }) {
+// Also used by the Community FAQ
+export function FAQRow({ item, isOpen, onToggle, index }) {
   const outerRef = useRef(null);
   const innerRef = useRef(null);
   const hasMounted = useRef(false);

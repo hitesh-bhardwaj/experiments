@@ -65,7 +65,6 @@ export default function Homepage({ faqItems, effects = [] }) {
       <LoaderV3 />
       <CursorV3 />
       <NavbarV3 effects={effects} introOnLoader />
-      {/* Theremin's scroll feel: a slower glide, a slightly stronger wheel */}
       <LenisSmoothScroll lerp={0.065} wheelMultiplier={0.85} />
       <ScrollTopOnLoad />
       <div className="relative">
@@ -73,37 +72,11 @@ export default function Homepage({ faqItems, effects = [] }) {
         <div className="relative z-10">
           <WhyVault />
           <ExplainVault/>
-          {/* <SmallMotion/> */}
-          {/* <Techstack /> */}
-          {/* <CurvedGradient /> */}
           <ProblemFixes />
            <SignalSection />
           <ExploreTheEffects />
-         
-          {/* <Preview /> */}
-          {/* <ExplainVault /> */}
-          {/* <UseCases useCases={USE_CASES} /> */}
-          {/* <DitherTransition
-            markers={false}
-            mobileStartTriggers="-10% bottom"
-            mobileEndTriggers="bottom -50%"
-            className="h-[60vw] max-md:h-[150vw]!"
-          /> */}
           <PricingPlansHome />
-          {/* <DitherTransition
-            dotColor="#ffffff"
-            invert
-            accentShift={0.8}
-            start="top bottom"
-            end="150% top"
-            mobileStartTriggers="top bottom"
-            mobileEndTriggers="bottom -50%"
-            markers={false}
-            accentColor="#eaeaea"
-            className="h-[75vw] mt-[-10vw]"
-          /> */}
           <FAQV3 faqItems={faqItems} />
-          {/* <CTAV3 /> */}
           <FooterV3 />
         </div>
       </div>

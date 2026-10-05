@@ -102,22 +102,11 @@ h4 {
   line-height: 1.2;
 }
 
-/* Homepage type (Theremin): the same variables, faces, weights and scale.
-   Display = Aeonik Pro at 400 with tight tracking; text = Avenir Next at 16px.
-   Re-pointing --font-neue-haas moves every inherited and font-neue-haas
-   element onto the text face in one go. The size classes map onto
-   Theremin's scale (.d1 / .d2 / .d3 / lead / body), fluid via clamp(), so
-   they replace the vw sizes and their breakpoint overrides here. Unlayered,
-   so it outranks Tailwind's font utilities inside the homepage only
-   (important utilities, e.g. max-md:text-[13vw]!, still win). */
 .home-type {
   --font-code: var(--font-plex-mono), "IBM Plex Mono", ui-monospace, Menlo, monospace;
   --font-display: var(--font-aeonik), "Aeonik Pro", system-ui, sans-serif;
   --font-text: var(--font-avenir), "Avenir Next", system-ui, sans-serif;
-  --font-neue-haas: var(--font-avenir);
-  --font-geist-sans: var(--font-avenir);
-  --font-geist: var(--font-avenir);
-  --font-geist-mono: var(--font-avenir);
+  --font-avenir: var(--font-avenir);
   font-family: var(--font-text);
   font-size: 16px;
   line-height: 1.6;
@@ -126,14 +115,11 @@ h4 {
 .home-type :is(.t96, .text64, .text80, .text110, .text120, .text140) {
   font-family: var(--font-display);
 }
-/* The size classes set their own (unlayered) tracking and leading globally,
-   so Theremin's display values have to be unlayered for them too */
 .home-type :is(.t96, .text64, .text80, .text110, .text120, .text140) {
   letter-spacing: -0.035em;
   line-height: 1.02;
 }
-/* Display weight and tracking sit in the base layer, so a heading's own
-   utility (e.g. font-medium on the plan names) can still override them */
+
 @layer base {
   .home-type :is(h1, h2, h3, h4),
   .home-type :is(.t96, .text64, .text80, .text110, .text120, .text140) {
@@ -1032,3 +1018,33 @@ html[data-pc-rm] body *:not([data-demo-header], [data-demo-header] *) {
   50.01% { background-size: 0% 1px; background-position: 0% 100%; }
   100% { background-size: 100% 1px; background-position: 0% 100%; }
 }
+
+/* Docs: content sits on the prototype's white sheet (square-edged). Theme
+   variables are re-pointed to ink inside it; code blocks keep the dark theme. */
+.docs-sheet {
+  --foreground: #1D1D1D;
+  --muted: #6B6B6B;
+  --docs-body: #3a3a3a;
+  --docs-line: rgba(29, 29, 29, 0.1);
+  background: #F4F4F4;
+  color: #3a3a3a;
+}
+.docs-sheet .codeblock-root {
+  --foreground: #ffffff;
+  --muted: #d2d2d2;
+  --docs-body: #ffffff;
+  --docs-line: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+}
+.docs-sheet .text-white:not(.codeblock-root *) { color: #1D1D1D; }
+.docs-sheet .text-white\/60:not(.codeblock-root *) { color: rgba(29, 29, 29, 0.6); }
+.docs-sheet .border-white\/10:not(.codeblock-root *) { border-color: rgba(29, 29, 29, 0.1); }
+.docs-sheet .hover\:text-white:not(.codeblock-root *):hover { color: #B84A00; }
+/* Docs footer (helpful? + prev/next) on the sheet */
+.docs-sheet .text-white\/80:not(.codeblock-root *) { color: rgba(29, 29, 29, 0.8); }
+.docs-sheet .text-white\/70\!:not(.codeblock-root *) { color: rgba(29, 29, 29, 0.7) !important; }
+.docs-sheet .text-white\/50:not(.codeblock-root *) { color: rgba(29, 29, 29, 0.5); }
+.docs-sheet .border-white\/15:not(.codeblock-root *) { border-color: rgba(29, 29, 29, 0.15); }
+.docs-sheet .hover\:border-white\/40:not(.codeblock-root *):hover { border-color: rgba(29, 29, 29, 0.4); }
+.docs-sheet .bg-white\/\[\.03\]:not(.codeblock-root *) { background-color: rgba(29, 29, 29, 0.03); }
+.docs-sheet .group:hover .group-hover\:text-primary { color: var(--primary); }

@@ -8,7 +8,8 @@ import { useEffect, useRef } from "react";
 // the ring trails alongside it. Fine pointers only.
 
 const CLICKABLE = "a[href],button,input,select,textarea,[role=button],[role=tab],[role=radio],label,summary";
-const HOLD_ZONES = "#hero-v3,#footer";
+// Any element can opt in with data-hold-zone (e.g. the Community hero)
+const HOLD_ZONES = "#hero-v3,#footer,[data-hold-zone]";
 const HOLD_SKIP = "a,button,input,textarea,select,label,[role=button],[role=tab],[role=radio],h1,h2,h3,p";
 const LERP = 0.22;
 // Text in the hold zones: hidden over it even when it ignores the pointer

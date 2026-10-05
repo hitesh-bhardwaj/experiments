@@ -228,3 +228,6 @@ html[data-pc-embed] .pc { display: none !important; }
   .pc-bar { top: 10px; }
   .pc-stage { padding: 70px 12px 44px; }
 }
+
+/* Embedded on the effect detail page / device frames: no demo header either */
+html[data-pc-embed] [data-demo-header] { display: none !important; }

@@ -35,6 +35,7 @@ import { CustomAnimationFormTrigger } from "@/components/WebsiteComps/modals/Cus
 import { CopyLimitProvider, useCopyLimit } from "./useCopyLimit";
 import ButtonV3 from "@/homepage-v3/components/ButtonV3";
 import { ArrowIcon } from "@/components/WebsiteComps/Icons";
+import EffectStage from "./EffectStage";
 
 function formatEffectDate(value) {
   if (!value) return null;
@@ -497,80 +498,15 @@ export function EffectDetailContent({
                         </div>
                       )}
 
-                      <div className="ml-auto shrink-0 max-md:hidden">
-                        <ButtonV3
-                          text="Live Preview"
-                          href={previewHref}
-                          target_blank={true}
-                          target="_blank"
-                          variant="orange"
-                          className="shrink-0"
-                        />
-                      </div>
                     </div>
                   </div>
                 </div>
 
                 <div className="fadeup max-md:px-[7vw] max-[1025px]:px-[6vw] h-auto  w-full">
-                  <div className="relative h-auto w-full aspect-16/8.5 overflow-hidden  bg-black isolate">
-                    <Image
-                      src={coverImage}
-                      alt={safeEffect.title || slug}
-                      fill
-                      sizes="(max-width: 1024px) 100vw, 980px"
-                      priority
-                      className={`rounded-[inherit] object-cover transition-all duration-500 ${showVideo ? "opacity-0" : "opacity-100"
-                        }`}
-                    />
-
-                    {videoPreviewUrl && !videoError && (
-                      <video
-                        key={videoPreviewUrl}
-                        ref={videoRef}
-                        src={videoPreviewUrl}
-                        autoPlay
-                        loop
-                        muted
-                        playsInline
-                        preload="auto"
-                        onLoadedMetadata={handleVideoReady}
-                        onLoadedData={handleVideoReady}
-                        onCanPlay={handleVideoReady}
-                        onPlaying={handleVideoReady}
-                        onError={() => setVideoError(true)}
-                        className={`absolute inset-0 h-full w-full rounded-[inherit] object-cover transition-opacity duration-500 ${showVideo ? "opacity-100" : "opacity-0"
-                          }`}
-                      />
-                    )}
-
-
-                    {!showVideo && (
-                      <>
-                        <div aria-hidden="true" className="absolute  inset-0 rounded-[inherit] bg-black/40" />
-                        <div className="absolute bottom-4 right-4 z-10">
-                          <div
-                            aria-label="Loading preview"
-                            role="status"
-                            className="h-8 w-8  animate-spin rounded-full  border-2 border-white/25 border-t-white"
-                          />
-                        </div>
-                      </>
-                    )}
-                  </div>
-
-
+                  {/* Live stage + Playground (remixer), in place of the preview video */}
+                  <EffectStage effect={effect} title={pageTitle} previewHref={previewHref} />
                 </div>
 
-                <div className="max-md:flex max-md:px-[7vw] max-[1025px]:px-[6vw] w-full max-md:pt-4 shrink-0 hidden">
-                  <ButtonV3
-                    text="Live Preview"
-                    href={previewHref}
-                    target_blank={true}
-                    target="_blank"
-                    variant="orange"
-                    className="shrink-0"
-                  />
-                </div>
 
                 <div className="relative max-md:px-[7vw] max-[1025px]:px-[6vw] pt-0">
                   <div className="fixed right-4 top-1/2 z-30 block -translate-y-1/2 max-[1025px]:hidden">
