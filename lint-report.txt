@@ -1,8 +1,0 @@
-
-> lint
-> npm --prefix apps/docs run lint
-
-
-> @hyperiux/docs@0.1.0 lint
-> eslint
-
