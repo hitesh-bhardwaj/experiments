@@ -1,6 +1,0 @@
-{
-  "/(marketing)/page": "app/(marketing)/page.js",
-  "/(marketing)/demo/gsap-flip-card/page": "app/(marketing)/demo/gsap-flip-card/page.js",
-  "/(app)/(workspace)/effects/page": "app/(app)/(workspace)/effects/page.js",
-  "/(app)/(workspace)/effects/[slug]/[effectSlug]/page": "app/(app)/(workspace)/effects/[slug]/[effectSlug]/page.js"
-}
