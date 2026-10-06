@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useLenis } from "lenis/react";
 import { RouteFade } from "@/components/layout/RouteFade";
 import { useVaultLayout } from "@/components/layout/VaultLayout";
 import { useFadeUp } from "@/components/Animations/gsapAnimations";
@@ -111,6 +112,29 @@ export default function DocsBody({ children }) {
   const router = useRouter();
   const { startNavigation } = useVaultLayout();
   const meta = useDocMeta(contentRef, pathname);
+  const lenis = useLenis();
+
+  // In-page links (href="#id") glide to their target like the TOC, instead of jumping
+  const onContentClick = useCallback(
+    (event) => {
+      if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      const link = event.target.closest?.('a[href^="#"]');
+      const id = link ? decodeURIComponent(link.getAttribute("href").slice(1)) : "";
+      const el = id && document.getElementById(id);
+      if (!el) return;
+
+      event.preventDefault();
+      const targetTop = el.getBoundingClientRect().top + window.scrollY - window.innerHeight * 0.2;
+      window.history.pushState(null, "", `#${id}`);
+
+      if (lenis) {
+        lenis.scrollTo(targetTop, { duration: 1.15, easing: (t) => 1 - Math.pow(1 - t, 3), force: true });
+      } else {
+        window.scrollTo({ top: targetTop, behavior: "smooth" });
+      }
+    },
+    [lenis]
+  );
 
   const navigateWithDocsFade = useCallback(
     (href) => {
@@ -190,7 +214,7 @@ export default function DocsBody({ children }) {
               docs footer and the TOC column. Code blocks stay dark. */}
           {/* Full width: the negative margins cancel the docs layout's side padding (px-14 / 6vw / 7vw) */}
           <div data-sound-flow="off" className="docs-sheet grid gap-10 grid-cols-[minmax(0,1fr)_320px] max-[1025px]:grid-cols-1 -mx-14 max-[1025px]:-mx-[6vw] max-md:mx-[-7vw] px-[clamp(20px,3.4vw,56px)] py-[4vw]">
-            <div ref={contentRef} className="min-w-0">
+            <div ref={contentRef} className="min-w-0" onClick={onContentClick}>
               <div className="blog-content">
                 {children}
               </div>

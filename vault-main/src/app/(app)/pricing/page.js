@@ -41,7 +41,7 @@ export default async function PricingPage() {
           <PricingHero isIndia={isIndia} />
           {/* The homepage plans section, reused as is; #plans is the hero's "See the plans" target */}
           <div id="plans" className="home-type">
-            <PricingPlansHome fixedGutter />
+            <PricingPlansHome  />
             <PricingFinder />
             <PricingCredits />
             <PricingProCompare />
@@ -51,11 +51,11 @@ export default async function PricingPage() {
             <PricingUseCase useCases={USE_CASES} />
           </div>
           <div className="max-md:mt-[-30vw]!  ">
-            <FAQV3 faqItems={faqItems} translateTop={false} fixedGutter />
+            <FAQV3 faqItems={faqItems} translateTop={false} />
           </div>
           {/* <CTA2 /> */}
         </main>
-        <FooterV3 fixedGutter />
+        <FooterV3/>
       </VaultShell>
     </>
   );

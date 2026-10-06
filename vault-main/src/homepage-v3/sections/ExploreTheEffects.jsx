@@ -142,7 +142,7 @@ export default function ExploreTheEffects() {
         <section
             ref={container}
             id="explore-the-effects"
-            className="relative mx-auto w-full max-w-[1536px] overflow-x-clip px-[3.5vw] pb-[12vw] pt-[20vw] text-center max-md:px-[6vw] max-sm:px-[7vw] space-y-[2vw] max-md:space-y-8 max-md:pt-32 max-md:pb-20"
+            className="relative mx-auto w-full max-w-[1536px] overflow-x-clip px-[4.5vw] pb-[12vw] pt-[20vw] text-center max-md:px-[6vw] max-sm:px-[7vw] space-y-[2vw] max-md:space-y-8 max-md:pt-32 max-md:pb-20"
         >
             <LineReveal as="h2" className="mx-auto w-[60vw] font-aeonik text-[5vw] max-md:w-full max-md:text-[9vw]">
                 Explore the Moments Your Website is <span className="gradient-text-animate">Missing.</span>
@@ -202,7 +202,7 @@ export default function ExploreTheEffects() {
                 role="tabpanel"
                 aria-live="polite"
                 data-fadeup-delay="0.2"
-                className="fadeup mx-auto mt-4 grid max-w-[1280px] grid-cols-2 gap-4 text-left max-md:grid-cols-1"
+                className="fadeup mx-auto mt-4 grid grid-cols-2 gap-4 text-left max-md:grid-cols-1"
             >
                 {CATEGORIES[shown].effects.map((item) => (
                     <article

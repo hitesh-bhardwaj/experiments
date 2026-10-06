@@ -162,7 +162,7 @@ export default function ProblemFixes() {
   return (
     <section
       ref={sectionRef}
-      className="relative z-200  max-md:mt-[-8vw] w-full overflow-hidden px-[3vw] pb-[10%] text-white max-md:px-[6vw] max-md:py-24  max-sm:py-20"
+      className="relative z-200  max-md:mt-[-8vw] w-full overflow-hidden px-[4.5vw] pb-[10%] text-white max-md:px-[6vw] max-md:py-24  max-sm:py-20"
     >
       <div className="mx-auto relative z-200 flex w-full max-w-[1536px] flex-col items-center">
         <div className=" text-center w-[70%] max-md:w-full">
@@ -177,7 +177,7 @@ export default function ProblemFixes() {
 
         <div
           ref={cardsRef}
-          className="mt-[8vw] h-fit w-[85vw] space-y-[1vw] max-md:mt-20 max-md:w-full max-md:space-y-5 max-sm:mt-20 max-sm:space-y-5"
+          className="mt-[8vw] h-fit w-full space-y-[1vw] max-md:mt-20 max-md:w-full max-md:space-y-5 max-sm:mt-20 max-sm:space-y-5"
         >
           <div className="text24 flex w-full items-center justify-between px-[.5vw] max-sm:text-sm">
             <p>The Risks</p>

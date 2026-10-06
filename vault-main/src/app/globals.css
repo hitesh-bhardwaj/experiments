@@ -1043,6 +1043,7 @@ html[data-pc-rm] body *:not([data-demo-header], [data-demo-header] *) {
 .docs-sheet .hover\:border-white\/40:not(.codeblock-root *):hover { border-color: rgba(29, 29, 29, 0.4); }
 .docs-sheet .bg-white\/\[\.03\]:not(.codeblock-root *) { background-color: rgba(29, 29, 29, 0.03); }
 .docs-sheet .group:hover .group-hover\:text-primary { color: var(--primary); }
+.docs-sheet .hover\:border-primary\/60:not(.codeblock-root *):hover { border-color: var(--primary); }
 
 
 html[data-v4-drawer-open] {

@@ -149,11 +149,11 @@ export default function PricingProCompare() {
               {[["pro", "Pro"], ["plus", "Pro+"]].map(([id, name]) => (
                 <div key={id} role="columnheader" className={`${CELL} flex-col items-start justify-center gap-[0.6vw] py-[2.2vw] max-md:gap-[2vw] max-md:py-[6vw] ${id === "plus" ? "bg-primary/5" : ""}`}>
                   <p className="text-[1.6vw] max-md:text-[5.6vw]">{id === "plus" ? <>Pro<span className="text-primary">+</span></> : name}</p>
-                  <p className={`flex items-center text-background/60 ${LABEL}`}>
+                  <div className={`flex items-center text-background/60 ${LABEL}`}>
                     <span className="flex h-[1.2vw] items-center leading-none max-md:h-[4vw]">$<RollNumber value={PRICES[id][period]} values={[PRICES[id].q, PRICES[id].y]} /></span>
                     <span>/mo ·&nbsp;</span>
                     <RollText fixed text={periodInfo.billed} dir={dir} className="h-[1.2vw] w-[10vw] leading-[1.2vw] max-md:h-[4vw] max-md:w-[34vw] max-md:leading-[4vw]" />
-                  </p>
+                  </div>
                 </div>
               ))}
             </div>

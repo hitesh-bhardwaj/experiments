@@ -1,17 +1,34 @@
 "use client";
 
-import { useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import LineReveal from "@/components/Animations/LineReveal";
 import { useFadeUp } from "@/components/Animations/gsapAnimations";
 import ButtonV3 from "../components/ButtonV3";
-import CornerMarks from "../components/CornerMarks";
 import { RollingPrice } from "../components/PriceDigit";
 import { useInteraction } from "../components/InteractionProvider";
 import { prefersReducedMotion } from "@/lib/motion";
+import { createFluidField } from "../lib/fluid-field";
 
 gsap.registerPlugin(useGSAP);
+
+const CARD_FLUID = { cell: 18, iterations: 8, scrollDrift: false, dyeDecay: 0.985, pointerForce: 0.2, pointerInk: 0.006 };
+
+function CardFluid() {
+    const dotsRef = useRef(null);
+    const inkRef = useRef(null);
+    useEffect(() => {
+        const fluid = createFluidField({ ink: inkRef.current, dots: dotsRef.current, ...CARD_FLUID }).start();
+        return () => fluid.destroy();
+    }, []);
+    return (
+        <div className="pointer-events-none absolute inset-0 -z-1" aria-hidden="true">
+            <canvas ref={dotsRef} className="absolute inset-0 block size-full" />
+            <canvas ref={inkRef} className="absolute inset-0 block size-full opacity-60 mix-blend-screen blur-[14px] saturate-[1.2]" />
+        </div>
+    );
+}
 
 // Content from the "Exploded tiers" pricing concept, word for word.
 // NOTE: display only - Pro+, quarterly billing and template credits don't
@@ -80,8 +97,8 @@ function Tick({ tone = "primary" }) {
     );
 }
 
-// `fixedGutter`: a `px-[4.5vw]` side gutter and no max width, so the section lines up with the rest of the page
-export default function PricingPlansHome({ fixedGutter = false }) {
+
+export default function PricingPlansHome() {
     const rootRef = useRef(null);
     const billRef = useRef(null);
     const pillRef = useRef(null);
@@ -117,8 +134,8 @@ export default function PricingPlansHome({ fixedGutter = false }) {
 
     return (
         <section ref={rootRef} id="pricing" data-sound-flow="off" className="relative bg-white font-avenir text-[#1D1D1D]">
-            <div className={`${fixedGutter ? "px-[4.5vw]" : "mx-auto max-w-[1536px] px-[5vw]"} flex flex-wrap items-end justify-between gap-8 max-md:px-5 max-md:gap-6 pt-[clamp(6rem,15vh,9rem)] pb-[clamp(2.5rem,6vh,4rem)]`}>
-                <LineReveal as="h2" className="text-[clamp(2.2rem,4.6vw,4.6rem)] leading-[1.02] font-normal tracking-[-.035em]">
+            <div className="mx-auto flex max-w-[1536px] flex-wrap items-end justify-between gap-8 px-[4.5vw] max-md:px-5 max-md:gap-6 pt-[clamp(6rem,15vh,9rem)] pb-[clamp(2.5rem,6vh,4rem)]">
+                <LineReveal as="h2" className="max-w-[60vw] max-md:max-w-full text-[clamp(2.2rem,4.6vw,4.6rem)] leading-[1.02] font-normal tracking-[-.035em]">
                     Two Plans.<br/> <span className="gradient-text-animate gradient-text-single">Every Moment Covered.</span>
                 </LineReveal>
 
@@ -151,16 +168,17 @@ export default function PricingPlansHome({ fixedGutter = false }) {
                 </div>
             </div>
 
-            <div className={`${fixedGutter ? "px-[4.5vw]" : "mx-auto max-w-[1536px] px-[8vw]"} grid grid-cols-2 gap-3.5 max-md:grid-cols-1 max-md:px-5 max-md:pt-6 pt-[3vw]`}>
+            <div className={`mx-auto max-w-[1536px] px-[8vw] grid grid-cols-2 gap-3.5 max-md:grid-cols-1 max-md:px-5 max-md:pt-6 pt-[3vw]`}>
                 {PLANS.map((plan, planIndex) => {
                     const dark = plan.id === "plus";
                     return (
                         <article
                             key={plan.id}
                             data-fadeup-delay={planIndex * 0.12}
-                            className={`fadeup relative flex flex-col gap-[18px] p-[clamp(1.8rem,3vw,2.8rem)] ${dark ? "bg-[#1D1D1D] text-[#F4F4F4]" : "border border-[#999999]/30 bg-white text-[#1D1D1D]"}`}
+                            className={`fadeup relative flex flex-col gap-[18px] p-[clamp(1.8rem,3vw,2.8rem)] ${dark ? "isolate overflow-hidden bg-black/90 text-[#F4F4F4]" : "border border-[#999999]/30 bg-white text-[#1D1D1D]"}`}
                         >
                             {/* <CornerMarks /> */}
+                            {dark && <CardFluid />}
                             {plan.badge && (
                                 <span className="text-shimmer absolute top-[22px] right-[22px] z-1 text-[11px] font-medium tracking-[.14em] uppercase max-sm:static max-sm:self-start">
                                     {plan.badge}
@@ -211,7 +229,7 @@ export default function PricingPlansHome({ fixedGutter = false }) {
                 })}
             </div>
 
-            <ul className={`${fixedGutter ? "px-[4.5vw]" : "mx-auto max-w-[1536px] px-[clamp(1.25rem,3vw,3rem)]"} mt-7 flex flex-wrap justify-center gap-x-7 gap-y-2.5 max-md:px-5 text-[11px] font-medium tracking-[.14em] text-[#6B6B6B] uppercase`}>
+            <ul className="mx-auto mt-7 flex max-w-[1536px] flex-wrap justify-center gap-x-7 gap-y-2.5 px-[4.5vw] text-[11px] font-medium tracking-[.14em] text-[#6B6B6B] uppercase">
                 {ASSURANCES.map((a) => (
                     <li key={a} className="flex items-center gap-2"><Tick />{a}</li>
                 ))}

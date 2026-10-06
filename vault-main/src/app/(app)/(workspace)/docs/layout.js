@@ -14,7 +14,7 @@ export default function Layout({ children }) {
         <VaultHeader showSearch totalEffects={totalEffects} effects={registry?.items || []} />
       </React.Suspense>
       {/* Same smooth scroll as the homepage */}
-      <LenisSmoothScroll lerp={0.065} wheelMultiplier={0.85} />
+      <LenisSmoothScroll lerp={0.065} wheelMultiplier={0.85} allowNestedScroll />
       <DocsBody>{children}</DocsBody>
     </div>
   );

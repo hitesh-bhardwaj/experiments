@@ -1,7 +1,6 @@
 "use client";
 
 import { createContext, useContext, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
-import Lenis from "lenis";
 import gsap from "gsap";
 import {
     PACKAGE_MANAGERS,
@@ -164,17 +163,10 @@ export function CodeBlock({
     showLanguageToggle = true,
     showCopyButton = true,
 }) {
-    // Smooth scrolling inside the code (its own Lenis; the page's Lenis is kept
-    // out by data-lenis-prevent). Skipped for reduced motion.
+    // The code scrolls natively; the page's Lenis (allowNestedScroll) hands the
+    // wheel back to the page once the block reaches its edge.
     const scrollRef = useRef(null);
     const contentRef = useRef(null);
-    useEffect(() => {
-        const wrapper = scrollRef.current;
-        const content = contentRef.current;
-        if (!wrapper || !content || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return undefined;
-        const lenis = new Lenis({ wrapper, content, lerp: 0.1, smoothWheel: true, autoRaf: true });
-        return () => lenis.destroy();
-    }, []);
 
     // JS / TS: shared by every block under a CodeBlockLanguageProvider
     const isJsVariant = ["jsx", "js", "tsx", "ts"].includes(language);
@@ -274,9 +266,8 @@ export function CodeBlock({
                     )}
                 </span>
             </div>
-            {/* codeblock: the site's thin code scrollbar (globals.css). Own Lenis for smooth
-                scrolling; data-lenis-prevent keeps the page's Lenis out. */}
-            <div ref={scrollRef} data-lenis-prevent className="codeblock max-h-[420px] overflow-auto">
+            {/* codeblock: the site's thin code scrollbar (globals.css). */}
+            <div ref={scrollRef} className="codeblock max-h-[420px] overflow-auto">
                 <div ref={contentRef}>
                 <pre
                     onCopy={onNativeCopy}
