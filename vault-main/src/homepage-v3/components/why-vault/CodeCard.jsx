@@ -4,14 +4,8 @@ import { useEffect, useRef } from "react";
 import { createFluidField } from "../../lib/fluid-field";
 import InstallationProcess from "../InstallationProcess";
 
-// Fluid kept inside the card: coarser cells (it's small and mostly blurred),
-// no scroll drag (the card scrolls with the page). Only the pointer adds ink,
-// so all it shows is the cursor's trail.
 const CARD_FLUID = { cell: 18, iterations: 8, scrollDrift: false, dyeDecay: 0.985, pointerForce: 0.2, pointerInk: 0.006 };
 
-// 02 "Code you own": the install walkthrough's windows, translucent and
-// blurred like Theremin's, over an orange fluid that lives only in this card.
-// Pointer movement over the card stirs it too. `play` starts the typing.
 export default function CodeCard({ play }) {
     const cardRef = useRef(null);
     const inkRef = useRef(null);

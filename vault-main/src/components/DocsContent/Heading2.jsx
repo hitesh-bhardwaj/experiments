@@ -9,7 +9,7 @@ export default function Heading2({ children, text, className, id, ...props }) {
   return (
     <h2
       className={[
-        "group/heading scroll-mt-24 relative font-aeonik text-2xl md:text-3xl font-semibold tracking-tighter text-foreground mt-10 pt-6 first:mt-0 first:pt-0",
+        "group/heading scroll-mt-24 relative mt-10 pt-6 first:mt-0 first:pt-0",
         className,
       ]
         .filter(Boolean)

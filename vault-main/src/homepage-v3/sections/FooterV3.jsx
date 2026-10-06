@@ -343,7 +343,7 @@ export default function FooterV3() {
                 className="flex flex-col gap-[0.6vw] max-md:gap-3"
               >
                 {/* One line, one rule underneath: email on the left, Subscribe on the right */}
-                <div className="flex items-center gap-[2vw] border-b border-foreground/30 transition-colors duration-300 focus-within:border-white/70 max-md:gap-4">
+                <div className="flex items-center gap-[2vw] border-b border-foreground/30 transition-colors duration-300 focus-within:border-white/70 max-md:gap-4 w-[90%]">
                   <Input
                     type="email"
                     value={email}
@@ -363,7 +363,7 @@ export default function FooterV3() {
                   <button
                     type="submit"
                     disabled={status === "loading"}
-                    className="shrink-0 cursor-pointer py-[0.9vw] text18 font-medium tracking-[.18em] text-[#d8d8d8] uppercase transition-colors duration-300 hover:text-primary disabled:pointer-events-none disabled:opacity-50 max-md:py-3"
+                    className="shrink-0 cursor-pointer py-[0.9vw] text-[0.9vw] font-medium text-[#d8d8d8] uppercase transition-colors duration-300 hover:text-primary disabled:pointer-events-none disabled:opacity-50 max-md:py-3"
                   >
                     {status === "loading" ? "Subscribing…" : "Subscribe"}
                   </button>

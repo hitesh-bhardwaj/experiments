@@ -1,12 +1,9 @@
-import styles from "@/app/(marketing)/blog/[slug]/blog-content.module.css";
-
-
 export default function BlogTags({ tags = [] }) {
   if (!tags.length) return null;
 
   return (
     <div>
-      {/* <hr className={styles.contentDivider} /> */}
+      {/* <hr className="blog-divider" /> */}
 
       <div className="flex flex-wrap items-center gap-3 mt-10">
         <span className="text-[0.9vw] max-[1025px]:text-[2.2vw] max-md:text-lg text-light-grey">tags:</span>

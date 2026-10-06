@@ -7,7 +7,6 @@ import {
   FAQTitle,
   FAQWrapper,
 } from "@/components/animated-faq";
-import styles from "@/app/(marketing)/blog/[slug]/blog-content.module.css";
 
 // Renders a blogPost's Sanity `body` (the same effectBody portable-text
 // schema effectContent uses - block/effectImage/effectCodeBlock/
@@ -16,8 +15,8 @@ import styles from "@/app/(marketing)/blog/[slug]/blog-content.module.css";
 // SanityBodyBlock: those are wired into useCopyLimit()'s Pro-effect
 // copy-paywall, which has no meaning for a blog post - pulling them in would
 // mean importing paywall logic into public content. Same schema, plain
-// rendering, styled by blog-content.module.css's bare-tag selectors under
-// .content (h2/h3/p/ul/blockquote/table/etc.) so blocks need no per-element
+// rendering, styled by styles/blog.css's bare-tag selectors under
+// .blog-content (h2/h3/p/ul/blockquote/table/etc.) so blocks need no per-element
 // classes beyond the few custom ones below.
 
 function buildMarkedChildren(block) {
@@ -60,10 +59,10 @@ function buildMarkedChildren(block) {
 }
 
 function getBlogCodeLanguage(language) {
-  if (language === "jsx" || language === "js") return "javascript";
-  if (language === "tsx" || language === "ts") return "typescript";
+  if (language === "javascript") return "jsx";
+  if (language === "typescript") return "tsx";
 
-  return language || "javascript";
+  return language || "jsx";
 }
 
 // Consecutive list-item blocks of the same listItem/level collapse into one
@@ -135,18 +134,18 @@ function BlogBlock({ block, headingId }) {
 
     return (
       <figure className="fadeup">
-        <div className={styles.imageFrame}>
+        <div className="blog-image-frame">
           <Image
             src={block.url}
             alt={block.alt || ""}
             width={1600}
             height={900}
             sizes="(max-width: 768px) 100vw, 720px"
-            className={styles.image}
+            className="blog-image"
           />
         </div>
         {block.caption && (
-          <figcaption className={styles.caption}>{block.caption}</figcaption>
+          <figcaption>{block.caption}</figcaption>
         )}
       </figure>
     );
@@ -157,14 +156,12 @@ function BlogBlock({ block, headingId }) {
       <CodeBlock
         code={block.code || ""}
         language={getBlogCodeLanguage(block.language)}
-        hideHeaderWhenNoFilename
-        showCopyButton={false}
-        showLanguageToggle={false}
+        filename={block.filename}
       />
     );
   }
 
-  if (block._type === "horizontalRule") return <hr className={styles.contentDivider} />;
+  if (block._type === "horizontalRule") return <hr className="blog-divider" />;
 
   if (block._type === "effectTableBlock") {
     const headers = Array.isArray(block.headers) ? block.headers : [];
@@ -176,18 +173,9 @@ function BlogBlock({ block, headingId }) {
 
     if (!columnCount) return null;
 
-    const variantClassName =
-      block.colorVariant === "orange"
-        ? styles.tableOrange
-        : block.colorVariant === "muted"
-          ? styles.tableMuted
-          : block.colorVariant === "outline"
-            ? styles.tableOutline
-            : "";
-
     return (
-      <div className={`fadeup ${styles.tableWrap} ${variantClassName}`}>
-        <table className={styles.table}>
+      <div className="fadeup blog-table-wrap" data-variant={block.colorVariant || "vault"}>
+        <table>
           {headers.length > 0 && (
             <thead>
               <tr>
@@ -226,9 +214,9 @@ function BlogBlock({ block, headingId }) {
     if (!faqItems.length) return null;
 
     return (
-      <section className={`fadeup ${styles.faqAccordion}`}>
+      <section className="fadeup blog-faq-section">
         {block.title && (
-          <h2 className={styles.faqAccordionTitle}>{block.title}</h2>
+          <h2>{block.title}</h2>
         )}
 
         <FAQGroup
@@ -255,13 +243,13 @@ function BlogBlock({ block, headingId }) {
                     iconPosition="left"
                     iconMode="rotate-left-down"
                   >
-                    <h3 className="text-[1.55vw]! font-avenir leading-tight! my-0! max-[1025px]:text-[3.4vw]! max-md:text-[5.2vw]!">
+                    <h3 className="my-0! leading-tight!">
                       {item.question}
                     </h3>
                   </FAQTitle>
 
                   <FAQContent className="pt-[1.2vw] pl-[2.8vw] max-[1025px]:pt-[2.5vw] max-[1025px]:pl-[7vw] max-md:pt-[4vw] max-md:pl-[8vw]">
-                    <p className="text-[1.15vw]! font-avenir text-white! leading-[1.45]! max-[1025px]:text-[2.2vw]! max-md:text-[4vw]!">
+                    <p className="m-0! leading-[1.45]!">
                       {item.answer}
                     </p>
                   </FAQContent>

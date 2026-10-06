@@ -191,7 +191,7 @@ export default function DocsBody({ children }) {
           {/* Full width: the negative margins cancel the docs layout's side padding (px-14 / 6vw / 7vw) */}
           <div data-sound-flow="off" className="docs-sheet grid gap-10 grid-cols-[minmax(0,1fr)_320px] max-[1025px]:grid-cols-1 -mx-14 max-[1025px]:-mx-[6vw] max-md:mx-[-7vw] px-[clamp(20px,3.4vw,56px)] py-[4vw]">
             <div ref={contentRef} className="min-w-0">
-              <div className="[&_h1]:text-[4vw] [&_h1]:font-semibold [&_h1]:leading-[1.05] [&_h1]:text-foreground [&_h2]:text-[clamp(1.45rem,2vw,2rem)] [&_h2]:font-normal [&_h2]:leading-[1.12] [&_h2]:tracking-[-0.04em] [&_h2]:text-foreground [&_h3]:text-[clamp(1.05rem,1.45vw,1.35rem)] [&_h3]:font-normal [&_h3]:leading-[1.15] [&_h3]:tracking-[-0.03em] [&_h3]:text-foreground [&_p]:text-[clamp(0.95rem,1.05vw,1.05rem)] [&_p]:leading-[1.72] [&_p]:text-(--docs-body) [&_li]:text-[clamp(0.95rem,1.05vw,1.05rem)] [&_li]:leading-[1.65] [&_li]:text-(--docs-body) [&_strong]:text-foreground [&_.docs-heading2-line]:bg-(--docs-line) [&_li::marker]:text-primary max-md:[&_h1]:text-[4vw]">
+              <div className="blog-content">
                 {children}
               </div>
               <DocsPageFooter />

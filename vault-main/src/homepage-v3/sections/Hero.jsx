@@ -26,6 +26,8 @@ const INTRO_DURATION = 1.7;
 const AT_HEADING = 1;
 const AT_COPY = 2.3;
 const AT_ACTIONS = 2.75;
+// Scroll unlocks ~2s after the loader (timeline position + NAV_LEAD)
+const AT_UNLOCK = 1.75;
 
 const INTRO_HIDDEN = { visibility: "hidden" };
 function revealIntroTargets(...els) {
@@ -144,7 +146,12 @@ export default function Hero() {
                 )
                 .to(
                     copy.lines,
-                    { yPercent: 0, autoAlpha: 1, duration: 0.8, stagger: 0.07 },
+                    {
+                        yPercent: 0,
+                        autoAlpha: 1,
+                        duration: 0.8,
+                        stagger: 0.07,
+                    },
                     AT_COPY
                 )
                 .to(
@@ -153,10 +160,11 @@ export default function Hero() {
                         y: 0,
                         autoAlpha: 1,
                         duration: 0.7,
-                        onComplete: unlockScrollV3,
                     },
                     AT_ACTIONS
                 );
+
+            tl.call(unlockScrollV3, null, AT_UNLOCK);
 
             return () => {
                 heading.revert();

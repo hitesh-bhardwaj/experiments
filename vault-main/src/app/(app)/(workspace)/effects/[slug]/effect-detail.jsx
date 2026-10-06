@@ -29,7 +29,6 @@ import { resolveEffectVideoUrl, resolveMediaUrl } from "@/lib/media";
 import HeadAnim from "@/components/Animations/HeadAnim";
 import Copy from "@/components/Animations/Copy";
 import { useFadeUp, useLineAnim } from "@/components/Animations/gsapAnimations";
-import styles from "./effect-content.module.css";
 import { LockKeyhole } from "lucide-react";
 import { CustomAnimationFormTrigger } from "@/components/WebsiteComps/modals/CustomAnimationFormModal";
 import { CopyLimitProvider, useCopyLimit } from "./useCopyLimit";
@@ -709,7 +708,7 @@ const EffectDynamicContent = forwardRef(function EffectDynamicContent(
   return (
     <div
       ref={ref}
-      className={`space-y-8 w-[70%] max-[1025px]:w-full ${styles.content}`}
+      className="blog-content space-y-8 w-[70%] max-[1025px]:w-full"
     >
       <SanityBodyRenderer
         body={content.body}
@@ -784,49 +783,47 @@ function EffectChangelogSection({ changelog = [] }) {
   if (!changelog?.length) return null;
 
   return (
-    <section className={`fadeup ${styles.faqAccordion}`}>
-      <h2 className={styles.changelogTitle}>Changelog</h2>
+    <section className="fadeup blog-faq-section">
+      <h2>Changelog</h2>
 
       <FAQGroup
         allowMultiple={false}
         defaultOpenItems={changelog[0]?.version ? [changelog[0].version] : []}
       >
-        <div className={styles.changelogTimeline}>
+        <div className="blog-changelog-timeline">
           {changelog.map((entry, index) => {
             const itemId = entry.version || `changelog-${index}`;
 
             return (
-              <div key={itemId} className={styles.changelogTimelineItem}>
+              <div key={itemId} className="blog-changelog-item">
                 <div
-                  className={styles.changelogTimelineMarker}
+                  className="blog-changelog-marker"
                   aria-hidden="true"
                 >
-                  <span className={styles.changelogTimelineDot} />
+                  <span className="blog-changelog-dot" />
                 </div>
 
                 <FAQWrapper
                   itemId={itemId}
-                  className={`${styles.faqAccordionItem} ${styles.changelogTimelineCard}`}
-                  titleClassName={styles.faqAccordionQuestion}
-                  iconClassName={styles.faqAccordionIcon}
+                  className="blog-changelog-card"
                   iconSize={18}
                   iconStrokeWidth={1.8}
                 >
                   <FAQTitle
-                    className={styles.changelogTrigger}
+                    className="blog-changelog-trigger"
                     iconPosition="right"
                   >
-                    <div className={styles.changelogRow}>
-                      <h3 className={styles.changelogVersion}>
+                    <div className="blog-changelog-row">
+                      <h3 className="blog-changelog-version">
                         v{entry.version}
                       </h3>
                       {entry.date && (
-                        <span className={styles.changelogDate}>
+                        <span className="blog-changelog-date">
                           {formatChangelogDate(entry.date)}
                         </span>
                       )}
                       {entry.breaking && (
-                        <span className={styles.changelogBreaking}>
+                        <span className="blog-changelog-breaking">
                           Breaking
                         </span>
                       )}
@@ -834,7 +831,7 @@ function EffectChangelogSection({ changelog = [] }) {
                   </FAQTitle>
 
                   {entry.summary && (
-                    <FAQContent className={styles.changelogSummary}>
+                    <FAQContent className="blog-changelog-summary">
                       {entry.summary}
                     </FAQContent>
                   )}
@@ -923,10 +920,10 @@ function EffectPropsTable({ props = [] }) {
 
   return (
     <div className="space-y-5! mt-4! fadeup">
-      <h3 className="text-xl tracking-tighter  text-foreground">Props</h3>
+      <h3>Props</h3>
 
-      <div className={`${styles.tableWrap} ${styles.propsTableWrap}`} data-variant="vault">
-        <table className={styles.table}>
+      <div className="blog-table-wrap blog-props-table" data-variant="vault">
+        <table>
           <thead>
             <tr>
               <th>Prop</th>
@@ -974,7 +971,7 @@ function SanityBodyBlock({ block, isLocked = false }) {
     const ListTag = block.listItem === "number" ? "ol" : "ul";
 
     const listClassName =
-      block.listItem === "number" ? `fadeup ${styles.numberList}` : "fadeup";
+      block.listItem === "number" ? "fadeup blog-number-list" : "fadeup";
 
     return (
       <ListTag className={listClassName}>
@@ -992,19 +989,19 @@ function SanityBodyBlock({ block, isLocked = false }) {
 
     return (
       <figure className="fadeup">
-        <div className={styles.imageFrame}>
+        <div className="blog-image-frame">
           <Image
             src={block.url}
             alt={block.alt || ""}
             width={1600}
             height={900}
             sizes="(max-width: 768px) 100vw, 800px"
-            className={styles.image}
+            className="blog-image"
           />
         </div>
 
         {block.caption && (
-          <figcaption className={styles.caption}>{block.caption}</figcaption>
+          <figcaption>{block.caption}</figcaption>
         )}
       </figure>
     );
@@ -1027,8 +1024,6 @@ function SanityBodyBlock({ block, isLocked = false }) {
           tsxCode={block.tsxCode ? normalizeCodeString(block.tsxCode) : undefined}
           language={block.language || "jsx"}
           filename={block.filename}
-          hideHeaderWhenNoFilename
-          className={!block.filename ? styles.contentCodeBlockNoFilename : ""}
           copyLocked={copyLimitLocked}
           selectable={copySelectable}
           onBeforeCopy={requestCopy}
@@ -1039,7 +1034,7 @@ function SanityBodyBlock({ block, isLocked = false }) {
   }
 
   if (block._type === "horizontalRule") {
-    return <hr className={`fadeup ${styles.contentDivider}`} />;
+    return <hr className="fadeup blog-divider" />;
   }
 
   if (block._type === "effectFaqAccordion") {
@@ -1048,9 +1043,9 @@ function SanityBodyBlock({ block, isLocked = false }) {
     if (!faqItems.length) return null;
 
     return (
-      <section className={`fadeup ${styles.faqAccordion}`}>
+      <section className="fadeup blog-faq-section">
         {block.title && (
-          <h2 className={styles.faqAccordionTitle}>{block.title}</h2>
+          <h2>{block.title}</h2>
         )}
 
         <FAQGroup
@@ -1077,13 +1072,13 @@ function SanityBodyBlock({ block, isLocked = false }) {
                     iconPosition="left"
                     iconMode="rotate-left-down"
                   >
-                    <h3 className="text-[1.55vw]! font-avenir leading-tight! my-0! max-[1025px]:text-[3.4vw]! max-md:text-[5.2vw]!">
+                    <h3 className="my-0! leading-tight!">
                       {item.question}
                     </h3>
                   </FAQTitle>
 
                   <FAQContent className="pt-[1.2vw] pl-[2.8vw] max-[1025px]:pt-[2.5vw] max-[1025px]:pl-[7vw] max-md:pt-[4vw] max-md:pl-[8vw]">
-                    <p className="text-[1.15vw]! font-avenir text-white! leading-[1.45]! max-[1025px]:text-[2.2vw]! max-md:text-[4vw]!">
+                    <p className="m-0! leading-[1.45]!">
                       {item.answer}
                     </p>
                   </FAQContent>
@@ -1112,16 +1107,16 @@ function SanityBodyBlock({ block, isLocked = false }) {
     return (
       <div className="space-y-3 fadeup">
         {block.caption && (
-          <h3 className="text-xl tracking-tighter text-foreground">
+          <h3>
             {block.caption}
           </h3>
         )}
 
         <div
-          className={styles.tableWrap}
+          className="blog-table-wrap"
           data-variant={block.colorVariant || "vault"}
         >
-          <table className={styles.table}>
+          <table>
             {headers.length ? (
               <thead>
                 <tr>
@@ -1154,18 +1149,18 @@ function SanityBodyBlock({ block, isLocked = false }) {
   if (block._type === "effectCalloutBlock") {
     const toneClass =
       block.tone === "info"
-        ? styles.calloutInfo
+        ? "blog-callout-info"
         : block.tone === "warning"
-          ? styles.calloutWarning
+          ? "blog-callout-warning"
           : block.tone === "success"
-            ? styles.calloutSuccess
+            ? "blog-callout-success"
             : "";
 
     const shouldRenderAsCardGrid = !block.tone || block.tone === "default";
 
     return (
-      <section className={`fadeup ${styles.callout} ${toneClass}`}>
-        {block.title && <h3 className={styles.calloutTitle}>{block.title}</h3>}
+      <section className={`fadeup ${toneClass ? `blog-callout-tone ${toneClass}` : "blog-callout-plain"}`}>
+        {block.title && <h3>{block.title}</h3>}
 
         {shouldRenderAsCardGrid ? (
           <CalloutCardGrid body={block.content || []} />
@@ -1187,9 +1182,9 @@ function CalloutCardGrid({ body = [] }) {
   }
 
   return (
-    <div className={styles.calloutGrid}>
+    <div className="blog-callout-grid">
       {items.map((item, index) => (
-        <div key={`${item}-${index}`} className={styles.calloutGridItem}>
+        <div key={`${item}-${index}`} className="blog-callout-grid-item">
           {item}
         </div>
       ))}
@@ -1436,7 +1431,7 @@ function buildMarkedChildren(block) {
 
       if (mark === "code") {
         node = (
-          <code key={`code-${index}`} className={styles.contentInlineCode}>
+          <code key={`code-${index}`}>
             {node}
           </code>
         );

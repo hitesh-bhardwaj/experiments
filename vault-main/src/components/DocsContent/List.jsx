@@ -9,7 +9,7 @@ function cx(...parts) {
 
 export function DocsListItem({ children, text, className, paraClassName, ...props }) {
   return (
-    <li className={cx("marker:text-muted", className)} {...props}>
+    <li className={className} {...props}>
       {children ?? <Para className={cx("m-0", paraClassName)}>{text}</Para>}
     </li>
   );
@@ -24,7 +24,7 @@ export default function DocsList({
   ...props
 }) {
   return (
-    <ul className={cx("list-disc pl-6 space-y-1.5 fadeup", className)} {...props}>
+    <ul className={cx("pl-6 space-y-1.5 fadeup", className)} {...props}>
       {items
         ? items.map((item, idx) => (
             <DocsListItem

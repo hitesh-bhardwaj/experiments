@@ -15,7 +15,6 @@ import CursorV3 from "@/homepage-v3/components/CursorV3";
 
 
 export default function Homepage({ faqItems, effects = [] }) {
-
   return (
     <div className="home-type">
       <LoaderV3 />

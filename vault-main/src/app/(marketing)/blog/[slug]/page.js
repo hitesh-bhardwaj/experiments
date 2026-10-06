@@ -17,7 +17,6 @@ import BlogBodyRenderer from "@/components/blog/BlogBodyRenderer";
 import BlogArticleBody from "@/components/blog/BlogArticleBody";
 import BlogTags from "@/components/blog/BlogTags";
 import RelatedBlogsSlider from "./RelatedBlogsSlider";
-import "@/styles/blog-new.css";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -90,7 +89,7 @@ export default async function BlogPostPage({ params }) {
       <LenisSmoothScroll allowNestedScroll />
 
       <div className="px-[4vw] py-[8vw] max-[1025px]:px-[5vw] max-[1025px]:py-[10vh] max-md:px-[7vw] max-md:py-[26vw]">
-        <article className="blog-article text-white">
+        <article className="text-white">
           <BlogDetailHero post={postWithAuthor} />
 
           <BlogArticleBody
