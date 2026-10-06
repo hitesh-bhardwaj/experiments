@@ -189,7 +189,7 @@ export function FilterMenu({
           light
             ? `relative flex h-9.5 cursor-pointer items-center justify-center gap-2 px-4 text-sm transition-colors duration-300 ${activeFilter
               ? "bg-[#ff5f00] text-black"
-              : "bg-white text-[#1D1D1D] shadow-[inset_0_0_0_1px_rgba(29,29,29,.1)] hover:bg-[#ff5f00] hover:text-black"
+              : "bg-white text-[#1D1D1D] shadow-[inset_0_0_0_1px_rgba(29,29,29,.1)] transition-shadow hover:shadow-[inset_0_0_0_1px_#ff5f00]"
             }`
             : `
           px-6 py-3  relative max-md:px-7 max-md:py-3

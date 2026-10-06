@@ -268,6 +268,40 @@ export function VaultHeader({
     };
   }, []);
 
+  // Opt-in scroll-away: a page can mark an element with data-vault-header-scroll-away
+  // (the effects listing marks its sticky controls bar). Once that element's top
+  // reaches 10% of the viewport, the desktop header slides up in step with the
+  // scroll until it's fully out of view, and stays out while the element is stuck;
+  // scrolling back above that point brings it back the same way. Uses the pixel `y`
+  // so it adds to (and never fights) the footer hide above, which tweens yPercent.
+  useEffect(() => {
+    const marker = document.querySelector("[data-vault-header-scroll-away]");
+    const header = desktopHeaderRef.current;
+    if (!marker || !header) return;
+
+    const tween = gsap.fromTo(
+      header,
+      { y: 0 },
+      {
+        y: () => -header.offsetHeight,
+        ease: "none",
+        scrollTrigger: {
+          trigger: marker,
+          start: "top 10%",
+          end: () => `+=${header.offsetHeight}`,
+          scrub: true,
+          invalidateOnRefresh: true,
+        },
+      },
+    );
+
+    return () => {
+      tween.scrollTrigger?.kill();
+      tween.kill();
+      gsap.set(header, { y: 0 });
+    };
+  }, [pathname]);
+
   const close = useCallback(() => {
     setOpen(false);
     setSection(null);

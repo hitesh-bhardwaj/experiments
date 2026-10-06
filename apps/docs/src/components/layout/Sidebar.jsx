@@ -549,7 +549,7 @@ export function Sidebar({
 
   return (
     <aside
-      className={`sticky bottom-0 left-0 top-0 z-51 h-screen bg-black/20 backdrop-blur-lg text-white max-[1025px]:hidden ${
+      className={`sticky bottom-0 left-0 top-0 z-51 h-screen bg-[#111111] text-white max-[1025px]:hidden ${
         disableInitialTransition
           ? "transition-none"
           : "transition-[width] duration-300 ease-out"
@@ -559,8 +559,8 @@ export function Sidebar({
         type="button"
         aria-label={isExpanded ? "Collapse sidebar" : "Expand sidebar"}
         onClick={toggle}
-        className={`absolute top-6  z-50 bg-[#1C1C1C] hidden size-10 cursor-pointer items-center justify-center  text-white transition-[left,background-color,transform] duration-300 ease-out hover:bg-white/15 sm:flex ${
-          isExpanded ? "left-[20.8vw]" : "left-[6.2vw]"
+        className={`absolute top-6  z-50 bg-[#1C1C1C] hidden size-10 cursor-pointer items-center justify-center  text-white transition-all duration-300 ease-out hover:bg-stone-700 hover:text-white sm:flex ${
+          isExpanded ? "left-[20.4vw]" : "left-[6vw]"
         }`}
       >
         <div className={isExpanded ? "" : "-scale-x-100"}>
@@ -671,7 +671,7 @@ export function Sidebar({
                       } ${
                         isActive
                           ? "text-white"
-                          : "text-white/42 hover:text-white/75"
+                          : "text-white/60 hover:text-white/90"
                       }`}
                     >
                       {isActive && (
@@ -751,7 +751,7 @@ export function Sidebar({
                       } ${
                         isActive
                           ? "text-white"
-                          : "text-white/42 hover:text-white/75"
+                          : "text-white/60 hover:text-white/90"
                       }`}
                     >
                       {isActive && (
@@ -808,7 +808,7 @@ export function Sidebar({
                       } ${
                         isActive
                           ? "text-white"
-                          : "text-white/42 hover:text-white/75"
+                          : "text-white/60 hover:text-white/90"
                       }`}
                     >
                       {isActive && (

@@ -7,14 +7,13 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { useLenis } from "lenis/react";
-import WebsiteButton from "@/components/WebsiteComps/Button";
-import Input from "@/components/animated-form/Input";
 import PhoneInput from "@/components/animated-form/PhoneInput";
-import Textarea from "@/components/animated-form/Textarea";
+import { GlobalError, StepHeading, SubmitButton } from "@/components/auth/AuthFormPrimitives";
 import CustomVerifyCheckbox from "@/components/WebsiteComps/Recaptcha/CustomVerifyCheckbox";
 import { validateForm } from "@/lib/form-validation";
 
@@ -85,14 +84,40 @@ export function CustomAnimationFormProvider({ children }) {
   );
 }
 
-function FieldLabel({ htmlFor, children }) {
+// Fields match the sign-in page (components/auth/AuthFormPrimitives TextField):
+// Geist Mono label, a quiet white/5 box, and four orange corner brackets that
+// appear while the field has focus.
+const FIELD_CLASS =
+  "w-full border border-white/10 bg-white/5 px-4 py-3 text-base! text-white placeholder:text-white/30 outline-none transition";
+
+function FocusCorners() {
+  const corner = "pointer-events-none absolute h-1.5 w-1.5 border-primary opacity-0 transition-opacity duration-300 group-focus-within:opacity-100 max-sm:hidden max-md:h-3 max-md:w-3";
   return (
-    <label
-      htmlFor={htmlFor}
-      className="mb-2 block text-[clamp(14px,0.9vw,18px)] font-medium text-white/90"
-    >
-      {children}
-    </label>
+    <>
+      <span aria-hidden="true" className={`${corner} top-0 left-0 border-t border-l`} />
+      <span aria-hidden="true" className={`${corner} top-0 right-0 border-t border-r`} />
+      <span aria-hidden="true" className={`${corner} bottom-0 left-0 border-b border-l`} />
+      <span aria-hidden="true" className={`${corner} bottom-0 right-0 border-b border-r`} />
+    </>
+  );
+}
+
+function Field({ id, label, error, children }) {
+  return (
+    <div className="mb-5 space-y-2 max-md:mb-4">
+      <label htmlFor={id} className="block font-geist-mono text-sm font-medium tracking-wide text-white/80">
+        {label}
+      </label>
+      <div className="group relative h-fit w-full">
+        {children}
+        <FocusCorners />
+      </div>
+      {error && (
+        <p id={`${id}-error`} className="text-sm text-red-400">
+          {error}
+        </p>
+      )}
+    </div>
   );
 }
 
@@ -147,6 +172,7 @@ function CustomAnimationFormModalInner() {
 
   const lenis = useLenis();
 
+  const formRef = useRef(null);
   const [values, setValues] = useState(INITIAL_FORM);
   const [errors, setErrors] = useState({});
   const [serverError, setServerError] = useState("");
@@ -325,179 +351,123 @@ function CustomAnimationFormModalInner() {
           />
 
           <motion.div
-            className="relative z-10 w-[80vw] max-[1025px]:w-[95%]"
+            className="relative z-10 w-full max-w-160"
             initial={{ opacity: 0, scale: 0.97, y: 10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.97, y: 10 }}
             transition={MODAL_TRANSITION}
           >
-            {/* Mobile/tablet close button - floats above the box */}
-            <button
-              type="button"
-              aria-label="Close"
-              onClick={closeCustomAnimationForm}
-              className="group md:hidden absolute -top-12 right-0 flex h-9 w-9 items-center justify-center rounded-none border border-white/20 bg-white/10 text-white/70 transition-all duration-300 hover:border-[#ff5f00] hover:bg-[#ff5f00] hover:text-white max-md:right-[-5%]"
-            >
-              <div className="relative flex h-4 w-4 items-center justify-center transition-transform duration-500 ease-in-out group-hover:rotate-90">
-                <span className="h-px w-4 rotate-45 bg-white" />
-                <span className="absolute h-px w-4 -rotate-45 bg-white" />
-              </div>
-            </button>
-
+            {/* Card: the sign-in page's surface - site background, hairline border. */}
             <div
-              className="relative w-full overflow-x-hidden overflow-y-auto rounded-none border border-white/20 bg-black/4 p-[3.5vw] text-white shadow-[0_30px_120px_rgba(0,0,0,0.45)] backdrop-blur-xl h-[80vh] max-[1025px]:h-[75vh] max-[1025px]:p-[6vw] custom-animation-form-scroll"
+              className="custom-animation-form-scroll relative max-h-[88vh] w-full overflow-x-hidden overflow-y-auto border border-white/10 bg-[#111111] px-12 py-12 text-white shadow-[0_30px_80px_-30px_rgba(0,0,0,0.7)] max-[1025px]:px-8 max-[1025px]:py-10 max-md:px-5 max-md:py-8"
               onWheelCapture={(e) => e.stopPropagation()}
               onTouchStart={(e) => e.stopPropagation()}
               onTouchMove={(e) => e.stopPropagation()}
             >
-            {/* Desktop close button - inside the box */}
-            <button
-              type="button"
-              aria-label="Close"
-              onClick={closeCustomAnimationForm}
-              className="max-[1025px]:hidden group absolute right-5 top-5 flex h-10 w-10 items-center justify-center rounded-none border border-white/20 bg-white/10 text-xl leading-none text-white/70 transition-all duration-500 ease-in-out hover:border-[#ff5f00] hover:bg-[#ff5f00] hover:text-white"
-            >
-              <div className="relative flex h-4 w-4 items-center justify-center duration-500 ease-in-out group-hover:rotate-90">
-                <span className="h-[1px] w-4 rotate-45 bg-white" />
-                <span className="absolute h-[1px] w-4 -rotate-45 bg-white" />
-              </div>
-            </button>
-
-            <div className="relative z-10">
-              <h3
-                id="custom-animation-form-title"
-                className="text-[3vw] leading-none max-md:text-[8vw] max-[1025px]:text-[5vw]"
+              {/* Same close control as the site's other modals. */}
+              <button
+                type="button"
+                aria-label="Close"
+                onClick={closeCustomAnimationForm}
+                className="group absolute top-5 right-5 flex h-10 w-10 items-center justify-center border border-white/20 bg-white/10 text-white/70 transition-colors duration-500 ease-in-out hover:border-[#ff5f00] hover:bg-[#ff5f00] hover:text-white max-md:top-4 max-md:right-4 max-md:h-9 max-md:w-9"
               >
-                {isSuccess
-                  ? "Request sent."
-                  : "Request a Custom Animation"}
-              </h3>
+                <span className="relative flex h-4 w-4 items-center justify-center transition-transform duration-500 ease-in-out group-hover:rotate-90">
+                  <span className="h-px w-4 rotate-45 bg-white" />
+                  <span className="absolute h-px w-4 -rotate-45 bg-white" />
+                </span>
+              </button>
 
-              <p className="mt-[1vw] max-w-[70vw] text24 leading-relaxed text-white/80 max-[1025px]:mt-4 max-[1025px]:max-w-full max-md:text-[4vw]! max-[1025px]:text-[2.2vw]!">
-                {isSuccess
-                  ? "We received your request. Closing this window now."
-                  : "Tell us what interaction, loader, transition, cursor, or WebGL detail you want. We will review it and get back to you."}
-              </p>
+              <div id="custom-animation-form-title" className="pr-12">
+                <StepHeading
+                  title={isSuccess ? "Request sent." : "Request a custom animation."}
+                  subtitle={
+                    isSuccess
+                      ? "We received your request and will get back to you shortly."
+                      : "Tell us the interaction, loader, transition, cursor or WebGL detail you want. We'll review it and get back to you."
+                  }
+                />
+              </div>
 
               {isSuccess ? (
-                <div className="mt-[4vw] rounded-none border border-emerald-400/20 bg-emerald-400/10 p-[2vw] max-[1025px]:mt-8 max-[1025px]:p-6">
-                  <p className="text-[1.4vw] font-medium text-emerald-100 max-[1025px]:text-xl">
-                    Your custom animation request has been sent.
-                  </p>
-
-                  <p className="mt-2 text-[1vw] text-white/70 max-[1025px]:text-[4vw]">
-                    We will get back to you shortly. The tiny interaction goblin
-                    has been notified.
-                  </p>
-                </div>
+                <p className="font-geist-mono text-sm text-white/50">
+                  Closing this window now. The tiny interaction goblin has been notified.
+                </p>
               ) : (
-                <form
-                  onSubmit={handleSubmit}
-                  noValidate
-                  className="mt-[3vw] grid grid-cols-2 gap-x-[3vw] gap-y-[2vw] max-[1025px]:mt-8 max-[1025px]:grid-cols-1 max-[1025px]:gap-5"
-                >
-                  <div className="space-y-[1vw] max-[1025px]:space-y-5">
-                    <div>
-                      <FieldLabel htmlFor="custom-animation-name">
-                        Name*
-                      </FieldLabel>
-                      <Input
-                        id="custom-animation-name"
-                        name="name"
-                        label={false}
-                        className="rounded-none! border-white/20 bg-white/10 text-white placeholder:text-white/35 focus:border-[#ff5f00]!"
-                        style={AUTOFILL_STYLE}
-                        value={values.name}
-                        onChange={updateField("name")}
-                        autoComplete="name"
-                        error={errors.name}
-                        placeholder="Your name"
-                      />
-                    </div>
+                <form ref={formRef} onSubmit={handleSubmit} noValidate>
+                  <GlobalError message={serverError} />
 
-                    <div>
-                      <FieldLabel htmlFor="custom-animation-email">
-                        Email*
-                      </FieldLabel>
-                      <Input
-                        id="custom-animation-email"
-                        name="email"
-                        type="email"
-                        label={false}
-                        className="rounded-none! border-white/20 bg-white/10 text-white placeholder:text-white/35 focus:border-[#ff5f00]!"
-                        style={AUTOFILL_STYLE}
-                        value={values.email}
-                        onChange={updateField("email")}
-                        autoComplete="email"
-                        error={errors.email}
-                        placeholder="you@company.com"
-                      />
-                    </div>
+                  <Field id="custom-animation-name" label="Name" error={errors.name}>
+                    <input
+                      id="custom-animation-name"
+                      name="name"
+                      className={FIELD_CLASS}
+                      style={AUTOFILL_STYLE}
+                      value={values.name}
+                      onChange={updateField("name")}
+                      autoComplete="name"
+                      placeholder="Enter your name"
+                      aria-invalid={errors.name ? true : undefined}
+                    />
+                  </Field>
 
-                    <div>
-                      <FieldLabel htmlFor="custom-animation-number">
-                        Phone Number*
-                      </FieldLabel>
-                      <PhoneInput
-                        id="custom-animation-number"
-                        name="number"
-                        label={false}
-                        placeholder="98765 43210"
-                        value={values.number}
-                        onChange={updateField("number")}
-                        defaultCountry="IN"
-                        countries={CUSTOM_ANIMATION_COUNTRIES}
-                        showCountryName
-                        error={errors.number}
-                        className="rounded-none! border-white/20 bg-white/10 text-white focus-within:border-[#ff5f00]!"
-                        style={AUTOFILL_STYLE}
-                        countryButtonClassName="text-white/80 hover:text-white"
-                        flagClassName="text-base"
-                        dialCodeClassName="text-white"
-                        chevronClassName="text-white/60"
-                        dividerClassName="bg-white/15"
-                        // PhoneInput's own <input> hardcodes rounded-r-full
-                        // (it's designed as a standalone pill) - the wrapper
-                        // above is squared via className's rounded-none!,
-                        // but without also squaring the input itself here,
-                        // the browser's autofill fill (which follows the
-                        // input's own border-radius) renders rounded
-                        // corners poking out of the now-square field.
-                        inputClassName="rounded-none! text-white placeholder:text-white/35"
-                        dropdownClassName="rounded-none! min-w-64 border-white/10! bg-[#111111]! text-white shadow-[0_20px_60px_rgba(0,0,0,0.45)]"
-                        optionClassName="rounded-none! text-white/70 hover:bg-white/10 hover:text-white"
-                        activeOptionClassName="text-[#ff5f00]"
-                        optionDialClassName="text-white/40"
-                        errorClassName="text-red-300"
-                      />
-                    </div>
-                  </div>
+                  <Field id="custom-animation-email" label="Email" error={errors.email}>
+                    <input
+                      id="custom-animation-email"
+                      name="email"
+                      type="email"
+                      className={FIELD_CLASS}
+                      style={AUTOFILL_STYLE}
+                      value={values.email}
+                      onChange={updateField("email")}
+                      autoComplete="email"
+                      placeholder="Enter your email address"
+                      aria-invalid={errors.email ? true : undefined}
+                    />
+                  </Field>
 
-                  <div className="h-full">
-                    <FieldLabel htmlFor="custom-animation-message">
-                      Message*
-                    </FieldLabel>
-                    <Textarea
+                  <Field id="custom-animation-number" label="Phone number" error={errors.number}>
+                    <PhoneInput
+                      id="custom-animation-number"
+                      name="number"
+                      label={false}
+                      placeholder="98765 43210"
+                      value={values.number}
+                      onChange={updateField("number")}
+                      defaultCountry="IN"
+                      countries={CUSTOM_ANIMATION_COUNTRIES}
+                      showCountryName
+                      className="h-12.5! rounded-none! border-white/10! bg-white/5! text-white"
+                      style={AUTOFILL_STYLE}
+                      countryButtonClassName="text-white/80 hover:text-white"
+                      flagClassName="text-base"
+                      dialCodeClassName="text-white"
+                      chevronClassName="text-white/60"
+                      dividerClassName="bg-white/10"
+                      // PhoneInput's own <input> is rounded (it's built as a pill); squared
+                      // here so the autofill fill doesn't poke rounded corners out.
+                      inputClassName="rounded-none! text-base! text-white placeholder:text-base! placeholder:text-white/30"
+                      dropdownClassName="rounded-none! min-w-64 border-white/10! bg-[#111111]! text-white shadow-[0_20px_60px_rgba(0,0,0,0.45)]"
+                      optionClassName="rounded-none! text-white/70 hover:bg-white/10 hover:text-white"
+                      activeOptionClassName="text-[#ff5f00]"
+                      optionDialClassName="text-white/40"
+                    />
+                  </Field>
+
+                  <Field id="custom-animation-message" label="Message" error={errors.message}>
+                    <textarea
                       id="custom-animation-message"
                       name="message"
-                      label={false}
-                      className="h-[17.3vw]! rounded-none! border-white/20 bg-white/10 text-white placeholder:text-white/35 focus:border-[#ff5f00]! max-[1025px]:h-36!"
+                      rows={5}
+                      className={`${FIELD_CLASS} block min-h-32 resize-y`}
                       style={AUTOFILL_STYLE}
-                      rows={3}
                       value={values.message}
                       onChange={updateField("message")}
-                      error={errors.message}
                       placeholder="Tell us what you want to build..."
+                      aria-invalid={errors.message ? true : undefined}
                     />
-                  </div>
+                  </Field>
 
-                  {serverError && (
-                    <div className="col-span-2 rounded-none border border-red-500/20 bg-red-500/10 px-5 py-3 text-sm leading-6 text-red-200 max-[1025px]:col-span-1">
-                      {serverError}
-                    </div>
-                  )}
-
-                  <div className="col-span-2 max-[1025px]:col-span-1">
+                  <div className="mb-6">
                     <CustomVerifyCheckbox
                       action="custom_animation_form"
                       checked={captchaVerified}
@@ -507,40 +477,17 @@ function CustomAnimationFormModalInner() {
                         if (verified) setCaptchaError("");
                       }}
                     />
-                    {captchaError && (
-                      <p className="mt-2 text-sm text-red-300">{captchaError}</p>
-                    )}
+                    {captchaError && <p className="mt-2 text-sm text-red-400">{captchaError}</p>}
                   </div>
 
-                  <div className="col-span-2 mt-4 flex items-center gap-4 max-[1025px]:col-span-1 max-[1025px]:flex-col max-[1025px]:items-start">
-                    {/* WebsiteButton renders a <Link>, not a <button type="submit">,
-                        so it can't be the form's implicit-submit target - without a
-                        real submit control here, pressing Enter in a field does
-                        nothing. This is visually hidden and out of tab order but
-                        still native, so Enter triggers the form's onSubmit normally. */}
-                    <button
-                      type="submit"
-                      disabled={isSubmitting}
-                      tabIndex={-1}
-                      aria-hidden="true"
-                      className="h-0 w-0 overflow-hidden border-0 p-0 opacity-0"
-                    />
-                    <WebsiteButton
-                      text={isSubmitting ? "Sending..." : "Send Request"}
-                      href="#"
-                      preventDefault
-                      disabled={isSubmitting}
-                      onClick={handleSubmit}
-                      variant="orange"
-                      scaleClass="group-hover:scale-[50]"
-                      className="min-w-0 rounded-none!"
-                      circleClassName="rounded-none!"
-                    />
-                  </div>
+                  {/* Same submit control as the sign-in page: ButtonV3 + a hidden real
+                      submit button so Enter in a field still submits. */}
+                  <SubmitButton loading={isSubmitting} formRef={formRef} className="w-fit">
+                    Send request
+                  </SubmitButton>
                 </form>
               )}
             </div>
-          </div>
           </motion.div>
         </motion.div>
       )}

@@ -7,8 +7,10 @@ import { useSearchParams } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
+import { motion } from "motion/react";
 import { ArrowLeft, ArrowRight, Search, X } from "lucide-react";
 import { AppVaultHeader } from "@/components/layout/AppVaultHeader";
+import { useVaultLayout } from "@/components/layout/VaultLayout";
 import { useToastQueue, ToastViewport } from "@/components/ui/Toast";
 import { emitWishlistChanged } from "@/lib/wishlistEvents";
 import {
@@ -27,7 +29,8 @@ import { PreviewDrawerV4 } from "./PreviewDrawerV4";
 
 gsap.registerPlugin(useGSAP);
 
-const PAGE = 24;
+// Effects load in batches of 30; the next batch comes in from the "Show more" button.
+const PAGE = 30;
 const COLS_KEY = "hyperiux-effects-v4-cols";
 // "trend" is the default (server) order; the rest live in the filter dropdown.
 const SORTS = {
@@ -45,28 +48,54 @@ const TIERS = [
   { id: "pro", label: "Pro" },
 ];
 const GRID_COLS = { 2: "grid-cols-2", 3: "grid-cols-3" };
+// Two- and three-pane window icons for the column switch.
+const COLUMN_ICONS = {
+  2: (
+    <>
+      <rect x="3.5" y="4.5" width="7.5" height="15" />
+      <rect x="13" y="4.5" width="7.5" height="15" />
+    </>
+  ),
+  3: (
+    <>
+      <rect x="2.5" y="4.5" width="5" height="15" />
+      <rect x="9.5" y="4.5" width="5" height="15" />
+      <rect x="16.5" y="4.5" width="5" height="15" />
+    </>
+  ),
+};
 const COLUMN_ITEMS = [2, 3].map((n) => ({
   id: n,
-  ariaLabel: `${n} columns`,
+  ariaLabel: `${n} cards per row`,
   label: (
-    <span className="flex h-3.5 gap-0.5" aria-hidden="true">
-      {Array.from({ length: n }, (_, i) => (
-        <i key={i} className="block w-0.75 bg-current" />
-      ))}
-    </span>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" className="size-4" aria-hidden="true">
+      {COLUMN_ICONS[n]}
+    </svg>
   ),
 }));
+// Same card layout animation as the /effects grid.
+const CARD_LAYOUT_TRANSITION = { layout: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } };
+
+/* ---------- text sizes (vw: desktop · tablet · mobile) ---------- */
+const T11 = "text-[0.76vw] max-[1025px]:text-[1.4vw] max-md:text-[2.8vw]";
+const T13 = "text-[0.9vw] max-[1025px]:text-[1.6vw] max-md:text-[3.3vw]";
+const T14 = "text-[0.97vw] max-[1025px]:text-[1.7vw] max-md:text-[3.6vw]";
+const T15 = "text-[1.04vw] max-[1025px]:text-[1.8vw] max-md:text-[3.8vw]";
+const T16 = "text-[1.1vw] max-[1025px]:text-[1.95vw] max-md:text-[4.1vw]";
+const T18 = "text-[1.25vw] max-[1025px]:text-[2.2vw] max-md:text-[4.4vw]";
+const T20 = "text-[1.4vw] max-[1025px]:text-[2.4vw] max-md:text-[5vw]";
+const T24 = "text-[1.67vw] max-[1025px]:text-[2.9vw] max-md:text-[6vw]";
+const T28 = "text-[1.95vw] max-[1025px]:text-[3.4vw] max-md:text-[7vw]";
 
 /* ---------- class tokens ---------- */
 const GUTTER = "px-[3.4vw] max-[1025px]:px-[5vw] max-md:px-5";
-const GRADIENT_TEXT =
-  "bg-[linear-gradient(100deg,#B84300_0%,#ff5f00_22%,#FFB27A_42%,#FF7A14_60%,#C24E00_80%,#ff5f00_100%)] bg-size-[300%_100%] bg-clip-text text-transparent";
+
 const CHIP =
-  "inline-flex h-8 shrink-0 cursor-pointer items-center gap-2 px-3 text-[13px] transition-[background-color,color,box-shadow] duration-500";
+  `inline-flex h-8 shrink-0 cursor-pointer items-center gap-2 px-3 ${T13} transition-[background-color,color,box-shadow] duration-500`;
 const CHIP_OFF = "text-[#6B6B6B] shadow-[inset_0_0_0_1px_rgba(29,29,29,.1)] hover:shadow-[inset_0_0_0_1px_#ff5f00] hover:text-[#1D1D1D]";
 const CHIP_ON = "bg-[#ff5f00] text-[#141414]";
 const ARROW_BTN =
-  "grid size-11 cursor-pointer place-items-center text-[#d0d0d0] shadow-[inset_0_0_0_1px_rgba(244,244,244,.14)] transition-colors duration-500 hover:bg-[rgba(244,244,244,.08)] hover:text-white disabled:pointer-events-none disabled:opacity-30 [&_svg]:size-4";
+  "grid size-11 cursor-pointer place-items-center text-white border border-white/40 backdrop-blur-lg hover:border-primary transition-colors duration-400 ease-out hover:text-black disabled:pointer-events-none disabled:brightness-70 disabled:backdrop-blur-lg [&_svg]:size-4 hover:bg-primary";
 
 const countWord = (n) => (n === 1 ? "effect" : "effects");
 const subscribeNever = () => () => {};
@@ -109,7 +138,6 @@ export function EffectsListingV4({ effects = [], trendingEffects = [], featuredN
   const searchRef = useRef(null);
   const countRef = useRef(null);
   const trendRef = useRef(null);
-  const sentinelRef = useRef(null);
   const [trendEdges, setTrendEdges] = useState({ start: true, end: false });
 
   /* ---------- derived data ---------- */
@@ -177,12 +205,34 @@ export function EffectsListingV4({ effects = [], trendingEffects = [], featuredN
     setQuery("");
   }, []);
 
-  /* ---------- effects ---------- */
+  /* ---------- columns ⇄ sidebar (same behaviour as /effects) ---------- */
+  // 3 per row only fits with the sidebar closed: picking 3 closes it, and opening
+  // the sidebar drops the grid back to 2. The cards animate to their new slots
+  // through motion's `layout` (see the grid below), exactly like /effects.
+  const { isSidebarOpen, toggleSidebar } = useVaultLayout();
+
+  const chooseCols = (n) => {
+    setCols(n);
+    if (n === 3) toggleSidebar(false);
+    try {
+      window.localStorage.setItem(COLS_KEY, String(n));
+    } catch {
+      /* storage unavailable */
+    }
+  };
+
   // Restore the column choice after hydration (localStorage isn't on the server).
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setCols(readStoredCols());
   }, []);
+
+  // Opening the sidebar from anywhere drops 3 per row to 2. Only reacts to the
+  // sidebar itself, so it never fights the column switch above.
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (isSidebarOpen) setCols((c) => (c === 3 ? 2 : c));
+  }, [isSidebarOpen]);
 
   // Any filter change starts the grid over from the first page.
   useEffect(() => {
@@ -212,14 +262,6 @@ export function EffectsListingV4({ effects = [], trendingEffects = [], featuredN
   }, [isSignedIn]);
 
 
-  // Load the next page before the visitor reaches the bottom.
-  useEffect(() => {
-    const sentinel = sentinelRef.current;
-    if (!sentinel || !hasMore) return undefined;
-    const observer = new IntersectionObserver(([entry]) => entry.isIntersecting && setShown((n) => n + PAGE), { rootMargin: "800px 0px" });
-    observer.observe(sentinel);
-    return () => observer.disconnect();
-  }, [hasMore, shown]);
 
   /* ---------- GSAP ---------- */
   // Hero entrance, stat count-up, and the slow flow on the orange words.
@@ -239,7 +281,7 @@ export function EffectsListingV4({ effects = [], trendingEffects = [], featuredN
   // Cards rise in whenever the result set changes.
   useGSAP(
     () => {
-      const cards = gsap.utils.toArray(gridRef.current?.children || []).slice(0, 12);
+      const cards = [...(gridRef.current?.children || [])].slice(0, 12).map((wrapper) => wrapper.firstElementChild);
       if (!cards.length) return;
       gsap.fromTo(
         cards,
@@ -312,6 +354,15 @@ export function EffectsListingV4({ effects = [], trendingEffects = [], featuredN
   const canInstall = (effect) => effect.tier !== "pro" || isProUser;
   const closeDrawer = useCallback(() => setDrawerEffect(null), []);
 
+  // One card (plus the row gap) per arrow click.
+  const scrollTrending = (dir) => {
+    const row = trendRef.current;
+    const card = row?.firstElementChild;
+    if (!card) return;
+    const gap = parseFloat(getComputedStyle(row).columnGap) || 0;
+    row.scrollBy({ left: dir * (card.getBoundingClientRect().width + gap), behavior: "smooth" });
+  };
+
   const updateTrendEdges = () => {
     const row = trendRef.current;
     if (!row) return;
@@ -357,15 +408,15 @@ export function EffectsListingV4({ effects = [], trendingEffects = [], featuredN
         </nav>
 
         <div data-v4-hero className="mt-7 grid grid-cols-[minmax(0,1.2fr)_minmax(0,.8fr)] items-end gap-12 max-[1025px]:grid-cols-1 max-[1025px]:gap-10">
-          <h1 className={`${DISPLAY} max-w-[12ch] text-[6vw] leading-[1.02] max-[1025px]:text-[9vw] max-md:text-[13vw]`}>
+          <h1 className={`${DISPLAY} max-w-[45vw] text-[6vw] leading-[0.9]! max-[1025px]:max-w-none max-[1025px]:text-[9vw] max-md:text-[13vw]`}>
             Browse the{" "}
-            <span data-v4-gradient className={`${GRADIENT_TEXT} pb-[.08em]`}>
+            <span className="gradient-text-animate">
               vault.
             </span>
           </h1>
 
           <div className="grid gap-6.5">
-            <p className="max-w-[46ch] text-base leading-relaxed text-[#bdbdbd]">
+            <p className={`max-w-[32vw] ${T16} text-[#bdbdbd] max-[1025px]:max-w-[70vw] max-md:max-w-none`}>
               Production-ready interaction effects for React and Next.js. Preview any of them live, then copy or install with one command.
             </p>
             <div className={`${LABEL} flex flex-wrap gap-x-7.5 gap-y-2.5`}>
@@ -375,14 +426,14 @@ export function EffectsListingV4({ effects = [], trendingEffects = [], featuredN
                 [categoryOptions.length, "Categories"],
               ].map(([value, label]) => (
                 <p key={label}>
-                  <b data-v4-count={value} className={`${DISPLAY} block text-[2.4vw] leading-none tracking-[-.04em] text-[#F4F4F4] tabular-nums normal-case max-[1025px]:text-[4.5vw] max-md:text-[8vw]`}>
+                  <b data-v4-count={value} className={`${DISPLAY} block text-[2.4vw] leading-none text-[#F4F4F4] tabular-nums normal-case max-[1025px]:text-[4.5vw] max-md:text-[8vw]`}>
                     {value}
                   </b>
-                  <span className="text-[#8a8a8a]">{label}</span>
+                  <span className="text-white/60 normal-case tracking-normal text-[1vw]">{label}</span>
                 </p>
               ))}
             </div>
-            <label className="relative flex h-15 items-center gap-3 bg-[rgba(20,20,20,.7)] pr-2.5 pl-5 shadow-[inset_0_0_0_1px_rgba(244,244,244,.12)] backdrop-blur-md transition-shadow duration-700 focus-within:shadow-[inset_0_0_0_1px_rgba(255,95,0,.6),0_24px_60px_-24px_rgba(255,95,0,.45)]">
+            {/* <label className="relative flex h-15 items-center gap-3 bg-[rgba(20,20,20,.7)] pr-2.5 pl-5 shadow-[inset_0_0_0_1px_rgba(244,244,244,.12)] backdrop-blur-md transition-shadow duration-700 focus-within:shadow-[inset_0_0_0_1px_rgba(255,95,0,.6),0_24px_60px_-24px_rgba(255,95,0,.45)]">
               <span className="sr-only">Search effects</span>
               <Search className="size-4.5 shrink-0 text-[#8a8a8a]" aria-hidden="true" />
               <input
@@ -393,9 +444,9 @@ export function EffectsListingV4({ effects = [], trendingEffects = [], featuredN
                 onKeyDown={(event) => event.key === "Enter" && scrollToGrid()}
                 placeholder="Search effects, categories or libraries"
                 autoComplete="off"
-                className="h-full min-w-0 flex-1 bg-transparent text-base text-[#F4F4F4] outline-none placeholder:text-[#6d6d6d]"
+                className="h-full min-w-0 flex-1 bg-transparent text-[1.1vw] max-[1025px]:text-[1.95vw] max-md:text-[4.1vw] text-[#F4F4F4] outline-none placeholder:text-[#6d6d6d]"
               />
-            </label>
+            </label> */}
           </div>
         </div>
       </section>
@@ -404,41 +455,48 @@ export function EffectsListingV4({ effects = [], trendingEffects = [], featuredN
       {trendingEffects.length > 0 && (
         <section aria-labelledby="v4-trending" className={`${GUTTER} pb-28 max-[1025px]:pb-20`}>
           <div className="mb-5.5 flex items-end justify-between">
-            <h2 id="v4-trending" className={`${DISPLAY} text-[2.2vw] tracking-[-.03em] max-[1025px]:text-[4vw] max-md:text-[7vw]`}>
+            <h2 id="v4-trending" className={`${DISPLAY} text-[2.2vw] max-[1025px]:text-[4vw] max-md:text-[7vw]`}>
               Trending this week
             </h2>
             <div className="flex gap-1.5 max-md:hidden">
-              <button type="button" aria-label="Previous" disabled={trendEdges.start} onClick={() => trendRef.current?.scrollBy({ left: -trendRef.current.clientWidth * 0.9, behavior: "smooth" })} className={ARROW_BTN}>
+              <button type="button" aria-label="Previous" disabled={trendEdges.start} onClick={() => scrollTrending(-1)} className={ARROW_BTN}>
                 <ArrowLeft />
               </button>
-              <button type="button" aria-label="Next" disabled={trendEdges.end} onClick={() => trendRef.current?.scrollBy({ left: trendRef.current.clientWidth * 0.9, behavior: "smooth" })} className={ARROW_BTN}>
+              <button type="button" aria-label="Next" disabled={trendEdges.end} onClick={() => scrollTrending(1)} className={ARROW_BTN}>
                 <ArrowRight />
               </button>
             </div>
           </div>
           <div
             ref={trendRef}
+            // overflow-y is set explicitly: with only overflow-x set the browser computes
+            // overflow-y to auto, and the site's Lenis (allowNestedScroll) then treats this
+            // row as a vertical scroller and traps the wheel inside it.
             onScroll={updateTrendEdges}
-            className="grid snap-x snap-mandatory auto-cols-[calc((100%-28px)/3)] grid-flow-col gap-3.5 overflow-x-auto pb-1 scrollbar-none max-[1025px]:auto-cols-[45%] max-md:auto-cols-[82%]"
+            className="grid snap-x snap-mandatory auto-cols-[calc((100%-28px)/3)] grid-flow-col gap-3.5 overflow-x-hidden overflow-y-hidden pb-1 scrollbar-none max-[1025px]:overflow-x-auto max-[1025px]:auto-cols-[45%] max-md:auto-cols-[82%]"
           >
             {trendingEffects.map((effect, index) => (
-              <EffectCardV4 key={effect.name} {...cardProps(effect, index)} small dark className="snap-start" />
+              <EffectCardV4 key={effect.name} {...cardProps(effect, index)} small dark className="snap-start" tagClassName="text-white border-white/30" metaClassName="text-white/80" />
             ))}
           </div>
         </section>
       )}
 
       {/* ---------- catalogue sheet ---------- */}
-      <div ref={sheetRef} id="v4-grid" className="relative scroll-mt-4 bg-[#F4F4F4] text-[#1D1D1D] max-md:mx-0">
-        <div className={`${GUTTER} pt-12 pb-24 max-md:pt-8 max-md:pb-16`}>
+      {/* Hover and mouse-swish sounds are muted on the light catalogue sheet (see wireSoundUI in homepage-v3/lib/sound.js). */}
+      {/* data-vault-header-scroll-away: the desktop header slides away as the sheet (and so the
+          sticky controls at its top) reaches 10% from the top - see VaultHeader. The sheet is the
+          marker rather than the sticky bar, because a stuck element reports the wrong position. */}
+      <div ref={sheetRef} id="v4-grid" data-sound-hover="off" data-sound-flow="off" data-vault-header-scroll-away className="relative scroll-mt-4 bg-[#F4F4F4] text-[#1D1D1D] max-md:mx-0">
+        <div className={`${GUTTER}  pb-24 max-md:pt-8 max-md:pb-16`}>
           {/* summary + view controls (sticky on desktop; tablet/mobile have a fixed header) */}
-          <div className="sticky top-0 h-[18vh] z-5 mx-[-3.4vw] flex flex-wrap items-end justify-between gap-4 bg-[#F4F4F4] px-[3.4vw] pt-4.5 pb-4 shadow-[0_1px_0_rgba(29,29,29,.08)] max-[1025px]:static max-[1025px]:shadow-none max-[1025px]:-mx-[5vw] max-[1025px]:px-[5vw] max-md:-mx-5 max-md:px-5">
-            <p aria-live="polite" className={`${DISPLAY} text-xl tracking-[-.02em]`}>
+          <div className="sticky top-0 h-fit z-5 mx-[-3.4vw] flex flex-wrap items-end justify-between gap-4 bg-[#F4F4F4] px-[3.5vw] pt-4.5 pb-4 shadow-[0_1px_0_rgba(29,29,29,.08)] max-[1025px]:static max-[1025px]:shadow-none max-[1025px]:mx-[-5vw] max-[1025px]:px-[5vw] max-md:-mx-5 max-md:px-5">
+            <p aria-live="polite" className={`${DISPLAY} ${T20} tracking-[-.02em]`}>
               <b ref={countRef} className="font-medium tabular-nums">
                 {filtered.length}
               </b>{" "}
               <span className="text-[#6B6B6B]">{countWord(filtered.length)}</span>
-              {context && <span className="ml-2.5 text-[15px] text-[#6B6B6B]">· {context}</span>}
+              {context && <span className={`ml-2.5 ${T15} text-[#6B6B6B]`}>· {context}</span>}
             </p>
 
             <div className="flex flex-wrap items-center gap-2.5">
@@ -447,7 +505,7 @@ export function EffectsListingV4({ effects = [], trendingEffects = [], featuredN
                 type="button"
                 aria-pressed={featured}
                 onClick={() => setFeatured((v) => !v)}
-                className={`inline-flex h-9.5 cursor-pointer items-center px-4 text-sm transition-[background-color,color,box-shadow] duration-500 ${
+                className={`inline-flex h-9.5 cursor-pointer items-center px-4 ${T14} transition-[background-color,color,box-shadow] duration-500 ${
                   featured ? CHIP_ON : `bg-white ${CHIP_OFF}`
                 }`}
               >
@@ -455,6 +513,8 @@ export function EffectsListingV4({ effects = [], trendingEffects = [], featuredN
               </button>
               <FilterMenu
                 tone="light"
+                // Open leftwards from the button's right edge on desktop (it sits near the screen edge).
+                panelClassName="min-[1026px]:left-auto! min-[1026px]:right-0"
                 options={SORT_OPTIONS}
                 activeFilter={sort === "trend" ? null : sort}
                 getLabel={sortLabel}
@@ -465,14 +525,7 @@ export function EffectsListingV4({ effects = [], trendingEffects = [], featuredN
                 label="Columns"
                 items={COLUMN_ITEMS}
                 value={cols}
-                onChange={(n) => {
-                  setCols(n);
-                  try {
-                    window.localStorage.setItem(COLS_KEY, String(n));
-                  } catch {
-                    /* storage unavailable */
-                  }
-                }}
+                onChange={chooseCols}
                 itemClassName="w-8.5"
                 className="max-[1025px]:hidden"
               />
@@ -480,7 +533,7 @@ export function EffectsListingV4({ effects = [], trendingEffects = [], featuredN
           </div>
 
           {/* categories */}
-          <div className="flex flex-wrap gap-1.5 pt-5 pb-3">
+          <div className="flex flex-wrap gap-1.5 pt-6 pb-3">
             <button type="button" aria-pressed={!category} onClick={() => setCategory(null)} className={`${CHIP} ${!category ? CHIP_ON : CHIP_OFF}`}>
               All
             </button>
@@ -493,13 +546,13 @@ export function EffectsListingV4({ effects = [], trendingEffects = [], featuredN
                 className={`${CHIP} ${category === c.id ? CHIP_ON : CHIP_OFF}`}
               >
                 {getQuickCategoryLabel(c.id)}
-                <span className={`font-mono text-[11px] tabular-nums ${category === c.id ? "text-[#141414]/70" : "text-[#B4B4B4]"}`}>{c.count}</span>
+                <span className={`font-mono mt-0.5 ${T11} tabular-nums ${category === c.id ? "text-black" : "text-black/50"}`}>{c.count}</span>
               </button>
             ))}
           </div>
 
           {/* built with + active filters */}
-          <div className="grid gap-3 pt-2 pb-6">
+          <div className="grid gap-3 pt-2 pb-10">
             {stackOptions.length > 0 && (
               <div className="flex flex-wrap items-center gap-3">
                 <span className={`${LABEL} text-[#6B6B6B]`}>Built with</span>
@@ -529,7 +582,7 @@ export function EffectsListingV4({ effects = [], trendingEffects = [], featuredN
                     type="button"
                     onClick={a.clear}
                     aria-label={`Remove filter ${a.label}`}
-                    className="inline-flex h-7.5 cursor-pointer items-center gap-2 bg-[#1D1D1D] pr-2 pl-3 text-[13px] text-[#F4F4F4] transition-colors duration-500 hover:bg-[#3a3a3a]"
+                    className={`inline-flex h-7.5 cursor-pointer items-center gap-2 bg-[#1D1D1D] pr-2 pl-3 ${T13} text-[#F4F4F4] transition-colors duration-500 hover:bg-[#3a3a3a]`}
                   >
                     {a.label}
                     <X className="size-3" aria-hidden="true" />
@@ -547,8 +600,8 @@ export function EffectsListingV4({ effects = [], trendingEffects = [], featuredN
           {/* grid */}
           {filtered.length === 0 ? (
             <div className="grid justify-items-center gap-3.5 px-4 py-20 text-center">
-              <b className={`${DISPLAY} text-[28px] tracking-[-.03em]`}>Nothing matches that, yet.</b>
-              <p className="max-w-[40ch] text-[#6B6B6B]">Try a broader search, or clear a filter. New effects land in the vault regularly.</p>
+              <b className={`${DISPLAY} ${T28} tracking-[-.03em]`}>Nothing matches that, yet.</b>
+              <p className={`max-w-[30vw] ${T16} text-[#6B6B6B] max-[1025px]:max-w-[60vw] max-md:max-w-none`}>Try a broader search, or clear a filter. New effects land in the vault regularly.</p>
               <button
                 type="button"
                 onClick={clearAll}
@@ -558,17 +611,18 @@ export function EffectsListingV4({ effects = [], trendingEffects = [], featuredN
               </button>
             </div>
           ) : (
-            <div ref={gridRef} className={`grid gap-x-3.5 gap-y-8 ${GRID_COLS[cols]} max-[1025px]:grid-cols-2 max-md:grid-cols-1 max-md:gap-y-10`}>
+            <div ref={gridRef} className={`grid gap-x-5 gap-y-10 ${GRID_COLS[cols]} max-[1025px]:grid-cols-2 max-md:grid-cols-1 max-md:gap-y-10`}>
               {visible.map((effect, index) => (
-                <EffectCardV4 key={effect.name} {...cardProps(effect, index)} />
+                <motion.div key={effect.name} layout transition={CARD_LAYOUT_TRANSITION}>
+                  <EffectCardV4 {...cardProps(effect, index)} tagClassName="border-black/20" />
+                </motion.div>
               ))}
             </div>
           )}
 
           {hasMore && (
             <div className="mt-16 flex flex-col items-center gap-3">
-              <div ref={sentinelRef} aria-hidden="true" />
-              <p className={`${LABEL} text-[#6B6B6B]`}>
+              <p aria-live="polite" className={` text-[#6B6B6B]`}>
                 Showing {visible.length} of {filtered.length}
               </p>
               <div className="h-0.5 w-55 overflow-hidden bg-[rgba(29,29,29,.1)]">
@@ -577,9 +631,9 @@ export function EffectsListingV4({ effects = [], trendingEffects = [], featuredN
               <button
                 type="button"
                 onClick={() => setShown((n) => n + PAGE)}
-                className={`${LABEL} mt-1 h-11 cursor-pointer px-5 shadow-[inset_0_0_0_1px_rgba(29,29,29,.1)] transition-shadow duration-500 hover:shadow-[inset_0_0_0_1px_#ff5f00]`}
+                className={` mt-1 h-11 cursor-pointer border border-[rgba(29,29,29,.12)] bg-[rgba(29,29,29,.02)] px-5 text-[#1D1D1D] transition-colors duration-500 hover:border-[#ff5f00]`}
               >
-                Show more effects
+                Show More Effects
               </button>
             </div>
           )}
@@ -588,34 +642,22 @@ export function EffectsListingV4({ effects = [], trendingEffects = [], featuredN
         {/* upgrade band */}
         {!isProUser && (
           <section className={`${GUTTER} pb-24 max-md:pb-16`}>
-            <div className="relative grid grid-cols-[minmax(0,1.3fr)_auto] items-center gap-8 overflow-hidden bg-[#1D1D1D] p-14 text-[#F4F4F4] max-[1025px]:grid-cols-1 max-[1025px]:p-10 max-md:p-7">
-              <span
-                aria-hidden="true"
-                className="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_90%_at_100%_100%,rgba(255,95,0,.45),transparent_60%),radial-gradient(40%_60%_at_0%_0%,rgba(255,255,255,.05),transparent_60%)]"
-              />
+            <div className="relative grid grid-cols-[minmax(0,1.3fr)_auto] gap-8 overflow-hidden bg-[#1D1D1D] p-10 py-12 text-[#F4F4F4] max-[1025px]:grid-cols-1 max-[1025px]:p-10 max-md:p-7">
+             
               <div className="relative">
-                <h2 className={`${DISPLAY} max-w-[18ch] text-[2.6vw] leading-[1.02] max-[1025px]:text-[5vw] max-md:text-[8vw]`}>
+                <h2 className={`${DISPLAY} max-w-[45vw] text-[3vw] leading-[1.02] max-[1025px]:max-w-none max-[1025px]:text-[5vw] max-md:text-[8vw]`}>
                   Everything in the vault.{" "}
-                  <span data-v4-gradient className={GRADIENT_TEXT}>
+                   <span className="gradient-text-animate">
                     One plan.
                   </span>
                 </h2>
-                <p className="mt-3.5 max-w-[48ch] text-[#bdbdbd]">
+                <p className={`mt-3.5 max-w-[45vw] ${T18} text-white/80 max-[1025px]:max-w-[70vw] max-md:max-w-none`}>
                   Pro unlocks every component, section and template, with template credits and new drops as they land. Everything you copy stays in your repo.
                 </p>
               </div>
-              <div className="relative flex flex-wrap gap-2">
+              <div className="relative flex flex-wrap gap-2 h-fit mt-2">
                 <ButtonV3 text="See plans" href="/pricing" />
-                <ButtonV3
-                  text="Browse free effects"
-                  href="#v4-grid"
-                  variant="outline"
-                  preventDefault
-                  onClick={() => {
-                    setTier("free");
-                    scrollToGrid();
-                  }}
-                />
+               
               </div>
             </div>
           </section>
@@ -623,18 +665,19 @@ export function EffectsListingV4({ effects = [], trendingEffects = [], featuredN
       </div>
 
       {/* ---------- FAQ + custom work CTA (from the current listing) ---------- */}
-      <div className={GUTTER}>
+      <div className="w-full h-full pb-[5vw] bg-white" >
         {faqItems.length > 0 && <FAQV3 faqItems={faqItems} translateTop={false} />}
         {cta && (cta.heading || cta.buttonText) && (
-          <section className="mx-auto my-[5vw] w-full bg-[#272727] px-10 text-center max-[1025px]:px-6 max-md:my-[15vw] max-md:px-[7vw]">
-            <div className="mx-auto flex w-full max-w-6xl flex-col items-center py-15">
-              {cta.heading && <h2 className="text-[4vw] font-medium max-md:text-[7vw]">{cta.heading}</h2>}
-              {cta.description && <p className="mx-auto mt-4 max-w-3xl text-lg text-muted">{cta.description}</p>}
+
+          <section className="mx-auto w-[92%] mt-[2vw] bg-[#1D1D1D] px-10 py-12 flex justify-between  max-[1025px]:px-6 max-md:my-[15vw] max-md:px-[7vw]">
+            <div className=" flex w-[60%] flex-col ">
+              {cta.heading && <h2 className="text-[3vw] font-medium max-md:text-[7vw]">{cta.heading}</h2>}
+              {cta.description && <p className={` mt-4 max-w-3xl ${T18} text-white/80`}>{cta.description}</p>}
+              </div>
+              <div className="mt-2">
               {cta.buttonText && (
                 <CustomAnimationFormTrigger>
-                  <div className="mt-6">
                     <ButtonV3 preventDefault={false} text={cta.buttonText} href={cta.buttonLink || "#"} className="mx-auto w-fit" />
-                  </div>
                 </CustomAnimationFormTrigger>
               )}
             </div>
@@ -645,8 +688,8 @@ export function EffectsListingV4({ effects = [], trendingEffects = [], featuredN
       <PreviewDrawerV4
         effect={drawerEffect}
         effects={effects}
-        canInstall={drawerEffect ? canInstall(drawerEffect) : false}
-        isWishlisted={drawerEffect ? wishlistSet.has(drawerEffect.name) : false}
+        canInstall={canInstall}
+        isWishlisted={(effect) => wishlistSet.has(effect.name)}
         onClose={closeDrawer}
         onOpen={setDrawerEffect}
         onToggleWishlist={toggleWishlist}
@@ -695,8 +738,8 @@ function Modal({ open, onClose, title, children }) {
         >
           <X className="size-4" aria-hidden="true" />
         </button>
-        <h2 className="text-2xl font-medium text-white">{title}</h2>
-        <p className="w-[80%] text-sm text-white/60 max-[1025px]:w-full">{text}</p>
+        <h2 className={`${T24} font-medium text-white`}>{title}</h2>
+        <p className={`w-[80%] ${T14} text-white/60 max-[1025px]:w-full`}>{text}</p>
         {action}
       </div>
     </div>
@@ -726,7 +769,7 @@ function SlidingSegment({ label, items, value, onChange, itemClassName, classNam
             aria-pressed={active}
             aria-label={item.ariaLabel}
             onClick={() => onChange(item.id)}
-            className={`relative z-1 grid h-8 cursor-pointer place-items-center text-sm transition-colors duration-500 ${itemClassName} ${
+            className={`relative z-1 grid h-8 cursor-pointer place-items-center ${T14} transition-colors duration-500 ${itemClassName} ${
               active ? "text-[#F4F4F4]" : "text-[#6B6B6B] hover:text-[#1D1D1D]"
             }`}
           >

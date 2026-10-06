@@ -239,12 +239,15 @@ h4 {
 *::-webkit-scrollbar-track {
   background: transparent;
 }
+/* The thumb reads --scrollbar-thumb (falls back to the brand gradient) so it can be
+   hidden at runtime: Chromium repaints a custom scrollbar when a variable it uses
+   changes, but not when a selector-based override starts matching. */
 *::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #e61216 0%, #f16b0d 100%);
+  background: var(--scrollbar-thumb, linear-gradient(180deg, #e61216 0%, #f16b0d 100%));
 }
 
 *::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, #e61216 0%, #f16b0d 100%);
+  background: var(--scrollbar-thumb, linear-gradient(180deg, #e61216 0%, #f16b0d 100%));
 }
 
 ::selection {
@@ -1047,3 +1050,26 @@ html[data-pc-rm] body *:not([data-demo-header], [data-demo-header] *) {
 .docs-sheet .hover\:border-white\/40:not(.codeblock-root *):hover { border-color: rgba(29, 29, 29, 0.4); }
 .docs-sheet .bg-white\/\[\.03\]:not(.codeblock-root *) { background-color: rgba(29, 29, 29, 0.03); }
 .docs-sheet .group:hover .group-hover\:text-primary { color: var(--primary); }
+
+/* Effects v4 preview drawer: the page scrollbar disappears while it's open, with no jump.
+   The scrollbar itself stays (its 8px track is already transparent - see the
+   *::-webkit-scrollbar rules above); only its thumb goes transparent, via
+   --scrollbar-thumb. Nothing changes size, so the layout can't shift sideways, and no
+   overflow is touched, so the sticky sidebar keeps working. (Hiding overflow drops the
+   scrollbar, and Chromium ignores scrollbar-gutter for custom ::-webkit-scrollbar.)
+   The drawer resets the variable for its own scrollbar; the page is held still by the
+   drawer's wheel/touch/key lock. */
+html[data-v4-drawer-open] {
+  --scrollbar-thumb: transparent;
+}
+/* Firefox only: in Chromium, setting scrollbar-color swaps the custom 8px
+   ::-webkit-scrollbar for the standard one, which changes its width (= a jump). */
+@supports not selector(::-webkit-scrollbar) {
+  html[data-v4-drawer-open] {
+    scrollbar-color: transparent transparent;
+  }
+}
+/* On pages that run Lenis, keep the scrollbar box instead of Lenis's overflow:clip. */
+html.lenis.lenis-stopped[data-v4-drawer-open] {
+  overflow: visible;
+}
