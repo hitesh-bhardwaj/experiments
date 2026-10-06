@@ -68,7 +68,7 @@ function SkeletonBlock({ className = "" }) {
 
 function EffectDetailMainSkeleton() {
   return (
-    <main className="mx-auto w-full relative px-14 max-[1025px]:px-0 pt-25 pb-12 max-md:pt-36">
+    <main className="mx-auto w-full relative px-14 max-[1025px]:px-0 pt-25 max-md:pt-36">
       <section className="space-y-7">
         <div className="flex items-start max-md:px-[7vw] max-[1025px]:px-[6vw] justify-between gap-5">
           <div className="w-full space-y-5">
@@ -447,7 +447,7 @@ export function EffectDetailContent({
         {isMainDataLoading ? (
           <EffectDetailMainSkeleton />
         ) : (
-          <main className="mx-auto w-full relative  max-[1025px]:px-0 pt-25 pb-12 max-md:pt-36">
+          <main className="mx-auto w-full relative  max-[1025px]:px-0 pt-25 max-md:pt-36">
             <section className="space-y-7">
               <div className="flex px-14 items-start max-md:px-[7vw] max-[1025px]:px-[6vw] justify-between gap-5">
                 <div className="w-full space-y-5">
@@ -463,7 +463,7 @@ export function EffectDetailContent({
 
                   {pageSummary && (
                     <Copy delay={0.5}>
-                      <p className="mt-4 w-full max-[1025px]:w-[90%] text-foreground opacity-90 text22 leading-relaxed max-[1025px]:leading-[1.3]">
+                      <p className="mt-4 w-[70%] max-[1025px]:w-[90%] text-foreground opacity-90 text22 leading-relaxed max-[1025px]:leading-[1.3]">
                         {pageSummary}
                       </p>
                     </Copy>
