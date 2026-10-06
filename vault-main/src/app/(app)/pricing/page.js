@@ -4,15 +4,14 @@ import { getSearchIndexEffects } from "@/lib/search-index";
 import PricingHero from "@/components/Pricing/pricing-hero/PricingHero";
 import { FAQJSONLD, WebpageJsonLd } from "@/lib/json-ld";
 import { createPageMetadata } from "@/lib/seo-metadata";
+import CursorV3 from "@/homepage-v3/components/CursorV3";
 import FAQV3 from "@/homepage-v3/sections/FAQV3";
 import FooterV3 from "@/homepage-v3/sections/FooterV3";
-import UseCases from "@/homepage-v3/sections/UseCases";
-import PricingPlans from "@/components/Pricing/exploded/PricingPlans";
 import PricingFinder from "@/components/Pricing/exploded/PricingFinder";
 import PricingCredits from "@/components/Pricing/exploded/PricingCredits";
-import PricingCompare from "@/components/Pricing/exploded/PricingCompare";
-import PricingPromise from "@/components/Pricing/exploded/PricingPromise";
-import "@/components/Pricing/exploded/exploded.css";
+import PricingUseCase from "@/components/Pricing/exploded/PricingUseCase";
+import PricingProCompare from "@/components/Pricing/exploded/PricingProCompare";
+import PricingPlansHome from "@/homepage-v3/sections/PricingPlansHome";
 
 export const metadata = createPageMetadata({
   title: "Hyperiux Vault Pricing | Pro React Effects Library",
@@ -37,26 +36,26 @@ export default async function PricingPage() {
       <WebpageJsonLd metadata={metadata} />
       <FAQJSONLD faqs={faqItems} />
       <VaultShell effects={effects}>
+        <CursorV3 />
         <main id="main-content">
           <PricingHero isIndia={isIndia} />
-          {/* .pr-x scopes the exploded-tiers styles to these sections only */}
-          <div className="pr-x">
-            <PricingPlans isIndia={isIndia} auth />
-            <PricingFinder isIndia={isIndia} />
-            {/* Credits, Compare and Promise share one light sheet, as in the concept */}
-            <div className="sheet">
-              <PricingCredits />
-              <PricingCompare isIndia={isIndia} />
-              <PricingPromise />
-            </div>
+          {/* The homepage plans section, reused as is; #plans is the hero's "See the plans" target */}
+          <div id="plans" className="home-type">
+            <PricingPlansHome fixedGutter />
+            <PricingFinder />
+            <PricingCredits />
+            <PricingProCompare />
           </div>
-          <UseCases useCases={USE_CASES} />
+          {/* The same use cases as before, themed for the white sheet above */}
+          <div className="flow-root bg-foreground pb-[8vw] text-background">
+            <PricingUseCase useCases={USE_CASES} />
+          </div>
           <div className="max-md:mt-[-30vw]!  ">
-            <FAQV3 faqItems={faqItems} translateTop={false} />
+            <FAQV3 faqItems={faqItems} translateTop={false} fixedGutter />
           </div>
           {/* <CTA2 /> */}
         </main>
-        <FooterV3 />
+        <FooterV3 fixedGutter />
       </VaultShell>
     </>
   );
