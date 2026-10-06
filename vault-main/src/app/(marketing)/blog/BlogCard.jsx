@@ -32,7 +32,7 @@ export default function BlogCard({ post, priority = false }) {
           )}
         </div>
 
-        <div className="mt-2 flex items-center justify-between gap-3 pb-3 font-geist-mono">
+        <div className="mt-2 flex items-center justify-between gap-3 pb-3 font-mono">
           <div className="flex min-w-0 flex-wrap items-center gap-2">
             {post.categories?.length > 0 && (
               <span className="bg-[#2B2B2B] px-2 py-0.5 text-[0.9vw] text-white/90 max-[1025px]:px-3 max-[1025px]:py-1.5 max-[1025px]:text-[2vw] max-md:px-3 max-md:py-1 max-md:text-[3vw]!">
@@ -40,13 +40,13 @@ export default function BlogCard({ post, priority = false }) {
               </span>
             )}
           </div>
-          <span className="shrink-0 text18 font-neue-haas text-[#AEAEAE] max-[1025px]:text-[1.8vw] max-md:text-[3vw]!">
+          <span className="shrink-0 text18 font-avenir text-[#AEAEAE] max-[1025px]:text-[1.8vw] max-md:text-[3vw]!">
             {formatCardDate(post.publishedAt)}
           </span>
         </div>
 
         <LineWipe>
-          <h3 className="shrink-0 text32 font-neue-haas font-medium leading-[1.2]! text-white max-[1025px]:text-[2.8vw] max-md:text-[3vw] max-sm:text-[4.5vw]">
+          <h3 className="shrink-0 text32 font-avenir font-medium leading-[1.2]! text-white max-[1025px]:text-[2.8vw] max-md:text-[3vw] max-sm:text-[4.5vw]">
             {post.title}
           </h3>
         </LineWipe>

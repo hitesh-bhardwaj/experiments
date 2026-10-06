@@ -58,11 +58,16 @@ export function priceLabel(plan, { yearly, currency, pricing = PRICING }) {
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const lerp = (a, b, t) => a + (b - a) * t;
 
+// Canvas can't read CSS variables: resolve next/font's real Plex Mono family name
+function codeFontForCanvas() {
+  return (typeof document !== "undefined" ? `${getComputedStyle(document.body).getPropertyValue("--font-plex-mono").trim() || '"IBM Plex Mono"'}, ui-monospace, Menlo, monospace` : "ui-monospace, Menlo, monospace");
+}
+
 export function mountExplodedTiers(host, opts = {}) {
   const {
     THREE: T, sound = null, plans = DEFAULT_PLANS, pricing = PRICING,
     canvasParent = host, holdMs = 900, pose: poseOpt = null, poseNarrow: poseNarrowOpt = null,
-    font = null, monoFont = '"IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace',
+    font = null, monoFont = codeFontForCanvas(),
   } = opts;
   let { yearly = true, currency = 'USD' } = opts;
   if (!T) throw new Error('mountExplodedTiers: pass { THREE }');

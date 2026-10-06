@@ -35,7 +35,7 @@ export default function CTAV3() {
       id="CTA"
       className="h-fit gap-[3vw] max-[1025px]:gap-[6vw] max-md:h-fit max-md:mt-[-60vw]! mt-[-35vw] max-[1025px]:mt-[-65vw] max-md:py-[10vw] max-sm:py-[15vw]! max-md:mb-[10vw] overflow-x-hidden flex items-start justify-between max-sm:gap-[10vw] max-md:gap-[8vw] flex-col text-foreground self-padd relative z-500 w-full py-[7vw]!"
     >
-      <LineReveal as="h2" className="t96 font-neue-haas max-[1025px]:w-full max-md:w-full relative z-2 w-[85%]">
+      <LineReveal as="h2" className="t96 font-avenir max-[1025px]:w-full max-md:w-full relative z-2 w-[85%]">
         Need More Than a Component? We Build the Whole Interaction.
       </LineReveal>
       <div className="space-y-[3vw] max-[1025px]:space-y-[5vw] max-md:space-y-[10vw] relative z-2">

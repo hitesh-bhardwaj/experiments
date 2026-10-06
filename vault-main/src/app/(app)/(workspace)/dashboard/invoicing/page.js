@@ -240,7 +240,7 @@ export default function InvoicingPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-4xl font-display text-white">Invoicing</h1>
+        <h1 className="text-4xl font-aeonik text-white">Invoicing</h1>
 
         <p className="text-white mt-2">
           Your plan validity, billing details, and previous invoices.

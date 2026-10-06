@@ -1,22 +1,32 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Copy, Download, Eye, Heart, Lock } from "lucide-react";
-import { getEffectHref, getQuickCategoryLabel, resolveEffectCategoryId } from "@/lib/categories";
+import { Check, Copy, Download, Eye, Heart, Lock } from "lucide-react";
+import { getEffectHref, getEffectPreviewHref, getQuickCategoryLabel, resolveEffectCategoryId } from "@/lib/categories";
+import { Tooltip } from "@/components/ui/Tooltip";
 import { resolveEffectVideoUrl, resolveMediaUrl, resizeR2ImageUrl } from "@/lib/media";
 import { useAutoplayPreviewVideo } from "@/hooks/useAutoplayPreviewVideo";
+import { twMerge } from "tailwind-merge";
 
 // Site fonts: body is Neue Haas, h1–h4 get Aeonik from globals.css, code is Geist Mono.
 export const DISPLAY = "font-normal tracking-[-.035em]";
-export const MONO = "font-geist-mono";
-export const LABEL = "text-[11px] uppercase tracking-[.14em]";
+export const MONO = "font-mono";
+export const LABEL = "text-[0.76vw] max-[1025px]:text-[1.4vw] max-md:text-[2.8vw] uppercase tracking-[.02em]";
 
 const NEW_WINDOW_MS = 1000 * 60 * 60 * 24 * 30;
-const BADGE = `inline-flex h-6 items-center gap-1.5 px-2.25 ${LABEL} text-[10.5px] tracking-[.12em] backdrop-blur-md`;
-const ICON_BTN =
-  "inline-flex h-8.5 min-w-8.5 cursor-pointer items-center justify-center gap-2 px-2.5 text-[12.5px] text-[#e8e8e8] bg-[rgba(20,20,20,.72)] shadow-[inset_0_0_0_1px_rgba(244,244,244,.12)] backdrop-blur-md transition-colors duration-500 hover:bg-[rgba(40,40,40,.9)] hover:text-white [&_svg]:size-3.5";
+// Text sizes in vw: desktop · tablet (max-[1025px]) · mobile (max-md).
+const T10 = "text-[0.73vw] max-[1025px]:text-[1.3vw] max-md:text-[2.7vw]";
+const T11 = "text-[0.76vw] max-[1025px]:text-[1.4vw] max-md:text-[2.8vw]";
+const T12 = "text-[0.87vw] max-[1025px]:text-[1.5vw] max-md:text-[3.2vw]";
+const T14 = "text-[0.97vw] max-[1025px]:text-[1.7vw] max-md:text-[3.6vw]";
+const T18 = "text-[1.25vw] max-[1025px]:text-[2.2vw] max-md:text-[4.1vw]";
+
+const BADGE = `inline-flex h-6 items-center gap-1.5 px-2.25 ${T10} uppercase tracking-[.02em] backdrop-blur-md`;
+// The dark action buttons on a card (Save, Copy install, Preview); the drawer reuses it.
+export const ICON_BTN =
+  `inline-flex h-8.5 min-w-8.5 cursor-pointer items-center justify-center gap-2 px-2.5 ${T12} text-[#e8e8e8] bg-[rgba(20,20,20,.72)] shadow-[inset_0_0_0_1px_rgba(244,244,244,.12)] backdrop-blur-md transition-colors duration-500 hover:bg-[rgba(40,40,40,.9)] hover:text-white [&_svg]:size-3.5`;
 
 export const isNewEffect = (effect) => !!effect?.addedAt && Date.now() - effect.addedAt < NEW_WINDOW_MS;
 export const installCommand = (effect) => `npx hyperiux add ${effect.name}`;
@@ -35,26 +45,24 @@ export function TierBadge({ tier }) {
   return tier === "pro" ? (
     <span className={`${BADGE} bg-[#ff5f00] text-[#141414]`}>Pro</span>
   ) : (
-    <span className={`${BADGE} bg-[rgba(244,244,244,.9)] text-[#1D1D1D]`}>Free</span>
+    <span className={`${BADGE} bg-[rgba(244,244,244,.9)] border border-black/10 text-[#1D1D1D]`}>Free</span>
   );
 }
 
 export function NewBadge() {
-  return <span className={`${BADGE} bg-[rgba(99,214,154,.18)] text-[#7fe0b0]`}>New</span>;
+  return <span className={`${BADGE} bg-green-500 text-white`}>New</span>;
 }
 
 /**
  * One effect in the vault grid. `small` drops the hover actions (trending row,
  * related effects); `dark` switches the meta text for dark backgrounds.
- * `compact` also drops the category badge for narrow cards (the category
- * still shows under the title). Clicking the card opens the preview drawer; the title is a real link to the
+ * Clicking the card opens the preview drawer; the title is a real link to the
  * effect page so it can be opened in a new tab and crawled.
  */
 export function EffectCardV4({
   effect,
   small = false,
   dark = false,
-  compact = false,
   priority = false,
   sizes = "(max-width: 767px) 100vw, (max-width: 1025px) 50vw, 33vw",
   isWishlisted = false,
@@ -63,8 +71,16 @@ export function EffectCardV4({
   onToggleWishlist,
   onCopyInstall,
   className = "",
+  // Extra classes for the parts under the preview; they override the defaults (tailwind-merge).
+  titleClassName = "",
+  metaClassName = "",
+  tagClassName = "",
 }) {
   const [imageError, setImageError] = useState(false);
+  // The copy icon turns into a tick for a moment after copying.
+  const [copied, setCopied] = useState(false);
+  const copiedTimerRef = useRef(0);
+  useEffect(() => () => clearTimeout(copiedTimerRef.current), []);
   const videoUrl = useMemo(() => resolveEffectVideoUrl(effect), [effect]);
   const cover = useMemo(() => resolveCover(effect), [effect]);
   const { cardRef, showVideo, shouldRenderVideo, videoProps } = useAutoplayPreviewVideo(videoUrl);
@@ -97,7 +113,7 @@ export function EffectCardV4({
       }}
       className={`group relative grid cursor-pointer gap-3.5 outline-none ${className}`}
     >
-      <div className="relative aspect-video overflow-hidden bg-[#141414] transition-shadow duration-700 ease-[cubic-bezier(.16,1,.3,1)] group-hover:shadow-[0_30px_60px_-30px_rgba(255,95,0,.55)] group-focus-visible:shadow-[0_0_0_2px_#ff5f00]">
+      <div className="relative aspect-[16/8.7] overflow-hidden bg-[#141414] transition-shadow duration-700 ease-[cubic-bezier(.16,1,.3,1)] group-hover:shadow-[0_30px_60px_-30px_rgba(255,95,0,.55)] group-focus-visible:shadow-[0_0_0_2px_#ff5f00]">
         {cover && !imageError ? (
           <Image
             src={cover}
@@ -120,80 +136,94 @@ export function EffectCardV4({
         )}
         <span aria-hidden="true" className="pointer-events-none absolute inset-0 shadow-[inset_0_0_0_1px_rgba(244,244,244,.07)]" />
 
-        <div className="pointer-events-none absolute inset-x-3 top-3 flex justify-between">
-          <span className="flex gap-1.5">
-            {!compact && <span className={`${BADGE} bg-[rgba(20,20,20,.6)] text-[#d8d8d8]`}>{category}</span>}
-            {isNewEffect(effect) && <NewBadge />}
-          </span>
+        {/* Only the tier sits on the preview; the category already shows under the title. */}
+        <div className="pointer-events-none absolute top-3 right-3">
           <TierBadge tier={effect.tier} />
         </div>
 
         {!small && (
           <div className="absolute inset-x-3 bottom-3 flex justify-end gap-1.5 opacity-0 transition-opacity duration-500 group-focus-within:opacity-100 group-hover:opacity-100 max-[1025px]:opacity-100">
-            <button
-              type="button"
-              aria-label={isWishlisted ? `Remove ${effect.title} from saved` : `Save ${effect.title}`}
-              aria-pressed={isWishlisted}
-              onClick={(event) => {
-                stop(event);
-                onToggleWishlist?.(effect);
-              }}
-              className={`${ICON_BTN} ${isWishlisted ? "text-[#ff5f00]! [&_svg]:fill-[#ff5f00]" : ""}`}
-            >
-              <Heart />
-            </button>
-            {canInstall ? (
+            <Tooltip label={isWishlisted ? "Saved" : "Save"} hideOnClick>
               <button
                 type="button"
+                aria-label={isWishlisted ? `Remove ${effect.title} from saved` : `Save ${effect.title}`}
+                aria-pressed={isWishlisted}
                 onClick={(event) => {
                   stop(event);
-                  onCopyInstall?.(effect);
+                  onToggleWishlist?.(effect);
                 }}
-                className={`${ICON_BTN} max-md:hidden`}
+                className={`${ICON_BTN} ${isWishlisted ? "text-[#ff5f00]! [&_svg]:fill-[#ff5f00]" : ""}`}
               >
-                <Copy />
-                <span>Copy install</span>
+                <Heart />
               </button>
+            </Tooltip>
+            {canInstall ? (
+              <Tooltip label={copied ? "Copied" : "Copy install command"} className="max-md:hidden">
+                <button
+                  type="button"
+                  aria-label={`Copy install command for ${effect.title}`}
+                  onClick={(event) => {
+                    stop(event);
+                    onCopyInstall?.(effect);
+                    setCopied(true);
+                    clearTimeout(copiedTimerRef.current);
+                    copiedTimerRef.current = setTimeout(() => setCopied(false), 1600);
+                  }}
+                  className={`${ICON_BTN} ${copied ? "text-[#ff5f00]!" : ""}`}
+                >
+                  {/* Copy and tick share one spot and cross-fade (scale + turn) into each other. */}
+                  <span className="relative grid size-3.5 place-items-center" aria-hidden="true">
+                    <Copy className={`absolute transition-[opacity,transform] duration-300 ease-out ${copied ? "scale-50 -rotate-45 opacity-0" : "scale-100 rotate-0 opacity-100"}`} />
+                    <Check className={`absolute transition-[opacity,transform] duration-300 ease-out ${copied ? "scale-100 rotate-0 opacity-100" : "scale-50 rotate-45 opacity-0"}`} />
+                  </span>
+                </button>
+              </Tooltip>
             ) : (
-              <Link href="/pricing" onClick={(event) => event.stopPropagation()} className={`${ICON_BTN} max-md:hidden`}>
-                <Lock />
-                <span>Pro</span>
-              </Link>
+              <Tooltip label="Unlock with Pro" className="max-md:hidden">
+                <Link href="/pricing" aria-label="Unlock with Pro" onClick={(event) => event.stopPropagation()} className={ICON_BTN}>
+                  <Lock />
+                </Link>
+              </Tooltip>
             )}
-            <button
-              type="button"
-              onClick={(event) => {
-                stop(event);
-                onOpen?.(effect);
-              }}
-              className={`${ICON_BTN} bg-[#ff5f00]! text-[#141414]! shadow-none! hover:bg-[#ff7a26]!`}
-            >
-              <Eye />
-              <span>Preview</span>
-            </button>
+            <Tooltip label="Live demo">
+              <Link
+                href={getEffectPreviewHref(effect)}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`Open the live demo of ${effect.title}`}
+                onClick={(event) => event.stopPropagation()}
+                className={`${ICON_BTN} bg-[#ff5f00]! text-[#141414]! shadow-none! hover:bg-[#ff7a26]!`}
+              >
+                <Eye />
+              </Link>
+            </Tooltip>
           </div>
         )}
       </div>
 
       <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-x-3 gap-y-1">
-        <h3 className={`${DISPLAY} truncate text-lg leading-tight font-medium tracking-[-.02em] max-md:text-base`}>
+        <h3 className={twMerge(`${DISPLAY} truncate ${T18} leading-tight font-medium tracking-[-.02em]`, titleClassName)}>
           <Link href={href} prefetch={false} className="transition-colors duration-300 hover:text-[#ff5f00]">
             {effect.title}
           </Link>
         </h3>
-        <div className="col-start-2 row-span-2 flex max-w-40 flex-wrap justify-end gap-1">
+        {/* Tags never break mid-word: each chip stays on one line (ellipsis if a single tag is wider than the column). */}
+        <div className="col-start-2 row-span-2 flex max-w-[13vw] flex-wrap justify-end gap-1 max-[1025px]:max-w-[24vw] max-md:max-w-[50vw]">
           {deps.map((dep) => (
             <span
               key={dep}
-              className={`${MONO} inline-flex h-5.5 items-center px-1.75 text-[11px] ${
-                dark ? "text-[#8c8c8c] shadow-[inset_0_0_0_1px_rgba(244,244,244,.12)]" : "text-[#6B6B6B] shadow-[inset_0_0_0_1px_rgba(29,29,29,.1)]"
-              }`}
+              className={twMerge(
+                `${MONO} block h-5.5 max-w-full truncate whitespace-nowrap border px-1.75 py-0.5 ${T11} ${
+                dark ? "text-[#8c8c8c] " : "text-[#6B6B6B]"
+              }`,
+                tagClassName,
+              )}
             >
               {dep}
             </span>
           ))}
         </div>
-        <p className={`flex items-center gap-3 text-sm ${dark ? "text-[#8c8c8c]" : "text-[#6B6B6B]"}`}>
+        <p className={twMerge(`flex items-center gap-3 ${T14} ${dark ? "text-[#8c8c8c]" : "text-[#6B6B6B]"}`, metaClassName)}>
           <span>{category}</span>
           {effect.installCount > 0 && (
             <span className="inline-flex items-center gap-1" title="CLI installs">

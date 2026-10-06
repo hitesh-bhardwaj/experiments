@@ -58,7 +58,7 @@ export function TextField({ id, label, type = "text", value, onChange, placehold
 
   return (
     <div className="mb-5 space-y-2 max-md:mb-4">
-      <label htmlFor={id} className="block text-sm font-geist-mono font-medium tracking-wide text-white/80">
+      <label htmlFor={id} className="block text-sm font-mono font-medium tracking-wide text-white/80">
         {label}
       </label>
       <div className="group relative w-full h-fit">

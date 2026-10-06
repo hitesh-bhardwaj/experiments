@@ -107,13 +107,15 @@ export function Tooltip({
         createPortal(
           <span
             role="tooltip"
+            // w-max: size to the label, not to the space left before the viewport edge
+            // (short labels near the right edge were wrapping); max-w still wraps long ones.
             style={{
               position: "fixed",
               top: coords.top,
               left: coords.left,
               transform: coords.transform,
             }}
-            className="pointer-events-none z-9999  max-w-[20vw] max-h-30  text-center  bg-[#2B2B2B] px-3 py-1.5 text-xs font-medium text-white shadow-lg max-md:hidden max-[1025px]:hidden"
+            className="pointer-events-none z-9999 w-max max-w-[20vw] max-h-30  text-center  bg-[#2B2B2B] px-3 py-1.5 text-xs font-medium text-white shadow-lg max-md:hidden max-[1025px]:hidden"
           >
             {label}
           </span>,

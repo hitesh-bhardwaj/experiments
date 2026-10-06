@@ -52,6 +52,9 @@ export default function SignalSection() {
 
             // Press and hold
             let pressedAt = 0;
+            // As in the prototype, the hold sound only starts once the dead zone has passed,
+            // so a quick click is just a pluck
+            let sounding = false;
             let raf = 0;
             const charge = { v: 0 };
             let decay = null;
@@ -59,6 +62,10 @@ export default function SignalSection() {
                 raf = requestAnimationFrame(tick);
                 const progress = (performance.now() - pressedAt - HOLD_DEAD_ZONE_MS) / HOLD_CHARGE_MS;
                 charge.v = progress > 0 ? Math.min(1, progress) ** 2 : 0;
+                if (progress > 0 && !sounding) {
+                    sounding = true;
+                    sound?.holdStart?.();
+                }
                 wave.setCharge(charge.v);
             };
             const onDown = (e) => {
@@ -67,7 +74,7 @@ export default function SignalSection() {
                 pressedAt = performance.now();
                 decay?.kill();
                 charge.v = 0;
-                sound?.holdStart?.();
+                sounding = false;
                 raf = requestAnimationFrame(tick);
             };
             const onUp = () => {
@@ -76,7 +83,8 @@ export default function SignalSection() {
                 const held = performance.now() - pressedAt;
                 pressedAt = 0;
                 const full = charge.v > FULL_CHARGE;
-                sound?.holdEnd?.(full);
+                if (sounding) sound?.holdEnd?.(full);
+                sounding = false;
                 if (held < TAP_MAX_MS) wave.tap();
                 else {
                     const kind = wave.release(full);

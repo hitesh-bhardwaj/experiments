@@ -225,7 +225,7 @@ export function TextFillAnimation({
         <div className="split__wrapper tfa-text-wrapper relative z-10 mx-auto">
           <h2
             ref={textRef}
-            className={`tfa-heading opacity-0 font-display font-medium leading-[1.18] max-md:leading-[1.4]! ${className}`}
+            className={`tfa-heading opacity-0 font-aeonik font-medium leading-[1.18] max-md:leading-[1.4]! ${className}`}
           >
             {text}
           </h2>

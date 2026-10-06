@@ -2,6 +2,11 @@
 
 import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
 
+// Canvas can't read CSS variables: resolve next/font's real Plex Mono family name
+function codeFontForCanvas() {
+  return (typeof document !== "undefined" ? `${getComputedStyle(document.body).getPropertyValue("--font-plex-mono").trim() || '"IBM Plex Mono"'}, ui-monospace, Menlo, monospace` : "ui-monospace, Menlo, monospace");
+}
+
 // Two ends of the morph. Each is sampled into the *same* grid, so a glyph in one
 // shape has a real coordinate to travel to in the other - this is what makes it
 // an actual redistribution of glyphs rather than a crossfade.
@@ -267,7 +272,7 @@ const AsciiMorph = forwardRef(function AsciiMorph(
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
         ctx.imageSmoothingEnabled = false;
         // Integer px font - fractional sizes anti-alias into mush.
-        ctx.font = `${Math.max(1, Math.round(cell))}px ui-monospace, SFMono-Regular, Menlo, monospace`;
+        ctx.font = `${Math.max(1, Math.round(cell))}px ${codeFontForCanvas()}`;
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
         ctx.fillStyle = COLOR;

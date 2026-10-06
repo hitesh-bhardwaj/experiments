@@ -2,6 +2,7 @@
 
 import "highlight.js/styles/night-owl.css";
 import { createContext, useContext, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
+import Lenis from "lenis";
 import {
     PACKAGE_MANAGERS,
     getPackageManager,
@@ -210,6 +211,18 @@ export function CodeBlock({
 }) {
     const [copied, setCopied] = useState(false);
 
+    // Smooth scrolling inside the code (its own Lenis; the page's Lenis is kept
+    // out by data-lenis-prevent). Skipped for reduced motion.
+    const codeScrollRef = useRef(null);
+    const codeContentRef = useRef(null);
+    useEffect(() => {
+        const wrapper = codeScrollRef.current;
+        const content = codeContentRef.current;
+        if (!wrapper || !content || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return undefined;
+        const lenis = new Lenis({ wrapper, content, lerp: 0.1, smoothWheel: true, autoRaf: true });
+        return () => lenis.destroy();
+    }, []);
+
     const isJsVariant = ["jsx", "js", "tsx", "ts"].includes(language);
     const sharedLanguage = useContext(CodeBlockLanguageContext);
     const [localVariant, setLocalVariant] = useState(language === "ts" || language === "tsx" ? "tsx" : "jsx");
@@ -248,9 +261,12 @@ export function CodeBlock({
     }
 
     return (
-        <div className={`relative overflow-hidden  fadeup codeblock-root ${className}`}>
+        <div data-sound-hover="off" className={`relative overflow-hidden  fadeup codeblock-root ${className}`}>
             {copyLocked && <CopyLimitOverlay message={lockedMessage} ctaHref={lockedCtaHref} />}
+            {/* data-lenis-prevent: wheel / touch scroll the code, not the page (Lenis) */}
             <div
+                data-lenis-prevent
+                ref={codeScrollRef}
                 className={`max-h-[30vw] overflow-y-auto w-full codeblock  ${
                     shouldShowHeader
                         ? "max-md:max-h-[50vh] max-[1025px]:max-h-[50vh] max-md:min-h-[5vh]"
@@ -260,6 +276,7 @@ export function CodeBlock({
                 }`}
                 style={{ scrollbarGutter: "stable" }}
             >
+                <div ref={codeContentRef}>
                 {shouldShowHeader ? (
                     <div className="sticky top-0 z-10 flex items-center justify-between bg-[#484848] px-4 py-2">
                         {pmVariants ? (
@@ -319,6 +336,7 @@ export function CodeBlock({
                         )}
                     </pre>
                 </div>
+                </div>
             </div>
         </div>
     );
@@ -342,6 +360,8 @@ export function InstallCommand({
 
     return (
         <div
+            data-sound-hover="off"
+            data-lenis-prevent
             className={`relative flex items-center gap-2 p-3  bg-neutral-900 border border-neutral-800 overflow-hidden ${
                 copyLocked ? "min-h-32.5" : ""
             }`}

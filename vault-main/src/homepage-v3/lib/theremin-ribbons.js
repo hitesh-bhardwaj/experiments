@@ -19,6 +19,8 @@ const RIBBON_THICKNESS = 1.05;
 
 // Motion
 const INTRO_DURATION = 4.2;
+// Footer ribbons start this far right and slide in as the footer comes into view
+const FOOTER_SLIDE_FROM = 9;
 const INTRO_DROP = 6; // world units the hero ribbons rise through on play()
 const NARROW_ASPECT = 0.9;
 
@@ -436,7 +438,7 @@ export function mountThereminRibbons(host, canvas, { pose = "hero", sound = null
       }
     }
     sGeo.attributes.position.needsUpdate = true;
-    sound?.sparkle?.(useMouse ? Math.min(1, stir / (SN * 0.05)) * Math.min(1, 0.25 + mSpd) : 0, (mouse.x + 1) / 2);
+    // No sound while the pointer stirs the shards (the shatter itself still sounds)
     if (mode === 3 && (done > SN * 0.97 || SH.t > REFORM_MAX_S)) {
       SH.mode = 4; SH.t = 0;
       ribMeshes.forEach((m) => { m.visible = true; });
@@ -614,6 +616,8 @@ export function mountThereminRibbons(host, canvas, { pose = "hero", sound = null
   const startNarrow = (canvas.clientWidth || innerWidth) / (canvas.clientHeight || innerHeight) < NARROW_ASPECT;
   const basePose = isHero ? (startNarrow ? POSE.ribbons_m : POSE.ribbons) : (startNarrow ? POSE.footer_m : POSE.footer);
   const cur = { rp: new THREE.Vector3().fromArray(basePose.rp), rr: new THREE.Vector3().fromArray(basePose.rr), rs: basePose.rs };
+  // Footer only: the cluster's x offset, starting off to the right
+  let footerSlide = FOOTER_SLIDE_FROM;
   let scrollV = 0, lastScroll = window.scrollY, scrollWave = 0, lastScrollStreak = 0, hoverAmp = 0, lastMx = -1, lastMy = -1, idleT = 3;
   // The loop pauses off-screen, so on resume the scroll it missed must not
   // land as one giant jump (that throws the layers apart and tilts them)
@@ -649,7 +653,8 @@ export function mountThereminRibbons(host, canvas, { pose = "hero", sound = null
     ribbons.scale.setScalar(cur.rs * (1 - ch * 0.09));
     ribbons.rotation.set(
       // Scroll speed only nudges the tilt: capped, so a fast flick can't swing the model off its axis
-      cur.rr.x + mouse.sy * 0.06 + clamp(scrollV, -MAX_TILT_SCROLL, MAX_TILT_SCROLL) * 0.0008,
+      // The hero model stays put while scrolling: no scroll tilt there (footer keeps it)
+      cur.rr.x + mouse.sy * 0.06 + (isHero ? 0 : clamp(scrollV, -MAX_TILT_SCROLL, MAX_TILT_SCROLL) * 0.0008),
       cur.rr.y + mouse.sx * 0.18,
       // The slow turn with page scroll belongs to the hero; at the footer (far
       // down the page) it would add a whole extra radian of twist
@@ -660,20 +665,26 @@ export function mountThereminRibbons(host, canvas, { pose = "hero", sound = null
     scrollWave = lerp(scrollWave, clamp(scrollV / 26, -1.3, 1.3), 0.07);
     // The hero holds its pose while scrolling (only the scroll ripple reacts)
     if (!isHero) {
+      // Slides in from the right as the footer arrives (and back out if it leaves)
+      const footerTop = host.getBoundingClientRect().top;
+      footerSlide = lerp(footerSlide, footerTop < window.innerHeight * 0.85 ? 0 : FOOTER_SLIDE_FROM, 1 - Math.pow(0.06, dt));
+      ribbons.position.x += footerSlide;
       // Drifts left / right with the pointer
-      ribbons.position.x += mouse.sx * 0.6;
+      ribbons.position.x += mouse.sx * 1.6;
       // Settles into its corner as the footer arrives (scaled to the small pose)
       const fr = clamp(host.getBoundingClientRect().top / window.innerHeight, -1, 1);
       ribbons.rotation.z += fr * 0.3;
       ribbons.position.y += fr * 0.8;
     }
-    subs.forEach((sb, j) => { sb.position.z = (j - (subs.length - 1) / 2) * Math.abs(scrollWave) * 0.3; });
+    // Rings fan apart with scroll speed - not in the hero, where the model holds still
+    subs.forEach((sb, j) => { sb.position.z = isHero ? 0 : (j - (subs.length - 1) / 2) * Math.abs(scrollWave) * 0.3; });
     RU.uScrollV.value = scrollWave;
     if (!reduced && Math.abs(scrollV) > 20 && time - lastScrollStreak > 0.3 && !SH.mode) {
       lastScrollStreak = time;
       fireStreak((Math.random() * streaks.length) | 0, 0, 0.45 + Math.min(0.5, Math.abs(scrollV) * 0.01));
     }
-    camera.position.z = lerp(camera.position.z, CAMERA_Z - ch * 1.8 - Math.abs(scrollWave) * 0.6, 0.06);
+    // Camera pushes in with scroll speed (footer only) and with the hold charge
+    camera.position.z = lerp(camera.position.z, CAMERA_Z - ch * 1.8 - (isHero ? 0 : Math.abs(scrollWave) * 0.6), 0.06);
     RU.uCharge.value = ch;
 
     if (SH.mode) { simShards(dt, time); sparkling = true; }

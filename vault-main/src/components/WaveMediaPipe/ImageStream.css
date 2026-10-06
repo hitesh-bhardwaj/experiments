@@ -107,7 +107,7 @@
 }
 
 .is-title h1 {
-  font-family: var(--font-display);
+  font-family: var(--font-aeonik);
   font-weight: 900;
   font-size: clamp(48px, 9vw, 126px);
   line-height: 0.87;

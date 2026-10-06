@@ -86,6 +86,7 @@ export default function ExploreTheEffects() {
     const container = useRef(null);
     const tabsRef = useRef(null);
     const pillRef = useRef(null);
+    const inkRef = useRef(null);
     const gridRef = useRef(null);
 
     useFadeUp(container);
@@ -101,6 +102,12 @@ export default function ExploreTheEffects() {
             if (!active) return;
             pillRef.current.style.width = `${active.offsetWidth}px`;
             pillRef.current.style.transform = `translateX(${active.offsetLeft}px)`;
+            // Dark label copy, clipped to exactly where the pill is (and moving with it)
+            const ink = inkRef.current;
+            if (ink) {
+                const right = ink.offsetWidth - active.offsetLeft - active.offsetWidth;
+                ink.style.clipPath = `inset(0 ${right}px 0 ${active.offsetLeft}px)`;
+            }
         };
         place();
         const ro = new ResizeObserver(place);
@@ -145,18 +152,34 @@ export default function ExploreTheEffects() {
                 ref={tabsRef}
                 role="tablist"
                 aria-label="Effect categories"
+                data-sound-hover="off"
                 data-fadeup-delay="0.1"
-                className="fadeup relative mt-[34px] inline-flex max-w-full max-md:overflow-x-auto gap-0.5 border border-grey bg-black/30 p-[3px] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+                className="fadeup relative mt-[34px] inline-flex max-w-full max-md:overflow-x-auto gap-0.5 border border-white/20 bg-black/30 p-[3px] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
             >
                 {/* <CornerMarks /> */}
                 {/* Sliding active pill, framed like the cards */}
                 <span
                     ref={pillRef}
                     aria-hidden="true"
-                    className="absolute inset-y-0.75 left-0 border border-grey bg-white/10 transition-[transform,width] duration-[600ms] motion-reduce:transition-none"
+                    className="absolute inset-y-0.75 left-0 border border-primary bg-primary transition-[transform,width] duration-[600ms] motion-reduce:transition-none"
                     style={{ transitionTimingFunction: EASE }}
                 >
                     {/* <CornerMarks /> */}
+                </span>
+                {/* The labels again in dark, clipped to the pill's box with the same timing,
+                    so whatever the orange covers reads dark at every moment of the slide
+                    instead of the text switching colour on its own clock (the blink). */}
+                <span
+                    ref={inkRef}
+                    aria-hidden="true"
+                    className="pointer-events-none absolute top-0 left-0 z-2 flex h-full w-max gap-0.5 p-[3px] transition-[clip-path] duration-[600ms] motion-reduce:transition-none"
+                    style={{ transitionTimingFunction: EASE }}
+                >
+                    {CATEGORIES.map((category) => (
+                        <span key={category.label} className="flex h-[30px] shrink-0 items-center px-3.5 font-mono text-[11px] font-medium tracking-wide text-[#111111] uppercase">
+                            {category.label}
+                        </span>
+                    ))}
                 </span>
                 {CATEGORIES.map((category, i) => (
                     <button
@@ -166,7 +189,7 @@ export default function ExploreTheEffects() {
                         aria-selected={tab === i}
                         aria-controls="explore-the-effects-panel"
                         onClick={() => choose(i)}
-                        className={`relative z-1 h-[30px] shrink-0 px-3.5 font-mono text-[11px] font-medium tracking-wide uppercase transition-colors duration-[600ms] ${tab === i ? "text-[#F4F4F4]" : "text-white/50 hover:text-white/80"}`}
+                        className="relative z-1 h-[30px] shrink-0 px-3.5 font-mono text-[11px] font-medium tracking-wide text-white/50 uppercase transition-colors duration-300 hover:text-white/80"
                     >
                         {category.label}
                     </button>
@@ -183,8 +206,12 @@ export default function ExploreTheEffects() {
             >
                 {CATEGORIES[shown].effects.map((item) => (
                     <article
-                        key={item.slug}
-                        className="relative grid grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] gap-6 border border-grey bg-black/30 p-4 text-[#F4F4F4] max-sm:grid-cols-1 max-sm:gap-4"
+                        // Keyed per tab, so a card that appears in two tabs is replaced, not
+                        // reused (a reused card was knocked to opacity 0 and back: the blink).
+                        // Starts hidden; the slide-in brings it up.
+                        key={`${shown}-${item.slug}`}
+                        style={{ opacity: 0 }}
+                        className="relative grid grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] gap-6 border border-white/20 bg-black/30 backdrop-blur-lg p-4 text-[#F4F4F4] max-sm:grid-cols-1 max-sm:gap-4"
                     >
                         {/* <CornerMarks /> */}
                         <div className="aspect-[16/10] overflow-hidden bg-white/5">

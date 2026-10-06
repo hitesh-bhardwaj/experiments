@@ -64,7 +64,7 @@ export default function WhyVault() {
             id="why"
             aria-label="Why Vault"
             data-sound-flow="off"
-            className="relative mx-auto max-w-[calc(100%-2*clamp(0px,1vw,16px))] bg-[#F4F4F4] font-neue-haas text-[#1D1D1D]"
+            className="relative mx-auto bg-[#F4F4F4] font-avenir text-[#1D1D1D]"
         >
             <div className="mx-auto grid max-w-[1536px] grid-cols-[minmax(0,.8fr)_minmax(0,1.6fr)] gap-8 px-[clamp(1.25rem,3vw,3rem)] pt-[clamp(5rem,14vh,9rem)] pb-[clamp(4rem,10vh,7rem)] max-md:grid-cols-1">
                 <p className="fadeup max-w-[max(15vw,14rem)] text-[max(1.1vw,0.875rem)] leading-[1.45] max-md:max-w-[36ch] mt-3">
@@ -88,7 +88,7 @@ export default function WhyVault() {
                             aria-current={active === i ? "true" : undefined}
                             className={`w-fit justify-self-start text-left text-[clamp(1.5rem,2.3vw,2.2rem)] leading-[1.12] tracking-tighter transition-colors duration-[600ms] ease-[cubic-bezier(.16,1,.3,1)] ${active === i ? "text-[#1D1D1D]" : "text-[#B4B4B4] hover:text-[#8a8a8a]"}`}
                         >
-                           <span className="font-display!"> {item.nav}</span>
+                           <span className="font-aeonik!"> {item.nav}</span>
                         </button>
                     ))}
                 </nav>
@@ -97,7 +97,7 @@ export default function WhyVault() {
                     {WHY_VAULT_ITEMS.map((item, i) => (
                         <article key={item.id} data-wv-panel={i}>
                             <div className="fadeup">{renderCard(item.id, i)}</div>
-                            <LineReveal as="h3" className="mt-7 max-md:mt-5 text-[clamp(1.25rem,1.6vw,1.5rem)] font-normal font-display! tracking-[-.02em]">{item.title}</LineReveal>
+                            <LineReveal as="h3" className="mt-7 max-md:mt-5 text-[clamp(1.25rem,1.6vw,1.5rem)] font-normal font-aeonik! tracking-[-.02em]">{item.title}</LineReveal>
                             <p data-fadeup-delay="0.15" className="fadeup mt-4 max-md:mt-3 max-w-[52ch] text-base max-sm:text-[15px] leading-[1.65] text-[#6B6B6B]">{item.body}</p>
                         </article>
                     ))}

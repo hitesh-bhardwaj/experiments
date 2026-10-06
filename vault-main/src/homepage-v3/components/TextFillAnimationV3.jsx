@@ -266,7 +266,7 @@ export default function TextFillAnimationV3({
       <div className="split__wrapper tfa-text-wrapper relative z-10 mx-auto text-center">
         <Tag
           ref={textRef}
-          className={`tfa-heading opacity-0 font-neue-haas leading-[1.18] ${className}`}
+          className={`tfa-heading opacity-0 font-avenir leading-[1.18] ${className}`}
         >
           {text}
         </Tag>

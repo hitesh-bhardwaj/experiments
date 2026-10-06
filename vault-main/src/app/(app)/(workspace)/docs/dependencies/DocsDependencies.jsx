@@ -5,7 +5,7 @@ import Heading2 from "@/components/DocsContent/Heading2";
 import Para from "@/components/DocsContent/Para";
 import DocsList, { DocsListItem } from "@/components/DocsContent/List";
 import DocsTable from "@/components/DocsContent/Table";
-import {CodeBlock} from "@/components/ui/CodeBlock";
+import { CodeBlock } from "@/components/DocsContent/DocsCodeBlock";
 import Heading3 from "@/components/DocsContent/Heading3New";
 import { useFadeUp } from "@/components/Animations/gsapAnimations";
 

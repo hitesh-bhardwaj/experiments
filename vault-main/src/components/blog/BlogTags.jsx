@@ -14,7 +14,7 @@ export default function BlogTags({ tags = [] }) {
         {tags.map((tag) => (
           <span
             key={tag}
-            className="bg-[#2B2B2B] font-geist-mono px-2 py-0.5 text-[0.85vw] max-[1025px]:text-[2vw] flex items-center tracking-tight justify-center capitalize text-foreground max-md:px-2 max-md:text-muted max-md:text-sm"
+            className="bg-[#2B2B2B] font-mono px-2 py-0.5 text-[0.85vw] max-[1025px]:text-[2vw] flex items-center tracking-tight justify-center capitalize text-foreground max-md:px-2 max-md:text-muted max-md:text-sm"
           >
             {tag}
           </span>

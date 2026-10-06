@@ -85,13 +85,13 @@ export function createSignalWave(canvas, options = {}) {
   /* The string only feels the pointer over `hitArea` (e.g. the wave's own block, when the canvas is a
      larger pinned layer); anywhere else it settles back to a flat line. Checked every frame, since the
      page can scroll under a still pointer. */
-  const pointer = { x: -1, y: -1, inPage: false };
+  const pointer = { x: -1, y: -1, inPage: false, moved: false };
   const updatePointer = () => {
     const r = canvas.getBoundingClientRect(), h = (o.hitArea || canvas).getBoundingClientRect();
     mouse.x = ((pointer.x - r.left) / r.width) * 2 - 1; mouse.y = ((pointer.y - r.top) / r.height) * 2 - 1;
     mouse.on = inZone && pointer.inPage && pointer.x >= h.left && pointer.x <= h.right && pointer.y >= h.top && pointer.y <= h.bottom;
   };
-  const onMove = (e) => { pointer.x = e.clientX; pointer.y = e.clientY; pointer.inPage = true; updatePointer(); };
+  const onMove = (e) => { pointer.x = e.clientX; pointer.y = e.clientY; pointer.inPage = true; pointer.moved = true; updatePointer(); };
   const onLeavePage = () => { pointer.inPage = false; mouse.on = false; };
   const tri = (j, c, w) => Math.max(0, 1 - Math.abs(j - c) / w);
 
@@ -105,9 +105,11 @@ export function createSignalWave(canvas, options = {}) {
   }
 
   /* ---- simulation + drawing ---- */
-  let charge = 0, time = 0;
+  let charge = 0, time = 0, scrolling = false;
   function sim(dt) {
-    let i, j; const hit = mouse.on && local(); let yN = 0.5;
+    // As in the prototype (line fixed to the viewport): scrolling the line under a still pointer
+    // does not touch the string, only real pointer movement does
+    let i, j; const hit = mouse.on && !scrolling && local(); let yN = 0.5;
     if (hit) {
       const idx = Math.round(((lp.x + XW) / (2 * XW)) * (N - 1));
       if (idx >= 0 && idx < N) {
@@ -145,7 +147,7 @@ export function createSignalWave(canvas, options = {}) {
 
   const pose0 = () => (innerWidth / innerHeight < 0.9 ? o.poseMobile : o.pose);
   const cur = { op: new T.Vector3().fromArray(pose0().op), os: pose0().os };
-  let raf = 0, running = false, visible = true, last = performance.now();
+  let raf = 0, running = false, visible = true, last = performance.now(), lastDy = 0;
   function frame(now) {
     raf = requestAnimationFrame(frame);
     const dt = Math.min(0.05, (now - last) / 1000); last = now;
@@ -158,6 +160,7 @@ export function createSignalWave(canvas, options = {}) {
     // exactly as in the prototype's viewport-centred pose.
     const cr = canvas.getBoundingClientRect(), ar = anchor.getBoundingClientRect(), dyPx = ar.top + ar.height / 2 - cr.top - H / 2;
     camera.setViewOffset(W, H, 0, -dyPx, W, H);
+    scrolling = Math.abs(dyPx - lastDy) > 0.5 && !pointer.moved; lastDy = dyPx; pointer.moved = false;
     mouse.sx += (mouse.x - mouse.sx) * 0.03; mouse.sy += (mouse.y - mouse.sy) * 0.03;
     G.position.copy(cur.op); G.scale.setScalar(Math.max(0.001, cur.os)); G.rotation.set(mouse.sy * 0.06, mouse.sx * 0.1, 0);
     sim(dt);

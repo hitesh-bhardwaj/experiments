@@ -100,7 +100,7 @@ const NumberCounterTwo = ({
  return (
  <div ref={containerRef} className="flex items-end gap-[2vw] w-fit max-[1025px]:gap-0">
  <div
- className={`flex items-end font-display leading-none ${textSize} ${(fontWeight && FONT_WEIGHTS[fontWeight]) ||'font-normal'}`}
+ className={`flex items-end font-aeonik leading-none ${textSize} ${(fontWeight && FONT_WEIGHTS[fontWeight]) ||'font-normal'}`}
  style={{ color }}
  >
  {cleanValue.split('').map((digit, index) => (

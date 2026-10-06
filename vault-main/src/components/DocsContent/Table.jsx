@@ -53,7 +53,7 @@ export default function DocsTable({
         : colorVariant === "outline"
           ? "[--docs-table-border:rgba(255,255,255,0.22)] [--docs-table-header-bg:transparent] [--docs-table-header-color:#fff] [--docs-table-cell-color:rgba(255,255,255,0.76)]"
           : // Default: the docs content sits on the light sheet - dark text and rules, dark header
-            "[--docs-table-border:rgba(29,29,29,0.14)] [--docs-table-header-bg:#272727] [--docs-table-header-color:#fff] [--docs-table-cell-color:rgba(29,29,29,0.82)]";
+            "[--docs-table-border:rgba(29,29,29,0.14)] [--docs-table-header-bg:rgb(0,0,0,0.8)] [--docs-table-header-color:#fff] [--docs-table-cell-color:rgba(29,29,29,0.82)]";
 
   return (
     <div
@@ -84,7 +84,7 @@ export default function DocsTable({
               key={col.key ?? idx}
               scope="col"
               className={cx(
-                "bg-(--docs-table-header-bg) px-4 py-3.5 text-[1.2rem] font-semibold text-(--docs-table-header-color) border-b border-(--docs-table-border)",
+                "bg-(--docs-table-header-bg) px-4 py-3.5 text-[1.2rem] font-medium text-(--docs-table-header-color) border-b border-(--docs-table-border)",
                 idx !== normalizedColumns.length - 1 &&
                   "border-r border-(--docs-table-border)",
                 col.headerClassName,

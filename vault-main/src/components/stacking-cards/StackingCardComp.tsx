@@ -259,7 +259,7 @@ const SliderCard = ({
  max-md:space-y-3"
                     >
                         <h3
-                            className="font-display text-[2.5vw] text-black leading-[1.2]
+                            className="font-aeonik text-[2.5vw] text-black leading-[1.2]
  max-md:text-[7vw] max-[1025px]:text-[4.5vw]"
                         >
                             {title}

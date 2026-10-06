@@ -33,11 +33,11 @@ export default function BlogAuthor({ author, className = "" }) {
       )}
 
       <div className="flex flex-col gap-[0.4vw]">
-        <p className="font-geist text-[0.9vw] leading-tight text-white max-[1025px]:text-[2.6vw] max-md:text-[3.6vw]">
+        <p className="font-avenir text-[0.9vw] leading-tight text-white max-[1025px]:text-[2.6vw] max-md:text-[3.6vw]">
           {author.name}
         </p>
         {designation && (
-          <p className="font-geist text-[0.9vw] leading-tight text-[#AEAEAE] max-[1025px]:text-[2.4vw] max-md:text-[3.4vw]">
+          <p className="font-avenir text-[0.9vw] leading-tight text-[#AEAEAE] max-[1025px]:text-[2.4vw] max-md:text-[3.4vw]">
             {designation}
           </p>
         )}

@@ -152,7 +152,7 @@ export default function SavedPage() {
 
       {/* Header */}
       <div>
-        <h1 className="text-4xl font-display text-white">
+        <h1 className="text-4xl font-aeonik text-white">
           Saved Effects
         </h1>
 

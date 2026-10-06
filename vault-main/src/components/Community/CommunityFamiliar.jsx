@@ -93,7 +93,7 @@ export default function CommunityFamiliar() {
   };
 
   return (
-    <div ref={rootRef} className="relative z-1 mx-auto max-w-[calc(100%-2*clamp(0px,1vw,16px))] bg-[#F4F4F4] text-[#1D1D1D]" data-zone="sheet">
+    <div ref={rootRef} className="relative z-1 mx-auto max-w-[calc(100%-2*clamp(0px,1vw,16px))] bg-[#F4F4F4] text-[#1D1D1D]" data-zone="sheet" data-sound-flow="off">
       <section className="mx-auto max-w-[1536px] px-[clamp(1.25rem,3vw,3rem)] pt-[clamp(6rem,16vh,10rem)] pb-[clamp(5rem,12vh,8rem)]" aria-labelledby="fam-h">
         {/* <p className="eyebrow label fadeup" id="fam-h">Sound familiar?</p> */}
         <ol className="mt-12 grid">
@@ -138,7 +138,7 @@ export default function CommunityFamiliar() {
             <article key={title} data-panel={i}>
               <Card joined={joined} />
               <h3 className={`font-aeonik font-normal tracking-[-.035em] leading-[1.02] mt-7 text-[clamp(1.25rem,1.6vw,1.5rem)]`}>{title}</h3>
-              <p className={`max-w-[40vw] max-[1025px]:max-w-[60ch] max-md:max-w-full text-base leading-[1.65] text-[#9C9C9C] mt-3`}>{text}</p>
+              <p className={`max-w-[40vw] max-[1025px]:max-w-[70vw] max-md:max-w-full text-base leading-[1.65] text-[#9C9C9C] mt-3`}>{text}</p>
             </article>
           ))}
         </div>

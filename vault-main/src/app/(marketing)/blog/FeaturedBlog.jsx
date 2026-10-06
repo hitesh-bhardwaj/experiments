@@ -31,10 +31,10 @@ function FeaturedBlogContent({ featuredPost }) {
     <section ref={sectionRef} className="space-y-[8vw] max-md:px-[7vw] max-md:mt-[6vw]">
       <div className="space-y-[2vw]">
         <LineWipe>
-          <h2 className="t96 max-[1025px]:text-[6.5vw] font-neue-haas text-center max-md:text-[9.5vw]">Latest From The Vault</h2>
+          <h2 className="t96 max-[1025px]:text-[6.5vw] font-avenir text-center max-md:text-[9.5vw]">Latest From The Vault</h2>
         </LineWipe>
         <LineWipe delay={0.5}>
-          <p className="text24 max-[1025px]:text-[3vw] text-center text-white font-geist max-md:mt-[4vw] max-md:text-[2.4vw] max-sm:text-[4vw]">
+          <p className="text24 max-[1025px]:text-[3vw] text-center text-white font-avenir max-md:mt-[4vw] max-md:text-[2.4vw] max-sm:text-[4vw]">
             Fresh notes on the effects, systems, and decisions behind Hyperiux Vault.
           </p>
         </LineWipe>
@@ -60,14 +60,14 @@ function FeaturedBlogContent({ featuredPost }) {
 
         <div className="flex w-[45%] grow flex-col gap-2 items-start justify-start my-4 max-[1025px]:w-full">
           <LineWipe>
-            <p className="text-[1vw] font-geist-mono text-light-grey max-[1025px]:text-[2.5vw] max-md:text-[4vw]">
+            <p className="text-[1vw] font-mono text-light-grey max-[1025px]:text-[2.5vw] max-md:text-[4vw]">
               {formatFeaturedDate(featuredPost.publishedAt)}
             </p>
           </LineWipe>
 
           <Link href={`/blog/${featuredPost.slug}`}>
             <LineWipe className='w-[85%]'>
-              <h3 className="text64 font-neue-haas mt-[1.2vw]  max-md:mt-[4vw] max-sm:text-[7.5vw]!">
+              <h3 className="text64 font-avenir mt-[1.2vw]  max-md:mt-[4vw] max-sm:text-[7.5vw]!">
                 {featuredPost.title}
               </h3>
             </LineWipe>
@@ -75,7 +75,7 @@ function FeaturedBlogContent({ featuredPost }) {
 
           {featuredPost.summary && (
             <LineWipe delay={0.5}>
-              <p className="text24 font-neue-haas mt-[1.8vw] text-white w-[85%] max-md:mt-[4vw] max-[1025px]:text-[2.5vw] max-md:text-[4vw]">
+              <p className="text24 font-avenir mt-[1.8vw] text-white w-[85%] max-md:mt-[4vw] max-[1025px]:text-[2.5vw] max-md:text-[4vw]">
                 {featuredPost.summary}
               </p>
             </LineWipe>

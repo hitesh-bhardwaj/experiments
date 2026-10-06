@@ -32,6 +32,7 @@ import { WISHLIST_CHANGED_EVENT } from "@/lib/wishlistEvents";
 import { prefersReducedMotion } from "@/lib/motion";
 import { markScrollToPricingCards } from "@/lib/pricingScrollIntent";
 import ButtonV3 from "@/homepage-v3/components/ButtonV3";
+import SoundToggle from "@/homepage-v3/components/SoundToggle";
 
 const useIsoLayoutEffect =
   typeof window === "undefined" ? useEffect : useLayoutEffect;
@@ -267,6 +268,40 @@ export function VaultHeader({
     };
   }, []);
 
+  // Opt-in scroll-away: a page can mark an element with data-vault-header-scroll-away
+  // (the effects listing marks its sticky controls bar). Once that element's top
+  // reaches 10% of the viewport, the desktop header slides up in step with the
+  // scroll until it's fully out of view, and stays out while the element is stuck;
+  // scrolling back above that point brings it back the same way. Uses the pixel `y`
+  // so it adds to (and never fights) the footer hide above, which tweens yPercent.
+  useEffect(() => {
+    const marker = document.querySelector("[data-vault-header-scroll-away]");
+    const header = desktopHeaderRef.current;
+    if (!marker || !header) return;
+
+    const tween = gsap.fromTo(
+      header,
+      { y: 0 },
+      {
+        y: () => -header.offsetHeight,
+        ease: "none",
+        scrollTrigger: {
+          trigger: marker,
+          start: "top 10%",
+          end: () => `+=${header.offsetHeight}`,
+          scrub: true,
+          invalidateOnRefresh: true,
+        },
+      },
+    );
+
+    return () => {
+      tween.scrollTrigger?.kill();
+      tween.kill();
+      gsap.set(header, { y: 0 });
+    };
+  }, [pathname]);
+
   const close = useCallback(() => {
     setOpen(false);
     setSection(null);
@@ -417,12 +452,13 @@ export function VaultHeader({
           }`}
       >
         <div className="flex h-full items-center justify-end gap-3">
-          <div className="flex items-center gap-3">
+          {/* items-stretch: search, sound and the buttons all share the buttons' height */}
+          <div className="flex items-stretch gap-3">
             {showSearch && (
               <button
                 type="button"
                 onClick={openSearch}
-                className="group flex  py-[0.9vw] cursor-pointer items-center gap-4 bg-[#161616] px-3 text-xs text-white backdrop-blur-md transition-colors duration-300 hover:bg-white/10 hover:border-[#ff5f00] hover:text-forground max-md:hidden max-md:gap-3"
+                className="group flex cursor-pointer items-center gap-4 bg-[#161616] px-3 text-xs text-white backdrop-blur-md transition-colors duration-300 hover:bg-white/10 hover:border-[#ff5f00] hover:text-forground max-md:hidden max-md:gap-3"
                 aria-label="Search effects"
               >
                 <div className="flex items-center gap-2">
@@ -446,8 +482,10 @@ export function VaultHeader({
               </button>
             )}
 
+            <SoundToggle className="self-stretch bg-[#161616]! transition-colors duration-300 hover:bg-white/10!" />
+
             {isLoaded && user?.publicMetadata?.plan !== "pro" && (
-              <div className="block max-[1025px]:hidden">
+              <div className="flex max-[1025px]:hidden">
                 <ButtonV3
                   text="Upgrade to Pro"
                   id={"upgrade-to-pro-navbar"}
@@ -460,7 +498,7 @@ export function VaultHeader({
             )}
 
             {isLoaded && (!isSignedIn ? (
-              <div className="block max-[1025px]:hidden">
+              <div className="flex max-[1025px]:hidden">
                 <ButtonV3
                   text="Sign In"
                   id={"sign-in-navbar"}
@@ -469,7 +507,7 @@ export function VaultHeader({
                 />
               </div>
             ) : (
-              <div className="max-[1025px]:hidden">
+              <div className="flex max-[1025px]:hidden">
                 <ProfileDropdown savedCount={wishlistCount} usage={usage} plan={user?.publicMetadata?.plan || "free"} />
               </div>
             ))}

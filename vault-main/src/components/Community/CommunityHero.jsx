@@ -34,7 +34,7 @@ export default function CommunityHero() {
             </LineReveal>
           </div>
           <div className="fadeup grid gap-[2vw] pb-[.6rem] max-[1025px]:gap-6" data-fadeup-delay="0.2">
-            <p className="max-w-[34vw] max-[1025px]:max-w-[60ch] max-md:max-w-full text-[15px] leading-[1.65] text-[#c9c9c9]">
+            <p className="max-w-[34vw] max-[1025px]:max-w-[70vw] max-md:max-w-full text-[15px] leading-[1.65] text-[#c9c9c9]">
               Vault Community is a home for developers who treat motion as craft. Live teardowns, first
               access to new effects, honest critique, and a room full of people who care about the same
               details you do.

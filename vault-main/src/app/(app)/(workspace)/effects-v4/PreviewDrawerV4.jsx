@@ -1,37 +1,46 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import Image from "next/image";
 import Link from "next/link";
 import gsap from "gsap";
-import { useGSAP } from "@gsap/react";
 import { useLenis } from "lenis/react";
-import { Heart, Lock, X } from "lucide-react";
+import { Check, Copy, Heart, Lock } from "lucide-react";
 import ButtonV3 from "@/homepage-v3/components/ButtonV3";
 import { getEffectHref, getEffectPreviewHref, getEffectCategory, resolveEffectCategoryId } from "@/lib/categories";
 import { resolveEffectVideoUrl } from "@/lib/media";
 import {
   DISPLAY,
   EffectCardV4,
-  LABEL,
+  ICON_BTN,
   MONO,
-  NewBadge,
   TierBadge,
   installCommand,
-  isNewEffect,
   resolveCover,
 } from "./EffectCardV4";
 
-gsap.registerPlugin(useGSAP);
+// Text sizes in vw: desktop · tablet (max-[1025px]) · mobile (max-md).
+const T11 = "text-[0.76vw] max-[1025px]:text-[1.4vw] max-md:text-[2.8vw]";
+const T14 = "text-[0.97vw] max-[1025px]:text-[1.7vw] max-md:text-[3.6vw]";
+const T16 = "text-[1.1vw] max-[1025px]:text-[1.95vw] max-md:text-[4.1vw]";
 
-const GHOST =
-  "inline-flex h-11 cursor-pointer items-center justify-center gap-2.5 px-5 text-[#F4F4F4] bg-[rgba(244,244,244,.05)] shadow-[inset_0_0_0_1px_rgba(244,244,244,.14)] transition-[background-color,box-shadow] duration-500 hover:bg-[rgba(244,244,244,.1)] hover:shadow-[inset_0_0_0_1px_#ff5f00]";
+// Open/close choreography borrowed from the information-drawer effect: the panel
+// slides in from the right (power2.inOut) while the backdrop fades, and only then
+// does the content fade in. Closing runs it backwards - content fades out, then the
+// panel slides off to the right - before anything unmounts.
+const EASE = "power2.inOut";
+const PANEL_DURATION = 0.65;
+const CONTENT_DURATION = 0.25;
 
 /**
  * Quick-look panel for one effect: live preview, install command (or the Pro
  * lock), links out to the effect page and live demo, and more from the same
  * category. Portalled to <body> so no transformed ancestor can trap it.
+ *
+ * `effect` drives it: set it to open (or swap to another effect), clear it to
+ * close. The panel keeps showing the last effect while it animates out, so
+ * `canInstall` / `isWishlisted` are functions of the effect being shown.
  */
 export function PreviewDrawerV4({
   effect,
@@ -45,81 +54,182 @@ export function PreviewDrawerV4({
 }) {
   const overlayRef = useRef(null);
   const panelRef = useRef(null);
+  const contentRef = useRef(null);
   const closeRef = useRef(null);
   const lenis = useLenis();
   const open = !!effect;
+
+  // The effect on screen; it outlives `effect` until the close animation ends.
+  const [shown, setShown] = useState(null);
+  const shownRef = useRef(null);
+  const wasOpenRef = useRef(false);
+  const closingRef = useRef(false);
+  const tlRef = useRef(null);
+
   // The cover shows until the video actually plays (a loading video paints black).
   const [playingVideo, setPlayingVideo] = useState(null);
+  // "Copy" flips to "Copied" for a moment after copying the install command.
+  const [copied, setCopied] = useState(false);
+  const copiedTimerRef = useRef(0);
+  useEffect(() => () => clearTimeout(copiedTimerRef.current), []);
 
-  const categoryId = effect ? resolveEffectCategoryId(effect) : null;
+  // Open, swap, or close in response to `effect`.
+  useEffect(() => {
+    const prev = shownRef.current;
+    if (effect && !prev) {
+      shownRef.current = effect;
+      setShown(effect);
+      return;
+    }
+    // Reopened while it was still closing: slide back in, then show this effect.
+    if (effect && prev && closingRef.current) {
+      closingRef.current = false;
+      tlRef.current?.kill();
+      tlRef.current = gsap
+        .timeline()
+        .to(panelRef.current, { xPercent: 0, duration: PANEL_DURATION, ease: EASE })
+        .to(overlayRef.current, { opacity: 1, duration: PANEL_DURATION, ease: EASE }, "<")
+        .add(() => {
+          if (effect === prev) gsap.to(contentRef.current, { opacity: 1, duration: CONTENT_DURATION, ease: EASE });
+          else {
+            shownRef.current = effect;
+            setShown(effect);
+          }
+        });
+      return;
+    }
+    if (effect && prev && effect !== prev) {
+      tlRef.current?.kill();
+      tlRef.current = gsap.to(contentRef.current, {
+        opacity: 0,
+        duration: CONTENT_DURATION,
+        ease: EASE,
+        onComplete: () => {
+          shownRef.current = effect;
+          setShown(effect);
+        },
+      });
+      return;
+    }
+    if (!effect && prev) {
+      closingRef.current = true;
+      tlRef.current?.kill();
+      tlRef.current = gsap
+        .timeline({
+          onComplete: () => {
+            closingRef.current = false;
+            shownRef.current = null;
+            wasOpenRef.current = false;
+            setShown(null);
+          },
+        })
+        .to(contentRef.current, { opacity: 0, duration: CONTENT_DURATION, ease: EASE })
+        .to(panelRef.current, { xPercent: 100, duration: PANEL_DURATION, ease: EASE })
+        .to(overlayRef.current, { opacity: 0, duration: PANEL_DURATION, ease: EASE }, "<");
+    }
+  }, [effect]);
+
+  // Slide in on first open; on a swap only the content fades back in.
+  useLayoutEffect(() => {
+    if (!shown) return;
+    tlRef.current?.kill();
+    panelRef.current.scrollTop = 0;
+    if (!wasOpenRef.current) {
+      wasOpenRef.current = true;
+      gsap.set(panelRef.current, { xPercent: 100 });
+      gsap.set(overlayRef.current, { opacity: 0 });
+      gsap.set(contentRef.current, { opacity: 0 });
+      tlRef.current = gsap
+        .timeline()
+        .to(panelRef.current, { xPercent: 0, duration: PANEL_DURATION, ease: EASE })
+        .to(overlayRef.current, { opacity: 1, duration: PANEL_DURATION, ease: EASE }, "<")
+        .to(contentRef.current, { opacity: 1, duration: CONTENT_DURATION, ease: EASE });
+    } else {
+      tlRef.current = gsap.fromTo(contentRef.current, { opacity: 0 }, { opacity: 1, duration: CONTENT_DURATION, ease: EASE });
+    }
+  }, [shown]);
+
+  useEffect(() => () => tlRef.current?.kill(), []);
+
+  const categoryId = shown ? resolveEffectCategoryId(shown) : null;
   const categoryName = getEffectCategory(categoryId)?.name || categoryId;
-  const videoUrl = useMemo(() => (effect ? resolveEffectVideoUrl(effect) : null), [effect]);
-  const cover = useMemo(() => (effect ? resolveCover(effect) : null), [effect]);
+  const videoUrl = useMemo(() => (shown ? resolveEffectVideoUrl(shown) : null), [shown]);
+  const cover = useMemo(() => (shown ? resolveCover(shown) : null), [shown]);
   const related = useMemo(
     () =>
-      effect
-        ? effects.filter((item) => item.name !== effect.name && resolveEffectCategoryId(item) === categoryId).slice(0, 3)
+      shown
+        ? effects.filter((item) => item.name !== shown.name && resolveEffectCategoryId(item) === categoryId).slice(0, 2)
         : [],
-    [effect, effects, categoryId],
+    [shown, effects, categoryId],
   );
 
-  // Lock the page behind the drawer and close on Escape.
+  // Lock the page behind the drawer and close on Escape (released as soon as it starts closing).
+  // data-v4-drawer-open turns the page scrollbar's thumb transparent (globals.css), so
+  // only the panel's scrollbar shows and nothing shifts. Scroll input outside the panel
+  // is cancelled, so the page can't move; the panel scrolls natively and
+  // overscroll-behavior: contain stops it chaining at its ends. lenis.stop() covers
+  // pages that run Lenis.
   useEffect(() => {
     if (!open) return undefined;
+    const root = document.documentElement;
+    root.setAttribute("data-v4-drawer-open", "");
     lenis?.stop();
-    document.documentElement.style.overflow = "hidden";
-    const onKey = (event) => event.key === "Escape" && onClose();
+    const insidePanel = (target) => target instanceof Node && panelRef.current?.contains(target);
+    const blockScroll = (event) => {
+      if (!insidePanel(event.target)) event.preventDefault();
+    };
+    const SCROLL_KEYS = new Set([" ", "PageUp", "PageDown", "Home", "End", "ArrowUp", "ArrowDown"]);
+    const onKey = (event) => {
+      if (event.key === "Escape") onClose();
+      else if (SCROLL_KEYS.has(event.key) && !insidePanel(document.activeElement)) event.preventDefault();
+    };
+    document.addEventListener("wheel", blockScroll, { passive: false });
+    document.addEventListener("touchmove", blockScroll, { passive: false });
     document.addEventListener("keydown", onKey);
-    const focus = setTimeout(() => closeRef.current?.focus(), 60);
+    const focus = setTimeout(() => closeRef.current?.focus({ preventScroll: true }), PANEL_DURATION * 1000);
     return () => {
       lenis?.start();
-      document.documentElement.style.overflow = "";
+      root.removeAttribute("data-v4-drawer-open");
+      document.removeEventListener("wheel", blockScroll);
+      document.removeEventListener("touchmove", blockScroll);
       document.removeEventListener("keydown", onKey);
       clearTimeout(focus);
     };
   }, [open, lenis, onClose]);
 
-  // Slide in on open and whenever another effect is opened from "related".
-  useGSAP(
-    () => {
-      if (!open) return;
-      gsap.fromTo(overlayRef.current, { backgroundColor: "rgba(8,8,8,0)" }, { backgroundColor: "rgba(8,8,8,.55)", duration: 0.6 });
-      gsap.fromTo(panelRef.current, { xPercent: 12, autoAlpha: 0 }, { xPercent: 0, autoAlpha: 1, duration: 0.9, ease: "expo.out" });
-      panelRef.current.scrollTop = 0;
-    },
-    { dependencies: [effect?.name] },
-  );
-
-  if (!open || typeof document === "undefined") return null;
+  if (!shown || typeof document === "undefined") return null;
+  const installable = canInstall(shown);
+  const saved = isWishlisted(shown);
 
   return createPortal(
-    <div
-      ref={overlayRef}
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="v4-drawer-title"
-      onClick={(event) => event.target === event.currentTarget && onClose()}
-      className="fixed inset-0 z-990 grid grid-cols-[1fr_minmax(0,760px)] backdrop-blur-sm max-[1025px]:grid-cols-[minmax(0,1fr)]"
-    >
+    // [--scrollbar-thumb:initial] brings the panel's own scrollbar back: <html> hides the
+    // page thumb through the same (inherited) variable while the drawer is open.
+    <div role="dialog" aria-modal="true" aria-labelledby="v4-drawer-title" className="fixed inset-0 z-990 [--scrollbar-thumb:initial]">
+      <div ref={overlayRef} aria-hidden="true" onClick={onClose} className="absolute inset-0 bg-[rgba(8,8,8,.35)] backdrop-blur-[2px]" />
       <div
         ref={panelRef}
         data-lenis-prevent
-        className="col-start-2 flex h-full flex-col gap-5.5 overflow-y-auto overscroll-contain bg-[#121212] px-10 pt-7 pb-10 text-[#F4F4F4] shadow-[-30px_0_80px_-20px_#000] max-[1025px]:col-start-1 max-[1025px]:px-8 max-md:px-5 *:shrink-0"
+        className="absolute inset-y-0 right-0 w-[min(760px,100vw)] overflow-y-auto overscroll-contain border-l border-white/10 bg-[#0e0e0e] font-neue-haas text-white shadow-[-16px_0_40px_-24px_rgba(0,0,0,.6)] max-[1025px]:w-full max-[1025px]:border-l-0"
       >
+      <div ref={contentRef} className="flex flex-col gap-6 px-10 pt-7 pb-10 max-[1025px]:px-8 max-md:px-5 *:shrink-0">
         <div className="flex items-center justify-between">
-          <span className={`${LABEL} text-[#8a8a8a]`}>{categoryName}</span>
+          <span className={`${T14} text-white/80`}>{categoryName}</span>
+          {/* Same close control as the site's modals: the cross turns a quarter on hover. */}
           <button
             ref={closeRef}
             type="button"
+            aria-label="Close preview (Esc)"
             onClick={onClose}
-            className={`${LABEL} inline-flex h-9 cursor-pointer items-center gap-2 px-3 text-[#bdbdbd] shadow-[inset_0_0_0_1px_rgba(244,244,244,.14)] transition-colors duration-500 hover:bg-[rgba(244,244,244,.08)] hover:text-white`}
+            className="group grid size-10 cursor-pointer place-items-center border border-white/20 bg-white/10 transition-colors duration-500 hover:border-[#ff5f00] hover:bg-[#ff5f00]"
           >
-            <X className="size-3.5" aria-hidden="true" />
-            Close · Esc
+            <span className="relative grid size-4 place-items-center transition-transform duration-500 ease-in-out group-hover:rotate-90">
+              <span className="h-px w-4 rotate-45 bg-white" />
+              <span className="absolute h-px w-4 -rotate-45 bg-white" />
+            </span>
           </button>
         </div>
 
-        <div className="relative aspect-16/10 overflow-hidden bg-[#0d0d0d] shadow-[inset_0_0_0_1px_rgba(244,244,244,.08)]">
+        <div className="relative aspect-[16/8.6] overflow-hidden border border-white/10 bg-[#0d0d0d]">
           {cover && <Image src={cover} alt="" fill sizes="(max-width: 1025px) 100vw, 760px" className="object-cover" />}
           {videoUrl && (
             <video
@@ -135,70 +245,82 @@ export function PreviewDrawerV4({
           )}
         </div>
 
-        <div className="flex flex-wrap gap-1.5">
-          <TierBadge tier={effect.tier} />
-          {isNewEffect(effect) && <NewBadge />}
+        <div className="grid gap-4">
+          <div className="flex flex-wrap gap-1.5">
+            <TierBadge tier={shown.tier} />
+          </div>
+          <h2 id="v4-drawer-title" className={`${DISPLAY} text-[3vw] leading-none tracking-[-.04em] max-[1025px]:text-[6vw] max-md:text-[9vw]`}>
+            {shown.title}
+          </h2>
+          {shown.description && (
+            <p className={`max-w-[42vw] ${T16} leading-relaxed text-white/60 max-[1025px]:max-w-none`}>{shown.description}</p>
+          )}
+          {shown.tags?.length > 0 && (
+            <div className="flex flex-wrap gap-1.5">
+              {shown.tags.map((tag) => (
+                <span key={tag} className={`${MONO} inline-flex h-6 items-center border border-white/15 px-2 ${T11} text-white/70`}>
+                  {tag}
+                </span>
+              ))}
+            </div>
+          )}
         </div>
 
-        <h2 id="v4-drawer-title" className={`${DISPLAY} text-[3vw] leading-none tracking-[-.04em] max-[1025px]:text-[6vw] max-md:text-[9vw]`}>
-          {effect.title}
-        </h2>
-        {effect.description && <p className="max-w-[56ch] text-[#b5b5b5]">{effect.description}</p>}
-
-        {effect.tags?.length > 0 && (
-          <div className="flex flex-wrap gap-1.5">
-            {effect.tags.map((tag) => (
-              <span key={tag} className={`${MONO} inline-flex h-5.5 items-center px-1.75 text-[11px] text-[#bdbdbd] shadow-[inset_0_0_0_1px_rgba(244,244,244,.14)]`}>
-                {tag}
-              </span>
-            ))}
-          </div>
-        )}
-
-        {canInstall ? (
-          <div className={`${MONO} flex items-center gap-2.5 bg-[#0b0b0b] py-2 pr-2 pl-4 text-sm text-[#d8d8d8] shadow-[inset_0_0_0_1px_rgba(244,244,244,.1)]`}>
-            <code className="min-w-0 flex-1 overflow-x-auto whitespace-nowrap">
-              <span className="text-[#ff5f00]">$</span> {installCommand(effect)}
+        {installable ? (
+          <div className="flex items-center gap-3 border border-white/10 bg-white/[.03] py-2 pr-2 pl-4">
+            <code className={`${MONO} min-w-0 flex-1 overflow-x-auto whitespace-nowrap ${T14} text-white/85`}>
+              <span className="text-[#ff5f00]">$</span> {installCommand(shown)}
             </code>
             <button
               type="button"
-              onClick={() => onCopyInstall(effect)}
-              className={`${LABEL} h-9 shrink-0 cursor-pointer bg-[#ff5f00] px-4 text-[#141414] transition-colors duration-300 hover:bg-[#ff7a26]`}
+              onClick={() => {
+                onCopyInstall(shown);
+                setCopied(true);
+                clearTimeout(copiedTimerRef.current);
+                copiedTimerRef.current = setTimeout(() => setCopied(false), 1600);
+              }}
+              className={`inline-flex shrink-0 cursor-pointer items-center gap-1.5 px-2 ${T14} transition-colors duration-300 ${copied ? "text-[#ff5f00]" : "text-white/70 hover:text-[#ff5f00]"}`}
             >
-              Copy
+              {copied ? <Check className="size-3.5" aria-hidden="true" /> : <Copy className="size-3.5" aria-hidden="true" />}
+              {copied ? "Copied" : "Copy"}
             </button>
           </div>
         ) : (
-          <div className="flex flex-wrap items-center justify-between gap-4 bg-[rgba(255,95,0,.08)] px-4.5 py-4 shadow-[inset_0_0_0_1px_rgba(255,95,0,.35)]">
-            <p className="flex items-center gap-2 text-sm text-[#e0c2ab]">
-              <Lock className="size-3.75 text-[#ff5f00]" aria-hidden="true" />
-              This is a Pro effect. Pro unlocks it with the rest of the library.
+          <div className="flex flex-wrap items-center justify-between gap-4 border border-[#ff5f00]/35 bg-[#ff5f00]/[.06] px-4.5 py-4">
+            <p className={`flex items-center gap-2 ${T14} text-white/70`}>
+              <Lock className="size-3.75 shrink-0 text-[#ff5f00]" aria-hidden="true" />
+              This is a Pro shown. Pro unlocks it with the rest of the library.
             </p>
-            <ButtonV3 text="Unlock with Pro" href="/pricing" className="text-sm!" />
+            <ButtonV3 text="Unlock with Pro" href="/pricing" />
           </div>
         )}
 
         <div className="flex flex-wrap gap-2">
-          <ButtonV3 text="Open effect page" href={getEffectHref(effect)} className="text-sm!" />
-          <Link href={getEffectPreviewHref(effect)} target="_blank" rel="noopener noreferrer" className={`${GHOST} ${LABEL}`}>
-            Live demo
-          </Link>
-          <button type="button" aria-pressed={isWishlisted} onClick={() => onToggleWishlist(effect)} className={`${GHOST} ${LABEL}`}>
-            <Heart className={`size-3.5 ${isWishlisted ? "fill-[#ff5f00] text-[#ff5f00]" : ""}`} aria-hidden="true" />
-            {isWishlisted ? "Saved" : "Save to favourites"}
+          <ButtonV3 text="Open effect page" href={getEffectHref(shown)} />
+          <ButtonV3 text="Live demo" href={getEffectPreviewHref(shown)} variant="outline" target_blank className="bg-transparent!" />
+          {/* Same dark action button as the card's Save. */}
+          <button
+            type="button"
+            aria-pressed={saved}
+            onClick={() => onToggleWishlist(shown)}
+            className={`${ICON_BTN} self-center ${saved ? "text-[#ff5f00]! [&_svg]:fill-[#ff5f00]" : ""}`}
+          >
+            <Heart />
+            <span>{saved ? "Saved" : "Save to favourites"}</span>
           </button>
         </div>
 
         {related.length > 0 && (
-          <div className="pt-4">
-            <h4 className={`${LABEL} mb-3 text-[#8a8a8a]`}>More in this category</h4>
-            <div className="grid grid-cols-3 gap-3.5 max-md:grid-cols-1">
+          <div className="border-t border-white/10 pt-6">
+            <p className={`mb-4 ${T14} text-white/60`}>More in this category</p>
+            <div className="grid grid-cols-2 gap-3.5 max-md:grid-cols-1">
               {related.map((item) => (
-                <EffectCardV4 key={item.name} effect={item} small dark compact sizes="240px" onOpen={onOpen} />
+                <EffectCardV4 key={item.name} effect={item} small dark sizes="240px" onOpen={onOpen} />
               ))}
             </div>
           </div>
         )}
+      </div>
       </div>
     </div>,
     document.body,

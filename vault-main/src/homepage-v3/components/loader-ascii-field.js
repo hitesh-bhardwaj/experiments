@@ -527,7 +527,7 @@ export function createAsciiLoaderField(canvas, state, options = {}) {
   };
 
   const labelFamily = (() => {
-    const v = getComputedStyle(document.body).getPropertyValue("--font-neue-haas").trim();
+    const v = getComputedStyle(document.body).getPropertyValue("--font-avenir").trim();
     return v ? `${v}, system-ui, sans-serif` : "system-ui, sans-serif";
   })();
 

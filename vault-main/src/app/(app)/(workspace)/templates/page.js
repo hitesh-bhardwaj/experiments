@@ -129,7 +129,7 @@ export default async function TemplatesPage() {
 
         <HeadAnim animateOnScroll={false} delay={0.3}>
           <h1
-            className="mb-4 w-[85%] leading-normal t96 font-display font-normal text-foreground max-md:w-[90%] max-md:text-4xl"
+            className="mb-4 w-[85%] leading-normal t96 font-aeonik font-normal text-foreground max-md:w-[90%] max-md:text-4xl"
             style={{ lineHeight: "1.3" }}
           >
             Interaction-First Templates

@@ -13,58 +13,36 @@ const range =
 
 // 03 "Tune everything": duration, stagger and easing controls that replay a
 // word reveal. Replays when the item becomes active (`replayKey` changes).
-// Range whose thumb and primary fill ease toward the dragged value instead of
-// snapping. The value itself updates straight away (labels stay exact).
+// Native range, as on the Theremin page: the thumb follows the pointer 1:1,
+// labels update while dragging and the reveal replays on release ("change").
 function SmoothRange({ min, max, step, value, label, onChange, onRelease }) {
-    const [display, setDisplay] = useState(value);
-    const displayRef = useRef(value);
-    const targetRef = useRef(value);
-    const rafRef = useRef(0);
+    const inputRef = useRef(null);
+    const releaseRef = useRef(onRelease);
+    useEffect(() => { releaseRef.current = onRelease; });
 
-    useEffect(() => () => cancelAnimationFrame(rafRef.current), []);
+    useEffect(() => {
+        const el = inputRef.current;
+        const onCommit = () => releaseRef.current(+el.value);
+        el.addEventListener("change", onCommit);
+        return () => el.removeEventListener("change", onCommit);
+    }, []);
 
-    const tick = () => {
-        const target = targetRef.current;
-        let next = displayRef.current + (target - displayRef.current) * 0.18;
-        if (Math.abs(target - next) < (max - min) * 0.0005) next = target;
-        displayRef.current = next;
-        setDisplay(next);
-        rafRef.current = next === target ? 0 : requestAnimationFrame(tick);
-    };
-
-    const snap = (v) => {
-        const decimals = (String(step).split(".")[1] ?? "").length;
-        return Math.min(max, Math.max(min, Number((Math.round((v - min) / step) * step + min).toFixed(decimals))));
-    };
-
-    const fill = ((display - min) / (max - min)) * 100;
+    const fill = ((value - min) / (max - min)) * 100;
 
     return (
         <input
+            ref={inputRef}
             type="range"
             data-sound-hover="off"
             data-sound-click="off"
             min={min}
             max={max}
-            step="any"
-            value={display}
+            step={step}
+            value={value}
             aria-label={label}
-            aria-valuetext={String(value)}
             className={range}
             style={{ "--fill": `${fill}%` }}
-            onChange={(e) => {
-                const v = snap(+e.target.value);
-                targetRef.current = v;
-                onChange(v);
-                if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
-                    displayRef.current = v;
-                    setDisplay(v);
-                } else if (!rafRef.current) {
-                    rafRef.current = requestAnimationFrame(tick);
-                }
-            }}
-            onPointerUp={() => onRelease(targetRef.current)}
-            onKeyUp={() => onRelease(targetRef.current)}
+            onChange={(e) => onChange(+e.target.value)}
         />
     );
 }
@@ -96,7 +74,7 @@ export default function TuneCard({ replayKey }) {
     return (
         <div className="relative grid aspect-[16/11] grid-cols-[1.1fr_.9fr] overflow-hidden bg-[#ececec] text-[#1D1D1D] max-md:aspect-[4/5] max-md:grid-cols-1">
             <div className="grid place-items-center border-r border-[#1D1D1D]/10 p-6 max-md:hidden">
-                <p className="text-center font-neue-haas text-[clamp(1.6rem,2.8vw,2.6rem)] leading-[1.05] tracking-[-.03em]">
+                <p className="text-center font-avenir text-[clamp(1.6rem,2.8vw,2.6rem)] leading-[1.05] tracking-[-.03em]">
                     {WORDS.map((word, i) => (
                         <span key={i} className="inline-block overflow-hidden px-[.08em] pt-[.14em] pb-[.24em] align-top -mx-[.08em] -mt-[.14em] -mb-[.24em]">
                             <span ref={(el) => { wordsRef.current[i] = el; }} className="inline-block">{word}</span>

@@ -26,14 +26,14 @@ function UseCaseBox({ item }) {
         <span className={`${mark} -bottom-px -left-px border-b border-l`} />
         <span className={`${mark} -bottom-px -right-px border-b border-r`} />
 
-        <h3 className="text32 font-neue-haas max-md:text-[4.4vw] max-sm:text-[6.5vw]">
+        <h3 className="text32 font-avenir max-md:text-[4.4vw] max-sm:text-[6.5vw]">
           {item.title}
         </h3>
       </div>
 
       {/* BODY */}
       <div className="flex flex-col justify-between gap-[4vw] px-[2vw] py-[2.5vw] max-[1025px]:gap-[5vw] max-[1025px]:px-[3vw] max-[1025px]:py-[3.5vw] max-md:gap-[7vw] max-md:px-[4vw] max-md:py-[5vw] max-sm:gap-[10vw] max-sm:px-[6vw] max-sm:py-[7vw]">
-        <p className="text22 font-neue-haas w-[80%] max-[1025px]:w-full max-md:w-full leading-[1.35] max-md:text-[2.2vw] max-sm:text-[4vw]">
+        <p className="text22 font-avenir w-[80%] max-[1025px]:w-full max-md:w-full leading-[1.35] max-md:text-[2.2vw] max-sm:text-[4vw]">
           {item.text}
         </p>
 
@@ -87,7 +87,7 @@ export default function UseCases({ useCases }) {
       className="h-fit w-full mt-[8vw] max-[1025px]:mt-[10vw] max-[1025px]:flex-col max-[1025px]:gap-[6vw] max-[1025px]:pb-[0vw]! max-md:mt-[16vw] max-md:pb-[30vw]! flex justify-between self-padd items-start overflow-x-clip text-white max-md:flex-col max-md:gap-[8vw]"
     >
       <MaskTextReveal stagger={0.08} scrub={false} duration={2} className="w-[40vw] sticky top-[20vh] max-[1025px]:static max-[1025px]:w-full max-[1025px]:mb-[6vw]! max-md:static max-md:w-full max-md:mb-[10vw]!">
-        <h2 className="text64 font-neue-haas">
+        <h2 className="text64 font-avenir">
           Built for teams where frontend is part of the brand & your interface needs to feel as premium as the product.
         </h2>
       </MaskTextReveal>

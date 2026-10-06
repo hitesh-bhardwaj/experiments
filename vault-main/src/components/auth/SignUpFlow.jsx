@@ -247,7 +247,7 @@ export default function SignUpFlow() {
             </SubmitButton>
           </div>
 
-          <p className="mt-6 text-left text-sm text-white/50 font-geist-mono">
+          <p className="mt-6 text-left text-sm text-white/50 font-mono">
             Already have an account?{" "}
             <NextLink href={signInHref} className="text-[#ff5f00] hover:text-[#ff7a29]">
               Sign in

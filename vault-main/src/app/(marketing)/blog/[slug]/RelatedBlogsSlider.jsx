@@ -162,7 +162,7 @@ export default function RelatedBlogsSlider({ posts = [] }) {
       <div className="flex items-center justify-between gap-5 max-[1025px]:items-end">
         <LineWipe lineStyle={RELATED_BLOGS_HEADING_LINE_STYLE}>
           <h2
-            className="font-neue-haas text80 font-medium text-white max-[1025px]:text-[7vw] max-md:text-[10vw]"
+            className="font-avenir text80 font-medium text-white max-[1025px]:text-[7vw] max-md:text-[10vw]"
             style={RELATED_BLOGS_HEADING_LINE_STYLE}
           >
             Related Blogs

@@ -301,7 +301,7 @@ export default function NavDropdownV3({ panel, onNavigate }) {
                 className="border-b border-white/10 bg-white/2 px-[1.5vw] py-[0.85vw] text18 flex items-center gap-[1vw] text-[#f4f4f4] capitalize"
               >
 
-                <span className="size-[.6vw] font-neue-haas bg-primary inline-block" />
+                <span className="size-[.6vw] font-avenir bg-primary inline-block" />
                 {column.title}
               </p>
 

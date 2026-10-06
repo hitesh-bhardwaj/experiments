@@ -14,7 +14,7 @@ const DOCS_PAGES = [
   { href: "/docs/license", label: "License" },
 ];
 
-const label = "text-[11px] font-semibold uppercase tracking-[.16em]";
+const label = "text-[11px] font-medium uppercase tracking-[.16em]";
 
 function FeedbackButton({ active, onClick, children }) {
   return (
@@ -33,24 +33,31 @@ function FeedbackButton({ active, onClick, children }) {
   );
 }
 
+// The site buttons' pixelated arrow (ButtonV3), sized to the label's cap height
+function PagerArrow({ className = "" }) {
+  return (
+    <span
+      aria-hidden="true"
+      className={`block size-[11px] shrink-0 bg-current [mask-image:url(/homepage-v3/svgs/pixelated-arrow.svg)] mask-center mask-no-repeat mask-contain transition-transform duration-300 ${className}`}
+    />
+  );
+}
+
 function PagerCard({ page, direction }) {
   const next = direction === "next";
   return (
     <Link
       href={page.href}
-      onClick={(event) => {
-        // Let DocsBody run its route fade, like the sidebar does.
-        const request = new CustomEvent("hyperiux:docs-route-request", { cancelable: true, detail: { href: page.href } });
-        if (!window.dispatchEvent(request)) event.preventDefault();
-      }}
+      // The site's full page transition (PageTransition), not the docs' in-place fade
+      data-page-transition
       className={`group flex flex-col gap-3 border border-white/10 bg-white/[.03] p-6 transition-colors duration-300 hover:border-primary/60 hover:bg-primary/[.06] ${
         next ? "col-start-2 items-end text-right max-sm:col-start-1" : "items-start"
       }`}
     >
-      <span className={`${label} flex items-center gap-2 text-white/50 transition-colors duration-300 group-hover:text-primary`}>
-        {!next && <span aria-hidden="true" className="transition-transform duration-300 group-hover:-translate-x-1">←</span>}
+      <span className={`${label} flex items-center gap-2.5 leading-none text-white/50 transition-colors duration-300 group-hover:text-primary`}>
+        {!next && <PagerArrow className="rotate-180 group-hover:-translate-x-1" />}
         {next ? "Next" : "Previous"}
-        {next && <span aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-1">→</span>}
+        {next && <PagerArrow className="group-hover:translate-x-1" />}
       </span>
       <span className="text-[clamp(1.4rem,2vw,2rem)] leading-none tracking-[-.03em] text-white">{page.label}</span>
     </Link>
@@ -67,12 +74,12 @@ export default function DocsPageFooter() {
   return (
     <div className="mt-20 grid gap-4 border-t border-white/10 pt-10">
       <div className="flex flex-wrap items-center gap-x-6 gap-y-4 border border-white/10 p-6">
-        <p className="m-0! text-[1.05rem]! text-white">Was this page helpful?</p>
+        <p className="m-0! text-[1.05rem]! text-[#1D1D1D]!">Was this page helpful?</p>
         <div className="flex gap-2">
           <FeedbackButton active={vote === "yes"} onClick={() => setVote("yes")}>Yes</FeedbackButton>
           <FeedbackButton active={vote === "no"} onClick={() => setVote("no")}>Not quite</FeedbackButton>
         </div>
-        <p aria-live="polite" className={`m-0! ${label} text-white/70! ${vote === "no" ? "basis-full" : ""}`}>
+        <p aria-live="polite" className={`m-0! ${label} text-[#1D1D1D]!`}>
           {vote === "yes" && "Thanks. Glad it helped."}
           {vote === "no" && (
             <>

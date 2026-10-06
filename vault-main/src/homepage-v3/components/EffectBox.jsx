@@ -493,7 +493,7 @@ export default function EffectBox({
         {enableDitherTrail ? <DitherTrailCanvas blend={ditherBlend} /> : null}
 
         {tag ? (
-          <span className="absolute left-[0.7vw] top-[0.7vw] z-30 bg-[#404040] px-[0.55vw] py-[0.45vw] font-geist-mono text-[0.72vw] leading-none tracking-wide text-white backdrop-blur-sm max-[1025px]:left-[1.2vw] max-[1025px]:top-[1.2vw] max-[1025px]:px-[1vw] max-[1025px]:py-[0.8vw] max-[1025px]:text-[1.3vw] max-md:left-2 max-md:top-2 max-md:px-3 max-md:py-1.5 max-md:text-[1.5vw] max-sm:text-[2.6vw]">
+          <span className="absolute left-[0.7vw] top-[0.7vw] z-30 bg-[#404040] px-[0.55vw] py-[0.45vw] font-mono text-[0.72vw] leading-none tracking-wide text-white backdrop-blur-sm max-[1025px]:left-[1.2vw] max-[1025px]:top-[1.2vw] max-[1025px]:px-[1vw] max-[1025px]:py-[0.8vw] max-[1025px]:text-[1.3vw] max-md:left-2 max-md:top-2 max-md:px-3 max-md:py-1.5 max-md:text-[1.5vw] max-sm:text-[2.6vw]">
             {tag}
           </span>
         ) : null}
@@ -505,7 +505,7 @@ export default function EffectBox({
         <span className={`${mark} -bottom-px -left-px border-b border-l`} />
         <span className={`${mark} -bottom-px -right-px border-b border-r`} />
 
-        <p className="text22 font-neue-haas leading-none text-white max-md:text-[2.4vw] max-sm:text-[4vw]">
+        <p className="text22 font-avenir leading-none text-white max-md:text-[2.4vw] max-sm:text-[4vw]">
           {title}
         </p>
 

@@ -1,6 +1,6 @@
 import "@/lib/progress-event-polyfill";
 import localFont from "next/font/local";
-import { Geist, Geist_Mono, IBM_Plex_Mono } from "next/font/google";
+import { IBM_Plex_Mono } from "next/font/google";
 import { Suspense } from "react";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/next";
@@ -25,26 +25,8 @@ import { CookieConsentNudge } from "@/components/WebsiteComps/CookieConsentNudge
 import PageTransition from "@/components/PageTransition/PageTransition";
 import SiteInteractions from "@/components/WebsiteComps/SiteInteractions";
 
-const neueHaasUnica = localFont({
-  src: [
-    {
-      path: "../fonts/NeueHaasUnicaPro-Regular.woff2",
-      weight: "400",
-      style: "normal",
-    },
-    {
-      path: "../fonts/NeueHaasUnicaPro-MediumIt.woff2",
-      weight: "500",
-      style: "italic",
-    },
-  ],
-  variable: "--font-neue-haas",
-  display: "swap",
-  preload: false,
-});
-
-// Homepage faces (Theremin): Aeonik Pro for display, Avenir Next for text.
-// Scoped to the homepage by the .home-type class in globals.css.
+// The site's two faces: Aeonik Pro (headings / display) and Avenir Next (text),
+// exposed to Tailwind as font-aeonik and font-avenir (globals.css @theme).
 const aeonikPro = localFont({
   src: [
     { path: "../../public/assets/fonts/AeonikPro-Light.woff2", weight: "300", style: "normal" },
@@ -69,25 +51,12 @@ const avenirNext = localFont({
   preload: false,
 });
 
-// Theremin's code face (homepage code windows), as --font-code in .home-type
+// Code face (code blocks, the homepage install windows, the remixer code box):
+// exposed as font-code / font-mono via --font-code in globals.css
 const plexMono = IBM_Plex_Mono({
-  weight: "400",
+  weight: ["400", "500"],
   subsets: ["latin"],
   variable: "--font-plex-mono",
-  display: "swap",
-  preload: false,
-});
-
-const geistSans = Geist({
-  subsets: ["latin"],
-  variable: "--font-geist-sans",
-  display: "swap",
-  preload: false,
-});
-
-const geistMono = Geist_Mono({
-  subsets: ["latin"],
-  variable: "--font-geist-mono",
   display: "swap",
   preload: false,
 });
@@ -114,7 +83,7 @@ export default function RootLayout({ children }) {
   return (
     <html
       lang="en"
-      className={`${neueHaasUnica.variable} ${aeonikPro.variable} ${avenirNext.variable} ${plexMono.variable} ${geistSans.variable} ${geistMono.variable} antialiased`}
+      className={`${aeonikPro.variable} ${avenirNext.variable} ${plexMono.variable} antialiased`}
     >
       <head>
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />

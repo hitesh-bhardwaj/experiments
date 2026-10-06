@@ -1077,13 +1077,13 @@ function SanityBodyBlock({ block, isLocked = false }) {
                     iconPosition="left"
                     iconMode="rotate-left-down"
                   >
-                    <h3 className="text-[1.55vw]! font-neue-haas leading-tight! my-0! max-[1025px]:text-[3.4vw]! max-md:text-[5.2vw]!">
+                    <h3 className="text-[1.55vw]! font-avenir leading-tight! my-0! max-[1025px]:text-[3.4vw]! max-md:text-[5.2vw]!">
                       {item.question}
                     </h3>
                   </FAQTitle>
 
                   <FAQContent className="pt-[1.2vw] pl-[2.8vw] max-[1025px]:pt-[2.5vw] max-[1025px]:pl-[7vw] max-md:pt-[4vw] max-md:pl-[8vw]">
-                    <p className="text-[1.15vw]! font-neue-haas text-white! leading-[1.45]! max-[1025px]:text-[2.2vw]! max-md:text-[4vw]!">
+                    <p className="text-[1.15vw]! font-avenir text-white! leading-[1.45]! max-[1025px]:text-[2.2vw]! max-md:text-[4vw]!">
                       {item.answer}
                     </p>
                   </FAQContent>

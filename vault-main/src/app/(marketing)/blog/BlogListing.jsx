@@ -19,7 +19,7 @@ function buildHref({ category, page }) {
 
 
 function categoryChipClass(isSelected) {
-  return `px-4 py-2.5 text-[0.9vw] max-md:text-sm max-[1025px]:text-[2.5vw] text-center relative max-md:px-7 max-md:py-3 backdrop-blur-[6px] font-geist-mono group flex items-center cursor-pointer transition-colors duration-300 ${
+  return `px-4 py-2.5 text-[0.9vw] max-md:text-sm max-[1025px]:text-[2.5vw] text-center relative max-md:px-7 max-md:py-3 backdrop-blur-[6px] font-mono group flex items-center cursor-pointer transition-colors duration-300 ${
     isSelected
       ? "bg-[#ff5f00] text-black hover:text-black hover:bg-[#ff5f00]"
       : "bg-[#161616] text-[#FFFFFF] hover:text-black hover:bg-[#ff5f00]"

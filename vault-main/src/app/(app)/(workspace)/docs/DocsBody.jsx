@@ -50,12 +50,13 @@ function openDocsSearch() {
 function DocsHero({ pathname, meta }) {
   const hero = DOCS_HERO[pathname?.replace(/\/$/, "") || "/docs"];
   return (
-    <section className="pb-[clamp(3rem,7vh,5rem)]">
+    <section className="pb-[10vw]">
       <Breadcrumb />
       {hero && (
-        <div className="mt-7 max-w-[980px]">
-          <h1 className="fadeup font-display text-[clamp(3rem,6.4vw,6.4rem)] font-normal leading-[1.02] tracking-[-.04em] text-white">{hero.title}</h1>
-          <p className="fadeup mt-[22px] max-w-[44ch] font-display text-[clamp(1.3rem,2vw,1.75rem)] leading-[1.3] tracking-[-.02em] text-[#d6d6d6]">{hero.lede}</p>
+        <div className="mt-7 max-w-[980px] space-y-[1.5vw]">
+          <h1 className="fadeup font-aeonik t96 font-normal leading-[1.02] text-white">{hero.title}</h1>
+          <p className="fadeup max-w-[40vw] font-avenir text-[1.2vw] leading-[1.3] tracking-[-.02em] text-[#d6d6d6]">{hero.lede}</p>
+          {/* Read time · sections · search, hidden for now
           <div className="fadeup mt-[30px] flex flex-wrap items-center gap-x-3.5 gap-y-2.5 text-[13px] uppercase tracking-[.08em] text-[#8a8a8a]">
             {meta.read && <span>{meta.read}</span>}
             {meta.read && <span aria-hidden="true">·</span>}
@@ -74,6 +75,7 @@ function DocsHero({ pathname, meta }) {
               <span className="rounded-[5px] px-1.5 py-0.5 font-mono text-[11px] text-[#8a8a8a] shadow-[inset_0_0_0_1px_rgba(244,244,244,.14)]">⌘ K</span>
             </button>
           </div>
+          */}
         </div>
       )}
     </section>
@@ -186,23 +188,21 @@ export default function DocsBody({ children }) {
 
           {/* White sheet (Docs prototype's .sheet), square-edged, under the content, the
               docs footer and the TOC column. Code blocks stay dark. */}
-          <div className="docs-sheet grid gap-10 grid-cols-[minmax(0,1fr)_320px] max-[1025px]:grid-cols-1 px-[clamp(20px,3.4vw,56px)] pt-[clamp(4rem,9vh,6rem)] pb-[clamp(4rem,9vh,6rem)]">
+          {/* Full width: the negative margins cancel the docs layout's side padding (px-14 / 6vw / 7vw) */}
+          <div data-sound-flow="off" className="docs-sheet grid gap-10 grid-cols-[minmax(0,1fr)_320px] max-[1025px]:grid-cols-1 -mx-14 max-[1025px]:-mx-[6vw] max-md:mx-[-7vw] px-[clamp(20px,3.4vw,56px)] py-[4vw]">
             <div ref={contentRef} className="min-w-0">
-              <div className="[&_h1]:text-[4vw] [&_h1]:font-semibold [&_h1]:leading-[1.05] [&_h1]:text-(--foreground) [&_h2]:text-[clamp(1.45rem,2vw,2rem)] [&_h2]:font-normal [&_h2]:leading-[1.12] [&_h2]:tracking-[-0.04em] [&_h2]:text-(--foreground) [&_h3]:text-[clamp(1.05rem,1.45vw,1.35rem)] [&_h3]:font-normal [&_h3]:leading-[1.15] [&_h3]:tracking-[-0.03em] [&_h3]:text-(--foreground) [&_p]:text-[clamp(0.95rem,1.05vw,1.05rem)] [&_p]:leading-[1.72] [&_p]:text-(--docs-body) [&_li]:text-[clamp(0.95rem,1.05vw,1.05rem)] [&_li]:leading-[1.65] [&_li]:text-(--docs-body) [&_strong]:text-(--foreground) [&_.docs-heading2-line]:bg-(--docs-line) [&_li::marker]:text-primary max-md:[&_h1]:text-[4vw]">
+              <div className="[&_h1]:text-[4vw] [&_h1]:font-semibold [&_h1]:leading-[1.05] [&_h1]:text-foreground [&_h2]:text-[clamp(1.45rem,2vw,2rem)] [&_h2]:font-normal [&_h2]:leading-[1.12] [&_h2]:tracking-[-0.04em] [&_h2]:text-foreground [&_h3]:text-[clamp(1.05rem,1.45vw,1.35rem)] [&_h3]:font-normal [&_h3]:leading-[1.15] [&_h3]:tracking-[-0.03em] [&_h3]:text-foreground [&_p]:text-[clamp(0.95rem,1.05vw,1.05rem)] [&_p]:leading-[1.72] [&_p]:text-(--docs-body) [&_li]:text-[clamp(0.95rem,1.05vw,1.05rem)] [&_li]:leading-[1.65] [&_li]:text-(--docs-body) [&_strong]:text-foreground [&_.docs-heading2-line]:bg-(--docs-line) [&_li::marker]:text-primary max-md:[&_h1]:text-[4vw]">
                 {children}
               </div>
               <DocsPageFooter />
             </div>
+            {/* TOC lives in the sheet's right column, sticky at the vertical centre */}
+            <aside className="sticky top-1/2 h-fit -translate-y-1/2 self-start justify-self-end max-[1025px]:hidden">
+              <TableOfContents containerRef={contentRef} watchKey={pathname} hideNearFooter />
+            </aside>
           </div>
         </div>
 
-        <aside className="h-fit fixed right-4 top-1/2 -translate-y-1/2 max-[1025px]:hidden">
-          <TableOfContents
-            containerRef={contentRef}
-            watchKey={pathname}
-            hideNearFooter
-          />
-        </aside>
       </RouteFade>
     </div>
   );

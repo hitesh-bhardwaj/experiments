@@ -254,7 +254,7 @@ const ShearWipeComp = ({
         <div className="flex h-full items-center">
           <div className="w-full flex items-center justify-center p-[6vw]">
             <div className={`w-[45vw] space-y-[1vw] ${componentsTextColorClass}`}>
-              <h2 className="text-[3vw] font-bold font-display leading-[1.2] whitespace-nowrap">Design that feels alive</h2>
+              <h2 className="text-[3vw] font-bold font-aeonik leading-[1.2] whitespace-nowrap">Design that feels alive</h2>
               <p className="text-[1.5vw]">
                 Every component reacts and transitions naturally , turning interfaces from static to alive.
               </p>
@@ -288,7 +288,7 @@ const ShearWipeComp = ({
           <div className="flex h-screen items-center relative">
             <div className="w-full flex items-center justify-center p-[6vw]">
               <div className={`w-[45vw] space-y-[1vw] ${showcaseTextColorClass}`}>
-                <h2 className="text-[3vw] font-bold font-display leading-[1.2] whitespace-nowrap">Motion with meaning</h2>
+                <h2 className="text-[3vw] font-bold font-aeonik leading-[1.2] whitespace-nowrap">Motion with meaning</h2>
                 <p className="text-[1.5vw]">
                   Animations explain, creating clarity and confidence across every screen.
                 </p>
@@ -342,7 +342,7 @@ const ShearWipeComp = ({
         <div className="relative mt-[8vw] max-md:mt-[10vw]">
           {/* Components tab content */}
           <div ref={componentsContentRef}>
-            <h2 className={`text-[6vw] max-md:text-[7.5vw] font-display leading-[1.15] ${componentsTextColorClass} mb-[3vw] max-md:mb-[5vw]`}>
+            <h2 className={`text-[6vw] max-md:text-[7.5vw] font-aeonik leading-[1.15] ${componentsTextColorClass} mb-[3vw] max-md:mb-[5vw]`}>
               Design that feels alive
             </h2>
             <p className={`text-[2.1vw] max-md:text-[4vw] leading-relaxed ${componentsTextColorClass} opacity-70 mb-[6vw] max-md:mb-[9vw]`}>
@@ -352,7 +352,7 @@ const ShearWipeComp = ({
 
           {/* Showcase tab content */}
           <div ref={showcaseContentRef} className="absolute inset-0">
-            <h2 className={`text-[6vw] max-md:text-[7.5vw] font-display leading-[1.15] ${showcaseTextColorClass} mb-[3vw] max-md:mb-[5vw]`}>
+            <h2 className={`text-[6vw] max-md:text-[7.5vw] font-aeonik leading-[1.15] ${showcaseTextColorClass} mb-[3vw] max-md:mb-[5vw]`}>
               Motion with meaning
             </h2>
             <p className={` max-md:text-[4vw] leading-relaxed ${showcaseTextColorClass} opacity-70 mb-[7vw] max-md:mb-[10vw]`}>
