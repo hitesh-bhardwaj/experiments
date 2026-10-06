@@ -1,31 +1,33 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
-import { useUser } from "@clerk/nextjs";
+import { useRouter, useSearchParams } from "next/navigation";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { motion } from "motion/react";
-import { ArrowLeft, ArrowRight, Search, X } from "lucide-react";
+import { Search, X } from "lucide-react";
 import { AppVaultHeader } from "@/components/layout/AppVaultHeader";
 import { useVaultLayout } from "@/components/layout/VaultLayout";
-import { useToastQueue, ToastViewport } from "@/components/ui/Toast";
-import { emitWishlistChanged } from "@/lib/wishlistEvents";
 import {
   effectCategories,
   effectsOverviewContent,
+  getEffectCategoryHref,
   getQuickCategoryLabel,
   resolveEffectCategoryId,
 } from "@/lib/categories";
 import { sortEffects } from "@/lib/effect-sort";
 import FAQV3 from "@/homepage-v3/sections/FAQV3";
 import ButtonV3 from "@/homepage-v3/components/ButtonV3";
-import { CustomAnimationFormTrigger } from "@/components/WebsiteComps/modals/CustomAnimationFormModal";
-import { FilterMenu } from "../effects/FilterMenu";
-import { DISPLAY, EffectCardV4, LABEL, installCommand } from "./EffectCardV4";
+import { FilterMenu } from "./FilterMenu";
+import { DISPLAY, EffectCardV4, LABEL } from "./EffectCardV4";
+import { Modal, useEffectCardActions } from "./useEffectCardActions";
 import { PreviewDrawerV4 } from "./PreviewDrawerV4";
+import { CustomAnimationCta } from "./CustomAnimationCta";
+import { SliderArrowButton } from "@/components/ui/SliderArrowButton";
+import HeadAnim from "@/components/Animations/HeadAnim";
+import Copy from "@/components/Animations/Copy";
 
 gsap.registerPlugin(useGSAP);
 
@@ -84,7 +86,6 @@ const T15 = "text-[1.04vw] max-[1025px]:text-[1.8vw] max-md:text-[3.8vw]";
 const T16 = "text-[1.1vw] max-[1025px]:text-[1.95vw] max-md:text-[4.1vw]";
 const T18 = "text-[1.25vw] max-[1025px]:text-[2.2vw] max-md:text-[4.4vw]";
 const T20 = "text-[1.4vw] max-[1025px]:text-[2.4vw] max-md:text-[5vw]";
-const T24 = "text-[1.67vw] max-[1025px]:text-[2.9vw] max-md:text-[6vw]";
 const T28 = "text-[1.95vw] max-[1025px]:text-[3.4vw] max-md:text-[7vw]";
 
 /* ---------- class tokens ---------- */
@@ -94,11 +95,8 @@ const CHIP =
   `inline-flex h-8 shrink-0 cursor-pointer items-center gap-2 px-3 ${T13} transition-[background-color,color,box-shadow] duration-500`;
 const CHIP_OFF = "text-[#6B6B6B] shadow-[inset_0_0_0_1px_rgba(29,29,29,.1)] hover:shadow-[inset_0_0_0_1px_#ff5f00] hover:text-[#1D1D1D]";
 const CHIP_ON = "bg-[#ff5f00] text-[#141414]";
-const ARROW_BTN =
-  "grid size-11 cursor-pointer place-items-center text-white border border-white/40 backdrop-blur-lg hover:border-primary transition-colors duration-400 ease-out hover:text-black disabled:pointer-events-none disabled:brightness-70 disabled:backdrop-blur-lg [&_svg]:size-4 hover:bg-primary";
 
 const countWord = (n) => (n === 1 ? "effect" : "effects");
-const subscribeNever = () => () => {};
 
 function readStoredCols() {
   try {
@@ -109,28 +107,56 @@ function readStoredCols() {
   }
 }
 
-export function EffectsListingV4({ effects = [], trendingEffects = [], featuredNames = [], userPlan = "free" }) {
+const TIER_SCOPES = ["free", "pro"];
+
+/**
+ * The effects listing. On /effects it shows everything; a category
+ * route (/effects/[slug]) passes:
+ *  - `scope`: the page's starting filter - "free" | "pro" | "featured" | a category id,
+ *  - `content`: that page's copy from lib/categories (name, description, faqs, cta),
+ *  - `routeCategories`: category chips become links to their own pages (so the hero,
+ *    FAQ and metadata change with them) instead of filtering in place.
+ */
+export function EffectsListingV4({
+  effects = [],
+  trendingEffects = [],
+  featuredNames = [],
+  userPlan = "free",
+  scope = null,
+  content = effectsOverviewContent,
+  routeCategories = false,
+}) {
+  const router = useRouter();
+  const scopeCategory = scope && !TIER_SCOPES.includes(scope) && scope !== "featured" ? scope : null;
   const searchParams = useSearchParams();
-  const { isSignedIn } = useUser();
-  const isProUser = userPlan === "pro";
-  const { toast, showToast, dismissToast } = useToastQueue();
+  // Save / copy install / Pro lock for every card and the drawer (shared with the effect page).
+  const { isProUser, mounted, canInstall, isWishlisted, copyInstall, toggleWishlist, cardActions, overlays } =
+    useEffectCardActions({ userPlan });
 
   /* ---------- filter state (seeded from the URL so links are shareable) ---------- */
-  const [tier, setTier] = useState(() => (["free", "pro"].includes(searchParams.get("tier")) ? searchParams.get("tier") : "all"));
-  const [featured, setFeatured] = useState(() => searchParams.get("featured") === "1");
-  const [category, setCategory] = useState(() => searchParams.get("category") || null);
+  // `filter` is the old listing's query param (?filter=free|pro|featured) - still honoured
+  // so existing links and bookmarks land on the same view.
+  const legacyFilter = searchParams.get("filter");
+  const [tier, setTier] = useState(() =>
+    TIER_SCOPES.includes(searchParams.get("tier"))
+      ? searchParams.get("tier")
+      : TIER_SCOPES.includes(legacyFilter)
+        ? legacyFilter
+        : TIER_SCOPES.includes(scope)
+          ? scope
+          : "all",
+  );
+  const [featured, setFeatured] = useState(() => searchParams.get("featured") === "1" || legacyFilter === "featured" || scope === "featured");
+  // On a category route the category comes from the route, not the query string.
+  const [category, setCategory] = useState(() => scopeCategory || (routeCategories ? null : searchParams.get("category")) || null);
   const [stack, setStack] = useState(() => (searchParams.get("stack") ? searchParams.get("stack").split(",") : []));
   const [query, setQuery] = useState(() => searchParams.get("q") || "");
   const [sort, setSort] = useState(() => (SORTS[searchParams.get("sort")] ? searchParams.get("sort") : "trend"));
   const [cols, setCols] = useState(3);
   const [shown, setShown] = useState(PAGE);
-  const [wishlist, setWishlist] = useState([]);
   const [drawerEffect, setDrawerEffect] = useState(null);
-  const [signInPrompt, setSignInPrompt] = useState(false);
   const [upgradeDismissed, setUpgradeDismissed] = useState(false);
   const justUpgraded = searchParams.get("upgraded") === "true";
-  // Portals need <body>; false on the server and during hydration.
-  const mounted = useSyncExternalStore(subscribeNever, () => true, () => false);
 
   const rootRef = useRef(null);
   const gridRef = useRef(null);
@@ -142,8 +168,25 @@ export function EffectsListingV4({ effects = [], trendingEffects = [], featuredN
 
   /* ---------- derived data ---------- */
   const featuredSet = useMemo(() => new Set(featuredNames), [featuredNames]);
-  const wishlistSet = useMemo(() => new Set(wishlist), [wishlist]);
-  const freeCount = useMemo(() => effects.filter((e) => e.tier !== "pro").length, [effects]);
+  // Hero stats describe the page's scope (everything, or this category / tier / featured).
+  const heroStats = useMemo(() => {
+    const inScope = effects.filter((effect) => {
+      if (scope === "free") return effect.tier !== "pro";
+      if (scope === "pro") return effect.tier === "pro";
+      if (scope === "featured") return featuredNames.includes(effect.name);
+      if (scopeCategory) return resolveEffectCategoryId(effect) === scopeCategory;
+      return true;
+    });
+    const free = inScope.filter((e) => e.tier !== "pro").length;
+    const pro = inScope.length - free;
+    const categories = new Set(inScope.map((e) => resolveEffectCategoryId(e)).filter(Boolean)).size;
+    return [
+      [inScope.length, "Effects"],
+      free > 0 && free < inScope.length && [free, "Free"],
+      scope && pro > 0 && pro < inScope.length && [pro, "Pro"],
+      categories > 1 && [categories, "Categories"],
+    ].filter(Boolean);
+  }, [effects, scope, scopeCategory, featuredNames]);
 
   const categoryOptions = useMemo(() => {
     const counts = {};
@@ -192,7 +235,7 @@ export function EffectsListingV4({ effects = [], trendingEffects = [], featuredN
   const actives = [
     tier !== "all" && { id: "tier", label: tier === "free" ? "Free" : "Pro", clear: () => setTier("all") },
     featured && { id: "featured", label: "Featured", clear: () => setFeatured(false) },
-    category && { id: "category", label: getQuickCategoryLabel(category), clear: () => setCategory(null) },
+    category && { id: "category", label: getQuickCategoryLabel(category), clear: () => (routeCategories ? router.push("/effects", { scroll: false }) : setCategory(null)) },
     ...stack.map((tag) => ({ id: `stack:${tag}`, label: tag, clear: () => setStack((s) => s.filter((t) => t !== tag)) })),
     query.trim() && { id: "q", label: `“${query.trim()}”`, clear: () => setQuery("") },
   ].filter(Boolean);
@@ -245,33 +288,59 @@ export function EffectsListingV4({ effects = [], trendingEffects = [], featuredN
     const params = new URLSearchParams();
     if (tier !== "all") params.set("tier", tier);
     if (featured) params.set("featured", "1");
-    if (category) params.set("category", category);
+    if (category && !routeCategories) params.set("category", category);
     if (stack.length) params.set("stack", stack.join(","));
     if (query.trim()) params.set("q", query.trim());
     if (sort !== "trend") params.set("sort", sort);
     const next = params.toString();
     window.history.replaceState(window.history.state, "", `${window.location.pathname}${next ? `?${next}` : ""}`);
-  }, [tier, featured, category, stack, query, sort]);
-
-  useEffect(() => {
-    if (!isSignedIn) return;
-    fetch("/api/wishlist")
-      .then((res) => (res.ok ? res.json() : []))
-      .then((data) => setWishlist((data || []).map((item) => item.effect_slug || item.name || item)))
-      .catch(() => {});
-  }, [isSignedIn]);
+  }, [tier, featured, category, stack, query, sort, routeCategories]);
 
 
+
+
+  /* ---------- hero stats: optical alignment ---------- */
+  // Each glyph carries its own left side-bearing, and the big number's is wider than
+  // the small label's - so their boxes line up but their ink doesn't. Measure where
+  // the ink of the number's first digit and the label's first letter actually starts
+  // (canvas actualBoundingBoxLeft, in each element's real font and size) and shift the
+  // number by the difference. Uses the final value, so the count-up doesn't move it.
+  // Re-runs once the web fonts load and on resize (the sizes are in vw).
+  useLayoutEffect(() => {
+    const root = rootRef.current;
+    if (!root) return undefined;
+    const ctx = document.createElement("canvas").getContext("2d");
+    const inkLeft = (el, text) => {
+      const cs = getComputedStyle(el);
+      ctx.font = `${cs.fontStyle} ${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`;
+      return -ctx.measureText(text).actualBoundingBoxLeft;
+    };
+    const align = () => {
+      root.querySelectorAll("[data-v4-count]").forEach((number) => {
+        const label = number.nextElementSibling;
+        if (!label) return;
+        number.style.marginLeft = "0px";
+        const offset = inkLeft(number, String(number.dataset.v4Count).charAt(0)) - inkLeft(label, label.textContent.trim().charAt(0));
+        number.style.marginLeft = `${-offset}px`;
+      });
+    };
+    align();
+    document.fonts?.ready.then(align);
+    window.addEventListener("resize", align);
+    return () => window.removeEventListener("resize", align);
+  }, [heroStats]);
 
   /* ---------- GSAP ---------- */
-  // Hero entrance, stat count-up, and the slow flow on the orange words.
+  // Page entrance (the title's chars and the paragraph's lines animate themselves via
+  // HeadAnim / Copy; the rest fades in 0.5s after load), stat count-up, and the slow
+  // flow on the orange words.
   useGSAP(
     () => {
-      gsap.from("[data-v4-hero] > *", { autoAlpha: 0, y: 40, duration: 1.2, ease: "expo.out", stagger: 0.08, clearProps: "opacity,visibility,transform" });
+      gsap.from("[data-v4-fade]", { autoAlpha: 0, duration: 1, delay: 0.5, ease: "power2.out", clearProps: "opacity,visibility" });
       gsap.utils.toArray("[data-v4-count]").forEach((el) => {
         const target = Number(el.dataset.v4Count);
         const counter = { v: 0 };
-        gsap.to(counter, { v: target, duration: 1.6, delay: 0.3, ease: "expo.out", onUpdate: () => (el.textContent = Math.round(counter.v)) });
+        gsap.to(counter, { v: target, duration: 1.6, delay: 0.5, ease: "expo.out", onUpdate: () => (el.textContent = Math.round(counter.v)) });
       });
       gsap.to("[data-v4-gradient]", { backgroundPosition: "100% 50%", duration: 9, ease: "sine.inOut", repeat: -1, yoyo: true });
     },
@@ -311,47 +380,6 @@ export function EffectsListingV4({ effects = [], trendingEffects = [], featuredN
   /* ---------- actions ---------- */
   const scrollToGrid = () => sheetRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
 
-  const copyInstall = useCallback(
-    async (effect) => {
-      const command = installCommand(effect);
-      try {
-        await navigator.clipboard.writeText(command);
-        showToast({ title: "Install command copied", description: command });
-      } catch {
-        showToast({ title: "Copy this command", description: command });
-      }
-    },
-    [showToast],
-  );
-
-  const toggleWishlist = useCallback(
-    async (effect) => {
-      if (!isSignedIn) {
-        setSignInPrompt(true);
-        return;
-      }
-      try {
-        const res = await fetch("/api/wishlist", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ effect }),
-        });
-        if (!res.ok) return;
-        const data = await res.json();
-        setWishlist((prev) => (data.saved ? [...new Set([...prev, effect.name])] : prev.filter((name) => name !== effect.name)));
-        showToast({
-          title: `${effect.title} ${data.saved ? "saved" : "removed"}`,
-          description: data.saved ? "You'll find it in your dashboard's Saved Effects." : "It's no longer in your dashboard's Saved Effects.",
-        });
-        emitWishlistChanged(data.saved);
-      } catch (error) {
-        console.error(error);
-      }
-    },
-    [isSignedIn, showToast],
-  );
-
-  const canInstall = (effect) => effect.tier !== "pro" || isProUser;
   const closeDrawer = useCallback(() => setDrawerEffect(null), []);
 
   // One card (plus the row gap) per arrow click.
@@ -371,24 +399,21 @@ export function EffectsListingV4({ effects = [], trendingEffects = [], featuredN
 
   const faqItems = useMemo(
     () =>
-      (effectsOverviewContent.faqs || []).map((item, index) => ({
-        id: `v4-faq-${index + 1}`,
+      (content?.faqs || []).map((item, index) => ({
+        id: `v4-faq-${content?.id || "all"}-${index + 1}`,
         question: item.question,
         answer: item.answer,
         defaultOpen: index === 0,
       })),
-    [],
+    [content],
   );
-  const cta = effectsOverviewContent.cta;
+  const cta = content?.cta;
 
   const cardProps = (effect, index) => ({
     effect,
     priority: index < 4,
-    isWishlisted: wishlistSet.has(effect.name),
-    canInstall: canInstall(effect),
     onOpen: setDrawerEffect,
-    onToggleWishlist: toggleWishlist,
-    onCopyInstall: copyInstall,
+    ...cardActions(effect),
   });
 
   return (
@@ -397,35 +422,55 @@ export function EffectsListingV4({ effects = [], trendingEffects = [], featuredN
 
       {/* ---------- hero ---------- */}
       <section className={`${GUTTER} pt-36 pb-20 max-[1025px]:pt-32 max-[1025px]:pb-14 max-md:pt-28`}>
-        <nav aria-label="Breadcrumb" className={`${LABEL} flex gap-2.5 text-[#7d7d7d]`}>
+        <nav data-v4-fade aria-label="Breadcrumb" className={`${LABEL} flex gap-2.5 text-[#7d7d7d]`}>
           <Link href="/" className="transition-colors duration-500 hover:text-white">
             Vault
           </Link>
           <span aria-hidden="true">/</span>
-          <span aria-current="page" className="text-[#ff5f00]">
-            Effects
-          </span>
+          {scope ? (
+            <>
+              <Link href="/effects" className="transition-colors duration-500 hover:text-white">
+                Effects
+              </Link>
+              <span aria-hidden="true">/</span>
+              <span aria-current="page" className="text-[#ff5f00]">
+                {content?.name}
+              </span>
+            </>
+          ) : (
+            <span aria-current="page" className="text-[#ff5f00]">
+              Effects
+            </span>
+          )}
         </nav>
 
-        <div data-v4-hero className="mt-7 grid grid-cols-[minmax(0,1.2fr)_minmax(0,.8fr)] items-end gap-12 max-[1025px]:grid-cols-1 max-[1025px]:gap-10">
-          <h1 className={`${DISPLAY} max-w-[45vw] text-[6vw] leading-[0.9]! max-[1025px]:max-w-none max-[1025px]:text-[9vw] max-md:text-[13vw]`}>
-            Browse the{" "}
-            <span className="gradient-text-animate">
-              vault.
-            </span>
-          </h1>
+        <div data-v4-hero className="mt-7 grid grid-cols-[minmax(0,1.25fr)_minmax(0,.75fr)] items-end gap-12 max-[1025px]:grid-cols-1 max-[1025px]:gap-10">
+          {/* Same entrances as the effect page: chars for the title, lines for the copy. */}
+          <HeadAnim animateOnScroll={false} animationKey={scope ? content?.name : "all"}>
+            <h1 className={`${DISPLAY} max-w-[45vw] text-[6vw] leading-[0.9]! max-[1025px]:max-w-none max-[1025px]:text-[9vw] max-md:text-[13vw]`}>
+              {scope ? (
+                <HeroTitle name={content?.name} />
+              ) : (
+                <>
+                  Browse the <span className="gradient-text-animate">vault.</span>
+                </>
+              )}
+            </h1>
+          </HeadAnim>
 
           <div className="grid gap-6.5">
-            <p className={`max-w-[32vw] ${T16} text-[#bdbdbd] max-[1025px]:max-w-[70vw] max-md:max-w-none`}>
-              Production-ready interaction effects for React and Next.js. Preview any of them live, then copy or install with one command.
-            </p>
-            <div className={`${LABEL} flex flex-wrap gap-x-7.5 gap-y-2.5`}>
-              {[
-                [effects.length, "Effects"],
-                [freeCount, "Free"],
-                [categoryOptions.length, "Categories"],
-              ].map(([value, label]) => (
+            {(scope
+              ? [].concat(content?.description || [])
+              : ["Production-ready interaction effects for React and Next.js. Preview any of them live, then copy or install with one command."]
+            ).map((paragraph, index) => (
+              <Copy key={index} animateOnScroll={false} delay={0.3 + index * 0.15} animationKey={scope ? content?.name : "all"}>
+                <p className={`max-w-[32vw] ${T16} text-[#bdbdbd] max-[1025px]:max-w-[70vw] max-md:max-w-none`}>{paragraph}</p>
+              </Copy>
+            ))}
+            <div data-v4-fade className={`${LABEL} flex flex-wrap gap-x-7.5 gap-y-2.5`}>
+              {heroStats.map(([value, label]) => (
                 <p key={label}>
+                  {/* margin-left is set by alignStatInk() so the digit's ink lines up with the label's. */}
                   <b data-v4-count={value} className={`${DISPLAY} block text-[2.4vw] leading-none text-[#F4F4F4] tabular-nums normal-case max-[1025px]:text-[4.5vw] max-md:text-[8vw]`}>
                     {value}
                   </b>
@@ -453,18 +498,14 @@ export function EffectsListingV4({ effects = [], trendingEffects = [], featuredN
 
       {/* ---------- trending ---------- */}
       {trendingEffects.length > 0 && (
-        <section aria-labelledby="v4-trending" className={`${GUTTER} pb-28 max-[1025px]:pb-20`}>
+        <section data-v4-fade aria-labelledby="v4-trending" className={`${GUTTER} pb-28 max-[1025px]:pb-20`}>
           <div className="mb-5.5 flex items-end justify-between">
             <h2 id="v4-trending" className={`${DISPLAY} text-[2.2vw] max-[1025px]:text-[4vw] max-md:text-[7vw]`}>
               Trending this week
             </h2>
             <div className="flex gap-1.5 max-md:hidden">
-              <button type="button" aria-label="Previous" disabled={trendEdges.start} onClick={() => scrollTrending(-1)} className={ARROW_BTN}>
-                <ArrowLeft />
-              </button>
-              <button type="button" aria-label="Next" disabled={trendEdges.end} onClick={() => scrollTrending(1)} className={ARROW_BTN}>
-                <ArrowRight />
-              </button>
+              <SliderArrowButton direction="prev" ariaLabel="Previous" disabled={trendEdges.start} onClick={() => scrollTrending(-1)} />
+              <SliderArrowButton direction="next" ariaLabel="Next" disabled={trendEdges.end} onClick={() => scrollTrending(1)} />
             </div>
           </div>
           <div
@@ -487,14 +528,14 @@ export function EffectsListingV4({ effects = [], trendingEffects = [], featuredN
       {/* data-vault-header-scroll-away: the desktop header slides away as the sheet (and so the
           sticky controls at its top) reaches 10% from the top - see VaultHeader. The sheet is the
           marker rather than the sticky bar, because a stuck element reports the wrong position. */}
-      <div ref={sheetRef} id="v4-grid" data-sound-hover="off" data-sound-flow="off" data-vault-header-scroll-away className="relative scroll-mt-4 bg-[#F4F4F4] text-[#1D1D1D] max-md:mx-0">
+      <div ref={sheetRef} id="v4-grid" data-v4-fade data-sound-hover="off" data-sound-flow="off" data-vault-header-scroll-away className="relative scroll-mt-4 bg-[#F4F4F4] text-[#1D1D1D] max-md:mx-0">
         <div className={`${GUTTER}  pb-24 max-md:pt-8 max-md:pb-16`}>
           {/* summary + view controls (sticky on desktop; tablet/mobile have a fixed header) */}
-          <div className="sticky top-0 h-fit z-5 mx-[-3.4vw] flex flex-wrap items-end justify-between gap-4 bg-[#F4F4F4] px-[3.5vw] pt-4.5 pb-4 shadow-[0_1px_0_rgba(29,29,29,.08)] max-[1025px]:static max-[1025px]:shadow-none max-[1025px]:mx-[-5vw] max-[1025px]:px-[5vw] max-md:-mx-5 max-md:px-5">
+          <div className="sticky top-[-2%] h-fit z-5 mx-[-3.4vw] flex flex-wrap items-end justify-between gap-4 bg-[#F4F4F4] px-[3.5vw] pt-10 pb-4 shadow-[0_1px_0_rgba(29,29,29,.08)] max-[1025px]:static max-[1025px]:shadow-none max-[1025px]:mx-[-5vw] max-[1025px]:px-[5vw] max-md:-mx-5 max-md:px-5">
             <p aria-live="polite" className={`${DISPLAY} ${T20} tracking-[-.02em]`}>
-              <b ref={countRef} className="font-medium tabular-nums">
+              <span ref={countRef} className="font-medium tabular-nums">
                 {filtered.length}
-              </b>{" "}
+              </span>{" "}
               <span className="text-[#6B6B6B]">{countWord(filtered.length)}</span>
               {context && <span className={`ml-2.5 ${T15} text-[#6B6B6B]`}>· {context}</span>}
             </p>
@@ -532,23 +573,40 @@ export function EffectsListingV4({ effects = [], trendingEffects = [], featuredN
             </div>
           </div>
 
-          {/* categories */}
+          {/* categories: on a category route each chip is a link to that category's page */}
           <div className="flex flex-wrap gap-1.5 pt-6 pb-3">
-            <button type="button" aria-pressed={!category} onClick={() => setCategory(null)} className={`${CHIP} ${!category ? CHIP_ON : CHIP_OFF}`}>
-              All
-            </button>
-            {categoryOptions.map((c) => (
-              <button
-                key={c.id}
-                type="button"
-                aria-pressed={category === c.id}
-                onClick={() => setCategory(category === c.id ? null : c.id)}
-                className={`${CHIP} ${category === c.id ? CHIP_ON : CHIP_OFF}`}
-              >
-                {getQuickCategoryLabel(c.id)}
-                <span className={`font-mono mt-0.5 ${T11} tabular-nums ${category === c.id ? "text-black" : "text-black/50"}`}>{c.count}</span>
-              </button>
-            ))}
+            {[{ id: null, label: "All" }, ...categoryOptions.map((c) => ({ id: c.id, label: getQuickCategoryLabel(c.id), count: c.count }))].map((c) => {
+              const active = c.id ? category === c.id : !category;
+              const inner = (
+                <>
+                  {c.label}
+                  {c.count != null && (
+                    <span className={`font-mono mt-0.5 ${T11} tabular-nums ${active ? "text-black" : "text-black/50"}`}>{c.count}</span>
+                  )}
+                </>
+              );
+              return routeCategories ? (
+                <Link
+                  key={c.id || "all"}
+                  href={c.id && !active ? getEffectCategoryHref(c.id) : "/effects"}
+                  scroll={false}
+                  aria-current={active ? "page" : undefined}
+                  className={`${CHIP} ${active ? CHIP_ON : CHIP_OFF}`}
+                >
+                  {inner}
+                </Link>
+              ) : (
+                <button
+                  key={c.id || "all"}
+                  type="button"
+                  aria-pressed={active}
+                  onClick={() => setCategory(c.id && !active ? c.id : null)}
+                  className={`${CHIP} ${active ? CHIP_ON : CHIP_OFF}`}
+                >
+                  {inner}
+                </button>
+              );
+            })}
           </div>
 
           {/* built with + active filters */}
@@ -665,83 +723,34 @@ export function EffectsListingV4({ effects = [], trendingEffects = [], featuredN
       </div>
 
       {/* ---------- FAQ + custom work CTA (from the current listing) ---------- */}
-      <div className="w-full h-full pb-[5vw] bg-white" >
+      <div data-v4-fade className="w-full h-full pb-[5vw] bg-white" >
         {faqItems.length > 0 && <FAQV3 faqItems={faqItems} translateTop={false} />}
-        {cta && (cta.heading || cta.buttonText) && (
-
-          <section className="mx-auto w-[92%] mt-[2vw] bg-[#1D1D1D] px-10 py-12 flex justify-between  max-[1025px]:px-6 max-md:my-[15vw] max-md:px-[7vw]">
-            <div className=" flex w-[60%] flex-col ">
-              {cta.heading && <h2 className="text-[3vw] font-medium max-md:text-[7vw]">{cta.heading}</h2>}
-              {cta.description && <p className={` mt-4 max-w-3xl ${T18} text-white/80`}>{cta.description}</p>}
-              </div>
-              <div className="mt-2">
-              {cta.buttonText && (
-                <CustomAnimationFormTrigger>
-                    <ButtonV3 preventDefault={false} text={cta.buttonText} href={cta.buttonLink || "#"} className="mx-auto w-fit" />
-                </CustomAnimationFormTrigger>
-              )}
-            </div>
-          </section>
-        )}
+        <CustomAnimationCta cta={cta} className="mt-[2vw]" />
       </div>
 
       <PreviewDrawerV4
         effect={drawerEffect}
         effects={effects}
         canInstall={canInstall}
-        isWishlisted={(effect) => wishlistSet.has(effect.name)}
+        isWishlisted={isWishlisted}
         onClose={closeDrawer}
         onOpen={setDrawerEffect}
         onToggleWishlist={toggleWishlist}
         onCopyInstall={copyInstall}
       />
 
-      <ToastViewport toast={toast} onDismiss={dismissToast} />
+      {overlays}
 
       {mounted &&
         createPortal(
           <>
-            <Modal open={signInPrompt} onClose={() => setSignInPrompt(false)} title="Sign in required">
-              Create a free account or sign in to save effects and pick up right where you left off.
-              <ButtonV3 text="Sign In" href="/sign-in?redirect_url=/effects-v4" />
-            </Modal>
             <Modal open={justUpgraded && !upgradeDismissed} onClose={() => setUpgradeDismissed(true)} title="Welcome to Pro">
               Your upgrade is confirmed and the full vault is unlocked. Explore every Pro effect and start shipping right away.
-              <ButtonV3 text="Explore effects" href="/effects-v4" />
+              <ButtonV3 text="Explore effects" href="/effects" />
             </Modal>
           </>,
           document.body,
         )}
-    </div>
-  );
-}
-
-function Modal({ open, onClose, title, children }) {
-  const [text, action] = Array.isArray(children) ? children : [children, null];
-  return (
-    <div
-      onClick={onClose}
-      className={`fixed inset-0 z-9999 flex items-center justify-center bg-black/40 p-4 backdrop-blur-sm transition-opacity duration-300 ${open ? "opacity-100" : "pointer-events-none opacity-0"}`}
-    >
-      <div
-        role="dialog"
-        aria-modal="true"
-        aria-label={title}
-        onClick={(event) => event.stopPropagation()}
-        className={`relative flex w-[35vw] flex-col items-center gap-6 border border-white/20 bg-[#0e0e0e] p-10 text-center shadow-2xl transition-transform duration-300 max-[1025px]:w-[70%] max-[1025px]:p-6 max-md:w-full ${open ? "scale-100" : "scale-95"}`}
-      >
-        <button
-          type="button"
-          aria-label="Close"
-          onClick={onClose}
-          className="absolute top-5 right-5 grid size-10 cursor-pointer place-items-center border border-white/20 bg-white/10 text-white/70 transition-colors duration-500 hover:border-[#ff5f00] hover:bg-[#ff5f00] hover:text-white max-[1025px]:hidden"
-        >
-          <X className="size-4" aria-hidden="true" />
-        </button>
-        <h2 className={`${T24} font-medium text-white`}>{title}</h2>
-        <p className={`w-[80%] ${T14} text-white/60 max-[1025px]:w-full`}>{text}</p>
-        {action}
-      </div>
     </div>
   );
 }
@@ -778,5 +787,17 @@ function SlidingSegment({ label, items, value, onChange, itemClassName, classNam
         );
       })}
     </div>
+  );
+}
+
+// A category name with its last word in the animated brand gradient ("Text <Animations>").
+function HeroTitle({ name = "" }) {
+  const words = String(name).trim().split(/\s+/);
+  const last = words.pop();
+  return (
+    <>
+      {words.length > 0 && `${words.join(" ")} `}
+      <span className="gradient-text-animate">{last}</span>
+    </>
   );
 }

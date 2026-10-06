@@ -3,7 +3,6 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import Image from "next/image";
-import Link from "next/link";
 import gsap from "gsap";
 import { useLenis } from "lenis/react";
 import { Check, Copy, Heart, Lock } from "lucide-react";
@@ -13,7 +12,6 @@ import { resolveEffectVideoUrl } from "@/lib/media";
 import {
   DISPLAY,
   EffectCardV4,
-  ICON_BTN,
   MONO,
   TierBadge,
   installCommand,
@@ -164,15 +162,17 @@ export function PreviewDrawerV4({
   );
 
   // Lock the page behind the drawer and close on Escape (released as soon as it starts closing).
-  // data-v4-drawer-open turns the page scrollbar's thumb transparent (globals.css), so
-  // only the panel's scrollbar shows and nothing shifts. Scroll input outside the panel
+  // The page scrollbar is hidden separately (data-v4-drawer-open, below) for as long as
+  // the drawer is on screen. Scroll input outside the panel
   // is cancelled, so the page can't move; the panel scrolls natively and
   // overscroll-behavior: contain stops it chaining at its ends. lenis.stop() covers
   // pages that run Lenis.
   useEffect(() => {
     if (!open) return undefined;
-    const root = document.documentElement;
-    root.setAttribute("data-v4-drawer-open", "");
+    // Flag the page before stopping Lenis: lenis-stopped alone means overflow: clip on
+    // <html>, which drops the scrollbar for a frame or two (a sideways jump) until the
+    // render that sets this attribute catches up. The effect below removes it.
+    document.documentElement.setAttribute("data-v4-drawer-open", "");
     lenis?.stop();
     const insidePanel = (target) => target instanceof Node && panelRef.current?.contains(target);
     const blockScroll = (event) => {
@@ -189,13 +189,22 @@ export function PreviewDrawerV4({
     const focus = setTimeout(() => closeRef.current?.focus({ preventScroll: true }), PANEL_DURATION * 1000);
     return () => {
       lenis?.start();
-      root.removeAttribute("data-v4-drawer-open");
       document.removeEventListener("wheel", blockScroll);
       document.removeEventListener("touchmove", blockScroll);
       document.removeEventListener("keydown", onKey);
       clearTimeout(focus);
     };
   }, [open, lenis, onClose]);
+
+  // The page scrollbar stays hidden for as long as the drawer is on screen - including
+  // its close animation - so it only reappears once the panel has fully slid away.
+  const onScreen = !!shown;
+  useEffect(() => {
+    if (!onScreen) return undefined;
+    const root = document.documentElement;
+    root.setAttribute("data-v4-drawer-open", "");
+    return () => root.removeAttribute("data-v4-drawer-open");
+  }, [onScreen]);
 
   if (!shown || typeof document === "undefined") return null;
   const installable = canInstall(shown);
@@ -211,9 +220,9 @@ export function PreviewDrawerV4({
         data-lenis-prevent
         className="absolute inset-y-0 right-0 w-[min(760px,100vw)] overflow-y-auto overscroll-contain border-l border-white/10 bg-[#0e0e0e] font-neue-haas text-white shadow-[-16px_0_40px_-24px_rgba(0,0,0,.6)] max-[1025px]:w-full max-[1025px]:border-l-0"
       >
-      <div ref={contentRef} className="flex flex-col gap-6 px-10 pt-7 pb-10 max-[1025px]:px-8 max-md:px-5 *:shrink-0">
+      <div ref={contentRef} className="flex flex-col gap-10 px-10 pt-7 pb-16 max-[1025px]:px-8 max-md:px-5 *:shrink-0">
         <div className="flex items-center justify-between">
-          <span className={`${T14} text-white/80`}>{categoryName}</span>
+          <span className={`${T16} text-white/80`}>{categoryName}</span>
           {/* Same close control as the site's modals: the cross turns a quarter on hover. */}
           <button
             ref={closeRef}
@@ -245,16 +254,23 @@ export function PreviewDrawerV4({
           )}
         </div>
 
-        <div className="grid gap-4">
-          <div className="flex flex-wrap gap-1.5">
+        {/* Actions sit right under the preview. */}
+       
+        <div className="grid gap-6">
+         
+          {/* Tier sits beside the name at its usual small size. */}
+          <div className="flex flex-wrap items-center gap-3">
+            <h2 id="v4-drawer-title" className={`${DISPLAY} text-[3vw] leading-[1]! tracking-[-.04em] max-[1025px]:text-[6vw] max-md:text-[9vw]`}>
+              {shown.title}
+            </h2>
+            <div className="mt-1.5">
             <TierBadge tier={shown.tier} />
+            </div>
           </div>
-          <h2 id="v4-drawer-title" className={`${DISPLAY} text-[3vw] leading-none tracking-[-.04em] max-[1025px]:text-[6vw] max-md:text-[9vw]`}>
-            {shown.title}
-          </h2>
           {shown.description && (
-            <p className={`max-w-[42vw] ${T16} leading-relaxed text-white/60 max-[1025px]:max-w-none`}>{shown.description}</p>
+            <p className={`max-w-[42vw] ${T16} leading-relaxed text-white/80 max-[1025px]:max-w-none`}>{shown.description}</p>
           )}
+          <div className="flex w-full justify-between">
           {shown.tags?.length > 0 && (
             <div className="flex flex-wrap gap-1.5">
               {shown.tags.map((tag) => (
@@ -264,10 +280,31 @@ export function PreviewDrawerV4({
               ))}
             </div>
           )}
+           <div className=" flex justify-end">
+          <div className="flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            aria-pressed={saved}
+            onClick={() => onToggleWishlist(shown)}
+            className={` flex gap-2 border px-3 border-white/60 py-3 leading-[1.2] text-[1.1vw] self-center ${saved ? "text-[#ff5f00]! [&_svg]:fill-[#ff5f00]" : ""}`}
+          >
+            <div className="size-4.5">
+            <Heart className="size-full" />
+            </div>
+          </button>
+          <ButtonV3 text="Demo" href={getEffectPreviewHref(shown)} variant="outline" target_blank className="bg-transparent!" />
+          <ButtonV3 text="View Article" href={getEffectHref(shown)} className="border border-primary" />
+          {/* Same dark action button as the card's Save. */}
+
+          </div>
+        </div>
+
+
+          </div>
         </div>
 
         {installable ? (
-          <div className="flex items-center gap-3 border border-white/10 bg-white/[.03] py-2 pr-2 pl-4">
+          <div className="flex items-center gap-3 border border-white/10 bg-white/3 py-3 pr-2 pl-4">
             <code className={`${MONO} min-w-0 flex-1 overflow-x-auto whitespace-nowrap ${T14} text-white/85`}>
               <span className="text-[#ff5f00]">$</span> {installCommand(shown)}
             </code>
@@ -289,33 +326,18 @@ export function PreviewDrawerV4({
           <div className="flex flex-wrap items-center justify-between gap-4 border border-[#ff5f00]/35 bg-[#ff5f00]/[.06] px-4.5 py-4">
             <p className={`flex items-center gap-2 ${T14} text-white/70`}>
               <Lock className="size-3.75 shrink-0 text-[#ff5f00]" aria-hidden="true" />
-              This is a Pro shown. Pro unlocks it with the rest of the library.
+              This is a Pro effect. Pro unlocks it with the rest of the library.
             </p>
             <ButtonV3 text="Unlock with Pro" href="/pricing" />
           </div>
         )}
 
-        <div className="flex flex-wrap gap-2">
-          <ButtonV3 text="Open effect page" href={getEffectHref(shown)} />
-          <ButtonV3 text="Live demo" href={getEffectPreviewHref(shown)} variant="outline" target_blank className="bg-transparent!" />
-          {/* Same dark action button as the card's Save. */}
-          <button
-            type="button"
-            aria-pressed={saved}
-            onClick={() => onToggleWishlist(shown)}
-            className={`${ICON_BTN} self-center ${saved ? "text-[#ff5f00]! [&_svg]:fill-[#ff5f00]" : ""}`}
-          >
-            <Heart />
-            <span>{saved ? "Saved" : "Save to favourites"}</span>
-          </button>
-        </div>
-
         {related.length > 0 && (
           <div className="border-t border-white/10 pt-6">
-            <p className={`mb-4 ${T14} text-white/60`}>More in this category</p>
+            <p className={`mb-4 ${T16} text-white`}>More in this category</p>
             <div className="grid grid-cols-2 gap-3.5 max-md:grid-cols-1">
               {related.map((item) => (
-                <EffectCardV4 key={item.name} effect={item} small dark sizes="240px" onOpen={onOpen} />
+                <EffectCardV4 key={item.name} effect={item} small dark sizes="240px" onOpen={onOpen} tagClassName="border-white/20" />
               ))}
             </div>
           </div>

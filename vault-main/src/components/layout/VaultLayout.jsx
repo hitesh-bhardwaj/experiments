@@ -313,15 +313,85 @@ export function VaultLayout({
     };
   }, [isSidebarOpen, isSidebarReady, lenis, refreshScrollTrigger]);
 
+  // Opening / closing the sidebar animates the content column's width, so text above
+  // the viewport re-wraps and the page height changes every frame. The browser's scroll
+  // anchoring would normally hide that, but Lenis writes the scroll position itself, so
+  // the page visibly jitters (worst mid-scroll). For the length of the transition (and
+  // the ScrollTrigger refreshes after it) keep the element at the top of the viewport
+  // where it was, by shifting Lenis's scroll state by however far the layout moved it.
+  const anchorHoldRef = useRef(null);
+  const holdScrollAnchor = useCallback(() => {
+    if (typeof window === "undefined" || window.scrollY < 1) return;
+
+    anchorHoldRef.current?.();
+
+    const anchor = document
+      .elementsFromPoint(window.innerWidth * 0.6, window.innerHeight * 0.3)
+      .find(
+        (el) =>
+          el !== document.documentElement &&
+          el !== document.body &&
+          !el.closest("aside, header, [role='dialog']") &&
+          getComputedStyle(el).position !== "fixed" &&
+          el.getBoundingClientRect().height < window.innerHeight
+      );
+    if (!anchor) return;
+
+    const root = document.documentElement;
+    const previousAnchoring = root.style.overflowAnchor;
+    root.style.overflowAnchor = "none";
+
+    let lastTop = anchor.getBoundingClientRect().top;
+    let lastScroll = window.scrollY;
+
+    const tick = () => {
+      if (!anchor.isConnected) return;
+      // How far the layout moved the anchor, beyond what scrolling explains.
+      const drift =
+        anchor.getBoundingClientRect().top - lastTop + (window.scrollY - lastScroll);
+
+      if (Math.abs(drift) >= 0.5) {
+        if (lenis) {
+          if (lenis.animate?.isRunning) {
+            lenis.animate.value += drift;
+            lenis.animate.from += drift;
+            lenis.animate.to += drift;
+          }
+          lenis.targetScroll += drift;
+          lenis.animatedScroll += drift;
+        }
+        window.scrollTo(0, window.scrollY + drift);
+      }
+
+      lastTop = anchor.getBoundingClientRect().top;
+      lastScroll = window.scrollY;
+    };
+
+    // After Lenis's own update in the same tick (Lenis runs on the gsap ticker too).
+    gsap.ticker.add(tick);
+    const stopTimer = window.setTimeout(() => release(), 1000);
+    const release = () => {
+      gsap.ticker.remove(tick);
+      window.clearTimeout(stopTimer);
+      root.style.overflowAnchor = previousAnchoring;
+      anchorHoldRef.current = null;
+    };
+    anchorHoldRef.current = release;
+  }, [lenis]);
+
+  useEffect(() => () => anchorHoldRef.current?.(), []);
+
   const toggleSidebar = useCallback((nextValue) => {
+    holdScrollAnchor();
     setIsSidebarOpen((currentValue) =>
       typeof nextValue === "boolean" ? nextValue : !currentValue
     );
 
     refreshScrollTrigger(true);
-  }, [refreshScrollTrigger]);
+  }, [holdScrollAnchor, refreshScrollTrigger]);
 
   const closeSidebar = () => {
+    holdScrollAnchor();
     setIsSidebarOpen(false);
     refreshScrollTrigger(true);
   };

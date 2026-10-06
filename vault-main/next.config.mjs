@@ -70,6 +70,12 @@ const nextConfig = {
 
   async redirects() {
     return [
+      // The v4 listing preview became /effects itself.
+      {
+        source: "/effects-v4",
+        destination: "/effects",
+        permanent: true,
+      },
       {
         source: "/effects/components/book-flip",
         destination: "/effects/webgl-effects/book-flip",

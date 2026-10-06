@@ -21,8 +21,10 @@
   --blog-font-mono: var(--font-code), "SF Mono", Consolas, monospace;
 }
 
-/* Docs content sits on the light sheet: same type, the sheet's colours */
-.docs-sheet .blog-content {
+/* Light surfaces: the docs sheet, and any wrapper marked .blog-theme-light (the
+   effect detail page's white article section) - same type, light colours */
+.docs-sheet .blog-content,
+.blog-theme-light .blog-content {
   --blog-text-color: #1d1d1d;
   --blog-text-secondary: var(--docs-body, #3a3a3a);
   --blog-text-muted: #6b6b6b;
@@ -117,6 +119,13 @@
 .blog-content h2:first-of-type {
   border-top: none;
   padding-top: 0;
+}
+
+/* A divider right before the heading already draws the line - don't add a second one. */
+.blog-content hr + h2 {
+  border-top: none;
+  padding-top: 0;
+  margin-top: 0;
 }
 
 .blog-content h3 {
@@ -724,6 +733,15 @@
   margin-top: 0.75rem;
 }
 
+/* Effect pages: tighter lists (half the default item spacing). */
+.blog-theme-light .blog-content li {
+  margin-bottom: 0.25rem;
+}
+
+.blog-theme-light .blog-content .blog-number-list li + li {
+  margin-top: 0.375rem;
+}
+
 /* Tables - colours come from the variant tokens */
 .blog-content .blog-table-wrap {
   --table-border: rgba(255, 255, 255, 0.14);
@@ -1061,5 +1079,71 @@
   .blog-content table {
     page-break-inside: avoid;
   }
+}
+
+/* .blog-theme-light: the rules below hardcode dark-theme colours instead of using the
+   --blog-* tokens, so they get light counterparts here. Code blocks stay dark. */
+.blog-theme-light .blog-content .blog-image-frame {
+  background: rgba(29, 29, 29, 0.03);
+}
+
+.blog-theme-light .blog-content .blog-table-wrap {
+  --table-border: rgba(29, 29, 29, 0.12);
+  --table-header-bg: #ededed;
+  --table-header-color: #141414;
+  --table-cell-color: rgba(29, 29, 29, 0.78);
+  border-color: rgba(29, 29, 29, 0.12);
+}
+
+.blog-theme-light .blog-content .blog-table-wrap[data-variant="orange"] {
+  --table-border: rgba(255, 95, 0, 0.32);
+  --table-header-bg: var(--primary);
+  --table-header-color: #0e0e0e;
+  --table-cell-color: rgba(29, 29, 29, 0.82);
+}
+
+.blog-theme-light .blog-content .blog-table-wrap[data-variant="muted"] {
+  --table-border: rgba(29, 29, 29, 0.14);
+  --table-header-bg: rgba(29, 29, 29, 0.05);
+  --table-header-color: rgba(29, 29, 29, 0.9);
+  --table-cell-color: rgba(29, 29, 29, 0.7);
+}
+
+.blog-theme-light .blog-content .blog-table-wrap[data-variant="outline"] {
+  --table-border: rgba(29, 29, 29, 0.2);
+  --table-header-bg: transparent;
+  --table-header-color: #141414;
+  --table-cell-color: rgba(29, 29, 29, 0.76);
+}
+
+.blog-theme-light .blog-changelog-item::before {
+  background: rgba(29, 29, 29, 0.15);
+}
+
+.blog-theme-light .blog-changelog-dot {
+  border-color: rgba(29, 29, 29, 0.6);
+  background: #ffffff;
+  box-shadow: 0 0 0 0.25rem #ffffff;
+}
+
+.blog-theme-light .blog-changelog-date {
+  color: rgba(29, 29, 29, 0.5);
+}
+
+.blog-theme-light .blog-changelog-breaking {
+  color: #c94a00;
+}
+
+.blog-theme-light .blog-changelog-summary {
+  color: rgba(29, 29, 29, 0.72);
+}
+
+.blog-theme-light .blog-content .blog-callout-info {
+  border-color: rgba(29, 29, 29, 0.25);
+}
+
+.blog-theme-light .blog-callout-grid-item {
+  border-color: rgba(29, 29, 29, 0.12);
+  color: #3a3a3a;
 }
 }
