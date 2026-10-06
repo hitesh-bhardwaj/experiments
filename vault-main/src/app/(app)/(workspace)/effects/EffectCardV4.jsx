@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Check, Copy, Download, Eye, Heart, Lock } from "lucide-react";
-import { getEffectHref, getEffectPreviewHref, getQuickCategoryLabel, resolveEffectCategoryId } from "@/lib/categories";
+import { getEffectPreviewHref, getQuickCategoryLabel, resolveEffectCategoryId } from "@/lib/categories";
 import { Tooltip } from "@/components/ui/Tooltip";
 import { resolveEffectVideoUrl, resolveMediaUrl, resizeR2ImageUrl } from "@/lib/media";
 import { useAutoplayPreviewVideo } from "@/hooks/useAutoplayPreviewVideo";
@@ -41,11 +41,12 @@ export function resolveCover(effect) {
   return resizeR2ImageUrl(resolved, { width: 1200, height: 675 });
 }
 
-export function TierBadge({ tier }) {
+// `className` overrides the default size (tailwind-merge), e.g. the drawer's button-height badge.
+export function TierBadge({ tier, className = "" }) {
   return tier === "pro" ? (
-    <span className={`${BADGE} bg-[#ff5f00] text-[#141414]`}>Pro</span>
+    <span className={twMerge(`${BADGE} bg-[#ff5f00] text-[#141414]`, className)}>Pro</span>
   ) : (
-    <span className={`${BADGE} bg-[rgba(244,244,244,.9)] border border-black/10 text-[#1D1D1D]`}>Free</span>
+    <span className={twMerge(`${BADGE} bg-[rgba(244,244,244,.9)] border border-black/10 text-[#1D1D1D]`, className)}>Free</span>
   );
 }
 
@@ -56,8 +57,7 @@ export function NewBadge() {
 /**
  * One effect in the vault grid. `small` drops the hover actions (trending row,
  * related effects); `dark` switches the meta text for dark backgrounds.
- * Clicking the card opens the preview drawer; the title is a real link to the
- * effect page so it can be opened in a new tab and crawled.
+ * Clicking the card opens the preview drawer (the title is plain text, not a link).
  */
 export function EffectCardV4({
   effect,
@@ -85,7 +85,6 @@ export function EffectCardV4({
   const cover = useMemo(() => resolveCover(effect), [effect]);
   const { cardRef, showVideo, shouldRenderVideo, videoProps } = useAutoplayPreviewVideo(videoUrl);
 
-  const href = getEffectHref(effect);
   const category = effectCategoryLabel(effect);
   const deps = (effect.tags || []).slice(0, 3);
 
@@ -113,7 +112,7 @@ export function EffectCardV4({
       }}
       className={`group relative grid cursor-pointer gap-3.5 outline-none ${className}`}
     >
-      <div className="relative aspect-[16/8.7] overflow-hidden bg-[#141414] transition-shadow duration-700 ease-[cubic-bezier(.16,1,.3,1)] group-hover:shadow-[0_30px_60px_-30px_rgba(255,95,0,.55)] group-focus-visible:shadow-[0_0_0_2px_#ff5f00]">
+      <div className="relative aspect-[16/8.6] overflow-hidden bg-[#141414] transition-shadow duration-700 ease-[cubic-bezier(.16,1,.3,1)] group-hover:shadow-[0_30px_60px_-30px_rgba(255,95,0,.55)] group-focus-visible:shadow-[0_0_0_2px_#ff5f00]">
         {cover && !imageError ? (
           <Image
             src={cover}
@@ -203,9 +202,7 @@ export function EffectCardV4({
 
       <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-x-3 gap-y-1">
         <h3 className={twMerge(`${DISPLAY} truncate ${T18} leading-tight font-medium tracking-[-.02em]`, titleClassName)}>
-          <Link href={href} prefetch={false} className="transition-colors duration-300 hover:text-[#ff5f00]">
-            {effect.title}
-          </Link>
+          {effect.title}
         </h3>
         {/* Tags never break mid-word: each chip stays on one line (ellipsis if a single tag is wider than the column). */}
         <div className="col-start-2 row-span-2 flex max-w-[13vw] flex-wrap justify-end gap-1 max-[1025px]:max-w-[24vw] max-md:max-w-[50vw]">

@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { ArrowUp } from "lucide-react";
 import Link from "next/link";
 import gsap from "gsap";
 import { useLenis } from "lenis/react";
@@ -29,6 +30,11 @@ export function TableOfContents({
   // Effects/docs reveal the widget only while you're inside the article; the
   // blog rail keeps it mounted for the whole column.
   alwaysVisible = false,
+  // How far down the viewport (0-1) the article's top must reach before the widget
+  // appears. Docs keep the original 0.45; the effect page passes 0.2.
+  revealAt = 0.45,
+  // Adds a "Back to top" entry after the headings in the flyout.
+  showBackToTop = false,
 }) {
   const [items, setItems] = useState([]);
   const [activeId, setActiveId] = useState("");
@@ -133,6 +139,22 @@ export function TableOfContents({
     [clearActiveLock, lenis]
   );
 
+  // Same easing as the heading jumps; Lenis when the page runs it, native otherwise.
+  const scrollToTop = useCallback(
+    (event) => {
+      event.preventDefault();
+      clearActiveLock();
+      scrollTweenRef.current?.kill();
+      scrollTweenRef.current = null;
+      if (lenis) {
+        lenis.scrollTo(0, { duration: 1.15, easing: (t) => 1 - Math.pow(1 - t, 3), force: true });
+      } else {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    },
+    [clearActiveLock, lenis]
+  );
+
   useEffect(() => {
     const root = containerRef?.current;
 
@@ -148,7 +170,7 @@ export function TableOfContents({
 
       setIsVisible(
         !hasReachedStop &&
-        rect.top <= window.innerHeight * 0.45 &&
+        rect.top <= window.innerHeight * revealAt &&
         rect.bottom >= window.innerHeight * 0.25
       );
     };
@@ -164,7 +186,7 @@ export function TableOfContents({
       window.removeEventListener("scroll", updateVisibility);
       window.removeEventListener("resize", updateVisibility);
     };
-  }, [containerRef, stopRef, watchKey]);
+  }, [containerRef, stopRef, watchKey, revealAt]);
 
   // Reset the footer-proximity flag when the feature is off - derived
   // purely from `hideNearFooter`, which is already available during render.
@@ -327,6 +349,25 @@ export function TableOfContents({
               </li>
             );
           })}
+          {showBackToTop && (
+            <li className="mt-1 border-t border-[rgba(29,29,29,.1)] pt-1">
+              <a
+                href="#top"
+                onMouseEnter={() => setHoveredId("__top")}
+                onClick={scrollToTop}
+                className="group relative isolate block"
+              >
+                <span
+                  aria-hidden="true"
+                  className={`absolute inset-0 -z-10 origin-top bg-[#ff5f00] transition-transform duration-300 ease-out motion-reduce:transition-none ${hoveredId === "__top" ? "scale-y-100" : "scale-y-0"}`}
+                />
+                <span className={`relative z-10 flex items-center gap-2 px-3 py-2 text20 font-normal leading-tight transition-colors duration-300 ${hoveredId === "__top" ? "text-[#141414]" : "text-(--docs-body,#3a3a3a)"}`}>
+                  <ArrowUp className="size-4" aria-hidden="true" />
+                  Back to top
+                </span>
+              </a>
+            </li>
+          )}
         </ul>
       </div>
 

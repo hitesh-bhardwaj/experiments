@@ -132,6 +132,21 @@ export default function HeadAnim({
         return;
       }
 
+      // background-clip: text on a parent doesn't paint transformed child chars, so a
+      // gradient word (.gradient-text-animate) would vanish while it animates. Put the
+      // gradient on its chars for the entrance; reverting the split afterwards restores
+      // the original markup, and with it the one continuous gradient across the word.
+      const gradientHosts = Array.from(
+        container.querySelectorAll(".gradient-text-animate")
+      );
+
+      gradientHosts.forEach((host) => {
+        allChars
+          .filter((char) => host.contains(char))
+          .forEach((char) => char.classList.add("gradient-text-animate"));
+        host.classList.remove("gradient-text-animate");
+      });
+
       gsap.set(allChars, {
         yPercent: 100,
         rotate: 8,
@@ -154,6 +169,11 @@ export default function HeadAnim({
           gsap.set(allChars, {
             clearProps: "willChange",
           });
+
+          if (gradientHosts.length) {
+            splitRefs.current.forEach((split) => split?.revert());
+            splitRefs.current = [];
+          }
 
           refreshRef.current?.kill();
           refreshRef.current = gsap.delayedCall(0.05, () => {

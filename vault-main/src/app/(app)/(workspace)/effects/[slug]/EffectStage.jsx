@@ -6,10 +6,14 @@ import ButtonV3 from "@/homepage-v3/components/ButtonV3";
 import { getGroupsFromRemixerControls } from "@/components/remixer-panel/RegistryRemixerDemo";
 import { useRemixerControls } from "@/components/remixer-panel/useRemixerControls";
 import { buildRemixerJsx } from "@/components/remixer-panel/build-remixer-code";
+import gsap from "gsap";
+import { useVaultLayout } from "@/components/layout/VaultLayout";
 
 // Same message the preview chrome sends its device iframe (onEmbedValues)
 const MSG = "vault-preview:values";
 const EASE = "cubic-bezier(.16,1,.3,1)";
+// 13px-equivalent text in vw: desktop · tablet (max-[1025px]) · mobile (max-md).
+const T13 = "text-[1.1vw] max-[1025px]:text-[1.6vw] max-md:text-[3.3vw]";
 
 // JSON-safe copy, so the values can cross postMessage into the iframe
 function cloneable(values) {
@@ -36,6 +40,13 @@ export default function EffectStage({ effect, title, previewHref }) {
   const hasPlayground = !!remixer.enabled && groups.some((g) => g.controls?.length);
 
   const [view, setView] = useState("preview");
+  // Opening the Playground closes the desktop sidebar to give the stage room. Only this
+  // way round: reopening the sidebar leaves the Playground open.
+  const { isSidebarOpen, toggleSidebar } = useVaultLayout();
+  const openPlayground = () => {
+    setView("play");
+    if (isSidebarOpen && window.matchMedia("(min-width: 1026px)").matches) toggleSidebar(false);
+  };
   const [frameKey, setFrameKey] = useState(0);
   const [loaded, setLoaded] = useState(false);
   const frameRef = useRef(null);
@@ -43,6 +54,50 @@ export default function EffectStage({ effect, title, previewHref }) {
   // The stage sticks vertically centred while a long Playground scrolls past
   const stageRef = useRef(null);
   const [stickyTop, setStickyTop] = useState(96);
+
+  // Opening the Playground narrows the stage by the panel's column, which would drop the
+  // demo into its tablet layout. Instead the iframe keeps the full (Preview) width and is
+  // scaled down to fit, so it always renders its desktop layout and never reflows while
+  // the column animates. On phones the panel stacks below, so nothing is scaled there.
+  const gridRef = useRef(null);
+  const [frameBox, setFrameBox] = useState(null);
+  useEffect(() => {
+    const grid = gridRef.current;
+    const stage = stageRef.current;
+    if (!grid || !stage) return;
+    const phone = window.matchMedia("(max-width: 767.98px)");
+    const target = () => (phone.matches ? stage.clientWidth : grid.clientWidth);
+    // While the layout animates (Playground column, sidebar) only the scale follows it;
+    // the iframe's own width - what the demo lays itself out at - is updated once, after
+    // the resizing has settled, so the demo doesn't re-layout on every frame.
+    let width = target();
+    let settle = 0;
+    const apply = () => {
+      const scale = width ? stage.clientWidth / width : 1;
+      setFrameBox(width === stage.clientWidth ? null : { width, height: stage.clientHeight / scale, scale });
+    };
+    const measure = () => {
+      if (phone.matches) width = target();
+      else if (target() !== width) {
+        clearTimeout(settle);
+        settle = setTimeout(() => {
+          width = target();
+          apply();
+        }, 200);
+      }
+      apply();
+    };
+    const ro = new ResizeObserver(measure);
+    ro.observe(grid);
+    ro.observe(stage);
+    phone.addEventListener("change", measure);
+    measure();
+    return () => {
+      clearTimeout(settle);
+      ro.disconnect();
+      phone.removeEventListener("change", measure);
+    };
+  }, []);
   useEffect(() => {
     const el = stageRef.current;
     if (!el) return undefined;
@@ -55,6 +110,35 @@ export default function EffectStage({ effect, title, previewHref }) {
   }, []);
   const [pill, setPill] = useState({ x: 0, w: 0 });
   const play = hasPlayground && view === "play";
+
+  // In Preview the hidden Playground column collapses to zero height (once its
+  // close animation is done), so the stage block is its normal height and nothing
+  // gives it room to stick. Opening un-collapses it straight away.
+  const [panelCollapsed, setPanelCollapsed] = useState(true);
+  useEffect(() => {
+    if (play) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setPanelCollapsed(false);
+      return undefined;
+    }
+    const id = setTimeout(() => setPanelCollapsed(true), 700);
+    return () => clearTimeout(id);
+  }, [play]);
+
+  // The panel's content keeps a fixed width (--pg-w; the column reveals it rather
+  // than squeezing it), and its rows ease in one after another once it's open.
+  const panelContentRef = useRef(null);
+  useEffect(() => {
+    const root = panelContentRef.current;
+    if (!play || !root || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return undefined;
+    const rows = root.querySelectorAll(':scope > p, aside section, aside [class*="codeBlock"]');
+    const tween = gsap.fromTo(
+      rows,
+      { autoAlpha: 0, x: 18 },
+      { autoAlpha: 1, x: 0, duration: 0.6, ease: "expo.out", stagger: 0.05, delay: 0.3, clearProps: "opacity,visibility,transform" },
+    );
+    return () => tween.kill();
+  }, [play]);
 
   const src = `${previewHref}?embed=1`;
 
@@ -84,9 +168,9 @@ export default function EffectStage({ effect, title, previewHref }) {
   );
 
   const tabCls = (on) =>
-    `relative z-1 h-9 px-[18px] text-[13px] uppercase tracking-[.08em] transition-colors duration-600 ${on ? "text-[#141414]" : "text-[#a9a9a9] hover:text-white"}`;
+    `relative z-1  px-5 py-2.5 font-medium  ${T13} transition-colors duration-600 ${on ? "text-black" : "text-white/60 hover:text-white"}`;
   const toolCls =
-    "inline-flex items-center gap-2 h-9 px-3.5 text-[13px] uppercase tracking-[.08em] text-[#cfcfcf] shadow-[inset_0_0_0_1px_rgba(244,244,244,.12)] transition-colors duration-500 hover:bg-[rgba(244,244,244,.08)] hover:text-white";
+    `inline-flex items-center border border-white/20 backdrop-blur-lg gap-2 px-3.5 ${T13} text-[#cfcfcf] bg-[rgba(244,244,244,.06)] transition-colors duration-500 hover:bg-[rgba(244,244,244,.08)] hover:text-white`;
 
   return (
     <section aria-label="Interactive preview" className="w-full">
@@ -94,49 +178,58 @@ export default function EffectStage({ effect, title, previewHref }) {
         <div
           ref={tabsRef}
           role="tablist"
-          className="relative isolate inline-flex bg-[rgba(244,244,244,.06)] p-[3px] shadow-[inset_0_0_0_1px_rgba(244,244,244,.08)]"
+          className="relative isolate inline-flex bg-[rgba(244,244,244,.06)] backdrop-blur-lg p-0.75"
         >
           <button role="tab" type="button" data-view="preview" aria-selected={view === "preview"} onClick={() => setView("preview")} className={tabCls(view === "preview")}>
             Preview
           </button>
           {hasPlayground && (
-            <button role="tab" type="button" data-view="play" aria-selected={view === "play"} onClick={() => setView("play")} className={tabCls(view === "play")}>
+            <button role="tab" type="button" data-view="play" aria-selected={view === "play"} onClick={openPlayground} className={tabCls(view === "play")}>
               Playground
             </button>
           )}
           <i
             aria-hidden="true"
-            className="absolute top-[3px] bottom-[3px] left-[3px] z-0 bg-primary"
+            className="absolute top-0.75 bottom-0.75 left-0.75 z-0 bg-primary"
             style={{ width: pill.w, transform: `translateX(${pill.x}px)`, transition: `transform .7s ${EASE}, width .7s ${EASE}` }}
           />
         </div>
-        <div className="flex items-center gap-2">
+        {/* items-stretch: Replay takes Live Preview's height (ButtonV3 scales with vw). */}
+        <div className="flex items-stretch gap-2">
           <button type="button" onClick={replay} className={toolCls}>
             ↺ Replay
           </button>
-          <ButtonV3 text="Live Preview" href={previewHref} target_blank variant="orange" className="shrink-0" />
+          <ButtonV3 text="Live Preview" href={previewHref} target_blank variant="orange" className="shrink-0 border border-primary" />
         </div>
       </div>
 
-      {/* Always two columns: the Playground column opens from 0 to 340px (same track
+      {/* Always two columns: the Playground column opens from 0 to --pg-w (same track
           count both ways, so grid-template-columns can animate), and the panel fades
-          and slides in with it instead of mounting / unmounting in a jump. */}
+          and slides in with it instead of mounting / unmounting in a jump.
+          --pg-w: 18vw on desktop, 340px on tablet (18vw would be too narrow there). */}
       <div
-        className="grid items-start max-md:grid-cols-1!"
+        ref={gridRef}
+        className="grid items-start [--pg-w:18vw] max-[1025px]:[--pg-w:340px] max-md:grid-cols-1!"
         style={{
-          gridTemplateColumns: play ? "minmax(0,1fr) 340px" : "minmax(0,1fr) 0px",
+          gridTemplateColumns: play ? "minmax(0,1fr) var(--pg-w)" : "minmax(0,1fr) 0px",
           columnGap: play ? 14 : 0,
           transition: `grid-template-columns .8s ${EASE}, column-gap .8s ${EASE}`,
         }}
       >
-        {/* Sticks centred on screen while a long Playground scrolls past it, released where the Playground ends */}
-        <div ref={stageRef} style={{ top: stickyTop }} className="sticky aspect-16/8.5 w-full overflow-hidden bg-black isolate max-md:static max-md:aspect-4/5">
+        {/* Only in Playground: sticks centred on screen while the long panel scrolls past
+            it, released where the panel ends. In Preview it's an ordinary block. */}
+        <div
+          ref={stageRef}
+          style={play ? { top: stickyTop } : undefined}
+          className={`${play ? "sticky" : "relative"} aspect-16/8.5 w-full overflow-hidden bg-black isolate max-md:relative max-md:aspect-4/5`}
+        >
           <iframe
             key={frameKey}
             ref={frameRef}
             src={src}
             title={`${title || "Effect"} preview`}
             onLoad={() => setLoaded(true)}
+            style={frameBox ? { width: frameBox.width, height: frameBox.height, transform: `scale(${frameBox.scale})`, transformOrigin: "0 0" } : undefined}
             className={`absolute inset-0 size-full border-0 transition-opacity duration-700 ${loaded ? "opacity-100" : "opacity-0"}`}
           />
           {!loaded && (
@@ -151,20 +244,25 @@ export default function EffectStage({ effect, title, previewHref }) {
             aria-label="Playground"
             aria-hidden={!play}
             inert={!play}
-            className={`flex min-w-0 flex-col overflow-hidden border border-[rgba(244,244,244,.08)] bg-[#141414] transition-[opacity,transform] duration-700 max-md:mt-3.5 ${play ? "translate-x-0 opacity-100" : "pointer-events-none translate-x-6 opacity-0 max-md:hidden"}`}
+            className={`flex min-w-0 flex-col overflow-hidden border border-[rgba(244,244,244,.08)] bg-[#141414] transition-[opacity,transform] duration-700 max-md:mt-3.5 ${panelCollapsed ? "h-0 border-0" : ""} ${play ? "translate-x-0 opacity-100" : "pointer-events-none translate-x-6 opacity-0 max-md:hidden"}`}
             style={{ transitionTimingFunction: EASE }}
           >
-            <p className="px-[22px] pt-[22px] pb-2 text-[13px] uppercase tracking-[.08em] text-[#8a8a8a]">Tune the real props</p>
-            <div className="min-h-0 flex-1 [&>aside]:h-full">
-              <RemixerPanel
-                isExpanded
-                groups={groups}
-                values={values}
-                onChange={updateValue}
-                onCopyCode={copyCode}
-                onReset={resetValues}
-                defaultOpenGroupId={remixer.defaultOpenGroupId}
-              />
+            {/* Fixed width: the column grows from 0 to --pg-w around it, so the controls
+                never re-wrap mid-animation. */}
+            <div ref={panelContentRef} className="flex w-(--pg-w) shrink-0 flex-col max-md:w-full">
+              <p className={`px-4 py-2 ${T13} tracking-normal text-white bg-[#111111]`}>Tune the real props</p>
+              <div className="min-h-0 flex-1 [&>aside]:h-full">
+                <RemixerPanel
+                  compact
+                  isExpanded
+                  groups={groups}
+                  values={values}
+                  onChange={updateValue}
+                  onCopyCode={copyCode}
+                  onReset={resetValues}
+                  defaultOpenGroupId={remixer.defaultOpenGroupId}
+                />
+              </div>
             </div>
           </div>
         )}
