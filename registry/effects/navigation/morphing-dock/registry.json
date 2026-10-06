@@ -19,7 +19,7 @@
   ],
   "registryDependencies": [],
   "packageName": "@hyperiux/morphing-dock",
-  "sourcePath": "apps/docs/src/components/morphing-dock",
+  "sourcePath": "vault-main/src/components/morphing-dock",
   "previewUrl": "/demo/morphing-dock",
   "tier": "pro",
   "subfolder": true,

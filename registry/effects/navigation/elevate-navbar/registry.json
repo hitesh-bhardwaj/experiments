@@ -25,7 +25,7 @@
   ],
   "registryDependencies": [],
   "packageName": "@hyperiux/elevate-navbar",
-  "sourcePath": "apps/docs/src/components/elevate-navbar",
+  "sourcePath": "vault-main/src/components/elevate-navbar",
   "previewUrl": "/demo/elevate-navbar",
   "tier": "free",
   "subfolder": true,

@@ -12,24 +12,24 @@
     "esModuleInterop": true,
     "isolatedModules": true,
     "allowJs": true,
-    "typeRoots": ["../apps/docs/node_modules/@types"],
+    "typeRoots": ["../vault-main/node_modules/@types"],
     "paths": {
-      "react": ["../apps/docs/node_modules/@types/react"],
-      "react/jsx-runtime": ["../apps/docs/node_modules/@types/react/jsx-runtime"],
-      "react/jsx-dev-runtime": ["../apps/docs/node_modules/@types/react/jsx-dev-runtime"],
-      "react-dom": ["../apps/docs/node_modules/@types/react-dom"],
-      "gsap": ["../apps/docs/node_modules/gsap"],
-      "gsap/*": ["../apps/docs/node_modules/gsap/*"],
-      "three": ["../apps/docs/node_modules/@types/three"],
-      "three/webgpu": ["../apps/docs/node_modules/@types/three/build/three.webgpu.d.ts"],
-      "three/tsl": ["../apps/docs/node_modules/@types/three/build/three.tsl.d.ts"],
-      "three/addons/*": ["../apps/docs/node_modules/@types/three/examples/jsm/*"],
-      "three/examples/jsm/*": ["../apps/docs/node_modules/@types/three/examples/jsm/*"],
-      "three/src/*": ["../apps/docs/node_modules/@types/three/src/*"],
-      "lenis/react": ["../apps/docs/node_modules/lenis/dist/lenis-react.d.ts"],
-      "@/*": ["../apps/docs/src/*"],
-      "*": ["../apps/docs/node_modules/*"]
+      "react": ["../vault-main/node_modules/@types/react"],
+      "react/jsx-runtime": ["../vault-main/node_modules/@types/react/jsx-runtime"],
+      "react/jsx-dev-runtime": ["../vault-main/node_modules/@types/react/jsx-dev-runtime"],
+      "react-dom": ["../vault-main/node_modules/@types/react-dom"],
+      "gsap": ["../vault-main/node_modules/gsap"],
+      "gsap/*": ["../vault-main/node_modules/gsap/*"],
+      "three": ["../vault-main/node_modules/@types/three"],
+      "three/webgpu": ["../vault-main/node_modules/@types/three/build/three.webgpu.d.ts"],
+      "three/tsl": ["../vault-main/node_modules/@types/three/build/three.tsl.d.ts"],
+      "three/addons/*": ["../vault-main/node_modules/@types/three/examples/jsm/*"],
+      "three/examples/jsm/*": ["../vault-main/node_modules/@types/three/examples/jsm/*"],
+      "three/src/*": ["../vault-main/node_modules/@types/three/src/*"],
+      "lenis/react": ["../vault-main/node_modules/lenis/dist/lenis-react.d.ts"],
+      "@/*": ["../vault-main/src/*"],
+      "*": ["../vault-main/node_modules/*"]
     }
   },
-  "include": ["effects/**/*.ts", "effects/**/*.tsx", "../apps/docs/node_modules/styled-jsx/global.d.ts"]
+  "include": ["effects/**/*.ts", "effects/**/*.tsx", "../vault-main/node_modules/styled-jsx/global.d.ts"]
 }

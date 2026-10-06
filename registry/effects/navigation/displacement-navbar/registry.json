@@ -18,7 +18,7 @@
   ],
   "registryDependencies": [],
   "packageName": "@hyperiux/displacement-navbar",
-  "sourcePath": "apps/docs/src/components/displacement-navbar",
+  "sourcePath": "vault-main/src/components/displacement-navbar",
   "previewUrl": "/demo/displacement-navbar",
   "tier": "pro",
   "subfolder": true,

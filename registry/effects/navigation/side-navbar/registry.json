@@ -18,7 +18,7 @@
   ],
   "registryDependencies": [],
   "packageName": "@hyperiux/side-navbar",
-  "sourcePath": "apps/docs/src/components/side-navbar",
+  "sourcePath": "vault-main/src/components/side-navbar",
   "previewUrl": "/demo/side-navbar",
   "tier": "pro",
   "subfolder": true,

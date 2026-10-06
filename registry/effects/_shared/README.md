@@ -58,4 +58,4 @@ return () => gate.destroy();
 - **Task 2 (cursor):** continuous rAF cursor packages - done  
 - **Task 3 (backgrounds):** dither-canvas, spider-particles, dotted-grid - done  
 - **Task 4 (scroll):** continuous rAF scroll packages - done  
-- **Task 5:** docs sync (`apps/docs/src/components/**`) - done  
+- **Task 5:** docs sync (`vault-main/src/components/**`) - done  
