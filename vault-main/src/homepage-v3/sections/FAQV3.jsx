@@ -212,7 +212,8 @@ export function FAQRow({ item, isOpen, onToggle, index }) {
   );
 }
 
-export default function FAQV3({ faqItems, translateTop = true }) {
+// `fixedGutter`: a `px-[4.5vw]` side gutter and no max width on the rows
+export default function FAQV3({ faqItems, translateTop = true, fixedGutter = false }) {
   const container = useRef(null);
   const [isExpanded, setIsExpanded] = useState(false);
   const [openId, setOpenId] = useState(faqItems[0].id);
@@ -271,7 +272,7 @@ export default function FAQV3({ faqItems, translateTop = true }) {
       ref={container}
       id="faq"
       data-sound-flow="off"
-      className="relative z-10 h-fit px-[12vw] w-full bg-foreground py-[7vw] text-background max-md:mt-0! max-md:px-[5vw] max-md:py-[22vw]"
+      className={`relative z-10 h-fit ${fixedGutter ? "px-[4.5vw]" : "px-[12vw]"} w-full bg-foreground py-[7vw] text-background max-md:mt-0! max-md:px-[5vw] max-md:py-[22vw]`}
     >
 
 
@@ -283,7 +284,7 @@ export default function FAQV3({ faqItems, translateTop = true }) {
       </LineReveal>
 
 
-      <div className="mx-auto  max-w-[1536px] max-md:w-full">
+      <div className={`${fixedGutter ? "px-[3vw] max-md:px-0" : "mx-auto max-w-[1536px]"} max-md:w-full`}>
         {visibleItems.map((item, index) => (
           <FAQRow
             key={item.id}

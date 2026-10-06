@@ -80,7 +80,8 @@ function Tick({ tone = "primary" }) {
     );
 }
 
-export default function PricingPlansHome() {
+// `fixedGutter`: a `px-[4.5vw]` side gutter and no max width, so the section lines up with the rest of the page
+export default function PricingPlansHome({ fixedGutter = false }) {
     const rootRef = useRef(null);
     const billRef = useRef(null);
     const pillRef = useRef(null);
@@ -116,8 +117,8 @@ export default function PricingPlansHome() {
 
     return (
         <section ref={rootRef} id="pricing" data-sound-flow="off" className="relative bg-white font-avenir text-[#1D1D1D]">
-            <div className="mx-auto flex max-w-[1536px] flex-wrap items-end justify-between gap-8 px-[5vw] max-md:px-5 max-md:gap-6 pt-[clamp(6rem,15vh,9rem)] pb-[clamp(2.5rem,6vh,4rem)]">
-                <LineReveal as="h2" className="max-w-[60vw] max-md:max-w-full text-[clamp(2.2rem,4.6vw,4.6rem)] leading-[1.02] font-normal tracking-[-.035em]">
+            <div className={`${fixedGutter ? "px-[4.5vw]" : "mx-auto max-w-[1536px] px-[5vw]"} flex flex-wrap items-end justify-between gap-8 max-md:px-5 max-md:gap-6 pt-[clamp(6rem,15vh,9rem)] pb-[clamp(2.5rem,6vh,4rem)]`}>
+                <LineReveal as="h2" className="text-[clamp(2.2rem,4.6vw,4.6rem)] leading-[1.02] font-normal tracking-[-.035em]">
                     Two Plans.<br/> <span className="gradient-text-animate gradient-text-single">Every Moment Covered.</span>
                 </LineReveal>
 
@@ -150,7 +151,7 @@ export default function PricingPlansHome() {
                 </div>
             </div>
 
-            <div className="mx-auto grid max-w-[1536px] grid-cols-2 gap-3.5 px-[8vw] max-md:grid-cols-1 max-md:px-5 max-md:pt-6 pt-[3vw]">
+            <div className={`${fixedGutter ? "px-[4.5vw]" : "mx-auto max-w-[1536px] px-[8vw]"} grid grid-cols-2 gap-3.5 max-md:grid-cols-1 max-md:px-5 max-md:pt-6 pt-[3vw]`}>
                 {PLANS.map((plan, planIndex) => {
                     const dark = plan.id === "plus";
                     return (
@@ -210,7 +211,7 @@ export default function PricingPlansHome() {
                 })}
             </div>
 
-            <ul className="mx-auto mt-7 flex max-w-[1536px] flex-wrap justify-center gap-x-7 gap-y-2.5 px-[clamp(1.25rem,3vw,3rem)] text-[11px] font-medium tracking-[.14em] text-[#6B6B6B] uppercase">
+            <ul className={`${fixedGutter ? "px-[4.5vw]" : "mx-auto max-w-[1536px] px-[clamp(1.25rem,3vw,3rem)]"} mt-7 flex flex-wrap justify-center gap-x-7 gap-y-2.5 max-md:px-5 text-[11px] font-medium tracking-[.14em] text-[#6B6B6B] uppercase`}>
                 {ASSURANCES.map((a) => (
                     <li key={a} className="flex items-center gap-2"><Tick />{a}</li>
                 ))}
