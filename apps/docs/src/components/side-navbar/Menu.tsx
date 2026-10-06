@@ -174,7 +174,7 @@ export default function Menu({
         className={`relative w-(--panel-width) pointer-events-auto translate-x-[100%] left-[99px] h-full bg-black/20 backdrop-blur-md max-md:w-full max-[1025px]:w-[70%]`}
       >
         <div data-lenis-prevent className="w-full h-full px-[5vw] pt-[5.5vw] pb-[3.5vw] relative flex flex-col justify-between items-start max-[1025px]:justify-between max-[1025px]:py-[15vw] max-md:pt-[25vw] max-md:pb-[10vw] overflow-y-auto">
-          <ul className="text-[4vw] font-display text-white leading-[1.15] max-md:text-[11.5vw] max-[1025px]:text-[6.5vw]">
+          <ul className="text-[4vw] font-aeonik text-white leading-[1.15] max-md:text-[11.5vw] max-[1025px]:text-[6.5vw]">
             {navLinks.map((link) => (
               <li key={link.text} className={link.liClassName}>
                 <MenuLink className="link-anim" href={link.href} text={link.text} />

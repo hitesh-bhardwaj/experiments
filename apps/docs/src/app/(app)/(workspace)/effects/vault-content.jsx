@@ -806,7 +806,7 @@ export function VaultContent({
 
             <HeadAnim animateOnScroll={false} delay={0.3} animationKey={routeKey}>
               <h1
-                className="mb-4 w-[80%] leading-normal t96 font-display font-normal text-foreground max-md:w-[90%] max-md:text-4xl"
+                className="mb-4 w-[80%] leading-normal t96 font-aeonik font-normal text-foreground max-md:w-[90%] max-md:text-4xl"
                 style={{ lineHeight: "1.3" }}
               >
                 {activeCategoryName}
@@ -898,7 +898,7 @@ export function VaultContent({
                       }
                       className={`
                           px-6 py-3 text-[1vw] max-md:text-[4vw] max-[1025px]:text-[2.5vw] text-center relative max-md:px-7 max-md:py-3
-                          backdrop-blur-[6px] font-geistMono group flex items-center justify-center gap-2 cursor-pointer
+                          backdrop-blur-[6px] font-mono group flex items-center justify-center gap-2 cursor-pointer
                           transition-colors duration-300 
                           ${isSelected
                           ? "bg-[#ff5f00] text-black hover:text-black hover:bg-[#ff5f00]"
@@ -1015,7 +1015,7 @@ export function VaultContent({
               </div>
 
               <h3
-                className="mb-3 font-display text-3xl font-normal text-foreground max-md:text-2xl"
+                className="mb-3 font-aeonik text-3xl font-normal text-foreground max-md:text-2xl"
                 style={{ lineHeight: "1.1" }}
               >
                 No effects found

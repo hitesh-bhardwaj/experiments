@@ -1,7 +1,7 @@
 export default function TechHeader() {
   return (
     <div className="max-w-4xl mb-16">
-      <h1 className="font-display text-[52px] md:text-[64px] font-normal text-foreground mb-6" style={{ lineHeight: "1.0" }}>
+      <h1 className="font-aeonik text-[52px] md:text-[64px] font-normal text-foreground mb-6" style={{ lineHeight: "1.0" }}>
         Creative Technologies
       </h1>
       <p className="text-lg md:text-[18px] text-[#d2d2d2] leading-[1.56] max-w-2xl">

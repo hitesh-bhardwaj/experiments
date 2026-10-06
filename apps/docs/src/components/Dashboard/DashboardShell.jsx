@@ -78,7 +78,7 @@ export function DashboardShell({ children, totalEffects = 0, effects = [] }) {
               <ArrowLeft className="h-5 w-5" />
             </button>
 
-            <h1 className="text-7xl font-display max-md:text-[12vw] max-[1025px]:text-[5vw]">
+            <h1 className="text-7xl font-aeonik max-md:text-[12vw] max-[1025px]:text-[5vw]">
               Dashboard
             </h1>
           </div>

@@ -493,7 +493,7 @@ export function EffectsListingV4({ effects = [], trendingEffects = [], featuredN
                 className={`${CHIP} ${category === c.id ? CHIP_ON : CHIP_OFF}`}
               >
                 {getQuickCategoryLabel(c.id)}
-                <span className={`font-geist-mono text-[11px] tabular-nums ${category === c.id ? "text-[#141414]/70" : "text-[#B4B4B4]"}`}>{c.count}</span>
+                <span className={`font-mono text-[11px] tabular-nums ${category === c.id ? "text-[#141414]/70" : "text-[#B4B4B4]"}`}>{c.count}</span>
               </button>
             ))}
           </div>

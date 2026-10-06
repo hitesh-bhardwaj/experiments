@@ -418,13 +418,13 @@
 }
 
 .fieldLabel {
-  font-family: var(--font-plex-mono), "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  font-family: var(--font-code), "IBM Plex Mono", ui-monospace, Menlo, monospace;
   font-size: 0.9rem;
   color: #fff;
 }
 
 .fieldValue {
-  font-family: var(--font-plex-mono), "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  font-family: var(--font-code), "IBM Plex Mono", ui-monospace, Menlo, monospace;
   font-size: 11px;
   line-height: 1;
   letter-spacing: 0.14em;
@@ -440,7 +440,7 @@
   background: transparent;
   color: var(--foreground);
   padding: 0;
-  font-family: var(--font-plex-mono), "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  font-family: var(--font-code), "IBM Plex Mono", ui-monospace, Menlo, monospace;
   font-size: 11px;
   line-height: 1;
   letter-spacing: 0;
@@ -574,7 +574,7 @@
   background: transparent;
   color: var(--foreground);
   padding: 0.4rem 0.15rem;
-  font-family: var(--font-plex-mono), "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  font-family: var(--font-code), "IBM Plex Mono", ui-monospace, Menlo, monospace;
   font-size: 11px;
   line-height: 1;
   letter-spacing: 0.16em;
@@ -998,7 +998,7 @@
   margin: 0;
   padding: 0.9rem;
   overflow-x: auto;
-  font-family: var(--font-plex-mono), "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  font-family: var(--font-code), "IBM Plex Mono", ui-monospace, Menlo, monospace;
   font-size: 12px;
   line-height: 1.7;
   color: #d8d8d8;

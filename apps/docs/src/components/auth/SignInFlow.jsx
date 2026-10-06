@@ -315,7 +315,7 @@ export default function SignInFlow() {
             autoComplete="current-password"
           />
 
-          <div className="mb-6 flex justify-start font-geist-mono">
+          <div className="mb-6 flex justify-start font-mono">
             <SecondaryButton
               onClick={() => {
                 setError(null);
@@ -328,7 +328,7 @@ export default function SignInFlow() {
           
           <SubmitButton loading={loading} formRef={formRef} className="w-fit">Continue to Vault</SubmitButton>
 
-          <p className="mt-6 text-left text-sm text-white/50 font-geist-mono">
+          <p className="mt-6 text-left text-sm text-white/50 font-mono">
             New here?{" "}
             <NextLink href={signUpHref} className="text-[#ff5f00] hover:text-[#ff7a29]">
               Create an account

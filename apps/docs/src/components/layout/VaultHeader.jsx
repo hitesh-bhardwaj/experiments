@@ -32,6 +32,7 @@ import { WISHLIST_CHANGED_EVENT } from "@/lib/wishlistEvents";
 import { prefersReducedMotion } from "@/lib/motion";
 import { markScrollToPricingCards } from "@/lib/pricingScrollIntent";
 import ButtonV3 from "@/homepage-v3/components/ButtonV3";
+import SoundToggle from "@/homepage-v3/components/SoundToggle";
 
 const useIsoLayoutEffect =
   typeof window === "undefined" ? useEffect : useLayoutEffect;
@@ -417,12 +418,13 @@ export function VaultHeader({
           }`}
       >
         <div className="flex h-full items-center justify-end gap-3">
-          <div className="flex items-center gap-3">
+          {/* items-stretch: search, sound and the buttons all share the buttons' height */}
+          <div className="flex items-stretch gap-3">
             {showSearch && (
               <button
                 type="button"
                 onClick={openSearch}
-                className="group flex  py-[0.9vw] cursor-pointer items-center gap-4 bg-[#161616] px-3 text-xs text-white backdrop-blur-md transition-colors duration-300 hover:bg-white/10 hover:border-[#ff5f00] hover:text-forground max-md:hidden max-md:gap-3"
+                className="group flex cursor-pointer items-center gap-4 bg-[#161616] px-3 text-xs text-white backdrop-blur-md transition-colors duration-300 hover:bg-white/10 hover:border-[#ff5f00] hover:text-forground max-md:hidden max-md:gap-3"
                 aria-label="Search effects"
               >
                 <div className="flex items-center gap-2">
@@ -446,8 +448,10 @@ export function VaultHeader({
               </button>
             )}
 
+            <SoundToggle className="self-stretch bg-[#161616]! transition-colors duration-300 hover:bg-white/10!" />
+
             {isLoaded && user?.publicMetadata?.plan !== "pro" && (
-              <div className="block max-[1025px]:hidden">
+              <div className="flex max-[1025px]:hidden">
                 <ButtonV3
                   text="Upgrade to Pro"
                   id={"upgrade-to-pro-navbar"}
@@ -460,7 +464,7 @@ export function VaultHeader({
             )}
 
             {isLoaded && (!isSignedIn ? (
-              <div className="block max-[1025px]:hidden">
+              <div className="flex max-[1025px]:hidden">
                 <ButtonV3
                   text="Sign In"
                   id={"sign-in-navbar"}
@@ -469,7 +473,7 @@ export function VaultHeader({
                 />
               </div>
             ) : (
-              <div className="max-[1025px]:hidden">
+              <div className="flex max-[1025px]:hidden">
                 <ProfileDropdown savedCount={wishlistCount} usage={usage} plan={user?.publicMetadata?.plan || "free"} />
               </div>
             ))}

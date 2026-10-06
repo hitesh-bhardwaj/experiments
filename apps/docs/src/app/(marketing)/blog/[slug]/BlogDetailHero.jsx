@@ -22,7 +22,7 @@ export default function BlogDetailHero({ post }) {
         <Breadcrumb maxWords={3} />
 
         <LineWipe>
-          <h1 className="text-[3.2vw] max-[1025px]:text-[6vw] max-md:text-[9vw] font-neue-haas leading-[1.2]! text-foreground w-[80%] max-[1025px]:w-full">
+          <h1 className="text-[3.2vw] max-[1025px]:text-[6vw] max-md:text-[9vw] font-avenir leading-[1.2]! text-foreground w-[80%] max-[1025px]:w-full">
             {post.title}
           </h1>
         </LineWipe>

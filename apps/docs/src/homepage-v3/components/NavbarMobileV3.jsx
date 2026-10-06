@@ -406,7 +406,7 @@ export default function NavbarMobileV3({
                   <Accordion open={expanded}>
                     {NAV_MENUS_V3[key].columns.map((column) => (
                       <div key={column.title} className=" last:mb-0">
-                        {/* <p className="font-geist-mono text-[2.5vw] mb-[3vw] tracking-[0.18em] text-light-grey uppercase">
+                        {/* <p className="font-mono text-[2.5vw] mb-[3vw] tracking-[0.18em] text-light-grey uppercase">
                           {column.title}
                         </p> */}
 

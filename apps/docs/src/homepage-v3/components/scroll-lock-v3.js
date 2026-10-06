@@ -39,6 +39,22 @@ let locked = false;
 let lastScrollInput = 0;
 const QUIET_MS = 250;
 const noteInput = () => { lastScrollInput = performance.now(); };
+
+// The lock itself: wheel / touch / scroll keys are swallowed before Lenis (or the
+// browser) sees them. A capture listener on window runs ahead of Lenis's own
+// window listener, so this holds even if Lenis was never handed to the lock.
+const SCROLL_KEYS = new Set(["ArrowUp", "ArrowDown", "PageUp", "PageDown", "Home", "End", " "]);
+const block = (e) => {
+  if (!locked) return;
+  if (e.type === "keydown") {
+    if (!SCROLL_KEYS.has(e.key) || e.target.closest?.("input,textarea,select,[contenteditable]")) return;
+  } else {
+    noteInput();
+  }
+  e.preventDefault();
+  e.stopPropagation();
+};
+const BLOCK_OPTS = { capture: true, passive: false };
 let lenisInstance = null;
 let failsafeId = 0;
 
@@ -47,8 +63,9 @@ export function lockScrollV3() {
 
   locked = true;
   document.documentElement.style.overflow = "hidden";
-  addEventListener("wheel", noteInput, { passive: true });
-  addEventListener("touchmove", noteInput, { passive: true });
+  addEventListener("wheel", block, BLOCK_OPTS);
+  addEventListener("touchmove", block, BLOCK_OPTS);
+  addEventListener("keydown", block, BLOCK_OPTS);
   lenisInstance?.stop?.();
 
   failsafeId = window.setTimeout(failsafe, FAILSAFE_MS);
@@ -77,8 +94,9 @@ export function unlockScrollV3() {
     window.setTimeout(unlockScrollV3, QUIET_MS);
     return;
   }
-  removeEventListener("wheel", noteInput);
-  removeEventListener("touchmove", noteInput);
+  removeEventListener("wheel", block, BLOCK_OPTS);
+  removeEventListener("touchmove", block, BLOCK_OPTS);
+  removeEventListener("keydown", block, BLOCK_OPTS);
 
   locked = false;
   window.clearTimeout(failsafeId);

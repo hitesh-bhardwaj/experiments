@@ -70,9 +70,9 @@ const EASE = "cubic-bezier(.16,1,.3,1)";
 // ButtonV3's outline variant is built for dark sections; on this light sheet it's a line button
 const LIGHT_OUTLINE = "border-[#1D1D1D]/40! bg-transparent! text-[#1D1D1D]!";
 
-function Tick() {
+function Tick({ tone = "primary" }) {
     return (
-        <i className="mt-px grid size-5 place-items-center bg-primary text-white">
+        <i className={`mt-px grid size-5 place-items-center text-white ${tone === "ink" ? "bg-[#1D1D1D]" : "bg-primary"}`}>
             <svg viewBox="0 0 24 24" className="size-3.5" fill="none" stroke="currentColor" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <path d="M5 12.5l4.2 4L19 7" />
             </svg>
@@ -157,10 +157,9 @@ export default function PricingPlansHome() {
                         <article
                             key={plan.id}
                             data-fadeup-delay={planIndex * 0.12}
-                            className={`fadeup relative flex flex-col gap-[18px] border p-[clamp(1.8rem,3vw,2.8rem)] ${dark ? "border-[#1D1D1D] bg-[#1D1D1D] text-[#F4F4F4]" : "border-[#1D1D1D]/15 bg-white"}`}
+                            className={`fadeup relative flex flex-col gap-[18px] p-[clamp(1.8rem,3vw,2.8rem)] ${dark ? "bg-[#1D1D1D] text-[#F4F4F4]" : "border border-[#999999]/30 bg-white text-[#1D1D1D]"}`}
                         >
                             {/* <CornerMarks /> */}
-                            {dark && <span aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(80%_60%_at_100%_0%,rgba(255,107,0,.4),transparent_60%)]" />}
                             {plan.badge && (
                                 <span className="text-shimmer absolute top-[22px] right-[22px] z-1 text-[11px] font-medium tracking-[.14em] uppercase max-sm:static max-sm:self-start">
                                     {plan.badge}
@@ -168,8 +167,8 @@ export default function PricingPlansHome() {
                             )}
 
                             <div className="relative grid gap-2">
-                                <h3 className="text-[clamp(1.8rem,2.6vw,2.4rem)] font-medium tracking-[-.03em]">{plan.name}</h3>
-                                <span className={`text-[11px] font-medium tracking-[.14em] uppercase ${dark ? "text-[#a9a9a9]" : "text-[#6B6B6B]"}`}>{plan.for}</span>
+                                <h3 className="text-[clamp(1.8rem,2.6vw,2.4rem)] font-normal tracking-[-.03em] uppercase">{plan.name}</h3>
+                                <span className={`text-[17px] ${dark ? "text-[#a9a9a9]" : "text-[#6B6B6B]"}`}>{plan.for}</span>
                             </div>
 
                             <div className="relative mt-2 flex items-baseline leading-none tracking-[-.05em]">
@@ -181,15 +180,16 @@ export default function PricingPlansHome() {
                                 <span className={`ml-2 text-[15px] tracking-normal ${dark ? "text-[#a9a9a9]" : "text-[#6B6B6B]"}`}>/mo</span>
                             </div>
 
-                            <p data-period-copy className={`relative min-h-[1.5em] text-[14.5px] ${dark ? "text-[#a9a9a9]" : "text-[#6B6B6B]"}`}>{plan.billLine[period]}</p>
-                            <p data-period-copy className={`relative self-start px-[11px] py-[7px] text-[11px] font-medium tracking-[.14em] uppercase ${dark ? "bg-primary/15" : "bg-primary/10"} text-primary/70`}>
-                                {plan.chip[period]}
-                            </p>
+                            {/* Billing + savings, closed off by a thin rule */}
+                            <div className={`relative grid gap-1 border-b pb-5 text-[16px] ${dark ? "border-[#F4F4F4]/12" : "border-[#1D1D1D]/12"}`}>
+                                <p data-period-copy className={`min-h-[1.5em] ${dark ? "text-[#a9a9a9]" : "text-[#6B6B6B]"}`}>{plan.billLine[period]}</p>
+                                <p data-period-copy className={dark ? "text-primary" : "text-[#8a8a8a]"}>{plan.chip[period]}</p>
+                            </div>
 
-                            <ul className="relative mt-1.5 grid flex-1 content-start gap-[13px] text-[15.5px]">
+                            <ul className="relative mt-1.5 grid flex-1 content-start gap-[18px] text-[17px]">
                                 {plan.features.map((f, i) => (
                                     <li key={i} className="grid grid-cols-[22px_minmax(0,1fr)] items-start gap-2.5">
-                                        <Tick />
+                                        <Tick tone={dark ? "primary" : "ink"} />
                                         <span data-period-copy={f.text ? undefined : ""} className="[&_b]:font-medium">{f.text ?? f[period]}</span>
                                     </li>
                                 ))}
@@ -202,7 +202,7 @@ export default function PricingPlansHome() {
                                 className={`relative mt-2.5 w-fit self-start justify-center ${plan.cta.variant === "outline" ? LIGHT_OUTLINE : ""}`}
                             />
                             {/* Same line reserved in every card, so the buttons sit level */}
-                            <p aria-hidden={!plan.yearlyNote} className="relative -mt-1 min-h-[1.5em] text-left text-[9px] font-medium tracking-[.14em] text-primary/70 uppercase">
+                            <p aria-hidden={!plan.yearlyNote} className="relative -mt-1 min-h-[1.5em] text-left text-[13px] text-[#8a8a8a]">
                                 {plan.yearlyNote ?? ""}
                             </p>
                         </article>

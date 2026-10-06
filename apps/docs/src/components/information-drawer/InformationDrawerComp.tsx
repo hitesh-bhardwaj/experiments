@@ -192,7 +192,7 @@ export default function InformationDrawerComp({
         <div className={`container ${detailOpen ? "pointer-events-none" : "pointer-events-auto"}`}>
           <h2
             data-title-anim
-            className="text-[5.7vw] w-fit font-display leading-[1.1] uppercase max-md:text-[10vw] max-[1025px]:text-[6.5vw] mb-[3vw] max-md:pt-[10vw]"
+            className="text-[5.7vw] w-fit font-aeonik leading-[1.1] uppercase max-md:text-[10vw] max-[1025px]:text-[6.5vw] mb-[3vw] max-md:pt-[10vw]"
           >
            Built by Different Minds
           </h2>
@@ -240,7 +240,7 @@ export default function InformationDrawerComp({
                       <div className="absolute w-full px-[2vw] py-[1.5vw] z-[2] bottom-0 overflow-hidden translate-y-full bg-black/40 backdrop-blur-lg group-hover:translate-y-0 max-[1025px]:translate-y-0 duration-300 ease-out max-md:py-[3vw] max-md:px-[3vw] max-[1025px]:py-[3vw]">
                         <div className=" flex w-full justify-between h-full">
                           <div className="flex flex-col max-[1025px]:w-[100%]">
-                            <h4 className="text-[1.8vw] font-display leading-[1.3] uppercase max-md:text-[6vw] max-[1025px]:text-[2.4vw]">
+                            <h4 className="text-[1.8vw] font-aeonik leading-[1.3] uppercase max-md:text-[6vw] max-[1025px]:text-[2.4vw]">
                               {member?.title ?? "-"}
                             </h4>
                             <p className="max-md:w-full max-md:leading-[1.3] max-md:text-[3vw] text-[1.2vw] max-[1025px]:text-[2vw]">
@@ -357,7 +357,7 @@ function TeamDetail({
           </div>
         )}
         <div className="max-[1025px]:w-[30%]">
-          <h2 className="text-[4vw]  font-display leading-[1.1] max-md:text-[12vw] max-md:mb-[2vw] max-[1025px]:text-[7.5vw]">
+          <h2 className="text-[4vw]  font-aeonik leading-[1.1] max-md:text-[12vw] max-md:mb-[2vw] max-[1025px]:text-[7.5vw]">
             {member.title}
           </h2>
           <p className="text-[1.2vw] font-medium max-md:text-[5.5vw] max-[1025px]:text-[3vw]">

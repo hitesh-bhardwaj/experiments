@@ -34,7 +34,7 @@ export default async function CommunityPage() {
           <CommunityHero />
           <CommunityFamiliar />
           <CommunityStack />
-          <div className="relative z-1 mx-auto max-w-[calc(100%-2*clamp(0px,1vw,16px))] bg-[#F4F4F4] text-[#1D1D1D]" data-zone="sheet">
+          <div className="relative z-1 mx-auto max-w-[calc(100%-2*clamp(0px,1vw,16px))] bg-[#F4F4F4] text-[#1D1D1D]" data-zone="sheet" data-sound-flow="off">
             <CommunityFounding />
             <CommunityFAQ />
           </div>

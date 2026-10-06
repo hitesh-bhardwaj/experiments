@@ -3,6 +3,8 @@
 @import "tailwindcss";
 
 :root {
+  /* Code face as a real custom property, for plain CSS (the @theme inline one only feeds Tailwind) */
+  --font-code: var(--font-plex-mono), "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
   --background: #111111;
   --foreground: #ffffff;
   --secondary: #d9d9d9;
@@ -36,11 +38,12 @@ body {
   --color-muted: var(--muted);
   --color-grey: var(--grey);
   --color-light-grey: var(--light-grey);
-  --font-neue-haas: var(--font-neue-haas);
+  /* The site's two faces: font-avenir (text) and font-aeonik (headings / display) */
   --font-avenir: var(--font-avenir);
-  --font-geist: var(--font-geist-sans);
-  --font-geist-mono: var(--font-geist-mono);
-  --font-geist: var(--font-geist-sans);
+  --font-aeonik: var(--font-aeonik);
+  /* Code face: font-code (and font-mono, so existing code classes follow) */
+  --font-code: var(--font-plex-mono), "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-mono: var(--font-plex-mono), "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
   --radius-sm: 4px;
   --radius-md: 8px;
   --radius-lg: 16px;
@@ -67,14 +70,14 @@ html {
 }
 
 .font-heading {
-  font-family: var(--font-neue-haas), system-ui, sans-serif;
+  font-family: var(--font-aeonik), system-ui, sans-serif;
   line-height: 1.2;
 }
 
 body {
   width: 100vw;
   overflow-x: hidden;
-  font-family: var(--font-neue-haas);
+  font-family: var(--font-avenir), "Avenir Next", system-ui, sans-serif;
   line-height: 1.5;
   font-size: 16px;
   color-scheme: dark;
@@ -103,17 +106,13 @@ h4 {
 }
 
 .home-type {
-  --font-code: var(--font-plex-mono), "IBM Plex Mono", ui-monospace, Menlo, monospace;
-  --font-display: var(--font-aeonik), "Aeonik Pro", system-ui, sans-serif;
-  --font-text: var(--font-avenir), "Avenir Next", system-ui, sans-serif;
-  --font-avenir: var(--font-avenir);
-  font-family: var(--font-text);
+  font-family: var(--font-avenir), "Avenir Next", system-ui, sans-serif;
   font-size: 16px;
   line-height: 1.6;
 }
 .home-type :is(h1, h2, h3, h4),
 .home-type :is(.t96, .text64, .text80, .text110, .text120, .text140) {
-  font-family: var(--font-display);
+  font-family: var(--font-aeonik);
 }
 .home-type :is(.t96, .text64, .text80, .text110, .text120, .text140) {
   letter-spacing: -0.035em;
@@ -939,7 +938,6 @@ html.loader-first-visit body {
   }
 }
 
-/* ---------- homepage cursor (CursorV3) ---------- */
 
 .hx-cursor {
   position: fixed; left: 0; top: 0; z-index: 9500; pointer-events: none;
@@ -972,7 +970,7 @@ html.loader-first-visit body {
 .hx-cursor-eyes i { width: 4px; height: 4px; border-radius: 50%; background: #fff; }
 .hx-cursor-label {
   position: absolute; left: 0; top: 0; white-space: nowrap;
-  font-family: var(--font-neue-haas), system-ui, sans-serif;
+  font-family: var(--font-avenir), system-ui, sans-serif;
   font-size: 10px; font-weight: 500; letter-spacing: .2em; text-transform: uppercase; color: rgba(244, 244, 244, .7);
   opacity: 0; transform: translate(-50%, 34px);
   transition: opacity .3s, transform .5s cubic-bezier(.16,1,.3,1);
@@ -999,10 +997,8 @@ html.loader-first-visit body {
 @keyframes text-shimmer { from { background-position: 100% 0; } to { background-position: -150% 0; } }
 @media (prefers-reduced-motion: reduce) { .text-shimmer { animation: none; } }
 
-/* ---------- DemoHeader (src/components/preview-chrome/DemoHeader.jsx) ---------- */
-/* the page stays still while a Tablet / Phone preview covers it */
 html[data-pc-dev] { overflow: hidden; }
-/* simulated reduced motion: flatten CSS motion everywhere except the header itself */
+
 html[data-pc-rm] body *:not([data-demo-header], [data-demo-header] *) {
   animation-duration: .001ms !important;
   animation-iteration-count: 1 !important;
@@ -1010,8 +1006,7 @@ html[data-pc-rm] body *:not([data-demo-header], [data-demo-header] *) {
   scroll-behavior: auto !important;
 }
 
-/* Underline that undraws to the right, then redraws from the left (404 page links).
-   Pair with a background-image underline: bg-[linear-gradient(currentColor,currentColor)]. */
+
 @keyframes hx-underline-redraw {
   0% { background-size: 100% 1px; background-position: 100% 100%; }
   50% { background-size: 0% 1px; background-position: 100% 100%; }
@@ -1039,7 +1034,11 @@ html[data-pc-rm] body *:not([data-demo-header], [data-demo-header] *) {
 .docs-sheet .text-white:not(.codeblock-root *) { color: #1D1D1D; }
 .docs-sheet .text-white\/60:not(.codeblock-root *) { color: rgba(29, 29, 29, 0.6); }
 .docs-sheet .border-white\/10:not(.codeblock-root *) { border-color: rgba(29, 29, 29, 0.1); }
-.docs-sheet .hover\:text-white:not(.codeblock-root *):hover { color: #B84A00; }
+/* links on the sheet keep their primary colour on hover */
+.docs-sheet .hover\:text-white:not(.codeblock-root *):hover { color: var(--primary); }
+/* Docs type: Avenir for text, Aeonik for headings (code keeps its mono face) */
+.docs-sheet *:not(pre, pre *, code, code *, kbd, .codeblock-root, .codeblock-root *) { font-family: var(--font-avenir), "Avenir Next", system-ui, sans-serif !important; }
+.docs-sheet :is(h1, h2, h3, h4, h5, h6):not(.codeblock-root *), .docs-sheet :is(h1, h2, h3, h4, h5, h6):not(.codeblock-root *) * { font-family: var(--font-aeonik), "Aeonik Pro", system-ui, sans-serif !important; }
 /* Docs footer (helpful? + prev/next) on the sheet */
 .docs-sheet .text-white\/80:not(.codeblock-root *) { color: rgba(29, 29, 29, 0.8); }
 .docs-sheet .text-white\/70\!:not(.codeblock-root *) { color: rgba(29, 29, 29, 0.7) !important; }

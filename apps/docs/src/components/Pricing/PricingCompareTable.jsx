@@ -96,7 +96,7 @@ export default function PricingCompareTable({ isIndia = false }) {
       </LineReveal>
 
       {/* Table card */}
-      <div className="w-full font-neue-haas! h-fit max-[1025px]:overflow-x-scroll max-[1025px]:pb-[7vw] max-[1025px]:px-[7vw] fadeup">
+      <div className="w-full font-avenir! h-fit max-[1025px]:overflow-x-scroll max-[1025px]:pb-[7vw] max-[1025px]:px-[7vw] fadeup">
         <div className="mx-auto w-full max-w-[82vw] border border-white/8 overflow-hidden  max-md:max-w-[240vw] max-md:w-[240vw] max-[1025px]:max-w-[150vw] max-[1025px]:w-[150vw]">
 
           {/* Column headers */}

@@ -17,7 +17,7 @@ export default function CommunityJoin() {
         <LineReveal as="h2" className={`font-aeonik font-normal tracking-[-.035em] leading-[1.02] text-[clamp(4rem,13vw,12rem)]`}>
           Save your <span className="gradient-text-animate gradient-text-single">seat.</span>
         </LineReveal>
-        <p className={`max-w-[30vw] max-[1025px]:max-w-[50ch] max-md:max-w-full text-base leading-[1.65] text-[#9C9C9C] fadeup mb-2.5`}>
+        <p className={`max-w-[30vw] max-[1025px]:max-w-[60vw] max-md:max-w-full text-base leading-[1.65] text-[#9C9C9C] fadeup mb-2.5`}>
           The room fills from the front. Join the waitlist and you’ll hear first, get invited first, and
           walk in as a founding member.
         </p>

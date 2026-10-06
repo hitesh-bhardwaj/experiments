@@ -5,7 +5,6 @@ import Link from "next/link";
 import { UnlockIcon } from "@/components/WebsiteComps/Icons";
 import ShimmerText from "@/components/WebsiteComps/ShimmerText";
 import Input from "@/components/animated-form/Input";
-import LinkButton from "@/components/WebsiteComps/LinkButton";
 import LineReveal from "@/components/Animations/LineReveal";
 import { useFadeUp } from "@/components/Animations/gsapAnimations";
 import { isLighthouseOrHeadless, isSoftwareRenderer } from "@/lib/audit";
@@ -168,13 +167,10 @@ export default function FooterV3() {
       id="footer"
       className="relative z-200 py-[7vw]  w-full overflow-hidden max-md:px-[5vw] max-md:py-[10vw] max-sm:mt-16 px-[3.5vw] max-sm:px-[7vw] max-sm:py-[15vw] max-md:bg-[#111110]"
     >
-      {/* One viewport tall and pinned to the top: the footer pose parks a small
-          ribbon cluster in the top-right corner. The bottom fades out so the
-          arcs never end on a hard line. */}
       <canvas
         ref={ribbonCanvasRef}
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 top-0 z-0 block h-svh w-full mask-[linear-gradient(to_top,transparent,#000_40%)]"
+        className="pointer-events-none absolute inset-x-0 top-0 z-0 left-[3%] block h-svh w-full mask-[linear-gradient(to_top,transparent,#000_40%)]"
       />
       <div className="mx-auto w-full max-w-[1536px] max-md:space-y-[6vw] max-sm:space-y-[8vw] h-fit relative z-3">
         <LineReveal
@@ -346,7 +342,8 @@ export default function FooterV3() {
                 onSubmit={handleSubscribe}
                 className="flex flex-col gap-[0.6vw] max-md:gap-3"
               >
-                <div className="flex items-center gap-[1vw] max-md:gap-3">
+                {/* One line, one rule underneath: email on the left, Subscribe on the right */}
+                <div className="flex items-center gap-[2vw] border-b border-foreground/30 transition-colors duration-300 focus-within:border-white/70 max-md:gap-4">
                   <Input
                     type="email"
                     value={email}
@@ -354,24 +351,22 @@ export default function FooterV3() {
                       setEmail(event.target.value);
                       if (status === "error") setStatus("idle");
                     }}
-                    placeholder="Email"
+                    placeholder="Your email"
                     aria-label="Email address"
                     disabled={status === "loading"}
                     style={{
                       "--input-autofill-bg": "#111210",
                       "--input-autofill-text": "#ffffff",
                     }}
-                    className="h-auto min-w-0 flex-1 rounded-none border-0 border-b border-foreground/50 bg-transparent! px-0 py-[0.6vw] max-md:py-3 text18 text-white outline-none placeholder:text-light-grey/70 focus:border-white/70 disabled:opacity-50"
+                    className="h-auto min-w-0 flex-1 rounded-none border-0 bg-transparent! px-0 py-[0.9vw] max-md:py-3 text24 text-white shadow-none! outline-none ring-0! placeholder:text-[#6e6e6e] disabled:opacity-50"
                   />
-                  <LinkButton
-                    href="#"
-                    text={status === "loading" ? "Subscribing…" : "Subscribe"}
-                    showArrow={false}
-                    tilted={false}
-                    shimmer
-                    onClick={handleSubscribe}
-                    className={`text18 shrink-0${status === "loading" ? " pointer-events-none opacity-50" : ""}`}
-                  />
+                  <button
+                    type="submit"
+                    disabled={status === "loading"}
+                    className="shrink-0 cursor-pointer py-[0.9vw] text18 font-medium tracking-[.18em] text-[#d8d8d8] uppercase transition-colors duration-300 hover:text-primary disabled:pointer-events-none disabled:opacity-50 max-md:py-3"
+                  >
+                    {status === "loading" ? "Subscribing…" : "Subscribe"}
+                  </button>
                 </div>
                 {status === "error" && (
                   <p className="text-sm text-red-400 px-[1.2vw] max-md:px-0">

@@ -179,7 +179,7 @@ export default function Preview() {
 
   return (
     <section id="preview" className="w-full mt-[16vw] ">
-      <LineReveal as='h2' className="t96 max-[1025px]:w-[85%] max-[1025px]:mx-auto max-md:w-[70%] max-md:mx-auto max-md:text-[8vw]! font-neue-haas text-center">
+      <LineReveal as='h2' className="t96 max-[1025px]:w-[85%] max-[1025px]:mx-auto max-md:w-[70%] max-md:mx-auto max-md:text-[8vw]! font-avenir text-center">
         Preview. Install. Tune. Ship.
       </LineReveal>
 

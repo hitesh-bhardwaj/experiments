@@ -42,7 +42,7 @@ const IDLE_MS = 3200;
 
 /* ---------- class tokens ---------- */
 const LABEL = "m-0 text-[11px] font-semibold uppercase tracking-[.14em]";
-const CODE_FONT = "font-[family-name:'IBM_Plex_Mono',ui-monospace,SFMono-Regular,Menlo,monospace]";
+const CODE_FONT = "font-code";
 const BTN =
   "inline-flex h-9.5 min-w-9.5 cursor-pointer items-center justify-center gap-2 px-2.5 text-[#cfcfcf] transition-colors duration-400 " +
   "hover:bg-[rgba(244,244,244,.08)] hover:text-white [&_svg]:size-4.25 " +
@@ -570,7 +570,7 @@ function PreviewBar({ title: titleProp, tier: tierProp, backHref: backHrefProp, 
     <div
       ref={rootRef}
       data-demo-header=""
-      className="font-neue-haas text-[#cfcfcf]"
+      className="font-avenir text-[#cfcfcf]"
       onPointerOver={onTipOver}
       onPointerLeave={hideTip}
       onFocus={onTipFocus}

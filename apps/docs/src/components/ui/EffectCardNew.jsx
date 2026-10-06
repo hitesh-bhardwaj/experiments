@@ -184,7 +184,7 @@ export function EffectCard({
           )}
         </div>
 
-        <div className="pointer-events-none h-[20%]  flex w-full items-center justify-between gap-3 font-geist-mono max-md:h-[30%] ">
+        <div className="pointer-events-none h-[20%]  flex w-full items-center justify-between gap-3 font-mono max-md:h-[30%] ">
           <div className="flex min-w-0 flex-1 flex-wrap items-center gap-2 max-md:gap-1.5">
             {dependencyPills.map((pill) => (
               <span

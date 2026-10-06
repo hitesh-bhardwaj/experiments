@@ -3,9 +3,9 @@
 .pc {
   --pc-accent: #FF6B00;
   --pc-ease: cubic-bezier(.16, 1, .3, 1);
-  --pc-display: var(--font-neue-haas, 'Aeonik Pro'), system-ui, sans-serif;
-  --pc-text: var(--font-neue-haas, 'Avenir Next'), system-ui, sans-serif;
-  --pc-code: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --pc-display: var(--font-aeonik, 'Aeonik Pro'), system-ui, sans-serif;
+  --pc-text: var(--font-avenir, 'Avenir Next'), system-ui, sans-serif;
+  --pc-code: var(--font-code);
   font-family: var(--pc-text);
   color: #cfcfcf;
 }

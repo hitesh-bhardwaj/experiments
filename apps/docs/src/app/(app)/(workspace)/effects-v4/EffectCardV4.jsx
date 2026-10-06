@@ -10,7 +10,7 @@ import { useAutoplayPreviewVideo } from "@/hooks/useAutoplayPreviewVideo";
 
 // Site fonts: body is Neue Haas, h1–h4 get Aeonik from globals.css, code is Geist Mono.
 export const DISPLAY = "font-normal tracking-[-.035em]";
-export const MONO = "font-geist-mono";
+export const MONO = "font-mono";
 export const LABEL = "text-[11px] uppercase tracking-[.14em]";
 
 const NEW_WINDOW_MS = 1000 * 60 * 60 * 24 * 30;

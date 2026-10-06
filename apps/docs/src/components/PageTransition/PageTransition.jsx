@@ -157,6 +157,7 @@ export default function PageTransition() {
   const { sound } = useInteraction()
 
   const prevPathRef = useRef(pathname)
+  const forcedTransitionRef = useRef(false)
   const isFirstRenderRef = useRef(true)
   const isTransitioningRef = useRef(false)
 
@@ -394,13 +395,16 @@ export default function PageTransition() {
 
       if (currentPath === targetPath) return
 
-      if (shouldSkipTransition(currentPath, targetPath)) {
+      // data-page-transition opts a link in even inside the workspace (docs prev / next)
+      const forced = anchor.dataset.pageTransition !== undefined
+      if (!forced && shouldSkipTransition(currentPath, targetPath)) {
         isTransitioningRef.current = false
         return
       }
 
       if (isTransitioningRef.current) return
       isTransitioningRef.current = true
+      forcedTransitionRef.current = forced
 
       e.preventDefault()
 
@@ -427,7 +431,10 @@ export default function PageTransition() {
 
     prevPathRef.current = pathname
 
-    if (!isTransitioningRef.current || shouldSkipTransition(prevPath, currentPath)) {
+    // An opted-in navigation (forcedTransitionRef) always reveals, even between workspace routes
+    const forced = forcedTransitionRef.current
+    forcedTransitionRef.current = false
+    if (!isTransitioningRef.current || (!forced && shouldSkipTransition(prevPath, currentPath))) {
       isTransitioningRef.current = false
       return
     }

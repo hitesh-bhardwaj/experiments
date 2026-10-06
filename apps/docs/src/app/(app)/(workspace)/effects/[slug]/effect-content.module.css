@@ -11,7 +11,7 @@
 .content h2,
 .content h3,
 .content h4 {
-  font-family: var(--font-display), system-ui, sans-serif;
+  font-family: var(--font-aeonik), system-ui, sans-serif;
 }
 
 .content h2 {

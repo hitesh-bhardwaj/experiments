@@ -163,7 +163,7 @@ export function TemplateCard({
           )}
         </div>
 
-        <div className="pointer-events-none shrink-0 py-[1.5vw] max-md:py-3 flex w-full items-center justify-between gap-3 font-geist-mono">
+        <div className="pointer-events-none shrink-0 py-[1.5vw] max-md:py-3 flex w-full items-center justify-between gap-3 font-mono">
           <div className="flex min-w-0 flex-1 flex-wrap items-center gap-2 max-md:gap-1.5">
             {tagPills.map((pill) => (
               <span

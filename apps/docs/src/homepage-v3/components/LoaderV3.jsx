@@ -31,7 +31,7 @@ const WORDMARK_CHARS = "HYPERIUX@#10";
 // has actually finished loading - so the number tracks something real instead
 // of sitting at 100 while assets are still coming in.
 // Never hold the page longer than this, however slow the load is.
-const MAX_WAIT_MS = 10000;
+const MAX_WAIT_MS = 1000;
 
 // Exit: one scalar drives the whole thing, whichever way the field leaves.
 //
@@ -88,7 +88,9 @@ function shouldSkipLoader() {
 function skipLoaderNow() {
   markLoaderV3Complete();
   markLoaderV3Handoff();
-  unlockScrollV3();
+  // No loader: the page still holds until the hero's heading, copy and buttons
+  // have landed (Hero releases the lock when its intro completes)
+  lockScrollV3();
 }
 
 function LoaderEntryButton({ label, onClick, variant = "outline" }) {
@@ -104,7 +106,7 @@ function LoaderEntryButton({ label, onClick, variant = "outline" }) {
       className={buttonV3ClassName({
         variant,
         className:
-          `justify-between ${variant === "outline" ? "bg-background/70 text-white backdrop-blur-md" : ""} text-[13px]! max-md:text-[13px]! py-1.5! max-md:py-1.5! max-md:px-4! [--btn-pad:14px]! max-md:[--btn-pad:14px]! [--btn-arrow:10px]!`,
+          `${variant === "outline" ? "bg-background/70 text-white backdrop-blur-md" : ""}`,
       })}
     >
       <ButtonV3Chrome label={label} hovered={hovered} />
@@ -144,6 +146,7 @@ export default function LoaderV3({ exitMode = "dock" }) {
     entryChosenRef.current = true;
     // Whatever was scrolled while the loader was up, enter on the hero
     resetScrollTopV3();
+    // The lock stays on: Hero releases it once its heading, copy and buttons have landed
     setLoaderV3Waiting(false);
     entryResolveRef.current?.();
   };
@@ -405,7 +408,7 @@ export default function LoaderV3({ exitMode = "dock" }) {
               onClick={() => chooseEntry(true)}
             />
           </div>
-          {/* <p className="font-neue-haas text-[10px] uppercase tracking-[0.22em] text-white/40">
+          {/* <p className="font-avenir text-[10px] uppercase tracking-[0.22em] text-white/40">
             Headphones recommended
           </p> */}
       </div>

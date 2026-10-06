@@ -418,7 +418,7 @@ function StackSpreadStage({
           }}
         >
           <h2
-            className="w-full whitespace-pre-line font-display text-[4.5vw] font-normal leading-none! tracking-tight max-md:text-[10vw]"
+            className="w-full whitespace-pre-line font-aeonik text-[4.5vw] font-normal leading-none! tracking-tight max-md:text-[10vw]"
             style={{ color: textColor }}
           >
             Design

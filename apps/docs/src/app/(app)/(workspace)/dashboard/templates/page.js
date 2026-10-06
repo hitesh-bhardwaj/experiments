@@ -171,7 +171,7 @@ export default function DashboardTemplatesPage() {
       <ToastViewport toast={toast} onDismiss={dismissToast} />
 
       <div>
-        <h1 className="text-4xl font-display text-white">My Templates</h1>
+        <h1 className="text-4xl font-aeonik text-white">My Templates</h1>
         <p className="mt-2 text-white">
           Templates you&apos;ve purchased or unlocked through Vault Pro, ready to download.
         </p>

@@ -200,19 +200,32 @@ export function TableOfContents({
 
     if (!root) return;
 
-    const headings = Array.from(root.querySelectorAll("h2")).map(
-      (el, index) => {
-        const id = ensureHeadingId(el, index);
+    const collect = () => {
+      const headings = Array.from(root.querySelectorAll("h2")).map(
+        (el, index) => {
+          const id = ensureHeadingId(el, index);
 
-        return {
-          id,
-          text: el.textContent || "",
-          level: el.tagName.toLowerCase(),
-        };
-      }
-    );
+          return {
+            id,
+            text: el.textContent || "",
+            level: el.tagName.toLowerCase(),
+          };
+        }
+      );
 
-    setItems(headings);
+      setItems((prev) =>
+        prev.length === headings.length && prev.every((p, i) => p.id === headings[i].id && p.text === headings[i].text)
+          ? prev
+          : headings
+      );
+    };
+
+    collect();
+    // After a client-side page change (docs prev / next) the new content can
+    // arrive after this runs - re-collect whenever headings show up or change.
+    const observer = new MutationObserver(collect);
+    observer.observe(root, { childList: true, subtree: true });
+    return () => observer.disconnect();
   }, [containerRef, watchKey]);
 
   useEffect(() => {
@@ -279,11 +292,12 @@ export function TableOfContents({
       />
 
       <div
-        className={`pointer-events-none absolute top-1/2 w-[18vw] -translate-y-1/2 bg-[#F4F4F4] p-2 opacity-0 shadow-2xl transition-all duration-300 ease-out group-hover:pointer-events-auto group-hover:opacity-100 max-h-[60vh] overflow-hidden ${isLeft ? "left-[calc(100%+1rem)]" : "right-[calc(100%+1rem)]"
+        className={`pointer-events-none absolute top-1/2 w-[18vw] max-h-[60vh] -translate-y-1/2 overflow-hidden border border-[rgba(29,29,29,.1)] bg-[#F4F4F4] p-2 opacity-0 shadow-[0_20px_50px_-24px_rgba(0,0,0,.35)] transition-[opacity,translate,scale] duration-500 ease-[cubic-bezier(.16,1,.3,1)] group-hover:pointer-events-auto group-hover:translate-x-0 group-hover:scale-100 group-hover:opacity-100 ${isLeft ? "left-[calc(100%+1rem)] -translate-x-3" : "right-[calc(100%+1rem)] translate-x-3"} scale-[.97]
           }`}
       >
         <ul
-          className="flex flex-col gap-1 overflow-y-auto max-h-[calc(60vh-1rem)] toc"
+          data-lenis-prevent
+          className="flex flex-col gap-1 overflow-y-auto overscroll-contain max-h-[calc(60vh-1rem)] toc"
           onMouseLeave={() => setHoveredId(null)}
         >
           {items.map((item) => {
@@ -306,7 +320,7 @@ export function TableOfContents({
                     className={`absolute inset-0 -z-10 origin-top bg-[#ff5f00] transition-transform duration-300 ease-out motion-reduce:transition-none ${highlighted ? "scale-y-100" : "scale-y-0"
                       }`}
                   />
-                  <span className="relative z-10 block px-3 py-2 text20 font-medium leading-tight text-[#1D1D1D]">
+                  <span className={`relative z-10 block px-3 py-2 text20 font-normal leading-tight transition-colors duration-300 ${highlighted ? "text-[#141414]" : "text-(--docs-body,#3a3a3a)"}`}>
                     {item.text}
                   </span>
                 </Link>
@@ -330,7 +344,7 @@ export function TableOfContents({
                   "block h-0.5 rounded-full transition-all duration-300 ease-out",
                   activeId === item.id
                     ? "w-8 bg-primary"
-                    : "w-8 bg-white/40 hover:w-8 hover:bg-white",
+                    : "w-8 bg-[#1D1D1D]/25 hover:w-8 hover:bg-[#1D1D1D]/60",
                 ].join(" ")}
               />
             </Link>

@@ -267,7 +267,7 @@ export default function PricingV3({ isIndia = false, auth = false }) {
         >
             {/* HEADING */}
             <div className="text-center w-full">
-                <LineReveal  as="h2" className="t96 w-full max-[1025px]:w-[95%] max-[1025px]:mx-auto font-neue-haas ">
+                <LineReveal  as="h2" className="t96 w-full max-[1025px]:w-[95%] max-[1025px]:mx-auto font-avenir ">
                     Start Free. Upgrade When You&rsquo;re{" "}
                     <span className="gradient-text-animate">Ready.</span>
                 </LineReveal>
@@ -290,10 +290,10 @@ export default function PricingV3({ isIndia = false, auth = false }) {
                     <PixelSquares flashClassName="bg-background" />
 
                     <div>
-                        <p className="text64  max-md:text-[5vw] font-neue-haas max-sm:text-[7vw]">Free</p>
+                        <p className="text64  max-md:text-[5vw] font-avenir max-sm:text-[7vw]">Free</p>
 
                         <div className="mt-[1.5vw] flex items-end gap-[1vw] max-[1025px]:mt-[3vw] max-[1025px]:gap-[2vw] max-md:mt-[4vw] max-md:gap-[2.5vw] max-sm:mt-[6vw]">
-                            <p className="t96 font-neue-haas  leading-none max-md:text-[7vw] max-sm:text-[11vw]">
+                            <p className="t96 font-avenir  leading-none max-md:text-[7vw] max-sm:text-[11vw]">
                                 {symbol}0
                             </p>
                             <p className="text22 mb-[0.4vw] max-md:text-[2.2vw] max-sm:text-[4vw]">
@@ -326,10 +326,10 @@ export default function PricingV3({ isIndia = false, auth = false }) {
                     <PixelSquares flashClassName="bg-white" />
 
                     <div>
-                        <p className="text64 font-neue-haas  max-md:text-[5vw] max-sm:text-[7vw]">Pro</p>
+                        <p className="text64 font-avenir  max-md:text-[5vw] max-sm:text-[7vw]">Pro</p>
 
                         <div className="mt-[1.5vw] flex items-end gap-[1vw] max-[1025px]:mt-[3vw] max-[1025px]:gap-[2vw] max-md:mt-[4vw] max-md:gap-[2.5vw] max-sm:mt-[6vw]">
-                            <p className="t96 font-neue-haas items-center  flex leading-none max-md:text-[7vw] max-sm:text-[11vw]">
+                            <p className="t96 font-avenir items-center  flex leading-none max-md:text-[7vw] max-sm:text-[11vw]">
                                 <span className="sr-only">{`${symbol}${planPrice} ${planLabel.toLowerCase()}`}</span>
                                 <span aria-hidden="true" className="flex items-center leading-none">
                                     <span>{symbol}</span>
@@ -355,7 +355,7 @@ export default function PricingV3({ isIndia = false, auth = false }) {
                         </div>
 
                         {isIndia && (
-                            <p className="font-geist-mono mt-[0.3vw] text-[1vw] text-[#c5c5c5] max-[1025px]:text-[1.7vw] max-md:text-[1.8vw] max-sm:text-[3.2vw]">
+                            <p className="font-mono mt-[0.3vw] text-[1vw] text-[#c5c5c5] max-[1025px]:text-[1.7vw] max-md:text-[1.8vw] max-sm:text-[3.2vw]">
                                 +18% GST
                             </p>
                         )}
@@ -385,7 +385,7 @@ export default function PricingV3({ isIndia = false, auth = false }) {
                             )}
                         </div>
 
-                        <p className="font-geist-mono mt-[1.2vw] text-[0.9vw] text-light-grey max-[1025px]:mt-[2.5vw] max-[1025px]:text-[1.7vw] max-md:mt-[3vw] max-md:text-[1.8vw] max-sm:mt-[5vw] max-sm:text-[3.2vw]">
+                        <p className="font-mono mt-[1.2vw] text-[0.9vw] text-light-grey max-[1025px]:mt-[2.5vw] max-[1025px]:text-[1.7vw] max-md:mt-[3vw] max-md:text-[1.8vw] max-sm:mt-[5vw] max-sm:text-[3.2vw]">
                             Instant access · npx hyperiux login · Cancel anytime
                         </p>
                     </div>

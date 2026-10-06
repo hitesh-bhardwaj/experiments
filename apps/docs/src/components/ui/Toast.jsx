@@ -32,7 +32,7 @@ export function useToastQueue(autoDismissMs = DEFAULT_AUTO_DISMISS_MS) {
   return { toast, showToast, dismissToast };
 }
 
-export function ToastViewport({ toast, onDismiss }) {
+export function ToastViewport({ toast, onDismiss, position = "top-right" }) {
   const [mounted, setMounted] = useState(false);
 
   // SSR-safe mounted flag - `mounted` gates a createPortal() call further
@@ -47,10 +47,16 @@ export function ToastViewport({ toast, onDismiss }) {
   return createPortal(
     <div
       aria-live="polite"
-      className={`fixed top-6 right-6 z-9999 w-[min(22rem,calc(100vw-2rem))] transition-all duration-300 ${
+      className={`fixed z-9999 w-[min(22rem,calc(100vw-2rem))] transition-all duration-300 ${
+        position === "bottom-center"
+          ? "bottom-6 left-1/2 -translate-x-1/2"
+          : "top-6 right-6"
+      } ${
         toast
           ? "translate-y-0 opacity-100"
-          : "pointer-events-none -translate-y-3 opacity-0"
+          : `pointer-events-none opacity-0 ${
+              position === "bottom-center" ? "translate-y-3" : "-translate-y-3"
+            }`
       }`}
     >
       {toast && (

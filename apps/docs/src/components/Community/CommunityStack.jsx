@@ -56,7 +56,7 @@ export default function CommunityStack() {
       <LineReveal as="h2" className={`font-aeonik font-normal tracking-[-.035em] leading-[1.02] mt-[22px] text-[clamp(2.2rem,4.6vw,4.6rem)] mx-auto`}>
         What do you <span className="gradient-text-animate gradient-text-single">build with?</span>
       </LineReveal>
-      <p className={`max-w-[40vw] max-[1025px]:max-w-[60ch] max-md:max-w-full text-base leading-[1.65] text-[#9C9C9C] fadeup mx-auto mt-[3vw] max-md:mt-6`}>
+      <p className={`max-w-[40vw] max-[1025px]:max-w-[70vw] max-md:max-w-full text-base leading-[1.65] text-[#9C9C9C] fadeup mx-auto mt-[3vw] max-md:mt-6`}>
         Pick your stack. Watch your corner of the crowd light up. We’ll use it to match you with the
         right channels, teardowns and people.
       </p>

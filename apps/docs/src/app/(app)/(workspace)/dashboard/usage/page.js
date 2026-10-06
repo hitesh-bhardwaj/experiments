@@ -233,7 +233,7 @@ export default function UsagePage() {
   return (
     <div className="space-y-4">
       <div>
-        <h1 className="text-4xl font-display text-white">Usage</h1>
+        <h1 className="text-4xl font-aeonik text-white">Usage</h1>
 
         <p className="text-white mt-2">
           Track your daily install/copy usage and revisit effects you&apos;ve
