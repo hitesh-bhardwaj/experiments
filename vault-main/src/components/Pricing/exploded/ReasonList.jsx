@@ -79,7 +79,7 @@ export default function ReasonList({ items }) {
   }, [items]);
 
   return (
-    <ul ref={listRef} className="flex h-[15vw] flex-col overflow-hidden max-md:h-[85vw]">
+    <ul ref={listRef} className="flex h-[15vw] flex-col overflow-hidden max-md:h-[60vw]">
       {rows.map((item) => (
         <Row key={item.id} item={item} mountedRef={mounted} />
       ))}

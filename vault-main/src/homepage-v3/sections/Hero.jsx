@@ -193,7 +193,7 @@ export default function Hero() {
                     <HeroRibbons play={playIntro && loaderComplete} />
                 )}
             </div>
-            <div className="pointer-events-none relative z-10 mx-auto flex min-h-dvh w-full max-w-[1536px] flex-col justify-end px-[calc(var(--cvw)*4.5)] pt-[calc(var(--cvw)*8)] pb-[calc(var(--cvw)*5)] max-md:px-6 max-md:pt-32 max-md:pb-10 max-sm:px-5">
+            <div className="pointer-events-none relative z-10 mx-auto flex min-h-dvh w-full max-w-[1536px] flex-col justify-end px-[calc(var(--cvw)*4.5)] max-md: pt-[calc(var(--cvw)*8)] max-md:px-[calc(var(--cvw)*7)]! pb-[calc(var(--cvw)*5)]  max-md:pt-32 max-md:pb-10 max-sm:px-5">
                 <div className="flex items-end justify-between gap-[calc(var(--cvw)*3)] max-md:flex-col max-md:items-stretch max-md:gap-5">
                    
                     <h1 ref={headingRef} className="relative min-w-0 flex-[1.5] font-aeonik t96 text-[calc(var(--cvw)*6.4)]! max-md:text-[calc(var(--cvw)*13)]! max-w-[calc(var(--cvw)*53)] leading-[1.15]! max-md:max-w-full text-[#F4F4F4]">
@@ -201,7 +201,7 @@ export default function Hero() {
                     </h1>
 
                     <div className="flex min-w-0 flex-[0.7] flex-col gap-[calc(var(--cvw)*2)] pb-[calc(var(--cvw)*0.6)] max-md:pb-0 max-md:gap-5">
-                        <p ref={copyRef} style={INTRO_HIDDEN} className="text22 font-avenir text-[calc(var(--cvw)*1.1)]! leading-[1.6]! max-md:text-[calc(var(--cvw)*2.2)]! max-sm:text-[calc(var(--cvw)*4.1)]! text-[#C9C9C9] max-w-[calc(var(--cvw)*40)] max-md:w-[75%] max-sm:w-full max-md:text-left">
+                        <p ref={copyRef} style={INTRO_HIDDEN} className="text22 font-avenir  text-[calc(var(--cvw)*1.1)]! leading-[1.6]! max-md:text-[calc(var(--cvw)*2.2)]! max-sm:text-[calc(var(--cvw)*4.1)]! text-[#C9C9C9] max-w-[calc(var(--cvw)*40)] max-md:max-w-full  max-md:w-full max-md:text-left">
                             Source-first scroll systems, cursor effects, text reveals, page transitions, loaders, backgrounds, and WebGL scenes for React and Next.js. Installed as real files in your project, not a dependency you rent.
                         </p>
 

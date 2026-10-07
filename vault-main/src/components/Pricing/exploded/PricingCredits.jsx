@@ -8,6 +8,7 @@ import ButtonV3 from "@/homepage-v3/components/ButtonV3";
 import { useInteraction } from "@/homepage-v3/components/InteractionProvider";
 import { prefersReducedMotion } from "@/lib/motion";
 import CreditTiles from "./CreditTiles";
+import RollNumber from "./RollNumber";
 import RollText from "./RollText";
 
 const FLY_DURATION = 0.9;
@@ -79,7 +80,8 @@ function RedeemButton({ done, label, disabled, onClick }) {
           <line key={i} ref={(el) => { lineRefs.current[i] = el; }} {...p} />
         ))}
       </svg>
-      <RollText text={label} className="text-center" />
+      {/* One fixed box for every label, so a wider label doesn't squeeze the one rolling out */}
+      <RollText fixed text={label} className="h-[1.4em] w-[8em] text-center leading-[1.4]" />
     </button>
   );
 }
@@ -189,8 +191,9 @@ export default function PricingCredits() {
     );
   };
 
+  // The count rolls as its own number; only the words after it roll as text
   const note = left
-    ? `${left} credit${left > 1 ? "s" : ""} left · ${plan.note}`
+    ? `credit${left > 1 ? "s" : ""} left · ${plan.note}`
     : "Wallet empty. That’s a year of templates, owned forever.";
   // Spending a credit rolls the note up, refilling rolls it down
   const [prevLeft, setPrevLeft] = useState(left);
@@ -201,7 +204,7 @@ export default function PricingCredits() {
   }
 
   return (
-    <section ref={rootRef} id="credits" data-sound-flow="off" className="relative bg-foreground px-[4.5vw] py-[7%] max-md:py-[15%] font-avenir text-background max-md:px-[calc(var(--cvw)*7)]">
+    <section ref={rootRef} id="credits" data-sound-flow="off" className="relative bg-foreground px-[4.5vw] py-[4%]  max-md:py-[8%] font-avenir text-background max-md:px-[calc(var(--cvw)*7)]">
       <div className="mx-auto flex w-full max-w-[1536px] flex-col gap-[3vw] max-md:gap-[8vw]">
         <div className="flex flex-col gap-[1.8vw] max-md:gap-[5vw]">
           <p className={`fadeup flex items-center gap-[0.6vw] text-background/60 max-md:gap-[2vw] ${LABEL}`}>
@@ -250,7 +253,12 @@ export default function PricingCredits() {
               />
             </div>
 
-            <RollText fixed text={note} dir={dir} className="relative h-[4vw] text-[1vw] leading-[1.6] text-foreground/60 max-md:h-[16vw] max-md:text-[3.8vw]" />
+            <div className="relative flex h-[4vw] gap-[0.3vw] text-[1vw] leading-[1.6] text-foreground/60 max-md:h-[16vw] max-md:gap-[1vw] max-md:text-[3.8vw]">
+              <span className={`flex h-[1.6em] items-center ${left ? "" : "hidden"}`}>
+                <RollNumber value={left} values={[1, 5]} />
+              </span>
+              <RollText fixed text={note} dir={dir} className="h-full min-w-0 flex-1" />
+            </div>
             <div className="relative mt-auto">
               <ButtonV3 text="Reset wallet" variant="outline" preventDefault onClick={refill} className="w-fit" />
             </div>

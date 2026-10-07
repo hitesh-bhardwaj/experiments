@@ -21,8 +21,13 @@ const TRAVEL = 110;
  * the lines on screen over to the next ones.
  * With `fixed`, every text is laid over the same box (give it a height), so
  * the text stays in place whatever its length.
+ * With `block`, the whole text rolls as one piece (all its lines together) instead
+ * of line by line.
+ * `travel` is how far (in % of a line) the text moves and `stagger` the delay
+ * between lines. The line box is the mask, so a tighter line-height class on the
+ * text makes the roll start closer.
  */
-export default function RollText({ text, dir = 1, fixed = false, className = "" }) {
+export default function RollText({ text, dir = 1, fixed = false, block = false, travel = TRAVEL, stagger = STAGGER, className = "" }) {
   const [layers, setLayers] = useState([{ id: 0, text }]);
   const nextId = useRef(1);
   const els = useRef(new Map());
@@ -52,17 +57,22 @@ export default function RollText({ text, dir = 1, fixed = false, className = "" 
       el.dataset.anim = "1";
       let split = splits.current.get(l.id);
       if (!split) {
-        split = SplitText.create(el, { type: "lines", mask: "lines" });
+        split = block ? { lines: [el], revert() {} } : SplitText.create(el, { type: "lines", mask: "lines" });
         splits.current.set(l.id, split);
       }
+      // A block moves in pixels, by the taller of its own text and the box it rolls in,
+      // so every line of it clears the box (a leaving layer's own height is only the box's)
+      const dist = block ? Math.max(el.scrollHeight, el.parentElement.offsetHeight) : 0;
+      const at = (sign) => (block ? { y: sign * l.dir * dist } : { yPercent: sign * l.dir * travel });
+      const rest = block ? { y: 0 } : { yPercent: 0 };
       if (l.enter) {
-        gsap.fromTo(split.lines, { yPercent: l.dir * TRAVEL }, { yPercent: 0, duration: DURATION, ease: EASE, stagger: STAGGER });
+        gsap.fromTo(split.lines, at(1), { ...rest, duration: DURATION, ease: EASE, stagger });
       } else {
         gsap.to(split.lines, {
-          yPercent: -l.dir * TRAVEL,
+          ...at(-1),
           duration: DURATION,
           ease: EASE,
-          stagger: STAGGER,
+          stagger,
           onComplete: () => {
             splits.current.delete(l.id);
             setLayers((prev) => prev.filter((x) => x.id !== l.id));

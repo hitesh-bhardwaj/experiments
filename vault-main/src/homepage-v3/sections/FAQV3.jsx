@@ -151,7 +151,7 @@ export function FAQRow({ item, isOpen, onToggle, index }) {
 
   return (
     <div
-      className={`faq-v3-row group relative cursor-pointer px-[calc(var(--cvw)*0.5)] py-[calc(var(--cvw)*2)] text-background max-md:px-[calc(var(--cvw)*6)] max-md:py-[calc(var(--cvw)*6)] ${index >= INITIAL_COUNT ? "faq-v3-row-extra" : ""}`}
+      className={`faq-v3-row group relative cursor-pointer px-[calc(var(--cvw)*0.5)] py-[calc(var(--cvw)*2)] text-background max-md:px-[calc(var(--cvw)*4)] max-md:py-[calc(var(--cvw)*6)] ${index >= INITIAL_COUNT ? "faq-v3-row-extra" : ""}`}
       role="button"
       tabIndex={0}
       data-sound-click

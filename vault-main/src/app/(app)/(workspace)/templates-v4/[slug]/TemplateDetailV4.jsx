@@ -73,14 +73,7 @@ function formatDate(value) {
     : null;
 }
 
-/**
- * Sample template detail page. From the v4 design: the split hero with badges,
- * facts and the Buy / Use 1 credit / Live preview actions, the exploded 3D view
- * of the homepage's sections, "What's inside", "More templates" and the
- * Buy-or-credit popup. From the live /templates/[slug]: real access (owned →
- * Download), the sign-in → resume purchase flow and paywall, the live iframe
- * preview, Overview, view recording and Save.
- */
+
 export function TemplateDetailV4({ template, templateAccess = { allowed: false, reason: "anonymous" }, devices = {}, effects = [], stack = [], related = [] }) {
   const rootRef = useRef(null);
   const stageTopRef = useRef(null);

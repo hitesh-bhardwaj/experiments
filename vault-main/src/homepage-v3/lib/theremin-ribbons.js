@@ -48,7 +48,7 @@ const MAX_POINTER_STEP = 40; // px of pointer movement one frame can register
 
 const POSE = {
   ribbons: { rp: [2.2, -4.6, 0], rr: [-0.28, -0.42, 0.22], rs: 1.12 },
-  ribbons_m: { rp: [2.5, -1.8, -2], rr: [-0.28, -0.42, 0.22], rs: 0.95 },
+  ribbons_m: { rp: [2.5, -5, -2], rr: [-0.28, -0.42, 0.22], rs: 0.95 },
   // Footer: a small cluster in the top-right corner
   // Turned counter-clockwise from the original 0.22 so the open ends close the gap on the right
   footer: { rp: [10.2, 0.6, 0], rr: [-0.28, -0.42, 0.79], rs: 0.56 },
