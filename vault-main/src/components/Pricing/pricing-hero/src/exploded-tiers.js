@@ -203,11 +203,14 @@ export function mountExplodedTiers(host, opts = {}) {
 
   /* ---------- layout: pose per breakpoint ---------- */
   const POSE = poseOpt || { op: [1.9, 0.6, 0], or: [0.7, -0.08, 0], os: 1.25 };
+  // Tablet and mobile (canvas up to 1025 wide): the stacks scale up and sit a little closer. Desktop is untouched.
+  let small = false;
+  const SMALL_NARROW = { scale: 1.35, gap: 0.85 }, SMALL_TABLET = { scale: 1.12, gap: 0.9 };
   const POSE_M = poseNarrowOpt || { op: [0, 2.9, -4], or: [0.7, -0.08, 0], os: 0.72 };
   let W = 1, H = 1;
   function resize() {
     const r = canvas.getBoundingClientRect();
-    W = Math.max(1, r.width); H = Math.max(1, r.height);
+    W = Math.max(1, r.width); H = Math.max(1, r.height); small = W <= 1025;
     renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 1.75));
     renderer.setSize(W, H, false);
     camera.aspect = W / H; camera.fov = camera.aspect < 0.8 ? 46 : 32; camera.updateProjectionMatrix();
@@ -263,7 +266,9 @@ export function mountExplodedTiers(host, opts = {}) {
     const narrow = camera.aspect < 0.9, P = narrow ? POSE_M : POSE, k = 1 - Math.pow(0.12, dt);
     cur.op.lerp(V.fromArray(P.op), k); cur.or.lerp(V.fromArray(P.or), k); cur.os = lerp(cur.os, P.os, k);
     mouse.sx = lerp(mouse.sx, mouse.on ? mouse.x : 0, 0.04); mouse.sy = lerp(mouse.sy, mouse.on ? mouse.y : 0, 0.04);
-    G.position.copy(cur.op); G.scale.setScalar(cur.os);
+    const sm = !small ? null : narrow ? SMALL_NARROW : SMALL_TABLET;
+    stacks.forEach((S, si) => { S.g.position.x = (si - (n - 1) / 2) * gapX * (sm ? sm.gap : 1); });
+    G.position.copy(cur.op); G.scale.setScalar(cur.os * (sm ? sm.scale : 1));
     G.rotation.set(cur.or.x + mouse.sy * 0.06, cur.or.y + mouse.sx * 0.1, cur.or.z);
 
     hovered = -1;
