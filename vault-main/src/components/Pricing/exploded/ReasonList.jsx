@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { prefersReducedMotion } from "@/lib/motion";
 import RollNumber from "./RollNumber";
@@ -24,13 +24,14 @@ function Parts({ parts }) {
   );
 }
 
-function Row({ item, enter }) {
+function Row({ item, mountedRef }) {
   const ref = useRef(null);
   useIsoLayoutEffect(() => {
-    if (!enter || prefersReducedMotion()) return undefined;
+    // Rows present on first mount appear as-is; later ones grow in
+    if (!mountedRef.current || prefersReducedMotion()) return undefined;
     const tween = gsap.from(ref.current, { height: 0, opacity: 0, y: 10, duration: 0.7, ease: "power3.out" });
     return () => tween.kill();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []);  
 
   return (
     <li ref={ref} data-id={item.id} className="overflow-hidden">
@@ -44,18 +45,22 @@ function Row({ item, enter }) {
 
 export default function ReasonList({ items }) {
   const listRef = useRef(null);
-  const latest = useRef(new Map());
   const mounted = useRef(false);
   const [rows, setRows] = useState(items);
 
-  useMemo(() => items.forEach((i) => latest.current.set(i.id, i)), [items]);
+  // New items join the rows straight away; leaving rows stay until their exit tween ends
+  const [prevItems, setPrevItems] = useState(items);
+  if (items !== prevItems) {
+    setPrevItems(items);
+    setRows((prev) => {
+      const byId = new Map(prev.map((r) => [r.id, r]));
+      items.forEach((i) => byId.set(i.id, i));
+      return REASON_ORDER.filter((id) => byId.has(id)).map((id) => byId.get(id));
+    });
+  }
 
   useEffect(() => {
     const ids = new Set(items.map((i) => i.id));
-    setRows((prev) => {
-      const keep = new Set([...prev.map((r) => r.id), ...ids]);
-      return REASON_ORDER.filter((id) => keep.has(id)).map((id) => latest.current.get(id));
-    });
 
     [...listRef.current.children].forEach((row) => {
       const id = row.dataset.id;
@@ -76,7 +81,7 @@ export default function ReasonList({ items }) {
   return (
     <ul ref={listRef} className="flex h-[15vw] flex-col overflow-hidden max-md:h-[85vw]">
       {rows.map((item) => (
-        <Row key={item.id} item={latest.current.get(item.id) ?? item} enter={mounted.current} />
+        <Row key={item.id} item={item} mountedRef={mounted} />
       ))}
     </ul>
   );

@@ -8,8 +8,65 @@ import { useFadeUp } from "@/components/Animations/gsapAnimations";
 import ButtonV3 from "@/homepage-v3/components/ButtonV3";
 import { clearScrollToPricingCardsIntent, hasScrollToPricingCardsIntent } from "@/lib/pricingScrollIntent";
 import { useBilling } from "./billing";
-import { ASSURANCES, INDIA_TAX_NOTE, PLANS, YEARLY_PERK, formatMoney, perMonth, pricingFor, yearlySavingPercent } from "./plans";
 import { BillingToggle, RollingNumber, Tick } from "./shared";
+
+// Live plans (Free + Pro, monthly or yearly through Razorpay). Pricing, the tax
+// note and the money helpers are exported for PricingCompare.
+export const PRICING = {
+  USD: { symbol: "$", locale: "en-US", monthly: 20, yearly: 179 },
+  INR: { symbol: "₹", locale: "en-IN", monthly: 999, yearly: 8999 },
+};
+
+export const INDIA_TAX_NOTE = "+18% GST";
+
+export const pricingFor = (isIndia) => PRICING[isIndia ? "INR" : "USD"];
+
+export function formatMoney(value, pricing) {
+  const digits = pricing.symbol === "$" && value % 1 ? 2 : 0;
+  return value.toLocaleString(pricing.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits });
+}
+
+const YEARLY_PERK = "3 months free";
+
+const PLANS = {
+  free: {
+    name: "Free",
+    tagline: "For trying real effects in real projects",
+    features: [
+      "50+ production-ready effects",
+      "Copy-paste + CLI install",
+      "Commercial-friendly usage",
+      "Code you own",
+    ],
+    cta: { text: "Browse free effects", href: "/effects/free" },
+  },
+  pro: {
+    name: "Pro",
+    tagline: "For developers, founders and agencies shipping premium work",
+    features: [
+      "All 150+ effects",
+      "New effects added regularly",
+      "Priority access to upcoming packs",
+      "Hyperiux CLI install + auth",
+      "Dependency, performance & reduced-motion notes per effect",
+      "Code you own, commercial-friendly",
+    ],
+  },
+};
+
+const ASSURANCES = [
+  "Cancel anytime",
+  "Everything you copy stays in your repo",
+  "INR pricing for India",
+  "Secure self-serve checkout",
+];
+
+// Per-month figure shown large on the Pro card: the monthly price, or the
+// yearly price spread over twelve months.
+const perMonth = (pricing, yearly) => (yearly ? pricing.yearly / 12 : pricing.monthly);
+
+const yearlySavingPercent = (pricing) =>
+  Math.round((1 - pricing.yearly / (pricing.monthly * 12)) * 100);
 
 // Auth-aware Razorpay checkout (sign-up → checkout → "You're on Pro"),
 // shared with the homepage's pricing cards.

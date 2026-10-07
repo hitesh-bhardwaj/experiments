@@ -3,8 +3,21 @@
 import { useEffect, useRef } from "react";
 import LineReveal from "@/components/Animations/LineReveal";
 import { useFadeUp } from "@/components/Animations/gsapAnimations";
-import { PERKS, STEPS } from "./community-data";
 import { createFluidField } from "@/homepage-v3/lib/fluid-field";
+
+const PERKS = [
+  { title: "A founding badge", text: "Permanent, visible, earned by being early." },
+  { title: "A direct line to the Hyperiux team", text: "The people who build Vault, in the same room as you." },
+  { title: "A vote on the roadmap from day one", text: "What gets built next starts with you." },
+  // NEEDS PRODUCT CONFIRMATION: the concept left the founding offer as a placeholder
+  { title: "[Founding offer on Vault Pro]", text: "[To confirm: e.g. a founding-member discount or extended trial.]" },
+];
+
+const STEPS = [
+  { title: "Join the waitlist", text: "Thirty seconds. Just your email and your stack." },
+  { title: "Get your invite", text: "We open the doors in small waves, waitlist first, so every conversation stays good." },
+  { title: "Walk in", text: "Your first teardown and a room full of people who get it are waiting inside." },
+];
 
 // The site's dotted grid + fluid ink, kept inside the perks card: the pointer
 // stirs the ink and pushes the dots (same set-up as the homepage Text demo)
@@ -32,22 +45,22 @@ export default function CommunityFounding() {
   useFadeUp(rootRef);
 
   return (
-    <section ref={rootRef} className="mx-auto max-w-[1536px] px-[clamp(1.25rem,3vw,3rem)] pt-[clamp(7rem,18vh,11rem)]" id="founding" aria-labelledby="fd-h">
+    <section ref={rootRef} className="mx-auto max-w-[1536px] px-[4.5vw] py-[7vw] px-[4.5vw]" id="founding" aria-labelledby="fd-h">
       <div>
         {/* <p className={`font-avenir text-[11px] font-medium tracking-[.14em] uppercase inline-flex items-center gap-2.5 text-[#9C9C9C] before:size-[5px] before:rounded-full before:bg-primary before:content-[''] text-[#6B6B6B] fadeup`}>Founding members</p> */}
-        <LineReveal as="h2" id="fd-h" className={`font-aeonik font-normal tracking-[-.035em] leading-[1.02] mt-[2vw] text-[clamp(2.2rem,4.6vw,4.6rem)] max-w-[35vw] max-[1025px]:max-w-[70vw] max-md:mt-4 max-md:max-w-full`}>
-          The first cohort <span className="gradient-text-animate gradient-text-single">shapes the room.</span>
+        <LineReveal as="h2" id="fd-h" className={`font-aeonik font-normal tracking-[-.035em] leading-[1.02] mt-[2vw] text80 max-md:text-[9vw] max-w-[35vw] max-[1025px]:max-w-[70vw] max-md:mt-4 max-md:max-w-full`}>
+          The First Cohort <span className="gradient-text-animate gradient-text-single">Shapes the Room.</span>
         </LineReveal>
       </div>
-      <div className="mt-[clamp(3rem,8vh,5rem)] grid grid-cols-[minmax(0,1.1fr)_minmax(0,.9fr)] items-start gap-[clamp(1.5rem,4vw,4rem)] max-[1025px]:grid-cols-1">
-        <div className="fadeup relative isolate overflow-hidden bg-[#1D1D1D] p-[clamp(1.8rem,3vw,2.6rem)] text-[#F4F4F4]">
+      <div className="mt-[5vw] grid grid-cols-[minmax(0,1.1fr)_minmax(0,.9fr)] items-start gap-[4vw] max-[1025px]:grid-cols-1">
+        <div className="fadeup relative isolate overflow-hidden bg-[#1D1D1D] p-[3vw] max-md:p-7 text-[#F4F4F4]">
           <CardFluid />
           <ul className="relative grid gap-[2vw] max-[1025px]:gap-5">
             {PERKS.map((perk) => (
               <li key={perk.title} className="grid grid-cols-[8px_minmax(0,1fr)] items-center gap-x-4 gap-y-1">
                 {/* diamond sits in its own column, centred on the title's line */}
                 <i aria-hidden="true" className="size-2 rotate-45 bg-primary" />
-                <b className="font-aeonik text-[clamp(1.1rem,1.5vw,1.35rem)] font-medium tracking-[-.02em]">{perk.title}</b>
+                <b className="font-aeonik text-[1.5vw] max-md:text-lg font-medium tracking-[-.02em]">{perk.title}</b>
                 <span className="col-start-2 text-[14.5px] text-[#a9a9a9]">{perk.text}</span>
               </li>
             ))}

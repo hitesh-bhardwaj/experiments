@@ -30,7 +30,6 @@ const [isAudioEnabled, setIsAudioEnabled] = useState(true);
       if (!backgroundAudioRef.current) {
         const bgAudio = new Audio("/sounds/ledger/bg.mp3");
         bgAudio.loop = true;
-        bgAudio.volume = volume;
         bgAudio.preload = "auto";
         backgroundAudioRef.current = bgAudio;
       }

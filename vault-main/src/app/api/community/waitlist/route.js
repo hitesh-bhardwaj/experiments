@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
-import { STACKS } from "@/components/Community/community-data";
+
+// Keep in sync with the stack chips in components/Community/CommunityStack.jsx
+const STACKS = ["React", "Next.js", "GSAP", "Three.js", "WebGL", "Motion", "Lenis", "Vue", "Svelte", "Webflow"];
 
 // Vault Community waitlist. Same provider and validation as /api/newsletter,
 // but its own Resend audience so the waitlist can be invited in waves.

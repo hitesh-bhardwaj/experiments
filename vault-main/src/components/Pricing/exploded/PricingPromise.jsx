@@ -3,7 +3,22 @@
 import { useRef } from "react";
 import LineReveal from "@/components/Animations/LineReveal";
 import { useFadeUp } from "@/components/Animations/gsapAnimations";
-import { PROMISES } from "./plans";
+
+const PROMISES = [
+  {
+    title: "Ownership",
+    text: "Every effect you install lands in your repository as source. No runtime dependency on Hyperiux. Cancel, and your code stays exactly where it is.",
+  },
+  {
+    title: "Commercial use",
+    text: "Free effects are commercial-friendly where marked in the license. Pro is built for production: client sites, SaaS products and internal tools alike.",
+  },
+  {
+    title: "Teams & agencies",
+    text: "Pro is licensed per seat. Working across client projects?",
+    link: { text: "Talk to us about agency licensing", href: "mailto:hello@hyperiux.com" },
+  },
+];
 
 export default function PricingPromise() {
   const rootRef = useRef(null);

@@ -260,8 +260,7 @@ export function mountCrowd(canvas, opts = {}) {
     }
     geo.attributes.position.needsUpdate = true;
     geo.attributes.aHot.needsUpdate = true;
-    // Prototype: Sound.sparkle, transposed like its zones (crowd2 → 'orb', -3)
-    sound?.sparkle?.(hasMouse ? Math.min(1, stir / (N * 0.06)) * (0.3 + spd) : 0, mouse.cx / innerWidth, zone === "crowd2" ? -3 : 0);
+    // No sparkle jingle while the pointer stirs the particles (hero or any other zone)
   };
 
   const render = () => renderer.render(scene, camera);

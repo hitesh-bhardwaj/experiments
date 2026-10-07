@@ -212,7 +212,7 @@ export function VoteCard() {
   };
 
   return (
-    <div className={`relative aspect-[16/11] overflow-hidden bg-[#141414] text-[#F4F4F4] max-sm:aspect-[4/5] flex flex-col p-[clamp(18px,3vw,30px)]`}>
+    <div className={`relative aspect-[16/11] overflow-hidden bg-[#141414] text-[#F4F4F4] max-sm:aspect-[4/5] flex flex-col p-[2vw] max-md:p-5`}>
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_90%_at_85%_110%,rgba(255,107,0,.45),transparent_55%),radial-gradient(90%_70%_at_0%_0%,rgba(255,255,255,.06),transparent_60%)]" />
       <p className={`font-avenir text-[11px] font-medium tracking-[.14em] uppercase relative mb-3.5 text-[#9c9c9c]`}>Up next in the vault · you decide</p>
       <ul ref={listRef} className="relative grid gap-2">
@@ -304,11 +304,11 @@ export function CritiqueCard() {
 // 04 featured: the spotlight card, addressed to the visitor once they join
 export function FeaturedCard({ joined }) {
   return (
-    <div className={`relative aspect-[16/11] overflow-hidden bg-[#141414] text-[#F4F4F4] max-sm:aspect-[4/5] grid place-items-center p-[clamp(18px,4vw,40px)]`}>
+    <div className={`relative aspect-[16/11] overflow-hidden bg-[#141414] text-[#F4F4F4] max-sm:aspect-[4/5] grid place-items-center p-[2.8vw] max-md:p-6`}>
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_90%_at_85%_110%,rgba(255,107,0,.45),transparent_55%),radial-gradient(90%_70%_at_0%_0%,rgba(255,255,255,.06),transparent_60%)]" />
       <div className="relative flex aspect-[4/5] w-[min(78%,420px)] flex-col justify-end gap-2.5 overflow-hidden bg-[linear-gradient(160deg,#241206,#140a04_55%,#0f0f0f)] p-[26px] shadow-[inset_0_0_0_1.5px_rgba(255,107,0,.45)] after:absolute after:-top-[30%] after:-right-[30%] after:aspect-square after:w-4/5 after:rounded-full after:bg-[radial-gradient(circle,rgba(255,107,0,.45),transparent_65%)] after:content-['']">
         <p className={`font-avenir text-[11px] font-medium tracking-[.14em] uppercase relative text-[#FFB27A]`}>Featured on Vault · this week</p>
-        <p className="relative font-aeonik text-[clamp(1.8rem,3vw,2.6rem)] leading-[1.05] tracking-[-.03em] text-[#F4F4F4]">Your work<br />could be here.</p>
+        <p className="relative font-aeonik text-[2.6vw] max-md:text-[7vw] leading-[1.05] tracking-[-.03em] text-[#F4F4F4]">Your work<br />could be here.</p>
         <p className={`font-avenir text-[11px] font-medium tracking-[.14em] uppercase relative text-[#9c9c9c]`}>by <span className="text-[#F4F4F4]">{joined ? "you, founding member" : "you"}</span></p>
       </div>
     </div>

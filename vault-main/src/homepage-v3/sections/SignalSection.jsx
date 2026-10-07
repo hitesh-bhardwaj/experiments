@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useRef, useSyncExternalStore } from "react";
 import gsap from "gsap";
 import { isLighthouseOrHeadless, isSoftwareRenderer } from "@/lib/audit";
 import { useFadeUp } from "@/components/Animations/gsapAnimations";
@@ -14,18 +14,24 @@ const HOLD_DEAD_ZONE_MS = 200;
 const HOLD_CHARGE_MS = 1900;
 const TAP_MAX_MS = 220;
 const FULL_CHARGE = 0.985;
+// Computed once per page load: the software-renderer probe creates a GL context
+let webglSupport = null;
+function canUseWebgl() {
+    if (webglSupport === null) {
+        webglSupport = !(isLighthouseOrHeadless() || isSoftwareRenderer()) && window.matchMedia("(min-width: 768px)").matches;
+    }
+    return webglSupport;
+}
+const noopSubscribe = () => () => {};
+
 export default function SignalSection() {
     const sectionRef = useRef(null);
     const canvasRef = useRef(null);
     const anchorRef = useRef(null);
     const { sound } = useInteraction();
-    const [webgl, setWebgl] = useState(false);
+    const webgl = useSyncExternalStore(noopSubscribe, canUseWebgl, () => false);
 
     useFadeUp(sectionRef);
-
-    useLayoutEffect(() => {
-        setWebgl(!(isLighthouseOrHeadless() || isSoftwareRenderer()) && window.matchMedia("(min-width: 768px)").matches);
-    }, []);
 
     useEffect(() => {
         if (!webgl) return undefined;

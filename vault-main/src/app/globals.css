@@ -10,13 +10,14 @@
   --secondary: #d9d9d9;
   --primary: #ff5f00;
   --primary-hover: #ff9253;
-  --secondary-surface: #101010;
-  --dark-surface: #000000;
   --dark-card: #161616;
   --border: #bcbcbc;
   --muted: #d2d2d2;
   --grey: #272727;
   --light-grey: #939393;
+  /* Dim text: black/20 on light surfaces, white/20 on dark ones */
+  --black-20: rgb(0 0 0 / 0.2);
+  --white-20: rgb(255 255 255 / 0.2);
   --announcement-h: 0px;
   --announcement-offset: var(--announcement-h);
 }
@@ -31,13 +32,13 @@ body {
   --color-secondary: var(--secondary);
   --color-primary: var(--primary);
   --color-primary-hover: var(--primary-hover);
-  --color-secondary-surface: var(--secondary-surface);
-  --color-dark-surface: var(--dark-surface);
   --color-dark-card: var(--dark-card);
   --color-border: var(--border);
   --color-muted: var(--muted);
   --color-grey: var(--grey);
   --color-light-grey: var(--light-grey);
+  --color-black-20: var(--black-20);
+  --color-white-20: var(--white-20);
   /* The site's two faces: font-avenir (text) and font-aeonik (headings / display) */
   --font-avenir: var(--font-avenir);
   --font-aeonik: var(--font-aeonik);

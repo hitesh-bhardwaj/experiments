@@ -193,9 +193,12 @@ export default function PricingCredits() {
     ? `${left} credit${left > 1 ? "s" : ""} left · ${plan.note}`
     : "Wallet empty. That’s a year of templates, owned forever.";
   // Spending a credit rolls the note up, refilling rolls it down
-  const prevLeft = useRef(left);
-  const dir = Math.sign(prevLeft.current - left) || 1;
-  useEffect(() => { prevLeft.current = left; }, [left]);
+  const [prevLeft, setPrevLeft] = useState(left);
+  const [dir, setDir] = useState(1);
+  if (left !== prevLeft) {
+    setPrevLeft(left);
+    setDir(Math.sign(prevLeft - left) || 1);
+  }
 
   return (
     <section ref={rootRef} id="credits" data-sound-flow="off" className="relative bg-foreground px-[4.5vw] py-[7%] font-avenir text-background max-md:px-[5vw] max-sm:px-[7vw]">

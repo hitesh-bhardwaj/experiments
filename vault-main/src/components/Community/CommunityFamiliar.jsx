@@ -9,13 +9,20 @@ import LineReveal from "@/components/Animations/LineReveal";
 import { useFadeUp } from "@/components/Animations/gsapAnimations";
 import { useInteraction } from "@/homepage-v3/components/InteractionProvider";
 import { prefersReducedMotion } from "@/lib/motion";
-import { FAMILIAR } from "./community-data";
 import { useCommunity } from "./community-store";
 import { CritiqueCard, FeaturedCard, TeardownCard, VoteCard } from "./WhyJoinPanels";
 
+
+const FAMILIAR = [
+  { text: "You’ve rebuilt the same scroll reveal six times this year." },
+  { text: "You spent an hour on one easing curve. Nobody noticed.", em: "You", after: " did." },
+  { text: "Someone called your page transition “just an animation.”" },
+  { text: "You shipped something beautiful, with nobody around who’d really get it." },
+];
+
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
-const SPY_OFFSET = 140; // keeps a panel's card below the fixed header when jumped to
+const SPY_OFFSET = 140; 
 
 const PANELS = [
   {
@@ -44,8 +51,6 @@ const PANELS = [
   },
 ];
 
-// Light sheet: the "sound familiar?" list lights up line by line, then the
-// why-join panels, with a sticky nav that follows whichever panel is centred
 export default function CommunityFamiliar() {
   const rootRef = useRef(null);
   const lenis = useLenis();
@@ -93,33 +98,32 @@ export default function CommunityFamiliar() {
   };
 
   return (
-    <div ref={rootRef} className="relative z-1 mx-auto max-w-[calc(100%-2*clamp(0px,1vw,16px))] bg-[#F4F4F4] text-[#1D1D1D]" data-zone="sheet" data-sound-flow="off">
-      <section className="mx-auto max-w-[1536px] px-[clamp(1.25rem,3vw,3rem)] pt-[clamp(6rem,16vh,10rem)] pb-[clamp(5rem,12vh,8rem)]" aria-labelledby="fam-h">
-        {/* <p className="eyebrow label fadeup" id="fam-h">Sound familiar?</p> */}
-        <ol className="mt-12 grid">
+    <div ref={rootRef} className="relative z-1 mx-auto  bg-[#F4F4F4] text-[#1D1D1D]" data-zone="sheet" data-sound-flow="off">
+      <section className="mx-auto max-w-[1536px] px-[4.5vw] py-[7vw]" aria-labelledby="fam-h">
+        <ol className="mt-12 flex flex-col px-[1vw]">
           {FAMILIAR.map((item, i) => (
             <li
               key={item.text}
               data-fam
-              className={`grid grid-cols-[70px_minmax(0,1fr)] items-baseline gap-4 border-t border-[rgba(29,29,29,.1)] py-[clamp(1.4rem,3vh,2rem)] last:border-b max-sm:grid-cols-[44px_minmax(0,1fr)]`}
+              className={`flex items-baseline gap-4 border-t border-[rgba(29,29,29,.1)] py-[1.9vw] max-md:py-6 last:border-b`}
             >
-              <span className={`font-avenir text-[11px] font-medium tracking-[.14em] uppercase transition-colors duration-1200 ease-[cubic-bezier(.16,1,.3,1)] ${lit === i ? "text-primary" : "text-[#B4B4B4]"}`}>
+              <span className={`w-[70px] shrink-0 max-sm:w-[44px] font-avenir text-[11px] font-medium tracking-[.14em] uppercase transition-colors duration-1200 ease-[cubic-bezier(.16,1,.3,1)] ${lit === i ? "text-primary" : "text-[#B4B4B4]"}`}>
                 {String(i + 1).padStart(2, "0")}
               </span>
-              <p className={`font-aeonik font-normal tracking-[-.035em] leading-[1.02] text-[clamp(1.5rem,3vw,2.9rem)] leading-[1.12] tracking-[-.03em] transition-colors duration-1200 ease-[cubic-bezier(.16,1,.3,1)] ${lit === i ? "text-[#1D1D1D]" : "text-[#B4B4B4]"}`}>
+              <p className={`min-w-0 flex-1 font-aeonik font-light  text-[2.8vw] leading-[1.12] tracking-[-.03em] transition-colors duration-1200 ease-[cubic-bezier(.16,1,.3,1)] ${lit === i ? "text-[#1D1D1D]" : "text-[#B4B4B4]"}`}>
                 {item.text}
                 {item.em && <> <em className="text-primary not-italic">{item.em}</em>{item.after}</>}
               </p>
             </li>
           ))}
         </ol>
-        <LineReveal as="h2" className={`font-aeonik font-normal tracking-[-.035em] leading-[1.02]  text-[clamp(2.2rem,4.6vw,4.6rem)] mt-[clamp(4rem,10vh,7rem)]! max-w-[45vw] max-[1025px]:max-w-[80vw] max-md:max-w-full`}>
+        <LineReveal as="h2" className={`font-aeonik font-normal tracking-[-.035em] leading-[1.02]  text80 mt-[7vw] max-w-[45vw] max-[1025px]:max-w-[80vw] max-md:max-w-full`}>
           You’re not the only one. <span className="gradient-text-animate gradient-text-single">There’s a room for this.</span>
         </LineReveal>
       </section>
 
-      <div className="mx-auto grid max-w-[1536px] grid-cols-[minmax(0,.8fr)_minmax(0,1.6fr)] gap-8 px-[clamp(1.25rem,3vw,3rem)] pb-[clamp(6rem,16vh,10rem)] max-[1025px]:grid-cols-1" id="why">
-        <div className="sticky top-[26vh] grid justify-items-start gap-4.5 self-start max-[1025px]:hidden">
+      <div className="mx-auto flex max-w-[1536px] gap-8 px-[4.5vw] pb-[10vw] max-[1025px]:flex-col" id="why">
+        <div className="sticky top-1/2 -translate-y-1/2 flex mt-[6vw] min-w-0 flex-[.8] flex-col items-start gap-4.5 self-start max-[1025px]:hidden">
           {/* <p className="eyebrow label">Why join</p> */}
           {PANELS.map((p, i) => (
             <button
@@ -127,18 +131,18 @@ export default function CommunityFamiliar() {
               type="button"
               aria-current={spy === i ? "true" : undefined}
               onClick={() => goToPanel(i)}
-              className={`font-aeonik font-normal tracking-[-.035em] leading-[1.02] text-left text-[clamp(1.5rem,2.3vw,2.2rem)] transition-colors duration-900 ease-[cubic-bezier(.16,1,.3,1)] ${spy === i ? "text-[#1D1D1D]" : "text-[#B4B4B4] hover:text-[#8a8a8a]"}`}
+              className={`font-aeonik font-normal tracking-[-.035em] leading-[1.02] text-left text-[2.6vw] transition-colors duration-900 ease-[cubic-bezier(.16,1,.3,1)] ${spy === i ? "text-[#1D1D1D]" : "text-[#B4B4B4] hover:text-[#8a8a8a]"}`}
             >
               {p.nav}
             </button>
           ))}
         </div>
-        <div className="grid gap-[clamp(8rem,22vh,14rem)]">
+        <div className="flex min-w-0 flex-[1.6] flex-col gap-[14vw]">
           {PANELS.map(({ title, text, Card }, i) => (
             <article key={title} data-panel={i}>
               <Card joined={joined} />
-              <h3 className={`font-aeonik font-normal tracking-[-.035em] leading-[1.02] mt-7 text-[clamp(1.25rem,1.6vw,1.5rem)]`}>{title}</h3>
-              <p className={`max-w-[40vw] max-[1025px]:max-w-[70vw] max-md:max-w-full text-base leading-[1.65] text-[#9C9C9C] mt-3`}>{text}</p>
+              <LineReveal as="h3" className="mt-[1.8vw] max-md:mt-[5vw] text32 font-aeonik text-[2.6vw]! max-md:text-[4vw]! max-sm:text-[6.6vw]!">{title}</LineReveal>
+              <p data-fadeup-delay="0.15" className="fadeup mt-[1vw] max-md:mt-[3vw] max-w-[52ch] text22 font-avenir text-[1.1vw]! leading-[1.6]! max-md:text-[2.2vw]! max-sm:text-[4.1vw]! text-[#6B6B6B]">{text}</p>
             </article>
           ))}
         </div>

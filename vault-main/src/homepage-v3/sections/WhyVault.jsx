@@ -10,7 +10,27 @@ import { useFadeUp } from "@/components/Animations/gsapAnimations";
 import CodeCard from "../components/why-vault/CodeCard";
 import MomentsCard from "../components/why-vault/MomentsCard";
 import TuneCard from "../components/why-vault/TuneCard";
-import { WHY_VAULT_ITEMS } from "../components/why-vault/why-vault-data";
+
+const WHY_VAULT_ITEMS = [
+    {
+        id: "moments",
+        nav: "150+ components / 56 free",
+        title: "Every moment, already built.",
+        body: "Scroll systems, cursor presence, text reveals, transitions, loaders and WebGL scenes. Preview exactly how each one behaves before it touches your project.",
+    },
+    {
+        id: "code",
+        nav: "Code you own",
+        title: "One command. Real files.",
+        body: "The Hyperiux CLI adds only the effect you asked for and only the files it needs. No runtime dependency on us, no lock-in. Inspect it, change it, keep it.",
+    },
+    {
+        id: "tune",
+        nav: "Tune everything",
+        title: "Your brand, your timing.",
+        body: "Copy, layout, timing, easing, breakpoints, hover states, mobile fallbacks and reduced-motion behaviour are all yours to tune. Try it: drag the sliders.",
+    },
+];
 
 if (typeof window !== "undefined") {
     gsap.registerPlugin(ScrollTrigger, useGSAP);
@@ -86,7 +106,7 @@ export default function WhyVault() {
                             type="button"
                             onClick={() => goTo(i)}
                             aria-current={active === i ? "true" : undefined}
-                            className={`w-fit justify-self-start text-left text-[clamp(1.5rem,2.3vw,2.2rem)] leading-[1.12] tracking-tighter transition-colors duration-[600ms] ease-[cubic-bezier(.16,1,.3,1)] ${active === i ? "text-[#1D1D1D]" : "text-[#B4B4B4] hover:text-[#8a8a8a]"}`}
+                            className={`w-fit justify-self-start text-left text-[2.6vw] leading-[1.12] tracking-tighter transition-colors duration-[600ms] ease-[cubic-bezier(.16,1,.3,1)] ${active === i ? "text-[#1D1D1D]" : "text-[#B4B4B4] hover:text-[#8a8a8a]"}`}
                         >
                            <span className="font-aeonik!"> {item.nav}</span>
                         </button>

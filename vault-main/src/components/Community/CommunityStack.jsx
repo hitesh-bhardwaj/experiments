@@ -8,8 +8,9 @@ import LineReveal from "@/components/Animations/LineReveal";
 import { useFadeUp } from "@/components/Animations/gsapAnimations";
 import { useInteraction } from "@/homepage-v3/components/InteractionProvider";
 import { prefersReducedMotion } from "@/lib/motion";
-import { STACKS } from "./community-data";
 import { getCrowd, setStack, useCommunity } from "./community-store";
+
+const STACKS = ["React", "Next.js", "GSAP", "Three.js", "WebGL", "Motion", "Lenis", "Vue", "Svelte", "Webflow"];
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
@@ -51,10 +52,10 @@ export default function CommunityStack() {
   };
 
   return (
-    <section ref={rootRef} className={`mx-auto max-w-[1536px] px-[clamp(1.25rem,3vw,3rem)] relative z-1 py-[clamp(12rem,30vh,18rem)] text-center max-md:py-28`} id="stack" data-zone="crowd2" data-hold-zone>
+    <section ref={rootRef} className={`mx-auto max-w-[1536px] px-[4.5vw] relative z-1 py-[18vw] text-center max-md:py-28`} id="stack" data-zone="crowd2" data-hold-zone>
       {/* <p className="eyebrow label fadeup">Find your people</p> */}
-      <LineReveal as="h2" className={`font-aeonik font-normal tracking-[-.035em] leading-[1.02] mt-[22px] text-[clamp(2.2rem,4.6vw,4.6rem)] mx-auto`}>
-        What do you <span className="gradient-text-animate gradient-text-single">build with?</span>
+      <LineReveal as="h2" className={`font-aeonik font-normal tracking-[-.035em] leading-[1.02] mt-[22px] text80 max-md:text-[9vw] mx-auto`}>
+        What Do You <span className="gradient-text-animate gradient-text-single">Build With?</span>
       </LineReveal>
       <p className={`max-w-[40vw] max-[1025px]:max-w-[70vw] max-md:max-w-full text-base leading-[1.65] text-[#9C9C9C] fadeup mx-auto mt-[3vw] max-md:mt-6`}>
         Pick your stack. Watch your corner of the crowd light up. We’ll use it to match you with the
@@ -68,13 +69,13 @@ export default function CommunityStack() {
             data-chip
             aria-pressed={stack.includes(name)}
             onClick={() => toggle(name, i)}
-            className={`font-avenir text-[11px] font-medium tracking-[.14em] uppercase h-11 px-5 backdrop-blur-[10px] transition-[background-color,color,box-shadow] duration-700 ease-[cubic-bezier(.16,1,.3,1)] ${stack.includes(name) ? "bg-primary text-[#141414] shadow-[0_10px_30px_-10px_rgba(255,107,0,.7)]" : "bg-[rgba(20,20,20,.55)] text-[#d8d8d8] shadow-[inset_0_0_0_1px_rgba(244,244,244,.14)] hover:shadow-[inset_0_0_0_1px_rgba(255,107,0,.6)]"}`}
+            className={`font-avenir text-[0.75vw] font-medium tracking-[.14em] uppercase h-11 px-5 backdrop-blur-lg transition-[background-color,color,box-shadow] duration-700 ease-[cubic-bezier(.16,1,.3,1)] ${stack.includes(name) ? "bg-primary text-[#141414] shadow-[0_10px_30px_-10px_rgba(255,107,0,.7)]" : "bg-[rgba(20,20,20,.55)] text-[#d8d8d8] shadow-[inset_0_0_0_1px_rgba(244,244,244,.14)] hover:shadow-[inset_0_0_0_1px_rgba(255,107,0,.6)]"}`}
           >
             {name}
           </button>
         ))}
       </div>
-      <p className={`font-avenir text-[11px] font-medium tracking-[.14em] uppercase mt-[26px] min-h-[1.4em] text-[#FFB27A]`} aria-live="polite">{readout(stack)}</p>
+      <p className={`font-avenir text-[11px] font-medium tracking-[.14em] uppercase mt-[26px]  text-[#9C9C9C]`} aria-live="polite">{readout(stack)}</p>
     </section>
   );
 }

@@ -4,8 +4,24 @@ import { useRef } from "react";
 import LineReveal from "@/components/Animations/LineReveal";
 import { useFadeUp } from "@/components/Animations/gsapAnimations";
 import { useBilling } from "./billing";
-import { COMPARE_ROWS, INDIA_TAX_NOTE, formatMoney, pricingFor } from "./plans";
+import { INDIA_TAX_NOTE, formatMoney, pricingFor } from "./PricingPlans";
 import { BillingToggle, Dash, Tick } from "./shared";
+
+// true = tick, false = dash, string = text
+const COMPARE_ROWS = [
+  { feature: "Effects included", free: "50+ effects", pro: "Full library, all categories" },
+  { feature: "New effects", free: false, pro: "Added monthly" },
+  { feature: "Scroll & text effects", free: true, pro: true },
+  { feature: "Cursor effects", free: false, pro: true },
+  { feature: "WebGL scenes", free: false, pro: true },
+  { feature: "Advanced page transitions", free: false, pro: true },
+  { feature: "CLI install", free: true, pro: true },
+  { feature: "Source code ownership", free: true, pro: true },
+  { feature: "Commercial use", free: "Free core, where marked", pro: "Full commercial use" },
+  { feature: "Updates & fixes", free: "Community cadence", pro: "Priority" },
+  { feature: "Support", free: "GitHub / community", pro: "Email support" },
+  { feature: "Team / agency use", free: "Individual use", pro: "Per seat · agency licensing available" },
+];
 
 function Cell({ value }) {
   if (value === true) return <Tick />;

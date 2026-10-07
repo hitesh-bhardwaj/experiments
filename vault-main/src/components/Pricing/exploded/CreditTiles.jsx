@@ -27,7 +27,7 @@ function Tile({ index, filled, delay, sizeClass, onTile }) {
       { width, opacity: 1, scale: 1, duration: 0.7, ease: "back.out(1.8)", delay, clearProps: "width,opacity,scale,transform" },
     );
     return () => { tween.kill(); gsap.set(el, { clearProps: "width,opacity,scale,transform" }); };
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []);  
 
   // The number scales up from nothing when its credit is used, and back down when it isn't
   useEffect(() => {
@@ -56,6 +56,8 @@ export default function CreditTiles({ count, used, sizeClass = "size-[1.8vw] tex
   useEffect(() => {
     const tiles = [...rootRef.current.children];
     if (count > shown) {
+      // Intentional: new tiles mount here and run their own entrance; a smaller count animates out first
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setShown(count);
     } else if (count < shown) {
       const leaving = tiles.slice(count);

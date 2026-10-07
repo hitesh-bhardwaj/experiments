@@ -256,7 +256,7 @@ function detectPropsFromLocalRemixer(docsDir) {
   if (!propsMatch) return null;
 
   try {
-    // eslint-disable-next-line no-new-func -- trusted, developer-authored demo source, not user input
+     
     const props = new Function(`"use strict"; return (${propsMatch[1]});`)();
     return Array.isArray(props) ? props : null;
   } catch {

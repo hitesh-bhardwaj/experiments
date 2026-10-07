@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties, useLayoutEffect } from "react";
 import { Check, ChevronDown, Copy, RotateCcw } from "lucide-react";
 import styles from "./remixer-panel.module.css";
 import type { RemixerControl, RemixerOption, RemixerPanelProps } from "./types";
@@ -81,7 +81,9 @@ function SmoothRange({
   const emittedRef = useRef(value);
   const frameRef = useRef(0);
   const onChangeRef = useRef(onChange);
-  onChangeRef.current = onChange;
+  useLayoutEffect(() => {
+    onChangeRef.current = onChange;
+  });
 
   useEffect(() => {
     if (value === emittedRef.current) return;

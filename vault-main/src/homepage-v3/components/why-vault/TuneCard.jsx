@@ -3,7 +3,13 @@
 import { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { prefersReducedMotion } from "@/lib/motion";
-import { EASINGS } from "./why-vault-data";
+
+const EASINGS = [
+    ["Expo", "expo.out"],
+    ["Smooth", "power3.inOut"],
+    ["Back", "back.out(1.6)"],
+    ["Elastic", "elastic.out(1,.5)"],
+];
 
 const TUNE_TEXT = "Tune it until it feels right.";
 const WORDS = TUNE_TEXT.split(" ");

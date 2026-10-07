@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Matter from "matter-js";
@@ -33,6 +33,8 @@ const riseIn = "motion-safe:animate-[hx-up_1s_cubic-bezier(.16,1,.3,1)_both]";
 
 // "This page fell over": drag 4 0 4 back onto the line (or skip the physics),
 // then pick from the closest real pages. Plays notes once sound is on.
+const noopSubscribe = () => () => {};
+
 export default function SiteNotFound({ pages = [] }) {
     const canvasRef = useRef(null);
     const fellRef = useRef(null);
@@ -40,8 +42,7 @@ export default function SiteNotFound({ pages = [] }) {
     const { sound } = useInteraction();
     const asked = usePathname() || "/";
     // Query params aren't in usePathname; read them after mount.
-    const [search, setSearch] = useState("");
-    useEffect(() => setSearch(window.location.search), [asked]);
+    const search = useSyncExternalStore(noopSubscribe, () => window.location.search, () => "");
     const suggestions = useMemo(() => suggestPages(asked, pages, { search, limit: 3 }), [asked, pages, search]);
 
     const [standing, setStanding] = useState(false);

@@ -1,6 +1,6 @@
 "use client";
 
-import { memo, useEffect, useRef } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { prefersReducedMotion } from "@/lib/motion";
 
@@ -92,9 +92,12 @@ export default function RollNumber({ value, values = [value] }) {
   const intDigits = cur.int.padStart(intLen, "0");
 
   // Which way the number moved, so every digit rolls the same way
-  const prev = useRef(Number(value));
-  const dir = Math.sign(Number(value) - prev.current);
-  useEffect(() => { prev.current = Number(value); }, [value]);
+  const [prev, setPrev] = useState(Number(value));
+  const [dir, setDir] = useState(0);
+  if (Number(value) !== prev) {
+    setPrev(Number(value));
+    setDir(Math.sign(Number(value) - prev));
+  }
 
   return (
     <span className="inline-flex lining-nums tabular-nums leading-none">

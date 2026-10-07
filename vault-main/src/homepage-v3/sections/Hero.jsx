@@ -87,6 +87,8 @@ export default function Hero() {
             actionsRef.current
         );
         dropCover();
+        // Intentional: the intro can only start after this mount-time setup (cover dropped, targets hidden)
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setSkipGPU(shouldSkipRealtimeGPU());
         setPlayIntro(true);
     }, []);
