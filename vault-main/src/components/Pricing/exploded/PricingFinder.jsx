@@ -121,7 +121,7 @@ export default function PricingFinder() {
   }, { dependencies: [key], scope: outRef, revertOnUpdate: true });
 
   return (
-    <section ref={rootRef} id="finder" className="relative px-[4.5vw] py-[7%] text-foreground max-md:px-[5vw] max-sm:px-[7vw]">
+    <section ref={rootRef} id="finder" className="relative px-[4.5vw] py-[7%] max-md:py-[15%] text-foreground max-md:px-[calc(var(--cvw)*7)]">
       <div className="mx-auto flex w-full max-w-[1536px] items-center justify-between gap-[3vw] max-md:flex-col max-md:items-stretch max-md:gap-[10vw]">
       <div className="flex w-[40%] flex-col gap-[1.8vw] max-md:w-full max-md:gap-[5vw]">
         <p className={`fadeup flex items-center gap-[0.6vw] text-foreground/60 max-md:gap-[2vw] ${LABEL}`}>
@@ -159,7 +159,7 @@ export default function PricingFinder() {
             preventDefault
             ariaLabel={`I need full page sections, ${sections ? "on" : "off"}`}
             onClick={() => { setSections((v) => !v); sound?.note?.(sections ? 1 : 3); }}
-            className="w-fit"
+            className="w-fit max-md:w-full max-md:justify-center"
           />
         </div>
 

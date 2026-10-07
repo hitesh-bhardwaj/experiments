@@ -118,6 +118,7 @@ export default function PricingPlansHome() {
         place();
         const ro = new ResizeObserver(place);
         ro.observe(bill);
+        bill.querySelectorAll('[role="radio"]').forEach((b) => ro.observe(b)); // the pill follows a button that changes width
         return () => ro.disconnect();
     }, [period]);
 
@@ -133,13 +134,13 @@ export default function PricingPlansHome() {
     };
 
     return (
-        <section ref={rootRef} id="pricing" data-sound-flow="off" data-sound-hover="off" className="relative bg-white px-[calc(var(--cvw)*4.5)] py-[7%] font-avenir text-[#1D1D1D] max-md:px-[calc(var(--cvw)*5)] max-sm:px-[calc(var(--cvw)*7)]">
+        <section ref={rootRef} id="pricing" data-sound-flow="off" data-sound-hover="off" className="relative bg-white px-[calc(var(--cvw)*4.5)] py-[7%] max-md:py-[15%] font-avenir text-[#1D1D1D] max-md:px-[calc(var(--cvw)*7)]">
             <div className="mx-auto flex w-full max-w-[1536px] flex-wrap items-end justify-between gap-[calc(var(--cvw)*2)] max-md:gap-[calc(var(--cvw)*5)]">
                 <LineReveal as="h2" className="text64 leading-[1.2]! font-aeonik text-[calc(var(--cvw)*4.6)]! max-md:text-[calc(var(--cvw)*6)]! max-sm:text-[calc(var(--cvw)*9)]!">
                     Two Plans.<br/> <span className="gradient-text-animate gradient-text-single">Every Moment Covered.</span>
                 </LineReveal>
 
-                <div ref={billRef} role="radiogroup" aria-label="Billing period" className="fadeup relative isolate inline-flex border border-[#1D1D1D]/15 bg-[#ececec] p-1.5">
+                <div ref={billRef} role="radiogroup" aria-label="Billing period" className="fadeup relative isolate inline-flex border border-[#1D1D1D]/15 bg-[#ececec] p-1.5 max-md:flex max-md:w-full">
                     {/* <CornerMarks /> */}
                     <i
                         ref={pillRef}
@@ -156,11 +157,11 @@ export default function PricingPlansHome() {
                                 role="radio"
                                 aria-checked={on}
                                 onClick={() => choose(b.id)}
-                                className={`relative z-1 inline-flex h-10 items-center gap-2.5 px-[18px] text-[11px] font-medium tracking-[.14em] uppercase transition-colors duration-700 ${on ? "text-[#F4F4F4]" : "text-[#6B6B6B]"}`}
+                                className={`relative z-1 inline-flex h-10 items-center gap-2.5 px-[2vw] text-[11px] whitespace-nowrap max-md:h-[12vw] max-md:grow max-md:justify-center max-md:gap-[2vw] max-md:px-[3vw] max-md:text-[2.8vw] font-medium tracking-[.14em] uppercase transition-colors duration-700 ${on ? "text-[#F4F4F4]" : "text-[#6B6B6B]"}`}
                             >
                                 {b.label}
                                 {b.save && (
-                                    <span className={`px-[7px] py-[3px] transition-colors duration-700 ${on ? "bg-primary text-[#141414]" : "bg-primary/20 text-primary/70"}`}>{b.save}</span>
+                                    <span className={`px-[7px] py-[3px] max-md:px-[2vw] max-md:py-[1vw] transition-colors duration-700 ${on ? "bg-primary text-[#141414]" : "bg-primary/20 text-primary/70"}`}>{b.save}</span>
                                 )}
                             </button>
                         );
@@ -229,9 +230,9 @@ export default function PricingPlansHome() {
                 })}
             </div>
 
-            <ul className="mx-auto mt-[calc(var(--cvw)*2)] flex w-full max-w-[1536px] flex-wrap justify-center gap-x-[calc(var(--cvw)*2)] gap-y-[calc(var(--cvw)*0.8)] text-[calc(var(--cvw)*0.8)] max-md:text-[calc(var(--cvw)*2.8)] font-medium tracking-[.14em] text-[#6B6B6B] uppercase">
+            <ul className="mx-auto mt-[calc(var(--cvw)*2)] flex w-full max-w-[1536px] flex-wrap justify-center max-md:justify-start max-md:gap-[2.5vw] max-md:mt-[5vh] gap-x-[calc(var(--cvw)*2)] gap-y-[calc(var(--cvw)*0.8)] text-[calc(var(--cvw)*0.8)] max-md:text-[calc(var(--cvw)*2.8)] font-medium tracking-[.14em] text-[#6B6B6B] uppercase">
                 {ASSURANCES.map((a) => (
-                    <li key={a} className="flex items-center gap-2"><Tick />{a}</li>
+                    <li key={a} className="flex items-center  gap-2"><Tick />{a}</li>
                 ))}
             </ul>
         </section>

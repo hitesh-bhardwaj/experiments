@@ -201,7 +201,7 @@ export default function PricingCredits() {
   }
 
   return (
-    <section ref={rootRef} id="credits" data-sound-flow="off" className="relative bg-foreground px-[4.5vw] py-[7%] font-avenir text-background max-md:px-[5vw] max-sm:px-[7vw]">
+    <section ref={rootRef} id="credits" data-sound-flow="off" className="relative bg-foreground px-[4.5vw] py-[7%] max-md:py-[15%] font-avenir text-background max-md:px-[calc(var(--cvw)*7)]">
       <div className="mx-auto flex w-full max-w-[1536px] flex-col gap-[3vw] max-md:gap-[8vw]">
         <div className="flex flex-col gap-[1.8vw] max-md:gap-[5vw]">
           <p className={`fadeup flex items-center gap-[0.6vw] text-background/60 max-md:gap-[2vw] ${LABEL}`}>
@@ -262,7 +262,7 @@ export default function PricingCredits() {
               const locked = t.full && !plan.full;
               const unavailable = !isOwned && (locked || (!left && !pending.includes(i)));
               return (
-                <li key={t.name} className={`flex w-[32%] flex-col gap-[0.8vw] bg-foreground p-[0.8vw] transition-shadow duration-700 max-md:w-[48%] max-md:gap-[3vw] max-md:p-[2.4vw] ${isOwned ? "shadow-[inset_0_0_0_0.1vw_var(--primary)]" : "shadow-[inset_0_0_0_0.1vw_color-mix(in_srgb,var(--background)_10%,transparent)]"}`}>
+                <li key={t.name} className={`flex w-[32%] flex-col gap-[0.8vw] bg-foreground p-[0.8vw] transition-shadow duration-700 max-md:w-[48%] max-md:gap-[5vw] max-md:p-[2.4vw] ${isOwned ? "shadow-[inset_0_0_0_0.1vw_var(--primary)]" : "shadow-[inset_0_0_0_0.1vw_color-mix(in_srgb,var(--background)_10%,transparent)]"}`}>
                   <div
                     ref={(el) => { artRefs.current[i] = el; }}
                     aria-hidden="true"
@@ -272,7 +272,7 @@ export default function PricingCredits() {
                     <i className={`absolute top-[36%] left-[8%] h-[8%] w-[34%] transition-colors duration-1000 ${isOwned ? "bg-primary-hover" : "bg-background/15"}`} />
                     <i className={`absolute top-[56%] left-[8%] h-[30%] w-[84%] transition-colors duration-1000 ${isOwned ? "bg-grey" : "bg-background/15"}`} />
                   </div>
-                  <div className="flex flex-col gap-[0.3vw] max-md:gap-[1vw]">
+                  <div className="flex flex-col gap-[0.3vw] max-md:flex-1 max-md:gap-[1vw]">
                     <p className="text-[1.1vw] tracking-[-0.02em] max-md:text-[4vw]">{t.name}</p>
                     <p className={`flex items-center gap-[0.4vw] max-md:gap-[1.4vw] ${LABEL} ${t.full ? "text-background/60" : "text-primary"}`}>
                       {!t.full && <span aria-hidden="true">✦</span>}

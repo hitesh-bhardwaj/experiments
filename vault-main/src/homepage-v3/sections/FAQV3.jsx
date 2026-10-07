@@ -271,7 +271,7 @@ export default function FAQV3({ faqItems, translateTop = true}) {
       ref={container}
       id="faq"
       data-sound-flow="off"
-      className="relative z-10 h-fit px-[calc(var(--cvw)*4.5)] w-full bg-foreground py-[7%] text-background max-md:mt-0! max-md:px-[calc(var(--cvw)*5)] max-sm:px-[calc(var(--cvw)*7)]"
+      className="relative z-10 h-fit px-[calc(var(--cvw)*4.5)] w-full bg-foreground py-[7%] max-md:py-[15%] text-background max-md:mt-0! max-md:px-[calc(var(--cvw)*7)]"
     >
       <div className="mx-auto w-full max-w-[1536px]">
 
@@ -284,7 +284,7 @@ export default function FAQV3({ faqItems, translateTop = true}) {
       </LineReveal>
 
 
-      <div className="mx-auto  max-w-[1536px] max-md:w-full px-[calc(var(--cvw)*5)]">
+      <div className="mx-auto  max-w-[1536px] max-md:w-full px-[calc(var(--cvw)*5)] max-md:px-0" ref={container}>
         {visibleItems.map((item, index) => (
           <FAQRow
             key={item.id}

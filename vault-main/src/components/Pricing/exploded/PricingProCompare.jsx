@@ -55,7 +55,9 @@ function Mark({ on }) {
 
 function Cell({ value, period, dir }) {
   const v = value !== null && typeof value === "object" ? value[period] : value;
-  return typeof v === "boolean" ? <Mark on={v} /> : <RollText fixed text={v} dir={dir} className={`w-full text-background/60 ${TEXT}`} />;
+  // Long text wraps to two lines on mobile, so its box is two lines tall
+  const long = typeof v === "string" && v.length > 22;
+  return typeof v === "boolean" ? <Mark on={v} /> : <RollText fixed text={v} dir={dir} className={`w-full text-background/60 ${TEXT} ${long ? "max-md:h-[12vw]!" : ""}`} />;
 }
 
 export default function PricingProCompare() {
@@ -113,15 +115,15 @@ export default function PricingProCompare() {
   };
 
   return (
-    <section ref={rootRef} id="compare" data-sound-flow="off" className="relative bg-foreground px-[4.5vw] py-[7%] font-avenir text-background max-md:px-[5vw] max-sm:px-[7vw]">
+    <section ref={rootRef} id="compare" data-sound-flow="off" className="relative bg-foreground px-[4.5vw] max-md:px-0 py-[7%] max-md:py-[15%] font-avenir text-background">
       <div className="mx-auto flex w-full max-w-[1536px] flex-col gap-[3vw] max-md:gap-[8vw]">
-        <div className="flex items-end justify-between gap-[2vw] max-md:flex-col max-md:items-start max-md:gap-[6vw]">
+        <div className="flex max-md:px-[calc(var(--cvw)*7)] items-end justify-between gap-[2vw] max-md:flex-col max-md:items-start max-md:gap-[6vw]">
           <LineReveal as="h2" className="text64 text-[4.6vw]! leading-[1.2]! max-md:text-[6vw]! max-sm:text-[9vw]!">
             Pro vs Pro+,<br />
             <span className="gradient-text-animate">line by line.</span>
           </LineReveal>
 
-          <div ref={toggleRef} role="radiogroup" aria-label="Billing period" data-sound-hover="off" className="fadeup relative isolate flex w-fit border border-background/10 bg-background/10 p-[0.3vw] max-md:p-[1vw]">
+          <div ref={toggleRef} role="radiogroup" aria-label="Billing period" data-sound-hover="off" className="fadeup relative  isolate flex w-fit border border-background/10 bg-background/10 p-[0.3vw] max-md:p-[1vw]">
             {PERIODS.map((p) => (
               <button
                 key={p.id}
@@ -142,17 +144,18 @@ export default function PricingProCompare() {
           </div>
         </div>
 
-        <div className="fadeup overflow-x-auto px-[3vw] max-md:px-0">
-          <div role="table" aria-label="Pro and Pro+ compared" className="flex min-w-full flex-col border border-background/10 bg-foreground max-md:min-w-[170vw]">
+        <div className="fadeup overflow-x-auto px-[3vw] max-md:px-[calc(var(--cvw)*7)]">
+          <div role="table" aria-label="Pro and Pro+ compared" className="flex min-w-full  flex-col border border-background/10 bg-foreground max-md:min-w-[170vw]">
             <div role="row" className="flex border-b border-background/10">
               <div role="columnheader" className="flex w-[40%] items-center px-[1.6vw] py-[2.2vw] text-[1.1vw] text-background/30 max-md:px-[4vw] max-md:py-[6vw] max-md:text-[3.8vw]">Feature</div>
               {[["pro", "Pro"], ["plus", "Pro+"]].map(([id, name]) => (
                 <div key={id} role="columnheader" className={`${CELL} flex-col items-start justify-center gap-[0.6vw] py-[2.2vw] max-md:gap-[2vw] max-md:py-[6vw] ${id === "plus" ? "bg-primary/5" : ""}`}>
                   <p className="text-[1.6vw] max-md:text-[5.6vw]">{id === "plus" ? <>Pro<span className="text-primary">+</span></> : name}</p>
-                  <div className={`flex items-center text-background/60 ${LABEL}`}>
+                  <div className={`flex items-center text-background/60 max-md:flex-wrap ${LABEL}`}>
                     <span className="flex h-[1.2vw] items-center leading-none max-md:h-[4vw]">$<RollNumber value={PRICES[id][period]} values={[PRICES[id].q, PRICES[id].y]} /></span>
-                    <span>/mo ·&nbsp;</span>
-                    <RollText fixed text={periodInfo.billed} dir={dir} className="h-[1.2vw] w-[10vw] leading-[1.2vw] max-md:h-[4vw] max-md:w-[34vw] max-md:leading-[4vw]" />
+                    <span>/mo</span>
+                    <span className="max-md:hidden">&nbsp;·&nbsp;</span>
+                    <RollText fixed text={periodInfo.billed} dir={dir} className="h-[1.2vw] w-[10vw] leading-[1.2vw] max-md:h-[4vw] max-md:w-full max-md:leading-[4vw]" />
                   </div>
                 </div>
               ))}

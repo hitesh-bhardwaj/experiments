@@ -205,7 +205,7 @@ export function mountExplodedTiers(host, opts = {}) {
   const POSE = poseOpt || { op: [1.9, 0.6, 0], or: [0.7, -0.08, 0], os: 1.25 };
   // Tablet and mobile (canvas up to 1025 wide): the stacks scale up and sit a little closer. Desktop is untouched.
   let small = false;
-  const SMALL_NARROW = { scale: 1.35, gap: 0.85 }, SMALL_TABLET = { scale: 1.12, gap: 0.9 };
+  const SMALL_NARROW = { scale: 1.35, gap: 0.85, layer: 1.6 }, SMALL_TABLET = { scale: 1.12, gap: 0.9, layer: 1.4 };
   const POSE_M = poseNarrowOpt || { op: [0, 2.9, -4], or: [0.7, -0.08, 0], os: 0.72 };
   let W = 1, H = 1;
   function resize() {
@@ -289,11 +289,11 @@ export function mountExplodedTiers(host, opts = {}) {
       let want = locked[si] || hovered === si ? 1 : mouse.on ? 0.12 : 0.06;
       if (isTarget) want = Math.max(want, absorb);
       S.ex += (want - S.ex) * Math.min(1, dt * 3.2);
-      const sp = 0.12 + S.ex * 0.45; let top = 0;
+      const lk = sm ? sm.layer : 1, sp = (0.12 + S.ex * 0.45) * lk; let top = 0;
       S.layers.forEach((l, j) => {
         let ty = j * sp + Math.sin(time * 1.2 + j) * 0.02 * S.ex, tx = 0;
         if (!isTarget && absorb > 0.01 && !l.ghost) {
-          const sp2 = 0.12 + target.ex * 0.45;
+          const sp2 = (0.12 + target.ex * 0.45) * lk;
           tx = lerp(0, target.g.position.x - S.g.position.x, absorb);
           ty = lerp(ty, l.mergeTo * sp2 + 0.06, absorb);
         }

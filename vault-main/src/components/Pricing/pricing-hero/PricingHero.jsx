@@ -79,7 +79,7 @@ export default function PricingHero({ isIndia = false }) {
       aria-label="Pricing"
       data-hold-zone
       data-cursor-label="Hold to explore"
-      className="home-type relative mx-auto w-full max-w-[1536px] isolate flex min-h-[115vh] flex-col justify-end overflow-hidden bg-transparent pt-[8vw]! pb-[3vw]! text-foreground select-none [touch-action:pan-y] [&.pt-hover]:cursor-pointer max-md:pt-[48svh]! px-[4.5vw] max-md:px-[5vw] max-sm:px-[7vw]"
+      className="home-type relative mx-auto w-full max-w-[1536px] isolate flex min-h-[115vh] flex-col justify-end overflow-hidden bg-transparent pt-[8vw]! pb-[3vw]! text-foreground select-none [touch-action:pan-y] [&.pt-hover]:cursor-pointer max-md:pt-[48svh]! px-[4.5vw] max-md:px-[calc(var(--cvw)*7)]"
     >
       <div
         ref={stageRef}
@@ -103,7 +103,7 @@ export default function PricingHero({ isIndia = false }) {
           </div>
         </div>
       </div>
-      <div className="fadeup relative z-2 mt-[4.5vw] max-md:pt-[10vw]" aria-hidden="true">
+      <div className="fadeup relative z-2 mt-[4.5vw] max-md:pt-[7vw] max-md:pb-[8vw]" aria-hidden="true">
         <p className="text-center text-[0.7vw] font-semibold uppercase tracking-widest text-foreground/40 max-md:text-[2.8vw]">
           Hover a plan to take it apart · click to lock · hold to merge
         </p>
