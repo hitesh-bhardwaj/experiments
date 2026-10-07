@@ -41,8 +41,8 @@ export function isSessionExistsError(err) {
 // though the card stops growing past its cap.
 export function StepHeading({ title, subtitle }) {
   return (
-    <div className="mb-8 space-y-2 max-[1025px]:mb-7 max-md:mb-10 max-md:space-y-3">
-      <h1 className="text-4xl font-semibold text-white max-[1025px]:text-[2rem] max-md:text-3xl">{title}</h1>
+    <div className="mb-8 space-y-2 max-lg:mb-7 max-md:mb-10 max-md:space-y-3">
+      <h1 className="text-4xl font-semibold text-white max-lg:text-[2rem] max-md:text-3xl">{title}</h1>
       {subtitle && <p className="text-base text-white max-md:text-sm">{subtitle}</p>}
     </div>
   );
@@ -95,7 +95,7 @@ export function TextField({ id, label, type = "text", value, onChange, placehold
 export function GlobalError({ message }) {
   if (!message) return null;
   return (
-    <div className="mb-5 rounded-md border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-400">
+    <div className="mb-5 border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-400">
       {message}
     </div>
   );

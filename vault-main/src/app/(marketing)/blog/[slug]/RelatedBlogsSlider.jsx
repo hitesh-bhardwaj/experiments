@@ -16,7 +16,7 @@ function SliderButton({ direction, disabled, onClick, activeOrange = false }) {
       onClick={onClick}
       disabled={disabled}
       aria-label={isNext ? "Show next related blogs" : "Show previous related blogs"}
-      className={`group relative flex h-8 w-8 items-center justify-center overflow-hidden text-white transition-colors duration-300 max-[1025px]:size-10 ${
+      className={`group relative flex h-8 w-8 items-center justify-center overflow-hidden text-white transition-colors duration-300 max-lg:size-10 ${
         disabled
           ? "cursor-not-allowed bg-[#161616] opacity-40"
           : activeOrange
@@ -158,11 +158,11 @@ export default function RelatedBlogsSlider({ posts = [] }) {
   const showMobileControls = posts.length > 1;
 
   return (
-    <section ref={sectionRef} className="relative mt-[10vw] flex flex-col gap-[3vw] max-[1025px]:mt-[12vw] max-[1025px]:gap-[5vw] max-md:mt-[16vw] max-md:gap-[8vw]">
-      <div className="flex items-center justify-between gap-5 max-[1025px]:items-end">
+    <section ref={sectionRef} className="relative mt-[10vw] flex flex-col gap-[3vw] max-lg:mt-[12vw] max-lg:gap-[5vw] max-md:mt-[16vw] max-md:gap-[8vw]">
+      <div className="flex items-center justify-between gap-5 max-lg:items-end">
         <LineWipe lineStyle={RELATED_BLOGS_HEADING_LINE_STYLE}>
           <h2
-            className="font-avenir text80 font-medium text-white max-[1025px]:text-[7vw] max-md:text-[10vw]"
+            className="font-avenir text80 font-medium text-white max-lg:text-[7vw] max-md:text-[10vw]"
             style={RELATED_BLOGS_HEADING_LINE_STYLE}
           >
             Related Blogs
@@ -193,13 +193,13 @@ export default function RelatedBlogsSlider({ posts = [] }) {
         onPointerLeave={handlePointerEnd}
         onPointerCancel={handlePointerEnd}
         onDragStart={(event) => event.preventDefault()}
-        className="flex cursor-grab snap-x snap-mandatory select-none gap-6 overflow-x-auto scroll-smooth pb-4 active:cursor-grabbing max-[1025px]:gap-5 max-md:gap-6"
+        className="flex cursor-grab snap-x snap-mandatory select-none gap-6 overflow-x-auto scroll-smooth pb-4 active:cursor-grabbing max-lg:gap-5 max-md:gap-6"
       >
         {posts.map((post, index) => (
           <div
             key={post.slug}
             onClick={handleCardClick}
-            className="w-[31vw] flex-none snap-start max-[1025px]:w-[55vw] max-md:w-full! max-sm:px-0"
+            className="w-[31vw] flex-none snap-start max-lg:w-[55vw] max-md:w-full! max-sm:px-0"
           >
             <BlogCard post={post} priority={index === 0} />
           </div>

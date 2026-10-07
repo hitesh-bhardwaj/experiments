@@ -109,7 +109,7 @@ export function TemplatePaywallModal({
       onClick={onClose}
     >
       <div
-        className="relative w-[40vw] max-h-[90vh] overflow-y-auto border border-white/15 bg-[#111111] px-9 py-9 max-[1025px]:w-[85%] max-[1025px]:px-7 max-[1025px]:py-8 max-md:h-[80vh] max-md:max-h-none  max-md:border-x-0 max-md:border-b-0 max-md:px-5 max-md:py-12"
+        className="relative w-[40vw] max-h-[90vh] overflow-y-auto border border-white/15 bg-[#111111] px-9 py-9 max-lg:w-[85%] max-lg:px-7 max-lg:py-8 max-md:h-[80vh] max-md:max-h-none  max-md:border-x-0 max-md:border-b-0 max-md:px-5 max-md:py-12"
         onClick={(event) => event.stopPropagation()}
       >
         <button
@@ -125,7 +125,7 @@ export function TemplatePaywallModal({
           <div className="flex flex-col items-center gap-2.5 max-md:gap-2">
             <h3
               id="template-paywall-title"
-              className="text-4xl font-semibold text-white max-[1025px]:text-3xl max-md:text-2xl"
+              className="text-4xl font-semibold text-white max-lg:text-3xl max-md:text-2xl"
             >
               Unlock {template.title}
             </h3>
@@ -140,7 +140,7 @@ export function TemplatePaywallModal({
           </div>
         </div>
 
-        <div className="mt-7 border border-white/15 px-6 py-6 w-[80%] mx-auto max-[1025px]:w-full max-md:mt-5 max-md:w-full max-md:px-4 max-md:py-5">
+        <div className="mt-7 border border-white/15 px-6 py-6 w-[80%] mx-auto max-lg:w-full max-md:mt-5 max-md:w-full max-md:px-4 max-md:py-5">
           <p className="text-xs font-medium tracking-wide text-primary">PRO ANNUAL</p>
 
           <div className="mt-2 flex items-end justify-between gap-4 max-md:flex-col max-md:items-start max-md:gap-1">
@@ -168,7 +168,7 @@ export function TemplatePaywallModal({
           </div>
         </div>
 
-        <div className="mt-5 w-[80%] mx-auto max-[1025px]:w-full max-md:mt-4 max-md:w-full">
+        <div className="mt-5 w-[80%] mx-auto max-lg:w-full max-md:mt-4 max-md:w-full">
           <RazorpayButtonV3
             variant="orange"
             label="Upgrade to Pro Annual"
@@ -180,7 +180,7 @@ export function TemplatePaywallModal({
         </div>
 
         {isMonthlyPro && (
-          <div className="mt-4 flex items-center justify-center gap-2 border-t border-white/10 pt-4 text-xs text-white/50 w-[80%] mx-auto max-[1025px]:w-full max-md:w-full">
+          <div className="mt-4 flex items-center justify-center gap-2 border-t border-white/10 pt-4 text-xs text-white/50 w-[80%] mx-auto max-lg:w-full max-md:w-full">
             <User className="h-3.5 w-3.5" />
             <span>
               You&apos;re currently on Pro Monthly &middot; ${MONTHLY_PRICE}/month

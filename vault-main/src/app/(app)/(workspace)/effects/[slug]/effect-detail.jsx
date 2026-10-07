@@ -70,11 +70,11 @@ function SkeletonBlock({ className = "" }) {
 
 function EffectDetailMainSkeleton() {
   return (
-    <main className="mx-auto w-full relative px-14 max-[1025px]:px-0 pt-25 max-md:pt-36">
+    <main className="mx-auto w-full relative px-14 max-lg:px-0 pt-25 max-md:pt-36">
       <section className="space-y-7">
-        <div className="flex items-start max-md:px-[7vw] max-[1025px]:px-[6vw] justify-between gap-5">
+        <div className="flex items-start max-md:px-[7vw] max-lg:px-[6vw] justify-between gap-5">
           <div className="w-full space-y-5">
-            <div className="mb-6 flex w-fit max-w-full flex-wrap items-center gap-2 max-[1025px]:mx-auto max-[1025px]:justify-center">
+            <div className="mb-6 flex w-fit max-w-full flex-wrap items-center gap-2 max-lg:mx-auto max-lg:justify-center">
               <SkeletonBlock className="h-4 w-12  bg-[#272727]" />
               <span className="text-white/25">/</span>
               <SkeletonBlock className="h-4 w-16  bg-[#272727]" />
@@ -84,11 +84,11 @@ function EffectDetailMainSkeleton() {
               <SkeletonBlock className="h-4 w-40  bg-[#272727]" />
             </div>
 
-            <SkeletonBlock className="h-[5.2vw] w-[62%]  bg-[#272727] max-[1025px]:mx-auto max-[1025px]:h-14 max-[1025px]:w-[82%] max-md:h-12" />
+            <SkeletonBlock className="h-[5.2vw] w-[62%]  bg-[#272727] max-lg:mx-auto max-lg:h-14 max-lg:w-[82%] max-md:h-12" />
 
-            <div className="space-y-3 max-[1025px]:mx-auto max-[1025px]:w-[90%]">
-              <SkeletonBlock className="h-5 w-[72%]  bg-[#272727] max-[1025px]:mx-auto" />
-              <SkeletonBlock className="h-5 w-[54%]  bg-[#272727] max-[1025px]:mx-auto" />
+            <div className="space-y-3 max-lg:mx-auto max-lg:w-[90%]">
+              <SkeletonBlock className="h-5 w-[72%]  bg-[#272727] max-lg:mx-auto" />
+              <SkeletonBlock className="h-5 w-[54%]  bg-[#272727] max-lg:mx-auto" />
             </div>
 
             <div className="mt-12 flex w-full items-center justify-between gap-3">
@@ -105,16 +105,16 @@ function EffectDetailMainSkeleton() {
           </div>
         </div>
 
-        <div className="max-md:px-[7vw] max-[1025px]:px-[6vw] h-[46vw]  w-full">
+        <div className="max-md:px-[7vw] max-lg:px-[6vw] h-[46vw]  w-full">
           <SkeletonBlock className="h-full w-full bg-[#272727]" />
         </div>
 
-        <div className="max-md:flex max-md:px-[7vw] max-[1025px]:px-[6vw] w-full max-md:pt-4 justify-center shrink-0 hidden">
+        <div className="max-md:flex max-md:px-[7vw] max-lg:px-[6vw] w-full max-md:pt-4 justify-center shrink-0 hidden">
           <SkeletonBlock className="h-12 w-36  bg-[#ff5f00]/45" />
         </div>
 
-        <div className="relative max-md:px-[7vw] max-[1025px]:px-[6vw] pt-[1.5vw]">
-          <div className="space-y-8 w-[70%] max-[1025px]:w-full">
+        <div className="relative max-md:px-[7vw] max-lg:px-[6vw] pt-[1.5vw]">
+          <div className="space-y-8 w-[70%] max-lg:w-full">
             <SkeletonBlock className="h-10 w-[58%]  bg-[#272727]" />
 
             <div className="space-y-3">
@@ -137,12 +137,12 @@ function EffectDetailMainSkeleton() {
               <SkeletonBlock className="h-5 w-[74%]  bg-[#272727]" />
             </div>
 
-            <SkeletonBlock className="h-[18vw] w-full  bg-[#171717] max-[1025px]:h-64" />
+            <SkeletonBlock className="h-[18vw] w-full  bg-[#171717] max-lg:h-64" />
           </div>
         </div>
 
-        <div className="w-[70%] max-[1025px]:w-full max-md:px-[7vw] max-[1025px]:px-[6vw] max-md:mt-[10vw]">
-          <div className="w-full  bg-[#272727] my-[5vw] mx-auto px-10 max-[1025px]:px-6 max-md:px-[7vw] py-15">
+        <div className="w-[70%] max-lg:w-full max-md:px-[7vw] max-lg:px-[6vw] max-md:mt-[10vw]">
+          <div className="w-full  bg-[#272727] my-[5vw] mx-auto px-10 max-lg:px-6 max-md:px-[7vw] py-15">
             <SkeletonBlock className="h-10 w-[52%]  bg-[#333333] max-md:h-8 max-md:w-[84%]" />
 
             <div className="mt-5 space-y-3">
@@ -154,19 +154,19 @@ function EffectDetailMainSkeleton() {
           </div>
         </div>
 
-        <section className="my-20 relative space-y-10 max-[1025px]:space-y-10">
-          <div className="flex items-center justify-between gap-5 max-[1025px]:flex-col">
-            <SkeletonBlock className="h-12 w-[30%]  bg-[#272727] max-[1025px]:w-[60%] max-md:w-[80%]" />
-            <SkeletonBlock className="h-12 w-44  bg-[#ff5f00]/45 max-[1025px]:hidden" />
+        <section className="my-20 relative space-y-10 max-lg:space-y-10">
+          <div className="flex items-center justify-between gap-5 max-lg:flex-col">
+            <SkeletonBlock className="h-12 w-[30%]  bg-[#272727] max-lg:w-[60%] max-md:w-[80%]" />
+            <SkeletonBlock className="h-12 w-44  bg-[#ff5f00]/45 max-lg:hidden" />
           </div>
 
           <div className="flex gap-6 overflow-hidden">
             {Array.from({ length: 3 }).map((_, index) => (
               <div
                 key={`related-effect-skeleton-${index}`}
-                className="min-w-[31vw] max-[1025px]:min-w-[44vw] max-[1025px]:min-w-[55vw] max-md:min-w-full"
+                className="min-w-[31vw] max-lg:min-w-[44vw] max-lg:min-w-[55vw] max-md:min-w-full"
               >
-                <div className="relative aspect-[1.02/1] w-full overflow-hidden  bg-[#272727] p-[2vw] max-[1025px]:p-5 max-md:p-5">
+                <div className="relative aspect-[1.02/1] w-full overflow-hidden  bg-[#272727] p-[2vw] max-lg:p-5 max-md:p-5">
                   <div className="flex h-full w-full items-center justify-center">
                     <SkeletonBlock className="aspect-[1.78/1] w-[88%]  bg-[#111111]" />
                   </div>
@@ -452,15 +452,15 @@ export function EffectDetailContent({
         {isMainDataLoading ? (
           <EffectDetailMainSkeleton />
         ) : (
-          <main className="mx-auto w-full relative  max-[1025px]:px-0 pt-25 max-md:pt-36">
+          <main className="mx-auto w-full relative  max-lg:px-0 pt-25 max-md:pt-36">
             <section className="space-y-7">
-              <div className="flex px-14 items-start max-md:px-[7vw] max-[1025px]:px-[6vw] justify-between gap-5">
+              <div className="flex px-14 items-start max-md:px-[7vw] max-lg:px-[6vw] justify-between gap-5">
                 <div className="w-full space-y-5">
                   <Breadcrumb />
 
                   {pageTitle && (
                     <HeadAnim rotate={0}>
-                      <h1 className="w-full max-md:text-[6vw] max-md:font-bold max-[1025px]:w-[90%] max-md:w-[80%]  font-semibold leading-[1.3]! text-foreground text80">
+                      <h1 className="w-full max-md:text-[6vw] max-md:font-bold max-lg:w-[90%] max-md:w-[80%]  font-semibold leading-[1.3]! text-foreground text80">
                         {pageTitle}
                       </h1>
                     </HeadAnim>
@@ -468,7 +468,7 @@ export function EffectDetailContent({
 
                   {pageSummary && (
                     <Copy delay={0.5}>
-                      <p className="mt-4 w-[70%] max-[1025px]:w-[90%] text-foreground opacity-90 text22 leading-relaxed max-[1025px]:leading-[1.3]">
+                      <p className="mt-4 w-[70%] max-lg:w-[90%] text-foreground opacity-90 text22 leading-relaxed max-lg:leading-[1.3]">
                         {pageSummary}
                       </p>
                     </Copy>
@@ -493,7 +493,7 @@ export function EffectDetailContent({
                 </div>
               </div>
 
-              <div className="fadeup px-14 max-md:px-[7vw] max-[1025px]:px-[6vw] h-auto  w-full">
+              <div className="fadeup px-14 max-md:px-[7vw] max-lg:px-[6vw] h-auto  w-full">
                 {/* Live stage + Playground (remixer), in place of the preview video */}
                 <EffectStage
                   effect={effect}
@@ -508,8 +508,8 @@ export function EffectDetailContent({
                     animation block, and related effects - so no dark gaps show between them. */}
               <div className="bg-white text-black mt-20">
                 {/* blog-theme-light: blog.css prose in its light colours on this white section */}
-                <div className="blog-theme-light relative px-14 max-md:px-[7vw] max-[1025px]:px-[6vw] pt-20 pb-6">
-                  <div className="fixed right-4 top-1/2 z-30 block -translate-y-1/2 max-[1025px]:hidden">
+                <div className="blog-theme-light relative px-14 max-md:px-[7vw] max-lg:px-[6vw] pt-20 pb-6">
+                  <div className="fixed right-4 top-1/2 z-30 block -translate-y-1/2 max-lg:hidden">
                     <TableOfContents
                       containerRef={contentRef}
                       stopRef={hasCtaSection ? ctaSectionRef : relatedEffectsRef}
@@ -540,18 +540,18 @@ export function EffectDetailContent({
                 {safeRelatedEffects?.length > 0 && (
                   <section
                     ref={relatedEffectsRef}
-                    className="relative space-y-10 px-14 py-20 max-[1025px]:space-y-10 max-[1025px]:px-[6vw] max-md:px-[7vw]"
+                    className="relative space-y-10 px-14 py-20 max-lg:space-y-10 max-lg:px-[6vw] max-md:px-[7vw]"
                   >
-                    <div className="flex items-center justify-between gap-5 max-[1025px]:flex-col">
+                    <div className="flex items-center justify-between gap-5 max-lg:flex-col">
                       <HeadAnim rotate={0}>
-                        <h2 className="text-center text-[3.32vw] max-[1025px]:text-[5vw] max-md:text-[2rem] font-medium text-[#141414]">
+                        <h2 className="text-center text-[3.32vw] max-lg:text-[5vw] max-md:text-[2rem] font-medium text-[#141414]">
                           Related Effects
                         </h2>
                       </HeadAnim>
                       {/* The arrows are sized to the Explore button beside them: ButtonV3 is
                           1.15vw text x 1.5 line height + 1rem padding + 2px border. */}
                       <div className="flex items-center gap-2 fadeup">
-                        <div className=" flex max-[1025px]:hidden flex-col justify-center items-end gap-5 max-[1025px]:w-full max-[1025px]:items-stretch">
+                        <div className=" flex max-lg:hidden flex-col justify-center items-end gap-5 max-lg:w-full max-lg:items-stretch">
                           <ButtonV3
                             text="Explore All Effects"
                             href="/effects"
@@ -559,7 +559,7 @@ export function EffectDetailContent({
                             className="shrink-0 border border-primary"
                           />
                         </div>
-                        <div className="max-[1025px]:hidden">
+                        <div className="max-lg:hidden">
                           {showRelatedSliderControls && (
                             <div className="flex h-full items-center justify-end gap-2">
                               <SliderArrowButton
@@ -597,13 +597,13 @@ export function EffectDetailContent({
                         onPointerLeave={handleRelatedPointerEnd}
                         onPointerCancel={handleRelatedPointerEnd}
                         onDragStart={(event) => event.preventDefault()}
-                        className="flex cursor-grab snap-x snap-mandatory  bg select-none gap-6 overflow-x-auto max-md:gap-6 max-[1025px]:gap-2 scroll-smooth pb-4 active:cursor-grabbing"
+                        className="flex cursor-grab snap-x snap-mandatory  bg select-none gap-6 overflow-x-auto max-md:gap-6 max-lg:gap-2 scroll-smooth pb-4 active:cursor-grabbing"
                       >
                         {safeRelatedEffects.map((relatedEffect) => (
                           <div
                             key={relatedEffect.name}
                             onClickCapture={blockClickAfterDrag}
-                            className="min-w-[31vw] pl-1!  cursor-pointer max-md:px-[7vw] max-[1025px]:px-[6vw] snap-start max-[1025px]:min-w-[44vw] max-[1025px]:min-w-[55vw]! max-md:min-w-full!"
+                            className="min-w-[31vw] pl-1!  cursor-pointer max-md:px-[7vw] max-lg:px-[6vw] snap-start max-lg:min-w-[44vw] max-lg:min-w-[55vw]! max-md:min-w-full!"
                           >
                             <EffectCardV4
                               effect={relatedEffect}
@@ -617,9 +617,9 @@ export function EffectDetailContent({
                       </div>
                     </div>
 
-                    <div className="hidden max-[1025px]:block">
+                    <div className="hidden max-lg:block">
                       {showRelatedSliderControls && (
-                        <div className="flex items-center justify-end gap-2 max-[1025px]:justify-center">
+                        <div className="flex items-center justify-end gap-2 max-lg:justify-center">
                           <SliderArrowButton
                             direction="prev"
                             tone="light"
@@ -638,7 +638,7 @@ export function EffectDetailContent({
                       )}
                     </div>
 
-                    <div className="fadeup max-[1025px]:mx-auto max-[1025px]:flex hidden flex-col justify-center items-end gap-5 max-[1025px]:w-fit max-[1025px]:items-stretch">
+                    <div className="fadeup max-lg:mx-auto max-lg:flex hidden flex-col justify-center items-end gap-5 max-lg:w-fit max-lg:items-stretch">
                       <ButtonV3
                         text="Explore all effects"
                         href="/effects"
@@ -660,14 +660,14 @@ export function EffectDetailContent({
           onClick={() => setShowSignInToCopyModal(false)}
         >
           <div
-            className={`flex w-[35vw] max-md:w-full max-[1025px]:w-[70%] flex-col gap-6 items-center  border border-white/20 bg-[#0e0e0e] p-10 max-[1025px]:p-6 shadow-2xl transition-transform duration-300 relative ${showSignInToCopyModal ? "scale-100" : "scale-95"}`}
+            className={`flex w-[35vw] max-md:w-full max-lg:w-[70%] flex-col gap-6 items-center  border border-white/20 bg-[#0e0e0e] p-10 max-lg:p-6 shadow-2xl transition-transform duration-300 relative ${showSignInToCopyModal ? "scale-100" : "scale-95"}`}
             onClick={(event) => event.stopPropagation()}
           >
             <button
               type="button"
               aria-label="Close"
               onClick={() => setShowSignInToCopyModal(false)}
-              className="max-[1025px]:hidden group absolute right-5 top-5 flex h-10 w-10 items-center justify-center  border border-white/20 bg-white/10 text-xl leading-none text-white/70 transition-all duration-500 ease-in-out hover:border-[#ff5f00] hover:bg-[#ff5f00] hover:text-white "
+              className="max-lg:hidden group absolute right-5 top-5 flex h-10 w-10 items-center justify-center  border border-white/20 bg-white/10 text-xl leading-none text-white/70 transition-all duration-500 ease-in-out hover:border-[#ff5f00] hover:bg-[#ff5f00] hover:text-white "
             >
               <div className="relative flex h-4 w-4 items-center justify-center duration-500 ease-in-out group-hover:rotate-90">
                 <span className="h-px w-4 rotate-45 bg-white" />
@@ -708,7 +708,7 @@ const EffectDynamicContent = forwardRef(function EffectDynamicContent(
   return (
     <div
       ref={ref}
-      className="blog-content space-y-8 w-[70%] max-[1025px]:w-full"
+      className="blog-content space-y-8 w-[70%] max-lg:w-full"
     >
       <SanityBodyRenderer
         body={content.body}
@@ -1111,14 +1111,14 @@ function LockedCodePlaceholder({ filename }) {
 
   // Stays a dark code panel (like the code blocks) on the white article.
   return (
-    <section className="fadeup relative min-h-[40vh] max-md:min-h-[40vh] max-[1025px]:min-h-[30vh] overflow-hidden border border-white/30 bg-[#141414]">
+    <section className="fadeup relative min-h-[40vh] max-md:min-h-[40vh] max-lg:min-h-[30vh] overflow-hidden border border-white/30 bg-[#141414]">
       <div
         aria-hidden="true"
         className="absolute inset-0 "
       />
       <div aria-hidden="true" className="absolute inset-0 overflow-hidden">
 
-        <div className="absolute left-2 top-0 max-[1025px]:top-3 max-[1025px]:left-3 max-md:top-5 max-md:left-0 px-6 py-5 text-[11px] leading-6 text-white max-md:text-[10px]">
+        <div className="absolute left-2 top-0 max-lg:top-3 max-lg:left-3 max-md:top-5 max-md:left-0 px-6 py-5 text-[11px] leading-6 text-white max-md:text-[10px]">
           {teaserLines.map((line, index) => (
             <p
               key={`${line}-${index}`}
@@ -1139,7 +1139,7 @@ function LockedCodePlaceholder({ filename }) {
         </div>
       </div>
 
-      <div className="relative z-10 min-h-[40vh] max-md:min-h-[40vh] max-[1025px]:min-h-[30vh] flex   flex-col items-center justify-center gap-2  bg-white/5 px-8 py-6 text-center  max-md:px-6">
+      <div className="relative z-10 min-h-[40vh] max-md:min-h-[40vh] max-lg:min-h-[30vh] flex   flex-col items-center justify-center gap-2  bg-white/5 px-8 py-6 text-center  max-md:px-6">
         <LockKeyhole className="h-16 w-16 text-white" strokeWidth={1.2} />
 
         <div className="flex flex-col items-center gap-0">
@@ -1147,12 +1147,12 @@ function LockedCodePlaceholder({ filename }) {
             This is a Pro Effect.
           </h3>
 
-          <p className="max-w-sm text-sm leading-[1.2]! max-[1025px]:leading-relaxed text-white/50">
+          <p className="max-w-sm text-sm leading-[1.2]! max-lg:leading-relaxed text-white/50">
             {subtitle}
           </p>
         </div>
 
-        <div className="flex flex-wrap items-center pt-3 max-[1025px]:pt-6 justify-center gap-3">
+        <div className="flex flex-wrap items-center pt-3 max-lg:pt-6 justify-center gap-3">
           <ButtonV3
             text="Upgrade to Pro"
             variant="orange"

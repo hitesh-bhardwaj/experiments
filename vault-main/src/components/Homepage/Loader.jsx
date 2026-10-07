@@ -595,27 +595,27 @@ export default function Loader() {
 
       <div
         ref={behindLogoRef}
-        className="behind-logo relative z-10 flex w-fit items-center gap-[1vw] text-[#0E0E0E] max-[1025px]:gap-[3vw]"
+        className="behind-logo relative z-10 flex w-fit items-center gap-[1vw] text-[#0E0E0E] max-lg:gap-[3vw]"
       >
-        <div className="size-[4vw] max-[1025px]:size-[11vw]">
+        <div className="size-[4vw] max-lg:size-[11vw]">
           <HyperiuxLogoIcon />
         </div>
 
-        <div className="logo-wrapper w-[20vw] max-[1025px]:w-[50vw]">
+        <div className="logo-wrapper w-[20vw] max-lg:w-[50vw]">
           <HyperiuxLogo />
         </div>
       </div>
 
       <div
         ref={frontLogoRef}
-        className="front-logo absolute left-1/2 top-1/2 z-20 flex w-fit -translate-x-1/2 -translate-y-1/2 items-center gap-[1vw] text-[#ff5f00] max-[1025px]:gap-[3vw]"
+        className="front-logo absolute left-1/2 top-1/2 z-20 flex w-fit -translate-x-1/2 -translate-y-1/2 items-center gap-[1vw] text-[#ff5f00] max-lg:gap-[3vw]"
         style={{ clipPath: "inset(0% 100% 0% 0%)" }}
       >
-        <div className="size-[4vw] max-[1025px]:size-[11vw]">
+        <div className="size-[4vw] max-lg:size-[11vw]">
           <HyperiuxLogoIcon />
         </div>
 
-        <div className="logo-wrapper w-[20vw] max-[1025px]:w-[50vw]">
+        <div className="logo-wrapper w-[20vw] max-lg:w-[50vw]">
           <HyperiuxLogo />
         </div>
       </div>

@@ -212,18 +212,18 @@ export function TemplateDetailV4({ template, templateAccess = { allowed: false, 
       className="relative text-[#F4F4F4]"
     >
       {/* ---------- hero ---------- */}
-      <section className={`${GUTTER} pt-25 pb-16 max-[1025px]:pt-32 max-md:pt-28`}>
+      <section className={`${GUTTER} pt-25 pb-16 max-lg:pt-32 max-md:pt-28`}>
         <Breadcrumb />
 
-        <div className="mt-10 grid grid-cols-[minmax(0,1.2fr)_minmax(0,.8fr)] items-start gap-12 max-[1025px]:grid-cols-1 max-[1025px]:gap-10">
+        <div className="mt-10 grid grid-cols-[minmax(0,1.2fr)_minmax(0,.8fr)] items-start gap-12 max-lg:grid-cols-1 max-lg:gap-10">
           <div>
            
             <HeadAnim rotate={0} animateOnScroll={false}>
-              <h1 className={`${DISPLAY} text80 leading-[0.95]! max-[1025px]:text-[9vw] max-md:text-[13vw]`}>{template.title}</h1>
+              <h1 className={`${DISPLAY} text80 leading-[0.95]! max-lg:text-[9vw] max-md:text-[13vw]`}>{template.title}</h1>
             </HeadAnim>
             {template.tagline && (
               <Copy animateOnScroll={false} delay={0.3}>
-                <p className={`mt-6 max-w-[40vw] text22 leading-[1.3] text-foreground max-[1025px]:max-w-none`}>{template.tagline}</p>
+                <p className={`mt-6 max-w-[40vw] text22 leading-[1.3] text-foreground max-lg:max-w-none`}>{template.tagline}</p>
               </Copy>
             )}
              <div className="fadeup mt-10 flex flex-wrap gap-1.5">
@@ -238,7 +238,7 @@ export function TemplateDetailV4({ template, templateAccess = { allowed: false, 
           <aside className="fadeup grid min-w-0 gap-6">
             <dl className="grid gap-3">
               {facts.map(([term, value]) => (
-                <div key={term} className="grid grid-cols-[8vw_minmax(0,1fr)] items-center gap-3 border-b border-white/7 pb-3 max-[1025px]:grid-cols-[18vw_minmax(0,1fr)] max-md:grid-cols-[28vw_minmax(0,1fr)]">
+                <div key={term} className="grid grid-cols-[8vw_minmax(0,1fr)] items-center gap-3 border-b border-white/7 pb-3 max-lg:grid-cols-[18vw_minmax(0,1fr)] max-md:grid-cols-[28vw_minmax(0,1fr)]">
                   <dt className={`${LABEL} text-white/60`}>{term}</dt>
                   <dd className={`flex flex-wrap gap-1.25 ${T14} text-[#e0e0e0]`}>
                     {Array.isArray(value)
@@ -256,7 +256,7 @@ export function TemplateDetailV4({ template, templateAccess = { allowed: false, 
             <div className="grid gap-4">
               {price != null && (
                 <p className="flex items-baseline gap-3">
-                  <b className={`${DISPLAY} ${PRICE} text-[3.6vw] leading-none max-[1025px]:text-[7vw] max-md:text-[12vw]`}>${price}</b>
+                  <b className={`${DISPLAY} ${PRICE} text-[3.6vw] leading-none max-lg:text-[7vw] max-md:text-[12vw]`}>${price}</b>
                   <span className={`${LABEL} text-white/60`}>one-time or 1 template credit</span>
                 </p>
               )}
@@ -331,7 +331,7 @@ export function TemplateDetailV4({ template, templateAccess = { allowed: false, 
 
       {/* ---------- what's inside + more templates ---------- */}
       <div data-sound-hover="off" data-sound-flow="off" className="relative bg-[#F4F4F4] text-[#1D1D1D]">
-        <section className={`${GUTTER} grid grid-cols-[minmax(0,.8fr)_minmax(0,1.6fr)] gap-[4vw] pt-24 max-[1025px]:grid-cols-1 max-md:pt-16`}>
+        <section className={`${GUTTER} grid grid-cols-[minmax(0,.8fr)_minmax(0,1.6fr)] gap-[4vw] pt-24 max-lg:grid-cols-1 max-md:pt-16`}>
           <div className="fadeup">
             <h2 className={`${DISPLAY} ${T40} leading-[1.02]`}>
               What’s <span className="gradient-text-animate">inside.</span>

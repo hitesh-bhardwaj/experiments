@@ -56,7 +56,7 @@ export default function AppLayout({ children }) {
           colorText: "#ffffff",
           colorTextSecondary: "rgba(255,255,255,0.55)",
           colorDanger: "#fecaca",
-          borderRadius: "9999px",
+          borderRadius: "0",
           fontFamily: "inherit",
         },
       }}

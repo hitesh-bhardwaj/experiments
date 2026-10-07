@@ -365,15 +365,15 @@ const Loader2 = () => {
       <div
         ref={rootRef}
         id="loader"
-        className="fixed inset-0 z-1200 flex h-screen w-screen items-start justify-start overflow-hidden bg-[#0e0e0e] text-[17vw] text-white max-[1025px]:text-[22vw] max-md:text-[28vw]"
+        className="fixed inset-0 z-1200 flex h-screen w-screen items-start justify-start overflow-hidden bg-[#0e0e0e] text-[17vw] text-white max-lg:text-[22vw] max-md:text-[28vw]"
       >
         <div className="sequence-container relative z-2 flex h-fit w-fit font-head font-medium">
-          <div className="flex w-[10vw] overflow-hidden max-[1025px]:w-[14vw] max-md:w-[16vw]">
+          <div className="flex w-[10vw] overflow-hidden max-lg:w-[14vw] max-md:w-[16vw]">
             <div className="number-container flex w-fit">
               {LEFT_DIGITS.map((digit) => (
                 <span
                   key={`l-${digit}`}
-                  className="inline-block w-[10vw] shrink-0 text-center max-[1025px]:w-[14vw] max-md:w-[16vw]"
+                  className="inline-block w-[10vw] shrink-0 text-center max-lg:w-[14vw] max-md:w-[16vw]"
                 >
                   {digit}
                 </span>
@@ -381,12 +381,12 @@ const Loader2 = () => {
             </div>
           </div>
 
-          <div className="flex w-[10vw] overflow-hidden max-[1025px]:w-[14vw] max-md:w-[16vw]">
+          <div className="flex w-[10vw] overflow-hidden max-lg:w-[14vw] max-md:w-[16vw]">
             <div className="number-container flex w-fit">
               {RIGHT_DIGITS.map((digit, index) => (
                 <span
                   key={`r-${index}-${digit}`}
-                  className="inline-block w-[10vw] shrink-0 text-center max-[1025px]:w-[14vw] max-md:w-[16vw]"
+                  className="inline-block w-[10vw] shrink-0 text-center max-lg:w-[14vw] max-md:w-[16vw]"
                 >
                   {digit}
                 </span>
@@ -403,12 +403,12 @@ const Loader2 = () => {
 
       <div
         ref={footerRef}
-        className="loader-footer pointer-events-none fixed bottom-0 left-0 z-1300 h-[2vw] w-full max-[1025px]:h-10 max-md:h-9"
+        className="loader-footer pointer-events-none fixed bottom-0 left-0 z-1300 h-[2vw] w-full max-lg:h-10 max-md:h-9"
       >
         <div className="relative h-full w-full">
           <p
             ref={loadingTextRef}
-            className="loader-text-loading absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[1vw] font-medium text-white max-[1025px]:text-sm max-md:text-xs"
+            className="loader-text-loading absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[1vw] font-medium text-white max-lg:text-sm max-md:text-xs"
           >
             LOADING...
           </p>

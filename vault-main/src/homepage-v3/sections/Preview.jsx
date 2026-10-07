@@ -46,7 +46,7 @@ const STEPS = [
 ];
 
 const mark =
-  "preview-mark pointer-events-none absolute size-[0.5vw] border-primary max-[1025px]:size-2 max-md:size-2 max-sm:size-1.5";
+  "preview-mark pointer-events-none absolute size-[0.5vw] border-primary max-lg:size-2 max-md:size-2 max-sm:size-1.5";
 
 export default function Preview() {
   const gridRef = useRef(null);
@@ -179,13 +179,13 @@ export default function Preview() {
 
   return (
     <section id="preview" className="w-full mt-[16vw] ">
-      <LineReveal as='h2' className="t96 max-[1025px]:w-[85%] max-[1025px]:mx-auto max-md:w-[70%] max-md:mx-auto max-md:text-[8vw]! font-avenir text-center">
+      <LineReveal as='h2' className="t96 max-lg:w-[85%] max-lg:mx-auto max-md:w-[70%] max-md:mx-auto max-md:text-[8vw]! font-avenir text-center">
         Preview. Install. Tune. Ship.
       </LineReveal>
 
       <div
         ref={gridRef}
-        className="h-screen relative mt-[7vw] max-[1025px]:mt-[8vw] max-md:mt-[12vw] border-t border-b border-grey w-full flex flex-col"
+        className="h-screen relative mt-[7vw] max-lg:mt-[8vw] max-md:mt-[12vw] border-t border-b border-grey w-full flex flex-col"
       >
         {STEPS.map((step, i) => (
           <div
@@ -194,10 +194,10 @@ export default function Preview() {
               i === STEPS.length - 1 ? "" : "border-b border-grey"
             }`}
           >
-            <div className="w-[15vw] max-[1025px]:w-[6vw] max-md:w-[5vw] h-full border-r border-grey" />
+            <div className="w-[15vw] max-lg:w-[6vw] max-md:w-[5vw] h-full border-r border-grey" />
             {/* This row's number, morphing in place into this row's icon. */}
-            <div className="relative w-[15vw] max-[1025px]:w-[20vw] max-md:w-[30vw] h-full border-r border-grey">
-              <div className="preview-icon pointer-events-none absolute inset-0 p-[1vw] max-[1025px]:p-[3vw]">
+            <div className="relative w-[15vw] max-lg:w-[20vw] max-md:w-[30vw] h-full border-r border-grey">
+              <div className="preview-icon pointer-events-none absolute inset-0 p-[1vw] max-lg:p-[3vw]">
                 {morphs ? (
                   <AsciiMorph
                     ref={(node) => {
@@ -209,7 +209,7 @@ export default function Preview() {
                     numberFill={1}
                     numberBrightness={i === 0 ? 40 : 100}
                     iconFill={1} 
-                    className="h-full max-[1025px]:my-auto w-full"
+                    className="h-full max-lg:my-auto w-full"
                   />
                 ) : (
                   <Image
@@ -218,12 +218,12 @@ export default function Preview() {
                     aria-hidden
                     width={160}
                     height={160}
-                    className="h-full max-[1025px]:my-auto w-full object-contain"
+                    className="h-full max-lg:my-auto w-full object-contain"
                   />
                 )}
               </div>
             </div>
-            <div className="flex-1 flex relative flex-col justify-center px-[4vw] gap-[1vw] max-[1025px]:gap-[1.5vw] border-r border-grey">
+            <div className="flex-1 flex relative flex-col justify-center px-[4vw] gap-[1vw] max-lg:gap-[1.5vw] border-r border-grey">
               <span className={`${mark} -top-px -left-px border-t border-l`} />
               <span className={`${mark} -top-px -right-px border-t border-r`} />
               <span
@@ -232,12 +232,12 @@ export default function Preview() {
               <span
                 className={`${mark} -bottom-px -right-px border-b border-r`}
               />
-              <div className="preview-text-wrapper flex flex-col max-[1025px]:gap-[2vw] max-md:gap-[3vw] gap-[1vw] will-change-transform">
+              <div className="preview-text-wrapper flex flex-col max-lg:gap-[2vw] max-md:gap-[3vw] gap-[1vw] will-change-transform">
                 <p className="text34">{step.title}</p>
-                <p className="text-[1.2vw] max-md:text-[3vw] max-[1025px]:text-[2.2vw] w-[80%] max-[1025px]:w-[95%] max-md:w-[95%]">{step.text}</p>
+                <p className="text-[1.2vw] max-md:text-[3vw] max-lg:text-[2.2vw] w-[80%] max-lg:w-[95%] max-md:w-[95%]">{step.text}</p>
               </div>
             </div>
-            <div className="w-[15vw] max-[1025px]:w-[6vw] max-md:w-[5vw] h-full" />
+            <div className="w-[15vw] max-lg:w-[6vw] max-md:w-[5vw] h-full" />
           </div>
         ))}
       </div>

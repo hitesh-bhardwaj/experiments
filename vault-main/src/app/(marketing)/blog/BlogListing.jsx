@@ -19,7 +19,7 @@ function buildHref({ category, page }) {
 
 
 function categoryChipClass(isSelected) {
-  return `px-4 py-2.5 text-[0.9vw] max-md:text-sm max-[1025px]:text-[2.5vw] text-center relative max-md:px-7 max-md:py-3 backdrop-blur-[6px] font-mono group flex items-center cursor-pointer transition-colors duration-300 ${
+  return `px-4 py-2.5 text-[0.9vw] max-md:text-sm max-lg:text-[2.5vw] text-center relative max-md:px-7 max-md:py-3 backdrop-blur-[6px] font-mono group flex items-center cursor-pointer transition-colors duration-300 ${
     isSelected
       ? "bg-[#ff5f00] text-black hover:text-black hover:bg-[#ff5f00]"
       : "bg-[#161616] text-[#FFFFFF] hover:text-black hover:bg-[#ff5f00]"
@@ -42,7 +42,7 @@ export default function BlogListing({
   return (
     <section ref={sectionRef} className="flex flex-col gap-[2vw] max-md:gap-[6vw]">
       {categories.length > 0 && (
-        <div className="flex flex-wrap max-md:px-[5vw] items-center gap-4 max-[1025px]:flex-nowrap max-[1025px]:overflow-x-auto">
+        <div className="flex flex-wrap max-md:px-[5vw] items-center gap-4 max-lg:flex-nowrap max-lg:overflow-x-auto">
           <Link href={buildHref({ category: "all" })} scroll={false} className={categoryChipClass(activeCategory === "all")}>
             <span className="leading-none">All</span>
           </Link>
@@ -63,8 +63,8 @@ export default function BlogListing({
       {posts.length === 0 ? (
         <p className="t22 text-light-grey">No posts yet.</p>
       ) : (
-        <div className="flex max-md:px-[7vw] flex-col gap-[3vw] pb-[4vw] max-md:gap-[6vw] max-[1025px]:pt-[4vh]">
-          <div className="grid auto-rows-fr grid-cols-3 max-md:gap-y-6 items-stretch gap-x-6 gap-y-12 max-[1025px]:grid-cols-2 max-md:grid-cols-1 max-[1025px]:gap-y-8 max-[1025px]:gap-x-5 max-md:gap-16">
+        <div className="flex max-md:px-[7vw] flex-col gap-[3vw] pb-[4vw] max-md:gap-[6vw] max-lg:pt-[4vh]">
+          <div className="grid auto-rows-fr grid-cols-3 max-md:gap-y-6 items-stretch gap-x-6 gap-y-12 max-lg:grid-cols-2 max-md:grid-cols-1 max-lg:gap-y-8 max-lg:gap-x-5 max-md:gap-16">
             {posts.map((post, index) => (
               <BlogCard key={post.slug} post={post} priority={index < 3} />
             ))}

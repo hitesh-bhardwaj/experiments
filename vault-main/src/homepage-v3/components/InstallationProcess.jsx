@@ -82,7 +82,7 @@ function TreeFile({ label, depth = 0, className = "", right = null, dataKey }) {
   return (
     <div
       data-file-key={dataKey}
-      className={`flex items-center justify-between rounded-[calc(var(--cvw)*0.3)] px-[calc(var(--cvw)*0.55)] py-[calc(var(--cvw)*0.35)] opacity-0 max-md:rounded-md max-md:px-2 max-md:py-1.5 ${className}`}
+      className={`flex items-center justify-between px-[calc(var(--cvw)*0.55)] py-[calc(var(--cvw)*0.35)] opacity-0 max-md:px-2 max-md:py-1.5 ${className}`}
       style={{ paddingLeft: `calc(var(--cvw) * ${depth * 1.35 + 0.55})` }}
     >
       <div className="flex min-w-0 items-center gap-3">
@@ -611,7 +611,7 @@ export default function InstallationProcess({ id = "code-block", play }) {
                             right={
                               <span
                                 data-file-key="addedBadge1"
-                                className="rounded-full  px-3 py-1 font-mono text-[12px] text-[#63d69a] opacity-0"
+                                className="px-3 py-1 font-mono text-[12px] text-[#63d69a] opacity-0"
                               >
                                 + Added
                               </span>
@@ -625,7 +625,7 @@ export default function InstallationProcess({ id = "code-block", play }) {
                             right={
                               <span
                                 data-file-key="addedBadge2"
-                                className="rounded-full  px-3 py-1 max-sm:text-nowrap font-mono text-[12px] text-[#63d69a] opacity-0"
+                                className="px-3 py-1 max-sm:text-nowrap font-mono text-[12px] text-[#63d69a] opacity-0"
                               >
                                 + Added
                               </span>
@@ -639,7 +639,7 @@ export default function InstallationProcess({ id = "code-block", play }) {
                             right={
                               <span
                                 data-file-key="addedBadge3"
-                                className="rounded-full  px-3 py-1 font-mono text-[12px] text-[#63d69a] opacity-0"
+                                className="px-3 py-1 font-mono text-[12px] text-[#63d69a] opacity-0"
                               >
                                 + Added
                               </span>

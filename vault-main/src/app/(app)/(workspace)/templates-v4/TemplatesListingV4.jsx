@@ -117,29 +117,29 @@ export function TemplatesListingV4({ templates = [], description = "", faqItems 
   return (
     <div ref={rootRef} className="relative text-[#F4F4F4]">
       {/* ---------- hero ---------- */}
-      <section className={`${GUTTER} pt-36 pb-12 max-[1025px]:pt-32 max-md:pt-28`}>
+      <section className={`${GUTTER} pt-36 pb-12 max-lg:pt-32 max-md:pt-28`}>
         <Breadcrumb />
 
-        <div className="mt-7 grid grid-cols-[minmax(0,1.2fr)_minmax(0,.8fr)] items-end gap-12 max-[1025px]:grid-cols-1 max-[1025px]:gap-10">
+        <div className="mt-7 grid grid-cols-[minmax(0,1.2fr)_minmax(0,.8fr)] items-end gap-12 max-lg:grid-cols-1 max-lg:gap-10">
           <HeadAnim rotate={0} animateOnScroll={false}>
-            <h1 className={`${DISPLAY} max-w-[45vw] text-[6vw] leading-[0.95]! max-[1025px]:max-w-none max-[1025px]:text-[9vw] max-md:text-[13vw]`}>
+            <h1 className={`${DISPLAY} max-w-[45vw] text-[6vw] leading-[0.95]! max-lg:max-w-none max-lg:text-[9vw] max-md:text-[13vw]`}>
               Whole sites. <span className="gradient-text-animate">Ready to ship.</span>
             </h1>
           </HeadAnim>
 
           <div className="grid gap-6">
             <Copy animateOnScroll={false} delay={0.3}>
-              <p className={`max-w-[34vw] ${T16} text-[#bdbdbd] max-[1025px]:max-w-[70vw] max-md:max-w-none`}>
+              <p className={`max-w-[34vw] ${T16} text-[#bdbdbd] max-lg:max-w-[70vw] max-md:max-w-none`}>
                 {description} Buy one outright, or redeem a template credit from your plan.
               </p>
             </Copy>
             <div className={`fadeup ${LABEL} flex flex-wrap gap-x-7.5 gap-y-2.5`}>
               {stats.map(([value, label]) => (
                 <p key={label}>
-                  <b className={`${DISPLAY} block text-[2.4vw] leading-none text-[#F4F4F4] tabular-nums max-[1025px]:text-[4.5vw] max-md:text-[8vw]`}>
+                  <b className={`${DISPLAY} block text-[2.4vw] leading-none text-[#F4F4F4] tabular-nums max-lg:text-[4.5vw] max-md:text-[8vw]`}>
                     {value}
                   </b>
-                  <span className="text-[1vw] text-white/60 max-[1025px]:text-[1.8vw] max-md:text-[3.6vw]">{label}</span>
+                  <span className="text-[1vw] text-white/60 max-lg:text-[1.8vw] max-md:text-[3.6vw]">{label}</span>
                 </p>
               ))}
             </div>
@@ -162,7 +162,7 @@ export function TemplatesListingV4({ templates = [], description = "", faqItems 
               </button>
             ))}
           </div>
-          <div role="group" aria-label="Catalogue" className="ml-auto flex flex-wrap gap-1.5 max-[1025px]:ml-0">
+          <div role="group" aria-label="Catalogue" className="ml-auto flex flex-wrap gap-1.5 max-lg:ml-0">
             {CATALOGUES.map((c) => (
               <button
                 key={c.id}
@@ -229,7 +229,7 @@ export function TemplatesListingV4({ templates = [], description = "", faqItems 
               One credit. <span className="gradient-text-animate">One whole site.</span>
             </h2>
           </div>
-          <div className="fadeup grid grid-cols-3 gap-3.5 max-[1025px]:grid-cols-2 max-md:grid-cols-1">
+          <div className="fadeup grid grid-cols-3 gap-3.5 max-lg:grid-cols-2 max-md:grid-cols-1">
             <CreditCard title="No plan needed" className="bg-[#fff4ea]">
               Buy any template outright{prices.length > 0 && <> for {formatPrices(prices)}</>}. One payment, and the source is yours.
             </CreditCard> 

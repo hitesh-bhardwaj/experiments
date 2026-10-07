@@ -177,7 +177,7 @@ export default function SavedPage() {
 
       {/* Empty State */}
       {savedEffects.length === 0 ? (
-        <div className="rounded-md p-12 bg-[#272727] text-center">
+        <div className="p-12 bg-[#272727] text-center">
           <h3 className="text-2xl text-white mb-2">
             No saved effects yet
           </h3>
@@ -188,7 +188,7 @@ export default function SavedPage() {
           </p>
         </div>
       ) : filteredEffects.length === 0 ? (
-        <div className="border border-white/10 rounded-lg p-12 text-center bg-white/5 backdrop-blur-lg ">
+        <div className="border border-white/10 p-12 text-center bg-white/5 backdrop-blur-lg ">
           <h3 className="text-xl text-white mb-2">
             No saved effects in this category
           </h3>
@@ -198,7 +198,7 @@ export default function SavedPage() {
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-3 gap-4 max-[1025px]:grid-cols-2 max-md:grid-cols-1 max-md:gap-12">
+        <div className="grid grid-cols-3 gap-4 max-lg:grid-cols-2 max-md:grid-cols-1 max-md:gap-12">
           {filteredEffects.map((effect) => (
             <EffectCard
               key={effect.id}

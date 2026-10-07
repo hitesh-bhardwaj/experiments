@@ -97,12 +97,12 @@ function CheckSquare({ className = "", onDark = false }) {
 
 export function FeatureList({ features, className = "", onDark = false }) {
     return (
-        <ul className={`flex flex-col gap-[1.2vw] max-[1025px]:gap-[2.5vw] max-md:gap-[3vw] max-sm:gap-[4.5vw] ${className}`}>
+        <ul className={`flex flex-col gap-[1.2vw] max-lg:gap-[2.5vw] max-md:gap-[3vw] max-sm:gap-[4.5vw] ${className}`}>
             {features.map((feature) => (
-                <li key={feature} className="flex items-start gap-[1vw] max-[1025px]:gap-[2vw] max-md:gap-[2.5vw] max-sm:gap-[3.5vw]">
+                <li key={feature} className="flex items-start gap-[1vw] max-lg:gap-[2vw] max-md:gap-[2.5vw] max-sm:gap-[3.5vw]">
                     <CheckSquare
                         onDark={onDark}
-                        className="mt-[0.25vw] size-[1.1vw] max-[1025px]:mt-[0.6vw] max-[1025px]:size-[2.2vw] max-md:mt-[1.4vw] max-md:size-[2.4vw] max-sm:size-[4vw]"
+                        className="mt-[0.25vw] size-[1.1vw] max-lg:mt-[0.6vw] max-lg:size-[2.2vw] max-md:mt-[1.4vw] max-md:size-[2.4vw] max-sm:size-[4vw]"
                     />
                     <span className="text22 leading-[1.35] max-md:text-[2.2vw] max-sm:text-[4vw]">
                         {feature}
@@ -122,13 +122,13 @@ function PixelSquares({ flashClassName }) {
     return (
         <span
             aria-hidden="true"
-            className="absolute top-[1.5vw] right-[1.5vw] grid grid-cols-2 gap-[0.15vw] max-[1025px]:top-[3vw] max-[1025px]:right-[3vw] max-[1025px]:gap-[0.3vw] max-md:top-[4vw] max-md:right-[4vw] max-md:gap-[0.4vw] max-sm:gap-[0.6vw]"
+            className="absolute top-[1.5vw] right-[1.5vw] grid grid-cols-2 gap-[0.15vw] max-lg:top-[3vw] max-lg:right-[3vw] max-lg:gap-[0.3vw] max-md:top-[4vw] max-md:right-[4vw] max-md:gap-[0.4vw] max-sm:gap-[0.6vw]"
         >
             {Array.from({ length: 4 }).map((_, i) => (
                 <span
                     key={i}
                     style={{ animationDelay: `${i * 70}ms` }}
-                    className="pixel-glitch-square relative size-[0.5vw] bg-primary max-[1025px]:size-[1vw] max-md:size-[1.2vw] max-sm:size-[1.8vw]"
+                    className="pixel-glitch-square relative size-[0.5vw] bg-primary max-lg:size-[1vw] max-md:size-[1.2vw] max-sm:size-[1.8vw]"
                 >
                     <span
                         style={{ animationDelay: `${i * 70}ms` }}
@@ -142,7 +142,7 @@ function PixelSquares({ flashClassName }) {
 
 export function BillingToggle({ isYearly, onChange }) {
     return (
-        <div className="flex items-center gap-[1vw] text22 max-[1025px]:gap-[2vw] max-md:gap-[2.5vw] max-md:text-[2.2vw] font-mono! max-sm:gap-[3.5vw] max-sm:text-[4vw]">
+        <div className="flex items-center gap-[1vw] text22 max-lg:gap-[2vw] max-md:gap-[2.5vw] max-md:text-[2.2vw] font-mono! max-sm:gap-[3.5vw] max-sm:text-[4vw]">
             <button
                 type="button"
                 onClick={() => onChange(false)}
@@ -157,7 +157,7 @@ export function BillingToggle({ isYearly, onChange }) {
                 aria-checked={isYearly}
                 aria-label="Toggle billing cycle"
                 onClick={() => onChange(!isYearly)}
-                className="relative flex h-full w-[4vw] cursor-pointer items-center bg-light-grey/30  max-[1025px]:h-[3vw] max-[1025px]:w-[6vw] max-[1025px]:p-[0.4vw] max-md:h-[3.4vw] max-md:w-[6.8vw] max-md:p-[0.5vw] max-sm:h-[5.5vw] max-sm:w-[11vw] max-sm:p-[0.8vw]"
+                className="relative flex h-full w-[4vw] cursor-pointer items-center bg-light-grey/30  max-lg:h-[3vw] max-lg:w-[6vw] max-lg:p-[0.4vw] max-md:h-[3.4vw] max-md:w-[6.8vw] max-md:p-[0.5vw] max-sm:h-[5.5vw] max-sm:w-[11vw] max-sm:p-[0.8vw]"
             >
                 <span
                     className={`h-full w-1/2 bg-primary transition-transform duration-300 ${isYearly ? "translate-x-full" : "translate-x-0"
@@ -273,32 +273,32 @@ export default function PricingV3({ isIndia = false, auth = false }) {
         >
             {/* HEADING */}
             <div className="text-center w-full">
-                <LineReveal  as="h2" className="t96 w-full max-[1025px]:w-[95%] max-[1025px]:mx-auto font-avenir ">
+                <LineReveal  as="h2" className="t96 w-full max-lg:w-[95%] max-lg:mx-auto font-avenir ">
                     Start Free. Upgrade When You&rsquo;re{" "}
                     <span className="gradient-text-animate">Ready.</span>
                 </LineReveal>
 
-                <SplitLine delay={.25} as="p" className="text24 w-[50%]  mx-auto mt-[2vw] text-background max-[1025px]:mt-[3vw] max-[1025px]:w-[80vw] max-md:mt-[4vw] max-md:w-[70vw] max-md:text-[2.2vw] max-sm:mt-[6vw] max-sm:w-[80vw] max-sm:text-[4vw]">
+                <SplitLine delay={.25} as="p" className="text24 w-[50%]  mx-auto mt-[2vw] text-background max-lg:mt-[3vw] max-lg:w-[80vw] max-md:mt-[4vw] max-md:w-[70vw] max-md:text-[2.2vw] max-sm:mt-[6vw] max-sm:w-[80vw] max-sm:text-[4vw]">
                 The Free Core lets you judge Vault where it matters: inside your own stack. Pro gives frequent users the full library, advanced effects, and ongoing releases.
 
                 </SplitLine>
             </div>
 
             {/* TOGGLE */}
-            <div className="mt-[6vw] px-[13%] flex justify-end max-[1025px]:mt-[6vw] max-[1025px]:px-[5%] max-md:mt-[8vw] max-sm:mt-[12vw] max-sm:justify-center">
+            <div className="mt-[6vw] px-[13%] flex justify-end max-lg:mt-[6vw] max-lg:px-[5%] max-md:mt-[8vw] max-sm:mt-[12vw] max-sm:justify-center">
                 <BillingToggle isYearly={isYearly} onChange={setIsYearly} />
             </div>
 
             {/* CARDS */}
-            <div className="mt-[1.5vw] w-[75%] fadeup mx-auto flex items-stretch max-[1025px]:mt-[4vw] max-[1025px]:w-[90%] max-[1025px]:flex-col-reverse max-[1025px]:gap-[5vw] max-md:mt-[5vw] max-md:flex-col-reverse max-md:gap-[6vw] max-sm:gap-[8vw]" id="pricing-cards">
+            <div className="mt-[1.5vw] w-[75%] fadeup mx-auto flex items-stretch max-lg:mt-[4vw] max-lg:w-[90%] max-lg:flex-col-reverse max-lg:gap-[5vw] max-md:mt-[5vw] max-md:flex-col-reverse max-md:gap-[6vw] max-sm:gap-[8vw]" id="pricing-cards">
                 {/* FREE */}
-                <div className="pricing-v3-card relative flex w-1/2 flex-col justify-between border border-background/15 px-[3vw] py-[3vw] max-[1025px]:w-full max-[1025px]:px-[4vw] max-[1025px]:py-[4.5vw] max-md:w-full max-md:px-[5vw] max-md:py-[6vw] max-sm:px-[6vw] max-sm:py-[8vw]">
+                <div className="pricing-v3-card relative flex w-1/2 flex-col justify-between border border-background/15 px-[3vw] py-[3vw] max-lg:w-full max-lg:px-[4vw] max-lg:py-[4.5vw] max-md:w-full max-md:px-[5vw] max-md:py-[6vw] max-sm:px-[6vw] max-sm:py-[8vw]">
                     <PixelSquares flashClassName="bg-background" />
 
                     <div>
                         <p className="text64  max-md:text-[5vw] font-avenir max-sm:text-[7vw]">Free</p>
 
-                        <div className="mt-[1.5vw] flex items-end gap-[1vw] max-[1025px]:mt-[3vw] max-[1025px]:gap-[2vw] max-md:mt-[4vw] max-md:gap-[2.5vw] max-sm:mt-[6vw]">
+                        <div className="mt-[1.5vw] flex items-end gap-[1vw] max-lg:mt-[3vw] max-lg:gap-[2vw] max-md:mt-[4vw] max-md:gap-[2.5vw] max-sm:mt-[6vw]">
                             <p className="t96 font-avenir  leading-none max-md:text-[7vw] max-sm:text-[11vw]">
                                 {symbol}0
                             </p>
@@ -307,17 +307,17 @@ export default function PricingV3({ isIndia = false, auth = false }) {
                             </p>
                         </div>
 
-                        <p className="text22  mt-[1.5vw] text-background/70 max-[1025px]:mt-[3vw] max-md:mt-[3vw] max-md:text-[2.2vw] max-sm:mt-[5vw] max-sm:text-[4vw]">
+                        <p className="text22  mt-[1.5vw] text-background/70 max-lg:mt-[3vw] max-md:mt-[3vw] max-md:text-[2.2vw] max-sm:mt-[5vw] max-sm:text-[4vw]">
                             For trying real effects in real projects.
                         </p>
 
                         <FeatureList
                             features={FREE_FEATURES}
-                            className="mt-[2.5vw] max-[1025px]:mt-[4vw] max-md:mt-[5vw] max-sm:mt-[8vw]"
+                            className="mt-[2.5vw] max-lg:mt-[4vw] max-md:mt-[5vw] max-sm:mt-[8vw]"
                         />
                     </div>
 
-                    <div className="mt-[3vw] pb-[2.5vw] w-fit max-[1025px]:mt-[5vw] max-md:mt-[6vw] max-sm:mt-[10vw] max-sm:w-full">
+                    <div className="mt-[3vw] pb-[2.5vw] w-fit max-lg:mt-[5vw] max-md:mt-[6vw] max-sm:mt-[10vw] max-sm:w-full">
                         <ButtonV3
                             variant="outline"
                             href="/effects/free"
@@ -328,13 +328,13 @@ export default function PricingV3({ isIndia = false, auth = false }) {
                 </div>
 
                 {/* PRO */}
-                <div className="pricing-v3-card relative flex w-1/2 flex-col justify-between bg-background px-[3vw] py-[3vw] text-foreground max-[1025px]:w-full max-[1025px]:px-[4vw] max-[1025px]:py-[4.5vw] max-md:w-full max-md:px-[5vw] max-md:py-[6vw] max-sm:px-[6vw] max-sm:py-[8vw]">
+                <div className="pricing-v3-card relative flex w-1/2 flex-col justify-between bg-background px-[3vw] py-[3vw] text-foreground max-lg:w-full max-lg:px-[4vw] max-lg:py-[4.5vw] max-md:w-full max-md:px-[5vw] max-md:py-[6vw] max-sm:px-[6vw] max-sm:py-[8vw]">
                     <PixelSquares flashClassName="bg-white" />
 
                     <div>
                         <p className="text64 font-avenir  max-md:text-[5vw] max-sm:text-[7vw]">Pro</p>
 
-                        <div className="mt-[1.5vw] flex items-end gap-[1vw] max-[1025px]:mt-[3vw] max-[1025px]:gap-[2vw] max-md:mt-[4vw] max-md:gap-[2.5vw] max-sm:mt-[6vw]">
+                        <div className="mt-[1.5vw] flex items-end gap-[1vw] max-lg:mt-[3vw] max-lg:gap-[2vw] max-md:mt-[4vw] max-md:gap-[2.5vw] max-sm:mt-[6vw]">
                             <p className="t96 font-avenir items-center  flex leading-none max-md:text-[7vw] max-sm:text-[11vw]">
                                 <span className="sr-only">{`${symbol}${planPrice} ${planLabel.toLowerCase()}`}</span>
                                 <span aria-hidden="true" className="flex items-center leading-none">
@@ -361,23 +361,23 @@ export default function PricingV3({ isIndia = false, auth = false }) {
                         </div>
 
                         {isIndia && (
-                            <p className="font-mono mt-[0.3vw] text-[1vw] text-[#c5c5c5] max-[1025px]:text-[1.7vw] max-md:text-[1.8vw] max-sm:text-[3.2vw]">
+                            <p className="font-mono mt-[0.3vw] text-[1vw] text-[#c5c5c5] max-lg:text-[1.7vw] max-md:text-[1.8vw] max-sm:text-[3.2vw]">
                                 +18% GST
                             </p>
                         )}
 
-                        <p className="text22  mt-[1.5vw] max-[1025px]:mt-[3vw] max-md:mt-[3vw] max-md:text-[2.2vw] max-sm:mt-[5vw] max-sm:text-[4vw]">
+                        <p className="text22  mt-[1.5vw] max-lg:mt-[3vw] max-md:mt-[3vw] max-md:text-[2.2vw] max-sm:mt-[5vw] max-sm:text-[4vw]">
                             For developers, founders, and agencies shipping premium work.
                         </p>
 
                         <FeatureList
                             features={PRO_FEATURES}
                             onDark
-                            className="mt-[2.5vw] max-[1025px]:mt-[4vw] max-md:mt-[5vw] max-sm:mt-[8vw]"
+                            className="mt-[2.5vw] max-lg:mt-[4vw] max-md:mt-[5vw] max-sm:mt-[8vw]"
                         />
                     </div>
 
-                    <div className="mt-[3vw] max-[1025px]:mt-[5vw] max-md:mt-[6vw] max-sm:mt-[10vw]">
+                    <div className="mt-[3vw] max-lg:mt-[5vw] max-md:mt-[6vw] max-sm:mt-[10vw]">
                         <div className="w-fit max-sm:w-full">
                             {auth ? (
                                 <ProCta isYearly={isYearly} currency={currency} />
@@ -391,7 +391,7 @@ export default function PricingV3({ isIndia = false, auth = false }) {
                             )}
                         </div>
 
-                        <p className="font-mono mt-[1.2vw] text-[0.9vw] text-light-grey max-[1025px]:mt-[2.5vw] max-[1025px]:text-[1.7vw] max-md:mt-[3vw] max-md:text-[1.8vw] max-sm:mt-[5vw] max-sm:text-[3.2vw]">
+                        <p className="font-mono mt-[1.2vw] text-[0.9vw] text-light-grey max-lg:mt-[2.5vw] max-lg:text-[1.7vw] max-md:mt-[3vw] max-md:text-[1.8vw] max-sm:mt-[5vw] max-sm:text-[3.2vw]">
                             Instant access · npx hyperiux login · Cancel anytime
                         </p>
                     </div>
@@ -399,7 +399,7 @@ export default function PricingV3({ isIndia = false, auth = false }) {
             </div>
 
             {/* FOOTNOTE */}
-            <SplitLine as="p" className="text32  mx-auto mt-[5vw] w-[52vw] text-center leading-[1.35] max-[1025px]:mt-[8vw] max-[1025px]:w-[85%] max-md:mt-[10vw] max-md:w-[75vw]  max-sm:mt-[14vw] max-sm:w-[90%] ">
+            <SplitLine as="p" className="text32  mx-auto mt-[5vw] w-[52vw] text-center leading-[1.35] max-lg:mt-[8vw] max-lg:w-[85%] max-md:mt-[10vw] max-md:w-[75vw]  max-sm:mt-[14vw] max-sm:w-[90%] ">
                 The free core stays free forever. Every effect lives in
                 your repo. So even if you leave, your code stays.
             </SplitLine>

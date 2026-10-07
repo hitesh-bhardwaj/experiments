@@ -17,9 +17,9 @@ export default function CommunityHero() {
         id="hero"
         data-zone="crowd"
         data-hold-zone
-        className={`mx-auto max-w-[1536px] px-[4.5vw] relative z-1 flex h-screen flex-col justify-end pb-[3vw] max-[1025px]:h-auto max-[1025px]:min-h-svh max-[1025px]:pt-36 max-md:pt-32 max-md:max-w-full max-[1025px]:max-w-full`}
+        className={`mx-auto max-w-[1536px] px-[4.5vw] relative z-1 flex h-screen flex-col justify-end pb-[3vw] max-lg:h-auto max-lg:min-h-svh max-lg:pt-36 max-md:pt-32 max-md:max-w-full max-lg:max-w-full`}
       >
-        <div className="flex items-end gap-8 max-[1025px]:flex-col max-[1025px]:items-stretch max-[1025px]:gap-10 max-md:gap-8">
+        <div className="flex items-end gap-8 max-lg:flex-col max-lg:items-stretch max-lg:gap-10 max-md:gap-8">
           <div className="min-w-0 flex-[1.25]">
             {/* <p className={`font-avenir text-[11px] font-medium tracking-[.14em] uppercase fadeup inline-flex items-center gap-2.5 text-[#9C9C9C]`}>
               <span className="live-dot" aria-hidden="true" />
@@ -28,13 +28,13 @@ export default function CommunityHero() {
             <LineReveal
               as="h1"
               delay={0.3}
-              className="max-w-[50vw] font-aeonik t96 leading-[1.02] font-normal tracking-[-.035em] wrap-break-word max-md:max-w-full max-[1025px]:max-w-full"
+              className="max-w-[50vw] font-aeonik t96 leading-[1.02] font-normal tracking-[-.035em] wrap-break-word max-md:max-w-full max-lg:max-w-full"
             >
               Find The People Who Notice <span className="gradient-text-animate gradient-text-single">Two Dropped Frames.</span>
             </LineReveal>
           </div>
-          <div className="fadeup flex min-w-0 flex-[.9] flex-col gap-[2vw] pb-[.6rem] max-[1025px]:gap-6" data-fadeup-delay="0.2">
-            <p className="max-w-[34vw] max-[1025px]:max-w-[70vw] max-md:max-w-full text-[15px] leading-[1.65] text-[#c9c9c9]">
+          <div className="fadeup flex min-w-0 flex-[.9] flex-col gap-[2vw] pb-[.6rem] max-lg:gap-6" data-fadeup-delay="0.2">
+            <p className="max-w-[34vw] max-lg:max-w-[70vw] max-md:max-w-full text-[15px] leading-[1.65] text-[#c9c9c9]">
               Vault Community is a home for developers who treat motion as craft. Live teardowns, first
               access to new effects, honest critique, and a room full of people who care about the same
               details you do.

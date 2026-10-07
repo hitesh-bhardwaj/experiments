@@ -42,7 +42,7 @@ export function CliAuthClient({ plan }) {
           <h1 className="text-3xl font-semibold text-white">CLI Token</h1>
           <p className="text-white/60 text-sm leading-relaxed">
             Generate a token, then paste it when prompted by{" "}
-            <code className="text-white/80 bg-white/10 px-1.5 py-0.5 rounded text-xs">npx hyperiux login</code>.
+            <code className="text-white/80 bg-white/10 px-1.5 py-0.5 text-xs">npx hyperiux login</code>.
           </p>
           {!isPro && (
             <p className="text-white/40 text-xs leading-relaxed">
@@ -58,12 +58,12 @@ export function CliAuthClient({ plan }) {
 
         {!token ? (
           <div className="space-y-4">
-            <div className="rounded-xl border border-white/10 bg-white/5 p-5 space-y-3 text-sm text-white/60">
+            <div className="border border-white/10 bg-white/5 p-5 space-y-3 text-sm text-white/60">
               <p className="font-medium text-white/80">How it works</p>
               <ol className="space-y-2 list-decimal list-inside">
                 <li>Click <span className="text-white">Generate Token</span> below</li>
                 <li>Copy the token - it is shown <span className="text-white">once only</span></li>
-                <li>Run <code className="bg-white/10 px-1.5 py-0.5 rounded text-white/80">npx hyperiux login</code> in your project</li>
+                <li>Run <code className="bg-white/10 px-1.5 py-0.5 text-white/80">npx hyperiux login</code> in your project</li>
                 <li>Paste the token when prompted</li>
               </ol>
             </div>
@@ -75,7 +75,7 @@ export function CliAuthClient({ plan }) {
             <button
               onClick={generateToken}
               disabled={loading}
-              className="w-full flex items-center justify-center gap-2 px-5 py-3 rounded-lg bg-white text-black font-semibold text-sm hover:bg-white/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full flex items-center justify-center gap-2 px-5 py-3 bg-white text-black font-semibold text-sm hover:bg-white/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading && <span className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" />}
               {loading ? "Generating…" : "Generate Token"}
@@ -83,7 +83,7 @@ export function CliAuthClient({ plan }) {
           </div>
         ) : (
           <div className="space-y-4">
-            <div className="rounded-xl border border-white/20 bg-white/5 p-4 space-y-3">
+            <div className="border border-white/20 bg-white/5 p-4 space-y-3">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-medium text-white/40 uppercase tracking-widest">Your Token</span>
                 <button
@@ -118,7 +118,7 @@ export function CliAuthClient({ plan }) {
 
             <button
               onClick={() => { setToken(null); setCopied(false); }}
-              className="w-full px-5 py-2.5 rounded-lg border border-white/20 text-white/60 text-sm hover:bg-white/5 transition-colors"
+              className="w-full px-5 py-2.5 border border-white/20 text-white/60 text-sm hover:bg-white/5 transition-colors"
             >
               Generate a new token (invalidates current)
             </button>

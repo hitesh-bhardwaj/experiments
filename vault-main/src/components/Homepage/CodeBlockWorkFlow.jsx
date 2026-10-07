@@ -24,7 +24,7 @@ function TerminalTick({ dataKey }) {
     <svg
       data-tick-key={dataKey}
       viewBox="0 0 18 18"
-      className="h-[1.05vw] w-[1.05vw] shrink-0 text-[#5AC382] opacity-0 max-[1025px]:h-4 max-[1025px]:w-4"
+      className="h-[1.05vw] w-[1.05vw] shrink-0 text-[#5AC382] opacity-0 max-lg:h-4 max-lg:w-4"
       fill="none"
       aria-hidden="true"
     >
@@ -42,15 +42,15 @@ function TerminalTick({ dataKey }) {
 function Panel({ title, children, className = "" }) {
   return (
     <div
-      className={`overflow-hidden rounded-[1.6vw] border border-white/8 bg-[#161616] shadow-[0_20px_80px_rgba(0,0,0,0.35)] max-[1025px]:rounded-[1.6vw] max-md:rounded-[4vw] ${className}`}
+      className={`overflow-hidden border border-white/8 bg-[#161616] shadow-[0_20px_80px_rgba(0,0,0,0.35)] ${className}`}
     >
-      <div className="flex h-[3vw] items-center max-md:gap-[4vw] gap-[1vw] bg-[#272727] px-[1.4vw] max-[1025px]:h-12 max-[1025px]:px-5">
+      <div className="flex h-[3vw] items-center max-md:gap-[4vw] gap-[1vw] bg-[#272727] px-[1.4vw] max-lg:h-12 max-lg:px-5">
         <WindowDots />
-        <p className="font-mono text-[1.02vw] text-white/72 max-[1025px]:text-sm">
+        <p className="font-mono text-[1.02vw] text-white/72 max-lg:text-sm">
           {title}
         </p>
       </div>
-      <div className="p-[1.6vw] max-[1025px]:p-5">{children}</div>
+      <div className="p-[1.6vw] max-lg:p-5">{children}</div>
     </div>
   );
 }
@@ -63,14 +63,14 @@ function TreeFolder({ label, depth = 0 }) {
     >
       <svg
         viewBox="0 0 24 24"
-        className="h-[1.1vw] w-[1.1vw] shrink-0 text-[#3b82f6] max-[1025px]:h-4 max-[1025px]:w-4"
+        className="h-[1.1vw] w-[1.1vw] shrink-0 text-[#3b82f6] max-lg:h-4 max-lg:w-4"
         fill="none"
         stroke="currentColor"
         strokeWidth="1.7"
       >
         <path d="M3 7.5A1.5 1.5 0 0 1 4.5 6H10l2 2h7.5A1.5 1.5 0 0 1 21 9.5v8A1.5 1.5 0 0 1 19.5 19h-15A1.5 1.5 0 0 1 3 17.5z" />
       </svg>
-      <span className="font-mono text-[1.05vw] max-[1025px]:text-[15px]">{label}</span>
+      <span className="font-mono text-[1.05vw] max-lg:text-[15px]">{label}</span>
     </div>
   );
 }
@@ -79,13 +79,13 @@ function TreeFile({ label, depth = 0, className = "", right = null, dataKey }) {
   return (
     <div
       data-file-key={dataKey}
-      className={`flex items-center justify-between rounded-[0.3vw] px-[0.55vw] py-[0.35vw] opacity-0 max-[1025px]:rounded-md max-[1025px]:px-2 max-[1025px]:py-1.5 ${className}`}
+      className={`flex items-center justify-between px-[0.55vw] py-[0.35vw] opacity-0 max-lg:px-2 max-lg:py-1.5 ${className}`}
       style={{ paddingLeft: `calc(${depth * 1.35}vw + 0.55vw)` }}
     >
       <div className="flex min-w-0 items-center gap-3">
         <svg
           viewBox="0 0 24 24"
-          className="h-[1.05vw] w-[1.05vw] shrink-0 text-[#c084fc] max-[1025px]:h-4 max-[1025px]:w-4"
+          className="h-[1.05vw] w-[1.05vw] shrink-0 text-[#c084fc] max-lg:h-4 max-lg:w-4"
           fill="none"
           stroke="currentColor"
           strokeWidth="1.7"
@@ -93,7 +93,7 @@ function TreeFile({ label, depth = 0, className = "", right = null, dataKey }) {
           <path d="M7 3.75h6l4 4v12.5H7A1.25 1.25 0 0 1 5.75 19V5A1.25 1.25 0 0 1 7 3.75z" />
           <path d="M13 3.75V8h4.25" />
         </svg>
-        <span className="truncate font-mono text-[1.05vw] text-[#ff7a1a] max-[1025px]:text-[15px]">
+        <span className="truncate font-mono text-[1.05vw] text-[#ff7a1a] max-lg:text-[15px]">
           {label}
         </span>
       </div>
@@ -436,14 +436,14 @@ export default function CodeBlockWorkflow() {
     <section
       id="code-block"
       ref={sectionRef}
-      className="relative w-full overflow-hidden text-white max-[1025px]:px-0 max-[1025px]:py-20 max-md:py-0 max-md:pb-8"
+      className="relative w-full overflow-hidden text-white max-lg:px-0 max-lg:py-20 max-md:py-0 max-md:pb-8"
     >
       <div className="mx-auto w-full max-w-450">
-        <div className="grid grid-cols-[0.92fr_1.08fr] gap-[1.4vw] max-[1025px]:grid-cols-1 max-[1025px]:gap-5">
+        <div className="grid grid-cols-[0.92fr_1.08fr] gap-[1.4vw] max-lg:grid-cols-1 max-lg:gap-5">
           {/* LEFT COLUMN - terminal + code */}
-          <div className="flex flex-col gap-[1.4vw] max-[1025px]:contents">
-            <Panel title="amazing_project" className="fadeup min-h-[25vw] max-md:min-h-[40vh] max-[1025px]:min-h-[30vh] ">
-              <div className="space-y-[0.8vw] font-mono text-[1.02vw] leading-[1.9] max-[1025px]:space-y-2 max-[1025px]:text-[14px]">
+          <div className="flex flex-col gap-[1.4vw] max-lg:contents">
+            <Panel title="amazing_project" className="fadeup min-h-[25vw] max-md:min-h-[40vh] max-lg:min-h-[30vh] ">
+              <div className="space-y-[0.8vw] font-mono text-[1.02vw] leading-[1.9] max-lg:space-y-2 max-lg:text-[14px]">
                 <div className="flex items-center gap-2">
                   <span data-terminal-key="dollar1" className="text-[#ff9f43]">$</span>
                   <span data-terminal-key="init" className="text-white/90" />
@@ -485,8 +485,8 @@ export default function CodeBlockWorkflow() {
               </div>
             </Panel>
 
-            <Panel title="app/page.jsx" className="fadeup min-h-[20vw] max-[1025px]:min-h-[20vh] max-md:min-h-[25vh] max-[1025px]:order-last">
-              <div className="space-y-[0.55vw] font-mono text-[1vw] leading-[1.95] text-white/78 max-[1025px]:space-y-1 max-[1025px]:text-[13px]">
+            <Panel title="app/page.jsx" className="fadeup min-h-[20vw] max-lg:min-h-[20vh] max-md:min-h-[25vh] max-lg:order-last">
+              <div className="space-y-[0.55vw] font-mono text-[1vw] leading-[1.95] text-white/78 max-lg:space-y-1 max-lg:text-[13px]">
                 <div data-code-key="line1" />
                 <div data-code-key="line2" />
                 <div data-code-key="line3" />
@@ -498,19 +498,19 @@ export default function CodeBlockWorkflow() {
 
           {/* RIGHT COLUMN - file tree */}
           <div className="flex flex-col gap-[1.15vw]">
-            <Panel title="amazing_project / Components" className="fadeup h-full max-[1025px]:min-h-[25vh] max-md:min-h-[25vh]">
-              <div className="space-y-[0.9vw] max-[1025px]:space-y-3">
+            <Panel title="amazing_project / Components" className="fadeup h-full max-lg:min-h-[25vh] max-md:min-h-[25vh]">
+              <div className="space-y-[0.9vw] max-lg:space-y-3">
 
                 {/* app/ */}
                 <TreeFolder label="app" depth={0} />
                 <div>
-                  <div className="relative ml-[0.38vw] border-l border-white/10 pl-[1.2vw] max-[1025px]:ml-1.5 max-[1025px]:pl-3">
+                  <div className="relative ml-[0.38vw] border-l border-white/10 pl-[1.2vw] max-lg:ml-1.5 max-lg:pl-3">
                     <div className="flex items-center gap-3 text-white/80">
-                      <svg viewBox="0 0 24 24" className="h-[1.05vw] w-[1.05vw] shrink-0 text-[#c084fc] max-[1025px]:h-4 max-[1025px]:w-4" fill="none" stroke="currentColor" strokeWidth="1.7">
+                      <svg viewBox="0 0 24 24" className="h-[1.05vw] w-[1.05vw] shrink-0 text-[#c084fc] max-lg:h-4 max-lg:w-4" fill="none" stroke="currentColor" strokeWidth="1.7">
                         <path d="M7 3.75h6l4 4v12.5H7A1.25 1.25 0 0 1 5.75 19V5A1.25 1.25 0 0 1 7 3.75z" />
                         <path d="M13 3.75V8h4.25" />
                       </svg>
-                      <span className="font-mono text-[1.05vw] text-white/76 max-[1025px]:text-[15px]">page.jsx</span>
+                      <span className="font-mono text-[1.05vw] text-white/76 max-lg:text-[15px]">page.jsx</span>
                     </div>
                   </div>
                 </div>
@@ -518,20 +518,20 @@ export default function CodeBlockWorkflow() {
                 {/* components/ */}
                 <TreeFolder label="components" depth={0} />
                 <div>
-                  <div className="relative ml-[0.38vw] border-l border-white/10 pl-[1.1vw] max-[1025px]:ml-1.5 max-[1025px]:pl-4">
+                  <div className="relative ml-[0.38vw] border-l border-white/10 pl-[1.1vw] max-lg:ml-1.5 max-lg:pl-4">
 
                     {/* effects/ - hidden until animation */}
                     <div data-file-key="effectsFolder">
                       <TreeFolder label="effects" depth={0} />
                     </div>
-                    <div className=" pt-[0.45vw]  max-[1025px]:pt-1.5">
-                      <div className="relative ml-[0.38vw] border-l border-white/10 pl-[1.1vw] max-[1025px]:ml-1.5 max-[1025px]:pl-4">
+                    <div className=" pt-[0.45vw]  max-lg:pt-1.5">
+                      <div className="relative ml-[0.38vw] border-l border-white/10 pl-[1.1vw] max-lg:ml-1.5 max-lg:pl-4">
 
                         {/* split-canvas/ - hidden until animation */}
                         <div data-file-key="splitCanvasFolder">
                           <TreeFolder label="split-canvas" depth={0} />
                         </div>
-                        <div className="space-y-[0.35vw]  pt-[0.45vw] max-[1025px]:space-y-1.5 max-[1025px]:pl-3 max-[1025px]:pt-1.5">
+                        <div className="space-y-[0.35vw]  pt-[0.45vw] max-lg:space-y-1.5 max-lg:pl-3 max-lg:pt-1.5">
 
                           <TreeFile
                             label="index.jsx"
@@ -539,7 +539,7 @@ export default function CodeBlockWorkflow() {
                             right={
                               <span
                                 data-file-key="addedBadge1"
-                                className="rounded-full  px-3 py-1 font-mono text-[0.95vw] text-[#5AC382] opacity-0 max-[1025px]:text-xs"
+                                className="px-3 py-1 font-mono text-[0.95vw] text-[#5AC382] opacity-0 max-lg:text-xs"
                               >
                                 + Added
                               </span>
@@ -553,7 +553,7 @@ export default function CodeBlockWorkflow() {
                             right={
                               <span
                                 data-file-key="addedBadge2"
-                                className="rounded-full  px-3 py-1 max-md:text-nowrap font-mono text-[0.95vw] text-[#5AC382] opacity-0 max-[1025px]:text-xs"
+                                className="px-3 py-1 max-md:text-nowrap font-mono text-[0.95vw] text-[#5AC382] opacity-0 max-lg:text-xs"
                               >
                                 + Added
                               </span>
@@ -567,7 +567,7 @@ export default function CodeBlockWorkflow() {
                             right={
                               <span
                                 data-file-key="addedBadge3"
-                                className="rounded-full  px-3 py-1 font-mono text-[0.95vw] text-[#5AC382] opacity-0 max-[1025px]:text-xs"
+                                className="px-3 py-1 font-mono text-[0.95vw] text-[#5AC382] opacity-0 max-lg:text-xs"
                               >
                                 + Added
                               </span>
@@ -581,8 +581,8 @@ export default function CodeBlockWorkflow() {
                   </div>
                 </div>
 
-                <div className="pt-[1vw] max-[1025px]:pt-3">
-                  <p className="font-mono text-[1.02vw] text-white/42 max-[1025px]:text-sm">ui</p>
+                <div className="pt-[1vw] max-lg:pt-3">
+                  <p className="font-mono text-[1.02vw] text-white/42 max-lg:text-sm">ui</p>
                 </div>
               </div>
             </Panel>

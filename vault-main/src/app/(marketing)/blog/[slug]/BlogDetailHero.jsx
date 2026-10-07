@@ -18,18 +18,18 @@ export default function BlogDetailHero({ post }) {
 
   return (
     <div ref={heroRef} className="pt-[5vw]">
-      <header className="flex flex-col gap-[1.5vw] max-[1025px]:gap-[6vw] max-md:gap-[8vw]">
+      <header className="flex flex-col gap-[1.5vw] max-lg:gap-[6vw] max-md:gap-[8vw]">
         <Breadcrumb maxWords={3} />
 
         <LineWipe>
-          <h1 className="text-[3.2vw] max-[1025px]:text-[6vw] max-md:text-[9vw] font-avenir leading-[1.2]! text-foreground w-[80%] max-[1025px]:w-full">
+          <h1 className="text-[3.2vw] max-lg:text-[6vw] max-md:text-[9vw] font-avenir leading-[1.2]! text-foreground w-[80%] max-lg:w-full">
             {post.title}
           </h1>
         </LineWipe>
 
         {post.summary && (
           <LineWipe delay={0.5}>
-            <p className="text-[1.25vw] leading-relaxed max-[1025px]:leading-[1.2] w-[60%] max-[1025px]:w-full text-white max-[1025px]:text-[2.8vw] max-sm:text-[4vw]">
+            <p className="text-[1.25vw] leading-relaxed max-lg:leading-[1.2] w-[60%] max-lg:w-full text-white max-lg:text-[2.8vw] max-sm:text-[4vw]">
               {post.summary}
             </p>
           </LineWipe>
@@ -38,7 +38,7 @@ export default function BlogDetailHero({ post }) {
       </header>
 
       {post.coverImage?.url && (
-        <div className="fadeup group relative mt-[5vw] h-[48vw] w-full overflow-hidden max-md:mt-[8vw] max-[1025px]:mt-[6vh] max-md:h-[60vw] ">
+        <div className="fadeup group relative mt-[5vw] h-[48vw] w-full overflow-hidden max-md:mt-[8vw] max-lg:mt-[6vh] max-md:h-[60vw] ">
           <Image
             src={post.coverImage.url}
             alt={post.coverImage.alt || post.title}

@@ -66,7 +66,7 @@ export default function ProjectCard({
         >
             <div onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
-                onMouseMove={handleMouseMove} className="w-full aspect-video rounded-md overflow-hidden relative group">
+                onMouseMove={handleMouseMove} className="w-full aspect-video overflow-hidden relative group">
                 <Image
                     src={project.img}
                     className="object-cover"
@@ -93,7 +93,7 @@ export default function ProjectCard({
             {/* Floating explore cursor inside the card bounds */}
             <div
                 ref={cursorRef}
-                className="px-[3vw] py-[1.5vw] flex items-center justify-center w-fit h-fit rounded-full absolute left-0 top-0 pointer-events-none font-semibold bg-background text-foreground text20 scale-0 z-10"
+                className="px-[3vw] py-[1.5vw] flex items-center justify-center w-fit h-fit absolute left-0 top-0 pointer-events-none font-semibold bg-background text-foreground text20 scale-0 z-10"
                 style={{ transition: "scale 0.3s" }}
             >
                 <p>Explore</p>

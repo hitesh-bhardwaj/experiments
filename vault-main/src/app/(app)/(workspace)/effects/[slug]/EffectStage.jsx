@@ -8,12 +8,13 @@ import { useRemixerControls } from "@/components/remixer-panel/useRemixerControl
 import { buildRemixerJsx } from "@/components/remixer-panel/build-remixer-code";
 import gsap from "gsap";
 import { useVaultLayout } from "@/components/layout/VaultLayout";
+import { MEDIA } from "@/lib/breakpoints";
 
 // Same message the preview chrome sends its device iframe (onEmbedValues)
 const MSG = "vault-preview:values";
 const EASE = "cubic-bezier(.16,1,.3,1)";
 // 13px-equivalent text in vw: desktop · tablet (max-[1025px]) · mobile (max-md).
-const T13 = "text-[1.1vw] max-[1025px]:text-[1.6vw] max-md:text-[3.3vw]";
+const T13 = "text-[1.1vw] max-lg:text-[1.6vw] max-md:text-[3.3vw]";
 
 // JSON-safe copy, so the values can cross postMessage into the iframe
 function cloneable(values) {
@@ -46,7 +47,7 @@ export default function EffectStage({ effect, title, previewHref, getCode = null
   const { isSidebarOpen, toggleSidebar } = useVaultLayout();
   const openPlayground = () => {
     setView("play");
-    if (isSidebarOpen && window.matchMedia("(min-width: 1026px)").matches) toggleSidebar(false);
+    if (isSidebarOpen && !window.matchMedia(MEDIA.tablet).matches) toggleSidebar(false);
   };
   const [frameKey, setFrameKey] = useState(0);
   const [loaded, setLoaded] = useState(false);
@@ -66,7 +67,7 @@ export default function EffectStage({ effect, title, previewHref, getCode = null
     const grid = gridRef.current;
     const stage = stageRef.current;
     if (!grid || !stage) return;
-    const phone = window.matchMedia("(max-width: 767.98px)");
+    const phone = window.matchMedia(MEDIA.mobile);
     const target = () => (phone.matches ? stage.clientWidth : grid.clientWidth);
     // While the layout animates (Playground column, sidebar) only the scale follows it;
     // the iframe's own width - what the demo lays itself out at - is updated once, after
@@ -215,7 +216,7 @@ export default function EffectStage({ effect, title, previewHref, getCode = null
           --pg-w: 18vw on desktop, 340px on tablet (18vw would be too narrow there). */}
       <div
         ref={gridRef}
-        className="grid items-start [--pg-w:17.8vw] max-[1025px]:[--pg-w:340px] max-md:grid-cols-1!"
+        className="grid items-start [--pg-w:17.8vw] max-lg:[--pg-w:340px] max-md:grid-cols-1!"
         style={{
           gridTemplateColumns: play ? "minmax(0,1fr) var(--pg-w)" : "minmax(0,1fr) 0px",
           columnGap: play ? 14 : 0,

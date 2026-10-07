@@ -9,8 +9,8 @@ import { useToastQueue, ToastViewport } from "@/components/ui/Toast";
 import { emitWishlistChanged } from "@/lib/wishlistEvents";
 import { installCommand } from "./EffectCardV4";
 
-const T14 = "text-[0.97vw] max-[1025px]:text-[1.7vw] max-md:text-[3.6vw]";
-const T24 = "text-[1.67vw] max-[1025px]:text-[2.9vw] max-md:text-[6vw]";
+const T14 = "text-[0.97vw] max-lg:text-[1.7vw] max-md:text-[3.6vw]";
+const T24 = "text-[1.67vw] max-lg:text-[2.9vw] max-md:text-[6vw]";
 
 const subscribeNever = () => () => {};
 
@@ -191,18 +191,18 @@ export function Modal({ open, onClose, title, children }) {
         aria-modal="true"
         aria-label={title}
         onClick={(event) => event.stopPropagation()}
-        className={`relative flex w-[35vw] flex-col items-center gap-6 border border-white/20 bg-[#0e0e0e] p-10 text-center shadow-2xl transition-transform duration-300 max-[1025px]:w-[70%] max-[1025px]:p-6 max-md:w-full ${open ? "scale-100" : "scale-95"}`}
+        className={`relative flex w-[35vw] flex-col items-center gap-6 border border-white/20 bg-[#0e0e0e] p-10 text-center shadow-2xl transition-transform duration-300 max-lg:w-[70%] max-lg:p-6 max-md:w-full ${open ? "scale-100" : "scale-95"}`}
       >
         <button
           type="button"
           aria-label="Close"
           onClick={onClose}
-          className="absolute top-5 right-5 grid size-10 cursor-pointer place-items-center border border-white/20 bg-white/10 text-white/70 transition-colors duration-500 hover:border-[#ff5f00] hover:bg-[#ff5f00] hover:text-white max-[1025px]:hidden"
+          className="absolute top-5 right-5 grid size-10 cursor-pointer place-items-center border border-white/20 bg-white/10 text-white/70 transition-colors duration-500 hover:border-[#ff5f00] hover:bg-[#ff5f00] hover:text-white max-lg:hidden"
         >
           <X className="size-4" aria-hidden="true" />
         </button>
         <h2 className={`${T24} font-medium text-white`}>{title}</h2>
-        <p className={`w-[80%] ${T14} text-white/60 max-[1025px]:w-full`}>{text}</p>
+        <p className={`w-[80%] ${T14} text-white/60 max-lg:w-full`}>{text}</p>
         {action}
       </div>
     </div>

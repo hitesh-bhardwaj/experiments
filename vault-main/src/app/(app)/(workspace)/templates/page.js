@@ -53,7 +53,7 @@ export default async function TemplatesPage() {
           </h1>
         </HeadAnim>
 
-        <div className="category-fadeup flex max-w-[55vw] flex-col text-lg text-muted max-[1025px]:max-w-full max-md:text-base">
+        <div className="category-fadeup flex max-w-[55vw] flex-col text-lg text-muted max-lg:max-w-full max-md:text-base">
           <Copy delay={0.6}>
             <p className="mt-3">{DESCRIPTION}</p>
           </Copy>

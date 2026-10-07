@@ -359,7 +359,7 @@ function CustomAnimationFormModalInner() {
           >
             {/* Card: the sign-in page's surface - site background, hairline border. */}
             <div
-              className="custom-animation-form-scroll relative max-h-[88vh] w-full overflow-x-hidden overflow-y-auto border border-white/10 bg-[#111111] px-12 py-12 text-white shadow-[0_30px_80px_-30px_rgba(0,0,0,0.7)] max-[1025px]:px-8 max-[1025px]:py-10 max-md:px-5 max-md:py-8"
+              className="custom-animation-form-scroll relative max-h-[88vh] w-full overflow-x-hidden overflow-y-auto border border-white/10 bg-[#111111] px-12 py-12 text-white shadow-[0_30px_80px_-30px_rgba(0,0,0,0.7)] max-lg:px-8 max-lg:py-10 max-md:px-5 max-md:py-8"
               onWheelCapture={(e) => e.stopPropagation()}
               onTouchStart={(e) => e.stopPropagation()}
               onTouchMove={(e) => e.stopPropagation()}

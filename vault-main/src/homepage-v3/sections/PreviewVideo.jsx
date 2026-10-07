@@ -54,7 +54,7 @@ export default function PreviewVideo() {
     <section
       ref={sectionRef}
       id="Workflow"
-      className="relative p-[2vw]  flex items-center justify-center mt-[20vw] h-screen w-full max-[1025px]:h-fit max-[1025px]:px-[4vw] max-[1025px]:mt-[24vw] max-md:h-fit max-md:px-[4vw]"
+      className="relative p-[2vw]  flex items-center justify-center mt-[20vw] h-screen w-full max-lg:h-fit max-lg:px-[4vw] max-lg:mt-[24vw] max-md:h-fit max-md:px-[4vw]"
     >
       <div
         ref={videoWrapRef}

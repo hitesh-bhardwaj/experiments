@@ -88,7 +88,7 @@ export default async function BlogPostPage({ params }) {
       <NavbarV3 effects={effects} />
       <LenisSmoothScroll allowNestedScroll />
 
-      <div className="px-[4vw] py-[8vw] max-[1025px]:px-[5vw] max-[1025px]:py-[10vh] max-md:px-[7vw] max-md:py-[26vw]">
+      <div className="px-[4vw] py-[8vw] max-lg:px-[5vw] max-lg:py-[10vh] max-md:px-[7vw] max-md:py-[26vw]">
         <article className="text-white">
           <BlogDetailHero post={postWithAuthor} />
 

@@ -100,7 +100,7 @@ function MobileNavAccordion({ open, children }) {
 
   return (
     <div ref={wrapperRef} className="h-0 overflow-hidden opacity-0">
-      <div ref={contentRef} className="pb-[6vw] max-[1025px]:pb-[3.5vw]">
+      <div ref={contentRef} className="pb-[6vw] max-lg:pb-[3.5vw]">
         {children}
       </div>
     </div>
@@ -448,7 +448,7 @@ export function VaultHeader({
       {/* Desktop header - untouched, >1025px only (or never, when mobileOnly). */}
       <header
         ref={desktopHeaderRef}
-        className={`fixed left-0 right-0 top-(--announcement-offset) transition-[top] duration-300 ease-out z-50 px-[2vw] py-3.5 ${mobileOnly ? "hidden" : "max-[1025px]:hidden"} ${isScrolled ? "bg-black/20 backdrop-blur-sm" : ""
+        className={`fixed left-0 right-0 top-(--announcement-offset) transition-[top] duration-300 ease-out z-50 px-[2vw] py-3.5 ${mobileOnly ? "hidden" : "max-lg:hidden"} ${isScrolled ? "bg-black/20 backdrop-blur-sm" : ""
           }`}
       >
         <div className="flex h-full items-center justify-end gap-3">
@@ -476,7 +476,7 @@ export function VaultHeader({
                     />
                   </svg>
                 </div>
-                <kbd className="space-x-2 rounded bg-foreground/20 px-1.5 py-0.5 text-sm text-current max-[1025px]:hidden">
+                <kbd className="space-x-2 bg-foreground/20 px-1.5 py-0.5 text-sm text-current max-lg:hidden">
                   ⌘ K
                 </kbd>
               </button>
@@ -486,7 +486,7 @@ export function VaultHeader({
             <SoundToggle fit className="self-stretch bg-[#161616]! transition-colors duration-300 hover:bg-white/10!" />
 
             {isLoaded && user?.publicMetadata?.plan !== "pro" && (
-              <div className="flex max-[1025px]:hidden">
+              <div className="flex max-lg:hidden">
                 <ButtonV3
                   text="Upgrade to Pro"
                   id={"upgrade-to-pro-navbar"}
@@ -499,7 +499,7 @@ export function VaultHeader({
             )}
 
             {isLoaded && (!isSignedIn ? (
-              <div className="flex max-[1025px]:hidden">
+              <div className="flex max-lg:hidden">
                 <ButtonV3
                   text="Sign In"
                   id={"sign-in-navbar"}
@@ -508,7 +508,7 @@ export function VaultHeader({
                 />
               </div>
             ) : (
-              <div className="flex max-[1025px]:hidden">
+              <div className="flex max-lg:hidden">
                 <ProfileDropdown savedCount={wishlistCount} usage={usage} plan={user?.publicMetadata?.plan || "free"} />
               </div>
             ))}
@@ -519,27 +519,27 @@ export function VaultHeader({
       {/* Mobile/tablet bar - <=1025px only, matches NavbarMobileV3. */}
       <div
         ref={mobileBarRef}
-        className="fixed top-0 left-0 z-950 hidden max-[1025px]:flex w-full items-center justify-between border-b border-white/8 bg-background/60 px-[6vw] py-[5vw] backdrop-blur-xl max-[1025px]:px-[3.5vw] max-[1025px]:py-[2.5vw]"
+        className="fixed top-0 left-0 z-950 hidden max-lg:flex w-full items-center justify-between border-b border-white/8 bg-background/60 px-[6vw] py-[5vw] backdrop-blur-xl max-lg:px-[3.5vw] max-lg:py-[2.5vw]"
       >
         <Link
           href="/"
           onClick={close}
           aria-label="Hyperiux Vault home"
-          className="w-[36vw] max-[1025px]:w-[15vw]"
+          className="w-[36vw] max-lg:w-[15vw]"
         >
           <HyperiuxLogo className="size-full text-primary" />
         </Link>
 
-        <div className="flex items-center gap-[3vw] max-[1025px]:gap-[2vw]">
+        <div className="flex items-center gap-[3vw] max-lg:gap-[2vw]">
           {showSearch && (
             <button
               type="button"
               onClick={handleSearch}
               aria-label="Search effects"
-              className="relative flex size-[10vw] shrink-0 items-center justify-center bg-[#161616] text-primary max-[1025px]:size-[5vw]"
+              className="relative flex size-[10vw] shrink-0 items-center justify-center bg-[#161616] text-primary max-lg:size-[5vw]"
             >
               <svg
-                className="size-[4.5vw] shrink-0 max-[1025px]:size-[2.4vw]"
+                className="size-[4.5vw] shrink-0 max-lg:size-[2.4vw]"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -560,16 +560,16 @@ export function VaultHeader({
             onClick={() => setOpen((current) => !current)}
             aria-label={open ? "Close navigation menu" : "Open navigation menu"}
             aria-expanded={open}
-            className="relative flex size-[10vw] shrink-0 items-center justify-center bg-[#161616] text-primary max-[1025px]:size-[5vw]"
+            className="relative flex size-[10vw] shrink-0 items-center justify-center bg-[#161616] text-primary max-lg:size-[5vw]"
           >
             <span
               aria-hidden="true"
-              className={`absolute h-px w-[4.5vw] bg-current transition-transform duration-300 ease-out motion-reduce:transition-none max-[1025px]:w-[2.4vw] ${open ? "rotate-45" : "-translate-y-[1.2vw] max-[1025px]:translate-y-[-0.6vw]"
+              className={`absolute h-px w-[4.5vw] bg-current transition-transform duration-300 ease-out motion-reduce:transition-none max-lg:w-[2.4vw] ${open ? "rotate-45" : "-translate-y-[1.2vw] max-lg:translate-y-[-0.6vw]"
                 }`}
             />
             <span
               aria-hidden="true"
-              className={`absolute h-px w-[4.5vw] bg-current transition-transform duration-300 ease-out motion-reduce:transition-none max-[1025px]:w-[2.4vw] ${open ? "-rotate-45" : "translate-y-[1.2vw] max-[1025px]:translate-y-[0.6vw]"
+              className={`absolute h-px w-[4.5vw] bg-current transition-transform duration-300 ease-out motion-reduce:transition-none max-lg:w-[2.4vw] ${open ? "-rotate-45" : "translate-y-[1.2vw] max-lg:translate-y-[0.6vw]"
                 }`}
             />
           </button>
@@ -579,55 +579,55 @@ export function VaultHeader({
       {/* Mobile/tablet overlay - full-screen clip-path reveal. */}
       <div
         ref={overlayRef}
-        className="fixed inset-0 z-940 hidden bg-background max-[1025px]:block"
+        className="fixed inset-0 z-940 hidden bg-background max-lg:block"
         style={{ visibility: "hidden", opacity: 0 }}
       >
         <div
           data-lenis-prevent
-          className="mobile-nav-scroll absolute inset-0 overflow-y-auto px-[6vw] pt-[22vw] pb-[12vw] max-[1025px]:px-[3.5vw] max-[1025px]:pt-[11vw] max-[1025px]:pb-[7vw]"
+          className="mobile-nav-scroll absolute inset-0 overflow-y-auto px-[6vw] pt-[22vw] pb-[12vw] max-lg:px-[3.5vw] max-lg:pt-[11vw] max-lg:pb-[7vw]"
         >
           {isSignedIn && user && (
             <Link
               data-mobile-row
               href="/dashboard"
               onClick={close}
-              className="flex w-full my-[5vw] items-center justify-between gap-[3vw] border border-white/10 bg-[#121212] px-[4vw] py-[3.5vw] text-left text-white/90 max-[1025px]:my-[3vw] max-[1025px]:gap-[1.8vw] max-[1025px]:px-[2.3vw] max-[1025px]:py-[2vw]"
+              className="flex w-full my-[5vw] items-center justify-between gap-[3vw] border border-white/10 bg-[#121212] px-[4vw] py-[3.5vw] text-left text-white/90 max-lg:my-[3vw] max-lg:gap-[1.8vw] max-lg:px-[2.3vw] max-lg:py-[2vw]"
             >
-              <div className="flex min-w-0 items-center gap-[3vw] max-[1025px]:gap-[1.8vw]">
+              <div className="flex min-w-0 items-center gap-[3vw] max-lg:gap-[1.8vw]">
                 {user.hasImage ? (
                   <Image
                     src={user.imageUrl}
                     alt={user.fullName || "User"}
                     width={40}
                     height={40}
-                    className="size-[9vw] shrink-0 rounded-full object-cover max-[1025px]:size-[4.6vw]"
+                    className="size-[9vw] shrink-0 rounded-full object-cover max-lg:size-[4.6vw]"
                   />
                 ) : (
-                  <div className="flex size-[9vw] shrink-0 items-center justify-center rounded-full bg-[#1f1f1f] text-white/70 max-[1025px]:size-[4.6vw]">
-                    <UserIcon className="size-[4.5vw] max-[1025px]:size-[2.2vw]" />
+                  <div className="flex size-[9vw] shrink-0 items-center justify-center rounded-full bg-[#1f1f1f] text-white/70 max-lg:size-[4.6vw]">
+                    <UserIcon className="size-[4.5vw] max-lg:size-[2.2vw]" />
                   </div>
                 )}
 
                 <div className="min-w-0">
-                  <p className="truncate max-md:text-[4vw] text-white/90 max-[1025px]:text-[2.75vw]">
+                  <p className="truncate max-md:text-[4vw] text-white/90 max-lg:text-[2.75vw]">
                     {user.fullName || user.username || "Account"}
                   </p>
-                  <p className="truncate text-[3.2vw] text-white/50 max-[1025px]:text-[1.7vw]">
+                  <p className="truncate text-[3.2vw] text-white/50 max-lg:text-[1.7vw]">
                     {user.primaryEmailAddress?.emailAddress || user.username}
                   </p>
                 </div>
               </div>
 
-              <ChevronRight className="size-[4.5vw] shrink-0 max-[1025px]:size-[2.6vw]" />
+              <ChevronRight className="size-[4.5vw] shrink-0 max-lg:size-[2.6vw]" />
             </Link>
           )}
 
-          <div className="mt-[2vw] max-[1025px]:mt-[1.2vw]">
+          <div className="mt-[2vw] max-lg:mt-[1.2vw]">
             <Link
               data-mobile-row
               href="/effects"
               onClick={close}
-              className="flex border-t border-white/10 py-[4.5vw] max-md:text-[4.75vw] max-[1025px]:text-[3.75vw] text-white/90 max-md:py-[4.5vw] max-[1025px]:py-[3vw] "
+              className="flex border-t border-white/10 py-[4.5vw] max-md:text-[4.75vw] max-lg:text-[3.75vw] text-white/90 max-md:py-[4.5vw] max-lg:py-[3vw] "
             >
               All Effects
             </Link>
@@ -640,14 +640,14 @@ export function VaultHeader({
                 onClick={() => toggleSection("categories")}
                 aria-label={`${section === "categories" ? "Collapse" : "Expand"} Categories`}
                 aria-expanded={section === "categories"}
-                className="flex w-full items-center justify-between py-[4.5vw] text-left max-md:text-[4.75vw] max-[1025px]:text-[3.75vw] text-white/90 max-md:py-[4.5vw] max-[1025px]:py-[3vw] "
+                className="flex w-full items-center justify-between py-[4.5vw] text-left max-md:text-[4.75vw] max-lg:text-[3.75vw] text-white/90 max-md:py-[4.5vw] max-lg:py-[3vw] "
               >
                 <span>Effect Categories</span>
-                <div className="relative flex size-[8vw] shrink-0 items-center justify-center bg-[#161616] text-primary max-[1025px]:size-[4.6vw]">
-                  <span aria-hidden="true" className="absolute h-px w-[3.5vw] bg-current max-[1025px]:w-[2vw]" />
+                <div className="relative flex size-[8vw] shrink-0 items-center justify-center bg-[#161616] text-primary max-lg:size-[4.6vw]">
+                  <span aria-hidden="true" className="absolute h-px w-[3.5vw] bg-current max-lg:w-[2vw]" />
                   <span
                     aria-hidden="true"
-                    className={`absolute h-px w-[3.5vw] bg-current max-[1025px]:w-[2vw] transition-transform duration-300 ease-out motion-reduce:transition-none ${section === "categories" ? "rotate-180" : "rotate-90"
+                    className={`absolute h-px w-[3.5vw] bg-current max-lg:w-[2vw] transition-transform duration-300 ease-out motion-reduce:transition-none ${section === "categories" ? "rotate-180" : "rotate-90"
                       }`}
                   />
                 </div>
@@ -660,7 +660,7 @@ export function VaultHeader({
                       key={category.id}
                       href={getEffectCategoryHref(category.id)}
                       onClick={close}
-                      className="flex items-center max-md:py-[1.5vw] max-md:text-[4vw] w-fit text-white/75 active:text-primary max-[1025px]:py-[1.5vw] max-[1025px]:text-[2.75vw]"
+                      className="flex items-center max-md:py-[1.5vw] max-md:text-[4vw] w-fit text-white/75 active:text-primary max-lg:py-[1.5vw] max-lg:text-[2.75vw]"
                     >
                       {categoryLabel(category)}
                     </Link>
@@ -672,7 +672,7 @@ export function VaultHeader({
               data-mobile-row
               href="/templates"
               onClick={close}
-              className="flex border-t border-white/10 py-[4.5vw] max-md:text-[4.75vw] max-[1025px]:text-[3.75vw] text-white/90 max-md:py-[4.5vw] max-[1025px]:py-[3vw] "
+              className="flex border-t border-white/10 py-[4.5vw] max-md:text-[4.75vw] max-lg:text-[3.75vw] text-white/90 max-md:py-[4.5vw] max-lg:py-[3vw] "
             >
               Templates
             </Link>
@@ -683,14 +683,14 @@ export function VaultHeader({
                 onClick={() => toggleSection("documentation")}
                 aria-label={`${section === "documentation" ? "Collapse" : "Expand"} Documentation`}
                 aria-expanded={section === "documentation"}
-                className="flex w-full items-center justify-between py-[4.5vw] text-left max-md:text-[4.75vw] max-[1025px]:text-[3.75vw] text-white/90 max-md:py-[4.5vw] max-[1025px]:py-[3vw]"
+                className="flex w-full items-center justify-between py-[4.5vw] text-left max-md:text-[4.75vw] max-lg:text-[3.75vw] text-white/90 max-md:py-[4.5vw] max-lg:py-[3vw]"
               >
                 <span>Documentation</span>
-                <div className="relative flex size-[8vw] shrink-0 items-center justify-center bg-[#161616] text-primary max-[1025px]:size-[4.6vw]">
-                  <span aria-hidden="true" className="absolute h-px w-[3.5vw] bg-current max-[1025px]:w-[2vw]" />
+                <div className="relative flex size-[8vw] shrink-0 items-center justify-center bg-[#161616] text-primary max-lg:size-[4.6vw]">
+                  <span aria-hidden="true" className="absolute h-px w-[3.5vw] bg-current max-lg:w-[2vw]" />
                   <span
                     aria-hidden="true"
-                    className={`absolute h-px w-[3.5vw] bg-current max-[1025px]:w-[2vw] transition-transform duration-300 ease-out motion-reduce:transition-none ${section === "documentation" ? "rotate-180" : "rotate-90"
+                    className={`absolute h-px w-[3.5vw] bg-current max-lg:w-[2vw] transition-transform duration-300 ease-out motion-reduce:transition-none ${section === "documentation" ? "rotate-180" : "rotate-90"
                       }`}
                   />
                 </div>
@@ -703,7 +703,7 @@ export function VaultHeader({
                       key={link.href}
                       href={link.href}
                       onClick={close}
-                      className="flex items-center max-md:py-[1.5vw] max-md:text-[4vw] w-fit text-white/75 active:text-primary max-[1025px]:py-[1.5vw] max-[1025px]:text-[2.75vw]"
+                      className="flex items-center max-md:py-[1.5vw] max-md:text-[4vw] w-fit text-white/75 active:text-primary max-lg:py-[1.5vw] max-lg:text-[2.75vw]"
                     >
                       {link.label}
                     </Link>
@@ -720,7 +720,7 @@ export function VaultHeader({
                 target={link.external ? "_blank" : undefined}
                 rel={link.external ? "noopener noreferrer" : undefined}
                 onClick={close}
-                className="flex border-t border-white/10 py-[4.5vw]  max-md:text-[4.75vw] text-white/90 max-md:py-[4.5vw] max-[1025px]:py-[3vw] max-[1025px]:text-[3.75vw]"
+                className="flex border-t border-white/10 py-[4.5vw]  max-md:text-[4.75vw] text-white/90 max-md:py-[4.5vw] max-lg:py-[3vw] max-lg:text-[3.75vw]"
               >
                 {link.label}
               </Link>
@@ -728,7 +728,7 @@ export function VaultHeader({
           </div>
 
           {isLoaded && (
-            <div data-mobile-row className="mt-[8vw] flex flex-col gap-[3vw] max-[1025px]:mt-[4.6vw] max-[1025px]:gap-[1.5vw]">
+            <div data-mobile-row className="mt-[8vw] flex flex-col gap-[3vw] max-lg:mt-[4.6vw] max-lg:gap-[1.5vw]">
               {user?.publicMetadata?.plan !== "pro" && (
                 <ButtonV3
                   text="Upgrade to Pro"
@@ -738,7 +738,7 @@ export function VaultHeader({
                     markScrollToPricingCards();
                   }}
                   variant="outline"
-                  className="w-full border-white/50! max-[1025px]:py-[1.5vw] max-[1025px]:text-[2vw] max-[1025px]:[--btn-pad:2.4vw] max-[1025px]:[--btn-gap:1vw] max-[1025px]:[--btn-square:1.4vw] max-[1025px]:[--btn-arrow:2vw]"
+                  className="w-full border-white/50! max-lg:py-[1.5vw] max-lg:text-[2vw] max-lg:[--btn-pad:2.4vw] max-lg:[--btn-gap:1vw] max-lg:[--btn-square:1.4vw] max-lg:[--btn-arrow:2vw]"
                 />
               )}
 
@@ -747,7 +747,7 @@ export function VaultHeader({
                   text="Sign In"
                   href="/sign-in"
                   onClick={close}
-                  className="w-fit max-md:w-full max-[1025px]:w-[22vw] max-[1025px]:py-[1.5vw] max-[1025px]:text-[2vw] max-[1025px]:[--btn-pad:2.4vw] max-[1025px]:[--btn-gap:1vw] max-[1025px]:[--btn-square:1.4vw] max-[1025px]:[--btn-arrow:2vw]"
+                  className="w-fit max-md:w-full max-lg:w-[22vw] max-lg:py-[1.5vw] max-lg:text-[2vw] max-lg:[--btn-pad:2.4vw] max-lg:[--btn-gap:1vw] max-lg:[--btn-square:1.4vw] max-lg:[--btn-arrow:2vw]"
                 />
               )}
             </div>

@@ -147,7 +147,7 @@ export default function NavbarV3({
         // `translate` is listed alongside `transform`: the translate-y utilities
         // set the `translate` property, so leaving it out snaps the slide and
         // only the opacity reads.
-        className={`py-[2vw] flex max-[1025px]:hidden items-center justify-between w-full fixed z-900 top-0 left-0 px-[3vw] transition-[transform,translate,opacity] duration-500 ease-out motion-reduce:transition-none ${!introReady
+        className={`py-[2vw] flex max-lg:hidden items-center justify-between w-full fixed z-900 top-0 left-0 px-[3vw] transition-[transform,translate,opacity] duration-500 ease-out motion-reduce:transition-none ${!introReady
           ? "translate-y-0 opacity-0 pointer-events-none"
           : reveal
             ? "translate-y-0 opacity-100"
@@ -282,7 +282,7 @@ export default function NavbarV3({
                 </svg>
               </div>
 
-              <kbd className="space-x-2 rounded bg-foreground/20 px-1.5 py-0.5 text-sm text-current max-md:hidden">
+              <kbd className="space-x-2 bg-foreground/20 px-1.5 py-0.5 text-sm text-current max-md:hidden">
                 ⌘ K
               </kbd>
             </button>
