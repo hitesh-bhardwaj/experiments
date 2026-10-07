@@ -133,9 +133,9 @@ export default function PricingPlansHome() {
     };
 
     return (
-        <section ref={rootRef} id="pricing" data-sound-flow="off" className="relative bg-white px-[4.5vw] py-[7%] font-avenir text-[#1D1D1D] max-md:px-[5vw] max-sm:px-[7vw]">
+        <section ref={rootRef} id="pricing" data-sound-flow="off" data-sound-hover="off" className="relative bg-white px-[4.5vw] py-[7%] font-avenir text-[#1D1D1D] max-md:px-[5vw] max-sm:px-[7vw]">
             <div className="mx-auto flex w-full max-w-[1536px] flex-wrap items-end justify-between gap-[2vw] max-md:gap-[5vw]">
-                <LineReveal as="h2" className="text64 font-aeonik text-[4.6vw]! max-md:text-[6vw]! max-sm:text-[9vw]!">
+                <LineReveal as="h2" className="text64 leading-[1.2]! font-aeonik text-[4.6vw]! max-md:text-[6vw]! max-sm:text-[9vw]!">
                     Two Plans.<br/> <span className="gradient-text-animate gradient-text-single">Every Moment Covered.</span>
                 </LineReveal>
 

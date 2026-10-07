@@ -308,7 +308,10 @@ export default function FAQV3({ faqItems, translateTop = true}) {
             showArrow
             text="View More"
             underlineClassName="mt-0.5"
-            className="text-[#7a7a7a]! hover:text-background! transition-colors duration-300 max-md:text34"
+            shimmer
+            shimmerBaseColor="var(--primary)"
+            shimmerColor="#ffe2c8"
+            className="text-primary! hover:text-primary-hover! transition-colors duration-300 max-md:text34"
           />
         </div>
       )}

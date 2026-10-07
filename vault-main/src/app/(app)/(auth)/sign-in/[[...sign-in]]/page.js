@@ -1,10 +1,6 @@
-import { Suspense } from "react";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { createPageMetadata } from "@/lib/seo-metadata";
-import SignInFlow from "@/components/auth/SignInFlow";
-import NavbarMobile from "@/components/WebsiteComps/NavbarMobile";
-import NavbarV3 from "@/homepage-v3/components/NavbarV3";
 
 export const metadata = createPageMetadata({
   title: "Sign In | Hyperiux Vault",
@@ -18,6 +14,7 @@ export const metadata = createPageMetadata({
   },
 });
 
+// The form itself is rendered by (auth)/layout.js
 export default async function SignInPage() {
   const { userId } = await auth();
 
@@ -25,13 +22,5 @@ export default async function SignInPage() {
     redirect("/effects");
   }
 
-  return (
-    <>
-      <NavbarV3 />
-      <NavbarMobile />
-      <Suspense fallback={null}>
-        <SignInFlow />
-      </Suspense>
-    </>
-  );
+  return null;
 }

@@ -113,7 +113,7 @@ export default function PricingProCompare() {
   };
 
   return (
-    <section ref={rootRef} id="compare" className="relative bg-foreground px-[4.5vw] py-[7%] font-avenir text-background max-md:px-[5vw] max-sm:px-[7vw]">
+    <section ref={rootRef} id="compare" data-sound-flow="off" className="relative bg-foreground px-[4.5vw] py-[7%] font-avenir text-background max-md:px-[5vw] max-sm:px-[7vw]">
       <div className="mx-auto flex w-full max-w-[1536px] flex-col gap-[3vw] max-md:gap-[8vw]">
         <div className="flex items-end justify-between gap-[2vw] max-md:flex-col max-md:items-start max-md:gap-[6vw]">
           <LineReveal as="h2" className="text64 text-[4.6vw]! leading-[1.2]! max-md:text-[6vw]! max-sm:text-[9vw]!">
@@ -121,7 +121,7 @@ export default function PricingProCompare() {
             <span className="gradient-text-animate">line by line.</span>
           </LineReveal>
 
-          <div ref={toggleRef} role="radiogroup" aria-label="Billing period" className="fadeup relative isolate flex w-fit border border-background/10 bg-background/10 p-[0.3vw] max-md:p-[1vw]">
+          <div ref={toggleRef} role="radiogroup" aria-label="Billing period" data-sound-hover="off" className="fadeup relative isolate flex w-fit border border-background/10 bg-background/10 p-[0.3vw] max-md:p-[1vw]">
             {PERIODS.map((p) => (
               <button
                 key={p.id}

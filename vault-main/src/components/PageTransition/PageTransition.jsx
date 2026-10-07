@@ -377,6 +377,8 @@ export default function PageTransition() {
         href.startsWith('tel:') ||
         href.startsWith('#') ||
         anchor.target === '_blank' ||
+        // In-page view switches (e.g. the vault door's sign-in/sign-up panes)
+        anchor.hasAttribute('data-no-page-transition') ||
         e.metaKey ||
         e.ctrlKey ||
         e.shiftKey ||

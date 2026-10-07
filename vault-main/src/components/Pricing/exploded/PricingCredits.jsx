@@ -198,7 +198,7 @@ export default function PricingCredits() {
   useEffect(() => { prevLeft.current = left; }, [left]);
 
   return (
-    <section ref={rootRef} id="credits" className="relative bg-foreground px-[4.5vw] py-[7%] font-avenir text-background max-md:px-[5vw] max-sm:px-[7vw]">
+    <section ref={rootRef} id="credits" data-sound-flow="off" className="relative bg-foreground px-[4.5vw] py-[7%] font-avenir text-background max-md:px-[5vw] max-sm:px-[7vw]">
       <div className="mx-auto flex w-full max-w-[1536px] flex-col gap-[3vw] max-md:gap-[8vw]">
         <div className="flex flex-col gap-[1.8vw] max-md:gap-[5vw]">
           <p className={`fadeup flex items-center gap-[0.6vw] text-background/60 max-md:gap-[2vw] ${LABEL}`}>
@@ -263,7 +263,7 @@ export default function PricingCredits() {
                   <div
                     ref={(el) => { artRefs.current[i] = el; }}
                     aria-hidden="true"
-                    className={`relative aspect-[16/10] w-full overflow-hidden ${isOwned ? "bg-linear-to-br from-primary/20 to-dark-card" : "bg-background/10"}`}
+                    className={`relative aspect-16/10 w-full overflow-hidden ${isOwned ? "bg-linear-to-br from-primary/20 to-dark-card" : "bg-background/10"}`}
                   >
                     <i className={`absolute top-[14%] left-[8%] h-[14%] w-[52%] transition-colors duration-1000 ${isOwned ? "bg-primary" : "bg-background/15"}`} />
                     <i className={`absolute top-[36%] left-[8%] h-[8%] w-[34%] transition-colors duration-1000 ${isOwned ? "bg-primary-hover" : "bg-background/15"}`} />
