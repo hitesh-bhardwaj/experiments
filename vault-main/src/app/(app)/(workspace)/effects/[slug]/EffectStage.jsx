@@ -30,7 +30,8 @@ function cloneable(values) {
  * effect's own demo page in embed mode; the Playground is the demo pages'
  * remixer, and its values are posted straight into the stage.
  */
-export default function EffectStage({ effect, title, previewHref }) {
+// getCode: the "Get code" dropdown (GetCodeMenu), shown beside Live Preview.
+export default function EffectStage({ effect, title, previewHref, getCode = null }) {
   const remixer = effect?.remixer ?? {};
   const remixerGroups = remixer.groups ?? getGroupsFromRemixerControls(remixer.controls);
   const { groups, values, updateValue, resetValues } = useRemixerControls({
@@ -168,38 +169,43 @@ export default function EffectStage({ effect, title, previewHref }) {
   );
 
   const tabCls = (on) =>
-    `relative z-1  px-5 py-2.5 font-medium  ${T13} transition-colors duration-600 ${on ? "text-black" : "text-white/60 hover:text-white"}`;
+    `relative z-1  px-5 py-2.5 font-medium  ${T13} transition-colors duration-400 ease-out ${on ? "text-black" : "text-white/60 hover:text-white"}`;
   const toolCls =
     `inline-flex items-center border border-white/20 backdrop-blur-lg gap-2 px-3.5 ${T13} text-[#cfcfcf] bg-[rgba(244,244,244,.06)] transition-colors duration-500 hover:bg-[rgba(244,244,244,.08)] hover:text-white`;
 
   return (
     <section aria-label="Interactive preview" className="w-full">
       <div className="mb-3.5 flex flex-wrap items-center justify-between gap-4">
-        <div
-          ref={tabsRef}
-          role="tablist"
-          className="relative isolate inline-flex bg-[rgba(244,244,244,.06)] backdrop-blur-lg p-0.75"
-        >
-          <button role="tab" type="button" data-view="preview" aria-selected={view === "preview"} onClick={() => setView("preview")} className={tabCls(view === "preview")}>
-            Preview
-          </button>
-          {hasPlayground && (
-            <button role="tab" type="button" data-view="play" aria-selected={view === "play"} onClick={openPlayground} className={tabCls(view === "play")}>
-              Playground
+        <div className="flex gap-2">
+          <div
+            ref={tabsRef}
+            role="tablist"
+            className="relative isolate inline-flex bg-[rgba(244,244,244,.06)] border border-white/20 backdrop-blur-lg p-0.75"
+          >
+            <button role="tab" type="button" data-view="preview" aria-selected={view === "preview"} onClick={() => setView("preview")} className={tabCls(view === "preview")}>
+              Preview
             </button>
-          )}
-          <i
-            aria-hidden="true"
-            className="absolute top-0.75 bottom-0.75 left-0.75 z-0 bg-primary"
-            style={{ width: pill.w, transform: `translateX(${pill.x}px)`, transition: `transform .7s ${EASE}, width .7s ${EASE}` }}
-          />
-        </div>
-        {/* items-stretch: Replay takes Live Preview's height (ButtonV3 scales with vw). */}
-        <div className="flex items-stretch gap-2">
+            {hasPlayground && (
+              <button role="tab" type="button" data-view="play" aria-selected={view === "play"} onClick={openPlayground} className={tabCls(view === "play")}>
+                Playground
+              </button>
+            )}
+            <i
+              aria-hidden="true"
+              className="absolute top-0.75 bottom-0.75 left-0.75 z-0 bg-primary"
+              style={{ width: pill.w, transform: `translateX(${pill.x}px)`, transition: `transform .7s ${EASE}, width .7s ${EASE}` }}
+            />
+          </div>
           <button type="button" onClick={replay} className={toolCls}>
             ↺ Replay
           </button>
-          <ButtonV3 text="Live Preview" href={previewHref} target_blank variant="orange" className="shrink-0 border border-primary" />
+
+        </div>
+        {/* items-stretch: Replay takes Live Preview's height (ButtonV3 scales with vw). */}
+        <div className="flex items-stretch gap-2">
+
+          {getCode}
+          <ButtonV3 text="Demo " href={previewHref} target_blank variant="orange" className="shrink-0 border border-primary" />
         </div>
       </div>
 
@@ -209,7 +215,7 @@ export default function EffectStage({ effect, title, previewHref }) {
           --pg-w: 18vw on desktop, 340px on tablet (18vw would be too narrow there). */}
       <div
         ref={gridRef}
-        className="grid items-start [--pg-w:18vw] max-[1025px]:[--pg-w:340px] max-md:grid-cols-1!"
+        className="grid items-start [--pg-w:17.8vw] max-[1025px]:[--pg-w:340px] max-md:grid-cols-1!"
         style={{
           gridTemplateColumns: play ? "minmax(0,1fr) var(--pg-w)" : "minmax(0,1fr) 0px",
           columnGap: play ? 14 : 0,

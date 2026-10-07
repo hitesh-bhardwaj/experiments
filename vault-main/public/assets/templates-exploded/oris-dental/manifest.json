@@ -1,0 +1,218 @@
+{
+  "slug": "oris-dental",
+  "devices": {
+    "desktop": {
+      "src": "/assets/templates-exploded/oris-dental/desktop.webp",
+      "viewport": 1280,
+      "width": 960,
+      "height": 9162,
+      "sections": [
+        {
+          "y": 0,
+          "h": 600,
+          "label": "oris-hero",
+          "tag": "section",
+          "cls": "h-dvh"
+        },
+        {
+          "y": 600,
+          "h": 584,
+          "label": "about-oris",
+          "tag": "section",
+          "cls": "h-fit"
+        },
+        {
+          "y": 1184,
+          "h": 680,
+          "label": "care-comfort",
+          "tag": "section",
+          "cls": "w-full"
+        },
+        {
+          "y": 1865,
+          "h": 1121,
+          "label": "dental-treatments-_R_tklritpesnduulb_",
+          "tag": "section",
+          "cls": "w-full"
+        },
+        {
+          "y": 2986,
+          "h": 600,
+          "label": "parallax",
+          "tag": "section",
+          "cls": "h-screen"
+        },
+        {
+          "y": 3586,
+          "h": 3000,
+          "label": "oris-reviews-_R_1dklritpesnduulb_",
+          "tag": "div",
+          "cls": "w-full"
+        },
+        {
+          "y": 6586,
+          "h": 1320,
+          "label": "passion-meet-purpose",
+          "tag": "section",
+          "cls": "w-full"
+        },
+        {
+          "y": 7906,
+          "h": 656,
+          "label": "oris-form",
+          "tag": "section",
+          "cls": "w-full"
+        },
+        {
+          "y": 8562,
+          "h": 600,
+          "label": "Brighten your smile with expert care.",
+          "tag": "div",
+          "cls": "relative"
+        }
+      ]
+    },
+    "tablet": {
+      "src": "/assets/templates-exploded/oris-dental/tablet.webp",
+      "viewport": 820,
+      "width": 615,
+      "height": 8332,
+      "sections": [
+        {
+          "y": 0,
+          "h": 885,
+          "label": "oris-hero",
+          "tag": "section",
+          "cls": "h-dvh"
+        },
+        {
+          "y": 885,
+          "h": 721,
+          "label": "about-oris",
+          "tag": "section",
+          "cls": "h-fit"
+        },
+        {
+          "y": 1606,
+          "h": 842,
+          "label": "care-comfort",
+          "tag": "section",
+          "cls": "w-full"
+        },
+        {
+          "y": 2447,
+          "h": 1516,
+          "label": "dental-treatments-_R_tklritpesnduulb_",
+          "tag": "section",
+          "cls": "w-full"
+        },
+        {
+          "y": 3962,
+          "h": 708,
+          "label": "parallax",
+          "tag": "section",
+          "cls": "h-screen"
+        },
+        {
+          "y": 4670,
+          "h": 1182,
+          "label": "Reviews",
+          "tag": "div",
+          "cls": "hidden"
+        },
+        {
+          "y": 5852,
+          "h": 953,
+          "label": "passion-meet-purpose",
+          "tag": "section",
+          "cls": "w-full"
+        },
+        {
+          "y": 6806,
+          "h": 872,
+          "label": "oris-form",
+          "tag": "section",
+          "cls": "w-full"
+        },
+        {
+          "y": 7678,
+          "h": 655,
+          "label": "Brighten your smile with expert care.",
+          "tag": "div",
+          "cls": "relative"
+        }
+      ]
+    },
+    "phone": {
+      "src": "/assets/templates-exploded/oris-dental/phone.webp",
+      "viewport": 390,
+      "width": 585,
+      "height": 12671,
+      "sections": [
+        {
+          "y": 0,
+          "h": 1266,
+          "label": "oris-hero",
+          "tag": "section",
+          "cls": "h-dvh"
+        },
+        {
+          "y": 1266,
+          "h": 1002,
+          "label": "about-oris",
+          "tag": "section",
+          "cls": "h-fit"
+        },
+        {
+          "y": 2268,
+          "h": 1280,
+          "label": "care-comfort",
+          "tag": "section",
+          "cls": "w-full"
+        },
+        {
+          "y": 3548,
+          "h": 2127,
+          "label": "dental-treatments-_R_tklritpesnduulb_",
+          "tag": "section",
+          "cls": "w-full"
+        },
+        {
+          "y": 5675,
+          "h": 1013,
+          "label": "parallax",
+          "tag": "section",
+          "cls": "h-screen"
+        },
+        {
+          "y": 6687,
+          "h": 2363,
+          "label": "Reviews",
+          "tag": "div",
+          "cls": "hidden"
+        },
+        {
+          "y": 9050,
+          "h": 1089,
+          "label": "passion-meet-purpose",
+          "tag": "section",
+          "cls": "w-full"
+        },
+        {
+          "y": 10139,
+          "h": 1503,
+          "label": "oris-form",
+          "tag": "section",
+          "cls": "w-full"
+        },
+        {
+          "y": 11642,
+          "h": 1028,
+          "label": "Brighten your smile with expert care.",
+          "tag": "div",
+          "cls": "relative"
+        }
+      ]
+    }
+  }
+}

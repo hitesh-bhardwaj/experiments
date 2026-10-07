@@ -11,7 +11,7 @@ const CopyLimitContext = createContext(null);
 // tracking its own stale copy of the daily count. The limit is per distinct
 // effect copied today, not per click - once this effect has consumed a slot
 // (or the user copies from it again), every block on the page stays unlocked.
-export function CopyLimitProvider({ children, onRequireSignIn, effectSlug }) {
+export function CopyLimitProvider({ children, onRequireSignIn, onRequireUpgrade, effectSlug }) {
   const { isSignedIn, isLoaded } = useUser();
   const [usage, setUsage] = useState(null);
   const { toast, showToast, dismissToast } = useToastQueue();
@@ -135,6 +135,22 @@ export function CopyLimitProvider({ children, onRequireSignIn, effectSlug }) {
       usage.remaining <= 0
   );
 
+  // For the "Get code" dropdown, whose copy route does the limit claim
+  // server-side and returns the same usage shape as copy-usage's POST -
+  // this keeps the shared count (and the "X of Y left" toast) in sync
+  // without a second round-trip.
+  const applyUsage = useCallback(
+    (data) => {
+      setUsage(data);
+      notifyUsage(data);
+    },
+    [notifyUsage]
+  );
+
+  const requireSignIn = useCallback(() => onRequireSignIn?.(), [onRequireSignIn]);
+  // Opens the Pro upgrade modal. reason: "pro-effect" | "limit".
+  const requireUpgrade = useCallback((reason) => onRequireUpgrade?.(reason), [onRequireUpgrade]);
+
   // Selection/clipboard is only blocked once we're sure the visitor is
   // signed out - default to selectable while auth is still loading so the
   // code doesn't flash locked-then-unlocked for signed-in users.
@@ -145,6 +161,10 @@ export function CopyLimitProvider({ children, onRequireSignIn, effectSlug }) {
     isSignedIn,
     usage,
     requestCopy,
+    applyUsage,
+    requireSignIn,
+    requireUpgrade,
+    showToast,
     isLocked,
     selectable,
     lockedCtaHref: usage?.plan === "pro" || usage?.isAdmin ? null : "/pricing",

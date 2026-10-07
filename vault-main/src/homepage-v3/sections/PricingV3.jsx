@@ -20,7 +20,7 @@ if (typeof window !== "undefined") {
     gsap.registerPlugin(ScrollTrigger, useGSAP);
 }
 
-const PRICING = {
+export const PRICING = {
     USD: { symbol: "$", monthly: 20, yearly: 179 },
     INR: { symbol: "₹", monthly: 999, yearly: 8999 },
 };
@@ -43,7 +43,13 @@ const PRO_FEATURES = [
     "Code you own, commercial-friendly",
 ];
 
-function PriceDigits({ monthlyAmount, yearlyAmount, isYearly }) {
+// The Pro card's feature list - also shown by the effect page's upgrade modal
+// (effects/[slug]/UpgradeToProModal). Same list on both billing periods here.
+export function getProFeatures() {
+    return PRO_FEATURES;
+}
+
+export function PriceDigits({ monthlyAmount, yearlyAmount, isYearly }) {
     const monthlyDigits = String(monthlyAmount).split("");
     const yearlyDigits = String(yearlyAmount).split("");
     const leadCount = yearlyDigits.length - monthlyDigits.length;
@@ -89,7 +95,7 @@ function CheckSquare({ className = "", onDark = false }) {
     );
 }
 
-function FeatureList({ features, className = "", onDark = false }) {
+export function FeatureList({ features, className = "", onDark = false }) {
     return (
         <ul className={`flex flex-col gap-[1.2vw] max-[1025px]:gap-[2.5vw] max-md:gap-[3vw] max-sm:gap-[4.5vw] ${className}`}>
             {features.map((feature) => (
@@ -134,7 +140,7 @@ function PixelSquares({ flashClassName }) {
     );
 }
 
-function BillingToggle({ isYearly, onChange }) {
+export function BillingToggle({ isYearly, onChange }) {
     return (
         <div className="flex items-center gap-[1vw] text22 max-[1025px]:gap-[2vw] max-md:gap-[2.5vw] max-md:text-[2.2vw] font-mono! max-sm:gap-[3.5vw] max-sm:text-[4vw]">
             <button

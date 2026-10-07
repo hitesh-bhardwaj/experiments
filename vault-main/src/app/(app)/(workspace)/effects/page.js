@@ -41,7 +41,6 @@ export default async function EffectsPage() {
           featuredNames={featuredNames}
           userPlan={userPlan}
           content={pageContent}
-          routeCategories
         />
       </Suspense>
     </>

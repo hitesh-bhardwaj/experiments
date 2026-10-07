@@ -17,7 +17,7 @@ export function CustomAnimationCta({ cta, sectionRef, className = "" }) {
   return (
     <section
       ref={sectionRef}
-      className={`mx-auto flex w-[92%] justify-between bg-[#1D1D1D] px-10 py-12 text-[#F4F4F4] max-[1025px]:px-6 max-md:my-[15vw] max-md:px-[7vw] ${className}`}
+      className={`mx-auto flex w-full justify-between bg-[#1D1D1D] px-10 py-12 text-[#F4F4F4] max-[1025px]:px-6 max-md:my-[15vw] max-md:px-[7vw] ${className}`}
     >
       <div className="flex w-[60%] flex-col">
         {cta.heading && <h2 className="text-[3vw] font-medium max-md:text-[7vw]">{cta.heading}</h2>}

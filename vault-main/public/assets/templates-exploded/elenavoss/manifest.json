@@ -1,0 +1,218 @@
+{
+  "slug": "elenavoss",
+  "devices": {
+    "desktop": {
+      "src": "/assets/templates-exploded/elenavoss/desktop.webp",
+      "viewport": 1280,
+      "width": 960,
+      "height": 9642,
+      "sections": [
+        {
+          "y": 0,
+          "h": 1800,
+          "label": "hero",
+          "tag": "section",
+          "cls": "relative"
+        },
+        {
+          "y": 1800,
+          "h": 2160,
+          "label": "portfolio",
+          "tag": "section",
+          "cls": "relative"
+        },
+        {
+          "y": 3960,
+          "h": 787,
+          "label": "work-with-me",
+          "tag": "section",
+          "cls": "relative"
+        },
+        {
+          "y": 4747,
+          "h": 832,
+          "label": "services",
+          "tag": "section",
+          "cls": "services-section"
+        },
+        {
+          "y": 5579,
+          "h": 686,
+          "label": "awards",
+          "tag": "section",
+          "cls": "relative"
+        },
+        {
+          "y": 6265,
+          "h": 1440,
+          "label": "clientblur",
+          "tag": "section",
+          "cls": "relative"
+        },
+        {
+          "y": 7705,
+          "h": 665,
+          "label": "testimonials",
+          "tag": "section",
+          "cls": "w-screen"
+        },
+        {
+          "y": 8369,
+          "h": 760,
+          "label": "Frequently Asked Questions",
+          "tag": "section",
+          "cls": "w-screen"
+        },
+        {
+          "y": 9128,
+          "h": 513,
+          "label": "footer",
+          "tag": "footer",
+          "cls": "relative"
+        }
+      ]
+    },
+    "tablet": {
+      "src": "/assets/templates-exploded/elenavoss/tablet.webp",
+      "viewport": 820,
+      "width": 615,
+      "height": 13199,
+      "sections": [
+        {
+          "y": 0,
+          "h": 2655,
+          "label": "hero",
+          "tag": "section",
+          "cls": "relative"
+        },
+        {
+          "y": 2655,
+          "h": 3186,
+          "label": "portfolio",
+          "tag": "section",
+          "cls": "relative"
+        },
+        {
+          "y": 5841,
+          "h": 1352,
+          "label": "work-with-me",
+          "tag": "section",
+          "cls": "relative"
+        },
+        {
+          "y": 7193,
+          "h": 1282,
+          "label": "services",
+          "tag": "section",
+          "cls": "services-section"
+        },
+        {
+          "y": 8474,
+          "h": 626,
+          "label": "awards",
+          "tag": "section",
+          "cls": "relative"
+        },
+        {
+          "y": 9101,
+          "h": 2124,
+          "label": "clientblur",
+          "tag": "section",
+          "cls": "relative"
+        },
+        {
+          "y": 11225,
+          "h": 699,
+          "label": "testimonials",
+          "tag": "section",
+          "cls": "w-screen"
+        },
+        {
+          "y": 11924,
+          "h": 700,
+          "label": "Frequently Asked Questions",
+          "tag": "section",
+          "cls": "w-screen"
+        },
+        {
+          "y": 12623,
+          "h": 576,
+          "label": "footer",
+          "tag": "footer",
+          "cls": "relative"
+        }
+      ]
+    },
+    "phone": {
+      "src": "/assets/templates-exploded/elenavoss/phone.webp",
+      "viewport": 390,
+      "width": 472,
+      "height": 16000,
+      "sections": [
+        {
+          "y": 0,
+          "h": 3064,
+          "label": "hero",
+          "tag": "section",
+          "cls": "relative"
+        },
+        {
+          "y": 3064,
+          "h": 3676,
+          "label": "portfolio",
+          "tag": "section",
+          "cls": "relative"
+        },
+        {
+          "y": 6739,
+          "h": 1328,
+          "label": "work-with-me",
+          "tag": "section",
+          "cls": "relative"
+        },
+        {
+          "y": 8069,
+          "h": 1896,
+          "label": "services",
+          "tag": "section",
+          "cls": "services-section"
+        },
+        {
+          "y": 9964,
+          "h": 786,
+          "label": "awards",
+          "tag": "section",
+          "cls": "relative"
+        },
+        {
+          "y": 10750,
+          "h": 2451,
+          "label": "clientblur",
+          "tag": "section",
+          "cls": "relative"
+        },
+        {
+          "y": 13200,
+          "h": 905,
+          "label": "testimonials",
+          "tag": "section",
+          "cls": "w-screen"
+        },
+        {
+          "y": 14106,
+          "h": 982,
+          "label": "Frequently Asked Questions",
+          "tag": "section",
+          "cls": "w-screen"
+        },
+        {
+          "y": 15089,
+          "h": 911,
+          "label": "footer",
+          "tag": "footer",
+          "cls": "relative"
+        }
+      ]
+    }
+  }
+}

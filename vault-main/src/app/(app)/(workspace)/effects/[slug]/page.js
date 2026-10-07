@@ -107,7 +107,6 @@ export default async function EffectsCategoryPage({ params }) {
           userPlan={userPlan}
           scope={scope}
           content={pageContent}
-          routeCategories
         />
       </Suspense>
     </>

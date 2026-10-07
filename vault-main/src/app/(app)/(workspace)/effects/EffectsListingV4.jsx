@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { motion } from "motion/react";
@@ -13,10 +13,14 @@ import { useVaultLayout } from "@/components/layout/VaultLayout";
 import {
   effectCategories,
   effectsOverviewContent,
+  getEffectCategoryBySlug,
+  getEffectCategoryContent,
   getEffectCategoryHref,
+  getEffectCategoryMetadata,
   getQuickCategoryLabel,
   resolveEffectCategoryId,
 } from "@/lib/categories";
+import { getFeaturedEffectsByCategory, getOverviewFeaturedEffects } from "@/lib/featured-effects";
 import { sortEffects } from "@/lib/effect-sort";
 import FAQV3 from "@/homepage-v3/sections/FAQV3";
 import ButtonV3 from "@/homepage-v3/components/ButtonV3";
@@ -113,22 +117,38 @@ const TIER_SCOPES = ["free", "pro"];
  * The effects listing. On /effects it shows everything; a category
  * route (/effects/[slug]) passes:
  *  - `scope`: the page's starting filter - "free" | "pro" | "featured" | a category id,
- *  - `content`: that page's copy from lib/categories (name, description, faqs, cta),
- *  - `routeCategories`: category chips become links to their own pages (so the hero,
- *    FAQ and metadata change with them) instead of filtering in place.
+ *  - `content`: that page's copy from lib/categories (name, description, faqs, cta).
+ * Category chips then switch between these pages client-side (selectCategory).
  */
 export function EffectsListingV4({
   effects = [],
-  trendingEffects = [],
+  trendingEffects: initialTrending = [],
   featuredNames = [],
   userPlan = "free",
-  scope = null,
-  content = effectsOverviewContent,
-  routeCategories = false,
+  scope: initialScope = null,
+  content: initialContent = effectsOverviewContent,
 }) {
-  const router = useRouter();
-  const scopeCategory = scope && !TIER_SCOPES.includes(scope) && scope !== "featured" ? scope : null;
   const searchParams = useSearchParams();
+
+  /* ---------- the page being shown ---------- */
+  // Category chips switch the page in place - hero copy, stats, trending, cards, FAQ
+  // and the URL (/effects/<category>) change, but nothing reloads or scrolls. The
+  // server props describe the page that was first loaded.
+  const [scope, setScope] = useState(initialScope);
+  const content = useMemo(
+    () => (scope === initialScope ? initialContent : scope ? getEffectCategoryContent(scope) : effectsOverviewContent),
+    [scope, initialScope, initialContent],
+  );
+  const scopeCategory = scope && !TIER_SCOPES.includes(scope) && scope !== "featured" ? scope : null;
+  const trendingEffects = useMemo(
+    () =>
+      scope === initialScope
+        ? initialTrending
+        : scopeCategory
+          ? getFeaturedEffectsByCategory(effects, scopeCategory)
+          : getOverviewFeaturedEffects(effects),
+    [scope, initialScope, initialTrending, scopeCategory, effects],
+  );
   // Save / copy install / Pro lock for every card and the drawer (shared with the effect page).
   const { isProUser, mounted, canInstall, isWishlisted, copyInstall, toggleWishlist, cardActions, overlays } =
     useEffectCardActions({ userPlan });
@@ -148,7 +168,8 @@ export function EffectsListingV4({
   );
   const [featured, setFeatured] = useState(() => searchParams.get("featured") === "1" || legacyFilter === "featured" || scope === "featured");
   // On a category route the category comes from the route, not the query string.
-  const [category, setCategory] = useState(() => scopeCategory || (routeCategories ? null : searchParams.get("category")) || null);
+  // ?category= is the old in-place filter link - still honoured on /effects.
+  const [category, setCategory] = useState(() => scopeCategory || (initialScope ? null : searchParams.get("category")) || null);
   const [stack, setStack] = useState(() => (searchParams.get("stack") ? searchParams.get("stack").split(",") : []));
   const [query, setQuery] = useState(() => searchParams.get("q") || "");
   const [sort, setSort] = useState(() => (SORTS[searchParams.get("sort")] ? searchParams.get("sort") : "trend"));
@@ -235,10 +256,36 @@ export function EffectsListingV4({
   const actives = [
     tier !== "all" && { id: "tier", label: tier === "free" ? "Free" : "Pro", clear: () => setTier("all") },
     featured && { id: "featured", label: "Featured", clear: () => setFeatured(false) },
-    category && { id: "category", label: getQuickCategoryLabel(category), clear: () => (routeCategories ? router.push("/effects", { scroll: false }) : setCategory(null)) },
+    category && { id: "category", label: getQuickCategoryLabel(category), clear: () => selectCategory(null) },
     ...stack.map((tag) => ({ id: `stack:${tag}`, label: tag, clear: () => setStack((s) => s.filter((t) => t !== tag)) })),
     query.trim() && { id: "q", label: `“${query.trim()}”`, clear: () => setQuery("") },
   ].filter(Boolean);
+
+  // A category chip: show that category's page (or the overview for null) in place.
+  // Leaving a Free / Pro / Featured page drops the filter that page started with.
+  const selectCategory = (id) => {
+    if (TIER_SCOPES.includes(scope)) setTier("all");
+    if (scope === "featured") setFeatured(false);
+    setCategory(id);
+    setScope(id);
+    window.history.pushState(window.history.state, "", `${getEffectCategoryHref(id || "all")}${window.location.search}`);
+  };
+
+  // Back / forward between pages switched in place: read the page from the URL.
+  useEffect(() => {
+    const onPopState = () => {
+      const slug = window.location.pathname.replace(/^\/effects\/?/, "").split("/")[0];
+      const next = !slug ? null : ["free", "pro", "featured"].includes(slug) ? slug : getEffectCategoryBySlug(slug)?.id;
+      if (next === undefined) return;
+      const nextCategory = next && !TIER_SCOPES.includes(next) && next !== "featured" ? next : null;
+      setScope(next);
+      setCategory(nextCategory);
+      setTier(TIER_SCOPES.includes(next) ? next : "all");
+      setFeatured(next === "featured");
+    };
+    window.addEventListener("popstate", onPopState);
+    return () => window.removeEventListener("popstate", onPopState);
+  }, []);
 
   const clearAll = useCallback(() => {
     setTier("all");
@@ -254,9 +301,28 @@ export function EffectsListingV4({
   // through motion's `layout` (see the grid below), exactly like /effects.
   const { isSidebarOpen, toggleSidebar } = useVaultLayout();
 
+  // Going to 3 with the sidebar open: close the sidebar first and switch the grid once
+  // it has finished (its width transition is 300ms). Doing both at once had the cards'
+  // layout animation aim at slots the widening container then moved - a visible jump.
+  // The toggle itself shows the choice straight away (pendingCols).
+  const [pendingCols, setPendingCols] = useState(null);
+  const colsTimerRef = useRef(0);
+  useEffect(() => () => clearTimeout(colsTimerRef.current), []);
+
   const chooseCols = (n) => {
-    setCols(n);
-    if (n === 3) toggleSidebar(false);
+    clearTimeout(colsTimerRef.current);
+    if (n === 3 && isSidebarOpen && window.matchMedia("(min-width: 1026px)").matches) {
+      setPendingCols(3);
+      toggleSidebar(false);
+      colsTimerRef.current = setTimeout(() => {
+        setCols(3);
+        setPendingCols(null);
+      }, 340);
+    } else {
+      setPendingCols(null);
+      setCols(n);
+      if (n === 3) toggleSidebar(false);
+    }
     try {
       window.localStorage.setItem(COLS_KEY, String(n));
     } catch {
@@ -273,8 +339,12 @@ export function EffectsListingV4({
   // Opening the sidebar from anywhere drops 3 per row to 2. Only reacts to the
   // sidebar itself, so it never fights the column switch above.
   useEffect(() => {
+    if (!isSidebarOpen) return;
+    // ...including a switch to 3 that was still waiting for the sidebar to close.
+    clearTimeout(colsTimerRef.current);
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    if (isSidebarOpen) setCols((c) => (c === 3 ? 2 : c));
+    setPendingCols(null);
+    setCols((c) => (c === 3 ? 2 : c));
   }, [isSidebarOpen]);
 
   // Any filter change starts the grid over from the first page.
@@ -288,13 +358,27 @@ export function EffectsListingV4({
     const params = new URLSearchParams();
     if (tier !== "all") params.set("tier", tier);
     if (featured) params.set("featured", "1");
-    if (category && !routeCategories) params.set("category", category);
+    if (category && !scope) params.set("category", category);
     if (stack.length) params.set("stack", stack.join(","));
     if (query.trim()) params.set("q", query.trim());
     if (sort !== "trend") params.set("sort", sort);
     const next = params.toString();
-    window.history.replaceState(window.history.state, "", `${window.location.pathname}${next ? `?${next}` : ""}`);
-  }, [tier, featured, category, stack, query, sort, routeCategories]);
+    const path = scope ? getEffectCategoryHref(scope) : "/effects";
+    window.history.replaceState(window.history.state, "", `${path}${next ? `?${next}` : ""}`);
+  }, [tier, featured, category, stack, query, sort, scope]);
+
+  // The tab title follows the page too (the first page keeps its server title).
+  const initialTitleRef = useRef(null);
+  useEffect(() => {
+    initialTitleRef.current ??= document.title;
+    if (scope === initialScope) {
+      document.title = initialTitleRef.current;
+      return;
+    }
+    const { title } = getEffectCategoryMetadata(scope || "all");
+    const text = typeof title === "string" ? title : title?.absolute || title?.default;
+    if (text) document.title = text;
+  }, [scope, initialScope]);
 
 
 
@@ -337,14 +421,24 @@ export function EffectsListingV4({
   useGSAP(
     () => {
       gsap.from("[data-v4-fade]", { autoAlpha: 0, duration: 1, delay: 0.5, ease: "power2.out", clearProps: "opacity,visibility" });
-      gsap.utils.toArray("[data-v4-count]").forEach((el) => {
-        const target = Number(el.dataset.v4Count);
-        const counter = { v: 0 };
-        gsap.to(counter, { v: target, duration: 1.6, delay: 0.5, ease: "expo.out", onUpdate: () => (el.textContent = Math.round(counter.v)) });
-      });
       gsap.to("[data-v4-gradient]", { backgroundPosition: "100% 50%", duration: 9, ease: "sine.inOut", repeat: -1, yoyo: true });
     },
     { scope: rootRef },
+  );
+
+  // Stat count-up - on load (after the fade) and again whenever the page changes.
+  const firstCount = useRef(true);
+  useGSAP(
+    () => {
+      const delay = firstCount.current ? 0.5 : 0.15;
+      firstCount.current = false;
+      gsap.utils.toArray("[data-v4-count]").forEach((el) => {
+        const target = Number(el.dataset.v4Count);
+        const counter = { v: 0 };
+        gsap.to(counter, { v: target, duration: 1.6, delay, ease: "expo.out", onUpdate: () => (el.textContent = Math.round(counter.v)) });
+      });
+    },
+    { dependencies: [scope], scope: rootRef },
   );
 
   // Cards rise in whenever the result set changes.
@@ -429,7 +523,15 @@ export function EffectsListingV4({
           <span aria-hidden="true">/</span>
           {scope ? (
             <>
-              <Link href="/effects" className="transition-colors duration-500 hover:text-white">
+              {/* Back to the overview in place, like the "All" chip. */}
+              <Link
+                href="/effects"
+                onClick={(event) => {
+                  event.preventDefault();
+                  selectCategory(null);
+                }}
+                className="transition-colors duration-500 hover:text-white"
+              >
                 Effects
               </Link>
               <span aria-hidden="true">/</span>
@@ -446,7 +548,9 @@ export function EffectsListingV4({
 
         <div data-v4-hero className="mt-7 grid grid-cols-[minmax(0,1.25fr)_minmax(0,.75fr)] items-end gap-12 max-[1025px]:grid-cols-1 max-[1025px]:gap-10">
           {/* Same entrances as the effect page: chars for the title, lines for the copy. */}
-          <HeadAnim animateOnScroll={false} animationKey={scope ? content?.name : "all"}>
+          {/* Keyed by page: SplitText owns the heading's text nodes, so a new page gets a
+              fresh heading (and runs its entrance again) instead of a stale update. */}
+          <HeadAnim key={scope || "all"} rotate={0} animateOnScroll={false}>
             <h1 className={`${DISPLAY} max-w-[45vw] text-[6vw] leading-[0.9]! max-[1025px]:max-w-none max-[1025px]:text-[9vw] max-md:text-[13vw]`}>
               {scope ? (
                 <HeroTitle name={content?.name} />
@@ -463,13 +567,13 @@ export function EffectsListingV4({
               ? [].concat(content?.description || [])
               : ["Production-ready interaction effects for React and Next.js. Preview any of them live, then copy or install with one command."]
             ).map((paragraph, index) => (
-              <Copy key={index} animateOnScroll={false} delay={0.3 + index * 0.15} animationKey={scope ? content?.name : "all"}>
+              <Copy key={`${scope || "all"}-${index}`} animateOnScroll={false} delay={0.3 + index * 0.15}>
                 <p className={`max-w-[32vw] ${T16} text-[#bdbdbd] max-[1025px]:max-w-[70vw] max-md:max-w-none`}>{paragraph}</p>
               </Copy>
             ))}
             <div data-v4-fade className={`${LABEL} flex flex-wrap gap-x-7.5 gap-y-2.5`}>
               {heroStats.map(([value, label]) => (
-                <p key={label}>
+                <p key={`${scope || "all"}-${label}`}>
                   {/* margin-left is set by alignStatInk() so the digit's ink lines up with the label's. */}
                   <b data-v4-count={value} className={`${DISPLAY} block text-[2.4vw] leading-none text-[#F4F4F4] tabular-nums normal-case max-[1025px]:text-[4.5vw] max-md:text-[8vw]`}>
                     {value}
@@ -565,7 +669,7 @@ export function EffectsListingV4({
               <SlidingSegment
                 label="Columns"
                 items={COLUMN_ITEMS}
-                value={cols}
+                value={pendingCols ?? cols}
                 onChange={chooseCols}
                 itemClassName="w-8.5"
                 className="max-[1025px]:hidden"
@@ -573,7 +677,7 @@ export function EffectsListingV4({
             </div>
           </div>
 
-          {/* categories: on a category route each chip is a link to that category's page */}
+          {/* categories: each chip shows its category's page in place (see selectCategory) */}
           <div className="flex flex-wrap gap-1.5 pt-6 pb-3">
             {[{ id: null, label: "All" }, ...categoryOptions.map((c) => ({ id: c.id, label: getQuickCategoryLabel(c.id), count: c.count }))].map((c) => {
               const active = c.id ? category === c.id : !category;
@@ -585,22 +689,12 @@ export function EffectsListingV4({
                   )}
                 </>
               );
-              return routeCategories ? (
-                <Link
-                  key={c.id || "all"}
-                  href={c.id && !active ? getEffectCategoryHref(c.id) : "/effects"}
-                  scroll={false}
-                  aria-current={active ? "page" : undefined}
-                  className={`${CHIP} ${active ? CHIP_ON : CHIP_OFF}`}
-                >
-                  {inner}
-                </Link>
-              ) : (
+              return (
                 <button
                   key={c.id || "all"}
                   type="button"
                   aria-pressed={active}
-                  onClick={() => setCategory(c.id && !active ? c.id : null)}
+                  onClick={() => !active && selectCategory(c.id)}
                   className={`${CHIP} ${active ? CHIP_ON : CHIP_OFF}`}
                 >
                   {inner}
@@ -723,7 +817,7 @@ export function EffectsListingV4({
       </div>
 
       {/* ---------- FAQ + custom work CTA (from the current listing) ---------- */}
-      <div data-v4-fade className="w-full h-full pb-[5vw] bg-white" >
+      <div data-v4-fade className="w-full h-full pb-[5vw] bg-white px-[3.4vw]" >
         {faqItems.length > 0 && <FAQV3 faqItems={faqItems} translateTop={false} />}
         <CustomAnimationCta cta={cta} className="mt-[2vw]" />
       </div>
