@@ -47,7 +47,7 @@ export default async function PricingPage() {
             <PricingProCompare />
           </div>
           {/* The same use cases as before, themed for the white sheet above */}
-          <div className="flow-root bg-foreground text-background">
+          <div data-sound-flow="off" className="flow-root bg-foreground text-background">
             <PricingUseCase useCases={USE_CASES} />
           </div>
           <div className="max-md:mt-[-30vw]!  ">

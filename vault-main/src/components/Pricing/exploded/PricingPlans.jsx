@@ -54,7 +54,7 @@ export default function PricingPlans({ isIndia = false, auth = true }) {
   return (
     <div ref={rootRef} className="sheet" id="plans">
       <div className="plans-head">
-        <LineReveal as="h2" className="display d2">
+        <LineReveal as="h2" className="display d2 leading-[1.2]!">
           Two plans. <span className="gradient-text-animate">Every moment covered.</span>
         </LineReveal>
         <BillingToggle saving={`Save ${yearlySavingPercent(pricing)}%`} />

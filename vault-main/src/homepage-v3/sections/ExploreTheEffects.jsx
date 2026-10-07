@@ -144,7 +144,7 @@ export default function ExploreTheEffects() {
             id="explore-the-effects"
             className="relative mx-auto w-full max-w-[1536px] overflow-x-clip px-[4.5vw] py-[7%] text-center max-md:px-[5vw] max-sm:px-[7vw] space-y-[2vw] max-md:space-y-[6vw]"
         >
-            <LineReveal as="h2" className="mx-auto w-[60vw] max-md:w-full text64 font-aeonik text-[4.6vw]! max-md:text-[6vw]! max-sm:text-[9vw]!">
+            <LineReveal as="h2" className="mx-auto w-[60vw]  max-md:w-full text64 font-aeonik text-[4.6vw]! max-md:text-[6vw]! max-sm:text-[9vw]!">
                 Explore the Moments Your Website is <span className="gradient-text-animate">Missing.</span>
             </LineReveal>
 

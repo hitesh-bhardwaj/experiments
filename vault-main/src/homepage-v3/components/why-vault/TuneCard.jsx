@@ -9,7 +9,12 @@ const TUNE_TEXT = "Tune it until it feels right.";
 const WORDS = TUNE_TEXT.split(" ");
 const label = "text-[11px] font-semibold uppercase tracking-[.14em]";
 const range =
-    "col-span-full mt-1.5 h-[22px] w-full cursor-pointer appearance-none bg-transparent [&::-webkit-slider-runnable-track]:h-0.5 [&::-webkit-slider-runnable-track]:bg-[linear-gradient(90deg,var(--primary)_var(--fill),rgba(29,29,29,.15)_var(--fill))] [&::-webkit-slider-thumb]:-mt-1.5 [&::-webkit-slider-thumb]:size-3.5 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-primary [&::-moz-range-track]:h-0.5 [&::-moz-range-track]:bg-[#1D1D1D]/15 [&::-moz-range-progress]:h-0.5 [&::-moz-range-progress]:bg-primary [&::-moz-range-thumb]:size-3.5 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-primary";
+    "col-span-full mt-1.5 h-[1.4vw] w-full cursor-pointer appearance-none bg-transparent max-md:h-[6vw] " +
+    "[&::-webkit-slider-runnable-track]:h-[0.2vw] [&::-webkit-slider-runnable-track]:bg-[linear-gradient(90deg,var(--primary)_var(--fill),rgba(29,29,29,.15)_var(--fill))] max-md:[&::-webkit-slider-runnable-track]:h-[0.5vw] " +
+    "[&::-webkit-slider-thumb]:-mt-[0.5vw] [&::-webkit-slider-thumb]:h-[1.2vw] [&::-webkit-slider-thumb]:w-[0.5vw] [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-none [&::-webkit-slider-thumb]:border-0 [&::-webkit-slider-thumb]:bg-primary max-md:[&::-webkit-slider-thumb]:-mt-[2.3vw] max-md:[&::-webkit-slider-thumb]:h-[5vw] max-md:[&::-webkit-slider-thumb]:w-[2vw] " +
+    "[&::-moz-range-track]:h-[0.2vw] [&::-moz-range-track]:bg-[#1D1D1D]/15 max-md:[&::-moz-range-track]:h-[0.5vw] " +
+    "[&::-moz-range-progress]:h-[0.2vw] [&::-moz-range-progress]:bg-primary max-md:[&::-moz-range-progress]:h-[0.5vw] " +
+    "[&::-moz-range-thumb]:h-[1.2vw] [&::-moz-range-thumb]:w-[0.5vw] [&::-moz-range-thumb]:rounded-none [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-primary max-md:[&::-moz-range-thumb]:h-[5vw] max-md:[&::-moz-range-thumb]:w-[2vw]";
 
 function SmoothRange({ min, max, step, defaultValue, digits, label, onRelease }) {
     const inputRef = useRef(null);
