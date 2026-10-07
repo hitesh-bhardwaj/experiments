@@ -58,7 +58,7 @@ export default function ExplainVault() {
                 stagger={40}
                 bandFraction={0.65}
                 settleBlend={0.45}
-                className="text-[calc(var(--cvw)*2.6)] max-md:text-[calc(var(--cvw)*6)]"
+                className="type-h2"
                 wrapperClassName="w-[80%] max-md:w-full"
                 containerClassName="py-[calc(var(--cvw)*15)] font-avenir max-md:py-24"
             />

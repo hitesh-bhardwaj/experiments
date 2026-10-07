@@ -144,7 +144,7 @@ export default function ExploreTheEffects() {
             id="explore-the-effects"
             className="relative mx-auto w-full max-w-[1536px] overflow-x-clip px-[calc(var(--cvw)*4.5)] py-[7%] text-center max-md:px-[calc(var(--cvw)*5)] max-sm:px-[calc(var(--cvw)*7)] space-y-[calc(var(--cvw)*2)] max-md:space-y-[calc(var(--cvw)*6)]"
         >
-            <LineReveal as="h2" className="mx-auto w-[calc(var(--cvw)*60)]  max-md:w-full text64 font-aeonik text-[calc(var(--cvw)*4.6)]! max-md:text-[calc(var(--cvw)*6)]! max-sm:text-[calc(var(--cvw)*9)]!">
+            <LineReveal as="h2" className="type-h1 mx-auto w-[calc(var(--cvw)*60)] max-md:w-full">
                 Explore the Moments Your Website is <span className="gradient-text-animate">Missing.</span>
             </LineReveal>
 
@@ -219,8 +219,8 @@ export default function ExploreTheEffects() {
                         </div>
                         <div className="flex flex-col justify-between gap-4 py-1">
                             <div>
-                                <h3 className="text32 font-aeonik text-[calc(var(--cvw)*2.6)]! max-md:text-[calc(var(--cvw)*4)]! max-sm:text-[calc(var(--cvw)*6.6)]! font-avenir">{item.title}</h3>
-                                <p className="mt-[calc(var(--cvw)*0.5)] text22 font-avenir text-[calc(var(--cvw)*1.1)]! leading-[1.6]! max-md:text-[calc(var(--cvw)*2.2)]! max-sm:text-[calc(var(--cvw)*4.1)]! text-white/60">{item.text}</p>
+                                <h3 className="type-h2">{item.title}</h3>
+                                <p className="type-body mt-[calc(var(--cvw)*0.5)] text-white/60">{item.text}</p>
                             </div>
                             <LinkButton href={item.href} text="Explore" underline tilted={false} underlineClassName="mt-0" className="text18 text-white hover:text-primary transition-colors duration-300" />
                         </div>

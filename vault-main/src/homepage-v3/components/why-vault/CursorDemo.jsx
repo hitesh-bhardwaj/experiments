@@ -41,7 +41,7 @@ export default function CursorDemo() {
             />
             <p
                 aria-hidden="true"
-                className={`pointer-events-none absolute inset-x-0 top-1/2 z-1 -translate-y-1/2 text-center font-avenir text-[11px] tracking-[.2em] text-white/40 uppercase transition-[opacity,filter] duration-700 ease-[cubic-bezier(.16,1,.3,1)] ${moving ? "opacity-0 blur-[2px]" : "opacity-100 blur-0"}`}
+                className={`pointer-events-none absolute inset-x-0 top-1/2 z-1 -translate-y-1/2 text-center type-label text-white/40 transition-[opacity,filter] duration-700 ease-[cubic-bezier(.16,1,.3,1)] ${moving ? "opacity-0 blur-[2px]" : "opacity-100 blur-0"}`}
             >
                 HOVER TO REVEAL.
             </p>

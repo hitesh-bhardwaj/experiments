@@ -136,7 +136,7 @@ export default function PricingPlansHome() {
     return (
         <section ref={rootRef} id="pricing" data-sound-flow="off" data-sound-hover="off" className="relative bg-white px-[calc(var(--cvw)*4.5)] py-[7%] max-md:py-[15%] font-avenir text-[#1D1D1D] max-md:px-[calc(var(--cvw)*7)]">
             <div className="mx-auto flex w-full max-w-[1536px] flex-wrap items-end justify-between gap-[calc(var(--cvw)*2)] max-md:gap-[calc(var(--cvw)*5)]">
-                <LineReveal as="h2" className="text64 leading-[1.2]! font-aeonik text-[calc(var(--cvw)*4.6)]! max-md:text-[calc(var(--cvw)*6)]! max-sm:text-[calc(var(--cvw)*9)]!">
+                <LineReveal as="h2" className="type-h1">
                     Two Plans.<br/> <span className="gradient-text-animate gradient-text-single">Every Moment Covered.</span>
                 </LineReveal>
 
@@ -181,14 +181,14 @@ export default function PricingPlansHome() {
                             {/* <CornerMarks /> */}
                             {dark && <CardFluid />}
                             {plan.badge && (
-                                <span className="text-shimmer absolute top-[22px] right-[22px] z-1 text-[11px] font-medium tracking-[.14em] uppercase max-sm:static max-sm:self-start">
+                                <span className="text-shimmer absolute top-[22px] right-[22px] z-1 type-label max-sm:static max-sm:self-start">
                                     {plan.badge}
                                 </span>
                             )}
 
                             <div className="relative grid gap-2">
-                                <h3 className="text32 font-aeonik text-[calc(var(--cvw)*2.6)]! max-md:text-[calc(var(--cvw)*4)]! max-sm:text-[calc(var(--cvw)*6.6)]! uppercase">{plan.name}</h3>
-                                <span className={`text22 font-avenir text-[calc(var(--cvw)*1.1)]! leading-[1.6]! max-md:text-[calc(var(--cvw)*2.2)]! max-sm:text-[calc(var(--cvw)*4.1)]! ${dark ? "text-[#a9a9a9]" : "text-[#6B6B6B]"}`}>{plan.for}</span>
+                                <h3 className="type-h2 uppercase">{plan.name}</h3>
+                                <span className={`type-body-lg ${dark ? "text-[#a9a9a9]" : "text-[#6B6B6B]"}`}>{plan.for}</span>
                             </div>
 
                             <div className="relative mt-2 flex items-baseline leading-none tracking-[-.05em]">
@@ -201,12 +201,12 @@ export default function PricingPlansHome() {
                             </div>
 
                             {/* Billing + savings, closed off by a thin rule */}
-                            <div className={`relative grid gap-1 border-b pb-[calc(var(--cvw)*1.4)] text22 font-avenir text-[calc(var(--cvw)*1.1)]! leading-[1.6]! max-md:text-[calc(var(--cvw)*2.2)]! max-sm:text-[calc(var(--cvw)*4.1)]! ${dark ? "border-[#F4F4F4]/12" : "border-[#1D1D1D]/12"}`}>
+                            <div className={`relative grid gap-1 border-b pb-[calc(var(--cvw)*1.4)] type-body ${dark ? "border-[#F4F4F4]/12" : "border-[#1D1D1D]/12"}`}>
                                 <p data-period-copy className={`min-h-[1.5em] ${dark ? "text-[#a9a9a9]" : "text-[#6B6B6B]"}`}>{plan.billLine[period]}</p>
                                 <p data-period-copy className={dark ? "text-primary" : "text-[#8a8a8a]"}>{plan.chip[period]}</p>
                             </div>
 
-                            <ul className={`relative mt-[calc(var(--cvw)*0.4)] grid flex-1 content-start gap-[calc(var(--cvw)*1.2)] max-md:gap-[calc(var(--cvw)*4)] text22 font-avenir text-[calc(var(--cvw)*1.1)]! leading-[1.6]! max-md:text-[calc(var(--cvw)*2.2)]! max-sm:text-[calc(var(--cvw)*4.1)]!`}>
+                            <ul className={`relative mt-[calc(var(--cvw)*0.4)] grid flex-1 content-start gap-[calc(var(--cvw)*1.2)] max-md:gap-[calc(var(--cvw)*4)] type-body`}>
                                 {plan.features.map((f, i) => (
                                     <li key={i} className="grid grid-cols-[22px_minmax(0,1fr)] items-start gap-2.5">
                                         <Tick tone={dark ? "primary" : "ink"} />
@@ -222,7 +222,7 @@ export default function PricingPlansHome() {
                                 className={`relative mt-2.5 w-fit self-start justify-center ${plan.cta.variant === "outline" ? LIGHT_OUTLINE : ""}`}
                             />
                             {/* Same line reserved in every card, so the buttons sit level */}
-                            <p aria-hidden={!plan.yearlyNote} className="relative -mt-1 min-h-[1.5em] text-left text-[calc(var(--cvw)*0.9)] max-md:text-[calc(var(--cvw)*3.4)] text-[#8a8a8a]">
+                            <p aria-hidden={!plan.yearlyNote} className="relative -mt-1 min-h-[1.5em] text-left type-small text-[#8a8a8a]">
                                 {plan.yearlyNote ?? ""}
                             </p>
                         </article>
@@ -230,7 +230,7 @@ export default function PricingPlansHome() {
                 })}
             </div>
 
-            <ul className="mx-auto mt-[calc(var(--cvw)*2)] flex w-full max-w-[1536px] flex-wrap justify-center max-md:justify-start max-md:gap-[2.5vw] max-md:mt-[5vh] gap-x-[calc(var(--cvw)*2)] gap-y-[calc(var(--cvw)*0.8)] text-[calc(var(--cvw)*0.8)] max-md:text-[calc(var(--cvw)*2.8)] font-medium tracking-[.14em] text-[#6B6B6B] uppercase">
+            <ul className="mx-auto mt-[calc(var(--cvw)*2)] flex w-full max-w-[1536px] flex-wrap justify-center max-md:justify-start max-md:gap-[2.5vw] max-md:mt-[5vh] gap-x-[calc(var(--cvw)*2)] gap-y-[calc(var(--cvw)*0.8)] type-label text-[#6B6B6B]">
                 {ASSURANCES.map((a) => (
                     <li key={a} className="flex items-center  gap-2"><Tick />{a}</li>
                 ))}

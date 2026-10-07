@@ -166,11 +166,11 @@ export default function ProblemFixes() {
     >
       <div className="mx-auto relative z-200 flex w-full max-w-[1536px] flex-col items-center">
         <div className=" text-center w-[70%] max-md:w-full">
-          <LineReveal as='h2' className="text64 font-aeonik text-[calc(var(--cvw)*4.6)]! max-md:text-[calc(var(--cvw)*6)]! max-sm:text-[calc(var(--cvw)*9)]! w-full">
+          <LineReveal as='h2' className="type-h1 w-full">
             Good Motion is{' '}
             <span className="gradient-text-animate">Harder</span> Than it Looks
           </LineReveal>
-          <p data-fadeup-delay="0.2" className="fadeup text22 font-avenir text-[calc(var(--cvw)*1.1)]! leading-[1.6]! max-md:text-[calc(var(--cvw)*2.2)]! max-sm:text-[calc(var(--cvw)*4.1)]! mx-auto mt-[calc(var(--cvw)*3.5)] max-w-[calc(var(--cvw)*55)] text-white max-md:mt-[calc(var(--cvw)*5)] max-md:w-full max-md:max-w-full max-sm:mt-[calc(var(--cvw)*10)]">
+          <p data-fadeup-delay="0.2" className="type-body-lg fadeup mx-auto mt-[calc(var(--cvw)*3.5)] max-w-[calc(var(--cvw)*55)] text-white max-md:mt-[calc(var(--cvw)*5)] max-md:w-full max-md:max-w-full max-sm:mt-[calc(var(--cvw)*10)]">
           Anyone can add a fade. What&apos;s hard is everything around it. Get timing, restraint, or performance wrong, and the moment meant to impress becomes the reason the site feels worse. Most teams see that risk and drop their ambitions to play it safe. And your interface ends up looking like everyone else&apos;s.  Vault is engineered around that discipline by default, not as an afterthought.
           </p>
         </div>
@@ -179,7 +179,7 @@ export default function ProblemFixes() {
           ref={cardsRef}
           className="mt-[calc(var(--cvw)*8)] h-fit w-full space-y-[calc(var(--cvw)*1)] max-md:mt-20 max-md:w-full max-md:space-y-5 max-sm:mt-20 max-sm:space-y-5"
         >
-          <div className="text24 flex w-full items-center justify-between px-[calc(var(--cvw)*.5)] max-sm:text-sm">
+          <div className="type-body-lg flex w-full items-center justify-between px-[calc(var(--cvw)*.5)]">
             <p>The Risks</p>
             <p>What Vault Fixes</p>
           </div>
@@ -196,7 +196,7 @@ export default function ProblemFixes() {
                   <FadeTextV3
                     as="p"
                     lang="en"
-                    className="text24 capitalize max-sm:min-w-0 max-sm:flex-1 max-sm:text-base! max-sm:leading-tight max-sm:wrap-break-word max-sm:hyphens-auto"
+                    className="type-body-lg capitalize max-sm:min-w-0 max-sm:flex-1 max-sm:wrap-break-word max-sm:hyphens-auto"
                     active={index <= activeIndex}
                     armed={armed}
                   >
@@ -223,7 +223,7 @@ export default function ProblemFixes() {
 
                 <FadeTextV3
                   as="p"
-                  className="text24 whitespace-nowrap capitalize max-md:whitespace-normal max-md:max-w-[10ch] max-md:text-right max-md:leading-[1.15] max-sm:text-base!"
+                  className="type-body-lg whitespace-nowrap capitalize max-lg:whitespace-normal max-md:max-w-[10ch] max-md:text-right"
                   active={index <= activeIndex}
                   armed={armed}
                 >

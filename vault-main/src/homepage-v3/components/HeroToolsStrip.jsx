@@ -86,7 +86,7 @@ export default function HeroToolsStrip() {
     return (
         <section ref={rootRef} aria-label="Built on" className="relative z-10 px-[calc(var(--cvw)*3)] max-md:px-6 max-sm:px-5 mt-[20vh]">
             <div className="fadeup border-t border-white/10 pt-[calc(var(--cvw)*4)] pb-[calc(var(--cvw)*12)] max-md:pt-12 max-md:pb-28">
-                <p className="mb-[calc(var(--cvw)*2.4)] text-center text-[calc(var(--cvw)*0.7)] max-md:text-[11px] font-semibold uppercase tracking-[0.14em] text-white/40 max-md:mb-8">
+                <p className="mb-[calc(var(--cvw)*2.4)] text-center type-label text-white/40 max-md:mb-8">
                     Built on the tools your team already trusts
                 </p>
                 <div className="overflow-hidden [mask-image:linear-gradient(90deg,transparent,#000_12%,#000_88%,transparent)]" aria-hidden="true">
@@ -100,7 +100,7 @@ export default function HeroToolsStrip() {
             {/* Theremin's breathing room under the hero: the ribbons carry on
                 through it before the next section arrives */}
             <div className="grid h-[38vh] place-items-end justify-center pb-[12vh]" aria-hidden="true">
-                <p className="text-[calc(var(--cvw)*0.75)] font-medium uppercase tracking-[0.14em] text-white/35 max-md:text-[11px]">
+                <p className="type-label text-white/35">
                     Move through the field
                 </p>
             </div>

@@ -128,12 +128,12 @@ export default function NotAnotherUIKit() {
                   <div className='relative size-[calc(var(--cvw)*3.2)]'>
                     {card.icon && <Image src={card.icon} alt="" aria-hidden="true" fill sizes="5vw" className="object-contain" />}
                   </div>
-                  <h3 className="text-[calc(var(--cvw)*3)] font-aeonik max-sm:text-[calc(var(--cvw)*6.5)]! max-sm:w-[80%]">
+                  <h3 className="type-h2 max-sm:w-[80%]">
                     {card.title}
                   </h3>
                   </div>
 
-                  <p className="text24 font-avenir max-sm:text-[calc(var(--cvw)*4)]! max-sm:leading-[1.2]">
+                  <p className="type-small">
                     {card.text}
                   </p>
                 </div>

@@ -58,15 +58,16 @@ Leave those working as they are. Don't restyle or refactor them to match this gu
 
   | Class | Use | Desktop | `max-lg` | `max-md` |
   |---|---|---|---|---|
-  | `type-display` | hero headline | `cvw×6.4` | `8.5vw` | `13vw` |
-  | `type-h1` | section headings | `cvw×4.6` | `6vw` | `9vw` |
-  | `type-h2` | sub-headings, large card titles | `cvw×2.6` | `4vw` | `6.5vw` |
-  | `type-h3` | card titles, FAQ questions | `cvw×1.6` | `2.6vw` | `5vw` |
-  | `type-body-lg` | intro paragraphs | `cvw×1.1` | `2.2vw` | `4.1vw` |
+  | `type-display` | hero headline | `cvw×6.4` | `8.5vw` | `13vw`, max 65px |
+  | `type-h1` | section headings | `cvw×4.6` | `6vw` | `9vw`, max 46px |
+  | `type-h2` | sub-headings, large card titles | `cvw×2.6` | `4vw` | `6.5vw`, max 31px |
+  | `type-h3` | card titles, FAQ questions | `cvw×1.6` | `2.6vw` | `5vw`, max 20px |
+  | `type-body-lg` | intro paragraphs | `cvw×1.1` | `2.2vw` | `clamp(15px, 4.1vw, 17px)` |
   | `type-body` | body copy | `clamp(15px, cvw×1.05, 17px)` | same | same |
   | `type-small` | meta text, card body | `clamp(13px, cvw×0.9, 15px)` | same | same |
   | `type-label` | eyebrows, field labels (uppercase, medium, 0.14em) | `clamp(11px, cvw×0.72, 12px)` | same | same |
 
+- Phone sizes stop at the tablet size (the `max-md` maximums above), so 640–767px screens such as an iPad mini in portrait don't get oversized text, and nothing jumps at 768px.
 - Pick the class by role, not by matching a pixel size. Don't write new one-off `text-[…]` sizes or new size constants (`T16`, `LABEL`). If a design really needs a one-off tweak, add a utility next to the scale class (`type-h2 max-md:text-[7vw]`): it overrides the scale without `!`.
 - The old `.text18`…`.text140` / `.t96` classes still work but are being replaced by the scale. Don't use them in new code.
 - To change a size site-wide, edit its `@utility type-*` block at the end of `globals.css` (desktop size first, then the `@variant max-lg` / `@variant max-md` sizes). Every element using that class updates. Don't fork a class for one section; override it in place with a utility instead.

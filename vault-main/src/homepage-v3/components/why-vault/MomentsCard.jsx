@@ -67,7 +67,7 @@ export default function MomentsCard() {
                 {near && (!needsWebGL || canRunWebGL) ? (
                     <Demo key={tab} tab={tab} />
                 ) : (
-                    <p className="flex h-full items-center justify-center text-[11px] font-semibold tracking-[.14em] text-white/40 uppercase">
+                    <p className="flex h-full items-center justify-center type-label text-white/40">
                         {current.effect}
                     </p>
                 )}
@@ -97,7 +97,7 @@ export default function MomentsCard() {
             </div>
             <Link
                 href={current.href}
-                className="absolute bottom-4 left-4 z-10 text-[10px] font-normal tracking-[.12em] text-white/70 uppercase underline-offset-4 transition-colors duration-700 ease-[cubic-bezier(.16,1,.3,1)] hover:text-white hover:underline focus-visible:text-white focus-visible:underline"
+                className="absolute bottom-4 left-4 z-10 type-label text-white/70 underline-offset-4 transition-colors duration-700 ease-[cubic-bezier(.16,1,.3,1)] hover:text-white hover:underline focus-visible:text-white focus-visible:underline"
             >
                 {current.effect}
             </Link>

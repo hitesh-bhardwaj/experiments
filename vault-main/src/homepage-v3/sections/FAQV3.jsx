@@ -162,7 +162,7 @@ export function FAQRow({ item, isOpen, onToggle, index }) {
       onKeyDown={handleKeyDown}
     >
       <div className="flex w-full items-start justify-between gap-[calc(var(--cvw)*1.5)] max-md:gap-[calc(var(--cvw)*4)]">
-        <h3 className="text-[calc(var(--cvw)*1.55)] font-avenir flex-1 leading-tight max-md:text-[calc(var(--cvw)*5.2)]">
+        <h3 className="type-h3 flex-1">
           {item.question}
         </h3>
         <span
@@ -193,7 +193,7 @@ export function FAQRow({ item, isOpen, onToggle, index }) {
           style={{ opacity: initiallyOpen ? 1 : 0 }}
           className="pt-[calc(var(--cvw)*1.2)] pr-[calc(var(--cvw)*2.8)] max-md:pt-[calc(var(--cvw)*4)] max-md:pr-[calc(var(--cvw)*8)]"
         >
-          <p className="text22 font-avenir text-[calc(var(--cvw)*1.1)]! leading-[1.6]! max-md:text-[calc(var(--cvw)*2.2)]! max-sm:text-[calc(var(--cvw)*4.1)]! w-[85%] text-background/70 max-md:w-full">
+          <p className="type-body w-[85%] text-background/70 max-md:w-full">
             {item.answer}
           </p>
         </div>
@@ -278,7 +278,7 @@ export default function FAQV3({ faqItems, translateTop = true}) {
 
       <LineReveal
         as="h2"
-        className="text64 font-aeonik text-[calc(var(--cvw)*4.6)]! max-md:text-[calc(var(--cvw)*6)]! max-sm:text-[calc(var(--cvw)*9)]! text-center mb-[calc(var(--cvw)*7)]  relative z-110  max-md:mb-[calc(var(--cvw)*12)] max-md:w-full"
+        className="type-h1 text-center mb-[calc(var(--cvw)*7)] relative z-110 max-md:mb-[calc(var(--cvw)*12)] max-md:w-full"
       >
         Questions, <span className="gradient-text-animate">Answered.</span>
       </LineReveal>

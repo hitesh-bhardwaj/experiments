@@ -1085,7 +1085,7 @@ html.lenis.lenis-stopped[data-v4-drawer-open] {
   line-height: 1.05;
   letter-spacing: -0.035em;
   @variant max-lg { font-size: 8.5vw; }
-  @variant max-md { font-size: 13vw; }
+  @variant max-md { font-size: min(13vw, 65px); }
 }
 @utility type-h1 {
   font-family: var(--font-aeonik), system-ui, sans-serif;
@@ -1094,7 +1094,7 @@ html.lenis.lenis-stopped[data-v4-drawer-open] {
   line-height: 1.05;
   letter-spacing: -0.035em;
   @variant max-lg { font-size: 6vw; }
-  @variant max-md { font-size: 9vw; }
+  @variant max-md { font-size: min(9vw, 46px); }
 }
 @utility type-h2 {
   font-family: var(--font-aeonik), system-ui, sans-serif;
@@ -1103,7 +1103,7 @@ html.lenis.lenis-stopped[data-v4-drawer-open] {
   line-height: 1.15;
   letter-spacing: -0.03em;
   @variant max-lg { font-size: 4vw; }
-  @variant max-md { font-size: 6.5vw; }
+  @variant max-md { font-size: min(6.5vw, 31px); }
 }
 @utility type-h3 {
   font-family: var(--font-aeonik), system-ui, sans-serif;
@@ -1112,14 +1112,14 @@ html.lenis.lenis-stopped[data-v4-drawer-open] {
   line-height: 1.25;
   letter-spacing: -0.02em;
   @variant max-lg { font-size: 2.6vw; }
-  @variant max-md { font-size: 5vw; }
+  @variant max-md { font-size: min(5vw, 20px); }
 }
 @utility type-body-lg {
   font-family: var(--font-avenir), "Avenir Next", system-ui, sans-serif;
   font-size: calc(var(--cvw) * 1.1);
   line-height: 1.6;
   @variant max-lg { font-size: 2.2vw; }
-  @variant max-md { font-size: 4.1vw; }
+  @variant max-md { font-size: clamp(15px, 4.1vw, 17px); }
 }
 @utility type-body {
   font-family: var(--font-avenir), "Avenir Next", system-ui, sans-serif;
