@@ -265,7 +265,7 @@ export default function NavbarMobileV3({
         data-site-header
         // Translucent rather than solid: the hero's ASCII field keeps moving
         // under the bar, and the blur is what keeps the logo readable over it.
-        className={`fixed top-0 left-0 z-1000 hidden max-[1025px]:flex w-full items-center justify-between border-b border-white/8 bg-background/30 px-[6vw] py-[5vw] backdrop-blur-xl transition-[transform,translate,opacity] duration-500 ease-out motion-reduce:transition-none md:px-[3.5vw] md:py-[2.5vw]  ${!intro
+        className={`fixed top-0 left-0 z-1000 hidden max-lg:flex w-full items-center justify-between border-b border-white/8 bg-background/30 px-[6vw] py-[5vw] backdrop-blur-xl transition-[transform,translate,opacity] duration-500 ease-out motion-reduce:transition-none md:px-[3.5vw] md:py-[2.5vw]  ${!intro
           ? "pointer-events-none translate-y-0 opacity-0"
           : visible || open
             ? "translate-y-0 opacity-100"
@@ -345,7 +345,7 @@ export default function NavbarMobileV3({
 
       <div
         ref={overlayRef}
-        className="fixed inset-0 z-990 hidden bg-background max-[1025px]:block"
+        className="fixed inset-0 z-990 hidden bg-background max-lg:block"
         style={{ visibility: "hidden", opacity: 0 }}
       >
         <div
@@ -366,7 +366,7 @@ export default function NavbarMobileV3({
                     onClick={close}
                     target={external ? "_blank" : undefined}
                     rel={external ? "noopener noreferrer" : undefined}
-                    className="flex border-t border-white/10 max-[1025px]:py-[3vw] max-md:text-[4.75vw] text-white/90 max-md:py-[4.5vw] max-[1025px]:text-[3.75vw]"
+                    className="flex border-t border-white/10 max-lg:py-[3vw] max-md:text-[4.75vw] text-white/90 max-md:py-[4.5vw] max-lg:text-[3.75vw]"
                   >
                     {row.label}
                   </Link>
@@ -390,7 +390,7 @@ export default function NavbarMobileV3({
                       }
                       aria-label={`${expanded ? "Collapse" : "Expand"} ${label}`}
                       aria-expanded={expanded}
-                      className="flex w-full items-center justify-between py-[4.5vw] text-left  text-white/90 max-md:py-[4.5vw] max-[1025px]:py-[3vw] max-[1025px]:text-[3.75vw] max-md:text-[4.75vw]"
+                      className="flex w-full items-center justify-between py-[4.5vw] text-left  text-white/90 max-md:py-[4.5vw] max-lg:py-[3vw] max-lg:text-[3.75vw] max-md:text-[4.75vw]"
                     >
                       <span>{label}</span>
                       <div className="relative flex size-[8vw] shrink-0 items-center justify-center bg-grey text-primary md:size-[4.6vw]">
@@ -445,7 +445,7 @@ export default function NavbarMobileV3({
               <ButtonV3
                 text="Go to Dashboard"
                 href="/dashboard"
-                className="w-full max-md:py-[1.5vw] max-[1025px]:py-[3vw] max-md:text-[4vw] max-[1025px]:text-[3vw] md:[--btn-pad:2.4vw] md:[--btn-gap:1vw] md:[--btn-square:1.4vw] md:[--btn-arrow:2vw]"
+                className="w-full max-md:py-[1.5vw] max-lg:py-[3vw] max-md:text-[4vw] max-lg:text-[3vw] md:[--btn-pad:2.4vw] md:[--btn-gap:1vw] md:[--btn-square:1.4vw] md:[--btn-arrow:2vw]"
               />
             ) : (
               <ButtonV3

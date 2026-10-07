@@ -207,7 +207,7 @@ export default function CubeAsciiControls({ base, onChange }) {
     // alone do nothing. `fill` keeps the panel inside this positioned shell.
     return (
         <div className="pointer-events-none fixed bottom-4 right-4 z-9999">
-            <div className="pointer-events-auto rounded-md w-[20vw] max-w-[calc(100vw-2rem)]">
+            <div className="pointer-events-auto w-[20vw] max-w-[calc(100vw-2rem)]">
                 <Leva
                     fill
                     flat

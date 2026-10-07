@@ -63,11 +63,11 @@ export function CoreHud({ ref, canvasRef, tooltipRef, mode, stats, effects, name
     <aside
       ref={ref}
       aria-label="Inside the vault"
-      className="relative z-[6] flex min-h-0 flex-col justify-between gap-[2vw] pt-[1vw] pb-[3vw] pl-[6vw] will-change-transform max-[1025px]:pb-6 portrait:row-start-1 portrait:justify-end portrait:pt-0 portrait:pb-4 portrait:pl-0"
+      className="relative z-[6] flex min-h-0 flex-col justify-between gap-[2vw] pt-[1vw] pb-[3vw] pl-[6vw] will-change-transform max-lg:pb-6 portrait:row-start-1 portrait:justify-end portrait:pt-0 portrait:pb-4 portrait:pl-0"
     >
       {/* The globe fills the column's content box (inside the left padding)
           behind the readout; core.js sizes itself and tracks the pointer here */}
-      <div className="absolute inset-y-0 right-0 left-[6vw] max-[1025px]:hidden">
+      <div className="absolute inset-y-0 right-0 left-[6vw] max-lg:hidden">
         <canvas ref={canvasRef} aria-hidden="true" className="absolute inset-0 block size-full" />
         <div
           ref={tooltipRef}

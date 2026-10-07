@@ -117,13 +117,13 @@ export default function CommunityFamiliar() {
             </li>
           ))}
         </ol>
-        <LineReveal as="h2" className={`font-aeonik font-normal tracking-[-.035em] leading-[1.02]  text80 mt-[7vw] max-w-[45vw] max-[1025px]:max-w-[80vw] max-md:max-w-full`}>
+        <LineReveal as="h2" className={`font-aeonik font-normal tracking-[-.035em] leading-[1.02]  text80 mt-[7vw] max-w-[45vw] max-lg:max-w-[80vw] max-md:max-w-full`}>
           You’re not the only one. <span className="gradient-text-animate gradient-text-single">There’s a room for this.</span>
         </LineReveal>
       </section>
 
-      <div className="mx-auto flex max-w-[1536px] gap-8 px-[4.5vw] pb-[10vw] max-[1025px]:flex-col" id="why">
-        <div className="sticky top-1/2 -translate-y-1/2 flex mt-[6vw] min-w-0 flex-[.8] flex-col items-start gap-4.5 self-start max-[1025px]:hidden">
+      <div className="mx-auto flex max-w-[1536px] gap-8 px-[4.5vw] pb-[10vw] max-lg:flex-col" id="why">
+        <div className="sticky top-1/2 -translate-y-1/2 flex mt-[6vw] min-w-0 flex-[.8] flex-col items-start gap-4.5 self-start max-lg:hidden">
           {/* <p className="eyebrow label">Why join</p> */}
           {PANELS.map((p, i) => (
             <button

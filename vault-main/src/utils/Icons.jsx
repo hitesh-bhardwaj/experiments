@@ -95,7 +95,7 @@ export function CheckIcon({ className, checkboxColor = "#0E0E0E" }) {
 export function FacebookIcon({ className = "", fill = "" }) {
     return (
         <svg
-            className={`w-[2.6vw] h-[2.6vw] relative z-2 duration-500  max-[1025px]:w-[6vw] max-[1025px]:h-[6vw] ease-in-out max-md:w-[13vw] max-md:h-[13vw] ${className}`}
+            className={`w-[2.6vw] h-[2.6vw] relative z-2 duration-500  max-lg:w-[6vw] max-lg:h-[6vw] ease-in-out max-md:w-[13vw] max-md:h-[13vw] ${className}`}
             width="48"
             height="48"
             viewBox="0 0 48 48"
@@ -122,7 +122,7 @@ export function FacebookIcon({ className = "", fill = "" }) {
 export function InstagramIcon({ className = "", fill = "" }) {
     return (
         <svg
-            className={`w-[2.6vw] h-[2.6vw] relative z-2 duration-500 ease-in-out  max-[1025px]:w-[6vw] max-[1025px]:h-[6vw] max-md:w-[13vw] max-md:h-[13vw] ${className}`}
+            className={`w-[2.6vw] h-[2.6vw] relative z-2 duration-500 ease-in-out  max-lg:w-[6vw] max-lg:h-[6vw] max-md:w-[13vw] max-md:h-[13vw] ${className}`}
             width="48"
             height="48"
             viewBox="0 0 48 48"
@@ -149,7 +149,7 @@ export function InstagramIcon({ className = "", fill = "" }) {
 export function LinkedinIcon({ className = "", fill = "" }) {
     return (
         <svg
-            className={`w-[2.6vw] h-[2.6vw] relative z-2 duration-500 ease-in-out max-[1025px]:w-[6vw] max-[1025px]:h-[6vw] max-md:w-[13vw] max-md:h-[13vw] ${className}`}
+            className={`w-[2.6vw] h-[2.6vw] relative z-2 duration-500 ease-in-out max-lg:w-[6vw] max-lg:h-[6vw] max-md:w-[13vw] max-md:h-[13vw] ${className}`}
             width="48"
             height="48"
             viewBox="0 0 48 48"
@@ -186,7 +186,7 @@ export function LinkedinIcon({ className = "", fill = "" }) {
 export function TwitterIcon({ className = "", fill = "" }) {
     return (
         <svg
-            className={`w-[2.6vw] h-[2.6vw] relative z-2 duration-500 ease-in-out  max-[1025px]:w-[6vw] max-[1025px]:h-[6vw] max-md:w-[13vw] max-md:h-[13vw] ${className}`}
+            className={`w-[2.6vw] h-[2.6vw] relative z-2 duration-500 ease-in-out  max-lg:w-[6vw] max-lg:h-[6vw] max-md:w-[13vw] max-md:h-[13vw] ${className}`}
             width="48"
             height="48"
             viewBox="0 0 48 48"

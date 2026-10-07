@@ -98,7 +98,7 @@ export default function UIKit() {
   }, []);
 
   return (
-    <section id="uikit-section" className="w-full h-[250vh] pt-[15vw] text-white max-[1025px]:overflow-hidden max-[1025px]:h-fit max-md:py-[25%] max-[1025px]:py-[12%] relative z-20">
+    <section id="uikit-section" className="w-full h-[250vh] pt-[15vw] text-white max-lg:overflow-hidden max-lg:h-fit max-md:py-[25%] max-lg:py-[12%] relative z-20">
         <div>
             <LineReveal as="h2" className="text110 w-[90vw] mx-auto text-center">
                Not <span className='gradient-text-animate'>Another</span> UI Kit. Not a Side Project.
@@ -106,19 +106,19 @@ export default function UIKit() {
         </div>
 
       {/* Use Case Cards */}
-      <div className="w-screen h-screen sticky mt-[-60vh]  max-md:mt-[8vh] top-0  overflow-hidden px-[3vw] max-[1025px]:h-fit max-[1025px]:static max-[1025px]:mt-[12vw] max-[1025px]:pb-[4vw] max-[1025px]:overflow-x-scroll mobile-scrollbar max-[1025px]:pr-[7vw] z-15 ">
-        <div className="w-fit h-full flex gap-[3vw] max-md:gap-[6vw] items-end use-case-container translate-x-[20%] max-[1025px]:translate-x-0 max-md:pl-[5vw] ">
+      <div className="w-screen h-screen sticky mt-[-60vh]  max-md:mt-[8vh] top-0  overflow-hidden px-[3vw] max-lg:h-fit max-lg:static max-lg:mt-[12vw] max-lg:pb-[4vw] max-lg:overflow-x-scroll mobile-scrollbar max-lg:pr-[7vw] z-15 ">
+        <div className="w-fit h-full flex gap-[3vw] max-md:gap-[6vw] items-end use-case-container translate-x-[20%] max-lg:translate-x-0 max-md:pl-[5vw] ">
           {UI_CARDS.map((card) => (
             <div
               key={card.id}
-              className="w-[28vw] h-fit flex flex-col relative use-case justify-between max-md:w-[70vw] max-[1025px]:w-[55vw]"
+              className="w-[28vw] h-fit flex flex-col relative use-case justify-between max-md:w-[70vw] max-lg:w-[55vw]"
             >
               {/* Always visible top orange bar */}
-              <div className="w-full h-[0.5vw] bg-[#ff5f00] max-[1025px]:h-[1vw] max-md:h-[1.5vw] shrink-0" />
+              <div className="w-full h-[0.5vw] bg-[#ff5f00] max-lg:h-[1vw] max-md:h-[1.5vw] shrink-0" />
 
               {/* Expanding card content */}
-              <div className="w-full h-[37vw]  bg-[#161616] content-container overflow-hidden max-md:h-[40vh] max-[1025px]:h-[60vw]">
-                <div className="p-[2.5vw] flex flex-col justify-between h-full max-[1025px]:p-[5vw]">
+              <div className="w-full h-[37vw]  bg-[#161616] content-container overflow-hidden max-md:h-[40vh] max-lg:h-[60vw]">
+                <div className="p-[2.5vw] flex flex-col justify-between h-full max-lg:p-[5vw]">
                   <h3 className="text64 max-md:text-[6.5vw]! max-md:w-[80%]">
                     {card.title}
                   </h3>

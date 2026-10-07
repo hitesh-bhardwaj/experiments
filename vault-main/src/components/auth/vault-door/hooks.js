@@ -5,11 +5,11 @@ import { RESEND_COOLDOWN_SECONDS } from "./constants";
 import { createCore } from "./core";
 import { createDoor } from "./door";
 import { measureSeam } from "./utils";
+import { MEDIA } from "@/lib/breakpoints";
 
 const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
-// Same breakpoint as the header's desktop/mobile switch; the globe is
-// hidden at and below it (phones and tablets)
-const COMPACT_QUERY = "(max-width: 1025px)";
+// Tablet and below (the max-lg: range); the globe is hidden there
+const COMPACT_QUERY = MEDIA.tablet;
 
 function useMediaQuery(query, serverValue) {
   return useSyncExternalStore(

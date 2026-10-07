@@ -24,10 +24,10 @@ export default function CommunityFAQ({ items = [] }) {
   }, [openId]);
 
   return (
-    <section ref={rootRef} className="mx-auto grid max-w-[1536px] grid-cols-[minmax(0,.8fr)_minmax(0,1.6fr)] items-start gap-8 px-[4.5vw] pt-[10vw] pb-[11vw] max-[1025px]:grid-cols-1 max-md:pt-24 max-md:pb-24" id="faq">
+    <section ref={rootRef} className="mx-auto grid max-w-[1536px] grid-cols-[minmax(0,.8fr)_minmax(0,1.6fr)] items-start gap-8 px-[4.5vw] pt-[10vw] pb-[11vw] max-lg:grid-cols-1 max-md:pt-24 max-md:pb-24" id="faq">
       <div className="grid content-start gap-[18px]">
         {/* <p className="eyebrow label fadeup">Questions</p> */}
-        <LineReveal as="h2" className={`font-aeonik font-normal tracking-[-.035em] leading-[1.02] max-w-[10vw] max-[1025px]:max-w-full text-[4.6vw] max-md:text-[9vw]`}>Frequently Asked Questions</LineReveal>
+        <LineReveal as="h2" className={`font-aeonik font-normal tracking-[-.035em] leading-[1.02] max-w-[10vw] max-lg:max-w-full text-[4.6vw] max-md:text-[9vw]`}>Frequently Asked Questions</LineReveal>
       </div>
       <div>
         {items.map((item, i) => (

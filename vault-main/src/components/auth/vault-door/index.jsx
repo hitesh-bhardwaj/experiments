@@ -333,19 +333,19 @@ export default function VaultDoorAuth({ catalogue }) {
     // finds the seam from the column boundary (utils/measureSeam).
     <section
       ref={rootRef}
-      className="home-type relative h-dvh overflow-hidden font-avenir text-foreground [--header-h:calc(4vw_+_45px)] max-[1025px]:[--header-h:80px]"
+      className="home-type relative h-dvh overflow-hidden font-avenir text-foreground [--header-h:calc(4vw_+_45px)] max-lg:[--header-h:80px]"
     >
       <canvas ref={doorCanvasRef} aria-hidden="true" className="pointer-events-none absolute inset-0 block size-full" />
 
-      <div className="mx-auto grid h-full max-w-[1536px] grid-cols-2 px-[3vw] pt-(--header-h) max-[1025px]:px-[6vw] portrait:grid-cols-1 portrait:grid-rows-[30%_1fr] max-[1025px]:portrait:grid-rows-[auto_1fr]">
+      <div className="mx-auto grid h-full max-w-[1536px] grid-cols-2 px-[3vw] pt-(--header-h) max-lg:px-[6vw] portrait:grid-cols-1 portrait:grid-rows-[30%_1fr] max-lg:portrait:grid-rows-[auto_1fr]">
         <div
           ref={formLayerRef}
-          className="relative z-[6] grid min-h-0 grid-rows-[1fr_auto] pr-[10vw] pb-[3vw] will-change-transform max-[1025px]:pb-6 portrait:row-start-2 portrait:overflow-y-auto portrait:pt-[8vw] portrait:pr-0 max-[1025px]:portrait:pt-36 max-md:portrait:pt-[5.3rem]"
+          className="relative z-[6] grid min-h-0 grid-rows-[1fr_auto] pr-[10vw] pb-[3vw] will-change-transform max-lg:pb-6 portrait:row-start-2 portrait:overflow-y-auto portrait:pt-[8vw] portrait:pr-0 max-lg:portrait:pt-36 max-md:portrait:pt-[5.3rem]"
         >
         <main className={`${FORM_WIDTH_CLASS} mt-[3vw] self-start portrait:mt-0`}>
           {/* minmax(0,1fr): the no-wrap heading may run past the block without widening the field */}
           <form ref={paneRef} key={mode} noValidate onSubmit={handleSubmit} className="grid grid-cols-[minmax(0,1fr)]">
-            <p className={`${LABEL_CLASS} mb-[1.2vw] flex items-baseline gap-[0.8vw] text-white/40 max-[1025px]:mb-4 max-[1025px]:gap-3`}>
+            <p className={`${LABEL_CLASS} mb-[1.2vw] flex items-baseline gap-[0.8vw] text-white/40 max-lg:mb-4 max-lg:gap-3`}>
               {pane.eyebrow}
               {pane.showCount && (
                 <span className="text24 font-aeonik tracking-[-.02em] text-primary" aria-live="polite">
@@ -354,7 +354,7 @@ export default function VaultDoorAuth({ catalogue }) {
               )}
             </p>
 
-            <h1 className="text64 mb-[3.5vw] font-aeonik whitespace-nowrap text-[#F4F4F4] max-[1025px]:mb-10 portrait:mb-9">
+            <h1 className="text64 mb-[3.5vw] font-aeonik whitespace-nowrap text-[#F4F4F4] max-lg:mb-10 portrait:mb-9">
               {pane.lead} <span className="gradient-text-animate">{pane.accent}</span>
             </h1>
 
@@ -386,7 +386,7 @@ export default function VaultDoorAuth({ catalogue }) {
             )}
 
             {mode === "sign-up" && field === "newPassword" && (
-              <p className={`${LABEL_CLASS} mt-[0.4vw] text-white/40 max-[1025px]:mt-1.5`}>
+              <p className={`${LABEL_CLASS} mt-[0.4vw] text-white/40 max-lg:mt-1.5`}>
                 By continuing you agree to the{" "}
                 <Link href={LEGAL_LINKS.terms} className="text-white/70 underline underline-offset-3 transition-colors duration-300 hover:text-primary">
                   Terms
@@ -403,11 +403,11 @@ export default function VaultDoorAuth({ catalogue }) {
             {mode === "sign-up" && <div id="clerk-captcha" />}
 
             {mode !== "reset" && (
-              <div className="mt-[2.4vw] grid gap-[1vw] max-[1025px]:mt-8 max-[1025px]:gap-4">
-                <p className={`${LABEL_CLASS} flex items-center gap-[1vw] text-white/40 after:h-px after:flex-1 after:bg-white/10 after:content-[''] max-[1025px]:gap-3`}>
+              <div className="mt-[2.4vw] grid gap-[1vw] max-lg:mt-8 max-lg:gap-4">
+                <p className={`${LABEL_CLASS} flex items-center gap-[1vw] text-white/40 after:h-px after:flex-1 after:bg-white/10 after:content-[''] max-lg:gap-3`}>
                   or continue with
                 </p>
-                <div className="grid grid-cols-2 gap-[0.8vw] max-[1025px]:gap-3">
+                <div className="grid grid-cols-2 gap-[0.8vw] max-lg:gap-3">
                   {OAUTH_PROVIDERS.map(({ strategy, label }) => {
                     const Icon = OAUTH_ICONS[strategy];
                     return (
@@ -416,9 +416,9 @@ export default function VaultDoorAuth({ catalogue }) {
                         type="button"
                         onClick={() => handleOAuth(strategy)}
                         disabled={busy || opening}
-                        className={`text18 flex cursor-pointer items-center justify-center gap-[0.7vw] border border-white/20 bg-black/30 px-[1.2vw] py-[0.85vw] text-white backdrop-blur-lg transition-colors duration-300 hover:border-white/60 hover:bg-white/5 disabled:pointer-events-none disabled:opacity-50 max-[1025px]:gap-2.5 max-[1025px]:px-4 max-[1025px]:py-3 ${FOCUS_RING_CLASS}`}
+                        className={`text18 flex cursor-pointer items-center justify-center gap-[0.7vw] border border-white/20 bg-black/30 px-[1.2vw] py-[0.85vw] text-white backdrop-blur-lg transition-colors duration-300 hover:border-white/60 hover:bg-white/5 disabled:pointer-events-none disabled:opacity-50 max-lg:gap-2.5 max-lg:px-4 max-lg:py-3 ${FOCUS_RING_CLASS}`}
                       >
-                        <Icon className="size-[1.2vw] shrink-0 max-[1025px]:size-5" />
+                        <Icon className="size-[1.2vw] shrink-0 max-lg:size-5" />
                         {label}
                       </button>
                     );
@@ -428,11 +428,11 @@ export default function VaultDoorAuth({ catalogue }) {
             )}
 
             {/* div, not p: LinkButton renders block elements */}
-            <div className="text18 mt-[1.6vw] flex flex-wrap items-baseline gap-x-[0.6vw] gap-y-1 text-light-grey max-[1025px]:mt-6 max-[1025px]:gap-x-2">
+            <div className="text18 mt-[1.6vw] flex flex-wrap items-baseline gap-x-[0.6vw] gap-y-1 text-light-grey max-lg:mt-6 max-lg:gap-x-2">
               {mode === "sign-in" && (
                 <>
                   New to Vault? {paneLink("sign-up", "Create an account")}
-                  <span className="mx-[0.4vw] text-white/20 max-[1025px]:mx-1" aria-hidden="true">·</span>
+                  <span className="mx-[0.4vw] text-white/20 max-lg:mx-1" aria-hidden="true">·</span>
                   {paneLink("reset", "Forgot password")}
                 </>
               )}

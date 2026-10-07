@@ -110,7 +110,7 @@ export function GetTemplateModal({ template, tab, onTab, onClose, onBuy }) {
         initial={{ opacity: 0, y: 30, scale: 0.97 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        className="relative grid w-[60vw] grid-cols-[minmax(0,.9fr)_minmax(0,1.1fr)] gap-6.5 bg-[#141414] p-6.5 text-[#F4F4F4] shadow-[inset_0_0_0_1px_rgba(244,244,244,.1),0_50px_100px_-30px_#000] max-[1025px]:w-[88vw] max-md:max-h-[90svh] max-md:w-full max-md:grid-cols-1 max-md:overflow-y-auto"
+        className="relative grid w-[60vw] grid-cols-[minmax(0,.9fr)_minmax(0,1.1fr)] gap-6.5 bg-[#141414] p-6.5 text-[#F4F4F4] shadow-[inset_0_0_0_1px_rgba(244,244,244,.1),0_50px_100px_-30px_#000] max-lg:w-[88vw] max-md:max-h-[90svh] max-md:w-full max-md:grid-cols-1 max-md:overflow-y-auto"
       >
         <button
           ref={closeRef}
@@ -155,7 +155,7 @@ export function GetTemplateModal({ template, tab, onTab, onClose, onBuy }) {
             <div className="grid gap-3.5">
               {price != null && (
                 <p className="flex items-baseline gap-2.5">
-                  <b className={`${DISPLAY} ${PRICE} text-[3vw] leading-none max-[1025px]:text-[6vw] max-md:text-[11vw]`}>${price}</b>
+                  <b className={`${DISPLAY} ${PRICE} text-[3vw] leading-none max-lg:text-[6vw] max-md:text-[11vw]`}>${price}</b>
                   <span className={`${LABEL} text-[#8a8a8a]`}>one-time payment</span>
                 </p>
               )}

@@ -9,10 +9,10 @@ export default function BlogAuthor({ author, className = "" }) {
   const designation = author.designation || author.role;
   const image = author.image || author.avatar;
   const avatarClassName =
-    "h-[3.5vw] w-[3.5vw] max-[1025px]:h-[10vw] max-[1025px]:w-[10vw] max-md:h-[14vw] max-md:w-[14vw] shrink-0 overflow-hidden";
+    "h-[3.5vw] w-[3.5vw] max-lg:h-[10vw] max-lg:w-[10vw] max-md:h-[14vw] max-md:w-[14vw] shrink-0 overflow-hidden";
 
   return (
-    <div className={`flex items-center gap-[0.9vw] max-[1025px]:gap-4 ${className}`}>
+    <div className={`flex items-center gap-[0.9vw] max-lg:gap-4 ${className}`}>
       {image?.url ? (
         <div className={avatarClassName}>
           <Image
@@ -33,11 +33,11 @@ export default function BlogAuthor({ author, className = "" }) {
       )}
 
       <div className="flex flex-col gap-[0.4vw]">
-        <p className="font-avenir text-[0.9vw] leading-tight text-white max-[1025px]:text-[2.6vw] max-md:text-[3.6vw]">
+        <p className="font-avenir text-[0.9vw] leading-tight text-white max-lg:text-[2.6vw] max-md:text-[3.6vw]">
           {author.name}
         </p>
         {designation && (
-          <p className="font-avenir text-[0.9vw] leading-tight text-[#AEAEAE] max-[1025px]:text-[2.4vw] max-md:text-[3.4vw]">
+          <p className="font-avenir text-[0.9vw] leading-tight text-[#AEAEAE] max-lg:text-[2.4vw] max-md:text-[3.4vw]">
             {designation}
           </p>
         )}

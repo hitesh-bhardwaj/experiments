@@ -48,14 +48,14 @@ export default function CommunityFounding() {
     <section ref={rootRef} className="mx-auto max-w-[1536px] px-[4.5vw] py-[7vw] px-[4.5vw]" id="founding" aria-labelledby="fd-h">
       <div>
         {/* <p className={`font-avenir text-[11px] font-medium tracking-[.14em] uppercase inline-flex items-center gap-2.5 text-[#9C9C9C] before:size-[5px] before:rounded-full before:bg-primary before:content-[''] text-[#6B6B6B] fadeup`}>Founding members</p> */}
-        <LineReveal as="h2" id="fd-h" className={`font-aeonik font-normal tracking-[-.035em] leading-[1.02] mt-[2vw] text80 max-md:text-[9vw] max-w-[35vw] max-[1025px]:max-w-[70vw] max-md:mt-4 max-md:max-w-full`}>
+        <LineReveal as="h2" id="fd-h" className={`font-aeonik font-normal tracking-[-.035em] leading-[1.02] mt-[2vw] text80 max-md:text-[9vw] max-w-[35vw] max-lg:max-w-[70vw] max-md:mt-4 max-md:max-w-full`}>
           The First Cohort <span className="gradient-text-animate gradient-text-single">Shapes the Room.</span>
         </LineReveal>
       </div>
-      <div className="mt-[5vw] grid grid-cols-[minmax(0,1.1fr)_minmax(0,.9fr)] items-start gap-[4vw] max-[1025px]:grid-cols-1">
+      <div className="mt-[5vw] grid grid-cols-[minmax(0,1.1fr)_minmax(0,.9fr)] items-start gap-[4vw] max-lg:grid-cols-1">
         <div className="fadeup relative isolate overflow-hidden bg-[#1D1D1D] p-[3vw] max-md:p-7 text-[#F4F4F4]">
           <CardFluid />
-          <ul className="relative grid gap-[2vw] max-[1025px]:gap-5">
+          <ul className="relative grid gap-[2vw] max-lg:gap-5">
             {PERKS.map((perk) => (
               <li key={perk.title} className="grid grid-cols-[8px_minmax(0,1fr)] items-center gap-x-4 gap-y-1">
                 {/* diamond sits in its own column, centred on the title's line */}

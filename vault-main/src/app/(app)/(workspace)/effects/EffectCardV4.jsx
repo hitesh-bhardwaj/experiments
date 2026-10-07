@@ -13,15 +13,15 @@ import { twMerge } from "tailwind-merge";
 // Site fonts: body is Neue Haas, h1–h4 get Aeonik from globals.css, code is Geist Mono.
 export const DISPLAY = "font-normal tracking-[-.035em]";
 export const MONO = "font-mono";
-export const LABEL = "text-[0.76vw] max-[1025px]:text-[1.4vw] max-md:text-[2.8vw] uppercase tracking-[.02em]";
+export const LABEL = "text-[0.76vw] max-lg:text-[1.4vw] max-md:text-[2.8vw] uppercase tracking-[.02em]";
 
 const NEW_WINDOW_MS = 1000 * 60 * 60 * 24 * 30;
 // Text sizes in vw: desktop · tablet (max-[1025px]) · mobile (max-md).
-const T10 = "text-[0.73vw] max-[1025px]:text-[1.3vw] max-md:text-[2.7vw]";
-const T11 = "text-[0.76vw] max-[1025px]:text-[1.4vw] max-md:text-[2.8vw]";
-const T12 = "text-[0.87vw] max-[1025px]:text-[1.5vw] max-md:text-[3.2vw]";
-const T14 = "text-[0.97vw] max-[1025px]:text-[1.7vw] max-md:text-[3.6vw]";
-const T18 = "text-[1.25vw] max-[1025px]:text-[2.2vw] max-md:text-[4.1vw]";
+const T10 = "text-[0.73vw] max-lg:text-[1.3vw] max-md:text-[2.7vw]";
+const T11 = "text-[0.76vw] max-lg:text-[1.4vw] max-md:text-[2.8vw]";
+const T12 = "text-[0.87vw] max-lg:text-[1.5vw] max-md:text-[3.2vw]";
+const T14 = "text-[0.97vw] max-lg:text-[1.7vw] max-md:text-[3.6vw]";
+const T18 = "text-[1.25vw] max-lg:text-[2.2vw] max-md:text-[4.1vw]";
 
 const BADGE = `inline-flex h-6 items-center gap-1.5 px-2.25 ${T10} uppercase tracking-[.02em] backdrop-blur-md`;
 // The dark action buttons on a card (Save, Copy install, Preview); the drawer reuses it.
@@ -141,7 +141,7 @@ export function EffectCardV4({
         </div>
 
         {!small && (
-          <div className="absolute inset-x-3 bottom-3 flex justify-end gap-1.5 opacity-0 transition-opacity duration-500 group-focus-within:opacity-100 group-hover:opacity-100 max-[1025px]:opacity-100">
+          <div className="absolute inset-x-3 bottom-3 flex justify-end gap-1.5 opacity-0 transition-opacity duration-500 group-focus-within:opacity-100 group-hover:opacity-100 max-lg:opacity-100">
             <Tooltip label={isWishlisted ? "Saved" : "Save"} hideOnClick>
               <button
                 type="button"
@@ -205,7 +205,7 @@ export function EffectCardV4({
           {effect.title}
         </h3>
         {/* Tags never break mid-word: each chip stays on one line (ellipsis if a single tag is wider than the column). */}
-        <div className="col-start-2 row-span-2 flex max-w-[13vw] flex-wrap justify-end gap-1 max-[1025px]:max-w-[24vw] max-md:max-w-[50vw]">
+        <div className="col-start-2 row-span-2 flex max-w-[13vw] flex-wrap justify-end gap-1 max-lg:max-w-[24vw] max-md:max-w-[50vw]">
           {deps.map((dep) => (
             <span
               key={dep}

@@ -63,9 +63,9 @@ export function StepField({ id, field, value, message, busy, submitLabel, onChan
             }}
             aria-label={revealed ? "Hide password" : "Show password"}
             aria-pressed={revealed}
-            className={`grid size-[2.4vw] shrink-0 cursor-pointer place-items-center text-white/40 transition-colors duration-300 hover:text-white aria-pressed:text-white max-[1025px]:size-10 ${FOCUS_RING_CLASS}`}
+            className={`grid size-[2.4vw] shrink-0 cursor-pointer place-items-center text-white/40 transition-colors duration-300 hover:text-white aria-pressed:text-white max-lg:size-10 ${FOCUS_RING_CLASS}`}
           >
-            <EyeIcon className="size-[1.2vw] max-[1025px]:size-[18px]" />
+            <EyeIcon className="size-[1.2vw] max-lg:size-[18px]" />
           </button>
         )}
 
@@ -74,14 +74,14 @@ export function StepField({ id, field, value, message, busy, submitLabel, onChan
           disabled={busy}
           aria-label={submitLabel}
           data-sound-kind="primary"
-          className={`grid size-[2.5vw] shrink-0 cursor-pointer place-items-center bg-primary text-black transition-colors duration-300 hover:bg-white disabled:pointer-events-none disabled:opacity-60 max-[1025px]:size-10 ${FOCUS_RING_CLASS}`}
+          className={`grid size-[2.5vw] shrink-0 cursor-pointer place-items-center bg-primary text-black transition-colors duration-300 hover:bg-white disabled:pointer-events-none disabled:opacity-60 max-lg:size-10 ${FOCUS_RING_CLASS}`}
         >
           {busy ? (
-            <span className="size-[0.45vw] animate-pulse bg-current max-[1025px]:size-2" aria-hidden="true" />
+            <span className="size-[0.45vw] animate-pulse bg-current max-lg:size-2" aria-hidden="true" />
           ) : (
             <span
               aria-hidden="true"
-              className="size-[0.9vw] bg-current [mask-image:url(/homepage-v3/svgs/pixelated-arrow.svg)] mask-contain mask-center mask-no-repeat max-[1025px]:size-3.5"
+              className="size-[0.9vw] bg-current [mask-image:url(/homepage-v3/svgs/pixelated-arrow.svg)] mask-contain mask-center mask-no-repeat max-lg:size-3.5"
             />
           )}
         </button>

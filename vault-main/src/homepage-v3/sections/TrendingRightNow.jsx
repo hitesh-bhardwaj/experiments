@@ -73,7 +73,7 @@ function TrendingEffectCard({ effect, priority = false }) {
       ref={cardRef}
       className="group relative block h-full w-full overflow-hidden bg-[#161616]/40"
     >
-      <span className="absolute left-5 top-3 z-10 bg-[#2B2B2B] px-3 py-[0.1vw] text-[0.8vw]  tracking-[0.06em] text-white max-md:text-[3vw] max-[1025px]:text-[2vw] max-md:px-4 max-md:py-1.5 ">
+      <span className="absolute left-5 top-3 z-10 bg-[#2B2B2B] px-3 py-[0.1vw] text-[0.8vw]  tracking-[0.06em] text-white max-md:text-[3vw] max-lg:text-[2vw] max-md:px-4 max-md:py-1.5 ">
         {categoryLabel}
       </span>
 
@@ -106,7 +106,7 @@ function TrendingEffectCard({ effect, priority = false }) {
       </div>
 
       <div className="pointer-events-none absolute inset-x-4 bottom-3 z-10 max-md:inset-x-5  ">
-        <p className="truncate px-0.5 pb-1.5  text-[1.15vw] font-medium leading-none text-white max-md:text-[3.5vw] max-[1025px]:text-[2vw]">
+        <p className="truncate px-0.5 pb-1.5  text-[1.15vw] font-medium leading-none text-white max-md:text-[3.5vw] max-lg:text-[2vw]">
           {effect.title || effect.name}
         </p>
       </div>

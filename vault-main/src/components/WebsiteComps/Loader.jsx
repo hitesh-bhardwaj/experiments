@@ -672,27 +672,27 @@ export default function Loader() {
 
       <div
         ref={behindLogoRef}
-        className="behind-logo relative z-10 flex w-fit items-center gap-[1vw] text-[#0E0E0E] max-[1025px]:gap-[3vw]"
+        className="behind-logo relative z-10 flex w-fit items-center gap-[1vw] text-[#0E0E0E] max-lg:gap-[3vw]"
       >
-        <div className="size-[4vw] max-[1025px]:size-[11vw]">
+        <div className="size-[4vw] max-lg:size-[11vw]">
           <HyperiuxLogoIcon />
         </div>
 
-        <div className="logo-wrapper w-[20vw] max-[1025px]:w-[50vw]">
+        <div className="logo-wrapper w-[20vw] max-lg:w-[50vw]">
           <HyperiuxLogo />
         </div>
       </div>
 
       <div
         ref={frontLogoRef}
-        className="front-logo absolute left-1/2 top-1/2 z-20 flex w-fit -translate-x-1/2 -translate-y-1/2 items-center gap-[1vw] text-[#ff5f00] max-[1025px]:gap-[3vw]"
+        className="front-logo absolute left-1/2 top-1/2 z-20 flex w-fit -translate-x-1/2 -translate-y-1/2 items-center gap-[1vw] text-[#ff5f00] max-lg:gap-[3vw]"
         style={{ clipPath: "inset(0% 100% 0% 0%)" }}
       >
-        <div className="size-[4vw] max-[1025px]:size-[11vw]">
+        <div className="size-[4vw] max-lg:size-[11vw]">
           <HyperiuxLogoIcon />
         </div>
 
-        <div className="logo-wrapper w-[20vw] max-[1025px]:w-[50vw]">
+        <div className="logo-wrapper w-[20vw] max-lg:w-[50vw]">
           <HyperiuxLogo />
         </div>
       </div>
@@ -709,18 +709,18 @@ export default function Loader() {
 
       <div
         ref={textWrapRef}
-        className="pointer-events-none absolute bottom-[5%] left-1/2 z-20 h-[3.6em] w-[26vw] -translate-x-1/2 overflow-hidden text-center text-[#111111] opacity-0 max-[1025px]:w-[70vw] max-md:bottom-[7%] max-md:w-[84vw]"
+        className="pointer-events-none absolute bottom-[5%] left-1/2 z-20 h-[3.6em] w-[26vw] -translate-x-1/2 overflow-hidden text-center text-[#111111] opacity-0 max-lg:w-[70vw] max-md:bottom-[7%] max-md:w-[84vw]"
       >
         <p
           ref={textOneRef}
-          className="absolute inset-0 flex items-center justify-center text-[1.2vw] font-medium leading-tight max-[1025px]:text-[2.5vw] max-md:text-[4vw]"
+          className="absolute inset-0 flex items-center justify-center text-[1.2vw] font-medium leading-tight max-lg:text-[2.5vw] max-md:text-[4vw]"
         >
           Hold Up !!!
         </p>
 
         <p
           ref={textTwoRef}
-          className="absolute inset-0 flex items-center justify-center text-[1.2vw] font-medium leading-tight max-[1025px]:text-[2.5vw] max-md:text-[4vw]"
+          className="absolute inset-0 flex items-center justify-center text-[1.2vw] font-medium leading-tight max-lg:text-[2.5vw] max-md:text-[4vw]"
         >
           The Effects are loading under the hood...
         </p>

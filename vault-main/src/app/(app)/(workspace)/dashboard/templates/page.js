@@ -178,7 +178,7 @@ export default function DashboardTemplatesPage() {
       </div>
 
       {templates.length === 0 && savedTemplates.length === 0 ? (
-        <div className="rounded-md bg-[#272727] p-12 text-center">
+        <div className="bg-[#272727] p-12 text-center">
           <h3 className="mb-2 text-2xl text-white">No templates yet</h3>
           <p className="text-zinc-400">
             Browse the template library and buy one, or upgrade to annual Vault Pro
@@ -196,7 +196,7 @@ export default function DashboardTemplatesPage() {
           {templates.length > 0 && (
             <div>
               <h2 className="mb-4 text-2xl font-semibold text-white">Purchased</h2>
-              <div className="grid grid-cols-3 gap-4 max-[1025px]:grid-cols-2 max-md:grid-cols-1">
+              <div className="grid grid-cols-3 gap-4 max-lg:grid-cols-2 max-md:grid-cols-1">
                 {templates.map((template) => (
                   <OwnedTemplateCard
                     key={template.slug}
@@ -211,7 +211,7 @@ export default function DashboardTemplatesPage() {
           {savedTemplates.length > 0 && (
             <div>
               <h2 className="mb-4 text-2xl font-semibold text-white">Saved</h2>
-              <div className="grid grid-cols-3 gap-4 max-[1025px]:grid-cols-2 max-md:grid-cols-1">
+              <div className="grid grid-cols-3 gap-4 max-lg:grid-cols-2 max-md:grid-cols-1">
                 {savedTemplates.map((template) => (
                   <TemplateCard
                     key={template.slug}

@@ -163,7 +163,7 @@ export default function DashboardPage() {
       </div>
 
       <div className="  p-6 bg-[#272727]">
-        <div className="flex items-start justify-between gap-6 max-[1025px]:flex-col max-[1025px]:items-start">
+        <div className="flex items-start justify-between gap-6 max-lg:flex-col max-lg:items-start">
           <div>
 
             <h2 className="text-2xl font-semibold">Vault access</h2>

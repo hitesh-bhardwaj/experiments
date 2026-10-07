@@ -382,7 +382,7 @@ export function TableOfContents({
             >
               <span
                 className={[
-                  "block h-0.5 rounded-full transition-all duration-300 ease-out",
+                  "block h-0.5 transition-all duration-300 ease-out",
                   activeId === item.id
                     ? "w-8 bg-primary"
                     : "w-8 bg-[#1D1D1D]/25 hover:w-8 hover:bg-[#1D1D1D]/60",

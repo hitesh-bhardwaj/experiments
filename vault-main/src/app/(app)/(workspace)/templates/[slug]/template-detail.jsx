@@ -199,21 +199,21 @@ export function TemplateDetail({
 
   return (
     <div className="min-h-screen text-foreground">
-      <main className="mx-auto w-full relative px-14 max-[1025px]:px-0 pt-25 max-md:pt-36">
+      <main className="mx-auto w-full relative px-14 max-lg:px-0 pt-25 max-md:pt-36">
         <section className="space-y-10">
-          <div className="flex items-start max-md:px-[7vw] max-[1025px]:px-[6vw] justify-between gap-5">
+          <div className="flex items-start max-md:px-[7vw] max-lg:px-[6vw] justify-between gap-5">
             <div className="w-full space-y-5">
               <Breadcrumb />
 
               <HeadAnim>
-                <h1 className="w-full max-md:text-[6vw] max-md:font-bold max-[1025px]:w-[90%] max-md:w-[80%]  font-semibold leading-[1.3]! text-foreground text80">
+                <h1 className="w-full max-md:text-[6vw] max-md:font-bold max-lg:w-[90%] max-md:w-[80%]  font-semibold leading-[1.3]! text-foreground text80">
                   {template.title}
                 </h1>
               </HeadAnim>
 
               {template.tagline && (
                 <Copy delay={0.5}>
-                  <p className="mt-4 w-full max-[1025px]:w-[90%] text-foreground opacity-90 text22 leading-relaxed max-[1025px]:leading-[1.3]">
+                  <p className="mt-4 w-full max-lg:w-[90%] text-foreground opacity-90 text22 leading-relaxed max-lg:leading-[1.3]">
                     {template.tagline}
                   </p>
                 </Copy>
@@ -244,7 +244,7 @@ export function TemplateDetail({
             </div>
           </div>
 
-          <div className="fadeup max-md:px-[7vw] max-[1025px]:px-[6vw] w-full space-y-4">
+          <div className="fadeup max-md:px-[7vw] max-lg:px-[6vw] w-full space-y-4">
             <div className="flex flex-wrap items-center justify-between gap-4">
               <div className="relative inline-flex items-center gap-1 bg-[#161616] p-1">
                 {/* Same sliding-highlight technique as the grid-density toggle
@@ -320,8 +320,8 @@ export function TemplateDetail({
           </div>
 
           {template.overview?.length > 0 && (
-            <div className="relative max-md:px-[7vw] max-[1025px]:px-[6vw] pt-[1.5vw]">
-              <div className="space-y-6 w-[70%] max-[1025px]:w-full">
+            <div className="relative max-md:px-[7vw] max-lg:px-[6vw] pt-[1.5vw]">
+              <div className="space-y-6 w-[70%] max-lg:w-full">
                 <HeadAnim>
                   <h2 className="text32 font-medium text-foreground">Overview</h2>
                 </HeadAnim>
@@ -338,10 +338,10 @@ export function TemplateDetail({
           )}
 
           {relatedTemplates.length > 0 && (
-            <section className="my-20 relative max-md:pt-[5vh] space-y-10 max-[1025px]:space-y-10">
-              <div className="flex items-center justify-between gap-5 max-[1025px]:flex-col">
+            <section className="my-20 relative max-md:pt-[5vh] space-y-10 max-lg:space-y-10">
+              <div className="flex items-center justify-between gap-5 max-lg:flex-col">
                 <HeadAnim>
-                  <h2 className="text-[3.32vw] max-[1025px]:text-[5vw] max-md:text-[2rem] font-medium text-foreground">
+                  <h2 className="text-[3.32vw] max-lg:text-[5vw] max-md:text-[2rem] font-medium text-foreground">
                     Related Templates
                   </h2>
                 </HeadAnim>
@@ -356,7 +356,7 @@ export function TemplateDetail({
                 </div>
               </div>
 
-              <div className="fadeup grid grid-cols-2 gap-6 max-md:px-[7vw] max-[1025px]:px-[6vw] max-[1025px]:gap-10 max-md:grid-cols-1">
+              <div className="fadeup grid grid-cols-2 gap-6 max-md:px-[7vw] max-lg:px-[6vw] max-lg:gap-10 max-md:grid-cols-1">
                 {relatedTemplates.map((relatedTemplate) => (
                   <TemplateCard
                     key={relatedTemplate.slug}

@@ -5,10 +5,10 @@ import useIsMobile from "@/hooks/useIsMobile";
 import DeferredMount from "@/components/WebsiteComps/DeferredMount";
 
 // The dark placeholder matches --background (#0e0e0e) exactly, so it stands in
-// for the scene's own backdrop with no white flash. `max-[1025px]:hidden` mirrors the
+// for the scene's own backdrop with no white flash. `max-lg:hidden` mirrors the
 // scene container, so nothing shows below the md breakpoint.
 const BACKDROP = (
-  <div className="absolute inset-0 z-10 h-[140vh] max-[1025px]:hidden w-full bg-background" />
+  <div className="absolute inset-0 z-10 h-[140vh] max-lg:hidden w-full bg-background" />
 );
 
 // Keep the three.js / @react-three bundle out of the initial page chunk - it
@@ -23,7 +23,7 @@ const GlowingPlates = dynamic(() => import("./GlowingPlates"), {
 export default function GlowingPlatesDeferred(props) {
   const { isMounted, isMobile } = useIsMobile();
 
-  // The scene container is `max-[1025px]:hidden`, so it is never visible below the md
+  // The scene container is `max-lg:hidden`, so it is never visible below the md
   // (1025px) breakpoint. Skipping the mount there means phones/tablets never
   // download or parse the three.js bundle at all - visually identical (nothing
   // was ever shown), just without the wasted JS. Guard on isMounted so SSR and

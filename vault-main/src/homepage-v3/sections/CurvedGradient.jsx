@@ -13,7 +13,7 @@ if (typeof window !== "undefined") {
 }
 
 const headingClass =
-  "text64 pointer-events-none absolute left-1/2 top-1/2 z-10 w-full max-w-[65.5vw] -translate-x-1/2 -translate-y-1/2 text-center text-[3.25vw] text-white max-[1025px]:max-w-[85%] max-[1025px]:text-[4.2vw] max-md:max-w-[90%] max-md:text-[5vw]";
+  "text64 pointer-events-none absolute left-1/2 top-1/2 z-10 w-full max-w-[65.5vw] -translate-x-1/2 -translate-y-1/2 text-center text-[3.25vw] text-white max-lg:max-w-[85%] max-lg:text-[4.2vw] max-md:max-w-[90%] max-md:text-[5vw]";
 
 // Pinned scroll per text, plus one text's worth of run-in/run-out
 const VH_PER_TEXT = 50;

@@ -55,7 +55,7 @@ export default function BlogHero() {
       </div>
 
       <section className="absolute inset-0 z-20 pointer-events-none self-padd h-full flex max-md:items-end max-md:pb-[20vw]! items-center w-full">
-        <div className="space-y-[2vw] max-[1025px]:space-y-[8vw] mt-[2vw] max-[1025px]:mt-0 relative z-2 w-[60%] max-[1025px]:w-full">
+        <div className="space-y-[2vw] max-lg:space-y-[8vw] mt-[2vw] max-lg:mt-0 relative z-2 w-[60%] max-lg:w-full">
           <div className="h-fit flex max-md:flex-col max-md:justify-start items-center w-full">
             <LineReveal
               as="h1"

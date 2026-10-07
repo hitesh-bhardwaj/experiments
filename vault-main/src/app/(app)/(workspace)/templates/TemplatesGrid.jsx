@@ -67,18 +67,18 @@ export function TemplatesGrid({ templates }) {
     <>
       {categories.length > 1 && (
         <div className="fadeup mx-auto px-14 pb-7 pt-10 max-md:px-0">
-          <div className="relative max-[1025px]:w-full flex items-start gap-4">
+          <div className="relative max-lg:w-full flex items-start gap-4">
             <div className="relative min-w-0 flex-1">
               <div
                 className={[
-                  "flex items-center gap-2.5 max-[1025px]:px-[7vw]",
+                  "flex items-center gap-2.5 max-lg:px-[7vw]",
                   "flex-nowrap",
-                  "max-[1025px]:flex-nowrap max-[1025px]:overflow-x-auto",
+                  "max-lg:flex-nowrap max-lg:overflow-x-auto",
                   "scrollbar-thin [scrollbar-color:#CC4C04_transparent]",
                   "[&::-webkit-scrollbar]:h-1",
                   "[&::-webkit-scrollbar-track]:bg-white/10 [&::-webkit-scrollbar-track]:",
                   "[&::-webkit-scrollbar-thumb]:bg-[#CC4C04] [&::-webkit-scrollbar-thumb]:",
-                  "max-[1025px]:pb-3",
+                  "max-lg:pb-3",
                 ].join(" ")}
               >
                 {categories.map((category) => {
@@ -100,7 +100,7 @@ export function TemplatesGrid({ templates }) {
                         px-6 py-3 text-[1vw] text-center relative max-md:px-5
                         backdrop-blur-[6px] font-mono group flex items-center justify-center gap-2 cursor-pointer
                         shrink-0 whitespace-nowrap
-                        transition-colors duration-300 max-[1025px]:text-[2.5vw] max-md:text-[4.2vw]
+                        transition-colors duration-300 max-lg:text-[2.5vw] max-md:text-[4.2vw]
                         ${isSelected
                           ? "bg-[#ff5f00] text-black hover:text-black hover:bg-[#ff5f00]"
                           : "bg-[#161616] text-[#FFFFFF] hover:text-black hover:bg-[#ff5f00]"
@@ -121,7 +121,7 @@ export function TemplatesGrid({ templates }) {
       )}
 
       <div className="mx-auto px-14 pb-12 max-md:px-0">
-        <div className="grid grid-cols-2 gap-4 rounded-xl max-[1025px]:grid-cols-1 max-md:grid-cols-1 max-md:px-[7vw] max-[1025px]:gap-10">
+        <div className="grid grid-cols-2 gap-4 max-lg:grid-cols-1 max-md:grid-cols-1 max-md:px-[7vw] max-lg:gap-10">
           {filteredTemplates.map((template, index) => (
             // FadeUp per card (not one fadeup around the whole grid) so each
             // card animates independently via its own mount-scoped

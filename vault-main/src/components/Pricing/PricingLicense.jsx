@@ -26,12 +26,12 @@ const cards = [
 
 export default function PricingLicense() {
   return (
-    <section className="w-full text-white px-[5vw] py-[8vw] max-[1025px]:px-[6vw] max-[1025px]:py-[16vw]">
+    <section className="w-full text-white px-[5vw] py-[8vw] max-lg:px-[6vw] max-lg:py-[16vw]">
 
       {/* Heading */}
       <LineReveal
         as="h2"
-        className="text110 text-center w-[70vw] max-[1025px]:w-full mx-auto"
+        className="text110 text-center w-[70vw] max-lg:w-full mx-auto"
       >
         What you can do with Vault, in plain language.
       </LineReveal>
@@ -40,26 +40,26 @@ export default function PricingLicense() {
       <SplitLine
         as="p"
         delay={0.15}
-        className="text24 text-center mt-[1.5vw] mb-[5vw] w-[48vw] max-[1025px]:w-[88vw] max-[1025px]:mt-4 max-[1025px]:mb-[10vw] mx-auto leading-relaxed"
+        className="text24 text-center mt-[1.5vw] mb-[5vw] w-[48vw] max-lg:w-[88vw] max-lg:mt-4 max-lg:mb-[10vw] mx-auto leading-relaxed"
       >
         A summary of the terms that matter most before you buy - see the full license for the complete legal text.
       </SplitLine>
 
       {/* Cards grid */}
-      <div className="mx-auto w-full max-w-[82vw] max-[1025px]:max-w-full grid grid-cols-2 gap-[1.5vw] max-[1025px]:grid-cols-1 max-[1025px]:gap-4">
+      <div className="mx-auto w-full max-w-[82vw] max-lg:max-w-full grid grid-cols-2 gap-[1.5vw] max-lg:grid-cols-1 max-lg:gap-4">
         {cards.map((card) => (
           <div
             key={card.title}
-            className="rounded-[1vw] max-[1025px]:rounded-[4vw] border border-white/8 bg-white/[0.03] p-[2.2vw] max-[1025px]:p-6 flex flex-col gap-[1.2vw] max-[1025px]:gap-4 fadeup"
+            className="border border-white/8 bg-white/[0.03] p-[2.2vw] max-lg:p-6 flex flex-col gap-[1.2vw] max-lg:gap-4 fadeup"
           >
-            <h3 className="text-[2vw] max-md:text-[7vw] max-[1025px]:text-[4.5vw] font-medium text-white/90">{card.title}</h3>
-            <p className="text24 max-[1025px]:text-sm text-white/50 leading-relaxed">{card.body}</p>
+            <h3 className="text-[2vw] max-md:text-[7vw] max-lg:text-[4.5vw] font-medium text-white/90">{card.title}</h3>
+            <p className="text24 max-lg:text-sm text-white/50 leading-relaxed">{card.body}</p>
           </div>
         ))}
       </div>
 
       {/* Footer link */}
-      <div className="text24 max-[1025px]:text-sm text-white/60 text-center mt-[4vw] max-[1025px]:mt-[10vw]">
+      <div className="text24 max-lg:text-sm text-white/60 text-center mt-[4vw] max-lg:mt-[10vw]">
         Need the complete legal text?{" "}
         
         <LinkButton

@@ -1,15 +1,16 @@
 import { useState, useEffect } from 'react';
+import { BREAKPOINTS } from "@/lib/breakpoints";
 
-/** Matches `--breakpoint-sm` in globals.css; phone-only layout below this width. */
-export const PHONE_BREAKPOINT = 768;
+/** Tailwind `md` (max-md:); phone-only layout below this width. */
+export const PHONE_BREAKPOINT = BREAKPOINTS.md;
 
-/** Matches `--breakpoint-md` in globals.css; mobile + tablet use compact layout below this width. */
-export const COMPACT_LAYOUT_BREAKPOINT = 1025;
+/** Tailwind `lg` (max-lg:); mobile + tablet use compact layout below this width. */
+export const COMPACT_LAYOUT_BREAKPOINT = BREAKPOINTS.lg;
 
 /**
  * Detects compact layout (phones + tablets) and client mount state.
  *
- * @param {number} breakpoint - Max width for compact layout in px (default: 1025, Tailwind `md`)
+ * @param {number} breakpoint - Max width for compact layout in px (default: 1025, Tailwind `lg`)
  * @returns {{ isMounted: boolean, isMobile: boolean }}
  */
 export default function useIsMobile(breakpoint = COMPACT_LAYOUT_BREAKPOINT) {

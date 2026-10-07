@@ -89,7 +89,7 @@ export function TemplateCardV4({ template, priority = false, isWishlisted = fals
         </Link>
 
         {/* hover actions (always shown on touch layouts) */}
-        <div className="absolute right-3 bottom-3 z-2 flex gap-1.5 opacity-0 transition-opacity duration-500 group-hover:opacity-100 group-focus-within:opacity-100 max-[1025px]:opacity-100">
+        <div className="absolute right-3 bottom-3 z-2 flex gap-1.5 opacity-0 transition-opacity duration-500 group-hover:opacity-100 group-focus-within:opacity-100 max-lg:opacity-100">
           <Tooltip label={isWishlisted ? "Saved" : "Save"}>
             <button
               type="button"

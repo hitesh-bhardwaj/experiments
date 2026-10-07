@@ -33,7 +33,7 @@ function Tick() {
     <svg
       viewBox="0 0 18 18"
       fill="none"
-      className="w-[1.1vw] h-[1.1vw] max-[1025px]:w-4 max-[1025px]:h-4 shrink-0"
+      className="w-[1.1vw] h-[1.1vw] max-lg:w-4 max-lg:h-4 shrink-0"
       aria-hidden="true"
     >
       <path
@@ -48,7 +48,7 @@ function Tick() {
 }
 
 function Dash() {
-  return <span className="text-white/25 text-[1.1vw] max-[1025px]:text-base">-</span>;
+  return <span className="text-white/25 text-[1.1vw] max-lg:text-base">-</span>;
 }
 
 function Cell({ value, isPro = false, highlight = false }) {
@@ -61,7 +61,7 @@ function Cell({ value, isPro = false, highlight = false }) {
   }
   if (!value) return <Dash />;
   return (
-    <span className={`text24 max-[1025px]:text-[3.5vw] max-md:text-sm leading-snug ${highlight ? "text-primary font-medium" : "text-white/50"}`}>
+    <span className={`text24 max-lg:text-[3.5vw] max-md:text-sm leading-snug ${highlight ? "text-primary font-medium" : "text-white/50"}`}>
       {value}
     </span>
   );
@@ -85,29 +85,29 @@ export default function PricingCompareTable({ isIndia = false }) {
   );
 
   return (
-    <section className="w-screen pb-[30vw] max-md:pb-[40vw]! overflow-hidden text-white px-[5vw] py-[8vw] max-[1025px]:px-0 max-[1025px]:pt-0 max-[1025px]:pb-[15vw] relative z-10">
+    <section className="w-screen pb-[30vw] max-md:pb-[40vw]! overflow-hidden text-white px-[5vw] py-[8vw] max-lg:px-0 max-lg:pt-0 max-lg:pb-[15vw] relative z-10">
 
       {/* Heading */}
       <LineReveal
         as="h2"
-        className="text110 text-center mb-[6vw] max-md:mb-[12vw] w-[75vw] max-[1025px]:w-[80%] mx-auto"
+        className="text110 text-center mb-[6vw] max-md:mb-[12vw] w-[75vw] max-lg:w-[80%] mx-auto"
       >
         <span className="gradient-text-animate">Free vs. Pro,</span> feature by feature.
       </LineReveal>
 
       {/* Table card */}
-      <div className="w-full font-avenir! h-fit max-[1025px]:overflow-x-scroll max-[1025px]:pb-[7vw] max-[1025px]:px-[7vw] fadeup">
-        <div className="mx-auto w-full max-w-[82vw] border border-white/8 overflow-hidden  max-md:max-w-[240vw] max-md:w-[240vw] max-[1025px]:max-w-[150vw] max-[1025px]:w-[150vw]">
+      <div className="w-full font-avenir! h-fit max-lg:overflow-x-scroll max-lg:pb-[7vw] max-lg:px-[7vw] fadeup">
+        <div className="mx-auto w-full max-w-[82vw] border border-white/8 overflow-hidden  max-md:max-w-[240vw] max-md:w-[240vw] max-lg:max-w-[150vw] max-lg:w-[150vw]">
 
           {/* Column headers */}
-          <div className="grid grid-cols-[2.2fr_1fr_1fr] max-[1025px]:grid-cols-[25%_40%_35%] max-md:grid-cols-[25%_40%_35%] bg-white/4 px-[2.5vw] py-[1.3vw] max-[1025px]:px-6 max-[1025px]:py-4 border-b border-white/8">
-            <span className=" text-[1.2vw] max-[1025px]:text-[3vw] max-md:text-[5vw] text-white/50 uppercase">
+          <div className="grid grid-cols-[2.2fr_1fr_1fr] max-lg:grid-cols-[25%_40%_35%] max-md:grid-cols-[25%_40%_35%] bg-white/4 px-[2.5vw] py-[1.3vw] max-lg:px-6 max-lg:py-4 border-b border-white/8">
+            <span className=" text-[1.2vw] max-lg:text-[3vw] max-md:text-[5vw] text-white/50 uppercase">
               Feature
             </span>
-            <span className=" text-[1.2vw] max-[1025px]:text-[3vw] max-md:text-[5vw] text-white/50 uppercase text-center">
+            <span className=" text-[1.2vw] max-lg:text-[3vw] max-md:text-[5vw] text-white/50 uppercase text-center">
               Free
             </span>
-            <span className=" text-[1.2vw] max-[1025px]:text-[3vw] max-md:text-[5vw] text-white/50 uppercase text-center">
+            <span className=" text-[1.2vw] max-lg:text-[3vw] max-md:text-[5vw] text-white/50 uppercase text-center">
               Pro
             </span>
           </div>
@@ -116,10 +116,10 @@ export default function PricingCompareTable({ isIndia = false }) {
           {rows.map((row, i) => (
             <div
               key={row.feature}
-              className={`grid grid-cols-[2.2fr_1fr_1fr] max-[1025px]:grid-cols-[25%_40%_35%] max-md:grid-cols-[25%_40%_35%] items-center px-[2.5vw] py-[1.4vw] max-[1025px]:px-6 max-[1025px]:py-4 border-t border-white/6 ${i % 2 !== 0 ? "bg-white/2" : ""
+              className={`grid grid-cols-[2.2fr_1fr_1fr] max-lg:grid-cols-[25%_40%_35%] max-md:grid-cols-[25%_40%_35%] items-center px-[2.5vw] py-[1.4vw] max-lg:px-6 max-lg:py-4 border-t border-white/6 ${i % 2 !== 0 ? "bg-white/2" : ""
                 }`}
             >
-              <span className="text24 max-[1025px]:text-sm text-white/80 pr-[2vw]">
+              <span className="text24 max-lg:text-sm text-white/80 pr-[2vw]">
                 {row.feature}
               </span>
               <span className="flex items-center justify-center">
@@ -137,7 +137,7 @@ export default function PricingCompareTable({ isIndia = false }) {
       {/* Footer note */}
       <SplitLine
         as="p"
-        className="text24 max-[1025px]:text-sm text-center mt-[3vw] max-[1025px]:mt-[8vw] max-[1025px]:px-[10vw]"
+        className="text24 max-lg:text-sm text-center mt-[3vw] max-lg:mt-[8vw] max-lg:px-[10vw]"
       >
         All plans include source code you own. No black boxes.
       </SplitLine>

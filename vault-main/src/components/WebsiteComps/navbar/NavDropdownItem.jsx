@@ -313,7 +313,7 @@ export default function NavDropdownItem({ label, href, icon, hoverGroupRef }) {
         <Link
             href={href}
             data-nav-dropdown-link
-            className="group relative isolate flex items-center gap-[0.75vw] rounded-[0.55vw] px-[0.7vw] py-[0.8vw]"
+            className="group relative isolate flex items-center gap-[0.75vw] px-[0.7vw] py-[0.8vw]"
             onMouseEnter={handleTextEnter}
             onMouseLeave={handleTextLeave}
         >
@@ -325,7 +325,7 @@ export default function NavDropdownItem({ label, href, icon, hoverGroupRef }) {
                     // second element alive under the same layoutId during fast
                     // hover sweeps, making the pill flicker out and back.
                     layoutId={reduceMotion ? undefined : 'nav-dropdown-pill'}
-                    className="absolute inset-0 z-0 rounded-[0.55vw] bg-black"
+                    className="absolute inset-0 z-0 bg-black"
                     initial={{ opacity: 1 }}
                     animate={{ opacity: 1 }}
                     transition={

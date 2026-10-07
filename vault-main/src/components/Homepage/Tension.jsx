@@ -172,30 +172,30 @@ export default function Tension() {
   }, [])
 
   return (
-    <section ref={sectionRef} className="relative w-full overflow-hidden z-200 px-[5vw] py-[10%] text-white max-[1025px]:px-[6vw] max-[1025px]:py-24 max-md:px-5 max-md:py-20">
+    <section ref={sectionRef} className="relative w-full overflow-hidden z-200 px-[5vw] py-[10%] text-white max-lg:px-[6vw] max-lg:py-24 max-md:px-5 max-md:py-20">
       <div className="mx-auto flex w-full max-w-[90vw] flex-col items-center">
         <div className="w-full max-md:w-[95%] max-md:mx-auto text-center">
-          <LineReveal as="h2" className="text110 font-normal leading-[0.95] max-[1025px]:leading-[1.02]">
+          <LineReveal as="h2" className="text110 font-normal leading-[0.95] max-lg:leading-[1.02]">
             Good Motion is{' '}
             <span className="gradient-text-animate">Harder</span> Than It Looks
           </LineReveal>
 
-          <SplitLine as="p" className="mx-auto mt-[2vw] max-[1025px]:mt-[5vw] max-md:mt-[10vw] max-w-[62vw] text24 leading-[1.55] max-md:leading-[1.3] text-white max-[1025px]:max-w-[85vw] max-[1025px]:text-sm max-md:max-w-full">
+          <SplitLine as="p" className="mx-auto mt-[2vw] max-lg:mt-[5vw] max-md:mt-[10vw] max-w-[62vw] text24 leading-[1.55] max-md:leading-[1.3] text-white max-lg:max-w-[85vw] max-lg:text-sm max-md:max-w-full">
             Anyone can add a fade. The hard part is everything around it - timing, restraint, responsive behavior, reduced-motion support, performance discipline. Get it wrong and your &quot;wow moment&quot; janks on mobile or breaks for anyone who turned motion off. So most teams play it safe and look like everyone else!
           </SplitLine>
         </div>
 
-        <div ref={cardsRef} className="h-fit w-[70vw] mt-[8vw] space-y-[1vw] max-[1025px]:w-full max-md:mt-20 max-[1025px]:mt-20 max-[1025px]:space-y-5 max-md:space-y-5">
+        <div ref={cardsRef} className="h-fit w-[70vw] mt-[8vw] space-y-[1vw] max-lg:w-full max-md:mt-20 max-lg:mt-20 max-lg:space-y-5 max-md:space-y-5">
           <div className="text24 px-[.5vw] flex w-full items-center justify-between max-md:text-sm">
             <p>Fixes</p>
             <p>Solves</p>
           </div>
 
           {cards.map((items, index) => (
-            <div key={index} className="tension-card bg-dark-card rounded-sm flex items-center justify-between pr-[1.5vw] p-[.7vw] max-md:pr-4 max-[1025px]:p-3 max-md:p-2">
-              <div className="flex items-center flex-1 min-w-0 max-[1025px]:flex-col max-[1025px]:items-start max-md:gap-2.5 max-[1025px]:gap-3">
-                <div className="flex items-center gap-[1vw] w-[25vw] shrink-0 max-md:w-auto max-md:gap-2.5 max-[1025px]:gap-4">
-                  <div className="size-[3vw] max-[1025px]:size-8 flex items-center justify-center p-1.5 bg-black rounded-sm shrink-0 max-md:size-9">
+            <div key={index} className="tension-card bg-dark-card flex items-center justify-between pr-[1.5vw] p-[.7vw] max-md:pr-4 max-lg:p-3 max-md:p-2">
+              <div className="flex items-center flex-1 min-w-0 max-lg:flex-col max-lg:items-start max-md:gap-2.5 max-lg:gap-3">
+                <div className="flex items-center gap-[1vw] w-[25vw] shrink-0 max-md:w-auto max-md:gap-2.5 max-lg:gap-4">
+                  <div className="size-[3vw] max-lg:size-8 flex items-center justify-center p-1.5 bg-black shrink-0 max-md:size-9">
                     <svg className="tension-check opacity-0 h-full w-full" viewBox="0 0 24 24" fill="none" stroke="#03E07C" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                       <polyline points="20 6 9 17 4 12" />
                     </svg>
@@ -204,8 +204,8 @@ export default function Tension() {
                 </div>
                 <p className="text-light-grey flex-1 min-w-0 text-left px-[2vw] text18 max-md:flex-none max-md:w-full max-md:px-0  max-md:text-[3.5vw]! max-md:leading-[1.2]">{items.description}</p>
               </div>
-              <div className="flex items-center gap-[1vw] w-[13vw] shrink-0 max-[1025px]:w-[30%] max-md:w-[40%] max-md:gap-2.5 max-md:pl-3">
-                <div className="size-[3vw] max-[1025px]:size-9 flex items-center justify-center shrink-0 max-md:size-12">
+              <div className="flex items-center gap-[1vw] w-[13vw] shrink-0 max-lg:w-[30%] max-md:w-[40%] max-md:gap-2.5 max-md:pl-3">
+                <div className="size-[3vw] max-lg:size-9 flex items-center justify-center shrink-0 max-md:size-12">
                   <svg className="tension-x opacity-0 h-[60%] w-[60%]" viewBox="0 0 24 24" fill="none" stroke="#FF0B0B" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                     <line x1="18" y1="6" x2="6" y2="18" />
                     <line x1="6" y1="6" x2="18" y2="18" />
@@ -217,10 +217,10 @@ export default function Tension() {
           ))}
         </div>
 
-        <div className="mt-[5vw] text-center max-md:w-[85%] max-md:mx-auto max-[1025px]:mt-14">
+        <div className="mt-[5vw] text-center max-md:w-[85%] max-md:mx-auto max-lg:mt-14">
           <SplitLineNoMask
             as="p"
-            className="text-[1.45vw] leading-[1.4] text-white/80 max-[1025px]:text-xl max-md:text-base"
+            className="text-[1.45vw] leading-[1.4] text-white/80 max-lg:text-xl max-md:text-base"
           >
             That difference has a name.{` `}
             <span className="italic text-[#ff5f00]">
