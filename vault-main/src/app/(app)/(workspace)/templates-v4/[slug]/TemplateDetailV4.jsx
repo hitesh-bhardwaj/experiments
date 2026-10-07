@@ -1,11 +1,13 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from "react";
+import { preload } from "react-dom";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Download, Heart } from "lucide-react";
 import { motion } from "motion/react";
+import { useLenis } from "lenis/react";
 import HeadAnim from "@/components/Animations/HeadAnim";
 import Copy from "@/components/Animations/Copy";
 import { useFadeUp } from "@/components/Animations/gsapAnimations";
@@ -39,6 +41,13 @@ const LIVE_SIZE = {
   tablet: { width: 820, height: 1180 },
   phone: { width: 390, height: 844 },
 };
+// Hero: the title and description animate in from 0.5s; everything else fades in 0.5s after.
+const HERO_FADE = {
+  initial: { opacity: 0 },
+  animate: { opacity: 1 },
+  transition: { delay: 1, duration: 0.8, ease: "easeInOut" },
+};
+
 const MODES = [
   { id: "exploded", label: "Exploded" },
   { id: "live", label: "Live" },
@@ -99,9 +108,6 @@ export function TemplateDetailV4({ template, templateAccess = { allowed: false, 
   const hasCapture = Object.keys(devices).length > 0;
   const mode = explodedOk && !glFailed && hasCapture ? chosenMode || "exploded" : "live";
   const [device, setDevice] = useState("desktop");
-  const [explode, setExplode] = useState(0.7);
-  const [resetKey, setResetKey] = useState(0);
-  const [liveTarget, setLiveTarget] = useState(null); // { y, n } page px to scroll the iframe to
 
   const { toast, showToast, dismissToast } = useToastQueue();
   const { wishlist, toggleWishlist } = useTemplateWishlist({
@@ -161,51 +167,49 @@ export function TemplateDetailV4({ template, templateAccess = { allowed: false, 
     router.refresh();
   };
 
-  // "See it live" on a layer: switch to the live preview, scrolled to that section.
-  const openLive = (index) => {
-    const s = capture?.sections[index];
-    // Only a capture of the live page maps to a scroll position; Figma designs don't.
-    if (s && capture?.source === "capture") setLiveTarget({ y: Math.round((s.y * capture.viewport) / capture.width), n: Date.now() });
-    setChosenMode("live");
-    requestAnimationFrame(() => stageTopRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }));
+  // Switching Exploded <-> Live changes the stage's height (the exploded view is
+  // a tall scroll-through), which would leave you further down the page. Bring
+  // the stage back to the top of the screen instead, so you stay on the preview.
+  const lenis = useLenis();
+  const keepStageRef = useRef(false);
+  const chooseMode = (id) => {
+    if (id === mode) return;
+    keepStageRef.current = true;
+    setChosenMode(id);
   };
+  useLayoutEffect(() => {
+    if (!keepStageRef.current) return;
+    keepStageRef.current = false;
+    const el = stageTopRef.current;
+    if (!el) return;
+    const top = el.getBoundingClientRect().top + window.scrollY - 80;
+    if (lenis) lenis.scrollTo(top, { immediate: true, force: true });
+    else window.scrollTo(0, top);
+  }, [mode, lenis]);
+
+  // Start downloading the exploded view's images with the page, rather than
+  // only once three.js has loaded and built the scene.
+  if (mode === "exploded" && capture) {
+    if (capture.src) preload(capture.src, { as: "image", fetchPriority: "high" });
+    capture.sections.forEach((sec, i) => sec.src && preload(sec.src, { as: "image", fetchPriority: i < 3 ? "high" : "low" }));
+  }
+
+  // Effects with a Vault page vs components built just for this template.
+  const vaultEffects = effects.filter((fx) => fx.href);
+  const customEffects = effects.filter((fx) => !fx.href);
 
   const facts = [
     ["Sections", sectionCount ? `${sectionCount} on one scrolling page` : "One scrolling page"],
     ["Stack", stack],
-    ["Built with", `${effects.length} Vault effects`],
+    ["Built with", `${vaultEffects.length} Vault effects`],
     ["Includes", "Source code and Figma file"],
     ["Licence", "MPL-2.0"],
   ];
 
   const toolbar = (
     <div className="flex flex-wrap items-center gap-3">
-      {explodedOk && !glFailed && hasCapture && <Segment label="View" items={MODES} value={mode} onChange={setChosenMode} itemClassName="w-24" />}
+      {explodedOk && !glFailed && hasCapture && <Segment label="View" items={MODES} value={mode} onChange={chooseMode} itemClassName="w-24" />}
       <Segment label="Device" items={mode === "exploded" ? DEVICES.filter((d) => devices[d.id]) : DEVICES} value={device} onChange={setDevice} itemClassName="w-21" />
-      {mode === "exploded" && (
-        <>
-          <label className={`flex items-center gap-2.5 ${LABEL} text-[#8a8a8a] max-md:hidden`}>
-            <span>Assembled</span>
-            <input
-              type="range"
-              min="0"
-              max="100"
-              value={Math.round(explode * 100)}
-              onChange={(e) => setExplode(e.target.value / 100)}
-              aria-label="Explode the page into sections"
-              className="w-[11vw] accent-[#ff5f00]"
-            />
-            <span>Exploded</span>
-          </label>
-          <button
-            type="button"
-            onClick={() => setResetKey((k) => k + 1)}
-            className={`inline-flex h-9 cursor-pointer items-center px-3.5 ${LABEL} text-[#cfcfcf] shadow-[inset_0_0_0_1px_rgba(244,244,244,.12)] transition-colors duration-500 hover:bg-white/8 hover:text-white`}
-          >
-            Reset view
-          </button>
-        </>
-      )}
     </div>
   );
 
@@ -220,29 +224,31 @@ export function TemplateDetailV4({ template, templateAccess = { allowed: false, 
     >
       {/* ---------- hero ---------- */}
       <section className={`${GUTTER} pt-25 pb-16 max-[1025px]:pt-32 max-md:pt-28`}>
-        <Breadcrumb />
+        <motion.div {...HERO_FADE}>
+          <Breadcrumb />
+        </motion.div>
 
         <div className="mt-10 grid grid-cols-[minmax(0,1.2fr)_minmax(0,.8fr)] items-start gap-12 max-[1025px]:grid-cols-1 max-[1025px]:gap-10">
-          <div>
+          <div className="sticky top-[20%] h-fit">
            
-            <HeadAnim rotate={0} animateOnScroll={false}>
+            <HeadAnim rotate={0} animateOnScroll={false} delay={0.5}>
               <h1 className={`${DISPLAY} text80 leading-[0.95]! max-[1025px]:text-[9vw] max-md:text-[13vw]`}>{template.title}</h1>
             </HeadAnim>
             {template.tagline && (
-              <Copy animateOnScroll={false} delay={0.3}>
+              <Copy animateOnScroll={false} delay={0.7}>
                 <p className={`mt-6 max-w-[40vw] text22 leading-[1.3] text-foreground max-[1025px]:max-w-none`}>{template.tagline}</p>
               </Copy>
             )}
-             <div className="fadeup mt-10 flex flex-wrap gap-1.5">
+             <motion.div {...HERO_FADE} className="mt-10 flex flex-wrap gap-1.5">
               <span className={`${BADGE} bg-white/5 text-[#d8d8d8]`}>{template.category}</span>
               <span className={`${BADGE} ${full ? "bg-white text-black shadow-[inset_0_0_0_1px_rgba(255,178,122,.3)]" : "bg-primary text-black"}`}>
                 {full ? "Pro+ only" : "✦ Selected catalogue"}
               </span>
               {hasAccess && <span className={`${BADGE} bg-white/5 backdrop-blur-lg text-white`}>Yours <span className="text-primary">✓</span></span>}
-            </div>
+            </motion.div>
           </div>
 
-          <aside className="fadeup grid min-w-0 gap-6">
+          <motion.aside {...HERO_FADE} className="grid min-w-0 gap-6">
             <dl className="grid gap-3">
               {facts.map(([term, value]) => (
                 <div key={term} className="grid grid-cols-[8vw_minmax(0,1fr)] items-center gap-3 border-b border-white/7 pb-3 max-[1025px]:grid-cols-[18vw_minmax(0,1fr)] max-md:grid-cols-[28vw_minmax(0,1fr)]">
@@ -268,6 +274,15 @@ export function TemplateDetailV4({ template, templateAccess = { allowed: false, 
                 </p>
               )}
               <div className="flex flex-wrap items-center gap-2">
+                 <button
+                  type="button"
+                  onClick={() => toggleWishlist(template)}
+                  aria-pressed={wishlist.includes(template.slug)}
+                  aria-label={wishlist.includes(template.slug) ? "Remove from saved" : "Save template"}
+                  className="inline-flex size-11 cursor-pointer items-center justify-center bg-white/5 backdrop-blur-lg shadow-[inset_0_0_0_1px_rgba(244,244,244,.14)] transition-shadow duration-500 hover:shadow-[inset_0_0_0_1px_rgba(255,95,0,.7)]"
+                >
+                  <Heart className={`size-4 ${wishlist.includes(template.slug) ? "fill-[#ff5f00] text-[#ff5f00]" : ""}`} aria-hidden="true" />
+                </button>
                 <button
                   type="button"
                   onClick={hasAccess ? download : () => setGetOpen("buy")}
@@ -281,24 +296,6 @@ export function TemplateDetailV4({ template, templateAccess = { allowed: false, 
                     "Buy template"
                   )}
                 </button>
-                {!hasAccess && (
-                  <button
-                    type="button"
-                    onClick={() => setGetOpen("credit")}
-                    className={`inline-flex h-11 cursor-pointer items-center bg-white/5 px-5 ${T16} text-[#F4F4F4] shadow-[inset_0_0_0_1px_rgba(244,244,244,.14)] backdrop-blur-md transition-shadow duration-500 hover:shadow-[inset_0_0_0_1px_rgba(255,95,0,.7)]`}
-                  >
-                    Use 1 credit
-                  </button>
-                )}
-                <button
-                  type="button"
-                  onClick={() => toggleWishlist(template)}
-                  aria-pressed={wishlist.includes(template.slug)}
-                  aria-label={wishlist.includes(template.slug) ? "Remove from saved" : "Save template"}
-                  className="inline-flex size-11 cursor-pointer items-center justify-center bg-white/5 shadow-[inset_0_0_0_1px_rgba(244,244,244,.14)] transition-shadow duration-500 hover:shadow-[inset_0_0_0_1px_rgba(255,95,0,.7)]"
-                >
-                  <Heart className={`size-4 ${wishlist.includes(template.slug) ? "fill-[#ff5f00] text-[#ff5f00]" : ""}`} aria-hidden="true" />
-                </button>
                 {/* The live template, in a new tab */}
                 <ButtonV3
                   text="Demo"
@@ -310,7 +307,7 @@ export function TemplateDetailV4({ template, templateAccess = { allowed: false, 
                 />
               </div>
             </div>
-          </aside>
+          </motion.aside>
         </div>
       </section>
 
@@ -321,17 +318,13 @@ export function TemplateDetailV4({ template, templateAccess = { allowed: false, 
             device={device}
             capture={capture}
             sections={capture?.sections || []}
-            explode={explode}
-            onExplode={setExplode}
-            resetKey={resetKey}
-            onOpenLive={openLive}
             onUnsupported={() => setGlFailed(true)}
             toolbar={toolbar}
           />
         ) : (
           <section aria-label="Live template preview" className={`${GUTTER} pb-24`}>
             <div className="mb-3.5">{toolbar}</div>
-            <LivePreview template={template} device={device} target={liveTarget} />
+            <LivePreview template={template} device={device} />
           </section>
         )}
       </div>
@@ -364,18 +357,24 @@ export function TemplateDetailV4({ template, templateAccess = { allowed: false, 
             </InsideCard>
             <InsideCard title="Built from Vault effects">
               <div className="flex flex-wrap gap-1.5">
-                {effects.map((fx) =>
-                  fx.href ? (
-                    <Link key={fx.name} href={fx.href} className={`inline-flex h-7.5 items-center bg-[#f2f0ec] px-3 ${T14} transition-colors duration-500 hover:bg-[#ff5f00] hover:text-[#141414]`}>
-                      {fx.title}
-                    </Link>
-                  ) : (
-                    <span key={fx.name} className={`inline-flex h-7.5 items-center bg-[#f2f0ec] px-3 ${T14} text-[#6B6B6B]`}>
-                      {fx.title}
-                    </span>
-                  ),
-                )}
+                {vaultEffects.map((fx) => (
+                  <Link key={fx.name} href={fx.href} className={`inline-flex h-7.5 items-center bg-[#f2f0ec] px-3 ${T14} transition-colors duration-500 hover:bg-[#ff5f00] hover:text-[#141414]`}>
+                    {fx.title}
+                  </Link>
+                ))}
               </div>
+              {customEffects.length > 0 && (
+                <>
+                  <p className={`mt-4.5 mb-2 ${LABEL} text-[#6B6B6B]`}>Built for this template</p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {customEffects.map((fx) => (
+                      <span key={fx.name} className={`inline-flex h-7.5 items-center px-3 ${T14} text-[#6B6B6B] shadow-[inset_0_0_0_1px_rgba(29,29,29,.12)]`}>
+                        {fx.title}
+                      </span>
+                    ))}
+                  </div>
+                </>
+              )}
             </InsideCard>
             <InsideCard title="Stack" className="col-span-full">
               <div className="flex flex-wrap gap-1.5">
@@ -435,9 +434,8 @@ export function TemplateDetailV4({ template, templateAccess = { allowed: false, 
 }
 
 /** The live template in an iframe at a real device size, scaled to fit the box (as on the live detail page). */
-function LivePreview({ template, device, target }) {
+function LivePreview({ template, device }) {
   const boxRef = useRef(null);
-  const frameRef = useRef(null);
   const [scale, setScale] = useState(1);
   const size = LIVE_SIZE[device] || LIVE_SIZE.desktop;
 
@@ -451,31 +449,15 @@ function LivePreview({ template, device, target }) {
     return () => ro.disconnect();
   }, [size.width, size.height]);
 
-  // Same-origin, so a "See it live" request can scroll the template itself.
-  const scrollFrame = useCallback(() => {
-    if (!target) return;
-    try {
-      frameRef.current?.contentWindow?.scrollTo({ top: target.y, behavior: "instant" });
-    } catch {
-      /* cross-origin in some setups: ignore */
-    }
-  }, [target]);
-  useEffect(() => {
-    const id = setTimeout(scrollFrame, 1200); // after the template's own loader
-    return () => clearTimeout(id);
-  }, [scrollFrame]);
-
   return (
     <div ref={boxRef} className="relative flex h-[78vh] items-center justify-center overflow-hidden bg-[radial-gradient(80%_70%_at_50%_40%,#1c1c1c,#0c0c0c)] shadow-[inset_0_0_0_1px_rgba(244,244,244,.08)]">
       <div style={{ width: size.width, height: size.height, transform: `scale(${scale})` }} className="shrink-0 origin-center bg-white transition-transform duration-300">
         <iframe
-          ref={frameRef}
           key={`${template.previewHref}-${device}`}
           src={template.previewHref}
           title={`${template.title} live preview`}
           width={size.width}
           height={size.height}
-          onLoad={() => setTimeout(scrollFrame, 1200)}
           className="block border-0"
         />
       </div>

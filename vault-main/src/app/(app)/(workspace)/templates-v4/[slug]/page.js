@@ -40,6 +40,16 @@ async function readCapture(slug) {
   }
 }
 
+// The registry index has no titles; each effect's own registry file does.
+async function readEffectTitle(name) {
+  try {
+    const file = path.join(process.cwd(), "public/r", `${name}.json`);
+    return JSON.parse(await fs.readFile(file, "utf8")).title || null;
+  } catch {
+    return null;
+  }
+}
+
 const titleCase = (name) => name.split("-").map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
 
 export default async function TemplateDetailV4Page({ params }) {
@@ -60,7 +70,7 @@ export default async function TemplateDetailV4Page({ params }) {
   for (const name of TEMPLATE_SECTIONS[slug]?.effects || []) {
     const item = registry.find((e) => e.name === name);
     effectsByName[name] = item
-      ? { name, title: item.title, href: getEffectHref(item), tier: item.tier }
+      ? { name, title: (await readEffectTitle(name)) || titleCase(name), href: getEffectHref(item), tier: item.tier }
       : { name, title: titleCase(name), href: null };
   }
 

@@ -1,11 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
 import * as THREE from "three";
 import gsap from "gsap";
 import { motion } from "motion/react";
-import { ArrowUpRight } from "lucide-react";
+import { RotateCcw } from "lucide-react";
 import { DISPLAY, LABEL, T13, T14 } from "../tokens";
 
 /*
@@ -21,13 +20,14 @@ import { DISPLAY, LABEL, T13, T14 } from "../tokens";
  * front of and behind it. Drag to turn, click a layer to bring it forward,
  * and the panel names whichever section is selected or in focus.
  *
- * `explode` (0 assembled · 1 fully exploded) is owned by the parent so its
- * slider can live in the toolbar; this component tweens it on load and reset.
+ * `explode` (0 assembled · 1 fully exploded) lives here, with its slider and
+ * Reset, so moving it only re-renders this component, not the whole page.
+ * `toolbar` is the parent's controls (view and device), shown beside them.
  */
 
 const PAGE_WIDTH = { desktop: 4.2, tablet: 3, phone: 1.6 }; // slab width, world units
 const ROOT_SCALE = { desktop: 1, tablet: 1, phone: 1.25 };
-const SCROLL_PER_SECTION = 30; // vh of page scroll per section
+const SCROLL_PER_SECTION = 18; // vh of page scroll per section
 const REST = { x: -0.12, y: 0.55 }; // default turn
 const pad2 = (n) => String(n).padStart(2, "0");
 const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
@@ -36,10 +36,6 @@ export default function TemplateExploded({
   device = "desktop",
   capture,
   sections = [],
-  explode,
-  onExplode,
-  resetKey = 0,
-  onOpenLive,
   onUnsupported,
   toolbar = null,
 }) {
@@ -48,15 +44,14 @@ export default function TemplateExploded({
   const canvasRef = useRef(null);
   const labelRefs = useRef([]);
   const sceneRef = useRef(null);
+  const [explode, setExplode] = useState(0.7);
   const explodeRef = useRef(explode);
-  const onExplodeRef = useRef(onExplode);
   const onUnsupportedRef = useRef(onUnsupported);
   const [panelIndex, setPanelIndex] = useState(0);
   const [selected, setSelected] = useState(-1);
 
   useEffect(() => {
     explodeRef.current = explode;
-    onExplodeRef.current = onExplode;
     onUnsupportedRef.current = onUnsupported;
   });
 
@@ -314,23 +309,26 @@ export default function TemplateExploded({
       duration: 2.2,
       delay: 0.3,
       ease: "expo.inOut",
-      onStart: () => onExplodeRef.current?.(0),
-      onUpdate: () => onExplodeRef.current?.(proxy.v),
+      onStart: () => setExplode(0),
+      onUpdate: () => setExplode(proxy.v),
     });
     return () => tween.kill();
   }, [capture, sections, device]);
 
   /* ---------- reset view ---------- */
-  useEffect(() => {
+  const resetTween = useRef(null);
+  const reset = () => {
     const state = sceneRef.current;
-    if (!state || !resetKey) return;
+    if (!state) return;
     state.rot.tx = REST.x;
     state.rot.ty = REST.y;
     state.sel = -1;
+    setSelected(-1);
+    resetTween.current?.kill();
     const proxy = { v: explodeRef.current ?? 0.7 };
-    const tween = gsap.to(proxy, { v: 0.7, duration: 1.2, ease: "expo.out", onUpdate: () => onExplodeRef.current?.(proxy.v) });
-    return () => tween.kill();
-  }, [resetKey]);
+    resetTween.current = gsap.to(proxy, { v: 0.7, duration: 1.2, ease: "power2.inOut", onUpdate: () => setExplode(proxy.v) });
+  };
+  useEffect(() => () => resetTween.current?.kill(), []);
 
   // Selection lives in the scene's state (read every frame); this mirrors it for the panel.
   const select = (i) => {
@@ -364,9 +362,9 @@ export default function TemplateExploded({
               }}
               className="group/xl absolute top-0 left-0 flex items-center gap-2.5 whitespace-nowrap opacity-0 transition-opacity duration-500"
             >
-              <i className="block h-px w-10 bg-[#ff5f00]/60" />
-              <span className={`${T13} bg-[rgba(16,16,16,.7)] px-2.25 py-1 text-[#e6e6e6] shadow-[inset_0_0_0_1px_rgba(244,244,244,.1)] group-data-[on=true]/xl:bg-[#ff5f00] group-data-[on=true]/xl:text-[#141414]`}>
-                <b className="font-mono font-normal text-[#FFB27A] group-data-[on=true]/xl:text-[#141414]">{pad2(i + 1)}</b> {s.name}
+              <i className="block h-px w-10 bg-primary" />
+              <span className={`${T13} bg-[rgba(16,16,16,.7)] px-3 py-2 text-foreground shadow-[inset_0_0_0_1px_rgba(244,244,244,.1)] group-data-[on=true]/xl:bg-[#ff5f00] group-data-[on=true]/xl:text-[#141414]`}>
+                <b className="font-mono font-normal text-primary group-data-[on=true]/xl:text-[#141414]">{pad2(i + 1)}</b> {s.name}
               </span>
             </div>
           ))}
@@ -394,26 +392,6 @@ export default function TemplateExploded({
               <h3 className={`${DISPLAY} text-[1.7vw] leading-[1.1] max-[1025px]:text-[3.4vw] max-md:text-[6vw]`}>{current.name}</h3>
               {current.note && <p className={`${T14} text-[#bdbdbd] max-md:line-clamp-2`}>{current.note}</p>}
               <div className="mt-1 flex flex-wrap gap-1.5">
-                {/* Effects that aren't in the registry have no page to link to. */}
-                {current.effect?.href ? (
-                  <Link
-                    href={current.effect.href}
-                    className={`inline-flex h-7.5 items-center gap-1.5 bg-[#ff5f00]/14 px-3 ${T13} text-[#FFB27A] transition-colors duration-500 hover:bg-[#ff5f00]/25`}
-                  >
-                    Powered by {current.effect.title} →
-                  </Link>
-                ) : current.effect ? (
-                  <span className={`inline-flex h-7.5 items-center px-3 ${T13} text-[#FFB27A]/80 bg-[#ff5f00]/8`}>
-                    Built with {current.effect.title}
-                  </span>
-                ) : null}
-                <button
-                  type="button"
-                  onClick={() => onOpenLive?.(panelIndex)}
-                  className={`inline-flex h-7.5 cursor-pointer items-center gap-1.5 px-3 ${T13} text-[#cfcfcf] shadow-[inset_0_0_0_1px_rgba(244,244,244,.14)] transition-colors duration-500 hover:text-white`}
-                >
-                  See it live <ArrowUpRight className="size-3.5" aria-hidden="true" />
-                </button>
                 {selected >= 0 && (
                   <button
                     type="button"
@@ -428,13 +406,39 @@ export default function TemplateExploded({
           </aside>
         )}
 
-        {toolbar && (
-          <div data-exploded-ui className="absolute bottom-6 left-[3.4vw] right-[3.4vw] max-[1025px]:inset-x-[5vw] max-md:inset-x-4 max-md:bottom-4">
-            {toolbar}
-          </div>
-        )}
+        <div data-exploded-ui className="absolute bottom-6 left-[3.4vw] right-[3.4vw] flex flex-wrap items-center justify-between gap-3 max-[1025px]:inset-x-[5vw] max-md:inset-x-4 max-md:bottom-4">
+          {toolbar}
+          <div className="flex items-center gap-3">
+          <label className={`flex items-center gap-2.5 ${LABEL} text-[#8a8a8a] max-md:hidden`}>
+            <span>Assembled</span>
+            <input
+              type="range"
+              min="0"
+              max="100"
+              value={Math.round(explode * 100)}
+              onChange={(e) => {
+                resetTween.current?.kill();
+                setExplode(e.target.value / 100);
+              }}
+              aria-label="Explode the page into sections"
+              // A thin borderless track with a square orange handle (WebKit and Firefox).
+              className="h-4 w-[11vw] cursor-pointer appearance-none bg-transparent [&::-moz-range-thumb]:size-3.5 [&::-moz-range-thumb]:rounded-none [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-[#ff5f00] [&::-moz-range-track]:h-0.5 [&::-moz-range-track]:border-0 [&::-moz-range-track]:bg-white/25 [&::-webkit-slider-runnable-track]:h-0.5 [&::-webkit-slider-runnable-track]:border-0 [&::-webkit-slider-runnable-track]:bg-white/25 [&::-webkit-slider-thumb]:-mt-1.5 [&::-webkit-slider-thumb]:size-3.5 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-none [&::-webkit-slider-thumb]:border-0 [&::-webkit-slider-thumb]:bg-[#ff5f00]"
+            />
+            <span>Exploded</span>
+          </label>
+          <button
+            type="button"
+            onClick={reset}
+            className={`group/reset inline-flex h-9 cursor-pointer items-center gap-2 px-3.5 ${LABEL} text-[#cfcfcf] shadow-[inset_0_0_0_1px_rgba(244,244,244,.12)] transition-colors duration-500 hover:bg-white/8 hover:text-white`}
+          >
+            <RotateCcw className="size-3.5 transition-transform duration-500 ease-in-out group-hover/reset:-rotate-180" aria-hidden="true" />
+            Reset view
+          </button>
 
-        <p className={`${LABEL} pointer-events-none absolute top-28 right-[3.4vw] text-right text-white/45 max-[1025px]:hidden`}>
+          </div>
+        </div>
+
+        <p className={`${LABEL} pointer-events-none absolute top-28 right-[3.4vw] text-right text-white/60 max-[1025px]:hidden`}>
           Scroll to move down the page
           <br />
           Drag to turn · click a layer

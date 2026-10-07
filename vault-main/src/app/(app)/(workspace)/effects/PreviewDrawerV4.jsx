@@ -5,7 +5,8 @@ import { createPortal } from "react-dom";
 import Image from "next/image";
 import gsap from "gsap";
 import { useLenis } from "lenis/react";
-import { Check, Copy, Heart, Lock } from "lucide-react";
+import Link from "next/link";
+import { ArrowUpRight, Check, Copy, Heart, Lock } from "lucide-react";
 import ButtonV3 from "@/homepage-v3/components/ButtonV3";
 import { getEffectHref, getEffectPreviewHref, getEffectCategory, resolveEffectCategoryId } from "@/lib/categories";
 import { resolveEffectVideoUrl } from "@/lib/media";
@@ -257,21 +258,7 @@ export function PreviewDrawerV4({
         {/* Actions sit right under the preview. */}
        
         <div className="grid gap-6">
-         
-          {/* Tier sits beside the name at its usual small size. */}
-          <div className="flex flex-wrap items-center gap-3">
-            <h2 id="v4-drawer-title" className={`${DISPLAY} text-[3vw] leading-[1]! tracking-[-.04em] max-[1025px]:text-[6vw] max-md:text-[9vw]`}>
-              {shown.title}
-            </h2>
-            <div className="mt-1.5">
-            <TierBadge tier={shown.tier} />
-            </div>
-          </div>
-          {shown.description && (
-            <p className={`max-w-[42vw] ${T16} leading-relaxed text-white/80 max-[1025px]:max-w-none`}>{shown.description}</p>
-          )}
-          <div className="flex w-full justify-between">
-          {shown.tags?.length > 0 && (
+         {shown.tags?.length > 0 && (
             <div className="flex flex-wrap gap-1.5">
               {shown.tags.map((tag) => (
                 <span key={tag} className={`${MONO} inline-flex h-6 items-center border border-white/15 px-2 ${T11} text-white/70`}>
@@ -280,19 +267,35 @@ export function PreviewDrawerV4({
               ))}
             </div>
           )}
-           <div className=" flex justify-end">
+          {/* Tier sits beside the name at its usual small size. */}
+          <div className="flex flex-wrap items-center gap-3">
+            <h2 id="v4-drawer-title" className={`${DISPLAY} text-[3vw] leading-[1]! tracking-[-.04em] max-[1025px]:text-[6vw] max-md:text-[9vw]`}>
+              {shown.title}
+            </h2>
+            
+            <div className="mt-1.5">
+            <TierBadge tier={shown.tier} />
+            </div>
+          </div>
+          
+          {shown.description && (
+            <p className={`max-w-[42vw] ${T16} leading-relaxed text-white/80 max-[1025px]:max-w-none`}>{shown.description}</p>
+          )}
+          <div className="flex w-full justify-between">
+          
+          <div className=" flex justify-end">
           <div className="flex flex-wrap items-center gap-2">
           <button
             type="button"
             aria-pressed={saved}
             onClick={() => onToggleWishlist(shown)}
-            className={` flex gap-2 border px-3 border-white/60 py-3 leading-[1.2] text-[1.1vw] self-center ${saved ? "text-[#ff5f00]! [&_svg]:fill-[#ff5f00] [&_svg]:stroke-[#ff5f00]" : ""}`}
+            className={` flex gap-2 border px-3 border-white/20 py-3 leading-[1.2] text-[1.1vw] self-center ${saved ? "text-[#ff5f00]! [&_svg]:fill-[#ff5f00] [&_svg]:stroke-[#ff5f00]" : ""}`}
           >
             <div className="size-4.5">
             <Heart className="size-full" />
             </div>
           </button>
-          <ButtonV3 text="Demo" href={getEffectPreviewHref(shown)} variant="outline" target_blank className="bg-transparent!" />
+          <ButtonV3 text="Demo" href={getEffectPreviewHref(shown)} variant="outline" target_blank className="bg-transparent! border-white/20" />
           <ButtonV3 text="View Article" href={getEffectHref(shown)} className="border border-primary" />
           {/* Same dark action button as the card's Save. */}
 
@@ -328,7 +331,10 @@ export function PreviewDrawerV4({
               <Lock className="size-3.75 shrink-0 text-[#ff5f00]" aria-hidden="true" />
               This is a Pro effect. Pro unlocks it with the rest of the library.
             </p>
-            <ButtonV3 text="Unlock with Pro" href="/pricing" />
+            <Link href="/pricing" className={`group inline-flex items-center gap-1.5 ${T14} text-white`}>
+              <span className="border-b border-white/30 pb-0.5 transition-colors duration-500 group-hover:border-[#ff5f00]">Unlock with Pro</span>
+              <ArrowUpRight className="size-3.5 text-[#ff5f00] transition-transform duration-500 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden="true" />
+            </Link>
           </div>
         )}
 

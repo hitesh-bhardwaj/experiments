@@ -112,13 +112,18 @@ export function GetTemplateModal({ template, tab, onTab, onClose, onBuy }) {
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         className="relative grid w-[60vw] grid-cols-[minmax(0,.9fr)_minmax(0,1.1fr)] gap-6.5 bg-[#141414] p-6.5 text-[#F4F4F4] shadow-[inset_0_0_0_1px_rgba(244,244,244,.1),0_50px_100px_-30px_#000] max-[1025px]:w-[88vw] max-md:max-h-[90svh] max-md:w-full max-md:grid-cols-1 max-md:overflow-y-auto"
       >
+        {/* Same close control as the effects preview drawer: the cross turns a quarter on hover. */}
         <button
           ref={closeRef}
           type="button"
+          aria-label="Close (Esc)"
           onClick={onClose}
-          className={`absolute top-4 right-4 cursor-pointer ${LABEL} text-[#8a8a8a] transition-colors duration-500 hover:text-white`}
+          className="group absolute top-4 right-4 z-1 grid size-10 cursor-pointer place-items-center border border-white/20 bg-white/10 transition-colors duration-500 hover:border-[#ff5f00] hover:bg-[#ff5f00]"
         >
-          Close · Esc
+          <span className="relative grid size-4 place-items-center transition-transform duration-500 ease-in-out group-hover:rotate-90">
+            <span className="h-px w-4 rotate-45 bg-white" />
+            <span className="absolute h-px w-4 -rotate-45 bg-white" />
+          </span>
         </button>
 
         <div ref={thumbRef} className="relative aspect-[3/4] overflow-hidden bg-[#222] max-md:aspect-video">

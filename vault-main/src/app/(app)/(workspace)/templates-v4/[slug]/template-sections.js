@@ -1,7 +1,11 @@
 // Detail-page data for the v4 sample, taken from each template's own source in
 // src/app/(marketing)/template-demo/<slug>: section names and notes from its
 // README, `effect` from the Vault effect that section's component imports,
-// and `effects`/`stack` from its effects/ folder and README.
+// and `effects`/`stack` from the effects its files import and its README.
+// Effects are listed by their Vault registry name: a template's own copy can
+// live in a differently named folder (Oris Dental's effects/dot-fill-btn is
+// Dot Fill Button, effects/text-fill an adapted Text Fill Animation). Names
+// that aren't in the registry are components built just for that template.
 //
 // Sections are matched to the layers in public/assets/templates-exploded/
 // <slug>/manifest.json by the layer's label (the Figma export's file name, or
@@ -32,15 +36,15 @@ export const TEMPLATE_SECTIONS = {
   },
   "oris-dental": {
     stack: ["Next.js", "React 19", "Three.js", "React Three Fiber", "Tailwind CSS", "GSAP", "Lenis"],
-    effects: ["split-text-lines", "slot-counter", "smooth-carousel", "circular-button", "text-fill", "patient-card", "contact-form", "char-stagger-button", "dot-fill-btn"],
+    effects: ["text-fill-animation", "char-stagger-button", "dot-fill-button", "split-text-lines", "slot-counter", "smooth-carousel", "circular-button", "patient-card", "contact-form"],
     sections: [
       { match: "oris-hero", name: "Hero", note: "A real-time 3D tooth model visitors can rotate, beside the intro copy.", effect: "split-text-lines" },
       { match: "about-oris", name: "About", note: "Practice overview with four animated slot counters.", effect: "slot-counter" },
       { match: "care-comfort", name: "Care & comfort", note: "A smooth carousel of care highlights.", effect: "smooth-carousel" },
       { match: "dental-treatments", name: "Treatments", note: "A scroll-pinned, stacked card deck of treatments.", effect: "split-text-lines" },
-      { match: "parallax", name: "Statement break", note: "A full-bleed parallax statement with a scroll-driven text fill.", effect: "text-fill" },
-      { match: "oris-reviews", name: "Reviews", note: "Ribbon strips of patient reviews.", effect: "text-fill" },
-      { match: "reviews", name: "Reviews", note: "Ribbon strips of patient reviews.", effect: "text-fill" },
+      { match: "parallax", name: "Statement break", note: "A full-bleed parallax statement with a scroll-driven text fill.", effect: "text-fill-animation" },
+      { match: "oris-reviews", name: "Reviews", note: "Ribbon strips of patient reviews.", effect: "text-fill-animation" },
+      { match: "reviews", name: "Reviews", note: "Ribbon strips of patient reviews.", effect: "text-fill-animation" },
       { match: "passion-meet-purpose", name: "Clinic & doctors", note: "A grid gallery of the clinic and its doctors.", effect: "split-text-lines" },
       { match: "oris-form", name: "Book an appointment", note: "A booking card with a validated contact form.", effect: "contact-form" },
       { match: "brighten", name: "Footer", note: "An interactive dot-canvas footer with the brand wordmark.", effect: "char-stagger-button" },

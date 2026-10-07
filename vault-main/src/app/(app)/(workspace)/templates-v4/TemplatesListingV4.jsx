@@ -21,6 +21,14 @@ const TemplateCorridor = dynamic(() => import("./TemplateCorridor"), {
   loading: () => <div className="h-svh" />,
 });
 
+// Hero: the heading and description animate in first; the breadcrumb, stats and
+// filter bar then fade up after them, one after another.
+const heroFadeUp = (delay) => ({
+  initial: { opacity: 0, y: 24 },
+  animate: { opacity: 1, y: 0 },
+  transition: { delay, duration: 0.9, ease: [0.16, 1, 0.3, 1] },
+});
+
 const VIEWS = [
   { id: "corr", label: "Corridor" },
   { id: "grid", label: "Grid" },
@@ -118,22 +126,24 @@ export function TemplatesListingV4({ templates = [], description = "", faqItems 
     <div ref={rootRef} className="relative text-[#F4F4F4]">
       {/* ---------- hero ---------- */}
       <section className={`${GUTTER} pt-36 pb-12 max-[1025px]:pt-32 max-md:pt-28`}>
-        <Breadcrumb />
+        <motion.div {...heroFadeUp(1)}>
+          <Breadcrumb />
+        </motion.div>
 
         <div className="mt-7 grid grid-cols-[minmax(0,1.2fr)_minmax(0,.8fr)] items-end gap-12 max-[1025px]:grid-cols-1 max-[1025px]:gap-10">
-          <HeadAnim rotate={0} animateOnScroll={false}>
+          <HeadAnim rotate={0} animateOnScroll={false} delay={0.2}>
             <h1 className={`${DISPLAY} max-w-[45vw] text-[6vw] leading-[0.95]! max-[1025px]:max-w-none max-[1025px]:text-[9vw] max-md:text-[13vw]`}>
               Whole sites. <span className="gradient-text-animate">Ready to ship.</span>
             </h1>
           </HeadAnim>
 
           <div className="grid gap-6">
-            <Copy animateOnScroll={false} delay={0.3}>
+            <Copy animateOnScroll={false} delay={0.5}>
               <p className={`max-w-[34vw] ${T16} text-[#bdbdbd] max-[1025px]:max-w-[70vw] max-md:max-w-none`}>
                 {description} Buy one outright, or redeem a template credit from your plan.
               </p>
             </Copy>
-            <div className={`fadeup ${LABEL} flex flex-wrap gap-x-7.5 gap-y-2.5`}>
+            <motion.div {...heroFadeUp(1.1)} className={`${LABEL} flex flex-wrap gap-x-7.5 gap-y-2.5`}>
               {stats.map(([value, label]) => (
                 <p key={label}>
                   <b className={`${DISPLAY} block text-[2.4vw] leading-none text-[#F4F4F4] tabular-nums max-[1025px]:text-[4.5vw] max-md:text-[8vw]`}>
@@ -142,12 +152,12 @@ export function TemplatesListingV4({ templates = [], description = "", faqItems 
                   <span className="text-[1vw] text-white/60 max-[1025px]:text-[1.8vw] max-md:text-[3.6vw]">{label}</span>
                 </p>
               ))}
-            </div>
+            </motion.div>
           </div>
         </div>
 
         {/* view · category · catalogue */}
-        <div className="fadeup mt-14 flex flex-wrap items-center gap-3.5 max-md:mt-10">
+        <motion.div {...heroFadeUp(1.2)} className="mt-14 flex flex-wrap items-center gap-3.5 max-md:mt-10">
           {corridorOk && <DarkSegment label="View" items={VIEWS} value={view} onChange={setChosenView} itemClassName="w-24" />}
           <div role="group" aria-label="Category" className="flex flex-wrap gap-1.5">
             {categories.map((c) => (
@@ -175,7 +185,7 @@ export function TemplatesListingV4({ templates = [], description = "", faqItems 
               </button>
             ))}
           </div>
-        </div>
+        </motion.div>
       </section>
 
       {/* ---------- corridor ---------- */}
