@@ -215,7 +215,7 @@ export default function Hero() {
                                 className="max-sm:w-full max-sm:justify-center"
                             />
                             <ButtonV3
-                                text="Browse All Effects"
+                                text="Browse Effects"
                                 href="/effects"
                                 variant="orange"
                                 scrollOffset={-1000}
