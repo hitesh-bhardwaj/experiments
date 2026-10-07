@@ -34,6 +34,8 @@ import Copy from "@/components/Animations/Copy";
 import { useFadeUp, useLineAnim } from "@/components/Animations/gsapAnimations";
 import { LockKeyhole } from "lucide-react";
 import { CopyLimitProvider, useCopyLimit } from "./useCopyLimit";
+import GetCodeMenu from "./GetCodeMenu";
+import UpgradeToProModal from "./UpgradeToProModal";
 import ButtonV3 from "@/homepage-v3/components/ButtonV3";
 import { SliderArrowButton } from "@/components/ui/SliderArrowButton";
 import EffectStage from "./EffectStage";
@@ -205,6 +207,10 @@ export function EffectDetailContent({
 
   const [mounted, setMounted] = useState(false);
   const [showSignInToCopyModal, setShowSignInToCopyModal] = useState(false);
+  // "Get code" asks for Pro (a Pro effect, or the daily copy limit) through this modal.
+  const [upgradeReason, setUpgradeReason] = useState(null);
+  const openUpgradeModal = useCallback((reason) => setUpgradeReason(reason || "pro-effect"), []);
+  const closeUpgradeModal = useCallback(() => setUpgradeReason(null), []);
 
   // SSR-safe mounted flag - `mounted` gates a createPortal() call further
   // down, which needs document.body and so can only run after mount.
@@ -428,14 +434,13 @@ export function EffectDetailContent({
     ? content.tags
     : safeEffect.dependencies || [];
 
-  const coverImage =
-    resolveMediaUrl(content?.coverImage || safeEffect.coverImage || slug, {
-      defaultDirectory: "vault-listing-images",
-      defaultExtension: "png",
-    }) || "/assets/img/image01.webp";
 
   return (
-    <CopyLimitProvider effectSlug={slug} onRequireSignIn={() => setShowSignInToCopyModal(true)}>
+    <CopyLimitProvider
+      effectSlug={slug}
+      onRequireSignIn={() => setShowSignInToCopyModal(true)}
+      onRequireUpgrade={openUpgradeModal}
+    >
       {/* No cursor-movement swish or hover sounds anywhere on the effect page. */}
       <div data-sound-hover="off" data-sound-flow="off" className="min-h-screen text-foreground">
         <Suspense fallback={<div className="h-12" />}>
@@ -454,7 +459,7 @@ export function EffectDetailContent({
                   <Breadcrumb />
 
                   {pageTitle && (
-                    <HeadAnim>
+                    <HeadAnim rotate={0}>
                       <h1 className="w-full max-md:text-[6vw] max-md:font-bold max-[1025px]:w-[90%] max-md:w-[80%]  font-semibold leading-[1.3]! text-foreground text80">
                         {pageTitle}
                       </h1>
@@ -490,7 +495,12 @@ export function EffectDetailContent({
 
               <div className="fadeup px-14 max-md:px-[7vw] max-[1025px]:px-[6vw] h-auto  w-full">
                 {/* Live stage + Playground (remixer), in place of the preview video */}
-                <EffectStage effect={effect} title={pageTitle} previewHref={previewHref} />
+                <EffectStage
+                  effect={effect}
+                  title={pageTitle}
+                  previewHref={previewHref}
+                  getCode={<GetCodeMenu effectSlug={slug} effectTitle={pageTitle || safeEffect.title} isLocked={isLocked} />}
+                />
               </div>
 
 
@@ -531,7 +541,7 @@ export function EffectDetailContent({
                     className="relative space-y-10 px-14 py-20 max-[1025px]:space-y-10 max-[1025px]:px-[6vw] max-md:px-[7vw]"
                   >
                     <div className="flex items-center justify-between gap-5 max-[1025px]:flex-col">
-                      <HeadAnim>
+                      <HeadAnim rotate={0}>
                         <h2 className="text-center text-[3.32vw] max-[1025px]:text-[5vw] max-md:text-[2rem] font-medium text-[#141414]">
                           Related Effects
                         </h2>
@@ -682,6 +692,7 @@ export function EffectDetailContent({
         document.body
       )}
       {cardOverlays}
+      <UpgradeToProModal open={upgradeReason !== null} reason={upgradeReason ?? "pro-effect"} onClose={closeUpgradeModal} />
     </CopyLimitProvider>
   );
 }

@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
-import { Monitor, Tablet, Smartphone, Download } from "lucide-react";
+import { Monitor, Smartphone, Download } from "lucide-react";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import { Tooltip } from "@/components/ui/Tooltip";
 import { TemplateCard } from "@/components/ui/TemplateCard";

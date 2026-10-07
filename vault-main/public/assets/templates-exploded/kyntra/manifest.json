@@ -1,0 +1,281 @@
+{
+  "slug": "kyntra",
+  "devices": {
+    "desktop": {
+      "src": "/assets/templates-exploded/kyntra/desktop.webp",
+      "viewport": 1280,
+      "width": 960,
+      "height": 9128,
+      "sections": [
+        {
+          "y": 0,
+          "h": 747,
+          "label": "One App toManage Your Home",
+          "tag": "section",
+          "cls": "kyntra-hero"
+        },
+        {
+          "y": 747,
+          "h": 848,
+          "label": "kyntra-about",
+          "tag": "section",
+          "cls": "kyntra-container"
+        },
+        {
+          "y": 1595,
+          "h": 600,
+          "label": "kyntra-section-break",
+          "tag": "section",
+          "cls": "relative"
+        },
+        {
+          "y": 2195,
+          "h": 1685,
+          "label": "features",
+          "tag": "section",
+          "cls": "kyntra-container"
+        },
+        {
+          "y": 3880,
+          "h": 600,
+          "label": "smarter",
+          "tag": "section",
+          "cls": "relative"
+        },
+        {
+          "y": 4480,
+          "h": 1185,
+          "label": "how-it-works",
+          "tag": "section",
+          "cls": "kyntra-container"
+        },
+        {
+          "y": 5664,
+          "h": 600,
+          "label": "Trusted by Homeowners",
+          "tag": "section",
+          "cls": "relative"
+        },
+        {
+          "y": 6264,
+          "h": 566,
+          "label": "stories",
+          "tag": "section",
+          "cls": "relative"
+        },
+        {
+          "y": 6830,
+          "h": 641,
+          "label": "resources",
+          "tag": "section",
+          "cls": "relative"
+        },
+        {
+          "y": 7470,
+          "h": 578,
+          "label": "faq",
+          "tag": "section",
+          "cls": "kyntra-container"
+        },
+        {
+          "y": 8048,
+          "h": 600,
+          "label": "cta",
+          "tag": "section",
+          "cls": "relative"
+        },
+        {
+          "y": 8648,
+          "h": 480,
+          "label": "footer",
+          "tag": "div",
+          "cls": "relative"
+        }
+      ]
+    },
+    "tablet": {
+      "src": "/assets/templates-exploded/kyntra/tablet.webp",
+      "viewport": 820,
+      "width": 581,
+      "height": 16000,
+      "sections": [
+        {
+          "y": 0,
+          "h": 1291,
+          "label": "One App toManage Your Home",
+          "tag": "section",
+          "cls": "kyntra-hero"
+        },
+        {
+          "y": 1291,
+          "h": 3356,
+          "label": "kyntra-about",
+          "tag": "section",
+          "cls": "kyntra-container"
+        },
+        {
+          "y": 4647,
+          "h": 837,
+          "label": "kyntra-section-break",
+          "tag": "section",
+          "cls": "relative"
+        },
+        {
+          "y": 5484,
+          "h": 3195,
+          "label": "features",
+          "tag": "section",
+          "cls": "kyntra-container"
+        },
+        {
+          "y": 8679,
+          "h": 837,
+          "label": "smarter",
+          "tag": "section",
+          "cls": "relative"
+        },
+        {
+          "y": 9516,
+          "h": 1192,
+          "label": "how-it-works",
+          "tag": "section",
+          "cls": "kyntra-container"
+        },
+        {
+          "y": 10708,
+          "h": 786,
+          "label": "Trusted by Homeowners",
+          "tag": "section",
+          "cls": "relative"
+        },
+        {
+          "y": 11493,
+          "h": 978,
+          "label": "stories",
+          "tag": "section",
+          "cls": "relative"
+        },
+        {
+          "y": 12471,
+          "h": 851,
+          "label": "resources",
+          "tag": "section",
+          "cls": "relative"
+        },
+        {
+          "y": 13322,
+          "h": 872,
+          "label": "faq",
+          "tag": "section",
+          "cls": "kyntra-container"
+        },
+        {
+          "y": 14195,
+          "h": 586,
+          "label": "cta",
+          "tag": "section",
+          "cls": "relative"
+        },
+        {
+          "y": 14780,
+          "h": 1220,
+          "label": "footer",
+          "tag": "div",
+          "cls": "relative"
+        }
+      ]
+    },
+    "phone": {
+      "src": "/assets/templates-exploded/kyntra/phone.webp",
+      "viewport": 390,
+      "width": 393,
+      "height": 16000,
+      "sections": [
+        {
+          "y": 0,
+          "h": 1318,
+          "label": "One App toManage Your Home",
+          "tag": "section",
+          "cls": "kyntra-hero"
+        },
+        {
+          "y": 1318,
+          "h": 2468,
+          "label": "kyntra-about",
+          "tag": "section",
+          "cls": "kyntra-container"
+        },
+        {
+          "y": 3786,
+          "h": 850,
+          "label": "kyntra-section-break",
+          "tag": "section",
+          "cls": "relative"
+        },
+        {
+          "y": 4635,
+          "h": 3288,
+          "label": "features",
+          "tag": "section",
+          "cls": "kyntra-container"
+        },
+        {
+          "y": 7923,
+          "h": 850,
+          "label": "smarter",
+          "tag": "section",
+          "cls": "relative"
+        },
+        {
+          "y": 8773,
+          "h": 1473,
+          "label": "how-it-works",
+          "tag": "section",
+          "cls": "kyntra-container"
+        },
+        {
+          "y": 10245,
+          "h": 848,
+          "label": "Trusted by Homeowners",
+          "tag": "section",
+          "cls": "relative"
+        },
+        {
+          "y": 11093,
+          "h": 1063,
+          "label": "stories",
+          "tag": "section",
+          "cls": "relative"
+        },
+        {
+          "y": 12156,
+          "h": 958,
+          "label": "resources",
+          "tag": "section",
+          "cls": "relative"
+        },
+        {
+          "y": 13114,
+          "h": 1144,
+          "label": "faq",
+          "tag": "section",
+          "cls": "kyntra-container"
+        },
+        {
+          "y": 14258,
+          "h": 595,
+          "label": "cta",
+          "tag": "section",
+          "cls": "relative"
+        },
+        {
+          "y": 14852,
+          "h": 1148,
+          "label": "footer",
+          "tag": "div",
+          "cls": "relative"
+        }
+      ]
+    }
+  }
+}

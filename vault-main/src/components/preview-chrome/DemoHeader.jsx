@@ -727,7 +727,7 @@ function PreviewBar({ title: titleProp, tier: tierProp, backHref: backHrefProp, 
             aria-hidden="true"
             className="relative z-2 -mb-2 block h-8 w-px bg-[linear-gradient(#5a5a5a,#6a6a6a)] transition-[height] duration-700 ease-[cubic-bezier(.34,1.56,.64,1)] group-hover:h-5.5 group-focus-visible:h-5.5"
           />
-          <span className="relative flex items-center gap-2.25 pt-3.25 bg-black/40 border border-white/10 backdrop-blur-lg pr-3.5 pb-2.25 pl-3 shadow-[inset_0_1px_0_rgba(255,255,255,.07)">
+          <span className="relative flex items-center gap-2.25 pt-3.25 bg-black/60 border border-white/10 backdrop-blur-lg pr-3.5 pb-2.25 pl-3 shadow-[inset_0_1px_0_rgba(255,255,255,.07)">
             <span
               aria-hidden="true"
               className="absolute top-1 left-1/2 -ml-0.75 size-1.5 rounded-full bg-[#0d0d0d] shadow-[0_0_0_1px_#6a6a6a,inset_0_1px_1px_rgba(0,0,0,.8)]"
@@ -749,7 +749,7 @@ function PreviewBar({ title: titleProp, tier: tierProp, backHref: backHrefProp, 
                 <path d="M3 15.5l5 5 5-5" />
               </g>
             </svg>
-            <span className="text-[0.8vw] max-md:text-[3vw] max-[1025px]:text-[1.5vw] leading-none uppercase text-white">Controls</span>
+            <span className="text-[1vw] max-md:text-[3vw] max-[1025px]:text-[1.5vw] leading-none text-white">Controls</span>
           </span>
         </span>
       </button>
@@ -763,7 +763,7 @@ function PreviewBar({ title: titleProp, tier: tierProp, backHref: backHrefProp, 
           data-lenis-prevent
           data-lenis-prevent-wheel
           data-lenis-prevent-touch
-          className="fixed top-19.5 right-10 z-9021 max-[1025px]:top-17.5 max-[1025px]:right-6 max-md:top-16 flex h-fit max-h-[calc(100vh-94px)] min-h-80 w-[min(344px,calc(100vw-32px))] flex-col overflow-hidden bg-[#111] shadow-[inset_0_0_0_1px_rgba(244,244,244,.08),0_30px_80px_-20px_#000]"
+          className="fixed top-19.5 right-10 z-9021 max-[1025px]:top-17.5 max-[1025px]:right-6 max-md:top-16 flex h-fit max-h-[calc(100vh-94px)] min-h-80 w-[20vw] max-[1025px]:w-[min(344px,calc(100vw-32px))] flex-col overflow-hidden bg-[#111] shadow-[inset_0_0_0_1px_rgba(244,244,244,.08),0_30px_80px_-20px_#000]"
         >
           <div
             data-tip="Drag to move"
@@ -771,16 +771,19 @@ function PreviewBar({ title: titleProp, tier: tierProp, backHref: backHrefProp, 
             onPointerMove={onPanelPointerMove}
             onPointerUp={endDrag}
             onPointerCancel={endDrag}
-            className={`flex touch-none items-center justify-between border-b border-[rgba(244,244,244,.08)] py-2 pr-2 pl-5 select-none ${dragging ? "cursor-grabbing" : "cursor-grab"}`}
+            className={`flex touch-none items-center justify-between border-b border-[rgba(244,244,244,.08)] py-2 pr-2 pl-[0.9rem] select-none ${dragging ? "cursor-grabbing" : "cursor-grab"}`}
           >
-            <p className={`${LABEL} text-[#ffffffb7]`}>Props</p>
+            {/* Same heading as the effect page's Playground panel. */}
+            <p className="text-[1.1vw] tracking-normal text-white max-[1025px]:text-[1.6vw] max-md:text-[3.3vw]">Tune the real props</p>
             <button type="button" aria-label="Close props" onClick={() => setPanel(false)} className={BTN}>
               ✕
             </button>
           </div>
           {/* the app's RemixerPanel fills the body edge to edge */}
           <div className="min-h-0 flex-auto overflow-y-auto overscroll-contain scrollbar-none *:animate-none! *:bg-transparent! [&::-webkit-scrollbar]:hidden">
+            {/* compact: the same tight panel as the effect page's Playground. */}
             <RemixerPanel
+              compact
               isExpanded
               groups={groups}
               values={demo.values}

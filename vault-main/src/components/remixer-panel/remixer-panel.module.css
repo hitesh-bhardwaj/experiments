@@ -6,7 +6,7 @@
   --remixer-text: var(--foreground);
   --remixer-text-muted: #ffffffb7;
   --remixer-text-soft: color-mix(in srgb, var(--foreground) 52%, transparent);
-  --remixer-text-dim: color-mix(in srgb, var(--foreground) 30%, transparent);
+  --remixer-text-dim: color-mix(in srgb, var(--foreground) 60%, transparent);
   --remixer-accent: color-mix(in srgb, var(--foreground) 94%, transparent);
   --remixer-accent-strong: var(--foreground);
   --remixer-shadow: -24px 0 80px rgba(0, 0, 0, 0.45);

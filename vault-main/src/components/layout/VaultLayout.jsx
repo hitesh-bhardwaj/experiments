@@ -320,6 +320,13 @@ export function VaultLayout({
   // the ScrollTrigger refreshes after it) keep the element at the top of the viewport
   // where it was, by shifting Lenis's scroll state by however far the layout moved it.
   const anchorHoldRef = useRef(null);
+  // Where the anchor sits by layout alone - offsetTop ignores transforms, so cards
+  // that animate with transforms (motion layout, reveals) don't read as page drift.
+  const layoutTop = (el) => {
+    let top = 0;
+    for (let node = el; node; node = node.offsetParent) top += node.offsetTop;
+    return top - window.scrollY;
+  };
   const holdScrollAnchor = useCallback(() => {
     if (typeof window === "undefined" || window.scrollY < 1) return;
 
@@ -341,14 +348,13 @@ export function VaultLayout({
     const previousAnchoring = root.style.overflowAnchor;
     root.style.overflowAnchor = "none";
 
-    let lastTop = anchor.getBoundingClientRect().top;
+    let lastTop = layoutTop(anchor);
     let lastScroll = window.scrollY;
 
     const tick = () => {
       if (!anchor.isConnected) return;
       // How far the layout moved the anchor, beyond what scrolling explains.
-      const drift =
-        anchor.getBoundingClientRect().top - lastTop + (window.scrollY - lastScroll);
+      const drift = layoutTop(anchor) - lastTop + (window.scrollY - lastScroll);
 
       if (Math.abs(drift) >= 0.5) {
         if (lenis) {
@@ -363,7 +369,7 @@ export function VaultLayout({
         window.scrollTo(0, window.scrollY + drift);
       }
 
-      lastTop = anchor.getBoundingClientRect().top;
+      lastTop = layoutTop(anchor);
       lastScroll = window.scrollY;
     };
 

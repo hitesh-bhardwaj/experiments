@@ -199,6 +199,25 @@ export async function getSanityEffectContent(categorySlug, effectSlug) {
   }
 }
 
+// Full component source for the effect page's "Get code" dropdown. Server
+// only - call it after the access/limit checks in /api/effects/[slug]/copy.
+// Published documents only (drafts may hold unreviewed code).
+export async function getSanityEffectSource(effectSlug) {
+  if (!isSanityConfigured()) return null
+
+  const client = getSanityClient()
+  const effectSlugs = getEffectSlugAliases(effectSlug)
+
+  return client.fetch(
+    `*[_type == "effectContent" && effectSlug in $effectSlugs && !(_id in path("drafts.**"))][0]{
+      tier,
+      jsxCode,
+      tsxCode
+    }`,
+    {effectSlugs}
+  )
+}
+
 export async function getAllSanityEffectEntries() {
   if (!isSanityConfigured()) {
     console.warn('Sanity is not configured. No effect detail pages will be pre-rendered.')

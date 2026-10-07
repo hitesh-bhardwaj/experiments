@@ -1,0 +1,14 @@
+# Local HTTPS for testing the production Clerk instance, whose live keys only
+# work on vault.hyperiux.com and its subdomains.
+#
+#   1. /etc/hosts:  127.0.0.1 local.vault.hyperiux.com
+#   2. npm run dev
+#   3. npm run caddy        (sudo, to bind :443)
+#   4. open https://local.vault.hyperiux.com
+#
+# `tls internal` signs with Caddy's local CA; run `caddy trust` once if the
+# browser warns about the certificate.
+local.vault.hyperiux.com {
+	tls internal
+	reverse_proxy localhost:3000
+}

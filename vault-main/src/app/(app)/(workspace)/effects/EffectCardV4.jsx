@@ -112,7 +112,7 @@ export function EffectCardV4({
       }}
       className={`group relative grid cursor-pointer gap-3.5 outline-none ${className}`}
     >
-      <div className="relative aspect-[16/8.6] overflow-hidden bg-[#141414] transition-shadow duration-700 ease-[cubic-bezier(.16,1,.3,1)] group-hover:shadow-[0_30px_60px_-30px_rgba(255,95,0,.55)] group-focus-visible:shadow-[0_0_0_2px_#ff5f00]">
+      <div className="relative aspect-[16/8.6] overflow-hidden bg-[#141414] transition-shadow duration-700 ease-[cubic-bezier(.16,1,.3,1)] group-hover:shadow-[0_14px_28px_-16px_rgba(0,0,0,.35)] group-focus-visible:shadow-[0_0_0_2px_#ff5f00]">
         {cover && !imageError ? (
           <Image
             src={cover}
