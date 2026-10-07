@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { prefersReducedMotion } from "@/lib/motion";
 
 const LINE_WIDTH = 1.75;
@@ -13,10 +13,25 @@ const MORPH_ON_ELASTICITY = 0.025;
 // Sound toggle: a line that morphs into a travelling sine wave when
 // sound is on.
 // Controlled: the caller owns the sound state (`isOn`) and what a click does.
-export default function AudioCanvas({ isOn = false, onToggle, onHover, size = 44, className = "" }) {
+// `fit`: instead of a fixed `size`, stay square at whatever height the button is
+// stretched to (e.g. a header row sized by its tallest button), never below `size`.
+export default function AudioCanvas({ isOn = false, onToggle, onHover, size = 44, fit = false, className = "" }) {
     const canvasRef = useRef(null);
     const buttonRef = useRef(null);
     const stateRef = useRef({ phase: 0, morph: 0, isOn });
+    const [fitSize, setFitSize] = useState(null);
+
+    useEffect(() => {
+        const button = buttonRef.current;
+        if (!fit || !button) return undefined;
+        const measure = () => setFitSize(Math.round(button.clientHeight));
+        const ro = new ResizeObserver(measure);
+        ro.observe(button);
+        measure();
+        return () => ro.disconnect();
+    }, [fit]);
+
+    const drawSize = fit ? Math.max(size, fitSize ?? size) : size;
 
     // Latest on/off for the draw loop, without restarting it
     useEffect(() => {
@@ -29,18 +44,18 @@ export default function AudioCanvas({ isOn = false, onToggle, onHover, size = 44
         const ctx = canvas?.getContext("2d");
         if (!ctx) return undefined;
         const dpr = window.devicePixelRatio || 1;
-        canvas.width = size * dpr;
-        canvas.height = size * dpr;
-        canvas.style.width = `${size}px`;
-        canvas.style.height = `${size}px`;
+        canvas.width = drawSize * dpr;
+        canvas.height = drawSize * dpr;
+        canvas.style.width = `${drawSize}px`;
+        canvas.style.height = `${drawSize}px`;
         ctx.scale(dpr, dpr);
 
         const reduced = prefersReducedMotion();
         const S = stateRef.current;
-        const padding = size * PADDING_RATIO;
-        const width = size - padding * 2;
-        const centerY = size / 2;
-        const maxAmp = size * MAX_AMPLITUDE_RATIO;
+        const padding = drawSize * PADDING_RATIO;
+        const width = drawSize - padding * 2;
+        const centerY = drawSize / 2;
+        const maxAmp = drawSize * MAX_AMPLITUDE_RATIO;
         const steps = Math.floor(width * 2.5);
         let raf = 0;
 
@@ -55,7 +70,7 @@ export default function AudioCanvas({ isOn = false, onToggle, onHover, size = 44
             } else S.morph += (0 - S.morph) * MORPH_OFF_RATE;
             if (S.isOn && !reduced) S.phase += PHASE_SPEED;
 
-            ctx.clearRect(0, 0, size, size);
+            ctx.clearRect(0, 0, drawSize, drawSize);
             ctx.beginPath();
             ctx.strokeStyle = "#ffffff";
             ctx.lineWidth = LINE_WIDTH;
@@ -74,7 +89,7 @@ export default function AudioCanvas({ isOn = false, onToggle, onHover, size = 44
         };
         raf = requestAnimationFrame(draw);
         return () => cancelAnimationFrame(raf);
-    }, [size]);
+    }, [drawSize]);
 
     return (
         <button
@@ -87,9 +102,15 @@ export default function AudioCanvas({ isOn = false, onToggle, onHover, size = 44
             aria-label={isOn ? "Turn sound off" : "Turn sound on"}
             title={isOn ? "Sound on" : "Sound off"}
             className={`relative flex shrink-0 cursor-pointer items-center justify-center overflow-hidden bg-white/10 p-0 backdrop-blur-lg ${className}`}
-            style={{ width: size, height: size }}
+            // fit: the height comes from the row (min `size`); the canvas is taken out of
+            // flow so it can't hold the button at an old, larger height.
+            style={fit ? { width: drawSize, minHeight: size } : { width: size, height: size }}
         >
-            <canvas ref={canvasRef} className="relative z-10" aria-hidden="true" />
+            <canvas
+                ref={canvasRef}
+                className={fit ? "absolute top-1/2 left-1/2 z-10 -translate-x-1/2 -translate-y-1/2" : "relative z-10"}
+                aria-hidden="true"
+            />
         </button>
     );
 }

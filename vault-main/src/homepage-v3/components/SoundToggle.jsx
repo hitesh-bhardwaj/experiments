@@ -25,7 +25,7 @@ function writeSoundPreference(isOn) {
     }
 }
 
-export default function SoundToggle({ className = "", size = 44 }) {
+export default function SoundToggle({ className = "", size = 44, fit = false }) {
     const { sound, soundOn, setSound } = useInteraction();
     const [mounted, setMounted] = useState(false);
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -38,5 +38,5 @@ export default function SoundToggle({ className = "", size = 44 }) {
         writeSoundPreference(next);
     };
 
-    return <AudioCanvas isOn={soundOn} onToggle={onToggle} size={size} className={className} />;
+    return <AudioCanvas isOn={soundOn} onToggle={onToggle} size={size} fit={fit} className={className} />;
 }

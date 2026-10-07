@@ -286,7 +286,7 @@ export function PreviewDrawerV4({
             type="button"
             aria-pressed={saved}
             onClick={() => onToggleWishlist(shown)}
-            className={` flex gap-2 border px-3 border-white/60 py-3 leading-[1.2] text-[1.1vw] self-center ${saved ? "text-[#ff5f00]! [&_svg]:fill-[#ff5f00]" : ""}`}
+            className={` flex gap-2 border px-3 border-white/60 py-3 leading-[1.2] text-[1.1vw] self-center ${saved ? "text-[#ff5f00]! [&_svg]:fill-[#ff5f00] [&_svg]:stroke-[#ff5f00]" : ""}`}
           >
             <div className="size-4.5">
             <Heart className="size-full" />

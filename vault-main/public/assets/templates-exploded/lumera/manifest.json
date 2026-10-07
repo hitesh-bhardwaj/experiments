@@ -1,351 +1,157 @@
 {
   "slug": "lumera",
+  "source": "figma",
   "devices": {
     "desktop": {
-      "src": "/assets/templates-exploded/lumera/desktop.webp",
-      "viewport": 1280,
-      "width": 939,
-      "height": 16000,
       "sections": [
         {
-          "y": 0,
-          "h": 1277,
-          "label": "hero",
-          "tag": "section",
-          "cls": "relative"
+          "name": "hero",
+          "src": "/assets/templates-exploded/lumera/desktop/01-hero.webp",
+          "width": 1200,
+          "height": 1500
         },
         {
-          "y": 1277,
-          "h": 788,
-          "label": "about",
-          "tag": "section",
-          "cls": "overflow-hidden"
+          "name": "about",
+          "src": "/assets/templates-exploded/lumera/desktop/02-about.webp",
+          "width": 1200,
+          "height": 915
         },
         {
-          "y": 2065,
-          "h": 4988,
-          "label": "lumera-features",
-          "tag": "section",
-          "cls": "relative"
+          "name": "feature reveal",
+          "src": "/assets/templates-exploded/lumera/desktop/03-feature-reveal.webp",
+          "width": 1200,
+          "height": 1410
         },
         {
-          "y": 7053,
-          "h": 710,
-          "label": "services",
-          "tag": "section",
-          "cls": "w-screen"
+          "name": "services",
+          "src": "/assets/templates-exploded/lumera/desktop/04-services.webp",
+          "width": 1200,
+          "height": 815
         },
         {
-          "y": 7763,
-          "h": 1920,
-          "label": "works",
-          "tag": "section",
-          "cls": "w-full"
+          "name": "residences",
+          "src": "/assets/templates-exploded/lumera/desktop/05-residences.webp",
+          "width": 1200,
+          "height": 2473
         },
         {
-          "y": 9683,
-          "h": 741,
-          "label": "project",
-          "tag": "section",
-          "cls": "w-screen"
+          "name": "refinement",
+          "src": "/assets/templates-exploded/lumera/desktop/06-refinement.webp",
+          "width": 1200,
+          "height": 863
         },
         {
-          "y": 10423,
-          "h": 775,
-          "label": "showcase",
-          "tag": "section",
-          "cls": "py-[10%]"
+          "name": "heart of dubai",
+          "src": "/assets/templates-exploded/lumera/desktop/07-heart-of-dubai.webp",
+          "width": 1200,
+          "height": 875
         },
         {
-          "y": 11198,
-          "h": 688,
-          "label": "Core Features",
-          "tag": "section",
-          "cls": "py-[5%]"
-        },
-        {
-          "y": 11887,
-          "h": 1174,
-          "label": "bringing-desktop",
-          "tag": "section",
-          "cls": "max-[1025px]:hidden"
-        },
-        {
-          "y": 13060,
-          "h": 205,
-          "label": "",
-          "tag": "div",
-          "cls": "max-[1025px]:hidden"
-        },
-        {
-          "y": 13264,
-          "h": 447,
-          "label": "",
-          "tag": "section",
-          "cls": "py-[10%]"
-        },
-        {
-          "y": 13712,
-          "h": 564,
-          "label": "faq",
-          "tag": "section",
-          "cls": "py-[5%]"
-        },
-        {
-          "y": 14276,
-          "h": 512,
-          "label": "highlights",
-          "tag": "section",
-          "cls": "pb-[7%]"
-        },
-        {
-          "y": 14788,
-          "h": 321,
-          "label": "roi",
-          "tag": "section",
-          "cls": "py-[5%]"
-        },
-        {
-          "y": 15109,
-          "h": 561,
-          "label": "cta",
-          "tag": "section",
-          "cls": "relative"
-        },
-        {
-          "y": 15670,
-          "h": 330,
-          "label": "footer",
-          "tag": "div",
-          "cls": "relative"
-        }
-      ]
-    },
-    "tablet": {
-      "src": "/assets/templates-exploded/lumera/tablet.webp",
-      "viewport": 820,
-      "width": 479,
-      "height": 16000,
-      "sections": [
-        {
-          "y": 0,
-          "h": 1395,
-          "label": "hero",
-          "tag": "section",
-          "cls": "relative"
-        },
-        {
-          "y": 1395,
-          "h": 814,
-          "label": "about",
-          "tag": "section",
-          "cls": "overflow-hidden"
-        },
-        {
-          "y": 2210,
-          "h": 4818,
-          "label": "lumera-features",
-          "tag": "section",
-          "cls": "relative"
-        },
-        {
-          "y": 7027,
-          "h": 553,
-          "label": "services",
-          "tag": "section",
-          "cls": "w-screen"
-        },
-        {
-          "y": 7581,
-          "h": 2767,
-          "label": "works",
-          "tag": "section",
-          "cls": "w-full"
-        },
-        {
-          "y": 10348,
-          "h": 618,
-          "label": "project",
-          "tag": "section",
-          "cls": "w-screen"
-        },
-        {
-          "y": 10966,
-          "h": 584,
-          "label": "showcase",
-          "tag": "section",
-          "cls": "py-[10%]"
-        },
-        {
-          "y": 11550,
-          "h": 967,
-          "label": "Core Features",
-          "tag": "section",
-          "cls": "py-[5%]"
-        },
-        {
-          "y": 12517,
-          "h": 720,
-          "label": "bringing",
-          "tag": "section",
-          "cls": "hidden"
-        },
-        {
-          "y": 13237,
-          "h": 346,
-          "label": "",
-          "tag": "section",
-          "cls": "py-[10%]"
-        },
-        {
-          "y": 13583,
-          "h": 525,
-          "label": "faq",
-          "tag": "section",
-          "cls": "py-[5%]"
-        },
-        {
-          "y": 14108,
-          "h": 423,
-          "label": "highlights",
-          "tag": "section",
-          "cls": "pb-[7%]"
-        },
-        {
-          "y": 14531,
-          "h": 397,
-          "label": "roi",
-          "tag": "section",
-          "cls": "py-[5%]"
-        },
-        {
-          "y": 14928,
-          "h": 702,
-          "label": "cta",
-          "tag": "section",
-          "cls": "relative"
-        },
-        {
-          "y": 15630,
-          "h": 370,
-          "label": "footer",
-          "tag": "div",
-          "cls": "relative"
+          "name": "core features",
+          "src": "/assets/templates-exploded/lumera/desktop/08-core-features.webp",
+          "width": 1200,
+          "height": 1025
         }
       ]
     },
     "phone": {
-      "src": "/assets/templates-exploded/lumera/phone.webp",
-      "viewport": 390,
-      "width": 346,
-      "height": 16000,
       "sections": [
         {
-          "y": 0,
-          "h": 1362,
-          "label": "hero",
-          "tag": "section",
-          "cls": "relative"
+          "name": "hero",
+          "src": "/assets/templates-exploded/lumera/phone/01-hero.webp",
+          "width": 390,
+          "height": 1528
         },
         {
-          "y": 1362,
-          "h": 761,
-          "label": "about",
-          "tag": "section",
-          "cls": "overflow-hidden"
+          "name": "about",
+          "src": "/assets/templates-exploded/lumera/phone/02-about.webp",
+          "width": 390,
+          "height": 859
         },
         {
-          "y": 2122,
-          "h": 4634,
-          "label": "lumera-features",
-          "tag": "section",
-          "cls": "relative"
+          "name": "feature reveal",
+          "src": "/assets/templates-exploded/lumera/phone/03-feature-reveal.webp",
+          "width": 390,
+          "height": 2023
         },
         {
-          "y": 6756,
-          "h": 645,
-          "label": "services",
-          "tag": "section",
-          "cls": "w-screen"
+          "name": "services",
+          "src": "/assets/templates-exploded/lumera/phone/04-services.webp",
+          "width": 390,
+          "height": 706
         },
         {
-          "y": 7402,
-          "h": 2220,
-          "label": "works",
-          "tag": "section",
-          "cls": "w-full"
+          "name": "residences",
+          "src": "/assets/templates-exploded/lumera/phone/05-residences.webp",
+          "width": 390,
+          "height": 2425
         },
         {
-          "y": 9621,
-          "h": 718,
-          "label": "project",
-          "tag": "section",
-          "cls": "w-screen"
+          "name": "refinement",
+          "src": "/assets/templates-exploded/lumera/phone/06-refinement.webp",
+          "width": 390,
+          "height": 709
         },
         {
-          "y": 10339,
-          "h": 478,
-          "label": "showcase",
-          "tag": "section",
-          "cls": "py-[10%]"
+          "name": "heart of dubai",
+          "src": "/assets/templates-exploded/lumera/phone/07-heart-of-dubai.webp",
+          "width": 390,
+          "height": 509
         },
         {
-          "y": 10817,
-          "h": 1151,
-          "label": "Core Features",
-          "tag": "section",
-          "cls": "py-[5%]"
+          "name": "core features",
+          "src": "/assets/templates-exploded/lumera/phone/08-core-features.webp",
+          "width": 390,
+          "height": 1368
         },
         {
-          "y": 11969,
-          "h": 746,
-          "label": "bringing",
-          "tag": "section",
-          "cls": "hidden"
+          "name": "new standard",
+          "src": "/assets/templates-exploded/lumera/phone/09-new-standard.webp",
+          "width": 390,
+          "height": 771
         },
         {
-          "y": 12715,
-          "h": 383,
-          "label": "",
-          "tag": "section",
-          "cls": "py-[10%]"
+          "name": "stats",
+          "src": "/assets/templates-exploded/lumera/phone/10-stats.webp",
+          "width": 390,
+          "height": 393
         },
         {
-          "y": 13098,
-          "h": 792,
-          "label": "faq",
-          "tag": "section",
-          "cls": "py-[5%]"
+          "name": "faq",
+          "src": "/assets/templates-exploded/lumera/phone/11-faq.webp",
+          "width": 390,
+          "height": 739
         },
         {
-          "y": 13889,
-          "h": 429,
-          "label": "highlights",
-          "tag": "section",
-          "cls": "pb-[7%]"
+          "name": "highlights",
+          "src": "/assets/templates-exploded/lumera/phone/12-highlights.webp",
+          "width": 390,
+          "height": 415
         },
         {
-          "y": 14318,
-          "h": 505,
-          "label": "roi",
-          "tag": "section",
-          "cls": "py-[5%]"
+          "name": "roi",
+          "src": "/assets/templates-exploded/lumera/phone/13-roi.webp",
+          "width": 390,
+          "height": 480
         },
         {
-          "y": 14824,
-          "h": 745,
-          "label": "cta",
-          "tag": "section",
-          "cls": "relative"
+          "name": "cta",
+          "src": "/assets/templates-exploded/lumera/phone/14-cta.webp",
+          "width": 390,
+          "height": 761
         },
         {
-          "y": 15568,
-          "h": 432,
-          "label": "footer",
-          "tag": "div",
-          "cls": "relative"
+          "name": "footer",
+          "src": "/assets/templates-exploded/lumera/phone/15-footer.webp",
+          "width": 390,
+          "height": 537
         }
       ]
     }
+  },
+  "full": {
+    "src": "/assets/templates-exploded/lumera/full-desktop.webp",
+    "width": 720,
+    "height": 5926
   }
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState, useSyncExternalStore } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import { useUser } from "@clerk/nextjs";
 import { X } from "lucide-react";
@@ -14,6 +14,31 @@ const T24 = "text-[1.67vw] max-[1025px]:text-[2.9vw] max-md:text-[6vw]";
 
 const subscribeNever = () => () => {};
 
+// Saved effects are cached per account - in memory across client navigations and in
+// localStorage across visits - so hearts show the right state straight away; the
+// /api/wishlist fetch then refreshes the cache in the background.
+const WISHLIST_CACHE_KEY = (userId) => `hx-wishlist:${userId}`;
+const memoryWishlist = new Map();
+
+function readCachedWishlist(userId) {
+  if (memoryWishlist.has(userId)) return memoryWishlist.get(userId);
+  try {
+    const stored = JSON.parse(window.localStorage.getItem(WISHLIST_CACHE_KEY(userId)) || "null");
+    return Array.isArray(stored) ? stored : null;
+  } catch {
+    return null;
+  }
+}
+
+function writeCachedWishlist(userId, list) {
+  memoryWishlist.set(userId, list);
+  try {
+    window.localStorage.setItem(WISHLIST_CACHE_KEY(userId), JSON.stringify(list));
+  } catch {
+    // Storage blocked - the in-memory copy still covers this visit.
+  }
+}
+
 /**
  * Everything an EffectCardV4's actions need - saved effects, copy install command,
  * the Pro lock - shared by the effects listing and the effect page's related effects
@@ -21,7 +46,8 @@ const subscribeNever = () => () => {};
  * and the "sign in to save" prompt.
  */
 export function useEffectCardActions({ userPlan = "free", signInRedirect = "/effects" } = {}) {
-  const { isSignedIn } = useUser();
+  const { isSignedIn, user } = useUser();
+  const userId = user?.id;
   const isProUser = userPlan === "pro";
   const { toast, showToast, dismissToast } = useToastQueue();
   const [wishlist, setWishlist] = useState([]);
@@ -29,13 +55,36 @@ export function useEffectCardActions({ userPlan = "free", signInRedirect = "/eff
   // Portals need <body>; false on the server and during hydration.
   const mounted = useSyncExternalStore(subscribeNever, () => true, () => false);
 
+  // Cached list first (before paint, so no hearts flicker), then the server's.
+  useLayoutEffect(() => {
+    if (!isSignedIn || !userId) return;
+    const cached = readCachedWishlist(userId);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (cached) setWishlist(cached);
+  }, [isSignedIn, userId]);
+
   useEffect(() => {
-    if (!isSignedIn) return;
+    if (!isSignedIn || !userId) return undefined;
+    let cancelled = false;
     fetch("/api/wishlist")
-      .then((res) => (res.ok ? res.json() : []))
-      .then((data) => setWishlist((data || []).map((item) => item.effect_slug || item.name || item)))
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (cancelled || !data) return;
+        const list = data.map((item) => item.effect_slug || item.name || item);
+        setWishlist(list);
+        writeCachedWishlist(userId, list);
+      })
       .catch(() => {});
-  }, [isSignedIn]);
+    return () => {
+      cancelled = true;
+    };
+  }, [isSignedIn, userId]);
+
+  // Latest list for click handlers (a click reads it before any re-render).
+  const wishlistRef = useRef(wishlist);
+  useLayoutEffect(() => {
+    wishlistRef.current = wishlist;
+  }, [wishlist]);
 
   const wishlistSet = useMemo(() => new Set(wishlist), [wishlist]);
 
@@ -52,31 +101,54 @@ export function useEffectCardActions({ userPlan = "free", signInRedirect = "/eff
     [showToast],
   );
 
+  // Optimistic: the heart, toast and dashboard count update on click; the request
+  // confirms in the background and the heart goes back if it fails.
+  const setSaved = useCallback(
+    (name, saved) => {
+      setWishlist((prev) => {
+        const next = saved ? [...new Set([...prev, name])] : prev.filter((item) => item !== name);
+        if (userId) writeCachedWishlist(userId, next);
+        return next;
+      });
+    },
+    [userId],
+  );
+
   const toggleWishlist = useCallback(
     async (effect) => {
       if (!isSignedIn) {
         setSignInPrompt(true);
         return;
       }
+      const willSave = !wishlistRef.current.includes(effect.name);
+      setSaved(effect.name, willSave);
+      showToast({
+        title: `${effect.title} ${willSave ? "saved" : "removed"}`,
+        description: willSave ? "You'll find it in your dashboard's Saved Effects." : "It's no longer in your dashboard's Saved Effects.",
+      });
+      emitWishlistChanged(willSave);
+
       try {
         const res = await fetch("/api/wishlist", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ effect }),
         });
-        if (!res.ok) return;
+        if (!res.ok) throw new Error(`wishlist ${res.status}`);
         const data = await res.json();
-        setWishlist((prev) => (data.saved ? [...new Set([...prev, effect.name])] : prev.filter((name) => name !== effect.name)));
-        showToast({
-          title: `${effect.title} ${data.saved ? "saved" : "removed"}`,
-          description: data.saved ? "You'll find it in your dashboard's Saved Effects." : "It's no longer in your dashboard's Saved Effects.",
-        });
-        emitWishlistChanged(data.saved);
+        // The server has the final say (e.g. after a double click).
+        if (typeof data.saved === "boolean" && data.saved !== willSave) {
+          setSaved(effect.name, data.saved);
+          emitWishlistChanged(data.saved);
+        }
       } catch (error) {
         console.error(error);
+        setSaved(effect.name, !willSave);
+        emitWishlistChanged(!willSave);
+        showToast({ title: "Couldn't update Saved Effects", description: "Please try again in a moment." });
       }
     },
-    [isSignedIn, showToast],
+    [isSignedIn, showToast, setSaved],
   );
 
   const canInstall = useCallback((effect) => effect.tier !== "pro" || isProUser, [isProUser]);

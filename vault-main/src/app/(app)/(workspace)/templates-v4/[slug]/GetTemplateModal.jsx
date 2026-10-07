@@ -7,7 +7,7 @@ import Link from "next/link";
 import gsap from "gsap";
 import { useLenis } from "lenis/react";
 import { motion } from "motion/react";
-import { DISPLAY, LABEL, T13, T14, T16, T40, catalogueOf, priceOf } from "../tokens";
+import { DISPLAY, LABEL, PRICE, T13, T14, T16, T40, catalogueOf, priceOf } from "../tokens";
 
 // Demo wallet, same plans as the pricing page's credit demo.
 const PLANS = {
@@ -102,7 +102,9 @@ export function GetTemplateModal({ template, tab, onTab, onClose, onBuy }) {
       aria-labelledby="get-template-title"
       data-lenis-prevent
       onClick={(e) => e.target === e.currentTarget && onClose()}
-      className="fixed inset-0 z-130 grid place-items-center bg-[rgba(8,8,8,.6)] p-4 backdrop-blur-sm"
+      // z-[310]: just above VaultLayout's z-300 page layer (the tablet/mobile header, z-950, stays on top).
+      // The page behind is blurred and dimmed rather than covered with a dark fill.
+      className="fixed inset-0 z-[310] grid place-items-center bg-black/20 p-4 backdrop-blur-md backdrop-brightness-50"
     >
       <motion.div
         initial={{ opacity: 0, y: 30, scale: 0.97 }}
@@ -153,7 +155,7 @@ export function GetTemplateModal({ template, tab, onTab, onClose, onBuy }) {
             <div className="grid gap-3.5">
               {price != null && (
                 <p className="flex items-baseline gap-2.5">
-                  <b className={`${DISPLAY} text-[3vw] leading-none max-[1025px]:text-[6vw] max-md:text-[11vw]`}>${price}</b>
+                  <b className={`${DISPLAY} ${PRICE} text-[3vw] leading-none max-[1025px]:text-[6vw] max-md:text-[11vw]`}>${price}</b>
                   <span className={`${LABEL} text-[#8a8a8a]`}>one-time payment</span>
                 </p>
               )}

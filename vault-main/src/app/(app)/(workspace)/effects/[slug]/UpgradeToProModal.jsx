@@ -97,7 +97,7 @@ export default function UpgradeToProModal({ open, onClose, reason = "pro-effect"
         </div>
 
         <div className="mt-5 flex flex-wrap items-end gap-x-3 gap-y-1">
-          <p className="flex items-center font-neue-haas text-[4.5vw] leading-none max-[1025px]:text-[8vw] max-sm:text-[12vw]">
+          <p className="flex items-center font-aeonik text-[4.5vw] leading-none max-[1025px]:text-[8vw] max-sm:text-[12vw]">
             <span className="sr-only">{`${symbol}${planPrice} ${planLabel.toLowerCase()}`}</span>
             <span aria-hidden="true" className="flex items-center leading-none">
               <span>{symbol}</span>

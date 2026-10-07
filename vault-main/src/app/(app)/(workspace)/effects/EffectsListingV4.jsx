@@ -30,6 +30,7 @@ import { Modal, useEffectCardActions } from "./useEffectCardActions";
 import { PreviewDrawerV4 } from "./PreviewDrawerV4";
 import { CustomAnimationCta } from "./CustomAnimationCta";
 import { SliderArrowButton } from "@/components/ui/SliderArrowButton";
+import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import HeadAnim from "@/components/Animations/HeadAnim";
 import Copy from "@/components/Animations/Copy";
 
@@ -516,35 +517,9 @@ export function EffectsListingV4({
 
       {/* ---------- hero ---------- */}
       <section className={`${GUTTER} pt-36 pb-20 max-[1025px]:pt-32 max-[1025px]:pb-14 max-md:pt-28`}>
-        <nav data-v4-fade aria-label="Breadcrumb" className={`${LABEL} flex gap-2.5 text-[#7d7d7d]`}>
-          <Link href="/" className="transition-colors duration-500 hover:text-white">
-            Vault
-          </Link>
-          <span aria-hidden="true">/</span>
-          {scope ? (
-            <>
-              {/* Back to the overview in place, like the "All" chip. */}
-              <Link
-                href="/effects"
-                onClick={(event) => {
-                  event.preventDefault();
-                  selectCategory(null);
-                }}
-                className="transition-colors duration-500 hover:text-white"
-              >
-                Effects
-              </Link>
-              <span aria-hidden="true">/</span>
-              <span aria-current="page" className="text-[#ff5f00]">
-                {content?.name}
-              </span>
-            </>
-          ) : (
-            <span aria-current="page" className="text-[#ff5f00]">
-              Effects
-            </span>
-          )}
-        </nav>
+        <div data-v4-fade>
+          <Breadcrumb />
+        </div>
 
         <div data-v4-hero className="mt-7 grid grid-cols-[minmax(0,1.25fr)_minmax(0,.75fr)] items-end gap-12 max-[1025px]:grid-cols-1 max-[1025px]:gap-10">
           {/* Same entrances as the effect page: chars for the title, lines for the copy. */}
@@ -556,7 +531,7 @@ export function EffectsListingV4({
                 <HeroTitle name={content?.name} />
               ) : (
                 <>
-                  Browse the <span className="gradient-text-animate">vault.</span>
+                  Browse the <span className="gradient-text-animate">Vault.</span>
                 </>
               )}
             </h1>

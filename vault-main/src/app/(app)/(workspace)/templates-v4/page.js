@@ -1,3 +1,5 @@
+import fs from "node:fs/promises";
+import path from "node:path";
 import { createPageMetadata } from "@/lib/seo-metadata";
 import { TEMPLATES, TEMPLATES_OG_IMAGE } from "@/lib/mock-templates";
 import { getTemplateViewCounts } from "@/lib/template-views";
@@ -19,10 +21,23 @@ export const metadata = createPageMetadata({
   robots: { index: false, follow: false },
 });
 
+// The full-page desktop design built from the template's Figma exports
+// (scripts/build-exploded-manifest.mjs), for the card and corridor hover.
+async function readFullShot(slug) {
+  try {
+    const file = path.join(process.cwd(), "public/assets/templates-exploded", slug, "manifest.json");
+    return JSON.parse(await fs.readFile(file, "utf8")).full || null;
+  } catch {
+    return null;
+  }
+}
+
 export default async function TemplatesV4Page() {
   const viewCounts = await getTemplateViewCounts(TEMPLATES.map((template) => template.slug));
-  const templates = TEMPLATES.map((template) => ({
+  const fullShots = await Promise.all(TEMPLATES.map((template) => readFullShot(template.slug)));
+  const templates = TEMPLATES.map((template, i) => ({
     ...template,
+    fullShot: fullShots[i],
     href: sampleHref(template.slug), // cards and the corridor open the sample detail page
     viewCount: viewCounts[template.slug] || 0,
   }));

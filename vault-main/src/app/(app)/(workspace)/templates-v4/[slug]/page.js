@@ -110,7 +110,14 @@ export default async function TemplateDetailV4Page({ params }) {
         devices={devices}
         effects={Object.values(effectsByName)}
         stack={TEMPLATE_SECTIONS[slug]?.stack || template.tags || []}
-        related={related.map((t) => ({ ...t, href: sampleHref(t.slug), viewCount: viewCounts[t.slug] || 0 }))}
+        related={await Promise.all(
+          related.map(async (t) => ({
+            ...t,
+            href: sampleHref(t.slug),
+            viewCount: viewCounts[t.slug] || 0,
+            fullShot: (await readCapture(t.slug))?.full || null,
+          })),
+        )}
       />
     </Suspense>
   );

@@ -3,8 +3,13 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+// Segments whose URL doesn't read well as a label.
+const SEGMENT_LABELS = {
+  "templates-v4": "templates", // the v4 templates sample
+};
+
 function formatSegmentLabel(segment) {
-  return segment.replace(/-/g, " ");
+  return SEGMENT_LABELS[segment] || segment.replace(/-/g, " ");
 }
 
 function itemsFromPathname(pathname) {

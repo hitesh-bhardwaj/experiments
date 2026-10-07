@@ -532,7 +532,9 @@ export function EffectDetailContent({
                 {/* FAQ + custom animation block - the same components as the effects listing */}
                 <div className="h-full w-full">
                   {faqItems.length > 0 && <FAQV3 faqItems={faqItems} translateTop={false} />}
+                  <div className="px-[3.4vw]">
                   <CustomAnimationCta cta={safeContent?.ctaBanner} sectionRef={ctaSectionRef} className="mt-[2vw]" />
+                  </div>
                 </div>
 
                 {safeRelatedEffects?.length > 0 && (

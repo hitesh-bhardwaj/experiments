@@ -151,7 +151,7 @@ export function EffectCardV4({
                   stop(event);
                   onToggleWishlist?.(effect);
                 }}
-                className={`${ICON_BTN} ${isWishlisted ? "text-[#ff5f00]! [&_svg]:fill-[#ff5f00]" : ""}`}
+                className={`${ICON_BTN} ${isWishlisted ? "text-[#ff5f00]! [&_svg]:fill-[#ff5f00] [&_svg]:stroke-[#ff5f00]" : ""}`}
               >
                 <Heart />
               </button>

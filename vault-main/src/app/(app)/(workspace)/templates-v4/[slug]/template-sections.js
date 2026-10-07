@@ -6,7 +6,8 @@
 // Sections are matched to the layers in public/assets/templates-exploded/
 // <slug>/manifest.json by the layer's label (the Figma export's file name, or
 // for a stitched capture the section's DOM id or heading):
-//   match - the layer label starts with this (case-insensitive)
+//   match - the layer label starts with this (case-insensitive); a label equal
+//           to the section's name matches too
 //   after - for a layer with no id/heading: the first one after this match
 // Anything unmatched falls back to a tidied-up version of its label.
 
@@ -20,8 +21,11 @@ export const TEMPLATE_SECTIONS = {
       { match: "work-with-me", name: "Why work with me", note: "Positioning copy revealed line by line.", effect: "overflow-text-reveal" },
       { match: "services", name: "Services", note: "Horizontal scroll on desktop, a plain grid on mobile.", effect: "overflow-text-reveal" },
       { match: "awards", name: "Awards", note: "A hover-reveal award list with an interactive divider.", effect: "overflow-text-reveal" },
+      { match: "trusted", name: "Trusted by", note: "Floating award objects around the trust statement.", effect: "overflow-text-reveal" },
       { match: "clientblur", name: "Clients", note: "Ripple rings around the client logos." },
+      { match: "clients", name: "Clients", note: "Ripple rings around the client logos." },
       { match: "testimonials", name: "Testimonials", note: "A quote carousel.", effect: "overflow-text-reveal" },
+      { match: "faq", name: "FAQ", note: "Accordion answers that open with a smooth height animation.", effect: "animated-faq" },
       { match: "frequently", name: "FAQ", note: "Accordion answers that open with a smooth height animation.", effect: "animated-faq" },
       { match: "footer", name: "Footer", note: "Contact links and the pill button with the animated dot.", effect: "dot-fill-button" },
     ],
@@ -50,10 +54,16 @@ export const TEMPLATE_SECTIONS = {
       { match: "about", name: "About", note: "Brand positioning with a masked headline reveal.", effect: "mask-text-reveal" },
       { match: "lumera-features", name: "Feature reveal", note: "A pinned section that scrolls the residence features sideways.", effect: "horizontal-feature-reveal" },
       { match: "services", name: "Services", note: "A draggable marquee of what the development offers.", effect: "draggable-marquee" },
+      { match: "feature-reveal", name: "Feature reveal", note: "A statement, then a pinned section that scrolls the residences sideways.", effect: "horizontal-feature-reveal" },
       { match: "works", name: "Works", note: "Project listing with parallax images.", effect: "parallax-image-animation" },
+      { match: "residences", name: "Residences", note: "A dark gallery of the residence interiors, room by room.", effect: "parallax-image-animation" },
+      { match: "refinement", name: "A world of refinement", note: "An image slider with the advisor call to action.", effect: "mask-text-reveal" },
+      { match: "heart-of-dubai", name: "Location", note: "The address, framed by the landmarks around it.", effect: "mask-text-reveal" },
+      { match: "new-standard", name: "A new standard", note: "A closing statement with a video of the residences.", effect: "mask-text-reveal" },
+      { match: "stats", name: "Track record", note: "Years of experience, homes delivered and projects, counted up.", effect: "number-counter" },
       { match: "project", name: "Project", note: "Project detail with an infinite carousel.", effect: "mask-text-reveal" },
       { match: "showcase", name: "Showcase", note: "A background-video showcase.", effect: "mask-text-reveal" },
-      { match: "core features", name: "Gallery", note: "An interactive feature gallery with image previews.", effect: "mask-text-reveal" },
+      { match: "core features", name: "Core features", note: "The signature features around an interactive image gallery.", effect: "mask-text-reveal" },
       { match: "bringing", name: "Bringing it home", note: "A supporting video section.", effect: "mask-text-reveal" },
       { after: "bringing", name: "Project hover", note: "Hover a project name to preview its image." },
       { match: "faq", name: "FAQ", note: "Accordion answers that open with a smooth height animation.", effect: "animated-faq" },
@@ -109,11 +119,14 @@ export function resolveSections(slug, captured = [], effectsByName = {}) {
     layers.push({ ...s });
   }
 
+  // "work with me", "work-with-me" and "Work_With_Me" all match "work-with-me".
+  const norm = (text = "") => text.toLowerCase().trim().replace(/[\s_-]+/g, "-");
   let lastMatch = null;
   return layers.map((s, i) => {
-    const label = (s.label || "").toLowerCase();
-    let rule = label ? rules.find((r) => r.match && label.startsWith(r.match)) : null;
-    if (!rule && !label && lastMatch) rule = rules.find((r) => r.after && lastMatch.startsWith(r.after));
+    const label = norm(s.label);
+    // By its match prefix, or by the section's own name ("treatments" -> Treatments).
+    let rule = label ? rules.find((r) => (r.match && label.startsWith(norm(r.match))) || label === norm(r.name)) : null;
+    if (!rule && !label && lastMatch) rule = rules.find((r) => r.after && norm(lastMatch).startsWith(norm(r.after)));
     if (rule?.match) lastMatch = rule.match;
     return {
       y: s.y,

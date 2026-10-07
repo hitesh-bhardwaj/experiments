@@ -1,218 +1,139 @@
 {
   "slug": "elenavoss",
+  "source": "figma",
   "devices": {
     "desktop": {
-      "src": "/assets/templates-exploded/elenavoss/desktop.webp",
-      "viewport": 1280,
-      "width": 960,
-      "height": 9642,
       "sections": [
         {
-          "y": 0,
-          "h": 1800,
-          "label": "hero",
-          "tag": "section",
-          "cls": "relative"
+          "name": "hero",
+          "src": "/assets/templates-exploded/elenavoss/desktop/01-hero.webp",
+          "width": 1200,
+          "height": 1456
         },
         {
-          "y": 1800,
-          "h": 2160,
-          "label": "portfolio",
-          "tag": "section",
-          "cls": "relative"
+          "name": "portfolio",
+          "src": "/assets/templates-exploded/elenavoss/desktop/02-portfolio.webp",
+          "width": 1200,
+          "height": 1294
         },
         {
-          "y": 3960,
-          "h": 787,
-          "label": "work-with-me",
-          "tag": "section",
-          "cls": "relative"
+          "name": "work with me",
+          "src": "/assets/templates-exploded/elenavoss/desktop/03-work-with-me.webp",
+          "width": 1200,
+          "height": 750
         },
         {
-          "y": 4747,
-          "h": 832,
-          "label": "services",
-          "tag": "section",
-          "cls": "services-section"
+          "name": "services",
+          "src": "/assets/templates-exploded/elenavoss/desktop/04-services.webp",
+          "width": 1200,
+          "height": 950
         },
         {
-          "y": 5579,
-          "h": 686,
-          "label": "awards",
-          "tag": "section",
-          "cls": "relative"
+          "name": "awards",
+          "src": "/assets/templates-exploded/elenavoss/desktop/05-awards.webp",
+          "width": 1200,
+          "height": 856
         },
         {
-          "y": 6265,
-          "h": 1440,
-          "label": "clientblur",
-          "tag": "section",
-          "cls": "relative"
+          "name": "trusted by",
+          "src": "/assets/templates-exploded/elenavoss/desktop/06-trusted-by.webp",
+          "width": 1200,
+          "height": 766
         },
         {
-          "y": 7705,
-          "h": 665,
-          "label": "testimonials",
-          "tag": "section",
-          "cls": "w-screen"
+          "name": "clients",
+          "src": "/assets/templates-exploded/elenavoss/desktop/07-clients.webp",
+          "width": 1200,
+          "height": 697
         },
         {
-          "y": 8369,
-          "h": 760,
-          "label": "Frequently Asked Questions",
-          "tag": "section",
-          "cls": "w-screen"
+          "name": "testimonials",
+          "src": "/assets/templates-exploded/elenavoss/desktop/08-testimonials.webp",
+          "width": 1200,
+          "height": 703
         },
         {
-          "y": 9128,
-          "h": 513,
-          "label": "footer",
-          "tag": "footer",
-          "cls": "relative"
-        }
-      ]
-    },
-    "tablet": {
-      "src": "/assets/templates-exploded/elenavoss/tablet.webp",
-      "viewport": 820,
-      "width": 615,
-      "height": 13199,
-      "sections": [
-        {
-          "y": 0,
-          "h": 2655,
-          "label": "hero",
-          "tag": "section",
-          "cls": "relative"
+          "name": "faq",
+          "src": "/assets/templates-exploded/elenavoss/desktop/09-faq.webp",
+          "width": 1200,
+          "height": 872
         },
         {
-          "y": 2655,
-          "h": 3186,
-          "label": "portfolio",
-          "tag": "section",
-          "cls": "relative"
-        },
-        {
-          "y": 5841,
-          "h": 1352,
-          "label": "work-with-me",
-          "tag": "section",
-          "cls": "relative"
-        },
-        {
-          "y": 7193,
-          "h": 1282,
-          "label": "services",
-          "tag": "section",
-          "cls": "services-section"
-        },
-        {
-          "y": 8474,
-          "h": 626,
-          "label": "awards",
-          "tag": "section",
-          "cls": "relative"
-        },
-        {
-          "y": 9101,
-          "h": 2124,
-          "label": "clientblur",
-          "tag": "section",
-          "cls": "relative"
-        },
-        {
-          "y": 11225,
-          "h": 699,
-          "label": "testimonials",
-          "tag": "section",
-          "cls": "w-screen"
-        },
-        {
-          "y": 11924,
-          "h": 700,
-          "label": "Frequently Asked Questions",
-          "tag": "section",
-          "cls": "w-screen"
-        },
-        {
-          "y": 12623,
-          "h": 576,
-          "label": "footer",
-          "tag": "footer",
-          "cls": "relative"
+          "name": "footer",
+          "src": "/assets/templates-exploded/elenavoss/desktop/10-footer.webp",
+          "width": 1200,
+          "height": 594
         }
       ]
     },
     "phone": {
-      "src": "/assets/templates-exploded/elenavoss/phone.webp",
-      "viewport": 390,
-      "width": 472,
-      "height": 16000,
       "sections": [
         {
-          "y": 0,
-          "h": 3064,
-          "label": "hero",
-          "tag": "section",
-          "cls": "relative"
+          "name": "hero",
+          "src": "/assets/templates-exploded/elenavoss/phone/01-hero.webp",
+          "width": 390,
+          "height": 1768
         },
         {
-          "y": 3064,
-          "h": 3676,
-          "label": "portfolio",
-          "tag": "section",
-          "cls": "relative"
+          "name": "portfolio",
+          "src": "/assets/templates-exploded/elenavoss/phone/02-portfolio.webp",
+          "width": 390,
+          "height": 1072
         },
         {
-          "y": 6739,
-          "h": 1328,
-          "label": "work-with-me",
-          "tag": "section",
-          "cls": "relative"
+          "name": "work with me",
+          "src": "/assets/templates-exploded/elenavoss/phone/03-work-with-me.webp",
+          "width": 390,
+          "height": 930
         },
         {
-          "y": 8069,
-          "h": 1896,
-          "label": "services",
-          "tag": "section",
-          "cls": "services-section"
+          "name": "services",
+          "src": "/assets/templates-exploded/elenavoss/phone/04-services.webp",
+          "width": 390,
+          "height": 760
         },
         {
-          "y": 9964,
-          "h": 786,
-          "label": "awards",
-          "tag": "section",
-          "cls": "relative"
+          "name": "awards",
+          "src": "/assets/templates-exploded/elenavoss/phone/05-awards.webp",
+          "width": 390,
+          "height": 760
         },
         {
-          "y": 10750,
-          "h": 2451,
-          "label": "clientblur",
-          "tag": "section",
-          "cls": "relative"
+          "name": "trusted by",
+          "src": "/assets/templates-exploded/elenavoss/phone/06-trusted-by.webp",
+          "width": 390,
+          "height": 770
         },
         {
-          "y": 13200,
-          "h": 905,
-          "label": "testimonials",
-          "tag": "section",
-          "cls": "w-screen"
+          "name": "clients",
+          "src": "/assets/templates-exploded/elenavoss/phone/07-clients.webp",
+          "width": 390,
+          "height": 1120
         },
         {
-          "y": 14106,
-          "h": 982,
-          "label": "Frequently Asked Questions",
-          "tag": "section",
-          "cls": "w-screen"
+          "name": "testimonials",
+          "src": "/assets/templates-exploded/elenavoss/phone/08-testimonials.webp",
+          "width": 390,
+          "height": 860
         },
         {
-          "y": 15089,
-          "h": 911,
-          "label": "footer",
-          "tag": "footer",
-          "cls": "relative"
+          "name": "faq",
+          "src": "/assets/templates-exploded/elenavoss/phone/09-faq.webp",
+          "width": 390,
+          "height": 925
+        },
+        {
+          "name": "footer",
+          "src": "/assets/templates-exploded/elenavoss/phone/10-footer.webp",
+          "width": 390,
+          "height": 722
         }
       ]
     }
+  },
+  "full": {
+    "src": "/assets/templates-exploded/elenavoss/full-desktop.webp",
+    "width": 720,
+    "height": 5363
   }
 }

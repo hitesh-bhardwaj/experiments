@@ -11,15 +11,18 @@ export const T20 = "text-[1.4vw] max-[1025px]:text-[2.4vw] max-md:text-[5vw]";
 // Headings and small labels. Plain case and default letter-spacing throughout
 // these pages; every text size is in vw.
 export const DISPLAY = "font-normal";
-export const LABEL = T11;
+export const LABEL = T14;
 export const T10 = "text-[0.66vw] max-[1025px]:text-[1.2vw] max-md:text-[2.5vw]";
 export const T24 = "text-[1.7vw] max-[1025px]:text-[3.4vw] max-md:text-[6vw]";
-export const T40 = "text-[2.6vw] max-[1025px]:text-[4.6vw] max-md:text-[8vw]";
+export const T40 = "text-[3.5vw] max-[1025px]:text-[4.6vw] max-md:text-[8vw]";
+
+// Prices ($39 and the like) are always set in Aeonik Pro.
+export const PRICE = "font-aeonik";
 
 export const GUTTER = "px-[3.4vw] max-[1025px]:px-[5vw] max-md:px-5";
 
 // Small pill on a template shot (category, price, catalogue).
-export const BADGE = `inline-flex h-6 items-center gap-1.5 px-2.25 ${T11} backdrop-blur-md`;
+export const BADGE = `inline-flex py-1 items-center gap-1.5 px-2.25 ${T14} backdrop-blur-md`;
 
 /*
  * Which credit catalogue a template sits in: "selected" templates can be

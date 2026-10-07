@@ -4,17 +4,19 @@ import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { ArrowUpRight, Download, Heart } from "lucide-react";
+import { Download, Heart } from "lucide-react";
+import { motion } from "motion/react";
 import HeadAnim from "@/components/Animations/HeadAnim";
 import Copy from "@/components/Animations/Copy";
 import { useFadeUp } from "@/components/Animations/gsapAnimations";
 import { TemplatePaywallModal } from "@/components/ui/TemplatePaywallModal";
+import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import { useToastQueue, ToastViewport } from "@/components/ui/Toast";
 import ButtonV3 from "@/homepage-v3/components/ButtonV3";
 import { useTemplateWishlist } from "../../templates/useTemplateWishlist";
 import { useTemplateAccess } from "../../templates/useTemplateAccess";
 import { TemplateCardV4 } from "../TemplateCardV4";
-import { BADGE, DISPLAY, GUTTER, LABEL, T13, T14, T16, T24, T40, catalogueOf, priceOf } from "../tokens";
+import { BADGE, DISPLAY, PRICE, GUTTER, LABEL, T13, T14, T16, T18, T40, catalogueOf, priceOf } from "../tokens";
 import { GetTemplateModal } from "./GetTemplateModal";
 
 // three.js only loads when the exploded view is shown.
@@ -174,7 +176,6 @@ export function TemplateDetailV4({ template, templateAccess = { allowed: false, 
     ["Built with", `${effects.length} Vault effects`],
     ["Includes", "Source code and Figma file"],
     ["Licence", "MPL-2.0"],
-    ...(updated ? [["Updated", updated]] : []),
   ];
 
   const toolbar = (
@@ -209,47 +210,43 @@ export function TemplateDetailV4({ template, templateAccess = { allowed: false, 
   );
 
   return (
-    <div ref={rootRef} className="relative text-[#F4F4F4]">
+    // Fades in, so arriving from the corridor (which fades the listing out) is one smooth cross-fade.
+    <motion.div
+      ref={rootRef}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.9, ease: "easeInOut" }}
+      className="relative text-[#F4F4F4]"
+    >
       {/* ---------- hero ---------- */}
-      <section className={`${GUTTER} pt-36 pb-16 max-[1025px]:pt-32 max-md:pt-28`}>
-        <nav aria-label="Breadcrumb" className={`fadeup ${LABEL} flex flex-wrap gap-2.5 text-[#7d7d7d]`}>
-          <Link href="/" className="transition-colors duration-500 hover:text-white">
-            Vault
-          </Link>
-          <span aria-hidden="true">/</span>
-          <Link href="/templates-v4" className="transition-colors duration-500 hover:text-white">
-            Templates
-          </Link>
-          <span aria-hidden="true">/</span>
-          <span aria-current="page" className="text-[#ff5f00]">
-            {template.title}
-          </span>
-        </nav>
+      <section className={`${GUTTER} pt-25 pb-16 max-[1025px]:pt-32 max-md:pt-28`}>
+        <Breadcrumb />
 
-        <div className="mt-7 grid grid-cols-[minmax(0,1.2fr)_minmax(0,.8fr)] items-end gap-12 max-[1025px]:grid-cols-1 max-[1025px]:gap-10">
+        <div className="mt-10 grid grid-cols-[minmax(0,1.2fr)_minmax(0,.8fr)] items-start gap-12 max-[1025px]:grid-cols-1 max-[1025px]:gap-10">
           <div>
-            <div className="fadeup mb-5 flex flex-wrap gap-1.5">
-              <span className={`${BADGE} bg-white/8 text-[#d8d8d8]`}>{template.category}</span>
-              <span className={`${BADGE} ${full ? "bg-[#1D1D1D] text-[#FFB27A] shadow-[inset_0_0_0_1px_rgba(255,178,122,.3)]" : "bg-[rgba(255,178,122,.95)] text-[#1D1D1D]"}`}>
-                {full ? "Pro+ only" : "✦ Selected catalogue"}
-              </span>
-              {hasAccess && <span className={`${BADGE} bg-[#ff5f00] text-[#141414]`}>Yours ✓</span>}
-            </div>
+           
             <HeadAnim rotate={0} animateOnScroll={false}>
-              <h1 className={`${DISPLAY} text-[6vw] leading-[0.95]! max-[1025px]:text-[9vw] max-md:text-[13vw]`}>{template.title}</h1>
+              <h1 className={`${DISPLAY} text80 leading-[0.95]! max-[1025px]:text-[9vw] max-md:text-[13vw]`}>{template.title}</h1>
             </HeadAnim>
             {template.tagline && (
               <Copy animateOnScroll={false} delay={0.3}>
-                <p className={`mt-6 max-w-[40vw] ${T24} leading-[1.3] text-[#d6d6d6] max-[1025px]:max-w-none`}>{template.tagline}</p>
+                <p className={`mt-6 max-w-[40vw] text22 leading-[1.3] text-foreground max-[1025px]:max-w-none`}>{template.tagline}</p>
               </Copy>
             )}
+             <div className="fadeup mt-10 flex flex-wrap gap-1.5">
+              <span className={`${BADGE} bg-white/5 text-[#d8d8d8]`}>{template.category}</span>
+              <span className={`${BADGE} ${full ? "bg-white text-black shadow-[inset_0_0_0_1px_rgba(255,178,122,.3)]" : "bg-primary text-black"}`}>
+                {full ? "Pro+ only" : "✦ Selected catalogue"}
+              </span>
+              {hasAccess && <span className={`${BADGE} bg-white/5 backdrop-blur-lg text-white`}>Yours <span className="text-primary">✓</span></span>}
+            </div>
           </div>
 
           <aside className="fadeup grid min-w-0 gap-6">
             <dl className="grid gap-3">
               {facts.map(([term, value]) => (
                 <div key={term} className="grid grid-cols-[8vw_minmax(0,1fr)] items-center gap-3 border-b border-white/7 pb-3 max-[1025px]:grid-cols-[18vw_minmax(0,1fr)] max-md:grid-cols-[28vw_minmax(0,1fr)]">
-                  <dt className={`${LABEL} text-[#7d7d7d]`}>{term}</dt>
+                  <dt className={`${LABEL} text-white/60`}>{term}</dt>
                   <dd className={`flex flex-wrap gap-1.25 ${T14} text-[#e0e0e0]`}>
                     {Array.isArray(value)
                       ? value.map((v) => (
@@ -266,8 +263,8 @@ export function TemplateDetailV4({ template, templateAccess = { allowed: false, 
             <div className="grid gap-4">
               {price != null && (
                 <p className="flex items-baseline gap-3">
-                  <b className={`${DISPLAY} text-[3.6vw] leading-none max-[1025px]:text-[7vw] max-md:text-[12vw]`}>${price}</b>
-                  <span className={`${LABEL} text-[#8a8a8a]`}>one-time · or 1 template credit</span>
+                  <b className={`${DISPLAY} ${PRICE} text-[3.6vw] leading-none max-[1025px]:text-[7vw] max-md:text-[12vw]`}>${price}</b>
+                  <span className={`${LABEL} text-white/60`}>one-time or 1 template credit</span>
                 </p>
               )}
               <div className="flex flex-wrap items-center gap-2">
@@ -302,15 +299,15 @@ export function TemplateDetailV4({ template, templateAccess = { allowed: false, 
                 >
                   <Heart className={`size-4 ${wishlist.includes(template.slug) ? "fill-[#ff5f00] text-[#ff5f00]" : ""}`} aria-hidden="true" />
                 </button>
-                <a
+                {/* The live template, in a new tab */}
+                <ButtonV3
+                  text="Demo"
                   href={template.previewHref}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={`group ml-2 inline-flex h-11 items-center gap-2 ${T16} text-[#F4F4F4]/85 transition-colors duration-500 hover:text-white`}
-                >
-                  <span className="border-b border-white/25 pb-0.5 transition-colors duration-500 group-hover:border-[#ff5f00]">Live preview</span>
-                  <ArrowUpRight className="size-4 text-[#ff5f00] transition-transform duration-500 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden="true" />
-                </a>
+                  target_blank
+                  variant="outline"
+                  ariaLabel={`Open the ${template.title} demo in a new tab`}
+                  className="tracking-normal!"
+                />
               </div>
             </div>
           </aside>
@@ -433,7 +430,7 @@ export function TemplateDetailV4({ template, templateAccess = { allowed: false, 
       />
 
       <ToastViewport toast={toast} onDismiss={dismissToast} />
-    </div>
+    </motion.div>
   );
 }
 

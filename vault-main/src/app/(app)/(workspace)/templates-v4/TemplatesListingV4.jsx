@@ -1,19 +1,19 @@
 "use client";
 
-import { useMemo, useRef, useState, useSyncExternalStore } from "react";
+import { Fragment, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import dynamic from "next/dynamic";
-import Link from "next/link";
 import { motion } from "motion/react";
 import HeadAnim from "@/components/Animations/HeadAnim";
 import Copy from "@/components/Animations/Copy";
 import { useFadeUp } from "@/components/Animations/gsapAnimations";
 import { useToastQueue, ToastViewport } from "@/components/ui/Toast";
 import FAQV3 from "@/homepage-v3/sections/FAQV3";
+import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import ButtonV3 from "@/homepage-v3/components/ButtonV3";
 import { useTemplateWishlist } from "../templates/useTemplateWishlist";
 import { useTemplateAccess } from "../templates/useTemplateAccess";
 import { TemplateCardV4 } from "./TemplateCardV4";
-import { DISPLAY, GUTTER, LABEL, T13, T14, T16, T18, T20, T40, catalogueOf, priceOf } from "./tokens";
+import { DISPLAY, GUTTER, LABEL, PRICE, T16, T20, T40, catalogueOf, priceOf } from "./tokens";
 
 // three.js only loads when the corridor is shown.
 const TemplateCorridor = dynamic(() => import("./TemplateCorridor"), {
@@ -32,9 +32,9 @@ const CATALOGUES = [
 ];
 const CARD_LAYOUT_TRANSITION = { layout: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } };
 
-const CHIP = `inline-flex h-8.5 shrink-0 cursor-pointer items-center px-3.5 ${T13} transition-[background-color,color,box-shadow] duration-500`;
-const CHIP_OFF = "text-[#cfcfcf] shadow-[inset_0_0_0_1px_rgba(244,244,244,.14)] hover:shadow-[inset_0_0_0_1px_rgba(255,95,0,.6)]";
-const CHIP_ON = "bg-[#F4F4F4] text-[#141414]";
+const CHIP = `inline-flex py-3 shrink-0 cursor-pointer items-center px-3.5 ${T16} backdrop-blur-lg transition-[background-color,color,box-shadow] duration-500`;
+const CHIP_OFF = "text-[#cfcfcf] bg-white/5 shadow-[inset_0_0_0_1px_rgba(244,244,244,.14)] hover:shadow-[inset_0_0_0_1px_rgba(255,95,0,.6)]";
+const CHIP_ON = "bg-primary text-black";
 
 /* ---------- can this device show the corridor? (desktop, motion allowed, WebGL) ---------- */
 const CORRIDOR_QUERY = "(min-width: 901px) and (prefers-reduced-motion: no-preference)";
@@ -56,10 +56,14 @@ const subscribeCorridor = (onChange) => {
 };
 const canShowCorridor = () => window.matchMedia(CORRIDOR_QUERY).matches && hasWebGL();
 
-const formatPrices = (prices) => {
-  const list = prices.map((p) => `$${p}`);
-  return list.length > 1 ? `${list.slice(0, -1).join(", ")} or ${list.at(-1)}` : list[0] || "";
-};
+// "$39, $49 or $59", each price in Aeonik Pro.
+const formatPrices = (prices) =>
+  prices.map((p, i) => (
+    <Fragment key={p}>
+      {i > 0 && (i === prices.length - 1 ? " or " : ", ")}
+      <span className={PRICE}>${p}</span>
+    </Fragment>
+  ));
 
 /**
  * Sample Templates listing: the v4 design (public/v4/Templates — Hyperiux
@@ -101,7 +105,7 @@ export function TemplatesListingV4({ templates = [], description = "", faqItems 
 
   const stats = [
     [templates.length, "Templates"],
-    [prices.length ? `$${prices[0]}` : "-", "From, or 1 credit"],
+    [prices.length ? <span className={PRICE}>${prices[0]}</span> : "-", "or 1 credit"],
     [categories.length - 1, "Industries"],
   ];
 
@@ -114,15 +118,7 @@ export function TemplatesListingV4({ templates = [], description = "", faqItems 
     <div ref={rootRef} className="relative text-[#F4F4F4]">
       {/* ---------- hero ---------- */}
       <section className={`${GUTTER} pt-36 pb-12 max-[1025px]:pt-32 max-md:pt-28`}>
-        <nav aria-label="Breadcrumb" className={`fadeup ${LABEL} flex gap-2.5 text-[#7d7d7d]`}>
-          <Link href="/" className="transition-colors duration-500 hover:text-white">
-            Vault
-          </Link>
-          <span aria-hidden="true">/</span>
-          <span aria-current="page" className="text-[#ff5f00]">
-            Templates
-          </span>
-        </nav>
+        <Breadcrumb />
 
         <div className="mt-7 grid grid-cols-[minmax(0,1.2fr)_minmax(0,.8fr)] items-end gap-12 max-[1025px]:grid-cols-1 max-[1025px]:gap-10">
           <HeadAnim rotate={0} animateOnScroll={false}>
@@ -188,11 +184,11 @@ export function TemplatesListingV4({ templates = [], description = "", faqItems 
       {/* ---------- grid + credits sheet ---------- */}
       <div data-sound-hover="off" data-sound-flow="off" className="relative bg-[#F4F4F4] text-[#1D1D1D]">
         <section id="templates-grid" className={`${GUTTER} pt-24 max-md:pt-14`}>
-          <div className="fadeup mb-8 flex items-end justify-between gap-4">
+          <div className="fadeup mb-12 flex items-end justify-between gap-4">
             <h2 className={`${DISPLAY} ${T40} leading-[1.02]`}>
               All <span className="gradient-text-animate">templates.</span>
             </h2>
-            <p aria-live="polite" className={`${LABEL} text-[#6B6B6B]`}>
+            <p aria-live="polite" className={`${LABEL} text-black/60`}>
               {filtered.length} of {templates.length} templates
             </p>
           </div>
@@ -227,26 +223,21 @@ export function TemplatesListingV4({ templates = [], description = "", faqItems 
         </section>
 
         {/* template credits */}
-        <section className={`${GUTTER} grid gap-7 pt-32 pb-28 max-md:pt-20 max-md:pb-20`}>
+        <section className={`${GUTTER} grid gap-12 pt-32 pb-28 max-md:pt-20 max-md:pb-20`}>
           <div className="fadeup grid gap-3">
-            <p className={`${LABEL} flex items-center gap-2.5 text-[#6B6B6B]`}>
-              <span aria-hidden="true" className="size-1.25 rounded-full bg-[#ff5f00]" />
-              Template credits
-            </p>
             <h2 className={`${DISPLAY} ${T40} leading-[1.02]`}>
               One credit. <span className="gradient-text-animate">One whole site.</span>
             </h2>
           </div>
-          <div className="fadeup grid grid-cols-4 gap-3.5 max-[1025px]:grid-cols-2 max-md:grid-cols-1">
-            <CreditCard title="No plan needed" className="bg-[#fff4ea] shadow-[inset_0_0_0_1px_rgba(255,95,0,.35)]">
-              Buy any template outright{prices.length ? ` for ${formatPrices(prices)}` : ""}. One payment, and the source is yours.
-            </CreditCard>
-            <CreditCard title="1 credit = 1 template">Every page, section and interaction, as source code you own.</CreditCard>
+          <div className="fadeup grid grid-cols-3 gap-3.5 max-[1025px]:grid-cols-2 max-md:grid-cols-1">
+            <CreditCard title="No plan needed" className="bg-[#fff4ea]">
+              Buy any template outright{prices.length > 0 && <> for {formatPrices(prices)}</>}. One payment, and the source is yours.
+            </CreditCard> 
             <CreditCard title="Pro">
-              1 credit a year on quarterly billing, 3 a year on yearly. Redeem across the selected catalogue <span className="text-[#B84A00]">✦</span>.
+              1 credit a year on quarterly billing, 3 a year on yearly. Redeem across the selected catalogue <span className="text-primary">✦</span>.
             </CreditCard>
             <CreditCard title="Pro+" dark>
-              1 credit every quarter, or 5 a year on yearly (worth ~$200). Redeem across the full catalogue.
+              1 credit every quarter, or 5 a year on yearly (worth ~<span className={PRICE}>$200</span>). Redeem across the full catalogue.
             </CreditCard>
           </div>
           <div className="fadeup flex">
@@ -270,8 +261,8 @@ export function TemplatesListingV4({ templates = [], description = "", faqItems 
 function CreditCard({ title, dark = false, className = "", children }) {
   return (
     <div className={`p-6 ${dark ? "bg-[#1D1D1D] text-[#F4F4F4]" : `bg-white shadow-[inset_0_0_0_1px_rgba(29,29,29,.1)] ${className}`}`}>
-      <b className={`${DISPLAY} ${T18} font-medium`}>{title}</b>
-      <p className={`mt-2 ${T14} ${dark ? "text-[#bdbdbd]" : "text-[#6B6B6B]"}`}>{children}</p>
+      <b className={`${DISPLAY} ${T20} font-medium`}>{title}</b>
+      <p className={`mt-2 ${T16} ${dark ? "text-white/60" : "text-black/60"}`}>{children}</p>
     </div>
   );
 }
@@ -280,7 +271,7 @@ function CreditCard({ title, dark = false, className = "", children }) {
 function DarkSegment({ label, items, value, onChange, itemClassName }) {
   const index = Math.max(0, items.findIndex((item) => item.id === value));
   return (
-    <div role="radiogroup" aria-label={label} className="relative flex gap-0.5 bg-white/6 p-0.75 shadow-[inset_0_0_0_1px_rgba(244,244,244,.08)]">
+    <div role="radiogroup" aria-label={label} className="relative flex gap-0.5 bg-white/6 backdrop-blur-lg p-0.75 shadow-[inset_0_0_0_1px_rgba(244,244,244,.08)]">
       <span
         aria-hidden="true"
         className={`pointer-events-none absolute top-0.75 bottom-0.75 left-0.75 bg-[#ff5f00] transition-transform duration-700 ease-[cubic-bezier(.16,1,.3,1)] ${itemClassName}`}
@@ -295,7 +286,7 @@ function DarkSegment({ label, items, value, onChange, itemClassName }) {
             role="radio"
             aria-checked={active}
             onClick={() => onChange(item.id)}
-            className={`relative z-1 grid h-8.5 cursor-pointer place-items-center ${T14} transition-colors duration-500 ${itemClassName} ${
+            className={`relative z-1 grid py-2.5 cursor-pointer place-items-center ${T16} transition-colors duration-500 ${itemClassName} ${
               active ? "text-[#141414]" : "text-[#a9a9a9] hover:text-white"
             }`}
           >

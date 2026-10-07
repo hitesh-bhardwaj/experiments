@@ -18,7 +18,9 @@
  * 2. node scripts/build-exploded-manifest.mjs <slug> [<slug> ...]
  *
  * Writes web-sized WebP copies and manifest.json to
- * public/assets/templates-exploded/<slug>/, replacing what was there.
+ * public/assets/templates-exploded/<slug>/, replacing what was there, plus
+ * full-desktop.webp: the desktop sections stacked into one page, which the
+ * listing card scrolls through on hover.
  */
 
 import { mkdir, readdir, rm, writeFile } from "node:fs/promises";
@@ -33,6 +35,7 @@ const DEVICES = ["desktop", "tablet", "phone"];
 // Width of the saved images: enough for the 3D slabs, small enough to load fast.
 const OUT_WIDTH = { desktop: 1200, tablet: 820, phone: 600 };
 const IMAGE = /\.(png|jpe?g|webp)$/i;
+const FULL_WIDTH = 720; // the listing card's full-page image
 
 const labelOf = (file) =>
   path
@@ -44,7 +47,10 @@ const labelOf = (file) =>
 async function build(slug) {
   const manifest = { slug, source: "figma", devices: {} };
   const outDir = path.join(OUT, slug);
-  await rm(outDir, { recursive: true, force: true });
+  // Clear only what this script (or the old live-page capture) generated.
+  for (const old of [...DEVICES, ...DEVICES.map((d) => `${d}.webp`), "manifest.json", "full-desktop.webp"]) {
+    await rm(path.join(outDir, old), { recursive: true, force: true });
+  }
 
   for (const device of DEVICES) {
     const dir = path.join(SOURCE, slug, device);
@@ -65,6 +71,26 @@ async function build(slug) {
     }
     manifest.devices[device] = { sections };
     console.log(`${slug} · ${device}: ${sections.length} sections`);
+
+    if (device === "desktop") {
+      // Stack the sections at one width into a single full page.
+      const parts = await Promise.all(
+        files.map((file) => sharp(path.join(dir, file)).resize({ width: FULL_WIDTH }).toBuffer({ resolveWithObject: true })),
+      );
+      const height = parts.reduce((sum, p) => sum + p.info.height, 0);
+      let top = 0;
+      const composite = parts.map((p) => {
+        const layer = { input: p.data, left: 0, top };
+        top += p.info.height;
+        return layer;
+      });
+      const full = await sharp({ create: { width: FULL_WIDTH, height, channels: 3, background: "#ffffff" } })
+        .composite(composite)
+        .webp({ quality: 78 })
+        .toBuffer();
+      await writeFile(path.join(outDir, "full-desktop.webp"), full);
+      manifest.full = { src: `/assets/templates-exploded/${slug}/full-desktop.webp`, width: FULL_WIDTH, height };
+    }
   }
 
   if (!Object.keys(manifest.devices).length) {

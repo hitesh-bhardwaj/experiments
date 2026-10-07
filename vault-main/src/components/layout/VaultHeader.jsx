@@ -482,7 +482,8 @@ export function VaultHeader({
               </button>
             )}
 
-            <SoundToggle className="self-stretch bg-[#161616]! transition-colors duration-300 hover:bg-white/10!" />
+            {/* fit: same height as the search button (both stretch to the row). */}
+            <SoundToggle fit className="self-stretch bg-[#161616]! transition-colors duration-300 hover:bg-white/10!" />
 
             {isLoaded && user?.publicMetadata?.plan !== "pro" && (
               <div className="flex max-[1025px]:hidden">

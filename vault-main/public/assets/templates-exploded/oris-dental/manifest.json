@@ -1,218 +1,127 @@
 {
   "slug": "oris-dental",
+  "source": "figma",
   "devices": {
     "desktop": {
-      "src": "/assets/templates-exploded/oris-dental/desktop.webp",
-      "viewport": 1280,
-      "width": 960,
-      "height": 9162,
       "sections": [
         {
-          "y": 0,
-          "h": 600,
-          "label": "oris-hero",
-          "tag": "section",
-          "cls": "h-dvh"
+          "name": "hero",
+          "src": "/assets/templates-exploded/oris-dental/desktop/01-hero.webp",
+          "width": 1200,
+          "height": 725
         },
         {
-          "y": 600,
-          "h": 584,
-          "label": "about-oris",
-          "tag": "section",
-          "cls": "h-fit"
+          "name": "about",
+          "src": "/assets/templates-exploded/oris-dental/desktop/02-about.webp",
+          "width": 1200,
+          "height": 631
         },
         {
-          "y": 1184,
-          "h": 680,
-          "label": "care-comfort",
-          "tag": "section",
-          "cls": "w-full"
+          "name": "care comfort",
+          "src": "/assets/templates-exploded/oris-dental/desktop/03-care-comfort.webp",
+          "width": 1200,
+          "height": 725
         },
         {
-          "y": 1865,
-          "h": 1121,
-          "label": "dental-treatments-_R_tklritpesnduulb_",
-          "tag": "section",
-          "cls": "w-full"
+          "name": "treatments",
+          "src": "/assets/templates-exploded/oris-dental/desktop/04-treatments.webp",
+          "width": 1200,
+          "height": 888
         },
         {
-          "y": 2986,
-          "h": 600,
-          "label": "parallax",
-          "tag": "section",
-          "cls": "h-screen"
+          "name": "statement break",
+          "src": "/assets/templates-exploded/oris-dental/desktop/05-statement-break.webp",
+          "width": 1200,
+          "height": 806
         },
         {
-          "y": 3586,
-          "h": 3000,
-          "label": "oris-reviews-_R_1dklritpesnduulb_",
-          "tag": "div",
-          "cls": "w-full"
+          "name": "reviews",
+          "src": "/assets/templates-exploded/oris-dental/desktop/06-reviews.webp",
+          "width": 1200,
+          "height": 1419
         },
         {
-          "y": 6586,
-          "h": 1320,
-          "label": "passion-meet-purpose",
-          "tag": "section",
-          "cls": "w-full"
+          "name": "passion meet purpose",
+          "src": "/assets/templates-exploded/oris-dental/desktop/07-passion-meet-purpose.webp",
+          "width": 1200,
+          "height": 588
         },
         {
-          "y": 7906,
-          "h": 656,
-          "label": "oris-form",
-          "tag": "section",
-          "cls": "w-full"
+          "name": "book an appointment",
+          "src": "/assets/templates-exploded/oris-dental/desktop/08-book-an-appointment.webp",
+          "width": 1200,
+          "height": 724
         },
         {
-          "y": 8562,
-          "h": 600,
-          "label": "Brighten your smile with expert care.",
-          "tag": "div",
-          "cls": "relative"
-        }
-      ]
-    },
-    "tablet": {
-      "src": "/assets/templates-exploded/oris-dental/tablet.webp",
-      "viewport": 820,
-      "width": 615,
-      "height": 8332,
-      "sections": [
-        {
-          "y": 0,
-          "h": 885,
-          "label": "oris-hero",
-          "tag": "section",
-          "cls": "h-dvh"
-        },
-        {
-          "y": 885,
-          "h": 721,
-          "label": "about-oris",
-          "tag": "section",
-          "cls": "h-fit"
-        },
-        {
-          "y": 1606,
-          "h": 842,
-          "label": "care-comfort",
-          "tag": "section",
-          "cls": "w-full"
-        },
-        {
-          "y": 2447,
-          "h": 1516,
-          "label": "dental-treatments-_R_tklritpesnduulb_",
-          "tag": "section",
-          "cls": "w-full"
-        },
-        {
-          "y": 3962,
-          "h": 708,
-          "label": "parallax",
-          "tag": "section",
-          "cls": "h-screen"
-        },
-        {
-          "y": 4670,
-          "h": 1182,
-          "label": "Reviews",
-          "tag": "div",
-          "cls": "hidden"
-        },
-        {
-          "y": 5852,
-          "h": 953,
-          "label": "passion-meet-purpose",
-          "tag": "section",
-          "cls": "w-full"
-        },
-        {
-          "y": 6806,
-          "h": 872,
-          "label": "oris-form",
-          "tag": "section",
-          "cls": "w-full"
-        },
-        {
-          "y": 7678,
-          "h": 655,
-          "label": "Brighten your smile with expert care.",
-          "tag": "div",
-          "cls": "relative"
+          "name": "footer",
+          "src": "/assets/templates-exploded/oris-dental/desktop/09-footer.webp",
+          "width": 1200,
+          "height": 603
         }
       ]
     },
     "phone": {
-      "src": "/assets/templates-exploded/oris-dental/phone.webp",
-      "viewport": 390,
-      "width": 585,
-      "height": 12671,
       "sections": [
         {
-          "y": 0,
-          "h": 1266,
-          "label": "oris-hero",
-          "tag": "section",
-          "cls": "h-dvh"
+          "name": "hero",
+          "src": "/assets/templates-exploded/oris-dental/phone/01-hero.webp",
+          "width": 600,
+          "height": 1618
         },
         {
-          "y": 1266,
-          "h": 1002,
-          "label": "about-oris",
-          "tag": "section",
-          "cls": "h-fit"
+          "name": "about",
+          "src": "/assets/templates-exploded/oris-dental/phone/02-about.webp",
+          "width": 600,
+          "height": 1282
         },
         {
-          "y": 2268,
-          "h": 1280,
-          "label": "care-comfort",
-          "tag": "section",
-          "cls": "w-full"
+          "name": "care comfort",
+          "src": "/assets/templates-exploded/oris-dental/phone/03-care-comfort.webp",
+          "width": 600,
+          "height": 1107
         },
         {
-          "y": 3548,
-          "h": 2127,
-          "label": "dental-treatments-_R_tklritpesnduulb_",
-          "tag": "section",
-          "cls": "w-full"
+          "name": "treatments",
+          "src": "/assets/templates-exploded/oris-dental/phone/04-treatments.webp",
+          "width": 600,
+          "height": 1458
         },
         {
-          "y": 5675,
-          "h": 1013,
-          "label": "parallax",
-          "tag": "section",
-          "cls": "h-screen"
+          "name": "statement break",
+          "src": "/assets/templates-exploded/oris-dental/phone/05-statement-break.webp",
+          "width": 600,
+          "height": 1360
         },
         {
-          "y": 6687,
-          "h": 2363,
-          "label": "Reviews",
-          "tag": "div",
-          "cls": "hidden"
+          "name": "reviews",
+          "src": "/assets/templates-exploded/oris-dental/phone/06-reviews.webp",
+          "width": 600,
+          "height": 1266
         },
         {
-          "y": 9050,
-          "h": 1089,
-          "label": "passion-meet-purpose",
-          "tag": "section",
-          "cls": "w-full"
+          "name": "passion meet purpose",
+          "src": "/assets/templates-exploded/oris-dental/phone/07-passion-meet-purpose.webp",
+          "width": 600,
+          "height": 962
         },
         {
-          "y": 10139,
-          "h": 1503,
-          "label": "oris-form",
-          "tag": "section",
-          "cls": "w-full"
+          "name": "book an appointment",
+          "src": "/assets/templates-exploded/oris-dental/phone/08-book-an-appointment.webp",
+          "width": 600,
+          "height": 1362
         },
         {
-          "y": 11642,
-          "h": 1028,
-          "label": "Brighten your smile with expert care.",
-          "tag": "div",
-          "cls": "relative"
+          "name": "footer",
+          "src": "/assets/templates-exploded/oris-dental/phone/09-footer.webp",
+          "width": 600,
+          "height": 1298
         }
       ]
     }
+  },
+  "full": {
+    "src": "/assets/templates-exploded/oris-dental/full-desktop.webp",
+    "width": 720,
+    "height": 4266
   }
 }
