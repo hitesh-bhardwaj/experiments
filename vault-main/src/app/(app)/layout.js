@@ -8,7 +8,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 // Clerk only reads `localization` off <ClerkProvider> - passing it directly
 // to <SignUp> is silently ignored (it's not in the component's prop list, so
 // React forwards it but Clerk never looks at it). No `signIn.*` key here
-// anymore - /sign-in is a fully custom Clerk Elements flow (SignInFlow.jsx)
+// anymore - /sign-in is a fully custom Clerk flow (components/auth/vault-door)
 // that renders its own literal copy per step and never reads this object at
 // all, unlike the still-prebuilt <SignUp>. formButtonPrimary and the
 // password placeholder are deliberately NOT set here - both are single
@@ -33,7 +33,7 @@ export default function AppLayout({ children }) {
   return (
     <ClerkProvider
       localization={clerkLocalization}
-      // Only the fallback variant, not force: SignInFlow.jsx/SignUpFlow.jsx
+      // Only the fallback variant, not force: the vault-door auth flow
       // are fully custom (no <SignIn>/<SignUp> components rendered at all),
       // and now pass their own redirectUrl straight into setActive() when a
       // gated action (e.g. buying a template while signed out) needs to

@@ -99,7 +99,7 @@ export default function Pricing({ padding, content = true, isIndia = false }) {
   const { symbol, monthly: monthlyAmount, yearly: yearlyAmount } = PRICING[currency];
 
   // Anything that links here with a #pricing-cards hash (marketing CTAs,
-  // upgrade prompts, etc. - post-signup no longer does, see SignUpFlow.jsx)
+  // upgrade prompts, etc. - post-signup no longer does, see components/auth/vault-door)
   // needs a manual scroll: Lenis owns scroll and resets position on init, so
   // the browser's native anchor-jump doesn't stick on its own.
   const lenis = useLenis();

@@ -4,11 +4,8 @@ import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import ButtonV3 from "@/homepage-v3/components/ButtonV3";
 
-// Shared building blocks for the custom Clerk auth flows (SignInFlow,
-// SignUpFlow) - both step through Clerk's low-level useSignIn()/useSignUp()
-// resources with the same split-panel layout, so the visual pieces (and the
-// requestSubmit()-via-ButtonV3 wiring) live here once instead of being
-// duplicated per flow.
+// Shared auth helpers (also used by components/auth/vault-door) plus the
+// form building blocks CustomAnimationFormModal still renders.
 
 export function errorMessage(err, fallback) {
   return err?.errors?.[0]?.longMessage || err?.errors?.[0]?.message || fallback;
@@ -29,9 +26,9 @@ export function getSafeRedirectUrl(rawValue, fallback) {
 // Clerk rejects signIn.create()/signUp.create() with this code when the
 // browser already holds a valid session (single-session mode) - a real,
 // currently-valid session, not a stale one. The prebuilt <SignIn/>/<SignUp/>
-// components handle it by redirecting automatically; SignInFlow/SignUpFlow
-// call the lower-level signIn.create()/signUp.create() directly (see
-// SignInFlow.jsx's top comment for why), so without this check the form
+// components handle it by redirecting automatically; the vault-door flow
+// calls the lower-level signIn.create()/signUp.create() directly (see
+// vault-door/useVaultClerk.js), so without this check the form
 // just dead-ends on a raw Clerk error with no way forward short of a
 // manual reload - which is what actually surfaces the real session, via
 // the sign-in/sign-up page's own server-side auth() redirect.
@@ -39,10 +36,9 @@ export function isSessionExistsError(err) {
   return err?.errors?.[0]?.code === "session_exists";
 }
 
-// Sized in fixed steps (not vw) because the card itself is now a fixed
-// max-width (see SplitAuthLayout), not a viewport-relative column - vw units
-// would keep growing with screen width even though the card stops growing
-// past its cap.
+// Sized in fixed steps (not vw) because the forms using it sit in fixed
+// max-width cards - vw units would keep growing with screen width even
+// though the card stops growing past its cap.
 export function StepHeading({ title, subtitle }) {
   return (
     <div className="mb-8 space-y-2 max-[1025px]:mb-7 max-md:mb-10 max-md:space-y-3">

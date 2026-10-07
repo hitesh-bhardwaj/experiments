@@ -105,12 +105,14 @@ function Accordion({ open, children }) {
  *   (a Clerk-cookie cache check, not a live Clerk hook - see NavbarV3's own
  *   comment on why), so the sheet's bottom CTA matches the desktop bar's
  *   account-icon-vs-Sign-In swap instead of always showing Sign In.
+ * @param {boolean} hideSignIn - drops the signed-out Sign In CTA (NavbarV3's prop).
  */
 export default function NavbarMobileV3({
   visible = true,
   intro = true,
   onSearch,
   isSignedIn = false,
+  hideSignIn = false,
 }) {
   const overlayRef = useRef(null);
   const timelineRef = useRef(null);
@@ -259,6 +261,8 @@ export default function NavbarMobileV3({
   return (
     <>
       <div
+        // Lets pages that sit under the fixed header measure it (vault-door auth)
+        data-site-header
         // Translucent rather than solid: the hero's ASCII field keeps moving
         // under the bar, and the blur is what keeps the logo readable over it.
         className={`fixed top-0 left-0 z-1000 hidden max-[1025px]:flex w-full items-center justify-between border-b border-white/8 bg-background/30 px-[6vw] py-[5vw] backdrop-blur-xl transition-[transform,translate,opacity] duration-500 ease-out motion-reduce:transition-none md:px-[3.5vw] md:py-[2.5vw]  ${!intro
@@ -435,6 +439,7 @@ export default function NavbarMobileV3({
             })}
           </div>
 
+          {!(hideSignIn && !isSignedIn) && (
           <div data-mobile-row className="mt-[8vw] flex md:mt-[4.6vw]">
             {isSignedIn ? (
               <ButtonV3
@@ -452,6 +457,7 @@ export default function NavbarMobileV3({
               />
             )}
           </div>
+          )}
         </div>
       </div>
     </>

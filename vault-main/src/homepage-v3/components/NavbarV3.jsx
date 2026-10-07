@@ -32,6 +32,8 @@ export default function NavbarV3({
   effects = [],
   introOnLoader = false,
   isSignedIn = false,
+  // Drops the signed-out "Sign In" CTA (desktop bar + mobile sheet), e.g. on /sign-in itself
+  hideSignIn = false,
 }) {
   const navRef = useRef(null);
   // isSignedIn defaults to false here (no ClerkProvider on marketing
@@ -137,6 +139,8 @@ export default function NavbarV3({
     <>
       <nav
         ref={navRef}
+        // Lets pages that sit under the fixed header measure it (vault-door auth)
+        data-site-header
         // The intro is a fade in place - the loader's mark lands on the logo
         // where it already sits, so the bar can only appear around it. Sliding
         // is reserved for the scroll reveal, once the bar is its own again.
@@ -292,7 +296,7 @@ export default function NavbarV3({
               <User className="size-4" />
             </Link>
           ) : (
-            <ButtonV3 href="/sign-in" text="Sign In" />
+            !hideSignIn && <ButtonV3 href="/sign-in" text="Sign In" />
           )}
         </div>
 
@@ -304,6 +308,7 @@ export default function NavbarV3({
         intro={introReady}
         onSearch={openSearch}
         isSignedIn={isSignedIn || cachedSignedIn}
+        hideSignIn={hideSignIn}
       />
 
       <GlobalSearch effects={effects} externalOpen={openTrigger} />

@@ -6,5 +6,6 @@
 // (configured directly in the Razorpay dashboard) - nothing on our side for
 // that half. Lead tracking has to be client-side (window.Rocket) since the
 // server-side REST API (POST /api/v1/addParticipant) needs a paid-plan API
-// key we don't have - see SignUpFlow.jsx for where addParticipant is called.
+// key we don't have - see components/auth/vault-door/useVaultClerk.js for
+// where addParticipant is called.
 export const REFERRAL_ROCKET_CAMPAIGN_ID = "B8eATbfQ";
