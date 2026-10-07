@@ -142,9 +142,9 @@ export default function ExploreTheEffects() {
         <section
             ref={container}
             id="explore-the-effects"
-            className="relative mx-auto w-full max-w-[1536px] overflow-x-clip px-[4.5vw] py-[7%] text-center max-md:px-[5vw] max-sm:px-[7vw] space-y-[2vw] max-md:space-y-[6vw]"
+            className="relative mx-auto w-full max-w-[1536px] overflow-x-clip px-[calc(var(--cvw)*4.5)] py-[7%] text-center max-md:px-[calc(var(--cvw)*5)] max-sm:px-[calc(var(--cvw)*7)] space-y-[calc(var(--cvw)*2)] max-md:space-y-[calc(var(--cvw)*6)]"
         >
-            <LineReveal as="h2" className="mx-auto w-[60vw]  max-md:w-full text64 font-aeonik text-[4.6vw]! max-md:text-[6vw]! max-sm:text-[9vw]!">
+            <LineReveal as="h2" className="mx-auto w-[calc(var(--cvw)*60)]  max-md:w-full text64 font-aeonik text-[calc(var(--cvw)*4.6)]! max-md:text-[calc(var(--cvw)*6)]! max-sm:text-[calc(var(--cvw)*9)]!">
                 Explore the Moments Your Website is <span className="gradient-text-animate">Missing.</span>
             </LineReveal>
 
@@ -219,8 +219,8 @@ export default function ExploreTheEffects() {
                         </div>
                         <div className="flex flex-col justify-between gap-4 py-1">
                             <div>
-                                <h3 className="text32 font-aeonik text-[2.6vw]! max-md:text-[4vw]! max-sm:text-[6.6vw]! font-avenir">{item.title}</h3>
-                                <p className="mt-[0.5vw] text22 font-avenir text-[1.1vw]! leading-[1.6]! max-md:text-[2.2vw]! max-sm:text-[4.1vw]! text-white/60">{item.text}</p>
+                                <h3 className="text32 font-aeonik text-[calc(var(--cvw)*2.6)]! max-md:text-[calc(var(--cvw)*4)]! max-sm:text-[calc(var(--cvw)*6.6)]! font-avenir">{item.title}</h3>
+                                <p className="mt-[calc(var(--cvw)*0.5)] text22 font-avenir text-[calc(var(--cvw)*1.1)]! leading-[1.6]! max-md:text-[calc(var(--cvw)*2.2)]! max-sm:text-[calc(var(--cvw)*4.1)]! text-white/60">{item.text}</p>
                             </div>
                             <LinkButton href={item.href} text="Explore" underline tilted={false} underlineClassName="mt-0" className="text18 text-white hover:text-primary transition-colors duration-300" />
                         </div>

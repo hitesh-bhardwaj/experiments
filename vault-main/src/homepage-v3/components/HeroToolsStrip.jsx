@@ -14,8 +14,8 @@ if (typeof window !== "undefined") {
 
 const DRIFT_PX_PER_FRAME = 0.35; // the Theremin marquee's constant drift
 
-const MARK = "h-[1.7vw] w-auto max-md:h-6";
-const SYMBOL = "h-[1.9vw] w-auto max-md:h-7";
+const MARK = "h-[calc(var(--cvw)*1.7)] w-auto max-md:h-6";
+const SYMBOL = "h-[calc(var(--cvw)*1.9)] w-auto max-md:h-7";
 
 // Wordmarks (Next.js, WebGL) carry their own name; symbols get it beside them.
 // No Lenis logo exists in the repo, so it is a name only rather than an invented mark.
@@ -31,11 +31,11 @@ const TOOLS = [
 
 function ToolRow({ hidden = false }) {
     return (
-        <div className="flex shrink-0 items-center gap-[7vw] pr-[7vw] max-md:gap-12 max-md:pr-12" aria-hidden={hidden || undefined}>
+        <div className="flex shrink-0 items-center gap-[calc(var(--cvw)*7)] pr-[calc(var(--cvw)*7)] max-md:gap-12 max-md:pr-12" aria-hidden={hidden || undefined}>
             {TOOLS.map((tool) => (
-                <span key={tool.name} className="flex items-center gap-[0.8vw] whitespace-nowrap text-white opacity-55 max-md:gap-3">
+                <span key={tool.name} className="flex items-center gap-[calc(var(--cvw)*0.8)] whitespace-nowrap text-white opacity-55 max-md:gap-3">
                     {tool.icon}
-                    {!tool.wordmark && <span className="text-[1.8vw] font-avenir font-normal tracking-[-0.02em] max-md:text-[5.5vw]">{tool.name}</span>}
+                    {!tool.wordmark && <span className="text-[calc(var(--cvw)*1.8)] font-avenir font-normal tracking-[-0.02em] max-md:text-[calc(var(--cvw)*5.5)]">{tool.name}</span>}
                 </span>
             ))}
         </div>
@@ -84,9 +84,9 @@ export default function HeroToolsStrip() {
     );
 
     return (
-        <section ref={rootRef} aria-label="Built on" className="relative z-10 px-[3vw] max-md:px-6 max-sm:px-5 mt-[20vh]">
-            <div className="fadeup border-t border-white/10 pt-[4vw] pb-[12vw] max-md:pt-12 max-md:pb-28">
-                <p className="mb-[2.4vw] text-center text-[0.7vw] max-md:text-[11px] font-semibold uppercase tracking-[0.14em] text-white/40 max-md:mb-8">
+        <section ref={rootRef} aria-label="Built on" className="relative z-10 px-[calc(var(--cvw)*3)] max-md:px-6 max-sm:px-5 mt-[20vh]">
+            <div className="fadeup border-t border-white/10 pt-[calc(var(--cvw)*4)] pb-[calc(var(--cvw)*12)] max-md:pt-12 max-md:pb-28">
+                <p className="mb-[calc(var(--cvw)*2.4)] text-center text-[calc(var(--cvw)*0.7)] max-md:text-[11px] font-semibold uppercase tracking-[0.14em] text-white/40 max-md:mb-8">
                     Built on the tools your team already trusts
                 </p>
                 <div className="overflow-hidden [mask-image:linear-gradient(90deg,transparent,#000_12%,#000_88%,transparent)]" aria-hidden="true">
@@ -100,7 +100,7 @@ export default function HeroToolsStrip() {
             {/* Theremin's breathing room under the hero: the ribbons carry on
                 through it before the next section arrives */}
             <div className="grid h-[38vh] place-items-end justify-center pb-[12vh]" aria-hidden="true">
-                <p className="text-[0.75vw] font-medium uppercase tracking-[0.14em] text-white/35 max-md:text-[11px]">
+                <p className="text-[calc(var(--cvw)*0.75)] font-medium uppercase tracking-[0.14em] text-white/35 max-md:text-[11px]">
                     Move through the field
                 </p>
             </div>

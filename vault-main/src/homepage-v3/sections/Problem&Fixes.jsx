@@ -162,24 +162,24 @@ export default function ProblemFixes() {
   return (
     <section
       ref={sectionRef}
-      className="relative z-200  max-md:mt-[-8vw] w-full overflow-hidden px-[4.5vw] py-[7%] text-white max-md:px-[5vw] max-sm:px-[7vw]"
+      className="relative z-200  max-md:mt-[calc(var(--cvw)*-8)] w-full overflow-hidden px-[calc(var(--cvw)*4.5)] py-[7%] text-white max-md:px-[calc(var(--cvw)*5)] max-sm:px-[calc(var(--cvw)*7)]"
     >
       <div className="mx-auto relative z-200 flex w-full max-w-[1536px] flex-col items-center">
         <div className=" text-center w-[70%] max-md:w-full">
-          <LineReveal as='h2' className="text64 font-aeonik text-[4.6vw]! max-md:text-[6vw]! max-sm:text-[9vw]! w-full">
+          <LineReveal as='h2' className="text64 font-aeonik text-[calc(var(--cvw)*4.6)]! max-md:text-[calc(var(--cvw)*6)]! max-sm:text-[calc(var(--cvw)*9)]! w-full">
             Good Motion is{' '}
             <span className="gradient-text-animate">Harder</span> Than it Looks
           </LineReveal>
-          <p data-fadeup-delay="0.2" className="fadeup text22 font-avenir text-[1.1vw]! leading-[1.6]! max-md:text-[2.2vw]! max-sm:text-[4.1vw]! mx-auto mt-[3.5vw] max-w-[55vw] text-white max-md:mt-[5vw] max-md:w-full max-md:max-w-full max-sm:mt-[10vw]">
+          <p data-fadeup-delay="0.2" className="fadeup text22 font-avenir text-[calc(var(--cvw)*1.1)]! leading-[1.6]! max-md:text-[calc(var(--cvw)*2.2)]! max-sm:text-[calc(var(--cvw)*4.1)]! mx-auto mt-[calc(var(--cvw)*3.5)] max-w-[calc(var(--cvw)*55)] text-white max-md:mt-[calc(var(--cvw)*5)] max-md:w-full max-md:max-w-full max-sm:mt-[calc(var(--cvw)*10)]">
           Anyone can add a fade. What&apos;s hard is everything around it. Get timing, restraint, or performance wrong, and the moment meant to impress becomes the reason the site feels worse. Most teams see that risk and drop their ambitions to play it safe. And your interface ends up looking like everyone else&apos;s.  Vault is engineered around that discipline by default, not as an afterthought.
           </p>
         </div>
 
         <div
           ref={cardsRef}
-          className="mt-[8vw] h-fit w-full space-y-[1vw] max-md:mt-20 max-md:w-full max-md:space-y-5 max-sm:mt-20 max-sm:space-y-5"
+          className="mt-[calc(var(--cvw)*8)] h-fit w-full space-y-[calc(var(--cvw)*1)] max-md:mt-20 max-md:w-full max-md:space-y-5 max-sm:mt-20 max-sm:space-y-5"
         >
-          <div className="text24 flex w-full items-center justify-between px-[.5vw] max-sm:text-sm">
+          <div className="text24 flex w-full items-center justify-between px-[calc(var(--cvw)*.5)] max-sm:text-sm">
             <p>The Risks</p>
             <p>What Vault Fixes</p>
           </div>
@@ -187,11 +187,11 @@ export default function ProblemFixes() {
           {cards.map((item, index) => (
             <div
               key={item.title}
-              className="tension-card bg-grey/30 backdrop-blur-lg flex items-center justify-between p-[.7vw] pr-[1.5vw] max-md:p-3 max-sm:p-2 max-sm:pr-2"
+              className="tension-card bg-grey/30 backdrop-blur-lg flex items-center justify-between p-[calc(var(--cvw)*.7)] pr-[calc(var(--cvw)*1.5)] max-md:p-3 max-sm:p-2 max-sm:pr-2"
             >
               <div className="flex min-w-0 flex-1 items-center max-md:flex-col max-md:items-start max-md:gap-3 max-sm:gap-2.5">
 
-                <div className="flex w-[25vw] pl-[1vw] shrink-0 items-center gap-[1vw] max-md:w-auto max-md:gap-4 max-sm:gap-2.5">
+                <div className="flex w-[calc(var(--cvw)*25)] pl-[calc(var(--cvw)*1)] shrink-0 items-center gap-[calc(var(--cvw)*1)] max-md:w-auto max-md:gap-4 max-sm:gap-2.5">
 
                   <FadeTextV3
                     as="p"
@@ -202,7 +202,7 @@ export default function ProblemFixes() {
                   >
                     {item.label}
                   </FadeTextV3>
-                  <div className="flex size-[3vw] shrink-0 items-center justify-center bg-background p-1 max-md:size-8 max-sm:size-9">
+                  <div className="flex size-[calc(var(--cvw)*3)] shrink-0 items-center justify-center bg-background p-1 max-md:size-8 max-sm:size-9">
                     <DrawCrossV3
                       active={index <= activeIndex}
                       armed={armed}
@@ -210,7 +210,7 @@ export default function ProblemFixes() {
                     />
                   </div>
                 </div>
-                <p className="text-light-grey font-mono text18 max-md:w-[90%] max-md:flex-none max-md:px-0 max-md:text-[clamp(0.8rem,2.6vw,1rem)]! max-md:pr-0! min-w-0 flex-1 px-[2vw] text-left [--scramble-flash:var(--primary)] [--scramble-pre:var(--primary)] max-sm:w-[75%]">
+                <p className="text-light-grey font-mono text18 max-md:w-[90%] max-md:flex-none max-md:px-0 max-md:text-[clamp(0.8rem,calc(var(--cvw)*2.6),1rem)]! max-md:pr-0! min-w-0 flex-1 px-[calc(var(--cvw)*2)] text-left [--scramble-flash:var(--primary)] [--scramble-pre:var(--primary)] max-sm:w-[75%]">
                   <ScrambleTextV3
                     text={item.description}
                     active={index <= activeIndex}
@@ -219,7 +219,7 @@ export default function ProblemFixes() {
                 </p>
               </div>
 
-              <div className="flex w-[13vw] shrink-0 items-center gap-[1vw] justify-end max-md:gap-3 max-md:w-[38%] max-md:max-w-[40%] max-sm:w-[42%] max-sm:max-w-[48%] max-sm:gap-2">
+              <div className="flex w-[calc(var(--cvw)*13)] shrink-0 items-center gap-[calc(var(--cvw)*1)] justify-end max-md:gap-3 max-md:w-[38%] max-md:max-w-[40%] max-sm:w-[42%] max-sm:max-w-[48%] max-sm:gap-2">
 
                 <FadeTextV3
                   as="p"
@@ -229,7 +229,7 @@ export default function ProblemFixes() {
                 >
                   {item.title}
                 </FadeTextV3>
-                <div className="flex size-[3vw] shrink-0 items-center justify-center bg-background p-2.5 max-md:size-8 max-sm:size-9">
+                <div className="flex size-[calc(var(--cvw)*3)] shrink-0 items-center justify-center bg-background p-2.5 max-md:size-8 max-sm:size-9">
                   <DrawCheckV3
                     active={index <= activeIndex}
                     armed={armed}

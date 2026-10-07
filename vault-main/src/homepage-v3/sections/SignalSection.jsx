@@ -124,13 +124,13 @@ export default function SignalSection() {
                     <canvas ref={canvasRef} className="block size-full" />
                 </div>
             </div>
-            <div className="relative z-[60]! mx-auto h-[80vh]  max-w-[1536px] px-[4.5vw] py-[7%] max-md:h-fit max-md:px-[5vw] max-sm:px-[7vw]">
+            <div className="relative z-[60]! mx-auto h-[80vh]  max-w-[1536px] px-[calc(var(--cvw)*4.5)] py-[7%] max-md:h-fit max-md:px-[calc(var(--cvw)*5)] max-sm:px-[calc(var(--cvw)*7)]">
                 <div className="grid min-h-[62vh] grid-cols-2 items-start gap-12 max-md:min-h-fit max-md:grid-cols-1">
                     <div>
-                        <LineReveal as="h2" className="max-w-[30vw] leading-[1.2]! max-md:max-w-full text64 font-aeonik text-[4.6vw]! max-md:text-[6vw]! max-sm:text-[9vw]!">
+                        <LineReveal as="h2" className="max-w-[calc(var(--cvw)*30)] leading-[1.2]! max-md:max-w-full text64 font-aeonik text-[calc(var(--cvw)*4.6)]! max-md:text-[calc(var(--cvw)*6)]! max-sm:text-[calc(var(--cvw)*9)]!">
                             Small Motion.<br/> <span className="gradient-text-animate gradient-text-single">Big Signal.</span>
                         </LineReveal>
-                        <div className="fadeup mt-[4vw] flex flex-wrap gap-4 max-md:mt-8 max-sm:flex-col max-sm:items-start" data-fadeup-delay="0.16">
+                        <div className="fadeup mt-[calc(var(--cvw)*4)] flex flex-wrap gap-4 max-md:mt-8 max-sm:flex-col max-sm:items-start" data-fadeup-delay="0.16">
                             <ButtonV3 href="/effects" text="Browse Effects" />
                             <ButtonV3 variant="outline" href="/docs" text="Read the Docs" />
                         </div>

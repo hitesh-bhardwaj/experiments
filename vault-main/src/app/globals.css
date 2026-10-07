@@ -4,6 +4,10 @@
 @import "../styles/blog.css";
 
 :root {
+  /* "Container vw": 1vw up to the 1536px homepage container, then frozen at
+     its 1536px value, so vw-sized content stops growing once its container
+     stops (homepage sections use calc(var(--cvw)*N) instead of Nvw) */
+  --cvw: min(1vw, 15.36px);
   --font-code: var(--font-plex-mono), "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
   --background: #111111;
   --foreground: #ffffff;
@@ -128,9 +132,9 @@ h4 {
     line-height: 1.02;
   }
 }
-.home-type .t96 { font-size: clamp(2.6rem, 6.4vw, 6.6rem); }   /* .d1 */
-.home-type .text64 { font-size: clamp(2.2rem, 4.6vw, 4.6rem); } /* .d2 */
-.home-type :is(.text32, .text34) { font-size: clamp(1.6rem, 2.6vw, 2.6rem); } /* .d3 */
+.home-type .t96 { font-size: clamp(2.6rem, calc(var(--cvw) * 6.4), 6.6rem); }   /* .d1 */
+.home-type .text64 { font-size: clamp(2.2rem, calc(var(--cvw) * 4.6), 4.6rem); } /* .d2 */
+.home-type :is(.text32, .text34) { font-size: clamp(1.6rem, calc(var(--cvw) * 2.6), 2.6rem); } /* .d3 */
 .home-type .text24 { font-size: 17px; line-height: 1.45; }      /* lead */
 .home-type :is(.text22, .text20, .text18) { font-size: 16px; line-height: 1.65; } /* body */
 

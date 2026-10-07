@@ -22,7 +22,8 @@ export default function Homepage({ faqItems, effects = [] }) {
       <NavbarV3 effects={effects} introOnLoader />
       <LenisSmoothScroll lerp={0.065} wheelMultiplier={0.85} />
       <ScrollTopOnLoad />
-      <div className="relative">
+      {/* Sections (not the header) cap ButtonV3's vw sizing at the 1536px container */}
+      <div className="relative [--hx-vw:var(--cvw)]">
         <Hero />
         <div className="relative z-10">
           <WhyVault />

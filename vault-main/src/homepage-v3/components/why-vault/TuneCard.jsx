@@ -15,12 +15,12 @@ const TUNE_TEXT = "Tune it until it feels right.";
 const WORDS = TUNE_TEXT.split(" ");
 const label = "text-[11px] font-semibold uppercase tracking-[.14em]";
 const range =
-    "col-span-full mt-1.5 h-[1.4vw] w-full cursor-pointer appearance-none bg-transparent max-md:h-[6vw] " +
-    "[&::-webkit-slider-runnable-track]:h-[0.2vw] [&::-webkit-slider-runnable-track]:bg-[linear-gradient(90deg,var(--primary)_var(--fill),rgba(29,29,29,.15)_var(--fill))] max-md:[&::-webkit-slider-runnable-track]:h-[0.5vw] " +
-    "[&::-webkit-slider-thumb]:-mt-[0.5vw] [&::-webkit-slider-thumb]:h-[1.2vw] [&::-webkit-slider-thumb]:w-[0.5vw] [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-none [&::-webkit-slider-thumb]:border-0 [&::-webkit-slider-thumb]:bg-primary max-md:[&::-webkit-slider-thumb]:-mt-[2.3vw] max-md:[&::-webkit-slider-thumb]:h-[5vw] max-md:[&::-webkit-slider-thumb]:w-[2vw] " +
-    "[&::-moz-range-track]:h-[0.2vw] [&::-moz-range-track]:bg-[#1D1D1D]/15 max-md:[&::-moz-range-track]:h-[0.5vw] " +
-    "[&::-moz-range-progress]:h-[0.2vw] [&::-moz-range-progress]:bg-primary max-md:[&::-moz-range-progress]:h-[0.5vw] " +
-    "[&::-moz-range-thumb]:h-[1.2vw] [&::-moz-range-thumb]:w-[0.5vw] [&::-moz-range-thumb]:rounded-none [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-primary max-md:[&::-moz-range-thumb]:h-[5vw] max-md:[&::-moz-range-thumb]:w-[2vw]";
+    "col-span-full mt-1.5 h-[calc(var(--cvw)*1.4)] w-full cursor-pointer appearance-none bg-transparent max-md:h-[calc(var(--cvw)*6)] " +
+    "[&::-webkit-slider-runnable-track]:h-[calc(var(--cvw)*0.2)] [&::-webkit-slider-runnable-track]:bg-[linear-gradient(90deg,var(--primary)_var(--fill),rgba(29,29,29,.15)_var(--fill))] max-md:[&::-webkit-slider-runnable-track]:h-[calc(var(--cvw)*0.5)] " +
+    "[&::-webkit-slider-thumb]:-mt-[calc(var(--cvw)*0.5)] [&::-webkit-slider-thumb]:h-[calc(var(--cvw)*1.2)] [&::-webkit-slider-thumb]:w-[calc(var(--cvw)*0.5)] [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-none [&::-webkit-slider-thumb]:border-0 [&::-webkit-slider-thumb]:bg-primary max-md:[&::-webkit-slider-thumb]:-mt-[calc(var(--cvw)*2.3)] max-md:[&::-webkit-slider-thumb]:h-[calc(var(--cvw)*5)] max-md:[&::-webkit-slider-thumb]:w-[calc(var(--cvw)*2)] " +
+    "[&::-moz-range-track]:h-[calc(var(--cvw)*0.2)] [&::-moz-range-track]:bg-[#1D1D1D]/15 max-md:[&::-moz-range-track]:h-[calc(var(--cvw)*0.5)] " +
+    "[&::-moz-range-progress]:h-[calc(var(--cvw)*0.2)] [&::-moz-range-progress]:bg-primary max-md:[&::-moz-range-progress]:h-[calc(var(--cvw)*0.5)] " +
+    "[&::-moz-range-thumb]:h-[calc(var(--cvw)*1.2)] [&::-moz-range-thumb]:w-[calc(var(--cvw)*0.5)] [&::-moz-range-thumb]:rounded-none [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-primary max-md:[&::-moz-range-thumb]:h-[calc(var(--cvw)*5)] max-md:[&::-moz-range-thumb]:w-[calc(var(--cvw)*2)]";
 
 function SmoothRange({ min, max, step, defaultValue, digits, label, onRelease }) {
     const inputRef = useRef(null);
@@ -95,7 +95,7 @@ export default function TuneCard({ replayKey }) {
     return (
         <div className="relative grid aspect-[16/11] grid-cols-[1.1fr_.9fr] overflow-hidden bg-[#ececec] text-[#1D1D1D] max-md:aspect-[4/5] max-md:grid-cols-1">
             <div className="grid place-items-center border-r border-[#1D1D1D]/10 p-6 max-md:hidden">
-                <p className="text-center font-avenir text-[clamp(1.6rem,2.8vw,2.6rem)] leading-[1.05] tracking-[-.03em]">
+                <p className="text-center font-avenir text-[clamp(1.6rem,calc(var(--cvw)*2.8),2.6rem)] leading-[1.05] tracking-[-.03em]">
                     {WORDS.map((word, i) => (
                         <Fragment key={i}>
                             <span className="inline-block overflow-hidden px-[.08em] pt-[.14em] pb-[.24em] align-top -mx-[.08em] -mt-[.14em] -mb-[.24em]">

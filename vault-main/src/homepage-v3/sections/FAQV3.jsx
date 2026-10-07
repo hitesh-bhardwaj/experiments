@@ -151,7 +151,7 @@ export function FAQRow({ item, isOpen, onToggle, index }) {
 
   return (
     <div
-      className={`faq-v3-row group relative cursor-pointer px-[0.5vw] py-[2vw] text-background max-md:px-[6vw] max-md:py-[6vw] ${index >= INITIAL_COUNT ? "faq-v3-row-extra" : ""}`}
+      className={`faq-v3-row group relative cursor-pointer px-[calc(var(--cvw)*0.5)] py-[calc(var(--cvw)*2)] text-background max-md:px-[calc(var(--cvw)*6)] max-md:py-[calc(var(--cvw)*6)] ${index >= INITIAL_COUNT ? "faq-v3-row-extra" : ""}`}
       role="button"
       tabIndex={0}
       data-sound-click
@@ -161,13 +161,13 @@ export function FAQRow({ item, isOpen, onToggle, index }) {
       onClick={handleClick}
       onKeyDown={handleKeyDown}
     >
-      <div className="flex w-full items-start justify-between gap-[1.5vw] max-md:gap-[4vw]">
-        <h3 className="text-[1.55vw] font-avenir flex-1 leading-tight max-md:text-[5.2vw]">
+      <div className="flex w-full items-start justify-between gap-[calc(var(--cvw)*1.5)] max-md:gap-[calc(var(--cvw)*4)]">
+        <h3 className="text-[calc(var(--cvw)*1.55)] font-avenir flex-1 leading-tight max-md:text-[calc(var(--cvw)*5.2)]">
           {item.question}
         </h3>
         <span
           aria-hidden="true"
-          className={`relative mt-[0.55vw] size-[1.1vw] shrink-0 transition-[color,transform] duration-700 ease-out group-hover:rotate-180 group-hover:text-primary motion-reduce:transition-none max-md:mt-[1.5vw] max-md:size-[4vw] ${isOpen ? "rotate-180 text-primary" : "rotate-0 text-background/45"
+          className={`relative mt-[calc(var(--cvw)*0.55)] size-[calc(var(--cvw)*1.1)] shrink-0 transition-[color,transform] duration-700 ease-out group-hover:rotate-180 group-hover:text-primary motion-reduce:transition-none max-md:mt-[calc(var(--cvw)*1.5)] max-md:size-[calc(var(--cvw)*4)] ${isOpen ? "rotate-180 text-primary" : "rotate-0 text-background/45"
             }`}
         >
           <span className="absolute left-0 top-1/2 h-px w-full -translate-y-1/2 bg-current" />
@@ -191,9 +191,9 @@ export function FAQRow({ item, isOpen, onToggle, index }) {
         <div
           ref={innerRef}
           style={{ opacity: initiallyOpen ? 1 : 0 }}
-          className="pt-[1.2vw] pr-[2.8vw] max-md:pt-[4vw] max-md:pr-[8vw]"
+          className="pt-[calc(var(--cvw)*1.2)] pr-[calc(var(--cvw)*2.8)] max-md:pt-[calc(var(--cvw)*4)] max-md:pr-[calc(var(--cvw)*8)]"
         >
-          <p className="text22 font-avenir text-[1.1vw]! leading-[1.6]! max-md:text-[2.2vw]! max-sm:text-[4.1vw]! w-[85%] text-background/70 max-md:w-full">
+          <p className="text22 font-avenir text-[calc(var(--cvw)*1.1)]! leading-[1.6]! max-md:text-[calc(var(--cvw)*2.2)]! max-sm:text-[calc(var(--cvw)*4.1)]! w-[85%] text-background/70 max-md:w-full">
             {item.answer}
           </p>
         </div>
@@ -271,20 +271,20 @@ export default function FAQV3({ faqItems, translateTop = true}) {
       ref={container}
       id="faq"
       data-sound-flow="off"
-      className="relative z-10 h-fit px-[4.5vw] w-full bg-foreground py-[7%] text-background max-md:mt-0! max-md:px-[5vw] max-sm:px-[7vw]"
+      className="relative z-10 h-fit px-[calc(var(--cvw)*4.5)] w-full bg-foreground py-[7%] text-background max-md:mt-0! max-md:px-[calc(var(--cvw)*5)] max-sm:px-[calc(var(--cvw)*7)]"
     >
       <div className="mx-auto w-full max-w-[1536px]">
 
 
       <LineReveal
         as="h2"
-        className="text64 font-aeonik text-[4.6vw]! max-md:text-[6vw]! max-sm:text-[9vw]! text-center mb-[7vw]  relative z-110  max-md:mb-[12vw] max-md:w-full"
+        className="text64 font-aeonik text-[calc(var(--cvw)*4.6)]! max-md:text-[calc(var(--cvw)*6)]! max-sm:text-[calc(var(--cvw)*9)]! text-center mb-[calc(var(--cvw)*7)]  relative z-110  max-md:mb-[calc(var(--cvw)*12)] max-md:w-full"
       >
         Questions, <span className="gradient-text-animate">Answered.</span>
       </LineReveal>
 
 
-      <div className="mx-auto  max-w-[1536px] max-md:w-full px-[5vw]">
+      <div className="mx-auto  max-w-[1536px] max-md:w-full px-[calc(var(--cvw)*5)]">
         {visibleItems.map((item, index) => (
           <FAQRow
             key={item.id}
@@ -299,7 +299,7 @@ export default function FAQV3({ faqItems, translateTop = true}) {
       </div>
 
       {!isExpanded && faqItems.length > INITIAL_COUNT && (
-        <div className="faq-v3-row flex w-full items-center  justify-center mt-[3vw] max-md:mt-[10vw]">
+        <div className="faq-v3-row flex w-full items-center  justify-center mt-[calc(var(--cvw)*3)] max-md:mt-[calc(var(--cvw)*10)]">
           <LinkButton
             href="#"
             onClick={() => setIsExpanded(true)}

@@ -83,7 +83,7 @@ function FooterBlockLink({ href, children }) {
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 -z-10 bg-primary opacity-0 transition-opacity duration-200 ease-out group-hover:opacity-100 group-hover:duration-0 motion-reduce:transition-none"
       />
-      <span className="block py-[0.15vw] max-md:py-1.5 max-md:px-2 text20 text-foreground transition-transform duration-200 ease-out group-hover:translate-x-5 group-hover:duration-0 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0">
+      <span className="block py-[calc(var(--cvw)*0.15)] max-md:py-1.5 max-md:px-2 text20 text-foreground transition-transform duration-200 ease-out group-hover:translate-x-5 group-hover:duration-0 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0">
         {children}
       </span>
     </Link>
@@ -165,22 +165,22 @@ export default function FooterV3() {
     <footer
       ref={footerRef}
       id="footer"
-      className="relative z-200 py-[7vw]  w-full overflow-hidden max-md:px-[5vw] max-md:py-[10vw] max-sm:mt-16 px-[4.5vw] max-sm:px-[7vw] max-sm:py-[15vw] max-md:bg-[#111110]"
+      className="relative z-200 py-[calc(var(--cvw)*7)]  w-full overflow-hidden max-md:px-[calc(var(--cvw)*5)] max-md:py-[calc(var(--cvw)*10)] max-sm:mt-16 px-[calc(var(--cvw)*4.5)] max-sm:px-[calc(var(--cvw)*7)] max-sm:py-[calc(var(--cvw)*15)] max-md:bg-[#111110]"
     >
       <canvas
         ref={ribbonCanvasRef}
         aria-hidden="true"
         className="pointer-events-none absolute inset-x-0 top-0 z-0 left-[3%] block h-svh w-full mask-[linear-gradient(to_top,transparent,#000_40%)]"
       />
-      <div className={`mx-auto max-w-[1536px] w-full max-md:space-y-[6vw] max-sm:space-y-[8vw] h-fit relative z-3`}>
+      <div className={`mx-auto max-w-[1536px] w-full max-md:space-y-[calc(var(--cvw)*6)] max-sm:space-y-[calc(var(--cvw)*8)] h-fit relative z-3`}>
         <LineReveal
           as="h2"
-          className="text-[4vw] max-md:text-[7.5vw] max-sm:text-[8vw] leading-[1.1] font-aeonik pointer-events-auto max-md:w-full max-sm:px-0! w-[60%]"
+          className="text-[calc(var(--cvw)*4)] max-md:text-[calc(var(--cvw)*7.5)] max-sm:text-[calc(var(--cvw)*8)] leading-[1.1] font-aeonik pointer-events-auto max-md:w-full max-sm:px-0! w-[60%]"
         >
           Build the Interaction Layer Your Website is Missing.
         </LineReveal>
 
-        <div className="flex max-sm:flex-col mt-[3vw]  max-sm:gap-[4vw] pb-[2vw] mb-[4.5vw] max-md:gap-[3vw] max-md:mb-[15vw] relative max-sm:mb-[10vw] gap-[2vw] fadeup">
+        <div className="flex max-sm:flex-col mt-[calc(var(--cvw)*3)]  max-sm:gap-[calc(var(--cvw)*4)] pb-[calc(var(--cvw)*2)] mb-[calc(var(--cvw)*4.5)] max-md:gap-[calc(var(--cvw)*3)] max-md:mb-[calc(var(--cvw)*15)] relative max-sm:mb-[calc(var(--cvw)*10)] gap-[calc(var(--cvw)*2)] fadeup">
           <ButtonV3
             variant="outline"
             text="Browse the Effects"
@@ -193,8 +193,8 @@ export default function FooterV3() {
             href="/sign-up"
             variant="orange"
           />
-          <p className="shimmer-text w-full  flex items-center gap-[0.5vw] text-[#939393] leading-none max-md:gap-2 absolute max-sm:bottom-[-12vw] max-md:bottom-[-5vw] bottom-[-.8vw] left-1/2 -translate-x-1/2">
-            <span className="inline-block size-[0.9vw] shrink-0 text-[#d2d2d2] max-md:size-3">
+          <p className="shimmer-text w-full  flex items-center gap-[calc(var(--cvw)*0.5)] text-[#939393] leading-none max-md:gap-2 absolute max-sm:bottom-[calc(var(--cvw)*-12)] max-md:bottom-[calc(var(--cvw)*-5)] bottom-[calc(var(--cvw)*-.8)] left-1/2 -translate-x-1/2">
+            <span className="inline-block size-[calc(var(--cvw)*0.9)] shrink-0 text-[#d2d2d2] max-md:size-3">
               <UnlockIcon className="h-full w-full" />
             </span>
             <ShimmerText
@@ -207,22 +207,26 @@ export default function FooterV3() {
           </p>
         </div>
       </div>
-      <p className="text-center text18 absolute bottom-[2vw] max-md:bottom-[4vw] max-sm:bottom-[10vw] left-[4%] text-light-grey z-4 max-md:w-[80vw] max-sm:left-[11%] max-sm:text-[3.5vw]!">
-        © 2026 Hyperiux. All rights reserved. Psst, the first sentence is hiding something .
-        {/* <EggHint className="ml-2" /> */}
-      </p>
+      {/* Pinned to the footer's bottom edge but inside the same 1536px container
+          (and side padding) as the rest of the footer, so it lines up on wide screens */}
+      <div className="absolute inset-x-0 bottom-[calc(var(--cvw)*2)] z-4 px-[calc(var(--cvw)*4.5)] max-md:bottom-[calc(var(--cvw)*4)] max-md:px-[calc(var(--cvw)*5)] max-sm:bottom-[calc(var(--cvw)*10)] max-sm:px-[calc(var(--cvw)*7)]">
+        <p className="mx-auto w-full max-w-[1536px] text18 text-light-grey max-md:text-center max-sm:text-[calc(var(--cvw)*3.5)]!">
+          © 2026 Hyperiux. All rights reserved. Psst, the first sentence is hiding something .
+          {/* <EggHint className="ml-2" /> */}
+        </p>
+      </div>
       {/* ── Footer links grid ── */}
-      <div className="relative z-3 mx-auto mt-[10vw] w-full max-w-[1536px] max-md:mt-[14vw] max-sm:mt-[25vw]">
+      <div className="relative z-3 mx-auto mt-[calc(var(--cvw)*10)] w-full max-w-[1536px] max-md:mt-[calc(var(--cvw)*14)] max-sm:mt-[calc(var(--cvw)*25)]">
         {/* Platform label */}
-        <div className="flex items-center gap-[1vw] max-md:gap-2 pb-[1vw] max-md:pb-[3vw]">
-          <span className="size-[0.45vw] max-md:size-2 bg-[#ff5f00]" />
+        <div className="flex items-center gap-[calc(var(--cvw)*1)] max-md:gap-2 pb-[calc(var(--cvw)*1)] max-md:pb-[calc(var(--cvw)*3)]">
+          <span className="size-[calc(var(--cvw)*0.45)] max-md:size-2 bg-[#ff5f00]" />
           <span className="text24 text-[#B3B3B3] font-heading">Platform</span>
         </div>
 
         {/* Top 4-column grid: Vault | Categories | Documents | Legal */}
-        <div className="grid grid-cols-[1fr_2.5fr_1fr_1fr]  gap-[2vw] max-md:gap-[4vw] max-md:grid-cols-2 max-sm:grid-cols-1 ">
+        <div className="grid grid-cols-[1fr_2.5fr_1fr_1fr]  gap-[calc(var(--cvw)*2)] max-md:gap-[calc(var(--cvw)*4)] max-md:grid-cols-2 max-sm:grid-cols-1 ">
           {/* Vault */}
-          <div className="flex flex-col gap-[1.5vw] py-[1.2vw] max-md:py-[2.5vw] max-sm:py-[6vw] border-t  border-foreground/50 max-md:pb-[5vw] max-md:gap-[3vw] max-sm:pb-[6vw]">
+          <div className="flex flex-col gap-[calc(var(--cvw)*1.5)] py-[calc(var(--cvw)*1.2)] max-md:py-[calc(var(--cvw)*2.5)] max-sm:py-[calc(var(--cvw)*6)] border-t  border-foreground/50 max-md:pb-[calc(var(--cvw)*5)] max-md:gap-[calc(var(--cvw)*3)] max-sm:pb-[calc(var(--cvw)*6)]">
             <h3 className="text24 font-medium text-[#979797]">Vault</h3>
             <ul className="flex flex-col max-md:gap-1">
               {vaultFooterLinks.map(({ label, href }) => (
@@ -234,9 +238,9 @@ export default function FooterV3() {
           </div>
 
           {/* Categories */}
-          <div className="flex flex-col gap-[1.5vw] py-[1.2vw] max-md:py-[2.5vw] max-sm:py-[6vw]  border-t  border-foreground/50  max-md:pb-[5vw] max-md:gap-[3vw] max-sm:px-0 max-sm:pt-[6vw] max-sm:pb-[6vw] max-sm:border-t max-sm:border-foreground/50">
+          <div className="flex flex-col gap-[calc(var(--cvw)*1.5)] py-[calc(var(--cvw)*1.2)] max-md:py-[calc(var(--cvw)*2.5)] max-sm:py-[calc(var(--cvw)*6)]  border-t  border-foreground/50  max-md:pb-[calc(var(--cvw)*5)] max-md:gap-[calc(var(--cvw)*3)] max-sm:px-0 max-sm:pt-[calc(var(--cvw)*6)] max-sm:pb-[calc(var(--cvw)*6)] max-sm:border-t max-sm:border-foreground/50">
             <h3 className="text24 font-medium text-[#979797]">Categories</h3>
-            <div className="grid grid-cols-2 gap-x-[1vw] max-md:gap-x-[2vw] max-sm:grid-cols-2 max-sm:gap-x-4">
+            <div className="grid grid-cols-2 gap-x-[calc(var(--cvw)*1)] max-md:gap-x-[calc(var(--cvw)*2)] max-sm:grid-cols-2 max-sm:gap-x-4">
               {categoryColumns.map((col, ci) => (
                 <ul key={ci} className="flex flex-col max-md:gap-1">
                   {col.map(({ label, href }) => (
@@ -250,7 +254,7 @@ export default function FooterV3() {
           </div>
 
           {/* Documents */}
-          <div className="flex flex-col gap-[1.5vw] py-[1.2vw] max-md:py-[2.5vw] max-sm:py-[6vw]  border-t  border-foreground/50 max-md:border-t max-md:border-foreground/50 max-md:pt-[5vw] max-md:gap-[3vw] max-sm:px-0 max-sm:pt-[6vw] max-sm:pb-[6vw]">
+          <div className="flex flex-col gap-[calc(var(--cvw)*1.5)] py-[calc(var(--cvw)*1.2)] max-md:py-[calc(var(--cvw)*2.5)] max-sm:py-[calc(var(--cvw)*6)]  border-t  border-foreground/50 max-md:border-t max-md:border-foreground/50 max-md:pt-[calc(var(--cvw)*5)] max-md:gap-[calc(var(--cvw)*3)] max-sm:px-0 max-sm:pt-[calc(var(--cvw)*6)] max-sm:pb-[calc(var(--cvw)*6)]">
             <h3 className="text24 font-medium text-[#979797]">Documents</h3>
             <ul className="flex flex-col max-md:gap-1">
               {docsLinks.map(({ label, href }) => (
@@ -262,7 +266,7 @@ export default function FooterV3() {
           </div>
 
           {/* Legal */}
-          <div className="flex flex-col gap-[1.5vw] py-[1.2vw] max-md:py-[2.5vw] max-sm:py-[6vw]  border-t  border-foreground/50  max-md:border-foreground/50 max-md:border-t max-md:pt-[5vw] max-md:gap-[3vw] max-sm:pl-0 max-sm:border-t max-sm:border-foreground/50 max-sm:pt-[6vw]">
+          <div className="flex flex-col gap-[calc(var(--cvw)*1.5)] py-[calc(var(--cvw)*1.2)] max-md:py-[calc(var(--cvw)*2.5)] max-sm:py-[calc(var(--cvw)*6)]  border-t  border-foreground/50  max-md:border-foreground/50 max-md:border-t max-md:pt-[calc(var(--cvw)*5)] max-md:gap-[calc(var(--cvw)*3)] max-sm:pl-0 max-sm:border-t max-sm:border-foreground/50 max-sm:pt-[calc(var(--cvw)*6)]">
             <h3 className="text24 font-medium text-[#979797]">Legal</h3>
             <ul className="flex flex-col max-md:gap-1">
               {legalLinks.map(({ label, href }) => (
@@ -275,11 +279,11 @@ export default function FooterV3() {
         </div>
 
         {/* Bottom row: Socials | Contact Us | (gap) | Newsletter */}
-        <div className="grid grid-cols-[1fr_1fr_1.4fr_2.15fr]  gap-[2vw] py-[3vw] max-md:gap-[4vw] max-md:grid-cols-2 max-sm:flex max-sm:flex-col max-md:py-[6vw] max-sm:py-[8vw]">
+        <div className="grid grid-cols-[1fr_1fr_1.4fr_2.15fr]  gap-[calc(var(--cvw)*2)] py-[calc(var(--cvw)*3)] max-md:gap-[calc(var(--cvw)*4)] max-md:grid-cols-2 max-sm:flex max-sm:flex-col max-md:py-[calc(var(--cvw)*6)] max-sm:py-[calc(var(--cvw)*8)]">
           {/* Socials */}
-          <div className="flex flex-col gap-[1.1vw]  border-foreground/50 max-md:pb-[5vw] max-md:gap-[3vw] max-sm:pb-[6vw]">
-            <div className="flex items-center gap-[1vw] max-md:gap-2">
-              <span className="size-[0.45vw] max-md:size-2  bg-[#ff5f00]" />
+          <div className="flex flex-col gap-[calc(var(--cvw)*1.1)]  border-foreground/50 max-md:pb-[calc(var(--cvw)*5)] max-md:gap-[calc(var(--cvw)*3)] max-sm:pb-[calc(var(--cvw)*6)]">
+            <div className="flex items-center gap-[calc(var(--cvw)*1)] max-md:gap-2">
+              <span className="size-[calc(var(--cvw)*0.45)] max-md:size-2  bg-[#ff5f00]" />
               <span className="text24 text-[#B3B3B3] font-heading">
                 Socials
               </span>
@@ -296,9 +300,9 @@ export default function FooterV3() {
           </div>
 
           {/* Contact Us */}
-          <div className="flex flex-col gap-[1.1vw]  border-foreground/50  max-md:pb-[5vw] max-md:gap-[3vw] max-sm:px-0 max-sm:pt-[6vw] max-sm:pb-[6vw] max-sm:border-foreground/50">
-            <div className="flex items-center gap-[1vw] max-md:gap-2">
-              <span className="size-[0.45vw] max-md:size-2  bg-[#ff5f00] " />
+          <div className="flex flex-col gap-[calc(var(--cvw)*1.1)]  border-foreground/50  max-md:pb-[calc(var(--cvw)*5)] max-md:gap-[calc(var(--cvw)*3)] max-sm:px-0 max-sm:pt-[calc(var(--cvw)*6)] max-sm:pb-[calc(var(--cvw)*6)] max-sm:border-foreground/50">
+            <div className="flex items-center gap-[calc(var(--cvw)*1)] max-md:gap-2">
+              <span className="size-[calc(var(--cvw)*0.45)] max-md:size-2  bg-[#ff5f00] " />
               <span className="text24 text-[#B3B3B3] font-heading">
                 Contact Us
               </span>
@@ -322,14 +326,14 @@ export default function FooterV3() {
           <div className=" max-md:hidden" />
 
           {/* Newsletter */}
-          <div className="flex flex-col gap-[1.15vw]  border-foreground/50  max-md:pb-[12vw] max-md:border-foreground/50 max-md:pt-[5vw] max-md:col-span-2 max-md:pl-0 max-md:gap-[3vw] max-sm:py-[6vw] max-sm:pb-[20vw]">
-            <div className="flex items-center gap-[1vw] max-md:gap-2">
-              <span className="size-[0.45vw] max-md:size-2  bg-[#ff5f00]" />
+          <div className="flex flex-col gap-[calc(var(--cvw)*1.15)]  border-foreground/50  max-md:pb-[calc(var(--cvw)*12)] max-md:border-foreground/50 max-md:pt-[calc(var(--cvw)*5)] max-md:col-span-2 max-md:pl-0 max-md:gap-[calc(var(--cvw)*3)] max-sm:py-[calc(var(--cvw)*6)] max-sm:pb-[calc(var(--cvw)*20)]">
+            <div className="flex items-center gap-[calc(var(--cvw)*1)] max-md:gap-2">
+              <span className="size-[calc(var(--cvw)*0.45)] max-md:size-2  bg-[#ff5f00]" />
               <span className="text24 text-[#B3B3B3] font-heading">
                 New effects, in your inbox
               </span>
             </div>
-            <p className="text18 leading-[1.45] max-w-[25vw] mb-[1vw] max-md:mb-[2vw] max-md:max-w-full max-sm:mb-[6vw] text-[#979797]">
+            <p className="text18 leading-[1.45] max-w-[calc(var(--cvw)*25)] mb-[calc(var(--cvw)*1)] max-md:mb-[calc(var(--cvw)*2)] max-md:max-w-full max-sm:mb-[calc(var(--cvw)*6)] text-[#979797]">
               Every new drop, plus the occasional behind-the-scenes build. No
               spam. Unsubscribe anytime.
             </p>
@@ -340,10 +344,10 @@ export default function FooterV3() {
             ) : (
               <form
                 onSubmit={handleSubscribe}
-                className="flex flex-col gap-[0.6vw] max-md:gap-3"
+                className="flex flex-col gap-[calc(var(--cvw)*0.6)] max-md:gap-3"
               >
                 {/* One line, one rule underneath: email on the left, Subscribe on the right */}
-                <div className="flex items-center gap-[2vw] border-b border-foreground/30 transition-colors duration-300 focus-within:border-white/70 max-md:gap-4 w-[90%]">
+                <div className="flex items-center gap-[calc(var(--cvw)*2)] border-b border-foreground/30 transition-colors duration-300 focus-within:border-white/70 max-md:gap-4 w-[90%]">
                   <Input
                     type="email"
                     value={email}
@@ -358,18 +362,18 @@ export default function FooterV3() {
                       "--input-autofill-bg": "#111210",
                       "--input-autofill-text": "#ffffff",
                     }}
-                    className="h-auto min-w-0 flex-1 rounded-none border-0 bg-transparent! px-0 py-[0.9vw] max-md:py-3 text24 text-white shadow-none! outline-none ring-0! placeholder:text-[#6e6e6e] disabled:opacity-50"
+                    className="h-auto min-w-0 flex-1 rounded-none border-0 bg-transparent! px-0 py-[calc(var(--cvw)*0.9)] max-md:py-3 text24 text-white shadow-none! outline-none ring-0! placeholder:text-[#6e6e6e] disabled:opacity-50"
                   />
                   <button
                     type="submit"
                     disabled={status === "loading"}
-                    className="shrink-0 cursor-pointer py-[0.9vw] text-[0.9vw] font-medium text-[#d8d8d8] uppercase transition-colors duration-300 hover:text-primary disabled:pointer-events-none disabled:opacity-50 max-md:py-3"
+                    className="shrink-0 cursor-pointer py-[calc(var(--cvw)*0.9)] text-[calc(var(--cvw)*0.9)] font-medium text-[#d8d8d8] uppercase transition-colors duration-300 hover:text-primary disabled:pointer-events-none disabled:opacity-50 max-md:py-3"
                   >
                     {status === "loading" ? "Subscribing…" : "Subscribe"}
                   </button>
                 </div>
                 {status === "error" && (
-                  <p className="text-sm text-red-400 px-[1.2vw] max-md:px-0">
+                  <p className="text-sm text-red-400 px-[calc(var(--cvw)*1.2)] max-md:px-0">
                     {errorMessage}
                   </p>
                 )}
