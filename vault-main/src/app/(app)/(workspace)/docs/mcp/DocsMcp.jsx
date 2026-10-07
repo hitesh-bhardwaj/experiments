@@ -162,7 +162,7 @@ export default function DocsMcp() {
           22+)
         </DocsListItem>
         <DocsListItem>
-          An MCP-compatible client that supports <strong>local/stdio servers</strong>:{" "}
+          An MCP-compatible client that supports <span className="font-semibold">local/stdio servers</span>:{" "}
           <DocsLink href="https://claude.com/product/claude-code">Claude Code</DocsLink>,{" "}
           <DocsLink href="https://claude.ai/download">Claude Desktop</DocsLink>,{" "}
           <DocsLink href="https://cursor.com">Cursor</DocsLink>,{" "}
@@ -195,9 +195,9 @@ export default function DocsMcp() {
       </Para>
 
       <Para>
-        For each client, there are two ways in: a <strong>direct command</strong>{" "}
+        For each client, there are two ways in: a <span className="font-semibold">direct command</span>{" "}
         that writes the config for you automatically (fastest, recommended),
-        or <strong>copying a JSON/TOML block by hand</strong> into a config
+        or <span className="font-semibold">copying a JSON/TOML block by hand</span> into a config
         file (works everywhere, no extra install needed). Both end up in
         exactly the same place.
       </Para>
@@ -205,7 +205,7 @@ export default function DocsMcp() {
       <Heading3 id="claude-code">Claude Code</Heading3>
 
       <Para>
-        <strong>Option A - direct command (fastest, no file editing):</strong>
+        <span className="font-semibold">Option A - direct command (fastest, no file editing):</span>
       </Para>
 
       <Para>First, check whether the Claude Code CLI is already installed permanently on your machine:</Para>
@@ -214,7 +214,7 @@ export default function DocsMcp() {
 
       <DocsList>
         <DocsListItem>
-          <strong>If that prints a version</strong> → the CLI is installed, use{" "}
+          <span className="font-semibold">If that prints a version</span> → the CLI is installed, use{" "}
           <code>claude</code> directly:
         </DocsListItem>
       </DocsList>
@@ -223,9 +223,9 @@ export default function DocsMcp() {
 
       <DocsList>
         <DocsListItem>
-          <strong>
+          <span className="font-semibold">
             If it says <code>command not found: claude</code>
-          </strong>{" "}
+          </span>{" "}
           → it isn&apos;t installed permanently. You have two options:
         </DocsListItem>
         <DocsListItem>
@@ -253,7 +253,7 @@ export default function DocsMcp() {
         By default this adds the server to your personal, private config (
         <code>~/.claude.json</code>, scoped to just this project) - it works
         immediately, but isn&apos;t shared if you commit this project to git.
-        If you want a <strong>shareable</strong> config that anyone who clones
+        If you want a <span className="font-semibold">shareable</span> config that anyone who clones
         the repo gets automatically, add <code>--scope project</code> (note:{" "}
         <code>--scope</code> only accepts the fixed values <code>local</code>,{" "}
         <code>user</code>, or <code>project</code> - it&apos;s not a place to
@@ -265,7 +265,7 @@ export default function DocsMcp() {
 
       <Para>This writes an actual <code>.mcp.json</code> file into your project root instead.</Para>
 
-      <Para><strong>Option B - copy the file by hand:</strong></Para>
+      <Para><span className="font-semibold">Option B - copy the file by hand:</span></Para>
 
       <Para>
         Create a file named <code>.mcp.json</code> at the true root of your
@@ -275,7 +275,7 @@ export default function DocsMcp() {
 
       <CodeBlock code={mcpConfigJson} language="json" />
 
-      <Para><strong>Then, either way:</strong></Para>
+      <Para><span className="font-semibold">Then, either way:</span></Para>
 
       <DocsList>
         <DocsListItem>
@@ -307,8 +307,8 @@ export default function DocsMcp() {
       </Para>
 
       <Para>
-        <strong>1. Open Claude Desktop</strong>, then go to{" "}
-        <strong>Settings → Developer → Edit Config</strong>. This opens your
+        <span className="font-semibold">1. Open Claude Desktop</span>, then go to{" "}
+        <span className="font-semibold">Settings → Developer → Edit Config</span>. This opens your
         configuration file directly in your default text editor. (If
         you&apos;d rather find it yourself:{" "}
         <code>~/Library/Application Support/Claude/claude_desktop_config.json</code>{" "}
@@ -317,7 +317,7 @@ export default function DocsMcp() {
       </Para>
 
       <Para>
-        <strong>2. Add the <code>hyperiux</code> entry</strong> inside the{" "}
+        <span className="font-semibold">2. Add the <code>hyperiux</code> entry</span> inside the{" "}
         <code>mcpServers</code> object. If the file already lists other
         servers, add this one alongside them - don&apos;t delete anything
         else that&apos;s already there:
@@ -325,10 +325,10 @@ export default function DocsMcp() {
 
       <CodeBlock code={mcpConfigJson} language="json" />
 
-      <Para><strong>3. Save the file.</strong></Para>
+      <Para><span className="font-semibold">3. Save the file.</span></Para>
 
       <Para>
-        <strong>4. Fully quit Claude Desktop</strong> - not just close the
+        <span className="font-semibold">4. Fully quit Claude Desktop</span> - not just close the
         window, actually quit it (Cmd+Q on macOS, or right-click the icon in
         your taskbar/menu bar and choose Quit). Claude Desktop only reads
         this config file when it starts up, so it won&apos;t notice the
@@ -336,14 +336,14 @@ export default function DocsMcp() {
       </Para>
 
       <Para>
-        <strong>5. Reopen Claude Desktop</strong>, then check{" "}
-        <strong>Settings → Developer → Local MCP servers</strong> (or the
+        <span className="font-semibold">5. Reopen Claude Desktop</span>, then check{" "}
+        <span className="font-semibold">Settings → Developer → Local MCP servers</span> (or the
         Connectors panel). You&apos;re looking for <code>hyperiux</code> {" "} with
         a &quot;running&quot; or connected badge next to it.
       </Para>
 
       <Para>
-        <strong>6.</strong> Test it - see{" "}
+        <span className="font-semibold">6.</span> Test it - see{" "}
         <a href="#try-it-out" className="text-[#ff5f00] underline underline-offset-2 hover:text-white transition-colors">
           Try it out
         </a>{" "}
@@ -352,7 +352,7 @@ export default function DocsMcp() {
 
       <Heading3 id="cursor">Cursor</Heading3>
 
-      <Para><strong>Option A - through Settings UI:</strong></Para>
+      <Para><span className="font-semibold">Option A - through Settings UI:</span></Para>
 
       <DocsList>
         <DocsListItem>
@@ -378,7 +378,7 @@ export default function DocsMcp() {
         <DocsListItem>Save.</DocsListItem>
       </DocsList>
 
-      <Para><strong>Option B - copy the file by hand:</strong></Para>
+      <Para><span className="font-semibold">Option B - copy the file by hand:</span></Para>
 
       <Para>
         Create <code>.cursor/mcp.json</code> inside your project (available
@@ -389,8 +389,8 @@ export default function DocsMcp() {
       <CodeBlock code={mcpConfigJson} language="json" />
 
       <Para>
-        <strong>Then, either way:</strong> go to Cursor{" "}
-        <strong>Settings → Tools &amp; MCP</strong>, confirm{" "}
+        <span className="font-semibold">Then, either way:</span> go to Cursor{" "}
+        <span className="font-semibold">Settings → Tools &amp; MCP</span>, confirm{" "}
         <code>hyperiux</code> shows as connected, and enable it if it
         isn&apos;t already. Test it - see{" "}
         <a href="#try-it-out" className="text-[#ff5f00] underline underline-offset-2 hover:text-white transition-colors">
@@ -407,7 +407,7 @@ export default function DocsMcp() {
         below). Requires Node.js 22+ for Codex CLI itself.
       </Para>
 
-      <Para><strong>Option A - direct command (fastest, no file editing):</strong></Para>
+      <Para><span className="font-semibold">Option A - direct command (fastest, no file editing):</span></Para>
 
       <Para>First, check whether Codex CLI is already installed permanently:</Para>
 
@@ -415,7 +415,7 @@ export default function DocsMcp() {
 
       <DocsList>
         <DocsListItem>
-          <strong>If that prints a version</strong> → use <code>codex</code>{" "}
+          <span className="font-semibold">If that prints a version</span> → use <code>codex</code>{" "}
           directly:
         </DocsListItem>
       </DocsList>
@@ -424,9 +424,9 @@ export default function DocsMcp() {
 
       <DocsList>
         <DocsListItem>
-          <strong>
+          <span className="font-semibold">
             If it says <code>command not found: codex</code>
-          </strong>{" "}
+          </span>{" "}
           → it isn&apos;t installed permanently yet. You have two options:
         </DocsListItem>
         <DocsListItem>
@@ -435,10 +435,10 @@ export default function DocsMcp() {
           something via <code>npx</code>{" "}  doesn&apos;t add it to your PATH
           permanently, so you&apos;d retype the{" "}
           <code>npx @openai/codex</code> prefix every time).{" "}
-          <strong>
+          <span className="font-semibold">
             Make sure you use the scoped package name{" "}
             <code>@openai/codex</code>
-          </strong>
+          </span>
           , not the plain <code>codex</code> package (that&apos;s an
           unrelated, unofficial package from 2012 with no connection to
           OpenAI):
@@ -456,7 +456,7 @@ export default function DocsMcp() {
 
       <CodeBlock code={codexInstallGlobal} language="bash" />
 
-      <Para><strong>Option B - copy the file by hand:</strong></Para>
+      <Para><span className="font-semibold">Option B - copy the file by hand:</span></Para>
 
       <Para>
         Add this to <code>~/.codex/config.toml</code> (applies to every
@@ -467,7 +467,7 @@ export default function DocsMcp() {
 
       <CodeBlock code={codexConfigToml} language="plaintext" />
 
-      <Para><strong>Then, either way:</strong></Para>
+      <Para><span className="font-semibold">Then, either way:</span></Para>
 
       <DocsList>
         <DocsListItem>
@@ -488,8 +488,8 @@ export default function DocsMcp() {
       </DocsList>
 
       <Para>
-        <strong>Known Codex-specific quirk</strong>: if you&apos;re using the{" "}
-        <strong>Codex VS Code extension</strong> rather than the plain
+        <span className="font-semibold">Known Codex-specific quirk</span>: if you&apos;re using the{" "}
+        <span className="font-semibold">Codex VS Code extension</span> rather than the plain
         terminal <code>codex</code> command, there&apos;s a currently-open
         OpenAI bug where servers configured this way don&apos;t always show
         up in the extension even though they work fine in the CLI. If that
@@ -502,7 +502,7 @@ export default function DocsMcp() {
         Also, don&apos;t be alarmed if <code>/mcp</code> reports something
         like <em>&quot;no MCP resources or resource templates are currently
         exposed&quot;</em> - that&apos;s expected and not an error.{" "}
-        <code>hyperiux-mcp-server</code> only exposes <strong>tools</strong>{" "}
+        <code>hyperiux-mcp-server</code> only exposes <span className="font-semibold">tools</span>{" "}
         (the three described below), not a separate MCP feature called{" "}
         <em>resources</em>. That message is accurate, not a sign
         anything&apos;s broken - the real test is whether the tools work,
@@ -521,12 +521,12 @@ export default function DocsMcp() {
       </Para>
 
       <Para>
-        <strong>1. Open Antigravity Settings → Customizations tab → MCP Config.</strong>{" "}
+        <span className="font-semibold">1. Open Antigravity Settings → Customizations tab → MCP Config.</span>{" "}
         This opens the config file directly for editing.
       </Para>
 
       <Para>
-        <strong>2. Add the <code>hyperiux</code> entry</strong> inside the{" "}
+        <span className="font-semibold">2. Add the <code>hyperiux</code> entry</span> inside the{" "}
         <code>mcpServers</code> object:
       </Para>
 
@@ -540,22 +540,22 @@ export default function DocsMcp() {
 
       <DocsList>
         <DocsListItem>
-          <strong>Global</strong> (every project):{" "}
+          <span className="font-semibold">Global</span> (every project):{" "}
           <code>~/.gemini/config/mcp_config.json</code>
         </DocsListItem>
         <DocsListItem>
-          <strong>Workspace-level</strong> (just this project):{" "}
+          <span className="font-semibold">Workspace-level</span> (just this project):{" "}
           <code>.agents/mcp_config.json</code> in your project folder
         </DocsListItem>
       </DocsList>
 
       <Para>
-        <strong>3. Save the file</strong>, then restart Antigravity if it
+        <span className="font-semibold">3. Save the file</span>, then restart Antigravity if it
         doesn&apos;t pick up the change automatically.
       </Para>
 
       <Para>
-        <strong>4. Test it</strong> - see{" "}
+        <span className="font-semibold">4. Test it</span> - see{" "}
         <a href="#try-it-out" className="text-[#ff5f00] underline underline-offset-2 hover:text-white transition-colors">
           Try it out
         </a>{" "}
@@ -569,15 +569,15 @@ export default function DocsMcp() {
 
       <Para>
         Worth being upfront about this rather than letting you find out the
-        hard way: <strong>ChatGPT (the consumer web app) cannot connect to{" "}
-        <code>hyperiux-mcp-server</code> as it exists today.</strong> ChatGPT&apos;s
+        hard way: <span className="font-semibold">ChatGPT (the consumer web app) cannot connect to{" "}
+        <code>hyperiux-mcp-server</code> as it exists today.</span> ChatGPT&apos;s
         connector system only supports <em>remote</em> MCP servers reachable
         over HTTPS (Streamable HTTP or SSE) - it does not support{" "}
         <em>local</em> servers launched via a command like <code>npx</code>,
         which is how this server runs. This is a fundamental architecture
         difference, not a configuration issue on your end, and applies to
         essentially every local/stdio MCP server, not just this one. (Note:
-        this is separate from <strong>Codex CLI</strong>, OpenAI&apos;s
+        this is separate from <span className="font-semibold">Codex CLI</span>, OpenAI&apos;s
         terminal coding agent, which - as shown above - does support local
         stdio servers just fine.)
       </Para>
@@ -593,10 +593,10 @@ export default function DocsMcp() {
 
       <DocsList>
         <DocsListItem>
-          <strong>Command</strong>: <code>npx</code>
+          <span className="font-semibold">Command</span>: <code>npx</code>
         </DocsListItem>
         <DocsListItem>
-          <strong>Args</strong>: <code>-y hyperiux-mcp-server</code>
+          <span className="font-semibold">Args</span>: <code>-y hyperiux-mcp-server</code>
         </DocsListItem>
       </DocsList>
 
@@ -635,11 +635,11 @@ export default function DocsMcp() {
 
       <Para>
         No setup is required to query metadata or source for any of the{" "}
-        <strong>free</strong> effects in the catalog.
+        <span className="font-semibold">free</span> effects in the catalog.
       </Para>
 
       <Para>
-        To retrieve source code for a <strong>Pro</strong> effect, the server
+        To retrieve source code for a <span className="font-semibold">Pro</span> effect, the server
         needs a Hyperiux Pro CLI token. It automatically picks one up from
         either of these, in order:
       </Para>
@@ -658,8 +658,8 @@ export default function DocsMcp() {
       </DocsList>
 
       <Para>
-        <strong>Never share your token directly with an AI assistant in a
-        chat.</strong> Run <code>hyperiux login</code> yourself, in your own
+        <span className="font-semibold">Never share your token directly with an AI assistant in a
+        chat.</span> Run <code>hyperiux login</code> yourself, in your own
         terminal, and let the server pick up the saved session automatically.
       </Para>
 
@@ -697,12 +697,12 @@ export default function DocsMcp() {
         ]}
       />
 
-      <Para><strong>Returns:</strong></Para>
+      <Para><span className="font-semibold">Returns:</span></Para>
 
       <CodeBlock code={listEffectsResult} language="json" />
 
       <Para>
-        <strong>Note:</strong> this tool does not report tier (free vs. Pro)
+        <span className="font-semibold">Note:</span> this tool does not report tier (free vs. Pro)
         - use <code>hyperiux_get_effect</code> on a specific slug to check.
       </Para>
 
@@ -723,7 +723,7 @@ export default function DocsMcp() {
         ]}
       />
 
-      <Para><strong>Returns:</strong></Para>
+      <Para><span className="font-semibold">Returns:</span></Para>
 
       <CodeBlock code={getEffectResult} language="json" />
 
@@ -747,7 +747,7 @@ export default function DocsMcp() {
 
       <Para>No parameters required.</Para>
 
-      <Para><strong>Returns:</strong></Para>
+      <Para><span className="font-semibold">Returns:</span></Para>
 
       <CodeBlock code={listCategoriesResult} language="json" />
 
@@ -791,19 +791,19 @@ export default function DocsMcp() {
 
       <DocsList>
         <DocsListItem>
-          <strong>It does not install effects.</strong> Installing is handled
+          <span className="font-semibold">It does not install effects.</span> Installing is handled
           entirely by the <code>hyperiux</code> CLI. This server&apos;s job
           is making sure the right effect, dependencies, and import path are
           known before that install happens.
         </DocsListItem>
         <DocsListItem>
-          <strong>It does not expose component props.</strong> There is
+          <span className="font-semibold">It does not expose component props.</span> There is
           currently no structured props schema in the registry, so the
           server cannot yet answer &quot;what props does this component
           accept?&quot; in a reliable, structured way.
         </DocsListItem>
         <DocsListItem>
-          <strong>It does not currently report tier at the list level.</strong>{" "}
+          <span className="font-semibold">It does not currently report tier at the list level.</span>{" "}
           <code>hyperiux_list_effects</code> and{" "}
           <code>hyperiux_list_categories</code> cannot distinguish free from
           Pro effects - only <code>hyperiux_get_effect</code> on a specific
@@ -811,8 +811,8 @@ export default function DocsMcp() {
           installable without a Pro subscription.
         </DocsListItem>
         <DocsListItem>
-          <strong>It never returns Pro source without a valid, authenticated
-          token.</strong> There is no way to bypass this from a client -
+          <span className="font-semibold">It never returns Pro source without a valid, authenticated
+          token.</span> There is no way to bypass this from a client -
           it&apos;s enforced by the same protected API the CLI itself uses.
         </DocsListItem>
       </DocsList>
@@ -827,7 +827,7 @@ export default function DocsMcp() {
 
       <DocsList>
         <DocsListItem>
-          <strong>Wrong folder.</strong> Config files have to sit at the{" "}
+          <span className="font-semibold">Wrong folder.</span> Config files have to sit at the{" "}
           <em>true</em> root of whatever project your client opened - not a
           subfolder, and not one level up either. If you opened a folder
           called <code>my-app</code> that contains your real project nested
@@ -839,7 +839,7 @@ export default function DocsMcp() {
           the true root.
         </DocsListItem>
         <DocsListItem>
-          <strong>Placeholder text left in the file.</strong> If you&apos;re
+          <span className="font-semibold">Placeholder text left in the file.</span> If you&apos;re
           editing a config file by hand and it still contains literal text
           like <code>/absolute/path/to/node</code> or an obviously fake
           example path - that&apos;s illustration text, not a real value,
@@ -873,7 +873,7 @@ export default function DocsMcp() {
 
       <DocsList>
         <DocsListItem>
-          If it works in a terminal but a <strong>GUI app</strong> (like
+          If it works in a terminal but a <span className="font-semibold">GUI app</span> (like
           Claude Desktop) still shows it as disconnected, this is often a
           PATH issue - GUI apps don&apos;t always inherit your shell&apos;s
           PATH the way a terminal does. Try using the full absolute path to{" "}
@@ -886,7 +886,7 @@ export default function DocsMcp() {
           resolves <code>PATH</code>.
         </DocsListItem>
         <DocsListItem>
-          Start a <strong>completely fresh chat/session</strong> after
+          Start a <span className="font-semibold">completely fresh chat/session</span> after
           editing any config file. A session that was already open when you
           made the change can hang onto stale server state and won&apos;t
           notice the edit.
@@ -927,7 +927,7 @@ export default function DocsMcp() {
       <CodeBlock code={`npm install -g @anthropic-ai/claude-code   # or: npm install -g @openai/codex`} language="bash" />
 
       <Para>
-        <strong>Double-check the package names carefully</strong> -{" "}
+        <span className="font-semibold">Double-check the package names carefully</span> -{" "}
         <code>@anthropic-ai/claude-code</code> and <code>@openai/codex</code>{" "}
         are the correct, official, scoped packages. Unscoped names like
         plain <code>claude-code</code> or plain <code>codex</code> on npm are
@@ -940,8 +940,8 @@ export default function DocsMcp() {
 
       <Para>
         This is expected, not an error. <code>hyperiux-mcp-server</code> only
-        implements MCP <strong>tools</strong>, not the separate{" "}
-        <strong>resources</strong> feature - so a resources-specific check
+        implements MCP <span className="font-semibold">tools</span>, not the separate{" "}
+        <span className="font-semibold">resources</span> feature - so a resources-specific check
         correctly finds none. It says nothing about whether the tools
         themselves work. Test with an actual question instead (see{" "}
         <a href="#try-it-out" className="text-[#ff5f00] underline underline-offset-2 hover:text-white transition-colors">
@@ -989,25 +989,25 @@ export default function DocsMcp() {
 
       <DocsList>
         <DocsListItem>
-          <strong>Issues or bugs</strong>:{" "}
+          <span className="font-semibold">Issues or bugs</span>:{" "}
           <DocsLink href="https://github.com/Hyperiux-Immersion-Labs/hyperiux-components/issues">
             github.com/Hyperiux-Immersion-Labs/hyperiux-components/issues
           </DocsLink>
         </DocsListItem>
         <DocsListItem>
-          <strong>Questions and discussion</strong>:{" "}
+          <span className="font-semibold">Questions and discussion</span>:{" "}
           <DocsLink href="https://github.com/Hyperiux-Immersion-Labs/hyperiux-components/discussions">
             GitHub Discussions
           </DocsLink>
         </DocsListItem>
         <DocsListItem>
-          <strong>Browse the full effect catalog</strong>:{" "}
+          <span className="font-semibold">Browse the full effect catalog</span>:{" "}
           <DocsLink href="https://vault.hyperiux.com/effects">
             vault.hyperiux.com/effects
           </DocsLink>
         </DocsListItem>
         <DocsListItem>
-          <strong>The <code>hyperiux</code> CLI</strong>:{" "}
+          <span className="font-semibold">The <code>hyperiux</code> CLI</span>:{" "}
           <DocsLink href="https://www.npmjs.com/package/hyperiux">
             npmjs.com/package/hyperiux
           </DocsLink>

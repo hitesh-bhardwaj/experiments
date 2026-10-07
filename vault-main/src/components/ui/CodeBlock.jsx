@@ -322,7 +322,7 @@ export function CodeBlock({
                 >
                     <code ref={codeRef} className="block">
                         {lines.map((tokens, i) => (
-                            <span key={i} className="flex pr-5 transition-colors duration-200 hover:bg-white/[.035]">
+                            <span key={i} className="flex pr-5">
                                 <span aria-hidden="true" className="inline-block w-12 shrink-0 select-none pr-4 text-right text-[#4a4a4a]">{i + 1}</span>
                                 <span className="whitespace-pre">
                                     {tokens.length ? tokens.map(([k, v], j) => (k ? <span key={j} className={TOKEN[k]}>{v}</span> : v)) : " "}
