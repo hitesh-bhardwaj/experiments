@@ -128,7 +128,7 @@ export default function SignalSection() {
                 <div className="grid min-h-[62vh] grid-cols-2 items-start gap-12 max-md:min-h-fit max-md:grid-cols-1">
                     <div>
                         <LineReveal as="h2" className="type-h1 max-w-[calc(var(--cvw)*30)] max-lg:max-w-full">
-                            Small Motion.<br/> <span className="gradient-text-animate gradient-text-single">Big Signal.</span>
+                            Small Motion. <span className="gradient-text-animate gradient-text-single">Big Signal.</span>
                         </LineReveal>
                         <div className="fadeup mt-[calc(var(--cvw)*4)] flex flex-wrap gap-4 max-md:mt-8 max-sm:flex-col max-sm:items-start" data-fadeup-delay="0.16">
                             <ButtonV3 href="/effects" text="Browse Effects" />

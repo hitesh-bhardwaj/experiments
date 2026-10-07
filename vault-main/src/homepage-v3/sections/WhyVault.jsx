@@ -84,9 +84,9 @@ export default function WhyVault() {
             id="why"
             aria-label="Why Vault"
             data-sound-flow="off"
-            className="relative bg-[#F4F4F4] px-[calc(var(--cvw)*4.5)] py-[7%] font-avenir text-[#1D1D1D] max-md:px-[calc(var(--cvw)*5)] max-sm:px-[calc(var(--cvw)*7)]"
+            className="relative bg-[#F4F4F4] px-[calc(var(--cvw)*4.5)] py-[7%] max-md:py-[15%]  font-avenir text-[#1D1D1D]  max-md:px-[calc(var(--cvw)*7)]"
         >
-            <div className="mx-auto grid max-w-[1536px] grid-cols-[minmax(0,.8fr)_minmax(0,1.6fr)] gap-[calc(var(--cvw)*2)] max-md:grid-cols-1">
+            <div className="mx-auto grid max-w-[1536px] grid-cols-[minmax(0,.8fr)_minmax(0,1.6fr)] max-md:gap-4 gap-[calc(var(--cvw)*2)] max-md:grid-cols-1">
                 <p className="fadeup type-body-lg max-w-[calc(var(--cvw)*15)] max-lg:max-w-[36ch]">
                     Production-grade motion, without the production complexity.
                 </p>
@@ -95,7 +95,7 @@ export default function WhyVault() {
                 </LineReveal>
             </div>
 
-            <div className="mx-auto grid max-w-[1536px] grid-cols-[minmax(0,.8fr)_minmax(0,1.6fr)] gap-[calc(var(--cvw)*2)] pt-[calc(var(--cvw)*5)] max-md:grid-cols-1">
+            <div className="mx-auto grid max-w-[1536px] grid-cols-[minmax(0,.8fr)_minmax(0,1.6fr)] gap-[calc(var(--cvw)*2)] pt-[calc(var(--cvw)*5)] max-md:grid-cols-1 max-md:pt-12">
                 <nav className="sticky top-1/2 -translate-y-1/2 grid gap-[18px] self-start max-md:hidden" aria-label="Why Vault">
                     {/* <p className="mb-2.5 inline-flex items-center gap-2.5 text-[11px] font-semibold tracking-[.14em] text-[#6B6B6B] uppercase before:size-[5px] before:rounded-full before:bg-primary before:content-['']">
                         Why Vault
@@ -113,7 +113,7 @@ export default function WhyVault() {
                     ))}
                 </nav>
 
-                <div className="grid grid-cols-[minmax(0,1fr)] gap-[clamp(8rem,22vh,14rem)] max-md:gap-20 max-sm:gap-16">
+                <div className="grid grid-cols-[minmax(0,1fr)] gap-[clamp(8rem,22vh,14rem)] max-md:gap-8 ">
                     {WHY_VAULT_ITEMS.map((item, i) => (
                         <article key={item.id} data-wv-panel={i}>
                             <div className="fadeup">{renderCard(item.id, i)}</div>

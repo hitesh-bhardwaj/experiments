@@ -60,7 +60,7 @@ export default function PricingUseCase({ useCases }) {
   return (
     <div
       ref={container}
-      className="mx-auto flex h-fit w-full max-w-[1536px] items-start justify-between overflow-x-clip px-[4.5vw] py-[7%] max-md:py-[15%] text-background max-md:flex-col max-md:gap-[8vw] max-md:px-[calc(var(--cvw)*7)] max-md:pb-[30vw]!"
+      className="mx-auto flex h-fit w-full max-w-[1536px] items-start justify-between overflow-x-clip px-[4.5vw] py-[5%] max-md:py-[15%] text-background max-md:flex-col max-md:gap-[8vw] max-md:px-[calc(var(--cvw)*7)] max-md:pb-[30vw]!"
     >
       <MaskTextReveal stagger={0.08} scrub={false} duration={2} className="sticky top-[20vh] w-[40vw] max-md:static max-md:mb-[10vw]! max-md:w-full">
         <h2 className="text64 font-avenir">

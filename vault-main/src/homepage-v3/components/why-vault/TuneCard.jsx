@@ -92,8 +92,8 @@ export default function TuneCard({ replayKey }) {
     useEffect(() => () => gsap.killTweensOf(wordsRef.current.filter(Boolean)), []);
 
     return (
-        <div className="relative grid aspect-[16/11] grid-cols-[1.1fr_.9fr] overflow-hidden bg-[#ececec] text-[#1D1D1D] max-md:aspect-[4/5] max-md:grid-cols-1">
-            <div className="grid place-items-center border-r border-[#1D1D1D]/10 p-6 max-md:hidden">
+        <div className="relative grid aspect-[16/11] grid-cols-[1.1fr_.9fr] overflow-hidden bg-[#ececec] text-[#1D1D1D] max-md:aspect-[4/5] max-md:grid-cols-1 max-md:grid-rows-[auto_1fr]">
+            <div className="grid place-items-center border-r border-[#1D1D1D]/10 p-6 max-md:border-r-0 max-md:border-b max-md:px-[7vw] max-md:py-[8vw]">
                 <p className="text-center font-avenir text-[clamp(1.6rem,calc(var(--cvw)*2.8),2.6rem)] leading-[1.05] tracking-[-.03em]">
                     {WORDS.map((word, i) => (
                         <Fragment key={i}>

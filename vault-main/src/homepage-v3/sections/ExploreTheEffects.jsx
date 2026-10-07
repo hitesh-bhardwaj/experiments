@@ -142,9 +142,9 @@ export default function ExploreTheEffects() {
         <section
             ref={container}
             id="explore-the-effects"
-            className="relative mx-auto w-full max-w-[1536px] overflow-x-clip px-[calc(var(--cvw)*4.5)] py-[7%] text-center max-md:px-[calc(var(--cvw)*5)] max-sm:px-[calc(var(--cvw)*7)] space-y-[calc(var(--cvw)*2)] max-md:space-y-[calc(var(--cvw)*6)]"
+            className="relative mx-auto w-full max-w-[1536px] overflow-x-clip px-[calc(var(--cvw)*4.5)] py-[15%] text-center max-md:px-[calc(var(--cvw)*7)]  space-y-[calc(var(--cvw)*2)] max-md:space-y-[calc(var(--cvw)*6)]"
         >
-            <LineReveal as="h2" className="type-h1 mx-auto w-[calc(var(--cvw)*60)] max-md:w-full">
+            <LineReveal as="h2" className="type-h1 leading-[1.2] mx-auto w-[calc(var(--cvw)*60)] max-md:w-full">
                 Explore the Moments Your Website is <span className="gradient-text-animate">Missing.</span>
             </LineReveal>
 
@@ -202,7 +202,7 @@ export default function ExploreTheEffects() {
                 role="tabpanel"
                 aria-live="polite"
                 data-fadeup-delay="0.2"
-                className="fadeup mx-auto mt-4 grid grid-cols-2 gap-4 text-left max-md:grid-cols-1"
+                className="fadeup mx-auto mt-4 grid grid-cols-2 gap-4 max-md:gap-6 text-left max-md:grid-cols-1"
             >
                 {CATEGORIES[shown].effects.map((item) => (
                     <article
@@ -214,13 +214,13 @@ export default function ExploreTheEffects() {
                         className="relative grid grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] gap-6 border border-white/20 bg-black/30 backdrop-blur-lg p-4 text-[#F4F4F4] max-sm:grid-cols-1 max-sm:gap-4"
                     >
                         {/* <CornerMarks /> */}
-                        <div className="aspect-[16/10] overflow-hidden bg-white/5">
+                        <div className="aspect-16/10 overflow-hidden bg-white/5">
                             <LazyVideo src={item.video} poster={item.poster} loop muted playsInline className="size-full object-cover" />
                         </div>
                         <div className="flex flex-col justify-between gap-4 py-1">
-                            <div>
-                                <h3 className="type-h2">{item.title}</h3>
-                                <p className="type-body mt-[calc(var(--cvw)*0.5)] text-white/60">{item.text}</p>
+                            <div className="space-y-[1.1vw]">
+                                <h3 className="type-h3">{item.title}</h3>
+                                <p className="type-body leading-[1.3] mt-[calc(var(--cvw)*0.5)] text-white/60">{item.text}</p>
                             </div>
                             <LinkButton href={item.href} text="Explore" underline tilted={false} underlineClassName="mt-0" className="text18 text-white hover:text-primary transition-colors duration-300" />
                         </div>

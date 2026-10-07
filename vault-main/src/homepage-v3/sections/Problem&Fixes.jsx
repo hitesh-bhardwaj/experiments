@@ -162,7 +162,7 @@ export default function ProblemFixes() {
   return (
     <section
       ref={sectionRef}
-      className="relative z-200  max-md:mt-[calc(var(--cvw)*-8)] w-full overflow-hidden px-[calc(var(--cvw)*4.5)] py-[7%] text-white max-md:px-[calc(var(--cvw)*5)] max-sm:px-[calc(var(--cvw)*7)]"
+      className="relative z-200  max-md:mt-[calc(var(--cvw)*-8)] w-full overflow-hidden px-[calc(var(--cvw)*4.5)] py-[7%] text-white max-md:px-[calc(var(--cvw)*7)] "
     >
       <div className="mx-auto relative z-200 flex w-full max-w-[1536px] flex-col items-center">
         <div className=" text-center w-[70%] max-md:w-full">
@@ -177,7 +177,7 @@ export default function ProblemFixes() {
 
         <div
           ref={cardsRef}
-          className="mt-[calc(var(--cvw)*8)] h-fit w-full space-y-[calc(var(--cvw)*1)] max-md:mt-20 max-md:w-full max-md:space-y-5 max-sm:mt-20 max-sm:space-y-5"
+          className="mt-[calc(var(--cvw)*8)] px-10 max-md:px-0 h-fit w-full space-y-[calc(var(--cvw)*1)] max-md:mt-20 max-md:w-full max-md:space-y-5 max-sm:mt-20 max-sm:space-y-5"
         >
           <div className="type-body-lg flex w-full items-center justify-between px-[calc(var(--cvw)*.5)]">
             <p>The Risks</p>
