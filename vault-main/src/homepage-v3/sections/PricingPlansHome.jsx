@@ -133,9 +133,9 @@ export default function PricingPlansHome() {
     };
 
     return (
-        <section ref={rootRef} id="pricing" data-sound-flow="off" className="relative bg-white font-avenir text-[#1D1D1D]">
-            <div className="mx-auto flex max-w-[1536px] flex-wrap items-end justify-between gap-8 px-[4.5vw] max-md:px-5 max-md:gap-6 pt-[clamp(6rem,15vh,9rem)] pb-[clamp(2.5rem,6vh,4rem)]">
-                <LineReveal as="h2" className="max-w-[60vw] max-md:max-w-full text-[clamp(2.2rem,4.6vw,4.6rem)] leading-[1.02] font-normal tracking-[-.035em]">
+        <section ref={rootRef} id="pricing" data-sound-flow="off" className="relative bg-white px-[4.5vw] py-[7%] font-avenir text-[#1D1D1D] max-md:px-[5vw] max-sm:px-[7vw]">
+            <div className="mx-auto flex w-full max-w-[1536px] flex-wrap items-end justify-between gap-[2vw] max-md:gap-[5vw]">
+                <LineReveal as="h2" className="text64 font-aeonik text-[4.6vw]! max-md:text-[6vw]! max-sm:text-[9vw]!">
                     Two Plans.<br/> <span className="gradient-text-animate gradient-text-single">Every Moment Covered.</span>
                 </LineReveal>
 
@@ -168,14 +168,14 @@ export default function PricingPlansHome() {
                 </div>
             </div>
 
-            <div className={`mx-auto max-w-[1536px] px-[8vw] grid grid-cols-2 gap-3.5 max-md:grid-cols-1 max-md:px-5 max-md:pt-6 pt-[3vw]`}>
+            <div className={`mx-auto grid w-full max-w-[1536px] grid-cols-2 gap-[1vw] pt-[3vw] max-md:grid-cols-1 max-md:gap-[4vw] max-md:pt-[6vw]`}>
                 {PLANS.map((plan, planIndex) => {
                     const dark = plan.id === "plus";
                     return (
                         <article
                             key={plan.id}
                             data-fadeup-delay={planIndex * 0.12}
-                            className={`fadeup relative flex flex-col gap-[18px] p-[clamp(1.8rem,3vw,2.8rem)] ${dark ? "isolate overflow-hidden bg-black/90 text-[#F4F4F4]" : "border border-[#999999]/30 bg-white text-[#1D1D1D]"}`}
+                            className={`fadeup relative flex flex-col gap-[18px] p-[3vw] max-md:p-[6vw] ${dark ? "isolate overflow-hidden bg-black/90 text-[#F4F4F4]" : "border border-[#999999]/30 bg-white text-[#1D1D1D]"}`}
                         >
                             {/* <CornerMarks /> */}
                             {dark && <CardFluid />}
@@ -186,26 +186,26 @@ export default function PricingPlansHome() {
                             )}
 
                             <div className="relative grid gap-2">
-                                <h3 className="text-[clamp(1.8rem,2.6vw,2.4rem)] font-normal tracking-[-.03em] uppercase">{plan.name}</h3>
-                                <span className={`text-[17px] ${dark ? "text-[#a9a9a9]" : "text-[#6B6B6B]"}`}>{plan.for}</span>
+                                <h3 className="text32 font-aeonik text-[2.6vw]! max-md:text-[4vw]! max-sm:text-[6.6vw]! uppercase">{plan.name}</h3>
+                                <span className={`text22 font-avenir text-[1.1vw]! leading-[1.6]! max-md:text-[2.2vw]! max-sm:text-[4.1vw]! ${dark ? "text-[#a9a9a9]" : "text-[#6B6B6B]"}`}>{plan.for}</span>
                             </div>
 
                             <div className="relative mt-2 flex items-baseline leading-none tracking-[-.05em]">
-                                <span className="mt-[.35em] mr-1 self-start text-[clamp(1.8rem,2.6vw,2.4rem)]">$</span>
+                                <span className="mt-[.35em] mr-1 self-start text-[2.6vw] max-md:text-[6.6vw]">$</span>
                                 {/* Each digit rolls on its own reel when the period changes */}
-                                <span className="inline-flex text-[clamp(4rem,7vw,6.2rem)] leading-none tabular-nums">
+                                <span className="inline-flex text-[6.4vw] leading-none max-md:text-[16vw] tabular-nums">
                                     <RollingPrice value={plan.amount[period]} values={[plan.amount.q, plan.amount.y]} plan={period} />
                                 </span>
-                                <span className={`ml-2 text-[15px] tracking-normal ${dark ? "text-[#a9a9a9]" : "text-[#6B6B6B]"}`}>/mo</span>
+                                <span className={`ml-2 text-[1.1vw] max-md:text-[4.1vw] tracking-normal ${dark ? "text-[#a9a9a9]" : "text-[#6B6B6B]"}`}>/mo</span>
                             </div>
 
                             {/* Billing + savings, closed off by a thin rule */}
-                            <div className={`relative grid gap-1 border-b pb-5 text-[16px] ${dark ? "border-[#F4F4F4]/12" : "border-[#1D1D1D]/12"}`}>
+                            <div className={`relative grid gap-1 border-b pb-[1.4vw] text22 font-avenir text-[1.1vw]! leading-[1.6]! max-md:text-[2.2vw]! max-sm:text-[4.1vw]! ${dark ? "border-[#F4F4F4]/12" : "border-[#1D1D1D]/12"}`}>
                                 <p data-period-copy className={`min-h-[1.5em] ${dark ? "text-[#a9a9a9]" : "text-[#6B6B6B]"}`}>{plan.billLine[period]}</p>
                                 <p data-period-copy className={dark ? "text-primary" : "text-[#8a8a8a]"}>{plan.chip[period]}</p>
                             </div>
 
-                            <ul className="relative mt-1.5 grid flex-1 content-start gap-[18px] text-[17px]">
+                            <ul className={`relative mt-[0.4vw] grid flex-1 content-start gap-[1.2vw] max-md:gap-[4vw] text22 font-avenir text-[1.1vw]! leading-[1.6]! max-md:text-[2.2vw]! max-sm:text-[4.1vw]!`}>
                                 {plan.features.map((f, i) => (
                                     <li key={i} className="grid grid-cols-[22px_minmax(0,1fr)] items-start gap-2.5">
                                         <Tick tone={dark ? "primary" : "ink"} />
@@ -221,7 +221,7 @@ export default function PricingPlansHome() {
                                 className={`relative mt-2.5 w-fit self-start justify-center ${plan.cta.variant === "outline" ? LIGHT_OUTLINE : ""}`}
                             />
                             {/* Same line reserved in every card, so the buttons sit level */}
-                            <p aria-hidden={!plan.yearlyNote} className="relative -mt-1 min-h-[1.5em] text-left text-[13px] text-[#8a8a8a]">
+                            <p aria-hidden={!plan.yearlyNote} className="relative -mt-1 min-h-[1.5em] text-left text-[0.9vw] max-md:text-[3.4vw] text-[#8a8a8a]">
                                 {plan.yearlyNote ?? ""}
                             </p>
                         </article>
@@ -229,12 +229,11 @@ export default function PricingPlansHome() {
                 })}
             </div>
 
-            <ul className="mx-auto mt-7 flex max-w-[1536px] flex-wrap justify-center gap-x-7 gap-y-2.5 px-[4.5vw] text-[11px] font-medium tracking-[.14em] text-[#6B6B6B] uppercase">
+            <ul className="mx-auto mt-[2vw] flex w-full max-w-[1536px] flex-wrap justify-center gap-x-[2vw] gap-y-[0.8vw] text-[0.8vw] max-md:text-[2.8vw] font-medium tracking-[.14em] text-[#6B6B6B] uppercase">
                 {ASSURANCES.map((a) => (
                     <li key={a} className="flex items-center gap-2"><Tick />{a}</li>
                 ))}
             </ul>
-            <div className="h-[clamp(6rem,14vh,9rem)]" aria-hidden="true" />
         </section>
     );
 }

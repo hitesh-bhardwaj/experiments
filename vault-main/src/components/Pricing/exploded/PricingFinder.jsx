@@ -100,15 +100,16 @@ export default function PricingFinder() {
   }, { dependencies: [key], scope: outRef, revertOnUpdate: true });
 
   return (
-    <section ref={rootRef} id="finder" className="relative flex items-center justify-between gap-[3vw] bg-transparent px-[4.5vw] py-[10vw] text-foreground max-md:flex-col max-md:items-stretch max-md:gap-[10vw] max-md:px-[5vw] max-md:py-[20vw]">
+    <section ref={rootRef} id="finder" className="relative px-[4.5vw] py-[7%] text-foreground max-md:px-[5vw] max-sm:px-[7vw]">
+      <div className="mx-auto flex w-full max-w-[1536px] items-center justify-between gap-[3vw] max-md:flex-col max-md:items-stretch max-md:gap-[10vw]">
       <div className="flex w-[40%] flex-col gap-[1.8vw] max-md:w-full max-md:gap-[5vw]">
         <p className={`fadeup flex items-center gap-[0.6vw] text-foreground/60 max-md:gap-[2vw] ${LABEL}`}>
          
         </p>
-        <LineReveal as="h2" className="text64 text-foreground w-[80%]">
+        <LineReveal as="h2" className={`text64 text-[4.6vw]! max-md:text-[6vw]! max-sm:text-[9vw]! text-foreground w-[80%]`}>
           Not sure? <span className="gradient-text-animate">Let’s size it.</span>
         </LineReveal>
-        <p className="fadeup text22 w-[80%] leading-[1.6] text-foreground/60 max-md:w-full">
+        <p className={`fadeup text22 font-avenir text-[1.1vw]! leading-[1.6]! max-md:text-[2.2vw]! max-sm:text-[4.1vw]! w-[80%] text-foreground/60 max-md:w-full`}>
           Tell us how you build. We’ll point you to the plan that fits, and show you exactly why.
         </p>
       </div>
@@ -143,13 +144,13 @@ export default function PricingFinder() {
 
         <div ref={outRef} aria-live="polite" className="flex w-[50%] flex-col gap-[1.2vw] border-l border-foreground/10 p-[2.4vw] max-md:w-full max-md:gap-[4vw] max-md:border-t max-md:border-l-0 max-md:p-[6vw]">
           <p data-pick className={`text-foreground/50 ${LABEL}`}>We’d pick</p>
-          <p data-pick className="text64 flex items-center gap-[1vw] text-foreground max-md:gap-[3vw]">
+          <p data-pick className={`text64 text-[4.6vw]! max-md:text-[6vw]! max-sm:text-[9vw]! flex items-center gap-[1vw] text-foreground max-md:gap-[3vw]`}>
             {rec.plan.name}
             <span className={`bg-primary/20 px-[0.7vw] py-[0.4vw] text-primary-hover max-md:px-[2vw] max-md:py-[1vw] ${LABEL}`}>
               {rec.period === "y" ? "Yearly" : "Quarterly"}
             </span>
           </p>
-          <p className="text22 flex items-baseline text-foreground">
+          <p className={`text22 font-avenir text-[1.1vw]! leading-[1.6]! max-md:text-[2.2vw]! max-sm:text-[4.1vw]! flex items-baseline text-foreground`}>
             <span className="flex items-baseline">$<span className="relative top-[0.15em]"><RollNumber value={rec.tier.month} values={[7.42, 9, 14.92, 19]} /></span></span>
             <span data-pick className="text-foreground/50">/mo · {rec.tier.billed}</span>
           </p>
@@ -165,6 +166,7 @@ export default function PricingFinder() {
             />
           </div>
         </div>
+      </div>
       </div>
     </section>
   );

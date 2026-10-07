@@ -44,7 +44,7 @@ export default function ExplainVault() {
     }, [])
 
     return (
-        <section id='explain-vault' className='w-full h-fit px-[4.5vw] max-md:px-6 max-sm:px-5'>
+        <section id='explain-vault' className='mx-auto h-fit w-full max-w-[1536px] px-[4.5vw] py-[7%] max-md:px-[5vw] max-sm:px-[7vw]'>
 
             <TextFillPixelV3
                 as="h2"

@@ -193,7 +193,7 @@ export function FAQRow({ item, isOpen, onToggle, index }) {
           style={{ opacity: initiallyOpen ? 1 : 0 }}
           className="pt-[1.2vw] pr-[2.8vw] max-md:pt-[4vw] max-md:pr-[8vw]"
         >
-          <p className="text22 font-avenir w-[85%] text-background/70 leading-[1.45] max-md:w-full max-md:text-[4vw]">
+          <p className="text22 font-avenir text-[1.1vw]! leading-[1.6]! max-md:text-[2.2vw]! max-sm:text-[4.1vw]! w-[85%] text-background/70 max-md:w-full">
             {item.answer}
           </p>
         </div>
@@ -271,13 +271,14 @@ export default function FAQV3({ faqItems, translateTop = true}) {
       ref={container}
       id="faq"
       data-sound-flow="off"
-      className="relative z-10 h-fit px-[4.5vw] w-full bg-foreground py-[7vw] text-background max-md:mt-0! max-md:px-[5vw] max-md:py-[22vw]"
+      className="relative z-10 h-fit px-[4.5vw] w-full bg-foreground py-[7%] text-background max-md:mt-0! max-md:px-[5vw] max-sm:px-[7vw]"
     >
+      <div className="mx-auto w-full max-w-[1536px]">
 
 
       <LineReveal
         as="h2"
-        className="t96 text-center font-aeonik mb-[7vw]  relative z-110  max-md:mb-[12vw] max-md:w-full"
+        className="text64 font-aeonik text-[4.6vw]! max-md:text-[6vw]! max-sm:text-[9vw]! text-center mb-[7vw]  relative z-110  max-md:mb-[12vw] max-md:w-full"
       >
         Questions, <span className="gradient-text-animate">Answered.</span>
       </LineReveal>
@@ -311,6 +312,7 @@ export default function FAQV3({ faqItems, translateTop = true}) {
           />
         </div>
       )}
+      </div>
     </section>
   );
 }

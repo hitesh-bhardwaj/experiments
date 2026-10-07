@@ -198,17 +198,17 @@ export default function PricingCredits() {
   useEffect(() => { prevLeft.current = left; }, [left]);
 
   return (
-    <section ref={rootRef} id="credits" className="relative bg-foreground font-avenir text-background">
-      <div className="flex flex-col gap-[3vw] px-[4.5vw] py-[8vw] max-md:gap-[8vw] max-md:px-[5vw] max-md:py-[16vw]">
+    <section ref={rootRef} id="credits" className="relative bg-foreground px-[4.5vw] py-[7%] font-avenir text-background max-md:px-[5vw] max-sm:px-[7vw]">
+      <div className="mx-auto flex w-full max-w-[1536px] flex-col gap-[3vw] max-md:gap-[8vw]">
         <div className="flex flex-col gap-[1.8vw] max-md:gap-[5vw]">
           <p className={`fadeup flex items-center gap-[0.6vw] text-background/60 max-md:gap-[2vw] ${LABEL}`}>
           
           </p>
-          <LineReveal as="h2" className="text64 leading-[1.2]!">
+          <LineReveal as="h2" className="text64 text-[4.6vw]! max-md:text-[6vw]! max-sm:text-[9vw]!">
             One credit.<br />
             <span className="gradient-text-animate">One whole site.</span>
           </LineReveal>
-          <p className="fadeup text22 w-[40%] leading-[1.6] text-background/60 max-md:w-full">
+          <p className={`fadeup text22 font-avenir text-[1.1vw]! leading-[1.6]! max-md:text-[2.2vw]! max-sm:text-[4.1vw]! w-[40%] text-background/60 max-md:w-full`}>
             A credit unlocks one complete template: every page, section and interaction, as source code you own. Try it: spend your credits below.
           </p>
         </div>
