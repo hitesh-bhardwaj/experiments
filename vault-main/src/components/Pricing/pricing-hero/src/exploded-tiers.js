@@ -119,7 +119,7 @@ export function mountExplodedTiers(host, opts = {}) {
   scene.add(G);
 
   /* ---------- floors ---------- */
-  const LW = 3.1, LD = 2.05, LH = 0.08;
+  const LW = 3.6, LD = 2.05, LH = 0.08, LABEL_H = (3.1 * 0.94 * 180) / 640, LABEL_PX = Math.round(640 * (LW / 3.1)); 
   const faceFont = () => font || getComputedStyle(host).fontFamily || 'system-ui, sans-serif';
 
   function drawLayer(c, layer, plan) {
@@ -155,7 +155,7 @@ export function mountExplodedTiers(host, opts = {}) {
   }
 
   const stacks = [], hitboxes = [], disposables = [];
-  const n = plans.length, gapX = 4.1;
+  const n = plans.length, gapX = 4.8;
   plans.forEach((plan, si) => {
     const grp = new T.Group(); grp.position.x = (si - (n - 1) / 2) * gapX; G.add(grp);
     const S = { plan, g: grp, layers: [], ex: 0.06, title: titleSprite(plan), guides: null };
@@ -166,9 +166,9 @@ export function mountExplodedTiers(host, opts = {}) {
       glass.renderOrder = j * 2; lg.add(glass);
       const edges = new T.LineSegments(new T.EdgesGeometry(glass.geometry), new T.LineBasicMaterial({ color: ghost ? 0x777777 : 0xFF7A20, transparent: true, opacity: ghost ? 0.3 : 0.85, depthWrite: false }));
       lg.add(edges);
-      const c = document.createElement('canvas'); c.width = 640; c.height = 180; drawLayer(c, layer, plan);
+      const c = document.createElement('canvas'); c.width = LABEL_PX; c.height = 180; drawLayer(c, layer, plan);
       const tex = srgbTex(new T.CanvasTexture(c)); tex.anisotropy = 4;
-      const lab = new T.Mesh(new T.PlaneGeometry(LW * 0.94, (LW * 0.94 * 180) / 640), new T.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false, opacity: 0 }));
+      const lab = new T.Mesh(new T.PlaneGeometry(LW * 0.94, LABEL_H), new T.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false, opacity: 0 }));
       lab.rotation.x = -Math.PI / 2; lab.position.y = LH / 2 + 0.005; lab.renderOrder = j * 2 + 1; lg.add(lab);
       S.layers.push({ g: lg, glass, edges, lab, c, tex, layer, ghost, y: j * 0.12, x: 0 });
       disposables.push(glass.geometry, glass.material, edges.geometry, edges.material, lab.geometry, lab.material, tex);
@@ -202,8 +202,8 @@ export function mountExplodedTiers(host, opts = {}) {
   if (document.fonts?.ready) document.fonts.ready.then(() => { if (!dead) relabel(); });
 
   /* ---------- layout: pose per breakpoint ---------- */
-  const POSE = poseOpt || { op: [2.9, 0.6, 0], or: [0.7, -0.46, 0], os: 1.25 };
-  const POSE_M = poseNarrowOpt || { op: [0, 2.9, -4], or: [0.7, -0.4, 0], os: 0.72 };
+  const POSE = poseOpt || { op: [1.9, 0.6, 0], or: [0.7, -0.08, 0], os: 1.25 };
+  const POSE_M = poseNarrowOpt || { op: [0, 2.9, -4], or: [0.7, -0.08, 0], os: 0.72 };
   let W = 1, H = 1;
   function resize() {
     const r = canvas.getBoundingClientRect();
@@ -284,11 +284,11 @@ export function mountExplodedTiers(host, opts = {}) {
       let want = locked[si] || hovered === si ? 1 : mouse.on ? 0.12 : 0.06;
       if (isTarget) want = Math.max(want, absorb);
       S.ex += (want - S.ex) * Math.min(1, dt * 3.2);
-      const sp = 0.12 + S.ex * 0.4; let top = 0;
+      const sp = 0.12 + S.ex * 0.45; let top = 0;
       S.layers.forEach((l, j) => {
         let ty = j * sp + Math.sin(time * 1.2 + j) * 0.02 * S.ex, tx = 0;
         if (!isTarget && absorb > 0.01 && !l.ghost) {
-          const sp2 = 0.12 + target.ex * 0.4;
+          const sp2 = 0.12 + target.ex * 0.45;
           tx = lerp(0, target.g.position.x - S.g.position.x, absorb);
           ty = lerp(ty, l.mergeTo * sp2 + 0.06, absorb);
         }

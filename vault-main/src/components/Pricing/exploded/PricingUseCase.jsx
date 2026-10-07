@@ -63,7 +63,7 @@ export default function PricingUseCase({ useCases }) {
       className="mx-auto flex h-fit w-full max-w-[1536px] items-start justify-between overflow-x-clip px-[4.5vw] py-[7%] text-background max-md:flex-col max-md:gap-[8vw] max-md:px-[5vw] max-md:pb-[30vw]! max-sm:px-[7vw]"
     >
       <MaskTextReveal stagger={0.08} scrub={false} duration={2} className="sticky top-[20vh] w-[40vw] max-md:static max-md:mb-[10vw]! max-md:w-full">
-        <h2 className={`text64 text-[4.6vw]! max-md:text-[6vw]! max-sm:text-[9vw]! font-avenir`}>
+        <h2 className="text64 font-avenir">
           Built for teams where frontend is part of the brand & your interface needs to feel as premium as the product.
         </h2>
       </MaskTextReveal>

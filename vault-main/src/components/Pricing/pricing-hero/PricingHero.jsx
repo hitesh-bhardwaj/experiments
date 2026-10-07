@@ -86,8 +86,8 @@ export default function PricingHero({ isIndia = false }) {
         className="absolute inset-0 z-0 [&_canvas]:absolute [&_canvas]:inset-0 [&_canvas]:block [&_canvas]:size-full"
         aria-hidden="true"
       />
-      <div className="pointer-events-none relative z-2 flex items-end justify-between gap-[2vw] max-md:flex-col max-md:items-stretch max-md:gap-[5vw] [&_a]:pointer-events-auto [&_button]:pointer-events-auto">
-        <div className="w-[67%] max-md:w-full pb-[2.5vw]">
+      <div className="pointer-events-none pb-[4vw] relative z-2 flex items-end justify-between gap-[2vw] max-md:flex-col max-md:items-stretch max-md:gap-[5vw] [&_a]:pointer-events-auto [&_button]:pointer-events-auto">
+        <div className="w-[67%] max-md:w-full ">
           <LineReveal as="h1" className="relative font-aeonik t96 text-[6.4vw]! max-md:text-[13vw]! mt-[1.8vw] leading-[1.3]! text-foreground">
             Pick a plan. <span className="gradient-text-animate block">Keep the code.</span>
           </LineReveal>

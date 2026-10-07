@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useLayoutEffect, useMemo, useRef, useState } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import LineReveal from "@/components/Animations/LineReveal";
@@ -11,6 +11,7 @@ import { prefersReducedMotion } from "@/lib/motion";
 import CreditTiles from "./CreditTiles";
 import ReasonList from "./ReasonList";
 import RollNumber from "./RollNumber";
+import RollText from "./RollText";
 
 const HEADER_OFFSET = 96;
 
@@ -93,6 +94,26 @@ export default function PricingFinder() {
 
   useFadeUp(rootRef);
 
+  // The plan name changes width (Pro / Pro+), so the tag beside it slides to its
+  // new spot instead of jumping: watch the name resize, tween the difference.
+  const tagRef = useRef(null);
+  useLayoutEffect(() => {
+    const tag = tagRef.current;
+    const name = tag?.previousElementSibling;
+    if (!tag || !name || typeof ResizeObserver === "undefined") return undefined;
+    let left = tag.offsetLeft;
+    const ro = new ResizeObserver(() => {
+      const next = tag.offsetLeft;
+      if (next !== left && !prefersReducedMotion()) {
+        const from = (gsap.getProperty(tag, "x") || 0) + left - next;
+        gsap.fromTo(tag, { x: from }, { x: 0, duration: 0.9, ease: "expo.out", overwrite: "auto" });
+      }
+      left = next;
+    });
+    ro.observe(name);
+    return () => ro.disconnect();
+  }, []);
+
   // Only a changed recommendation animates, not every slider tick
   useGSAP(() => {
     if (prefersReducedMotion()) return;
@@ -144,26 +165,28 @@ export default function PricingFinder() {
 
         <div ref={outRef} aria-live="polite" className="flex w-[50%] flex-col gap-[1.2vw] border-l border-foreground/10 p-[2.4vw] max-md:w-full max-md:gap-[4vw] max-md:border-t max-md:border-l-0 max-md:p-[6vw]">
           <p data-pick className={`text-foreground/50 ${LABEL}`}>We’d pick</p>
-          <p data-pick className={`text64 text-[4.6vw]! max-md:text-[6vw]! max-sm:text-[9vw]! flex items-center gap-[1vw] text-foreground max-md:gap-[3vw]`}>
-            {rec.plan.name}
-            <span className={`bg-primary/20 px-[0.7vw] py-[0.4vw] text-primary-hover max-md:px-[2vw] max-md:py-[1vw] ${LABEL}`}>
+          <div className={`text64 text-[4.6vw]! max-md:text-[6vw]! max-sm:text-[9vw]! flex items-center gap-[1vw] text-foreground max-md:gap-[3vw]`}>
+            <RollText text={rec.plan.name} dir={rec.key === "plus" ? 1 : -1} className="pb-[0.1em]" />
+            <span ref={tagRef} data-pick className={`bg-primary/20 px-[0.7vw] py-[0.4vw] text-primary-hover max-md:px-[2vw] max-md:py-[1vw] ${LABEL}`}>
               {rec.period === "y" ? "Yearly" : "Quarterly"}
             </span>
-          </p>
+          </div>
           <p className={`text22 font-avenir text-[1.1vw]! leading-[1.6]! max-md:text-[2.2vw]! max-sm:text-[4.1vw]! flex items-baseline text-foreground`}>
             <span className="flex items-baseline">$<span className="relative top-[0.15em]"><RollNumber value={rec.tier.month} values={[7.42, 9, 14.92, 19]} /></span></span>
             <span data-pick className="text-foreground/50">/mo · {rec.tier.billed}</span>
           </p>
           <CreditTiles count={rec.tier.credits} used={templates} />
           <ReasonList items={rec.why} />
-          <div data-pick>
+          <div>
             <ButtonV3
               variant="orange"
               href="#plans"
               scrollOffset={HEADER_OFFSET}
-              text={`Start ${rec.label}`}
+              ariaLabel={`Start ${rec.label}`}
               className="max-sm:w-full max-sm:justify-center"
-            />
+            >
+              <RollText text={`Start ${rec.label}`} dir={rec.key === "plus" ? 1 : -1} />
+            </ButtonV3>
           </div>
         </div>
       </div>
