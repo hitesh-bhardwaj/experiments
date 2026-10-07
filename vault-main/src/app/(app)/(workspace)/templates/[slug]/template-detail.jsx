@@ -248,7 +248,7 @@ export function TemplateDetail({
             <div className="flex flex-wrap items-center justify-between gap-4">
               <div className="relative inline-flex items-center gap-1 bg-[#161616] p-1">
                 {/* Same sliding-highlight technique as the grid-density toggle
-                    in vault-content.jsx - one absolutely positioned span
+                    on the effects listing - one absolutely positioned span
                     behind the buttons, translated by a slot's width instead
                     of each button carrying its own background. */}
                 <span

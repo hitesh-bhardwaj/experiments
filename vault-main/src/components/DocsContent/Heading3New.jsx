@@ -12,7 +12,7 @@ export default function Heading3({ children, text, className, id, ...props }) {
     <h3
       ref={headingRef}
       className={[
-        "group/heading scroll-mt-24 relative font-aeonik text-xl md:text-2xl leading-1 font-semibold tracking-tighter text-foreground  first:mt-0 first:pt-0",
+        "group/heading scroll-mt-24 relative leading-1 first:mt-0 first:pt-0",
         className,
       ]
         .filter(Boolean)

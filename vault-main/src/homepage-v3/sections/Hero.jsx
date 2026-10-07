@@ -26,6 +26,8 @@ const INTRO_DURATION = 1.7;
 const AT_HEADING = 1;
 const AT_COPY = 2.3;
 const AT_ACTIONS = 2.75;
+// Scroll unlocks ~2s after the loader (timeline position + NAV_LEAD)
+const AT_UNLOCK = 1.75;
 
 const INTRO_HIDDEN = { visibility: "hidden" };
 function revealIntroTargets(...els) {
@@ -144,7 +146,12 @@ export default function Hero() {
                 )
                 .to(
                     copy.lines,
-                    { yPercent: 0, autoAlpha: 1, duration: 0.8, stagger: 0.07 },
+                    {
+                        yPercent: 0,
+                        autoAlpha: 1,
+                        duration: 0.8,
+                        stagger: 0.07,
+                    },
                     AT_COPY
                 )
                 .to(
@@ -153,10 +160,11 @@ export default function Hero() {
                         y: 0,
                         autoAlpha: 1,
                         duration: 0.7,
-                        onComplete: unlockScrollV3,
                     },
                     AT_ACTIONS
                 );
+
+            tl.call(unlockScrollV3, null, AT_UNLOCK);
 
             return () => {
                 heading.revert();
@@ -183,15 +191,15 @@ export default function Hero() {
                     <HeroRibbons play={playIntro && loaderComplete} />
                 )}
             </div>
-            <div className="pointer-events-none relative z-10 mx-auto flex min-h-dvh w-full max-w-[1536px] flex-col justify-end px-[3vw] pt-[8vw] pb-[5vw] max-md:px-6 max-md:pt-32 max-md:pb-10 max-sm:px-5">
-                <div className="grid grid-cols-[minmax(0,1.5fr)_minmax(0,0.7fr)] items-end gap-[3vw] max-md:grid-cols-1 max-md:gap-5">
+            <div className="pointer-events-none relative z-10 mx-auto flex min-h-dvh w-full max-w-[1536px] flex-col justify-end px-[4.5vw] pt-[8vw] pb-[5vw] max-md:px-6 max-md:pt-32 max-md:pb-10 max-sm:px-5">
+                <div className="flex items-end justify-between gap-[3vw] max-md:flex-col max-md:items-stretch max-md:gap-5">
                    
-                    <h1 ref={headingRef} className="relative font-aeonik max-md:text-[13vw]! t96 max-w-[53vw] leading-[1.15]! max-md:max-w-full text-[#F4F4F4]">
+                    <h1 ref={headingRef} className="relative min-w-0 flex-[1.5] font-aeonik t96 text-[6.4vw]! max-md:text-[13vw]! max-w-[53vw] leading-[1.15]! max-md:max-w-full text-[#F4F4F4]">
                         The Interaction Layer Your Website is <span className="gradient-text-animate">Missing</span><EasterEggDot className="pointer-events-auto" />
                     </h1>
 
-                    <div className="flex flex-col gap-[2vw] pb-[0.6vw] max-md:pb-0 max-md:gap-5">
-                        <p ref={copyRef} style={INTRO_HIDDEN} className="text22 leading-[1.65] text-[#C9C9C9] max-w-[40vw] max-md:w-[75%] max-sm:w-full max-md:text-left">
+                    <div className="flex min-w-0 flex-[0.7] flex-col gap-[2vw] pb-[0.6vw] max-md:pb-0 max-md:gap-5">
+                        <p ref={copyRef} style={INTRO_HIDDEN} className="text22 font-avenir text-[1.1vw]! leading-[1.6]! max-md:text-[2.2vw]! max-sm:text-[4.1vw]! text-[#C9C9C9] max-w-[40vw] max-md:w-[75%] max-sm:w-full max-md:text-left">
                             Source-first scroll systems, cursor effects, text reveals, page transitions, loaders, backgrounds, and WebGL scenes for React and Next.js. Installed as real files in your project, not a dependency you rent.
                         </p>
 

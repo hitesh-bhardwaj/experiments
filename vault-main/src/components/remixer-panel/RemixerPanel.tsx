@@ -172,6 +172,15 @@ function ControlField({
       <div className={styles.field}>
         <div className={styles.fieldRow}>
           <span className={styles.fieldLabel}>{control.id ?? control.label}</span>
+          {/* Small swatch (opens the native picker) right beside the hex value. */}
+          <span className={styles.colorValue}>
+          <input
+            type="color"
+            value={colorValue}
+            onChange={(event) => onChange(event.target.value)}
+            className={styles.colorSwatch}
+            aria-label={`${control.label} colour picker`}
+          />
           <input
             key={colorValue}
             type="text"
@@ -191,11 +200,9 @@ function ControlField({
             aria-label={`${control.label} hex value`}
             spellCheck={false}
           />
+          </span>
         </div>
         {control.description ? <p className={styles.fieldDescription}>{control.description}</p> : null}
-        <div className={styles.colorRow}>
-          <input type="color" value={colorValue} onChange={(event) => onChange(event.target.value)} className={styles.colorInput} />
-        </div>
       </div>
     );
   }
@@ -360,7 +367,8 @@ export default function RemixerPanel({
   onCopyCode,
   onReset,
   defaultOpenGroupId,
-}: RemixerPanelProps) {
+  compact = false,
+}: RemixerPanelProps & { compact?: boolean }) {
   const availableGroups = useMemo(() => groups.filter((group) => group.controls?.length), [groups]);
   const [openGroupId, setOpenGroupId] = useState<string | null>(
     defaultOpenGroupId ?? availableGroups[0]?.id ?? null,
@@ -377,7 +385,9 @@ export default function RemixerPanel({
   };
 
   return (
-    <aside className={`${styles.panel} ${isExpanded ? styles.panelOpen : ""}`}>
+    // compact: tighter spacing / tracking and wrapped code, for narrow columns
+    // (the effect page's Playground).
+    <aside className={`${styles.panel} ${isExpanded ? styles.panelOpen : ""} ${compact ? styles.compact : ""}`}>
       <div className={`${styles.body} ${styles.hideScrollbar}`} data-lenis-prevent>
         {availableGroups.map((group) => {
           if (group.collapsible === false) {

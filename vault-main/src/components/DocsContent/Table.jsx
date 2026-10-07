@@ -84,7 +84,7 @@ export default function DocsTable({
               key={col.key ?? idx}
               scope="col"
               className={cx(
-                "bg-(--docs-table-header-bg) px-4 py-3.5 text-[1.2rem] font-medium text-(--docs-table-header-color) border-b border-(--docs-table-border)",
+                "bg-(--docs-table-header-bg) px-4 py-3.5 font-medium text-(--docs-table-header-color) border-b border-(--docs-table-border)",
                 idx !== normalizedColumns.length - 1 &&
                   "border-r border-(--docs-table-border)",
                 col.headerClassName,
@@ -125,7 +125,7 @@ export default function DocsTable({
               <td
                 key={col.key ?? colIdx}
                 className={cx(
-                  "px-4 py-3.5 text-sm md:text-base leading-relaxed text-(--docs-table-cell-color) border-(--docs-table-border)",
+                  "px-4 py-3.5 text-(--docs-table-cell-color) border-(--docs-table-border)",
                   colIdx !== normalizedColumns.length - 1 &&
                     "border-r border-(--docs-table-border)",
                   col.cellClassName,

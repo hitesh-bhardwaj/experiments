@@ -1,11 +1,10 @@
 /**
  * Pricing hero object: "Exploded tiers" (from Pricing — Hyperiux Vault (Exploded tiers)).
  *
- * Two glass stacks, one per plan, built from real layers. The Free stack shows what it lacks as
- * faint dashed "Pro only" ghosts.
+ * Two glass stacks, one per plan (Pro, Pro+), built from real layers.
  *   · hover a stack   → it explodes into labelled floors with orange guide lines (soft notes, one per floor)
  *   · click           → lock it open (click again to close)
- *   · press and hold  → Pro absorbs Free: Free's real floors slide across into the Pro stack
+ *   · press and hold  → Pro+ absorbs Pro: Pro's real floors slide across into the Pro+ stack
  * The whole group tilts gently toward the mouse. No drag, no orbit.
  *
  * Self-contained three.js scene (own renderer / camera / lights / PMREM environment) rendered into a
@@ -24,33 +23,38 @@ export const PRICING = {
   INR: { symbol: '₹', monthly: 999, yearly: 8999 },
 };
 
-/* icon: grid · rows · tpl · coins · star ; ghost:true draws a dashed "not in this plan" floor */
+/* icon: grid · rows · tpl · coins · star ; ghost:true draws a dashed "not in this plan" floor.
+   `pricing` on a plan overrides the shared PRICING table. */
 export const DEFAULT_PLANS = [
   {
-    id: 'free', name: 'Free',
+    id: 'pro', name: 'Pro',
+    pricing: {
+      USD: { symbol: '$', monthly: 10, yearly: 89 },
+      INR: { symbol: '₹', monthly: 499, yearly: 4499 },
+    },
     layers: [
-      { title: 'Free Core', sub: '50+ source-first effects', icon: 'grid' },
-      { title: 'CLI install', sub: 'Copy or install, no account', icon: 'rows' },
-      { title: 'Premium effects', sub: 'Pro only', ghost: true },
-      { title: 'WebGL & cursor scenes', sub: 'Pro only', ghost: true },
+      { title: 'Components', sub: 'Every component in the vault', icon: 'grid' },
+      { title: 'Template credits', sub: '3 a year · selected catalogue', icon: 'coins' },
+      { title: 'Page sections', sub: 'Pro+ only', ghost: true },
+      { title: 'Full template catalogue', sub: 'Pro+ only', ghost: true },
     ],
   },
   {
-    id: 'pro', name: 'Pro',
+    id: 'pro-plus', name: 'Pro+',
     layers: [
-      { title: 'Free Core', sub: 'Everything in Free', icon: 'grid' },
-      { title: '150+ premium effects', sub: 'Scroll, text, transitions, loaders', icon: 'rows' },
-      { title: 'WebGL & cursor scenes', sub: 'The full 3D and cursor library', icon: 'tpl' },
-      { title: 'Commercial use', sub: 'Code you own, forever', icon: 'coins' },
-      { title: 'New drops', sub: 'Ongoing releases, first', icon: 'star' },
+      { title: 'Components', sub: 'Every component in the vault', icon: 'grid' },
+      { title: 'Page sections', sub: 'Full-page, ready to compose', icon: 'rows' },
+      { title: 'Full template catalogue', sub: 'Every template, whole sites', icon: 'tpl' },
+      { title: 'Template credits', sub: '5 a year · worth ~$200', icon: 'coins' },
+      { title: 'Freebies & early drops', sub: 'On the house', icon: 'star' },
     ],
   },
 ];
 
 export function priceLabel(plan, { yearly, currency, pricing = PRICING }) {
   if (plan.priceLabel) return plan.priceLabel({ yearly, currency });
-  if (plan.id === 'free') return 'Free forever';
-  const p = pricing[currency] || pricing.USD;
+  const table = plan.pricing || pricing;
+  const p = table[currency] || table.USD;
   const n = (v) => v.toLocaleString(currency === 'INR' ? 'en-IN' : 'en-US');
   return yearly ? `${p.symbol}${n(p.yearly)} a year` : `${p.symbol}${n(p.monthly)}/mo`;
 }
@@ -78,7 +82,6 @@ export function mountExplodedTiers(host, opts = {}) {
 
   /* ---------- renderer / scene / camera ---------- */
   const canvas = document.createElement('canvas');
-  canvas.className = 'pt-canvas';
   canvas.setAttribute('aria-hidden', 'true');
   canvasParent.appendChild(canvas);
   let renderer;
@@ -116,7 +119,7 @@ export function mountExplodedTiers(host, opts = {}) {
   scene.add(G);
 
   /* ---------- floors ---------- */
-  const LW = 3.1, LD = 2.05, LH = 0.08;
+  const LW = 3.6, LD = 2.05, LH = 0.08, LABEL_H = (3.1 * 0.94 * 180) / 640, LABEL_PX = Math.round(640 * (LW / 3.1)); 
   const faceFont = () => font || getComputedStyle(host).fontFamily || 'system-ui, sans-serif';
 
   function drawLayer(c, layer, plan) {
@@ -133,16 +136,16 @@ export function mountExplodedTiers(host, opts = {}) {
     else if (icon === 'coins') { for (let r = 0; r < 3; r++) { const gr = g.createRadialGradient(ix + 22 + r * 26 - 6, iy + 34, 2, ix + 22 + r * 26, iy + 40, 20); gr.addColorStop(0, '#FFD2B0'); gr.addColorStop(0.55, '#FF6B00'); gr.addColorStop(1, '#9a3800'); g.fillStyle = gr; g.beginPath(); g.arc(ix + 22 + r * 26, iy + 40, 20, 0, 7); g.fill(); } }
     else if (icon === 'star') { g.beginPath(); for (let r = 0; r < 10; r++) { const a = (r / 10) * Math.PI * 2 - Math.PI / 2, rr = r % 2 ? 16 : 40; g.lineTo(ix + 48 + Math.cos(a) * rr, iy + 40 + Math.sin(a) * rr); } g.closePath(); g.fill(); }
     else { g.strokeStyle = 'rgba(244,244,244,.3)'; g.lineWidth = 3; g.beginPath(); g.arc(ix + 40, iy + 40, 30, 0, 7); g.moveTo(ix + 18, iy + 62); g.lineTo(ix + 62, iy + 18); g.stroke(); }
-    g.fillStyle = ghost ? 'rgba(244,244,244,.4)' : '#F4F4F4'; g.font = `600 40px ${faceFont()}`; g.fillText(layer.title, 190, 92);
-    g.fillStyle = ghost ? 'rgba(244,244,244,.3)' : '#FFB27A'; g.font = `500 26px ${monoFont}`;
+    g.fillStyle = ghost ? 'rgba(244,244,244,.4)' : '#F4F4F4'; g.font = `400 40px ${faceFont()}`; g.fillText(layer.title, 190, 92);
+    g.fillStyle = ghost ? 'rgba(244,244,244,.3)' : '#FFB27A'; g.font = `400 26px ${monoFont}`;
     g.fillText(typeof layer.sub === 'function' ? layer.sub({ yearly, currency, plan }) : layer.sub || '', 190, 140);
   }
 
   function paintTitle(s) {
     const c = s.userData.c, g = c.getContext('2d');
     g.clearRect(0, 0, 512, 160); g.textAlign = 'center';
-    g.fillStyle = '#F4F4F4'; g.font = `600 72px ${faceFont()}`; g.fillText(s.userData.plan.name, 256, 72);
-    g.fillStyle = '#FF8A3D'; g.font = `500 34px ${monoFont}`; g.fillText(priceLabel(s.userData.plan, { yearly, currency, pricing }), 256, 130);
+    g.fillStyle = '#F4F4F4'; g.font = `400 72px ${faceFont()}`; g.fillText(s.userData.plan.name, 256, 72);
+    g.fillStyle = '#FF8A3D'; g.font = `400 34px ${monoFont}`; g.fillText(priceLabel(s.userData.plan, { yearly, currency, pricing }), 256, 130);
     s.material.map.needsUpdate = true;
   }
   function titleSprite(plan) {
@@ -152,7 +155,7 @@ export function mountExplodedTiers(host, opts = {}) {
   }
 
   const stacks = [], hitboxes = [], disposables = [];
-  const n = plans.length, gapX = 4.1;
+  const n = plans.length, gapX = 4.8;
   plans.forEach((plan, si) => {
     const grp = new T.Group(); grp.position.x = (si - (n - 1) / 2) * gapX; G.add(grp);
     const S = { plan, g: grp, layers: [], ex: 0.06, title: titleSprite(plan), guides: null };
@@ -163,9 +166,9 @@ export function mountExplodedTiers(host, opts = {}) {
       glass.renderOrder = j * 2; lg.add(glass);
       const edges = new T.LineSegments(new T.EdgesGeometry(glass.geometry), new T.LineBasicMaterial({ color: ghost ? 0x777777 : 0xFF7A20, transparent: true, opacity: ghost ? 0.3 : 0.85, depthWrite: false }));
       lg.add(edges);
-      const c = document.createElement('canvas'); c.width = 640; c.height = 180; drawLayer(c, layer, plan);
+      const c = document.createElement('canvas'); c.width = LABEL_PX; c.height = 180; drawLayer(c, layer, plan);
       const tex = srgbTex(new T.CanvasTexture(c)); tex.anisotropy = 4;
-      const lab = new T.Mesh(new T.PlaneGeometry(LW * 0.94, (LW * 0.94 * 180) / 640), new T.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false, opacity: 0 }));
+      const lab = new T.Mesh(new T.PlaneGeometry(LW * 0.94, LABEL_H), new T.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false, opacity: 0 }));
       lab.rotation.x = -Math.PI / 2; lab.position.y = LH / 2 + 0.005; lab.renderOrder = j * 2 + 1; lg.add(lab);
       S.layers.push({ g: lg, glass, edges, lab, c, tex, layer, ghost, y: j * 0.12, x: 0 });
       disposables.push(glass.geometry, glass.material, edges.geometry, edges.material, lab.geometry, lab.material, tex);
@@ -199,8 +202,8 @@ export function mountExplodedTiers(host, opts = {}) {
   if (document.fonts?.ready) document.fonts.ready.then(() => { if (!dead) relabel(); });
 
   /* ---------- layout: pose per breakpoint ---------- */
-  const POSE = poseOpt || { op: [2.9, 1.05, 0], or: [0.7, -0.46, 0], os: 1.25 };
-  const POSE_M = poseNarrowOpt || { op: [0, 3.2, -4], or: [0.7, -0.4, 0], os: 0.72 };
+  const POSE = poseOpt || { op: [1.9, 0.6, 0], or: [0.7, -0.08, 0], os: 1.25 };
+  const POSE_M = poseNarrowOpt || { op: [0, 2.9, -4], or: [0.7, -0.08, 0], os: 0.72 };
   let W = 1, H = 1;
   function resize() {
     const r = canvas.getBoundingClientRect();
@@ -281,11 +284,11 @@ export function mountExplodedTiers(host, opts = {}) {
       let want = locked[si] || hovered === si ? 1 : mouse.on ? 0.12 : 0.06;
       if (isTarget) want = Math.max(want, absorb);
       S.ex += (want - S.ex) * Math.min(1, dt * 3.2);
-      const sp = 0.12 + S.ex * 0.62; let top = 0;
+      const sp = 0.12 + S.ex * 0.45; let top = 0;
       S.layers.forEach((l, j) => {
         let ty = j * sp + Math.sin(time * 1.2 + j) * 0.02 * S.ex, tx = 0;
         if (!isTarget && absorb > 0.01 && !l.ghost) {
-          const sp2 = 0.12 + target.ex * 0.62;
+          const sp2 = 0.12 + target.ex * 0.45;
           tx = lerp(0, target.g.position.x - S.g.position.x, absorb);
           ty = lerp(ty, l.mergeTo * sp2 + 0.06, absorb);
         }

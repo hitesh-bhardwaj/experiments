@@ -162,22 +162,22 @@ export default function ProblemFixes() {
   return (
     <section
       ref={sectionRef}
-      className="relative z-200  max-md:mt-[-8vw] w-full overflow-hidden px-[3vw] pb-[10%] text-white max-md:px-[6vw] max-md:py-24  max-sm:py-20"
+      className="relative z-200  max-md:mt-[-8vw] w-full overflow-hidden px-[4.5vw] py-[7%] text-white max-md:px-[5vw] max-sm:px-[7vw]"
     >
       <div className="mx-auto relative z-200 flex w-full max-w-[1536px] flex-col items-center">
         <div className=" text-center w-[70%] max-md:w-full">
-          <LineReveal as='h2' className="t96 w-full">
+          <LineReveal as='h2' className="text64 font-aeonik text-[4.6vw]! max-md:text-[6vw]! max-sm:text-[9vw]! w-full">
             Good Motion is{' '}
             <span className="gradient-text-animate">Harder</span> Than it Looks
           </LineReveal>
-          <p data-fadeup-delay="0.2" className="fadeup text24 mx-auto mt-[3.5vw] max-w-[55vw] leading-[1.55] text-white max-md:mt-[5vw] max-md:w-full max-md:max-w-full max-md:text-sm max-sm:mt-[10vw] max-sm:leading-[1.3]">
+          <p data-fadeup-delay="0.2" className="fadeup text22 font-avenir text-[1.1vw]! leading-[1.6]! max-md:text-[2.2vw]! max-sm:text-[4.1vw]! mx-auto mt-[3.5vw] max-w-[55vw] text-white max-md:mt-[5vw] max-md:w-full max-md:max-w-full max-sm:mt-[10vw]">
           Anyone can add a fade. What&apos;s hard is everything around it. Get timing, restraint, or performance wrong, and the moment meant to impress becomes the reason the site feels worse. Most teams see that risk and drop their ambitions to play it safe. And your interface ends up looking like everyone else&apos;s.  Vault is engineered around that discipline by default, not as an afterthought.
           </p>
         </div>
 
         <div
           ref={cardsRef}
-          className="mt-[8vw] h-fit w-[85vw] space-y-[1vw] max-md:mt-20 max-md:w-full max-md:space-y-5 max-sm:mt-20 max-sm:space-y-5"
+          className="mt-[8vw] h-fit w-full space-y-[1vw] max-md:mt-20 max-md:w-full max-md:space-y-5 max-sm:mt-20 max-sm:space-y-5"
         >
           <div className="text24 flex w-full items-center justify-between px-[.5vw] max-sm:text-sm">
             <p>The Risks</p>

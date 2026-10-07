@@ -25,7 +25,7 @@ function FeedbackButton({ active, onClick, children }) {
       className={`h-10 cursor-pointer border px-4 transition-colors duration-300 ${label} ${
         active
           ? "border-primary bg-primary text-black"
-          : "border-white/15 text-white/80 hover:border-white/40 hover:text-white"
+          : "border-white/15 text-white/80 hover:border-primary hover:text-white"
       }`}
     >
       {children}
@@ -55,9 +55,9 @@ function PagerCard({ page, direction }) {
       }`}
     >
       <span className={`${label} flex items-center gap-2.5 leading-none text-white/50 transition-colors duration-300 group-hover:text-primary`}>
-        {!next && <PagerArrow className="rotate-180 group-hover:-translate-x-1" />}
+        {/* {!next && <PagerArrow className="rotate-180 group-hover:-translate-x-1" />} */}
         {next ? "Next" : "Previous"}
-        {next && <PagerArrow className="group-hover:translate-x-1" />}
+        {/* {next && <PagerArrow className="group-hover:translate-x-1" />} */}
       </span>
       <span className="text-[clamp(1.4rem,2vw,2rem)] leading-none tracking-[-.03em] text-white">{page.label}</span>
     </Link>

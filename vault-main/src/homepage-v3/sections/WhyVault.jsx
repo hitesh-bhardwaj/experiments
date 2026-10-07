@@ -64,18 +64,18 @@ export default function WhyVault() {
             id="why"
             aria-label="Why Vault"
             data-sound-flow="off"
-            className="relative mx-auto bg-[#F4F4F4] font-avenir text-[#1D1D1D]"
+            className="relative bg-[#F4F4F4] px-[4.5vw] py-[7%] font-avenir text-[#1D1D1D] max-md:px-[5vw] max-sm:px-[7vw]"
         >
-            <div className="mx-auto grid max-w-[1536px] grid-cols-[minmax(0,.8fr)_minmax(0,1.6fr)] gap-8 px-[clamp(1.25rem,3vw,3rem)] pt-[clamp(5rem,14vh,9rem)] pb-[clamp(4rem,10vh,7rem)] max-md:grid-cols-1">
-                <p className="fadeup max-w-[max(15vw,14rem)] text-[max(1.1vw,0.875rem)] leading-[1.45] max-md:max-w-[36ch] mt-3">
+            <div className="mx-auto grid max-w-[1536px] grid-cols-[minmax(0,.8fr)_minmax(0,1.6fr)] gap-[2vw] max-md:grid-cols-1">
+                <p className="fadeup text22 font-avenir text-[1.1vw]! leading-[1.6]! max-md:text-[2.2vw]! max-sm:text-[4.1vw]! max-w-[15vw] max-md:max-w-[36ch]">
                     Production-grade motion, without the production complexity.
                 </p>
-                <LineReveal as="h2" className="text-[clamp(2.2rem,4.6vw,4.6rem)] leading-[1.02] font-normal! tracking-[-.035em] font-aeonik!">
+                <LineReveal as="h2" className="text64 font-aeonik text-[4.6vw]! max-md:text-[6vw]! max-sm:text-[9vw]!">
                     Built for teams where the frontend <span className="gradient-text-animate gradient-text-single">is the brand.</span>
                 </LineReveal>
             </div>
 
-            <div className="mx-auto grid max-w-[1536px] grid-cols-[minmax(0,.8fr)_minmax(0,1.6fr)] gap-8 px-[clamp(1.25rem,3vw,3rem)] pb-[clamp(6rem,16vh,10rem)] max-md:grid-cols-1">
+            <div className="mx-auto grid max-w-[1536px] grid-cols-[minmax(0,.8fr)_minmax(0,1.6fr)] gap-[2vw] pt-[5vw] max-md:grid-cols-1">
                 <nav className="sticky top-1/2 -translate-y-1/2 grid gap-[18px] self-start max-md:hidden" aria-label="Why Vault">
                     {/* <p className="mb-2.5 inline-flex items-center gap-2.5 text-[11px] font-semibold tracking-[.14em] text-[#6B6B6B] uppercase before:size-[5px] before:rounded-full before:bg-primary before:content-['']">
                         Why Vault
@@ -97,8 +97,8 @@ export default function WhyVault() {
                     {WHY_VAULT_ITEMS.map((item, i) => (
                         <article key={item.id} data-wv-panel={i}>
                             <div className="fadeup">{renderCard(item.id, i)}</div>
-                            <LineReveal as="h3" className="mt-7 max-md:mt-5 text-[clamp(1.25rem,1.6vw,1.5rem)] font-normal font-aeonik! tracking-[-.02em]">{item.title}</LineReveal>
-                            <p data-fadeup-delay="0.15" className="fadeup mt-4 max-md:mt-3 max-w-[52ch] text-base max-sm:text-[15px] leading-[1.65] text-[#6B6B6B]">{item.body}</p>
+                            <LineReveal as="h3" className="mt-[1.8vw] max-md:mt-[5vw] text32 font-aeonik text-[2.6vw]! max-md:text-[4vw]! max-sm:text-[6.6vw]!">{item.title}</LineReveal>
+                            <p data-fadeup-delay="0.15" className="fadeup mt-[1vw] max-md:mt-[3vw] max-w-[52ch] text22 font-avenir text-[1.1vw]! leading-[1.6]! max-md:text-[2.2vw]! max-sm:text-[4.1vw]! text-[#6B6B6B]">{item.body}</p>
                         </article>
                     ))}
                 </div>

@@ -566,8 +566,41 @@
   /* border-radius: 0; */
 }
 
-.colorText {
+.colorValue {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
   margin-left: auto;
+}
+
+.colorSwatch {
+  width: 1.1rem;
+  height: 1.1rem;
+  flex-shrink: 0;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  background: transparent;
+  cursor: pointer;
+}
+
+.colorSwatch::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.colorSwatch::-webkit-color-swatch {
+  border: 0;
+}
+
+.colorSwatch::-moz-color-swatch {
+  border: 0;
+}
+
+.colorSwatch:focus-visible {
+  outline: 1px solid #ff5f00;
+  outline-offset: 2px;
+}
+
+.colorText {
   min-width: 5.75rem;
   border: 0;
   /* border-radius: 0; */
@@ -1013,3 +1046,121 @@
 .codeProp { color: #d8d8d8; }
 .codeValue { color: #F2C572; }
 .codeString { color: #F2A65A; }
+
+/* ---------- compact (effect page Playground) ---------- */
+.compact .groupTrigger,
+.compact .groupStaticHeader {
+  padding: 0.75rem 0.9rem;
+}
+
+.compact .field {
+  padding: 0.7rem 0.9rem;
+  padding-bottom: 0.85rem !important;
+}
+
+/* Group labels (Motion, Layout…) and "Your props": Title Case, medium weight. */
+.compact .groupTitle,
+.compact .codeTitle {
+  font-weight: 500;
+  text-transform: capitalize;
+  letter-spacing: 0;
+}
+
+.compact .groupTitle,
+.compact .codeTitle {
+  font-size: 1vw;
+}
+
+/* 1vw gets too small below desktop: same steps as the panel's other text there. */
+@media (max-width: 1025px) {
+  .compact .groupTitle,
+  .compact .codeTitle {
+    font-size: 1.6vw;
+  }
+}
+
+@media (max-width: 767px) {
+  .compact .groupTitle,
+  .compact .codeTitle {
+    font-size: 3.3vw;
+  }
+}
+
+.compact .fieldRow {
+  gap: 0.5rem;
+}
+
+.compact .fieldLabel {
+  min-width: 0;
+  font-size: 0.8rem;
+  overflow-wrap: anywhere;
+}
+
+.compact .fieldValue,
+.compact .colorText {
+  letter-spacing: 0.04em;
+}
+
+/* Exactly as wide as a "#RRGGBB" value (mono: 7ch + its tracking), so the swatch
+   sits right next to the code instead of across an empty stretch of input. */
+.compact .colorText {
+  min-width: 0;
+  width: calc(7ch + 7 * 0.04em);
+  padding: 0.2rem 0;
+}
+
+.compact .colorValue {
+  gap: 0.4rem;
+}
+
+.compact .fieldDescription {
+  margin-top: 0.3rem;
+  margin-bottom: 0.4rem;
+  font-size: 11px;
+  overflow-wrap: anywhere;
+}
+
+.compact .codeBlock {
+  margin: 0.8rem 0.9rem 0.9rem;
+}
+
+.compact .codeHeader {
+  padding: 0.35rem 0.35rem 0.35rem 0.7rem;
+}
+
+.compact .codeCopy {
+  letter-spacing: 0.06em;
+}
+
+.compact .codeCopy {
+  height: 1.75rem;
+  padding: 0 0.6rem;
+}
+
+/* The props wrap inside the column instead of scrolling sideways; continuation
+   lines hang under the prop name. */
+.compact .codePre {
+  padding: 0.7rem;
+  overflow-x: hidden;
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.compact .codeLine {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  padding-left: 2ch;
+  text-indent: -2ch;
+}
+
+.compact .footer {
+  padding: 0.7rem 0.9rem;
+}
+
+.compact .footerButton {
+  min-height: 2.25rem;
+}
+
+.compact .footerButtonText {
+  letter-spacing: 0.08em;
+}

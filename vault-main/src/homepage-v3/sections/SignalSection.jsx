@@ -118,10 +118,10 @@ export default function SignalSection() {
                     <canvas ref={canvasRef} className="block size-full" />
                 </div>
             </div>
-            <div className="relative z-[60]! mx-auto h-[80vh]  max-w-[1536px] px-[clamp(1.25rem,3vw,3rem)] pt-[clamp(7rem,18vh,12rem)] pb-[clamp(6rem,0vh,10rem)] max-md:h-fit">
+            <div className="relative z-[60]! mx-auto h-[80vh]  max-w-[1536px] px-[4.5vw] py-[7%] max-md:h-fit max-md:px-[5vw] max-sm:px-[7vw]">
                 <div className="grid min-h-[62vh] grid-cols-2 items-start gap-12 max-md:min-h-fit max-md:grid-cols-1">
                     <div>
-                        <LineReveal as="h2" className="max-w-[30vw] font-aeonik text-[3.85vw] max-md:max-w-full max-md:text-[11vw] font-normal leading-[1.02] tracking-[-.035em]">
+                        <LineReveal as="h2" className="max-w-[30vw] max-md:max-w-full text64 font-aeonik text-[4.6vw]! max-md:text-[6vw]! max-sm:text-[9vw]!">
                             Small Motion.<br/> <span className="gradient-text-animate gradient-text-single">Big Signal.</span>
                         </LineReveal>
                         <div className="fadeup mt-[4vw] flex flex-wrap gap-4 max-md:mt-8 max-sm:flex-col max-sm:items-start" data-fadeup-delay="0.16">

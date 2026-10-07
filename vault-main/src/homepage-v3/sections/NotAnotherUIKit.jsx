@@ -125,7 +125,7 @@ export default function NotAnotherUIKit() {
               <div className="w-full h-[37vw] border border-grey content-container overflow-hidden max-sm:h-[40vh] max-md:h-[60vw]">
                 <div className="p-[2.5vw] flex flex-col justify-between h-full max-md:p-[5vw]">
                   <div className="space-y-[1.5vw]">
-                  <div className='relative size-[5vw]'>
+                  <div className='relative size-[3.2vw]'>
                     {card.icon && <Image src={card.icon} alt="" aria-hidden="true" fill sizes="5vw" className="object-contain" />}
                   </div>
                   <h3 className="text-[3vw] font-aeonik max-sm:text-[6.5vw]! max-sm:w-[80%]">

@@ -14,7 +14,10 @@ import Link from "next/link";
 import { createPortal } from "react-dom";
 import { useRouter, usePathname } from "next/navigation";
 import { AppVaultHeader as VaultHeader } from "@/components/layout/AppVaultHeader";
-import { EffectCard } from "@/components/ui/EffectCardNew";
+import { EffectCardV4 } from "../EffectCardV4";
+import { CustomAnimationCta } from "../CustomAnimationCta";
+import { useEffectCardActions } from "../useEffectCardActions";
+import FAQV3 from "@/homepage-v3/sections/FAQV3";
 import { CodeBlock, CodeBlockLanguageProvider } from "@/components/ui/CodeBlock";
 import { TableOfContents } from "@/components/ui/TableOfContents";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
@@ -29,12 +32,10 @@ import { resolveEffectVideoUrl, resolveMediaUrl } from "@/lib/media";
 import HeadAnim from "@/components/Animations/HeadAnim";
 import Copy from "@/components/Animations/Copy";
 import { useFadeUp, useLineAnim } from "@/components/Animations/gsapAnimations";
-import styles from "./effect-content.module.css";
 import { LockKeyhole } from "lucide-react";
-import { CustomAnimationFormTrigger } from "@/components/WebsiteComps/modals/CustomAnimationFormModal";
 import { CopyLimitProvider, useCopyLimit } from "./useCopyLimit";
 import ButtonV3 from "@/homepage-v3/components/ButtonV3";
-import { ArrowIcon } from "@/components/WebsiteComps/Icons";
+import { SliderArrowButton } from "@/components/ui/SliderArrowButton";
 import EffectStage from "./EffectStage";
 
 function formatEffectDate(value) {
@@ -67,7 +68,7 @@ function SkeletonBlock({ className = "" }) {
 
 function EffectDetailMainSkeleton() {
   return (
-    <main className="mx-auto w-full relative px-14 max-[1025px]:px-0 pt-25 pb-12 max-md:pt-36">
+    <main className="mx-auto w-full relative px-14 max-[1025px]:px-0 pt-25 max-md:pt-36">
       <section className="space-y-7">
         <div className="flex items-start max-md:px-[7vw] max-[1025px]:px-[6vw] justify-between gap-5">
           <div className="w-full space-y-5">
@@ -199,6 +200,8 @@ export function EffectDetailContent({
 
   const router = useRouter();
   const pathname = usePathname();
+  // Related effects use the full listing card: save, copy install / Pro lock, live demo.
+  const { cardActions, overlays: cardOverlays } = useEffectCardActions({ userPlan, signInRedirect: pathname });
 
   const [mounted, setMounted] = useState(false);
   const [showSignInToCopyModal, setShowSignInToCopyModal] = useState(false);
@@ -262,6 +265,13 @@ export function EffectDetailContent({
 
   const safeEffect = effect || {};
   const safeContent = content || null;
+  // The article's FAQ block renders as the site FAQ section (FAQV3) below the article,
+  // exactly like the listing and homepage - not inside the prose.
+  const faqItems = (safeContent?.body || [])
+    .filter((block) => block?._type === "effectFaqAccordion")
+    .flatMap((block) => block.items || [])
+    .filter((item) => item?.question && item?.answer)
+    .map((item, index) => ({ id: item._key || `effect-faq-${index}`, question: item.question, answer: item.answer, defaultOpen: index === 0 }));
   const safeRelatedEffects = Array.isArray(relatedEffects)
     ? relatedEffects
     : [];
@@ -386,29 +396,13 @@ export function EffectDetailContent({
     }, 0);
   };
 
-  const handleRelatedCardClick = useCallback(
-    (event, relatedEffect) => {
-      const dragState = relatedSliderDragRef.current;
-
-      if (dragState.isDragging) {
-        event.preventDefault();
-        event.stopPropagation();
-        return;
-      }
-
-      const interactiveEl = event.target.closest(
-        "button, input, textarea, select, [role='button'], [data-no-card-link]"
-      );
-
-      if (interactiveEl) return;
-
-      event.preventDefault();
-      event.stopPropagation();
-
-      router.push(getEffectHref(relatedEffect));
-    },
-    [router]
-  );
+  // A drag across the slider ends in a click on whichever card is under the pointer;
+  // swallow it (capture phase, before the card or its buttons see it).
+  const blockClickAfterDrag = useCallback((event) => {
+    if (!relatedSliderDragRef.current.isDragging) return;
+    event.preventDefault();
+    event.stopPropagation();
+  }, []);
 
   const handleVideoReady = () => {
     const video = videoRef.current;
@@ -442,78 +436,76 @@ export function EffectDetailContent({
 
   return (
     <CopyLimitProvider effectSlug={slug} onRequireSignIn={() => setShowSignInToCopyModal(true)}>
-      <div className="min-h-screen text-foreground">
-          <Suspense fallback={<div className="h-12" />}>
-            <VaultHeader effectName={pageTitle || safeEffect.title}
-              showSearch={true}
-              effects={searchEffects} />
-          </Suspense>
+      {/* No cursor-movement swish or hover sounds anywhere on the effect page. */}
+      <div data-sound-hover="off" data-sound-flow="off" className="min-h-screen text-foreground">
+        <Suspense fallback={<div className="h-12" />}>
+          <VaultHeader effectName={pageTitle || safeEffect.title}
+            showSearch={true}
+            effects={searchEffects} />
+        </Suspense>
 
-          {isMainDataLoading ? (
-            <EffectDetailMainSkeleton />
-          ) : (
-            <main className="mx-auto w-full relative px-14 max-[1025px]:px-0 pt-25 pb-12 max-md:pt-36">
-              <section className="space-y-7">
-                <div className="flex items-start max-md:px-[7vw] max-[1025px]:px-[6vw] justify-between gap-5">
-                  <div className="w-full space-y-5">
-                    <Breadcrumb />
+        {isMainDataLoading ? (
+          <EffectDetailMainSkeleton />
+        ) : (
+          <main className="mx-auto w-full relative  max-[1025px]:px-0 pt-25 max-md:pt-36">
+            <section className="space-y-7">
+              <div className="flex px-14 items-start max-md:px-[7vw] max-[1025px]:px-[6vw] justify-between gap-5">
+                <div className="w-full space-y-5">
+                  <Breadcrumb />
 
-                    {pageTitle && (
-                      <HeadAnim>
-                        <h1 className="w-full max-md:text-[6vw] max-md:font-bold max-[1025px]:w-[90%] max-md:w-[80%]  font-semibold leading-[1.3]! text-foreground text80">
-                          {pageTitle}
-                        </h1>
-                      </HeadAnim>
-                    )}
+                  {pageTitle && (
+                    <HeadAnim>
+                      <h1 className="w-full max-md:text-[6vw] max-md:font-bold max-[1025px]:w-[90%] max-md:w-[80%]  font-semibold leading-[1.3]! text-foreground text80">
+                        {pageTitle}
+                      </h1>
+                    </HeadAnim>
+                  )}
 
-                    {pageSummary && (
-                      <Copy delay={0.5}>
-                        <p className="mt-4 w-full max-[1025px]:w-[90%] text-foreground opacity-90 text22 leading-relaxed max-[1025px]:leading-[1.3]">
-                          {pageSummary}
-                        </p>
-                      </Copy>
-                    )}
-                    {shouldShowEffectDates && (
-                      <div className="mt-5 flex items-start gap-x-5 gap-y-1 text18 text-white/80 max-md:text-[3vw]! max-md:flex-col ">
-                        <Copy delay={0.6} animationKey={addedAtLabel}>
-                          <div><span className="font-laygrotesk">Published On: </span>{addedAtLabel}</div>
-                        </Copy>
-                        <Copy delay={0.7} animationKey={lastUpdatedLabel}>
-                          <div><span className="font-laygrotesk">Last Updated: </span>{lastUpdatedLabel}</div>
-                        </Copy>
+                  {pageSummary && (
+                    <Copy delay={0.5}>
+                      <p className="mt-4 w-[70%] max-[1025px]:w-[90%] text-foreground opacity-90 text22 leading-relaxed max-[1025px]:leading-[1.3]">
+                        {pageSummary}
+                      </p>
+                    </Copy>
+                  )}
+
+
+                  <div className="mt-10 flex w-full items-center justify-between gap-3 fadeup max-md:mt-8">
+                    {(dependencies.length > 0 || (content?.tier ?? safeEffect.tier) === "pro") && (
+                      <div className="flex flex-wrap items-center gap-3">
+                        {dependencies.map((dep) => (
+                          <span
+                            key={dep}
+                            className=" bg-[#272727] px-2 py-1 text20 capitalize text-foreground max-md:text-muted max-md:px-6"
+                          >
+                            {dep}
+                          </span>
+                        ))}
                       </div>
                     )}
 
-                    <div className="mt-10 flex w-full items-center justify-between gap-3 fadeup max-md:mt-8">
-                      {(dependencies.length > 0 || (content?.tier ?? safeEffect.tier) === "pro") && (
-                        <div className="flex flex-wrap items-center gap-3">
-                          {dependencies.map((dep) => (
-                            <span
-                              key={dep}
-                              className=" bg-[#272727] px-2 py-1 text20 capitalize text-foreground max-md:text-muted max-md:px-6"
-                            >
-                              {dep}
-                            </span>
-                          ))}
-                        </div>
-                      )}
-
-                    </div>
                   </div>
                 </div>
+              </div>
 
-                <div className="fadeup max-md:px-[7vw] max-[1025px]:px-[6vw] h-auto  w-full">
-                  {/* Live stage + Playground (remixer), in place of the preview video */}
-                  <EffectStage effect={effect} title={pageTitle} previewHref={previewHref} />
-                </div>
+              <div className="fadeup px-14 max-md:px-[7vw] max-[1025px]:px-[6vw] h-auto  w-full">
+                {/* Live stage + Playground (remixer), in place of the preview video */}
+                <EffectStage effect={effect} title={pageTitle} previewHref={previewHref} />
+              </div>
 
 
-                <div className="relative max-md:px-[7vw] max-[1025px]:px-[6vw] pt-0">
+              {/* One white area for everything below the stage: the article, FAQ + custom
+                    animation block, and related effects - so no dark gaps show between them. */}
+              <div className="bg-white text-black mt-20">
+                {/* blog-theme-light: blog.css prose in its light colours on this white section */}
+                <div className="blog-theme-light relative px-14 max-md:px-[7vw] max-[1025px]:px-[6vw] pt-20 pb-6">
                   <div className="fixed right-4 top-1/2 z-30 block -translate-y-1/2 max-[1025px]:hidden">
                     <TableOfContents
                       containerRef={contentRef}
                       stopRef={hasCtaSection ? ctaSectionRef : relatedEffectsRef}
                       watchKey={slug}
+                      revealAt={0.2}
+                      showBackToTop
                     />
                   </div>
 
@@ -527,63 +519,62 @@ export function EffectDetailContent({
                   />
                 </div>
 
-                <div className="w-[70%] max-[1025px]:w-full max-md:px-[7vw] max-[1025px]:px-[6vw] max-md:mt-[10vw]">
-                  <EffectCtaSection
-                    cta={safeContent?.ctaBanner}
-                    sectionRef={ctaSectionRef}
-                  />
+                {/* FAQ + custom animation block - the same components as the effects listing */}
+                <div className="h-full w-full">
+                  {faqItems.length > 0 && <FAQV3 faqItems={faqItems} translateTop={false} />}
+                  <CustomAnimationCta cta={safeContent?.ctaBanner} sectionRef={ctaSectionRef} className="mt-[2vw]" />
                 </div>
 
                 {safeRelatedEffects?.length > 0 && (
                   <section
                     ref={relatedEffectsRef}
-                    className="my-20 relative space-y-10 max-[1025px]:space-y-10"
+                    className="relative space-y-10 px-14 py-20 max-[1025px]:space-y-10 max-[1025px]:px-[6vw] max-md:px-[7vw]"
                   >
                     <div className="flex items-center justify-between gap-5 max-[1025px]:flex-col">
                       <HeadAnim>
-                        <h2 className="text-center text-[3.32vw] max-[1025px]:text-[5vw] max-md:text-[2rem] font-medium text-foreground">
+                        <h2 className="text-center text-[3.32vw] max-[1025px]:text-[5vw] max-md:text-[2rem] font-medium text-[#141414]">
                           Related Effects
                         </h2>
                       </HeadAnim>
-
-                      <div className="fadeup flex max-[1025px]:hidden flex-col justify-center items-end gap-5 max-[1025px]:w-full max-[1025px]:items-stretch">
-                        <ButtonV3
-                          text="Explore All Effects"
-                          href="/effects"
-                          variant="orange"
-                          className="shrink-0"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="max-[1025px]:hidden">
-                      {showRelatedSliderControls && (
-                        <div className="flex items-center justify-end gap-2 max-[1025px]:justify-center">
-                          <button
-                            type="button"
-                            onClick={() => scrollRelatedEffects("previous")}
-                            disabled={!canScrollPrev}
-                            aria-label="Show previous related effects"
-                            className={`group relative flex h-8 w-8 items-center justify-center overflow-hidden   bg-[#161616] text-white  transition-colors duration-300 ${!canScrollPrev ? "cursor-not-allowed opacity-40" : "cursor-pointer hover:bg-[#ff5f00] hover:text-black"}`}
-                          >
-                            <ArrowIcon className={`h-4.5 w-4.5 max-md:h-3.5 max-md:w-3.5 -rotate-135  ${!canScrollPrev?"":"group-hover:translate-x-[-180%] duration-300 ease-in-out"}`} />
-                            <ArrowIcon className={`h-4.5 w-4.5 max-md:h-3.5 max-md:w-3.5 -rotate-135 absolute translate-x-[180%]  ${!canScrollPrev?"":" group-hover:translate-x-0 duration-300 ease-in-out"} `} />
-
-                          </button>
-
-                          <button
-                            type="button"
-                            onClick={() => scrollRelatedEffects("next")}
-                            disabled={!canScrollNext}
-                            aria-label="Show next related effects"
-                            className={`group relative flex h-8 w-8 items-center justify-center overflow-hidden  bg-[#161616] text-white transition-colors duration-300 ${!canScrollNext ? "cursor-not-allowed opacity-40" : "cursor-pointer hover:bg-[#ff5f00] hover:text-black"}`}
-                          >
-                            <ArrowIcon className={`h-4.5 w-4.5 max-md:h-3.5 max-md:w-3.5 rotate-45  ${!canScrollNext ? "" : "group-hover:translate-x-[180%] duration-300 ease-in-out"}`} />
-                            <ArrowIcon className={`h-4.5 w-4.5 max-md:h-3.5 max-md:w-3.5 rotate-45 absolute translate-x-[-180%]  ${!canScrollNext?"":" group-hover:translate-x-0 duration-300 ease-in-out"} `} />
-                          </button>
+                      {/* The arrows are sized to the Explore button beside them: ButtonV3 is
+                          1.15vw text x 1.5 line height + 1rem padding + 2px border. */}
+                      <div className="flex items-center gap-2 fadeup">
+                        <div className=" flex max-[1025px]:hidden flex-col justify-center items-end gap-5 max-[1025px]:w-full max-[1025px]:items-stretch">
+                          <ButtonV3
+                            text="Explore All Effects"
+                            href="/effects"
+                            variant="orange"
+                            className="shrink-0 border border-primary"
+                          />
                         </div>
-                      )}
+                        <div className="max-[1025px]:hidden">
+                          {showRelatedSliderControls && (
+                            <div className="flex h-full items-center justify-end gap-2">
+                              <SliderArrowButton
+                                direction="prev"
+                                tone="light"
+                                onClick={() => scrollRelatedEffects("previous")}
+                                disabled={!canScrollPrev}
+                                ariaLabel="Show previous related effects"
+                                className="size-[calc(1.725vw+18px)]"
+                              />
+                              <SliderArrowButton
+                                direction="next"
+                                tone="light"
+                                onClick={() => scrollRelatedEffects("next")}
+                                disabled={!canScrollNext}
+                                ariaLabel="Show next related effects"
+                                className="size-[calc(1.725vw+18px)]"
+                              />
+                            </div>
+                          )}
+                        </div>
+                        
+                      </div>
+
                     </div>
+
+
 
                     <div className=" fadeup">
                       <div
@@ -599,13 +590,14 @@ export function EffectDetailContent({
                         {safeRelatedEffects.map((relatedEffect) => (
                           <div
                             key={relatedEffect.name}
-                            onClick={(event) =>
-                              handleRelatedCardClick(event, relatedEffect)
-                            }
+                            onClickCapture={blockClickAfterDrag}
                             className="min-w-[31vw] pl-1!  cursor-pointer max-md:px-[7vw] max-[1025px]:px-[6vw] snap-start max-[1025px]:min-w-[44vw] max-[1025px]:min-w-[55vw]! max-md:min-w-full!"
                           >
-                            <EffectCard
+                            <EffectCardV4
                               effect={relatedEffect}
+                              {...cardActions(relatedEffect)}
+                              onOpen={(item) => router.push(getEffectHref(item))}
+                              tagClassName="border-black/20"
                               sizes="(max-width: 639px) 100vw, (max-width: 767px) 55vw, (max-width: 1023px) 44vw, 31vw"
                             />
                           </div>
@@ -616,28 +608,20 @@ export function EffectDetailContent({
                     <div className="hidden max-[1025px]:block">
                       {showRelatedSliderControls && (
                         <div className="flex items-center justify-end gap-2 max-[1025px]:justify-center">
-                          <button
-                            type="button"
+                          <SliderArrowButton
+                            direction="prev"
+                            tone="light"
                             onClick={() => scrollRelatedEffects("previous")}
                             disabled={!canScrollPrev}
-                            aria-label="Show previous related effects"
-                            className={`group relative flex size-10 items-center justify-center overflow-hidden  bg-[#161616] text-white transition-colors duration-300 ${!canScrollPrev ? "cursor-not-allowed opacity-40" : "cursor-pointer hover:bg-[#ff5f00]"}`}
-                          >
-                            <ArrowIcon className={`h-4.5 w-4.5 max-md:size-4 -rotate-135  ${!canScrollPrev?"":"group-hover:translate-x-[-180%] duration-300 ease-in-out"}`}/>
-                            <ArrowIcon className={`h-4.5 w-4.5 max-md:size-4 -rotate-135 absolute translate-x-[180%]  ${!canScrollPrev?"":"group-hover:translate-x-0 duration-300 ease-in-out"}`} />
-
-                          </button>
-
-                          <button
-                            type="button"
+                            ariaLabel="Show previous related effects"
+                          />
+                          <SliderArrowButton
+                            direction="next"
+                            tone="light"
                             onClick={() => scrollRelatedEffects("next")}
                             disabled={!canScrollNext}
-                            aria-label="Show next related effects"
-                            className={`group relative flex size-10 items-center justify-center overflow-hidden  bg-[#161616] text-white transition-colors duration-300 ${!canScrollNext ? "cursor-not-allowed opacity-40" : "cursor-pointer hover:bg-[#ff5f00]"}`}
-                          >
-                            <ArrowIcon className={`h-4.5 w-4.5 max-md:size-4 rotate-45  ${!canScrollNext?"":"group-hover:translate-x-[180%] duration-300 ease-in-out"}`} />
-                            <ArrowIcon className={`h-4.5 w-4.5 max-md:size-4 rotate-45 absolute translate-x-[-180%]  ${!canScrollNext?"":"group-hover:translate-x-0 duration-300 ease-in-out"}`} />
-                          </button>
+                            ariaLabel="Show next related effects"
+                          />
                         </div>
                       )}
                     </div>
@@ -652,10 +636,11 @@ export function EffectDetailContent({
                     </div>
                   </section>
                 )}
-              </section>
-            </main>
-          )}
-        </div>
+              </div>
+            </section>
+          </main>
+        )}
+      </div>
 
       {mounted && createPortal(
         <div
@@ -696,6 +681,7 @@ export function EffectDetailContent({
         </div>,
         document.body
       )}
+      {cardOverlays}
     </CopyLimitProvider>
   );
 }
@@ -709,7 +695,7 @@ const EffectDynamicContent = forwardRef(function EffectDynamicContent(
   return (
     <div
       ref={ref}
-      className={`space-y-8 w-[70%] max-[1025px]:w-full ${styles.content}`}
+      className="blog-content space-y-8 w-[70%] max-[1025px]:w-full"
     >
       <SanityBodyRenderer
         body={content.body}
@@ -721,50 +707,6 @@ const EffectDynamicContent = forwardRef(function EffectDynamicContent(
     </div>
   );
 });
-
-function EffectCtaSection({ cta, sectionRef }) {
-  if (!cta?.heading && !cta?.buttonText) return null;
-
-  const buttonLink = cta.buttonLink || "#";
-
-  return (
-    <section
-      ref={sectionRef}
-      className="fadeup w-full bg-[#272727]  my-[5vw] max-md:mt-[20vw] mx-auto"
-    >
-      <div className="mx-auto w-full flex flex-col items-start max-w-6xl px-10 max-[1025px]:px-6 max-md:px-[6vw] py-15">
-        {cta.heading && (
-          <h2 className="text-[2.5vw] font-medium text-foreground max-md:text-[7vw]">
-            {cta.heading}
-          </h2>
-        )}
-
-        {cta.description && (
-          <p className="mt-4 max-w-3xl text20 text-muted">
-            {cta.description}
-          </p>
-        )}
-
-        <div className="w-fit max-md:mt-[8vw] mt-6">
-          <CustomAnimationFormTrigger>
-            {cta.buttonText && (
-
-              <ButtonV3
-                preventDefault={false}
-                text={cta.buttonText}
-                href={buttonLink}
-                scaleClass="group-hover:scale-[100]! "
-                target="_blank"
-                variant="white"
-                className=" shrink-0 w-fit max-md:w-[90%] max-md:pl-[5vw]! max-md:pr-[12vw]! bg-white"
-              />
-            )}
-          </CustomAnimationFormTrigger>
-        </div>
-      </div>
-    </section>
-  );
-}
 
 function formatChangelogDate(dateString) {
   if (!dateString) return "";
@@ -784,49 +726,47 @@ function EffectChangelogSection({ changelog = [] }) {
   if (!changelog?.length) return null;
 
   return (
-    <section className={`fadeup ${styles.faqAccordion}`}>
-      <h2 className={styles.changelogTitle}>Changelog</h2>
+    <section className="fadeup blog-faq-section">
+      <h2>Changelog</h2>
 
       <FAQGroup
         allowMultiple={false}
         defaultOpenItems={changelog[0]?.version ? [changelog[0].version] : []}
       >
-        <div className={styles.changelogTimeline}>
+        <div className="blog-changelog-timeline">
           {changelog.map((entry, index) => {
             const itemId = entry.version || `changelog-${index}`;
 
             return (
-              <div key={itemId} className={styles.changelogTimelineItem}>
+              <div key={itemId} className="blog-changelog-item">
                 <div
-                  className={styles.changelogTimelineMarker}
+                  className="blog-changelog-marker"
                   aria-hidden="true"
                 >
-                  <span className={styles.changelogTimelineDot} />
+                  <span className="blog-changelog-dot" />
                 </div>
 
                 <FAQWrapper
                   itemId={itemId}
-                  className={`${styles.faqAccordionItem} ${styles.changelogTimelineCard}`}
-                  titleClassName={styles.faqAccordionQuestion}
-                  iconClassName={styles.faqAccordionIcon}
+                  className="blog-changelog-card"
                   iconSize={18}
                   iconStrokeWidth={1.8}
                 >
                   <FAQTitle
-                    className={styles.changelogTrigger}
+                    className="blog-changelog-trigger"
                     iconPosition="right"
                   >
-                    <div className={styles.changelogRow}>
-                      <h3 className={styles.changelogVersion}>
+                    <div className="blog-changelog-row">
+                      <h3 className="blog-changelog-version">
                         v{entry.version}
                       </h3>
                       {entry.date && (
-                        <span className={styles.changelogDate}>
+                        <span className="blog-changelog-date">
                           {formatChangelogDate(entry.date)}
                         </span>
                       )}
                       {entry.breaking && (
-                        <span className={styles.changelogBreaking}>
+                        <span className="blog-changelog-breaking">
                           Breaking
                         </span>
                       )}
@@ -834,7 +774,7 @@ function EffectChangelogSection({ changelog = [] }) {
                   </FAQTitle>
 
                   {entry.summary && (
-                    <FAQContent className={styles.changelogSummary}>
+                    <FAQContent className="blog-changelog-summary">
                       {entry.summary}
                     </FAQContent>
                   )}
@@ -879,29 +819,29 @@ function SanityBodyRenderer({
 
   return (
     <CodeBlockLanguageProvider>
-    <div className="space-y-6">
-      {shouldRenderChangelog && firstFaqIndex === -1 && (
-        <EffectChangelogSection changelog={changelog} />
-      )}
+      <div className="space-y-6">
+        {shouldRenderChangelog && firstFaqIndex === -1 && (
+          <EffectChangelogSection changelog={changelog} />
+        )}
 
-      {groupedBlocks.map((block, index) => {
-        const key = block._key || block._groupKey || `${block._type}-${index}`;
+        {groupedBlocks.map((block, index) => {
+          const key = block._key || block._groupKey || `${block._type}-${index}`;
 
-        return (
-          <Fragment key={key}>
-            {shouldRenderChangelog && index === firstFaqIndex && (
-              <EffectChangelogSection changelog={changelog} />
-            )}
-            {showPropsTable && block._type === "effectFaqAccordion" && (
-              <EffectPropsTable props={remixableProps} />
-            )}
-            <SanityBodyBlock block={block} isLocked={isLocked} />
-          </Fragment>
-        );
-      })}
+          return (
+            <Fragment key={key}>
+              {shouldRenderChangelog && index === firstFaqIndex && (
+                <EffectChangelogSection changelog={changelog} />
+              )}
+              {showPropsTable && block._type === "effectFaqAccordion" && (
+                <EffectPropsTable props={remixableProps} />
+              )}
+              <SanityBodyBlock block={block} isLocked={isLocked} />
+            </Fragment>
+          );
+        })}
 
-      {showPropsTable && !hasFaqBlock && <EffectPropsTable props={remixableProps} />}
-    </div>
+        {showPropsTable && !hasFaqBlock && <EffectPropsTable props={remixableProps} />}
+      </div>
     </CodeBlockLanguageProvider>
   );
 }
@@ -923,10 +863,10 @@ function EffectPropsTable({ props = [] }) {
 
   return (
     <div className="space-y-5! mt-4! fadeup">
-      <h3 className="text-xl tracking-tighter  text-foreground">Props</h3>
+      <h3>Props</h3>
 
-      <div className={`${styles.tableWrap} ${styles.propsTableWrap}`} data-variant="vault">
-        <table className={styles.table}>
+      <div className="blog-table-wrap blog-props-table" data-variant="vault">
+        <table>
           <thead>
             <tr>
               <th>Prop</th>
@@ -974,7 +914,7 @@ function SanityBodyBlock({ block, isLocked = false }) {
     const ListTag = block.listItem === "number" ? "ol" : "ul";
 
     const listClassName =
-      block.listItem === "number" ? `fadeup ${styles.numberList}` : "fadeup";
+      block.listItem === "number" ? "fadeup blog-number-list" : "fadeup";
 
     return (
       <ListTag className={listClassName}>
@@ -992,19 +932,19 @@ function SanityBodyBlock({ block, isLocked = false }) {
 
     return (
       <figure className="fadeup">
-        <div className={styles.imageFrame}>
+        <div className="blog-image-frame">
           <Image
             src={block.url}
             alt={block.alt || ""}
             width={1600}
             height={900}
             sizes="(max-width: 768px) 100vw, 800px"
-            className={styles.image}
+            className="blog-image"
           />
         </div>
 
         {block.caption && (
-          <figcaption className={styles.caption}>{block.caption}</figcaption>
+          <figcaption>{block.caption}</figcaption>
         )}
       </figure>
     );
@@ -1027,8 +967,6 @@ function SanityBodyBlock({ block, isLocked = false }) {
           tsxCode={block.tsxCode ? normalizeCodeString(block.tsxCode) : undefined}
           language={block.language || "jsx"}
           filename={block.filename}
-          hideHeaderWhenNoFilename
-          className={!block.filename ? styles.contentCodeBlockNoFilename : ""}
           copyLocked={copyLimitLocked}
           selectable={copySelectable}
           onBeforeCopy={requestCopy}
@@ -1039,62 +977,11 @@ function SanityBodyBlock({ block, isLocked = false }) {
   }
 
   if (block._type === "horizontalRule") {
-    return <hr className={`fadeup ${styles.contentDivider}`} />;
+    return <hr className="fadeup blog-divider" />;
   }
 
-  if (block._type === "effectFaqAccordion") {
-    const faqItems = block.items || [];
-
-    if (!faqItems.length) return null;
-
-    return (
-      <section className={`fadeup ${styles.faqAccordion}`}>
-        {block.title && (
-          <h2 className={styles.faqAccordionTitle}>{block.title}</h2>
-        )}
-
-        <FAQGroup
-          allowMultiple={false}
-          defaultOpenItems={faqItems[0]?._key ? [faqItems[0]._key] : []}
-        >
-          <div className="border border-grey">
-            {faqItems.map((item, index) => {
-              const itemId = item._key || `faq-${index}`;
-
-              return (
-                <FAQWrapper
-                  key={itemId}
-                  itemId={itemId}
-                  className={`group border-grey px-[2.5vw] py-[2vw] max-[1025px]:px-[4vw] max-[1025px]:py-[4vw] max-md:px-[6vw] max-md:py-[6vw] ${index > 0 ? "border-t" : ""
-                    }`}
-                  iconClassName="mt-[0.55vw] max-md:mt-[1vw] max-md:mt-[1.5vw] text-light-grey transition-colors duration-500 ease-out group-hover:text-white"
-                  iconSize={18}
-                  iconStrokeWidth={1.5}
-                  duration={0.6}
-                >
-                  <FAQTitle
-                    className="pb-0 items-start! justify-start! gap-[1.5vw]! max-[1025px]:gap-[3vw]! max-md:gap-[4vw]!"
-                    iconPosition="left"
-                    iconMode="rotate-left-down"
-                  >
-                    <h3 className="text-[1.55vw]! font-avenir leading-tight! my-0! max-[1025px]:text-[3.4vw]! max-md:text-[5.2vw]!">
-                      {item.question}
-                    </h3>
-                  </FAQTitle>
-
-                  <FAQContent className="pt-[1.2vw] pl-[2.8vw] max-[1025px]:pt-[2.5vw] max-[1025px]:pl-[7vw] max-md:pt-[4vw] max-md:pl-[8vw]">
-                    <p className="text-[1.15vw]! font-avenir text-white! leading-[1.45]! max-[1025px]:text-[2.2vw]! max-md:text-[4vw]!">
-                      {item.answer}
-                    </p>
-                  </FAQContent>
-                </FAQWrapper>
-              );
-            })}
-          </div>
-        </FAQGroup>
-      </section>
-    );
-  }
+  // Rendered below the article as the site FAQ section (see faqItems in EffectDetailContent).
+  if (block._type === "effectFaqAccordion") return null;
 
   if (block._type === "effectTableBlock") {
     const headers = Array.isArray(block.headers) ? block.headers : [];
@@ -1112,16 +999,16 @@ function SanityBodyBlock({ block, isLocked = false }) {
     return (
       <div className="space-y-3 fadeup">
         {block.caption && (
-          <h3 className="text-xl tracking-tighter text-foreground">
+          <h3>
             {block.caption}
           </h3>
         )}
 
         <div
-          className={styles.tableWrap}
+          className="blog-table-wrap"
           data-variant={block.colorVariant || "vault"}
         >
-          <table className={styles.table}>
+          <table>
             {headers.length ? (
               <thead>
                 <tr>
@@ -1154,18 +1041,18 @@ function SanityBodyBlock({ block, isLocked = false }) {
   if (block._type === "effectCalloutBlock") {
     const toneClass =
       block.tone === "info"
-        ? styles.calloutInfo
+        ? "blog-callout-info"
         : block.tone === "warning"
-          ? styles.calloutWarning
+          ? "blog-callout-warning"
           : block.tone === "success"
-            ? styles.calloutSuccess
+            ? "blog-callout-success"
             : "";
 
     const shouldRenderAsCardGrid = !block.tone || block.tone === "default";
 
     return (
-      <section className={`fadeup ${styles.callout} ${toneClass}`}>
-        {block.title && <h3 className={styles.calloutTitle}>{block.title}</h3>}
+      <section className={`fadeup ${toneClass ? `blog-callout-tone ${toneClass}` : "blog-callout-plain"}`}>
+        {block.title && <h3>{block.title}</h3>}
 
         {shouldRenderAsCardGrid ? (
           <CalloutCardGrid body={block.content || []} />
@@ -1187,9 +1074,9 @@ function CalloutCardGrid({ body = [] }) {
   }
 
   return (
-    <div className={styles.calloutGrid}>
+    <div className="blog-callout-grid">
       {items.map((item, index) => (
-        <div key={`${item}-${index}`} className={styles.calloutGridItem}>
+        <div key={`${item}-${index}`} className="blog-callout-grid-item">
           {item}
         </div>
       ))}
@@ -1209,8 +1096,9 @@ function LockedCodePlaceholder({ filename }) {
   const subtitle =
     "You can preview it now. Upgrade to Pro for instant install access.";
 
+  // Stays a dark code panel (like the code blocks) on the white article.
   return (
-    <section className="fadeup relative min-h-[40vh] max-md:min-h-[40vh] max-[1025px]:min-h-[30vh] overflow-hidden  border  border-white/30">
+    <section className="fadeup relative min-h-[40vh] max-md:min-h-[40vh] max-[1025px]:min-h-[30vh] overflow-hidden border border-white/30 bg-[#141414]">
       <div
         aria-hidden="true"
         className="absolute inset-0 "
@@ -1436,7 +1324,7 @@ function buildMarkedChildren(block) {
 
       if (mark === "code") {
         node = (
-          <code key={`code-${index}`} className={styles.contentInlineCode}>
+          <code key={`code-${index}`}>
             {node}
           </code>
         );

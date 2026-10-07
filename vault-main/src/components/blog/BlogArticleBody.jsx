@@ -5,7 +5,6 @@ import { TableOfContents } from "@/components/ui/TableOfContents";
 import { useFadeUp } from "@/components/Animations/gsapAnimations";
 import BlogAuthor from "./BlogAuthor";
 import BlogSharePopover from "./BlogSharePopover";
-import styles from "@/app/(marketing)/blog/[slug]/blog-content.module.css";
 
 
 // "September 06,2026" - the zero-padded format the listing cards use.
@@ -106,7 +105,7 @@ export default function BlogArticleBody({
           </div>
         </div>
 
-        <div ref={contentRef} className={styles.content}>
+        <div ref={contentRef} className="blog-content">
           {children}
         </div>
         <div ref={stopRef}>{afterContent}</div>

@@ -44,7 +44,7 @@ export default function ExplainVault() {
     }, [])
 
     return (
-        <section id='explain-vault' className='w-full h-fit'>
+        <section id='explain-vault' className='mx-auto h-fit w-full max-w-[1536px] px-[4.5vw] py-[7%] max-md:px-[5vw] max-sm:px-[7vw]'>
 
             <TextFillPixelV3
                 as="h2"
@@ -59,7 +59,7 @@ export default function ExplainVault() {
                 bandFraction={0.65}
                 settleBlend={0.45}
                 className="text-[2.6vw] max-md:text-[6vw]"
-                wrapperClassName="w-[65%] max-md:w-full"
+                wrapperClassName="w-[80%] max-md:w-full"
                 containerClassName="py-[15vw] font-avenir max-md:py-24"
             />
         </section>

@@ -19,7 +19,7 @@ function formatLabel(value = "") {
 
 // Client-only (page.js stays a server component so its `metadata` export
 // keeps working) filter row + grid, styled and behaving like
-// effects/vault-content.jsx's own category chips - `template.category` is
+// the old effects listing's category chips - `template.category` is
 // templates' equivalent of an effect's category, doubling as the
 // industry/vertical label ("Portfolio", "Healthcare", "Real Estate", ...).
 // No dedicated per-category route exists for templates (unlike

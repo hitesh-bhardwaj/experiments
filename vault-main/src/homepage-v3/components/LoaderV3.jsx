@@ -27,11 +27,7 @@ import { useInteraction } from "./InteractionProvider";
 const STATIC_CHARS = "!@#$%^*€π§Ωδ∞µΦ≈";
 const WORDMARK_CHARS = "HYPERIUX@#10";
 
-// The counter runs to 92 on its own, then only closes the last 8 once the page
-// has actually finished loading - so the number tracks something real instead
-// of sitting at 100 while assets are still coming in.
-// Never hold the page longer than this, however slow the load is.
-const MAX_WAIT_MS = 1000;
+const MAX_WAIT_MS = 100;
 
 // Exit: one scalar drives the whole thing, whichever way the field leaves.
 //

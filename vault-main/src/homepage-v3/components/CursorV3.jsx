@@ -8,7 +8,7 @@ import { useEffect, useRef } from "react";
 // the ring trails alongside it. Fine pointers only.
 
 const CLICKABLE = "a[href],button,input,select,textarea,[role=button],[role=tab],[role=radio],label,summary";
-// Any element can opt in with data-hold-zone (e.g. the Community hero)
+// Any element can opt in with data-hold-zone (e.g. the Community hero); data-cursor-label swaps the ring text
 const HOLD_ZONES = "#hero-v3,#footer,[data-hold-zone]";
 const HOLD_SKIP = "a,button,input,textarea,select,label,[role=button],[role=tab],[role=radio],h1,h2,h3,p";
 const LERP = 0.22;
@@ -67,7 +67,7 @@ export default function CursorV3() {
                 }
                 // Charging: the ring's primary stroke fills in step with the ribbons' hold
                 if (holding) root.dataset.charging = ""; else delete root.dataset.charging;
-                return setMode("hold", holding ? "" : "Hold to explore");
+                return setMode("hold", holding ? "" : zone.dataset.cursorLabel || "Hold to explore");
             }
             delete root.dataset.charging;
             return setMode("off");

@@ -165,14 +165,14 @@ export default function FooterV3() {
     <footer
       ref={footerRef}
       id="footer"
-      className="relative z-200 py-[7vw]  w-full overflow-hidden max-md:px-[5vw] max-md:py-[10vw] max-sm:mt-16 px-[3.5vw] max-sm:px-[7vw] max-sm:py-[15vw] max-md:bg-[#111110]"
+      className="relative z-200 py-[7vw]  w-full overflow-hidden max-md:px-[5vw] max-md:py-[10vw] max-sm:mt-16 px-[4.5vw] max-sm:px-[7vw] max-sm:py-[15vw] max-md:bg-[#111110]"
     >
       <canvas
         ref={ribbonCanvasRef}
         aria-hidden="true"
         className="pointer-events-none absolute inset-x-0 top-0 z-0 left-[3%] block h-svh w-full mask-[linear-gradient(to_top,transparent,#000_40%)]"
       />
-      <div className="mx-auto w-full max-w-[1536px] max-md:space-y-[6vw] max-sm:space-y-[8vw] h-fit relative z-3">
+      <div className={`mx-auto max-w-[1536px] w-full max-md:space-y-[6vw] max-sm:space-y-[8vw] h-fit relative z-3`}>
         <LineReveal
           as="h2"
           className="text-[4vw] max-md:text-[7.5vw] max-sm:text-[8vw] leading-[1.1] font-aeonik pointer-events-auto max-md:w-full max-sm:px-0! w-[60%]"
@@ -212,7 +212,7 @@ export default function FooterV3() {
         {/* <EggHint className="ml-2" /> */}
       </p>
       {/* ── Footer links grid ── */}
-      <div className="relative z-3 mt-[10vw] max-md:mt-[14vw] max-sm:mt-[25vw] ">
+      <div className="relative z-3 mx-auto mt-[10vw] w-full max-w-[1536px] max-md:mt-[14vw] max-sm:mt-[25vw]">
         {/* Platform label */}
         <div className="flex items-center gap-[1vw] max-md:gap-2 pb-[1vw] max-md:pb-[3vw]">
           <span className="size-[0.45vw] max-md:size-2 bg-[#ff5f00]" />
@@ -343,7 +343,7 @@ export default function FooterV3() {
                 className="flex flex-col gap-[0.6vw] max-md:gap-3"
               >
                 {/* One line, one rule underneath: email on the left, Subscribe on the right */}
-                <div className="flex items-center gap-[2vw] border-b border-foreground/30 transition-colors duration-300 focus-within:border-white/70 max-md:gap-4">
+                <div className="flex items-center gap-[2vw] border-b border-foreground/30 transition-colors duration-300 focus-within:border-white/70 max-md:gap-4 w-[90%]">
                   <Input
                     type="email"
                     value={email}
@@ -363,7 +363,7 @@ export default function FooterV3() {
                   <button
                     type="submit"
                     disabled={status === "loading"}
-                    className="shrink-0 cursor-pointer py-[0.9vw] text18 font-medium tracking-[.18em] text-[#d8d8d8] uppercase transition-colors duration-300 hover:text-primary disabled:pointer-events-none disabled:opacity-50 max-md:py-3"
+                    className="shrink-0 cursor-pointer py-[0.9vw] text-[0.9vw] font-medium text-[#d8d8d8] uppercase transition-colors duration-300 hover:text-primary disabled:pointer-events-none disabled:opacity-50 max-md:py-3"
                   >
                     {status === "loading" ? "Subscribing…" : "Subscribe"}
                   </button>

@@ -1,39 +1,130 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import LineReveal from "@/components/Animations/LineReveal";
 import { useFadeUp } from "@/components/Animations/gsapAnimations";
-import { prefersReducedMotion } from "@/lib/motion";
+import ButtonV3 from "@/homepage-v3/components/ButtonV3";
 import { useInteraction } from "@/homepage-v3/components/InteractionProvider";
-import { useBilling } from "./billing";
-import { CREDITS, DEMO_TEMPLATES } from "./plans";
-import { BillingToggle } from "./shared";
+import { prefersReducedMotion } from "@/lib/motion";
+import CreditTiles from "./CreditTiles";
+import RollText from "./RollText";
 
 const FLY_DURATION = 0.9;
 const FLY_FADE_DELAY = 0.75;
 
 // Demo wallet: spend template credits on example templates and watch each
-// coin fly into the card it unlocks. The wallet size follows the page's
-// Monthly/Yearly toggle, and changing it refills the wallet.
+// credit fly into the card it unlocks. Display only: credits aren't sold or
+// tracked by the backend yet. Credit counts match the plan cards above.
+const PLAN_OPTIONS = [
+  { id: "pro", label: "Pro · Yearly", name: "Pro yearly", credits: 3, note: "selected catalogue", full: false },
+  { id: "plus", label: "Pro+ · Yearly", name: "Pro+ yearly", credits: 5, note: "full catalogue · worth ~$200", full: true },
+];
+
+// `full` templates are only in the full catalogue (Pro+)
+const TEMPLATES = [
+  { name: "Studio portfolio", full: false },
+  { name: "SaaS launch", full: true },
+  { name: "Agency showcase", full: false },
+  { name: "Product story", full: true },
+  { name: "Event microsite", full: false },
+  { name: "Personal site", full: true },
+];
+
+const LABEL = "text-[0.7vw] uppercase tracking-[0.1em] max-md:text-[2.8vw]";
+
+const PLUS = [{ x1: 5, y1: 12, x2: 19, y2: 12 }, { x1: 12, y1: 5, x2: 12, y2: 19 }];
+const CHECK = [{ x1: 5, y1: 12.5, x2: 9.2, y2: 16.5 }, { x1: 9.2, y1: 16.5, x2: 19, y2: 7 }];
+// The site's colour tokens (globals.css), read for gsap, which can't tween CSS variables
+const token = (name, alpha = 1) => {
+  const hex = getComputedStyle(document.documentElement).getPropertyValue(name).trim().replace("#", "");
+  const [r, g, b] = [0, 2, 4].map((i) => parseInt(hex.slice(i, i + 2), 16));
+  return `rgba(${r},${g},${b},${alpha})`;
+};
+const redeemColors = (done) => (done
+  ? { backgroundColor: token("--primary"), borderColor: token("--primary") }
+  : { backgroundColor: token("--primary", 0), borderColor: token("--background", 0.15) });
+
+// Redeem button: on click the fill sweeps to orange, the plus morphs into a
+// check (its two strokes become the two legs of the tick), and the label rolls.
+function RedeemButton({ done, label, disabled, onClick }) {
+  const btnRef = useRef(null);
+  const lineRefs = useRef([]);
+  const first = useRef(true);
+
+  useEffect(() => {
+    const quick = first.current || prefersReducedMotion();
+    first.current = false;
+    const ends = done ? CHECK : PLUS;
+    const motion = { duration: 0.9, ease: "expo.inOut" };
+    if (quick) {
+      gsap.set(btnRef.current, redeemColors(done));
+      lineRefs.current.forEach((l, i) => gsap.set(l, { attr: { ...ends[i] } }));
+      return;
+    }
+    gsap.to(btnRef.current, { ...redeemColors(done), ...motion });
+    lineRefs.current.forEach((l, i) => gsap.to(l, { attr: { ...ends[i] }, ...motion }));
+  }, [done]);
+
+  return (
+    <button
+      ref={btnRef}
+      type="button"
+      disabled={disabled}
+      onClick={onClick}
+      className={`flex w-full cursor-pointer items-center justify-center gap-[0.6vw] rounded-none border py-[0.8vw] text-background transition-opacity duration-700 disabled:cursor-default max-md:gap-[2vw] max-md:py-[3vw] ${done ? "border-primary bg-primary" : "border-background/15 disabled:opacity-40"} ${LABEL}`}
+    >
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="square" aria-hidden="true" className="size-[1vw] max-md:size-[4vw]">
+        {(done ? CHECK : PLUS).map((p, i) => (
+          <line key={i} ref={(el) => { lineRefs.current[i] = el; }} {...p} />
+        ))}
+      </svg>
+      <RollText text={label} className="text-center" />
+    </button>
+  );
+}
+
 export default function PricingCredits() {
   const rootRef = useRef(null);
   const coinRefs = useRef([]);
   const artRefs = useRef([]);
   const fliesRef = useRef(new Set());
-  const yearly = useBilling();
+  const toggleRef = useRef(null);
+  const clipRef = useRef(null);
+  const pillPlaced = useRef(false);
   const { sound } = useInteraction() ?? {};
-  const total = yearly ? CREDITS.yearly : CREDITS.monthly;
-  const [wallet, setWallet] = useState({ yearly, owned: [], pending: [] });
-  const refill = () => setWallet({ yearly, owned: [], pending: [] });
-
-  // Refill whenever the plan changes (adjusted during render, not in an effect)
-  if (wallet.yearly !== yearly) refill();
+  const [planId, setPlanId] = useState("plus");
+  const [wallet, setWallet] = useState({ owned: [], pending: [] });
+  const plan = PLAN_OPTIONS.find((p) => p.id === planId);
   const { owned, pending } = wallet;
+  const left = plan.credits - owned.length - pending.length;
 
   useFadeUp(rootRef);
 
-  // Kill any coin still in flight on unmount
+  // The plan pill glides under the chosen option. It is a light copy of the
+  // labels clipped to the chosen option, so the fill and the dark text move
+  // as one and stay in step.
+  useLayoutEffect(() => {
+    const root = toggleRef.current;
+    const place = (animate) => {
+      const on = root.querySelector('[aria-checked="true"]');
+      if (!on || !clipRef.current) return;
+      const { offsetLeft: l, offsetTop: t, offsetWidth: w, offsetHeight: h } = on;
+      const clipPath = `inset(${t}px ${root.clientWidth - l - w}px ${root.clientHeight - t - h}px ${l}px)`;
+      if (animate && pillPlaced.current && !prefersReducedMotion()) gsap.to(clipRef.current, { clipPath, duration: 0.8, ease: "expo.out", overwrite: true });
+      else gsap.set(clipRef.current, { clipPath });
+      pillPlaced.current = true;
+    };
+    place(true);
+    // Only real resizes re-place it: the observer's first callback would snap an animation to its end
+    let ready = false;
+    const ro = new ResizeObserver(() => { if (ready) place(false); ready = true; });
+    ro.observe(root);
+    return () => ro.disconnect();
+  }, [planId]);
+
+
+  // Kill any credit still in flight on unmount
   useEffect(() => {
     const flies = fliesRef.current;
     return () => {
@@ -42,13 +133,18 @@ export default function PricingCredits() {
     };
   }, []);
 
-  const spent = owned.length + pending.length;
-  const left = total - spent;
+  const refill = () => setWallet({ owned: [], pending: [] });
+  const choose = (id) => {
+    if (id === planId) return;
+    setPlanId(id);
+    refill();
+    sound?.note?.(id === "plus" ? 3 : 1);
+  };
 
-  // A coin that lands after a refill no longer counts: it left the old wallet
+  // A credit that lands after a refill no longer counts: it left the old wallet
   const own = (i) =>
     setWallet((w) => (w.pending.includes(i)
-      ? { ...w, pending: w.pending.filter((x) => x !== i), owned: [...w.owned, i] }
+      ? { pending: w.pending.filter((x) => x !== i), owned: [...w.owned, i] }
       : w));
 
   const redeem = (i) => {
@@ -64,8 +160,13 @@ export default function PricingCredits() {
     const from = coin.getBoundingClientRect();
     const to = art.getBoundingClientRect();
     const el = document.createElement("i");
-    el.className = "pr-credit-fly";
     el.textContent = left;
+    Object.assign(el.style, {
+      position: "fixed", zIndex: "90", pointerEvents: "none", display: "flex",
+      alignItems: "center", justifyContent: "center", fontStyle: "normal", color: token("--background"),
+      background: token("--primary"), width: `${from.width}px`, height: `${from.height}px`,
+      marginLeft: `${-from.width / 2}px`, marginTop: `${-from.height / 2}px`,
+    });
     document.body.appendChild(el);
     const fly = { el, tweens: [] };
     fliesRef.current.add(fly);
@@ -89,55 +190,106 @@ export default function PricingCredits() {
   };
 
   const note = left
-    ? `${left} credit${left > 1 ? "s" : ""} left on Pro ${yearly ? "yearly" : "monthly"}`
-    : `Wallet empty. That\u2019s ${yearly ? "a year" : "a month"} of templates, owned forever.`;
+    ? `${left} credit${left > 1 ? "s" : ""} left · ${plan.note}`
+    : "Wallet empty. That’s a year of templates, owned forever.";
+  // Spending a credit rolls the note up, refilling rolls it down
+  const prevLeft = useRef(left);
+  const dir = Math.sign(prevLeft.current - left) || 1;
+  useEffect(() => { prevLeft.current = left; }, [left]);
 
   return (
-    <section ref={rootRef} className="credits" id="credits">
-      <div className="cr-head">
-        <p className="eyebrow label fadeup">Template credits</p>
-        <LineReveal as="h2" className="display d2">
-          One credit. <span className="gradient-text-animate">One whole site.</span>
-        </LineReveal>
-        <p className="body fadeup">
-          A credit unlocks one complete template: every page, section and interaction, as source
-          code you own. Try it: spend your credits below.
-        </p>
-      </div>
-      <div className="cr-play fadeup">
-        <div className="wallet">
-          <div className="wallet-top">
-            <span className="label">Your wallet</span>
-            <BillingToggle small label="Plan for this demo" />
-          </div>
-          <div className="coins">
-            {Array.from({ length: total }, (_, i) => (
-              <i key={i} ref={(el) => { coinRefs.current[i] = el; }} className={`tok${i < left ? "" : " dim"}`}>
-                {i + 1}
-              </i>
-            ))}
-          </div>
-          <p className="wallet-note" aria-live="polite">{note}</p>
-          <button type="button" className="cta3 label wallet-reset" onClick={refill}>
-            <span className="t3">Reset wallet</span>
-          </button>
+    <section ref={rootRef} id="credits" className="relative bg-foreground px-[4.5vw] py-[7%] font-avenir text-background max-md:px-[5vw] max-sm:px-[7vw]">
+      <div className="mx-auto flex w-full max-w-[1536px] flex-col gap-[3vw] max-md:gap-[8vw]">
+        <div className="flex flex-col gap-[1.8vw] max-md:gap-[5vw]">
+          <p className={`fadeup flex items-center gap-[0.6vw] text-background/60 max-md:gap-[2vw] ${LABEL}`}>
+          
+          </p>
+          <LineReveal as="h2" className="text64 text-[4.6vw]! max-md:text-[6vw]! max-sm:text-[9vw]!">
+            One credit.<br />
+            <span className="gradient-text-animate">One whole site.</span>
+          </LineReveal>
+          <p className={`fadeup text22 font-avenir text-[1.1vw]! leading-[1.6]! max-md:text-[2.2vw]! max-sm:text-[4.1vw]! w-[40%] text-background/60 max-md:w-full`}>
+            A credit unlocks one complete template: every page, section and interaction, as source code you own. Try it: spend your credits below.
+          </p>
         </div>
-        <ul className="shelf">
-          {DEMO_TEMPLATES.map((name, i) => {
-            const isOwned = owned.includes(i);
-            return (
-              <li key={name} className={`tp${isOwned ? " owned" : ""}`}>
-                <div ref={(el) => { artRefs.current[i] = el; }} className="tp-art" aria-hidden="true"><i /><i /><i /></div>
-                <div className="tp-meta"><b>{name}</b></div>
-                <button type="button" className="tp-b label" disabled={isOwned || (!left && !pending.includes(i))} onClick={() => redeem(i)}>
-                  {isOwned ? "Yours ✓" : "Redeem"}
+
+        <div className="fadeup flex items-stretch gap-[1vw] max-md:flex-col max-md:gap-[3vw]">
+          <div className="relative flex w-[30%] flex-col gap-[1.4vw] overflow-hidden bg-background p-[2vw] text-foreground max-md:w-full max-md:gap-[5vw] max-md:p-[6vw]">
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(90%_60%_at_0%_0%,color-mix(in_srgb,var(--primary)_30%,transparent),transparent_60%)]" />
+            <p className={`relative text-foreground/50 ${LABEL}`}>Your wallet</p>
+
+            <div ref={toggleRef} role="radiogroup" aria-label="Plan for this demo" className="relative isolate flex w-fit border border-foreground/10 bg-foreground/5 p-[0.3vw] max-md:p-[1vw]">
+              {PLAN_OPTIONS.map((p) => (
+                <button
+                  key={p.id}
+                  type="button"
+                  role="radio"
+                  aria-checked={p.id === planId}
+                  onClick={() => choose(p.id)}
+                  className={`cursor-pointer rounded-none px-[1.2vw] py-[0.7vw] text-foreground/60 max-md:px-[4vw] max-md:py-[2.4vw] ${LABEL}`}
+                >
+                  {p.label}
                 </button>
-              </li>
-            );
-          })}
-        </ul>
+              ))}
+              <div ref={clipRef} aria-hidden="true" className="pointer-events-none absolute inset-0 flex bg-foreground p-[0.3vw] max-md:p-[1vw]">
+                {PLAN_OPTIONS.map((p) => (
+                  <span key={p.id} className={`px-[1.2vw] py-[0.7vw] text-background max-md:px-[4vw] max-md:py-[2.4vw] ${LABEL}`}>{p.label}</span>
+                ))}
+              </div>
+            </div>
+
+            <div className="relative min-h-[3vw] max-md:min-h-[12vw]">
+              <CreditTiles
+                count={plan.credits}
+                used={left}
+                sizeClass="size-[2.6vw] text-[0.8vw] max-md:size-[10vw] max-md:text-[3.2vw]"
+                onTile={(i, el) => { coinRefs.current[i] = el; }}
+              />
+            </div>
+
+            <RollText fixed text={note} dir={dir} className="relative h-[4vw] text-[1vw] leading-[1.6] text-foreground/60 max-md:h-[16vw] max-md:text-[3.8vw]" />
+            <div className="relative mt-auto">
+              <ButtonV3 text="Reset wallet" variant="outline" preventDefault onClick={refill} className="w-fit" />
+            </div>
+          </div>
+
+          <ul className="flex w-[70%] flex-wrap content-start gap-[1vw] max-md:w-full max-md:gap-[3vw]">
+            {TEMPLATES.map((t, i) => {
+              const isOwned = owned.includes(i);
+              const locked = t.full && !plan.full;
+              const unavailable = !isOwned && (locked || (!left && !pending.includes(i)));
+              return (
+                <li key={t.name} className={`flex w-[32%] flex-col gap-[0.8vw] bg-foreground p-[0.8vw] transition-shadow duration-700 max-md:w-[48%] max-md:gap-[3vw] max-md:p-[2.4vw] ${isOwned ? "shadow-[inset_0_0_0_0.1vw_var(--primary)]" : "shadow-[inset_0_0_0_0.1vw_color-mix(in_srgb,var(--background)_10%,transparent)]"}`}>
+                  <div
+                    ref={(el) => { artRefs.current[i] = el; }}
+                    aria-hidden="true"
+                    className={`relative aspect-[16/10] w-full overflow-hidden ${isOwned ? "bg-linear-to-br from-primary/20 to-dark-card" : "bg-background/10"}`}
+                  >
+                    <i className={`absolute top-[14%] left-[8%] h-[14%] w-[52%] transition-colors duration-1000 ${isOwned ? "bg-primary" : "bg-background/15"}`} />
+                    <i className={`absolute top-[36%] left-[8%] h-[8%] w-[34%] transition-colors duration-1000 ${isOwned ? "bg-primary-hover" : "bg-background/15"}`} />
+                    <i className={`absolute top-[56%] left-[8%] h-[30%] w-[84%] transition-colors duration-1000 ${isOwned ? "bg-grey" : "bg-background/15"}`} />
+                  </div>
+                  <div className="flex flex-col gap-[0.3vw] max-md:gap-[1vw]">
+                    <p className="text-[1.1vw] tracking-[-0.02em] max-md:text-[4vw]">{t.name}</p>
+                    <p className={`flex items-center gap-[0.4vw] max-md:gap-[1.4vw] ${LABEL} ${t.full ? "text-background/60" : "text-primary"}`}>
+                      {!t.full && <span aria-hidden="true">✦</span>}
+                      {t.full ? "Full catalogue" : "Selected catalogue"}
+                    </p>
+                  </div>
+                  <RedeemButton
+                    done={isOwned || pending.includes(i)}
+                    label={isOwned || pending.includes(i) ? "Yours" : locked ? "Pro+ only" : "Redeem"}
+                    disabled={isOwned || unavailable || pending.includes(i)}
+                    onClick={() => redeem(i)}
+                  />
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+
+        <p className={`text-light-grey ${LABEL}`}>Template names are examples. This wallet is a demo and isn’t linked to your account.</p>
       </div>
-      <p className="cr-fine label">Template names are examples. This wallet is a demo and isn&rsquo;t linked to your account.</p>
     </section>
   );
 }
