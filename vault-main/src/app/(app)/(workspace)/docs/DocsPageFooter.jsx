@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
+import gsap from "gsap";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -33,6 +34,53 @@ function FeedbackButton({ active, onClick, children }) {
   );
 }
 
+function feedbackMessage(vote) {
+  if (vote === "yes") return "Thanks. Glad it helped.";
+  if (vote === "no") {
+    return (
+      <>
+        Thanks. Tell us what was missing at{" "}
+        <a href="mailto:hello@hyperiux.com" className="text-primary underline underline-offset-4">hello@hyperiux.com</a>.
+      </>
+    );
+  }
+  return null;
+}
+
+// Rolls the message: the old one leaves through the top while the new one rises from below.
+function FeedbackMessage({ vote }) {
+  const currentRef = useRef(null);
+  const outgoingRef = useRef(null);
+  const previous = useRef(null);
+  const [outgoing, setOutgoing] = useState(null);
+
+  useLayoutEffect(() => {
+    const was = previous.current;
+    if (was === vote) return;
+    previous.current = vote;
+    gsap.fromTo(currentRef.current, { yPercent: 100, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.6, ease: "power3.out" });
+    if (was) setOutgoing(was);
+  }, [vote]);
+
+  useLayoutEffect(() => {
+    if (!outgoing) return;
+    gsap.fromTo(
+      outgoingRef.current,
+      { yPercent: 0, opacity: 1 },
+      { yPercent: -100, opacity: 0, duration: 0.6, ease: "power3.out", onComplete: () => setOutgoing(null) }
+    );
+  }, [outgoing]);
+
+  return (
+    <p aria-live="polite" className={`relative m-0! overflow-hidden ${label} text-[#1D1D1D]!`}>
+      <span ref={currentRef} className="block">{feedbackMessage(vote)}</span>
+      {outgoing && (
+        <span ref={outgoingRef} aria-hidden="true" className="absolute left-0 top-0 block w-full">{feedbackMessage(outgoing)}</span>
+      )}
+    </p>
+  );
+}
+
 // The site buttons' pixelated arrow (ButtonV3), sized to the label's cap height
 function PagerArrow({ className = "" }) {
   return (
@@ -50,8 +98,8 @@ function PagerCard({ page, direction }) {
       href={page.href}
       // The site's full page transition (PageTransition), not the docs' in-place fade
       data-page-transition
-      className={`group flex flex-col gap-3 border border-white/10 bg-white/[.03] p-6 transition-colors duration-300 hover:border-primary/60 hover:bg-primary/[.06] ${
-        next ? "col-start-2 items-end text-right max-sm:col-start-1" : "items-start"
+      className={`group flex flex-col gap-3 border border-white/10 bg-white/[.03] p-6 max-md:p-[4vw] transition-colors duration-300 hover:border-primary/60 hover:bg-primary/[.06] max-md:text-center ${
+        next ? "col-start-2 items-end max-md:text-center max-md:items-center text-right" : "items-start max-md:items-center"
       }`}
     >
       <span className={`${label} flex items-center gap-2.5 leading-none text-white/50 transition-colors duration-300 group-hover:text-primary`}>
@@ -59,7 +107,7 @@ function PagerCard({ page, direction }) {
         {next ? "Next" : "Previous"}
         {/* {next && <PagerArrow className="group-hover:translate-x-1" />} */}
       </span>
-      <span className="text-[clamp(1.4rem,2vw,2rem)] leading-none tracking-[-.03em] text-white">{page.label}</span>
+      <span className="text-[clamp(1.4rem,2vw,2rem)] max-md:text-[5vw] leading-none tracking-[-.03em] text-white">{page.label}</span>
     </Link>
   );
 }
@@ -79,19 +127,11 @@ export default function DocsPageFooter() {
           <FeedbackButton active={vote === "yes"} onClick={() => setVote("yes")}>Yes</FeedbackButton>
           <FeedbackButton active={vote === "no"} onClick={() => setVote("no")}>Not quite</FeedbackButton>
         </div>
-        <p aria-live="polite" className={`m-0! ${label} text-[#1D1D1D]!`}>
-          {vote === "yes" && "Thanks. Glad it helped."}
-          {vote === "no" && (
-            <>
-              Thanks. Tell us what was missing at{" "}
-              <a href="mailto:hello@hyperiux.com" className="text-primary underline underline-offset-4">hello@hyperiux.com</a>.
-            </>
-          )}
-        </p>
+        <FeedbackMessage vote={vote} />
       </div>
 
       {(prev || next) && (
-        <nav aria-label="Docs pages" className="grid grid-cols-2 gap-4 max-sm:grid-cols-1">
+        <nav aria-label="Docs pages" className="grid grid-cols-2 gap-4">
           {prev && <PagerCard page={prev} direction="prev" />}
           {next && <PagerCard page={next} direction="next" />}
         </nav>

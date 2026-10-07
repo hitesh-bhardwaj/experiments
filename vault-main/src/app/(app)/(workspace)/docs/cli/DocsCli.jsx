@@ -295,7 +295,7 @@ export default function DocsCli() {
 
       <Para>It is a flashlight. Not a priest.</Para>
 
-      <Heading2 id="init" className="text-[#addb67]!">init</Heading2>
+      <Heading2 id="init">init</Heading2>
 
       <Para>Prepares your project for Vault effects.</Para>
 
@@ -327,7 +327,7 @@ export default function DocsCli() {
 
       <Para>If your components live somewhere else, tell Vault where the floor is.</Para>
 
-      <Heading2 id="add" className="text-[#addb67]!">add</Heading2>
+      <Heading2 id="add">add</Heading2>
 
       <Para>Adds an effect to your workspace.</Para>
 
@@ -364,7 +364,7 @@ export default function DocsCli() {
 
       <Para>No drive-by Three.js.</Para>
 
-      <Heading2 id="list" className="text-[#addb67]!">list</Heading2>
+      <Heading2 id="list">list</Heading2>
 
       <Para>List all the available effects.</Para>
 
@@ -376,7 +376,7 @@ export default function DocsCli() {
 
       <Para>Use this when you want to confirm what the CLI has already added.</Para>
 
-      <Heading2 id="login" className="text-[#addb67]!">login</Heading2>
+      <Heading2 id="login">login</Heading2>
 
       <Para>Connect your account to the CLI.</Para>
 
@@ -389,7 +389,7 @@ export default function DocsCli() {
 
       <Para>Interactive login keeps tokens out of shell history.</Para>
 
-      <Heading2 id="logout" className="text-[#addb67]!">logout</Heading2>
+      <Heading2 id="logout">logout</Heading2>
 
       <Para>Disconnect your account from the CLI.</Para>
 
@@ -400,7 +400,7 @@ export default function DocsCli() {
         project or machine.
       </Para>
 
-      <Heading2 id="whoami" className="text-[#addb67]!">whoami</Heading2>
+      <Heading2 id="whoami">whoami</Heading2>
 
       <Para>Show the currently connected account.</Para>
 

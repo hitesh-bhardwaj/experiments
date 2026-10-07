@@ -54,9 +54,9 @@ function DocsHero({ pathname, meta }) {
     <section className="pb-[10vw]">
       <Breadcrumb />
       {hero && (
-        <div className="mt-7 max-w-[980px] space-y-[1.5vw]">
+        <div className="mt-7 max-w-[980px] space-y-[1.5vw] max-md:space-y-[4vw]">
           <h1 className="fadeup font-aeonik t96 font-normal leading-[1.02] text-white">{hero.title}</h1>
-          <p className="fadeup max-w-[40vw] font-avenir text-[1.2vw] leading-[1.3] tracking-[-.02em] text-[#d6d6d6]">{hero.lede}</p>
+          <p className="fadeup max-w-[40vw] max-md:max-w-[90%] font-avenir text-[1.2vw] max-md:text-[4vw] leading-[1.3] tracking-[-.02em] text-[#d6d6d6]">{hero.lede}</p>
           {/* Read time · sections · search, hidden for now
           <div className="fadeup mt-[30px] flex flex-wrap items-center gap-x-3.5 gap-y-2.5 text-[13px] uppercase tracking-[.08em] text-[#8a8a8a]">
             {meta.read && <span>{meta.read}</span>}
@@ -213,7 +213,7 @@ export default function DocsBody({ children }) {
           {/* White sheet (Docs prototype's .sheet), square-edged, under the content, the
               docs footer and the TOC column. Code blocks stay dark. */}
           {/* Full width: the negative margins cancel the docs layout's side padding (px-14 / 6vw / 7vw) */}
-          <div data-sound-flow="off" className="docs-sheet grid gap-10 grid-cols-[minmax(0,1fr)_320px] max-lg:grid-cols-1 -mx-14 max-lg:-mx-[6vw] max-md:mx-[-7vw] px-[clamp(20px,3.4vw,56px)] py-[4vw]">
+          <div data-sound-flow="off" className="docs-sheet grid gap-10 grid-cols-[minmax(0,1fr)_320px] max-lg:grid-cols-1 -mx-14 max-lg:-mx-[6vw] max-md:mx-[-7vw] px-[clamp(20px,3.4vw,56px)] max-md:px-[7vw] py-[4vw]">
             <div ref={contentRef} className="min-w-0" onClick={onContentClick}>
               <div className="blog-content">
                 {children}
