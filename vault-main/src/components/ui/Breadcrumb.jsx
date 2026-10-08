@@ -69,7 +69,7 @@ export function Breadcrumb({ className = "", lastItemClassName = "", maxWords })
               <span
                 title={item.label}
                 className={[
-                  "capitalize text-primary text20",
+                  "capitalize text-primary type-body",
                   lastItemClassName,
                 ]
                   .filter(Boolean)
@@ -81,7 +81,7 @@ export function Breadcrumb({ className = "", lastItemClassName = "", maxWords })
               <Link
                 href={item.href}
                 scroll={false}
-                className="capitalize text20 transition-colors hover:text-primary"
+                className="capitalize type-body transition-colors hover:text-primary"
               >
                 {item.label}
               </Link>

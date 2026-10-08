@@ -43,7 +43,7 @@ const clamp01 = (v) => Math.max(0, Math.min(1, v));
 
 // Shared card shell and small uppercase label
 const CARD = "relative isolate flex aspect-[16/11] flex-col overflow-hidden bg-dark-card text-foreground max-md:aspect-[4/5]";
-const LABEL = "font-avenir text-[0.7vw] font-medium uppercase tracking-[0.1em] max-md:text-[2.8vw]";
+const LABEL = "type-label";
 
 // Site colour tokens for the canvases (globals.css)
 const cssColor = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
@@ -294,8 +294,8 @@ export function VoteCard() {
               className={`flex items-center justify-between gap-[1vw] px-[1.1vw] py-[1vw] ring-1 ring-inset transition-[background-color,box-shadow] duration-700 ease-[cubic-bezier(.16,1,.3,1)] max-md:gap-[3.5vw] max-md:px-[4vw] max-md:py-[3.5vw] ${on ? "bg-primary/10 ring-primary/45" : "bg-black/20 ring-foreground/10 backdrop-blur-lg"}`}
             >
               <div className="flex min-w-0 flex-col gap-0.5">
-                <span className="text24 font-aeonik text-foreground">{VOTE_IDEAS[i].title}</span>
-                <span className="text18 text-foreground/50">{VOTE_IDEAS[i].text}</span>
+                <span className="type-h3 text-foreground">{VOTE_IDEAS[i].title}</span>
+                <span className="type-small text-foreground/50">{VOTE_IDEAS[i].text}</span>
               </div>
               <button
                 type="button"
@@ -363,7 +363,7 @@ export function CritiqueCard() {
               className={`group/pin absolute -top-[0.6vw] -ml-[0.6vw] size-[1.2vw] bg-primary transition-shadow duration-600 ease-[cubic-bezier(.16,1,.3,1)] hover:ring-[0.5vw] hover:ring-primary/30 focus-visible:ring-[0.5vw] focus-visible:ring-primary/30 max-md:-top-[2.3vw] max-md:-ml-[2.3vw] max-md:size-[4.6vw] ${activePin === i ? "ring-[0.5vw] ring-primary/30" : "ring-[0.3vw] ring-primary/20"}`}
             >
               <span
-                className={`pointer-events-none absolute bottom-[calc(100%+0.8vw)] w-[17vw] bg-light px-[1vw] py-[0.8vw] text-left text18 leading-[1.4] text-ink transition-opacity duration-500 ease-[cubic-bezier(.16,1,.3,1)] group-hover/pin:opacity-100 group-focus-visible/pin:opacity-100 max-md:w-[52vw] max-md:px-[3.5vw] max-md:py-[3vw] ${activePin === i ? "opacity-100" : "opacity-0"} ${i === 0 ? "-left-[1.4vw]" : i === CRIT_PINS.length - 1 ? "-right-[1.4vw]" : "left-1/2 -translate-x-1/2"}`}
+                className={`pointer-events-none absolute bottom-[calc(100%+0.8vw)] w-[17vw] bg-light px-[1vw] py-[0.8vw] text-left type-small text-ink transition-opacity duration-500 ease-[cubic-bezier(.16,1,.3,1)] group-hover/pin:opacity-100 group-focus-visible/pin:opacity-100 max-md:w-[52vw] max-md:px-[3.5vw] max-md:py-[3vw] ${activePin === i ? "opacity-100" : "opacity-0"} ${i === 0 ? "-left-[1.4vw]" : i === CRIT_PINS.length - 1 ? "-right-[1.4vw]" : "left-1/2 -translate-x-1/2"}`}
               >
                 <b className="block font-bold text-[#B34A00]">{pin.who}</b> {pin.text}
               </span>
@@ -382,7 +382,7 @@ export function FeaturedCard({ joined }) {
       <CardFluid />
       <div className="relative flex aspect-[4/5] w-[78%] max-w-[29vw] flex-col justify-end gap-[0.7vw] overflow-hidden bg-black/20 p-[1.8vw] ring-1 ring-inset ring-primary/45 backdrop-blur-lg max-md:max-w-none max-md:gap-[2.5vw] max-md:p-[6.6vw] after:absolute after:-top-[30%] after:-right-[30%] after:aspect-square after:w-4/5 after:bg-[radial-gradient(circle,color-mix(in_srgb,var(--primary)_45%,transparent),transparent_65%)] after:content-['']">
         <p className={`${LABEL} relative text-[#FFB27A]`}>Featured on Vault · this week</p>
-        <p className="text32 relative font-aeonik tracking-tight text-foreground">Your work<br />could be here.</p>
+        <p className="type-h2 relative text-foreground">Your work<br />could be here.</p>
         <p className={`${LABEL} relative text-foreground/60`}>by <span className="text-foreground">{joined ? "you, founding member" : "you"}</span></p>
       </div>
     </div>

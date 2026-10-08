@@ -18,7 +18,7 @@ import Button from "@/homepage/components/Button";
 import { useTemplateWishlist } from "../useTemplateWishlist";
 import { useTemplateAccess } from "../useTemplateAccess";
 import { TemplateCard } from "../TemplateCard";
-import { BADGE, DISPLAY, PRICE, GUTTER, LABEL, T13, T14, T16, catalogueOf, priceOf } from "../tokens";
+import { BADGE, GUTTER, LABEL, T13, T14, T16, catalogueOf, priceOf } from "../tokens";
 import { GetTemplateModal } from "./GetTemplateModal";
 
 // three.js only loads when the exploded view is shown.
@@ -226,11 +226,11 @@ export function TemplateDetail({ template, templateAccess = { allowed: false, re
         <div className="flex items-start justify-between gap-12 max-lg:flex-col max-lg:gap-10">
           <div className="sticky top-[20%] flex h-fit w-[57%] flex-col gap-6 max-lg:static max-lg:w-full">
             <HeadAnim rotate={0} animateOnScroll={false} delay={0.5}>
-              <h1 className={`${DISPLAY} t96 font-aeonik`}>{template.title}</h1>
+              <h1 className="type-display">{template.title}</h1>
             </HeadAnim>
             {template.tagline && (
               <Copy animateOnScroll={false} delay={0.7}>
-                <p className="text22 w-[85%] leading-[1.3] text-foreground max-lg:w-full">{template.tagline}</p>
+                <p className="type-body-lg w-[85%] text-foreground max-lg:w-full">{template.tagline}</p>
               </Copy>
             )}
             <motion.div {...HERO_FADE} className="flex flex-wrap gap-1.5 pt-4">
@@ -263,7 +263,7 @@ export function TemplateDetail({ template, templateAccess = { allowed: false, re
             <div className="flex flex-col gap-4">
               {price != null && (
                 <p className="flex items-baseline gap-3">
-                  <b className={`${DISPLAY} ${PRICE} text64 leading-none`}>${price}</b>
+                  <b className="type-h1 leading-none">${price}</b>
                   <span className={`${LABEL} text-foreground/60`}>one-time or 1 template credit</span>
                 </p>
               )}
@@ -354,7 +354,7 @@ export function TemplateDetail({ template, templateAccess = { allowed: false, re
             <InsideCard title="Sections included" className="w-[calc((100%-0.9vw)/2)] max-md:w-full">
               <ol className="flex flex-col gap-2">
                 {(devices.desktop?.sections || []).map((s, i) => (
-                  <li key={`${s.name}-${i}`} className={`flex items-baseline gap-3 ${T16}`}>
+                  <li key={`${s.name}-${i}`} className="type-body flex items-baseline gap-3">
                     <span className={`font-mono ${T13} text-primary`}>{String(i + 1).padStart(2, "0")}</span>
                     {s.name}
                   </li>
@@ -389,7 +389,7 @@ export function TemplateDetail({ template, templateAccess = { allowed: false, re
           <section id="related-templates" className={`${GUTTER} flex flex-col gap-8`}>
             <div className="flex flex-wrap items-end justify-between gap-4">
               <HeadAnim rotate={0} by="words">
-                <h2 className={`${DISPLAY} text64 font-aeonik`}>
+                <h2 className="type-h1">
                   More <span className="gradient-text-animate">templates.</span>
                 </h2>
               </HeadAnim>

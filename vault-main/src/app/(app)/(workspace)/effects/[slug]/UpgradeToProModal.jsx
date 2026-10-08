@@ -86,10 +86,10 @@ export default function UpgradeToProModal({ open, onClose, reason = "pro-effect"
         </button>
 
         <div className="flex flex-col gap-2 pr-12">
-          <h2 id="upgrade-to-pro-title" className="text64 font-aeonik">
+          <h2 id="upgrade-to-pro-title" className="type-h1">
             Pro
           </h2>
-          <p className="text18 text-foreground/70">{REASON_COPY[shownReason] ?? REASON_COPY["pro-effect"]}</p>
+          <p className="type-small text-foreground/70">{REASON_COPY[shownReason] ?? REASON_COPY["pro-effect"]}</p>
         </div>
 
         <div className="flex justify-start max-md:justify-center">
@@ -98,17 +98,17 @@ export default function UpgradeToProModal({ open, onClose, reason = "pro-effect"
 
         <div className="flex flex-col gap-1">
           <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-            <p className="text80 flex items-center font-aeonik leading-none">
+            <p className="type-h1 flex items-center leading-none">
               <span className="sr-only">{`${symbol}${planPrice} ${planLabel.toLowerCase()}`}</span>
               <span aria-hidden="true" className="flex items-center leading-none">
                 <span>{symbol}</span>
                 <PriceDigits monthlyAmount={monthlyAmount} yearlyAmount={yearlyAmount} isYearly={isYearly} />
               </span>
             </p>
-            <p className="text22">{planLabel}</p>
+            <p className="type-body-lg">{planLabel}</p>
             <p
               aria-hidden={!isYearly}
-              className={`text22 text-primary transition-opacity [--link-flash:var(--primary)] [--link-pre:var(--primary)] ${
+              className={`type-body-lg text-primary transition-opacity [--link-flash:var(--primary)] [--link-pre:var(--primary)] ${
                 isYearly ? "opacity-100 duration-0" : "opacity-0 duration-300"
               }`}
             >

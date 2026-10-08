@@ -618,7 +618,7 @@ export function EffectsListing({
           {/* Keyed by page: SplitText owns the heading's text nodes, so a new page gets a
               fresh heading (and runs its entrance again) instead of a stale update. */}
           <HeadAnim key={scope || "all"} rotate={0} animateOnScroll={false}>
-            <h1 className={`${DISPLAY} t96 w-[58%] font-aeonik max-lg:w-full -mt-3`}>
+            <h1 className="type-display w-[58%] max-lg:w-full -mt-3">
               {scope ? (
                 <HeroTitle name={content?.name} />
               ) : (
@@ -635,7 +635,7 @@ export function EffectsListing({
               : ["Production-ready interaction effects for React and Next.js. Preview any of them live, then copy or install with one command."]
             ).map((paragraph, index) => (
               <Copy key={`${scope || "all"}-${index}`} animateOnScroll={false} delay={0.3 + index * 0.15}>
-                <p className={`w-full ${T16} text-foreground/80 max-lg:w-[70%] max-md:w-full`}>{paragraph}</p>
+                <p className="type-body-lg w-full text-foreground/80 max-lg:w-[70%] max-md:w-full">{paragraph}</p>
               </Copy>
             ))}
             <div data-v4-fade className={`${LABEL} flex flex-wrap gap-x-[2vw] gap-y-[0.7vw] max-md:gap-x-[7vw] max-md:gap-y-[2.5vw]`}>
@@ -852,7 +852,7 @@ export function EffectsListing({
           {/* grid */}
           {filtered.length === 0 ? (
             <div className="flex flex-col items-center gap-3.5 px-4 py-20 text-center">
-              <b className={`${DISPLAY} text32 font-aeonik tracking-tight`}>Nothing matches that, yet.</b>
+              <b className="type-h2">Nothing matches that, yet.</b>
               <p className={`w-[33%] ${T16} text-black/60 max-lg:w-[66%] max-md:w-full`}>Try a broader search, or clear a filter. New effects land in the vault regularly.</p>
               <button
                 type="button"
@@ -896,13 +896,13 @@ export function EffectsListing({
           <section id="upgrade" className={`${WRAP} pb-24 max-md:pb-16`}>
             <div className="relative flex items-start justify-between gap-8 overflow-hidden bg-ink px-10 py-12 text-light max-lg:flex-col max-lg:p-10 max-md:p-7">
               <div className="relative flex w-[65%] flex-col gap-3.5 max-lg:w-full">
-                <h2 className={`${DISPLAY} text64 font-aeonik`}>
+                <h2 className="type-h1">
                   Everything in the vault.{" "}
                   <span className="gradient-text-animate">
                     One plan.
                   </span>
                 </h2>
-                <p className="text24 w-full text-light/80 max-lg:w-[80%] max-md:w-full">
+                <p className="type-body-lg w-full text-light/80 max-lg:w-[80%] max-md:w-full">
                   Pro unlocks every component, section and template, with template credits and new drops as they land. Everything you copy stays in your repo.
                 </p>
               </div>

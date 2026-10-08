@@ -70,7 +70,7 @@ function recommend({ templates, copies, sections }) {
   return { key, period, plan, tier, label, why };
 }
 
-const LABEL = "text-[0.7vw] uppercase tracking-[0.1em] max-md:text-[2.8vw]";
+const LABEL = "type-label";
 // The homepage's tune slider: a thin track that fills with the brand colour up to the thumb
 const RANGE =
   "h-[1.4vw] w-full cursor-pointer appearance-none bg-transparent max-md:h-[6vw] " +
@@ -181,7 +181,7 @@ export default function PricingFinder() {
         <LineReveal as="h2" className={`type-h1 text-foreground w-[80%] max-md:w-[80%]`}>
           Not Sure? <span className="gradient-text-animate">Let’s Size it.</span>
         </LineReveal>
-        <p className={`fadeup text22 font-avenir leading-[1.6] w-[80%] text-foreground/60 max-md:w-full`}>
+        <p className="fadeup type-body-lg w-[80%] text-foreground/60 max-md:w-full">
           Tell us how you build. We’ll point you to the plan that fits, and show you exactly why.
         </p>
       </div>
@@ -216,13 +216,13 @@ export default function PricingFinder() {
 
         <div ref={outRef} aria-live="polite" className="flex w-[50%] flex-col gap-[1.2vw] border-l border-foreground/10 p-[2.4vw] max-md:w-full max-md:gap-[4vw] max-md:border-t max-md:border-l-0 max-md:p-[6vw]">
           <p data-pick className={`text-foreground/50 ${LABEL}`}>We’d pick</p>
-          <div className={`text80 flex items-center gap-[1vw] text-foreground max-md:gap-[3vw]`}>
+          <div className="type-h1 flex items-center gap-[1vw] text-foreground max-md:gap-[3vw]">
             <RollText text={rec.plan.name} dir={rec.key === "plus" ? 1 : -1} className="pb-[0.1em]" />
             <span ref={tagRef} className={`bg-primary/20 px-[0.7vw] py-[0.4vw] text-primary-hover max-md:px-[2vw] max-md:py-[1vw] ${LABEL}`}>
               {rec.period === "y" ? "Yearly" : "Quarterly"}
             </span>
           </div>
-          <p className={`text22 font-avenir leading-[1.6] flex items-baseline text-foreground`}>
+          <p className="type-body-lg flex items-baseline text-foreground">
             <span className="flex items-baseline">$<span className="relative top-[0.1em]"><RollNumber value={rec.tier.month} values={[7.42, 9, 14.92, 19]} /></span></span>
             <span data-pick className="text-foreground/50">/mo · {rec.tier.billed}</span>
           </p>

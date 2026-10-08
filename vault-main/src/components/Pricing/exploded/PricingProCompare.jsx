@@ -36,9 +36,9 @@ const ROWS = [
   { feature: "Team & agency seats", pro: "Agency licensing", plus: "Agency licensing" },
 ];
 
-const LABEL = "text-[0.7vw] uppercase tracking-[0.1em] max-md:text-[2.8vw]";
+const LABEL = "type-label";
 const CELL = "flex w-[30%] items-center px-[1.6vw] max-md:px-[4vw]";
-const TEXT = "text22 h-[1.5em] leading-[1.5em]";
+const TEXT = "type-body h-[1.7em]";
 
 function Mark({ on }) {
   return (
@@ -57,7 +57,7 @@ function Cell({ value, period, dir }) {
   const v = value !== null && typeof value === "object" ? value[period] : value;
   // Long text wraps to two lines on mobile, so its box is two lines tall
   const long = typeof v === "string" && v.length > 22;
-  return typeof v === "boolean" ? <Mark on={v} /> : <RollText fixed text={v} dir={dir} className={`w-full text-background/60 ${TEXT} ${long ? "max-md:h-[3em]!" : ""}`} />;
+  return typeof v === "boolean" ? <Mark on={v} /> : <RollText fixed text={v} dir={dir} className={`w-full text-background/60 ${TEXT} ${long ? "max-md:h-[3.3em]!" : ""}`} />;
 }
 
 export default function PricingProCompare() {
@@ -147,10 +147,10 @@ export default function PricingProCompare() {
         <div className="fadeup overflow-x-auto px-[3vw] max-md:px-[6vw]">
           <div role="table" aria-label="Pro and Pro+ compared" className="flex min-w-full  flex-col border border-background/10 bg-foreground max-md:min-w-[170vw]">
             <div role="row" className="flex border-b border-background/10">
-              <div role="columnheader" className="flex w-[40%] items-center px-[1.6vw] py-[2.2vw] text22 text-background/30 max-md:px-[4vw] max-md:py-[6vw]">Feature</div>
+              <div role="columnheader" className="flex w-[40%] items-center px-[1.6vw] py-[2.2vw] type-body text-background/30 max-md:px-[4vw] max-md:py-[6vw]">Feature</div>
               {[["pro", "Pro"], ["plus", "Pro+"]].map(([id, name]) => (
                 <div key={id} role="columnheader" className={`${CELL} flex-col items-start justify-center gap-[0.6vw] py-[2.2vw] max-md:gap-[2vw] max-md:py-[6vw] ${id === "plus" ? "bg-primary/5" : ""}`}>
-                  <p className="text32">{id === "plus" ? <>Pro<span className="text-primary">+</span></> : name}</p>
+                  <p className="type-h3">{id === "plus" ? <>Pro<span className="text-primary">+</span></> : name}</p>
                   <div className={`flex items-center text-background/60 max-md:flex-wrap ${LABEL}`}>
                     <span className="flex h-[1.2vw] items-center leading-none max-md:h-[4vw]">$<RollNumber value={PRICES[id][period]} values={[PRICES[id].q, PRICES[id].y]} /></span>
                     <span>/mo</span>
@@ -165,7 +165,7 @@ export default function PricingProCompare() {
               <i ref={hoverRef} aria-hidden="true" className="pointer-events-none absolute top-0 left-0 z-10 h-0 w-full bg-background/5 opacity-0" />
               {ROWS.map((row) => (
                 <div key={row.feature} role="row" className="flex border-b border-background/10 last:border-b-0" onPointerEnter={(e) => hoverRow(e.currentTarget)}>
-                  <div role="rowheader" className="flex w-[40%] items-center px-[1.6vw] py-[1.4vw] text22 max-md:px-[4vw] max-md:py-[4.6vw]">{row.feature}</div>
+                  <div role="rowheader" className="flex w-[40%] items-center px-[1.6vw] py-[1.4vw] type-body max-md:px-[4vw] max-md:py-[4.6vw]">{row.feature}</div>
                   <div role="cell" className={`${CELL} py-[1.4vw] max-md:py-[4.6vw]`}>
                     <Cell value={row.pro} period={period} dir={dir} />
                   </div>

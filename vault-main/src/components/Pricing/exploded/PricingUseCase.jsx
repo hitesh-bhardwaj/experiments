@@ -19,11 +19,11 @@ function UseCaseBox({ item }) {
   return (
     <article className="use-case-box relative w-full border border-t-0 border-background/15 first:border-t max-md:border-t">
       <div className="border-b border-background/15 px-[2vw] py-[2.5vw] max-md:px-[6vw] max-md:py-[7vw]">
-        <h3 className="text32 font-aeonik">{item.title}</h3>
+        <h3 className="type-h3">{item.title}</h3>
       </div>
 
       <div className="flex flex-col justify-between gap-[4vw] px-[2vw] py-[2.5vw] max-md:gap-[10vw] max-md:px-[6vw] max-md:py-[7vw]">
-        <p className="text22 w-[80%] font-avenir leading-[1.6] max-md:w-full">{item.text}</p>
+        <p className="type-body w-[80%] max-md:w-full">{item.text}</p>
         <LinkButton href={item.link} text={item.cta} prefetch={false} tilted={false} className="text-background!" />
       </div>
     </article>
@@ -61,7 +61,7 @@ export default function PricingUseCase({ useCases }) {
     <section ref={container} id="use-cases" data-sound-flow="off" className="overflow-x-clip bg-foreground px-[4.5vw] py-[7%] text-background max-md:px-[6vw] max-md:py-[15%]">
       <div className="mx-auto flex h-fit w-full max-w-[1536px] items-start justify-between max-md:flex-col max-md:gap-[10vw]">
         <MaskTextReveal stagger={0.08} scrub={false} duration={2} className="sticky top-[20vh] w-[45%] max-md:static max-md:w-full">
-          <h2 className="text64 font-aeonik">
+          <h2 className="type-h1">
             Built for teams where frontend is part of the brand & your interface needs to feel as premium as the product.
           </h2>
         </MaskTextReveal>

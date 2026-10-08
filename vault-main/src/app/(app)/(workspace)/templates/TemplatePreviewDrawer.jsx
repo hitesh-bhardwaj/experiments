@@ -225,7 +225,7 @@ export function TemplatePreviewDrawer({ template, templates = [], isWishlisted, 
           <div className="grid gap-6">
             {/* Catalogue sits beside the name at its usual small size. */}
             <div className="flex flex-wrap items-center gap-3">
-              <h2 id="tpl-drawer-title" className={`${DISPLAY} text64 font-aeonik`}>
+              <h2 id="tpl-drawer-title" className="type-h2">
                 {shown.title}
               </h2>
               <div className="mt-1.5 flex gap-1.5">

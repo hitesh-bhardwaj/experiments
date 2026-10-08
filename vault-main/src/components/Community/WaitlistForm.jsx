@@ -85,7 +85,7 @@ export default function WaitlistForm({ className = "" }) {
         onChange={(e) => { setEmail(e.target.value); if (error) setError(""); }}
         aria-invalid={!!error}
         aria-describedby={`${inputId}-msg`}
-        className={`text20 h-11 min-w-0 flex-1 border-0 bg-transparent text-foreground outline-none max-md:basis-full max-md:px-2.5 ${joined ? "placeholder:text-[#9fd9b9]" : "placeholder:text-foreground/40"}`}
+        className={`type-body h-11 min-w-0 flex-1 border-0 bg-transparent text-foreground outline-none max-md:basis-full max-md:px-2.5 ${joined ? "placeholder:text-[#9fd9b9]" : "placeholder:text-foreground/40"}`}
       />
       <button
         ref={buttonRef}
@@ -98,7 +98,7 @@ export default function WaitlistForm({ className = "" }) {
       >
         <ButtonChrome label={label} hovered={hovered} />
       </button>
-      <p id={`${inputId}-msg`} className={`font-avenir text-[0.7vw] font-medium tracking-[0.1em] uppercase absolute top-[calc(100%+0.7vw)] left-[1.2vw] min-h-[1em] text-left text-[#ff8a78] max-md:static max-md:basis-full max-md:px-2.5 max-md:py-1 max-md:text-[2.8vw]`} aria-live="polite">{error}</p>
+      <p id={`${inputId}-msg`} className={`type-label absolute top-[calc(100%+0.7vw)] left-[1.2vw] min-h-[1em] text-left text-[#ff8a78] max-md:static max-md:basis-full max-md:px-2.5 max-md:py-1`} aria-live="polite">{error}</p>
     </form>
   );
 }

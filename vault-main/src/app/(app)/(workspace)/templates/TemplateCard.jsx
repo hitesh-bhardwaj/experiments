@@ -7,7 +7,7 @@ import { ArrowUpRight, Download, Eye, Heart } from "lucide-react";
 import { Tooltip } from "@/components/ui/Tooltip";
 import { ICON_BTN } from "../effects/EffectCard";
 import { useTemplatePurchase } from "./useTemplatePurchase";
-import { BADGE, DISPLAY, PRICE, T11, T13, T14, T16, T18, T20, catalogueLabel, catalogueOf, priceOf } from "./tokens";
+import { BADGE, DISPLAY, PRICE, T11, T13, T14, T16, T18, catalogueLabel, catalogueOf, priceOf } from "./tokens";
 
 const formatViews = (n) => (n >= 1000 ? new Intl.NumberFormat("en", { notation: "compact", maximumFractionDigits: 1 }).format(n) : String(n));
 
@@ -107,7 +107,7 @@ export function TemplateCard({ template, priority = false, isWishlisted = false,
 
       <div className="flex flex-col gap-2">
         <div className="flex items-baseline justify-between gap-3">
-          <h3 className={`${DISPLAY} ${T20} flex min-w-0 flex-wrap items-center gap-2 font-aeonik font-medium`}>
+          <h3 className="type-h3 flex min-w-0 flex-wrap items-center gap-2 font-medium!">
             <Link href={href} prefetch={false} className="transition-colors duration-500 hover:text-primary">
               {template.title}
             </Link>

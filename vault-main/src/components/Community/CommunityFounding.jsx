@@ -25,7 +25,7 @@ export default function CommunityFounding() {
 
   return (
     <section ref={rootRef} className="mx-auto flex w-full max-w-[1536px] flex-col gap-[5vw] px-[4.5vw] py-[7%] max-md:gap-[10vw] max-md:px-[6vw]" id="founding" aria-labelledby="fd-h">
-      <LineReveal as="h2" id="fd-h" className="text80 w-[50%] font-aeonik font-normal max-[1025px]:w-[77%] max-md:w-full">
+      <LineReveal as="h2" id="fd-h" className="type-h1 w-[50%] max-[1025px]:w-[77%] max-md:w-full">
         The First Cohort <span className="gradient-text-animate gradient-text-single">Shapes the Room.</span>
       </LineReveal>
       <div className="flex items-start justify-between gap-[4vw] max-[1025px]:flex-col">
@@ -37,8 +37,8 @@ export default function CommunityFounding() {
                 {/* diamond sits on the title's line */}
                 <i aria-hidden="true" className="relative top-[0.6vw] size-[0.6vw] shrink-0 rotate-45 bg-primary max-md:top-[2.2vw] max-md:size-[2vw]" />
                 <div className="flex min-w-0 flex-col gap-1">
-                  <b className="text24 font-aeonik font-medium tracking-tight">{perk.title}</b>
-                  <span className="text18 text-light/60">{perk.text}</span>
+                  <b className="type-h3 font-medium!">{perk.title}</b>
+                  <span className="type-body text-light/60">{perk.text}</span>
                 </div>
               </li>
             ))}
@@ -47,10 +47,10 @@ export default function CommunityFounding() {
         <ol className="flex w-[43%] flex-col max-[1025px]:w-full">
           {STEPS.map((step, i) => (
             <li key={step.title} className="fadeup flex gap-[0.8vw] border-t border-black/10 py-[1.5vw] last:border-b max-md:gap-[3vw] max-md:py-[5.6vw]" data-fadeup-delay={i * 0.1}>
-              <span className="font-avenir text-[0.7vw] font-medium uppercase tracking-[0.1em] max-md:text-[2.8vw] relative top-[0.3vw] w-[3.3vw] shrink-0 text-primary max-md:top-[1vw] max-md:w-[12vw]">{String(i + 1).padStart(2, "0")}</span>
+              <span className="type-label relative top-[0.3vw] w-[3.3vw] shrink-0 text-primary max-md:top-[1vw] max-md:w-[12vw]">{String(i + 1).padStart(2, "0")}</span>
               <div className="flex min-w-0 flex-col gap-1">
-                <b className="text24 font-aeonik font-medium tracking-tight">{step.title}</b>
-                <p className="text20 text-black/60">{step.text}</p>
+                <b className="type-h3 font-medium!">{step.title}</b>
+                <p className="type-body text-black/60">{step.text}</p>
               </div>
             </li>
           ))}

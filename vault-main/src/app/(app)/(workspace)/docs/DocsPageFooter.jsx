@@ -15,7 +15,7 @@ const DOCS_PAGES = [
   { href: "/docs/license", label: "License" },
 ];
 
-const label = "text-[0.7vw] font-medium uppercase tracking-[0.2em] max-md:text-[2.8vw]";
+const label = "type-label";
 
 function FeedbackButton({ active, onClick, children }) {
   return (
@@ -107,22 +107,23 @@ function PagerCard({ page, direction }) {
         {next ? "Next" : "Previous"}
         {/* {next && <PagerArrow className="group-hover:translate-x-1" />} */}
       </span>
-      <span className="text32 leading-none tracking-tight text-foreground">{page.label}</span>
+      <span className="type-h3 leading-none text-foreground">{page.label}</span>
     </Link>
   );
 }
 
-export default function DocsPageFooter() {
+// `pages`: the ordered list Previous/Next walks through (docs by default; legal passes its own)
+export default function DocsPageFooter({ pages = DOCS_PAGES }) {
   const pathname = usePathname()?.replace(/\/$/, "") || "/docs";
   const [vote, setVote] = useState(null);
-  const index = DOCS_PAGES.findIndex((page) => page.href === pathname);
-  const prev = index > 0 ? DOCS_PAGES[index - 1] : null;
-  const next = index >= 0 && index < DOCS_PAGES.length - 1 ? DOCS_PAGES[index + 1] : null;
+  const index = pages.findIndex((page) => page.href === pathname);
+  const prev = index > 0 ? pages[index - 1] : null;
+  const next = index >= 0 && index < pages.length - 1 ? pages[index + 1] : null;
 
   return (
     <div className="flex flex-col gap-[1vw] border-t border-foreground/10 pt-[2.5vw] max-md:gap-[4vw] max-md:pt-[8vw]">
       <div className="flex flex-wrap items-center gap-[1.5vw] border border-foreground/10 p-[1.5vw] max-md:gap-[4vw] max-md:p-[5vw]">
-        <p className="text20 m-0! text-foreground">Was this page helpful?</p>
+        <p className="type-body m-0! text-foreground">Was this page helpful?</p>
         <div className="flex gap-[0.5vw] max-md:gap-[2vw]">
           <FeedbackButton active={vote === "yes"} onClick={() => setVote("yes")}>Yes</FeedbackButton>
           <FeedbackButton active={vote === "no"} onClick={() => setVote("no")}>Not quite</FeedbackButton>

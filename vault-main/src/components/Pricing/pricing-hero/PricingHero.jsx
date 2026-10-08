@@ -88,11 +88,11 @@ export default function PricingHero({ isIndia = false }) {
       />
       <div className="pointer-events-none relative z-2 mx-auto flex w-full max-w-[1536px] flex-col gap-[8vw] px-[4.5vw] pt-[8vw] pb-[3vw] max-md:gap-[12vw] max-md:px-[6vw] max-md:pt-[48svh] max-md:pb-10 [&_a]:pointer-events-auto [&_button]:pointer-events-auto">
         <div className="flex items-end justify-between gap-[3vw] max-md:flex-col max-md:items-stretch max-md:gap-[5vw]">
-          <LineReveal as="h1" className="t96 relative w-[58%] font-aeonik text-foreground max-md:w-full">
+          <LineReveal as="h1" className="type-display relative w-[58%] text-foreground max-md:w-full">
             Pick a Plan. <span className="gradient-text-animate block">Keep the Code.</span>
           </LineReveal>
           <div className="flex w-[32%] flex-col gap-[2vw] max-md:w-full max-md:gap-[5vw]">
-            <SplitLine as="p" start="top 120%" className="text22 w-full font-avenir leading-[1.6] text-foreground/80">
+            <SplitLine as="p" start="top 120%" className="type-body-lg w-full text-foreground/80">
               Two plans, Pro and Pro+, billed monthly or yearly. Every component you
               copy lands in your repo and stays yours, even if you cancel.
             </SplitLine>
@@ -102,7 +102,7 @@ export default function PricingHero({ isIndia = false }) {
             </div>
           </div>
         </div>
-        <p className="fadeup text-center text-[0.7vw] font-semibold uppercase tracking-[0.1em] text-foreground/40 max-md:text-[2.8vw]" aria-hidden="true">
+        <p className="fadeup type-label text-center text-foreground/40" aria-hidden="true">
           Hover a plan to take it apart · click to lock · hold to merge
         </p>
       </div>

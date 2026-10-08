@@ -111,7 +111,7 @@ function MenuItem({ children, trailing = null, onSelect, disabled = false, class
       role="menuitem"
       disabled={disabled}
       onClick={onSelect}
-      className={`group relative isolate flex w-full cursor-pointer items-center gap-3 px-3 py-2.5 text-left text18 leading-snug text-foreground outline-none disabled:cursor-not-allowed disabled:opacity-50 ${className}`}
+      className={`group relative isolate flex w-full cursor-pointer items-center gap-3 px-3 py-2.5 text-left type-small leading-snug text-foreground outline-none disabled:cursor-not-allowed disabled:opacity-50 ${className}`}
       {...props}
     >
       <span
@@ -143,7 +143,7 @@ function ProLockOverlay({ onUpgrade }) {
   return (
     <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-4 bg-dark-card/75 px-6 text-center backdrop-blur-lg">
       <LockKeyhole className="size-5 text-primary" aria-hidden="true" />
-      <p className="text18 leading-snug text-foreground/80">
+      <p className="type-small leading-snug text-foreground/80">
         Pro effect - upgrade to copy or install it.
       </p>
       <div className="contents" onPointerEnter={() => setHovered(true)} onPointerLeave={() => setHovered(false)}>
@@ -431,7 +431,7 @@ export default function GetCodeMenu({
           )}
           {view === "menu" ? (
             <div className="space-y-1" aria-hidden={codeLocked || undefined}>
-              <div className="flex items-center gap-2 px-3 pt-2 pb-1 text18 text-foreground">
+              <div className="flex items-center gap-2 px-3 pt-2 pb-1 type-small text-foreground">
                 Copy Code
                 {codeLocked && (
                   <span className="inline-flex items-center gap-1 normal-case tracking-normal text-primary">
@@ -515,7 +515,7 @@ export default function GetCodeMenu({
             </div>
           ) : (
             <div className="space-y-1 p-2">
-              <p className="px-2 pb-2 text18 leading-snug text-foreground">
+              <p className="px-2 pb-2 type-small leading-snug text-foreground">
                 Is the Hyperiux MCP installed in your project?
               </p>
               <MenuItem
@@ -530,7 +530,7 @@ export default function GetCodeMenu({
                 href="/docs/mcp"
                 role="menuitem"
                 onClick={close}
-                className="group relative isolate flex w-full items-center px-4 py-2.5 text18 text-foreground outline-none"
+                className="group relative isolate flex w-full items-center px-4 py-2.5 type-small text-foreground outline-none"
               >
                 <span
                   aria-hidden="true"

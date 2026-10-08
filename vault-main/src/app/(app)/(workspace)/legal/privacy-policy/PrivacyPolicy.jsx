@@ -11,7 +11,6 @@ import LinkButton from "@/components/WebsiteComps/LinkButton";
 export default function PrivacyPolicy() {
   return (
     <DocsContent className="max-w-none mx-0">
-      <Heading>Privacy Policy</Heading>
 
       <Para>
         Hyperiux Immersion Labs Private Limited (&quot;Hyperiux,&quot; &quot;we,&quot;

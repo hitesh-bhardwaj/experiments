@@ -51,12 +51,12 @@ function openDocsSearch() {
 function DocsHero({ pathname, meta }) {
   const hero = DOCS_HERO[pathname?.replace(/\/$/, "") || "/docs"];
   return (
-    <section id="docs-hero" className="mx-auto flex w-full max-w-[1536px] flex-col gap-7 px-[4.5vw] pb-[10vw] max-md:px-[6vw]">
+    <section id="docs-hero" className="mx-auto flex w-full max-w-[1536px] flex-col gap-7 px-[4.5vw] pb-[10vw] max-md:px-[6vw] max-md:pb-[20vw]">
       <Breadcrumb />
       {hero && (
         <div className="flex w-[65%] flex-col gap-[1.5vw] max-md:w-full max-md:gap-[4vw]">
-          <h1 className="fadeup t96 font-aeonik font-normal text-foreground">{hero.title}</h1>
-          <p className="fadeup text24 w-[70%] font-avenir leading-[1.3] tracking-tight text-foreground/80 max-md:w-[90%]">{hero.lede}</p>
+          <h1 className="fadeup type-display text-foreground">{hero.title}</h1>
+          <p className="fadeup type-body-lg w-[70%] text-foreground/80 max-md:w-[90%]">{hero.lede}</p>
           {/* Read time · sections · search, hidden for now
           <div className="fadeup mt-[30px] flex flex-wrap items-center gap-x-3.5 gap-y-2.5 text-[13px] uppercase tracking-[.08em] text-[#8a8a8a]">
             {meta.read && <span>{meta.read}</span>}
@@ -221,7 +221,7 @@ export default function DocsBody({ children }) {
               <DocsPageFooter />
             </div>
             {/* TOC lives in the sheet's right column, sticky at the vertical centre */}
-            <aside className="sticky top-1/2 flex h-fit w-[22%] shrink-0 -translate-y-1/2 justify-end max-[1025px]:hidden">
+            <aside className="sticky top-1/2 flex h-fit w-[22%] shrink-0 -translate-y-1/2 justify-end max-lg:hidden">
               <TableOfContents containerRef={contentRef} watchKey={pathname} hideNearFooter />
             </aside>
             </div>

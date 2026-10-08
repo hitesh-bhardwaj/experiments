@@ -12,7 +12,6 @@ import LinkButton from "@/components/WebsiteComps/LinkButton";
 import { getEffectHref, getEffectPreviewHref, getEffectCategory, resolveEffectCategoryId } from "@/lib/categories";
 import { resolveEffectVideoUrl } from "@/lib/media";
 import {
-  DISPLAY,
   EffectCard,
   MONO,
   TierBadge,
@@ -270,7 +269,7 @@ export function PreviewDrawer({
         <div className="flex flex-col gap-6">
           {/* Tier sits beside the name at its usual small size. */}
           <div className="flex flex-wrap items-center gap-3">
-            <h2 id="v4-drawer-title" className={`${DISPLAY} text64 font-aeonik`}>
+            <h2 id="v4-drawer-title" className="type-h2">
               {shown.title}
             </h2>
             <TierBadge tier={shown.tier} />

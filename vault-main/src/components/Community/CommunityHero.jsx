@@ -23,25 +23,25 @@ export default function CommunityHero() {
           <LineReveal
             as="h1"
             delay={0.3}
-            className="t96 w-[58%] font-aeonik font-normal wrap-break-word max-[1025px]:w-full"
+            className="type-display w-[58%] wrap-break-word max-[1025px]:w-full"
           >
             Find The People Who Notice <span className="gradient-text-animate gradient-text-single">Two Dropped Frames.</span>
           </LineReveal>
           <div className="fadeup flex w-[32%] flex-col gap-[2vw] max-[1025px]:w-full max-[1025px]:gap-[5vw]" data-fadeup-delay="0.2">
-            <p className="text22 w-full leading-[1.6] text-foreground/80 max-[1025px]:w-[70%] max-md:w-full">
+            <p className="type-body-lg w-full text-foreground/80 max-[1025px]:w-[70%] max-md:w-full">
               Vault Community is a home for developers who treat motion as craft. Live teardowns, first
               access to new effects, honest critique, and a room full of people who care about the same
               details you do.
             </p>
             <WaitlistForm />
-            <p className="font-avenir text-[0.8vw] font-medium uppercase tracking-[0.1em] text-foreground/40 max-md:text-[2.8vw]">Free to join · invites go out in waves</p>
+            <p className="type-label text-foreground/40">Free to join · invites go out in waves</p>
           </div>
         </div>
       </section>
       <div className="relative z-1 mx-auto w-full max-w-[1536px] px-[4.5vw] pt-[2vw] pb-[4vh] max-md:px-[6vw]" data-zone="crowd" data-hold-zone>
         <p
           aria-hidden="true"
-          className="flex items-center justify-center font-avenir text-[0.8vw] font-medium uppercase tracking-[0.1em] text-foreground/35 max-md:text-[2.8vw]"
+          className="type-label flex items-center justify-center text-foreground/35"
         >
           Every dot is a seat. Move through the crowd.
         </p>

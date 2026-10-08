@@ -124,6 +124,11 @@ Leave those working as they are. Don't restyle or refactor them to match this gu
   - effect detail
   - docs
   - template detail
+  - legal pages (terms of service, privacy policy, refund policy, license agreement)
+- Legal pages use the effect detail layout:
+  - the breadcrumb and page title (`type-h1`) sit at the top on the dark background
+  - the full-width text sits below on one white area (`bg-foreground`) inside `blog-theme-light` + `blog-content`, with the fixed TOC on the right
+  - the shell lives in `src/app/(app)/(workspace)/legal/LegalBody.jsx`, and each page's title is set in its `LEGAL_TITLES` map, not repeated in the content
 - No overrides on that content:
   - don't add Tailwind classes that restyle it
   - don't add `!` overrides

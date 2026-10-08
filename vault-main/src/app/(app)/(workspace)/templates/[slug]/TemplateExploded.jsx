@@ -5,7 +5,7 @@ import * as THREE from "three";
 import gsap from "gsap";
 import { motion } from "motion/react";
 import { RotateCcw } from "lucide-react";
-import { DISPLAY, LABEL, T13, T14 } from "../tokens";
+import { LABEL, T13, T14 } from "../tokens";
 
 /*
  * The template's homepage, exploded into its sections. Each section is a slab
@@ -159,14 +159,9 @@ export default function TemplateExploded({
       rot.y += (rot.ty + (state.drag ? 0 : mouse.x * 0.08) - rot.y) * k;
       root.rotation.set(rot.x, rot.y, 0);
 
-      // scroll progress → the point of the page in focus (G-local y, exploded)
+    
       const sec = section.getBoundingClientRect();
       const p = clamp(-sec.top / Math.max(1, sec.height - window.innerHeight), 0, 1);
-      // From the first section's centre to the last one's, so the last section
-      // comes fully into view; it holds there for the final 8% of the scroll.
-      // The focus is eased in the assembled page's coordinates and only then spread,
-      // so changing the explode amount fans the layers around the point in view
-      // rather than moving the target (which the easing would then chase).
       const spread = 1 + e * 0.18;
       const firstY = n ? slabs[0].y0 : 0;
       const lastY = n ? slabs[n - 1].y0 : 0;
@@ -244,7 +239,6 @@ export default function TemplateExploded({
     };
   }, []);
 
-  /* ---------- slabs: rebuilt when the device (capture) changes ---------- */
   useEffect(() => {
     const state = sceneRef.current;
     if (!state || !capture) return;
@@ -258,8 +252,7 @@ export default function TemplateExploded({
     state.sel = -1;
     state.panel = -1;
 
-    // Textures are cached by src; slabs stay grey until theirs has loaded.
-    if (!state.waiting) state.waiting = new Map(); // src -> materials to light up on load
+    if (!state.waiting) state.waiting = new Map(); 
     const { waiting } = state;
     const textureFor = (src) => {
       let tex = state.textures.get(src);
@@ -404,7 +397,7 @@ export default function TemplateExploded({
               transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
               className="flex flex-col gap-2"
             >
-              <h3 className={`${DISPLAY} text-[1.7vw] leading-[1.1] max-lg:text-[4.5vw] max-md:text-[6vw]`}>{current.name}</h3>
+              <h3 className="type-h3">{current.name}</h3>
               {current.note && <p className={`${T14} text-foreground/70 max-md:line-clamp-2`}>{current.note}</p>}
               <div className="flex flex-wrap gap-1.5 pt-1">
                 {selected >= 0 && (
@@ -437,7 +430,6 @@ export default function TemplateExploded({
                 setExplode(e.target.value / 100);
               }}
               aria-label="Explode the page into sections"
-              // A thin borderless track with a square orange handle (WebKit and Firefox).
               className="h-4 w-[11vw] cursor-pointer appearance-none bg-transparent [&::-moz-range-thumb]:size-3.5 [&::-moz-range-thumb]:rounded-none [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-primary [&::-moz-range-track]:h-0.5 [&::-moz-range-track]:border-0 [&::-moz-range-track]:bg-foreground/25 [&::-webkit-slider-runnable-track]:h-0.5 [&::-webkit-slider-runnable-track]:border-0 [&::-webkit-slider-runnable-track]:bg-foreground/25 [&::-webkit-slider-thumb]:-mt-1.5 [&::-webkit-slider-thumb]:size-3.5 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-none [&::-webkit-slider-thumb]:border-0 [&::-webkit-slider-thumb]:bg-primary"
             />
             <span>Exploded</span>

@@ -54,10 +54,10 @@ export default function CommunityStack() {
   return (
     <section ref={rootRef} className="relative z-1 px-[4.5vw] py-[18vw] text-center max-md:px-[6vw] max-md:py-28" id="stack" data-zone="crowd2" data-hold-zone>
       <div className="mx-auto flex w-full max-w-[1536px] flex-col items-center gap-[3vw] max-md:gap-[6vw]">
-        <LineReveal as="h2" className="text80 font-aeonik font-normal">
+        <LineReveal as="h2" className="type-h1">
           What Do You <span className="gradient-text-animate gradient-text-single">Build With?</span>
         </LineReveal>
-        <p className="fadeup text22 w-[45%] leading-[1.6] text-foreground/60 max-[1025px]:w-[77%] max-md:w-full">
+        <p className="fadeup type-body-lg w-[45%] text-foreground/60 max-[1025px]:w-[77%] max-md:w-full">
           Pick your stack. Watch your corner of the crowd light up. We’ll use it to match you with the
           right channels, teardowns and people.
         </p>
@@ -70,13 +70,13 @@ export default function CommunityStack() {
                 data-chip
                 aria-pressed={stack.includes(name)}
                 onClick={() => toggle(name, i)}
-                className={`h-11 px-5 font-avenir text-[0.8vw] font-medium uppercase tracking-[0.1em] backdrop-blur-lg transition-[background-color,color,box-shadow] duration-700 ease-[cubic-bezier(.16,1,.3,1)] max-md:text-[2.8vw] ${stack.includes(name) ? "bg-primary text-background shadow-[0_0.7vw_2vw_-0.7vw_color-mix(in_srgb,var(--primary)_70%,transparent)]" : "bg-background/50 text-foreground/80 ring-1 ring-inset ring-foreground/15 hover:ring-primary/60"}`}
+                className={`type-label h-11 px-5 backdrop-blur-lg transition-[background-color,color,box-shadow] duration-700 ease-[cubic-bezier(.16,1,.3,1)] ${stack.includes(name) ? "bg-primary text-background shadow-[0_0.7vw_2vw_-0.7vw_color-mix(in_srgb,var(--primary)_70%,transparent)]" : "bg-background/50 text-foreground/80 ring-1 ring-inset ring-foreground/15 hover:ring-primary/60"}`}
               >
                 {name}
               </button>
             ))}
           </div>
-          <p className="font-avenir text-[0.7vw] font-medium uppercase tracking-[0.1em] text-foreground/60 max-md:text-[2.8vw]" aria-live="polite">{readout(stack)}</p>
+          <p className="type-label text-foreground/60" aria-live="polite">{readout(stack)}</p>
         </div>
       </div>
     </section>

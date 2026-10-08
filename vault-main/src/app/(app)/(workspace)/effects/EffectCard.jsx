@@ -209,7 +209,7 @@ export function EffectCard({
 
       <div className="flex items-start justify-between gap-[0.8vw] max-md:gap-[3vw]">
         <div className="flex min-w-0 flex-1 flex-col gap-1">
-          <h3 className={twMerge(`${DISPLAY} text24 truncate font-aeonik leading-tight font-medium`, titleClassName)}>
+          <h3 className={twMerge(`type-h3 truncate font-medium!`, titleClassName)}>
             {effect.title}
           </h3>
           <p className={twMerge(`flex items-center gap-[0.8vw] ${T14} max-md:gap-[3vw] ${dark ? "text-foreground/50" : "text-black/60"}`, metaClassName)}>

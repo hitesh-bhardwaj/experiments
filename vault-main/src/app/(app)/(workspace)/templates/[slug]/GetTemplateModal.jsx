@@ -7,7 +7,7 @@ import Link from "next/link";
 import gsap from "gsap";
 import { useLenis } from "lenis/react";
 import { AnimatePresence, motion } from "motion/react";
-import { DISPLAY, LABEL, PRICE, T13, T14, T16, catalogueOf, priceOf } from "../tokens";
+import { LABEL, T13, T14, T16, catalogueOf, priceOf } from "../tokens";
 
 // Demo wallet, same plans as the pricing page's credit demo.
 const PLANS = [
@@ -165,7 +165,7 @@ export function GetTemplateModal({ template, open, tab = "buy", onTab, onClose, 
 
             <div className="flex min-w-0 flex-1 flex-col justify-center gap-4">
               <p className={`${LABEL} text-foreground/50`}>Get this template</p>
-              <h3 id="get-template-title" className={`${DISPLAY} text64 font-aeonik leading-none`}>
+              <h3 id="get-template-title" className="type-h1 leading-none">
                 {template.title}
               </h3>
 
@@ -181,6 +181,7 @@ export function GetTemplateModal({ template, open, tab = "buy", onTab, onClose, 
                 trackClassName="bg-foreground/6"
               />
 
+<<<<<<< Updated upstream
               {/* Both panels share one grid cell, so the area is always as tall as the taller one */}
               <div className="grid">
                 <motion.div
@@ -205,6 +206,71 @@ export function GetTemplateModal({ template, open, tab = "buy", onTab, onClose, 
                           </li>
                         ))}
                       </ul>
+=======
+              {tab === "buy" ? (
+                <div className="flex flex-col gap-3.5">
+                  {price != null && (
+                    <p className="flex items-baseline gap-2.5">
+                      <b className="type-h2 leading-none">${price}</b>
+                      <span className={`${LABEL} text-foreground/50`}>one-time payment</span>
+                    </p>
+                  )}
+                  <ul className={`flex flex-col gap-1.5 ${T14} text-foreground/80`}>
+                    {["Every page, section and interaction, as source you own", "The Figma file for the whole site", "Licensed under MPL-2.0"].map((item) => (
+                      <li key={item} className="relative pl-4.5 before:absolute before:top-[.6em] before:left-0.5 before:size-1.5 before:bg-primary">
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                  <button
+                    type="button"
+                    onClick={onBuy}
+                    className={`inline-flex h-12 w-fit cursor-pointer items-center bg-primary px-5 ${T16} text-background transition-colors duration-500 hover:bg-primary-hover`}
+                  >
+                    Continue to payment
+                  </button>
+                 
+                </div>
+              ) : (
+                <div className="flex flex-col gap-3.5">
+                  <SlideToggle
+                    role="radiogroup"
+                    ariaLabel="Your plan (demo)"
+                    items={PLANS}
+                    value={plan}
+                    onChange={(id) => {
+                      setPlan(id);
+                      setRedeemed(false);
+                    }}
+                    activeClassName="bg-light"
+                    itemClassName={`h-7.5 w-28 ${T13}`}
+                    activeTextClassName="text-ink"
+                    inactiveTextClassName="text-foreground/70 hover:text-foreground"
+                    trackClassName="bg-foreground/8"
+                  />
+                  <div className="flex min-h-11 flex-wrap gap-2.5">
+                    {Array.from({ length: credits }, (_, i) => (
+                      <i
+                        key={`${plan}-${i}`}
+                        ref={(el) => {
+                          coinRefs.current[i] = el;
+                        }}
+                        className={`flex size-10 items-center justify-center font-mono not-italic ${T13} ${
+                          i < remaining
+                            ? "bg-[radial-gradient(circle_at_35%_30%,#FFD2B0,var(--primary)_55%,#B84300)] text-background shadow-[0_0_1.1vw_color-mix(in_srgb,var(--primary)_45%,transparent),inset_0_-0.1vw_0.3vw_color-mix(in_srgb,black_25%,transparent)]"
+                            : "bg-foreground/8 text-foreground/40 ring-1 ring-inset ring-foreground/16"
+                        }`}
+                      >
+                        {i + 1}
+                      </i>
+                    ))}
+                  </div>
+                  <p aria-live="polite" className={`min-h-[3em] ${T14} text-foreground/70`}>
+                    {message}
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {!redeemed && !locked && remaining > 0 && (
+>>>>>>> Stashed changes
                       <button
                         type="button"
                         onClick={onBuy}

@@ -25,7 +25,7 @@ export default function CommunityFAQ({ items = [] }) {
 
   return (
     <section ref={rootRef} className="mx-auto flex w-full max-w-[1536px] items-start justify-between gap-[2vw] px-[4.5vw] py-[7%] max-[1025px]:flex-col max-[1025px]:gap-[5vw] max-md:px-[6vw] max-md:py-24" id="faq">
-      <LineReveal as="h2" className="text80 w-[32%] max-w-[10vw] font-aeonik font-normal max-[1025px]:w-full max-[1025px]:max-w-full">Frequently Asked Questions</LineReveal>
+      <LineReveal as="h2" className="type-h1 w-[32%] max-w-[10vw] max-[1025px]:w-full max-[1025px]:max-w-full">Frequently Asked Questions</LineReveal>
       <div className="w-[66%] max-[1025px]:w-full">
         {items.map((item, i) => (
           <div key={item.id} className="fadeup" data-fadeup-delay={i * 0.1}>

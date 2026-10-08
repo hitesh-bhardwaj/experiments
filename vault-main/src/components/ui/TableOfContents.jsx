@@ -341,7 +341,7 @@ export function TableOfContents({
                     className={`absolute inset-0 -z-10 origin-top bg-primary transition-transform duration-300 ease-out motion-reduce:transition-none ${highlighted ? "scale-y-100" : "scale-y-0"
                       }`}
                   />
-                  <span className={`relative z-10 block px-3 py-2 text20 font-normal leading-tight transition-colors duration-300 ${highlighted ? "text-background" : "text-(--docs-body,#3a3a3a)"}`}>
+                  <span className={`relative z-10 block px-3 py-2 type-body font-normal leading-tight transition-colors duration-300 ${highlighted ? "text-background" : "text-(--docs-body,#3a3a3a)"}`}>
                     {item.text}
                   </span>
                 </Link>
@@ -360,7 +360,7 @@ export function TableOfContents({
                   aria-hidden="true"
                   className={`absolute inset-0 -z-10 origin-top bg-primary transition-transform duration-300 ease-out motion-reduce:transition-none ${hoveredId === "__top" ? "scale-y-100" : "scale-y-0"}`}
                 />
-                <span className={`relative z-10 flex items-center gap-2 px-3 py-2 text20 font-normal leading-tight transition-colors duration-300 ${hoveredId === "__top" ? "text-background" : "text-(--docs-body,#3a3a3a)"}`}>
+                <span className={`relative z-10 flex items-center gap-2 px-3 py-2 type-body font-normal leading-tight transition-colors duration-300 ${hoveredId === "__top" ? "text-background" : "text-(--docs-body,#3a3a3a)"}`}>
                   <ArrowUp className="size-4" aria-hidden="true" />
                   Back to top
                 </span>

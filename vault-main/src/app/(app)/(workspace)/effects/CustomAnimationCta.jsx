@@ -28,8 +28,8 @@ export function CustomAnimationCta({ cta, sectionRef, className = "" }) {
       className={`mx-auto flex w-full items-start justify-between gap-[2vw] bg-ink px-[2.8vw] py-[3.3vw] text-light max-lg:px-[3vw] max-md:flex-col max-md:gap-[6vw] max-md:px-[7vw] max-md:py-[10vw] ${className}`}
     >
       <div className="flex w-[60%] flex-col gap-4 max-md:w-full">
-        {cta.heading && <h2 className="text64 font-aeonik font-medium">{cta.heading}</h2>}
-        {cta.description && <p className="text24 max-w-3xl text-light/80">{cta.description}</p>}
+        {cta.heading && <h2 className="type-h1 font-medium!">{cta.heading}</h2>}
+        {cta.description && <p className="type-body-lg max-w-3xl text-light/80">{cta.description}</p>}
       </div>
       {cta.buttonText && (
         <CustomAnimationFormTrigger>

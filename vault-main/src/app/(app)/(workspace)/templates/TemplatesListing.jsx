@@ -18,7 +18,7 @@ import { useTemplateAccess } from "./useTemplateAccess";
 import { TemplateCard } from "./TemplateCard";
 import { TemplatePreviewDrawer } from "./TemplatePreviewDrawer";
 import { useTemplatePurchase } from "./useTemplatePurchase";
-import { DISPLAY, GUTTER, LABEL, PRICE, T16, T20, catalogueOf, priceOf } from "./tokens";
+import { DISPLAY, GUTTER, LABEL, PRICE, T16, catalogueOf, priceOf } from "./tokens";
 
 // three.js only loads when the corridor is shown.
 const TemplateCorridor = dynamic(() => import("./TemplateCorridor"), {
@@ -182,14 +182,14 @@ export function TemplatesListing({ templates = [], description = "", faqItems = 
 
         <div className="flex justify-between gap-12 max-lg:flex-col max-lg:items-stretch max-lg:gap-10">
           <HeadAnim rotate={0} animateOnScroll={false} delay={0.2}>
-            <h1 className={`${DISPLAY} t96 w-[35vw] font-aeonik max-lg:w-full -mt-3`}>
+            <h1 className="type-display w-[35vw] max-lg:w-full -mt-3">
               Whole sites. <span className="gradient-text-animate">Ready to ship.</span>
             </h1>
           </HeadAnim>
 
           <div className="flex w-[38%] flex-col gap-6 max-lg:w-full">
             <Copy animateOnScroll={false} delay={0.5}>
-              <p className={`w-[90%] ${T16} text-foreground/80 max-lg:w-[70%] max-md:w-full`}>
+              <p className="type-body-lg w-[90%] text-foreground/80 max-lg:w-[70%] max-md:w-full">
                 {description} Buy one outright, or redeem a template credit from your plan.
               </p>
             </Copy>
@@ -248,7 +248,7 @@ export function TemplatesListing({ templates = [], description = "", faqItems = 
         <section id="templates-grid" className={`${GUTTER} flex flex-col gap-12`}>
           <div className="flex items-end justify-between gap-4">
             <HeadAnim rotate={0} by="words">
-              <h2 className={`${DISPLAY} text64 font-aeonik`}>
+              <h2 className="type-h1">
                 All <span className="gradient-text-animate">templates.</span>
               </h2>
             </HeadAnim>
@@ -259,8 +259,8 @@ export function TemplatesListing({ templates = [], description = "", faqItems = 
 
           {filtered.length === 0 ? (
             <div className="flex flex-col items-center gap-3.5 px-4 py-20 text-center">
-              <b className={`${DISPLAY} ${T20} font-aeonik`}>No templates match that filter yet.</b>
-              <p className={`${T16} text-black/60`}>New templates land in the vault regularly.</p>
+              <b className="type-h2">No templates match that filter yet.</b>
+              <p className="type-body text-black/60">New templates land in the vault regularly.</p>
               <button
                 type="button"
                 onClick={clearFilters}
@@ -340,8 +340,8 @@ export function TemplatesListing({ templates = [], description = "", faqItems = 
 function CreditCard({ title, dark = false, className = "", children }) {
   return (
     <div className={`flex w-[calc((100%-1.8vw)/3)] flex-col gap-2 p-6 max-lg:w-[calc((100%-0.9vw)/2)] max-md:w-full ${dark ? "bg-ink text-light" : `bg-foreground ring-1 ring-inset ring-black/10 ${className}`}`}>
-      <b className={`${DISPLAY} ${T20} font-aeonik font-medium`}>{title}</b>
-      <p className={`${T16} ${dark ? "text-light/60" : "text-black/60"}`}>{children}</p>
+      <b className="type-h3 font-medium!">{title}</b>
+      <p className={`type-body ${dark ? "text-light/60" : "text-black/60"}`}>{children}</p>
     </div>
   );
 }

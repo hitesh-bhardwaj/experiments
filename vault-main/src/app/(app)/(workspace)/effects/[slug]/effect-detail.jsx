@@ -431,7 +431,7 @@ export function EffectDetailContent({
 
                 {pageTitle && (
                   <HeadAnim rotate={0}>
-                    <h1 className="text80 w-full font-aeonik font-normal text-foreground max-lg:w-[90%] max-md:w-[80%]">
+                    <h1 className="type-h1 w-full text-foreground max-lg:w-[90%] max-md:w-[80%]">
                       {pageTitle}
                     </h1>
                   </HeadAnim>
@@ -439,7 +439,7 @@ export function EffectDetailContent({
 
                 {pageSummary && (
                   <Copy delay={0.5}>
-                    <p className="text22 w-[70%] leading-[1.6] text-foreground/90 max-lg:w-[90%]">
+                    <p className="type-body-lg w-[70%] text-foreground/90 max-lg:w-[90%]">
                       {pageSummary}
                     </p>
                   </Copy>
@@ -450,7 +450,7 @@ export function EffectDetailContent({
                     {dependencies.map((dep) => (
                       <span
                         key={dep}
-                        className="text20 border border-foreground/20 bg-foreground/6 backdrop-blur-lg px-[0.6vw] py-[0.3vw] capitalize text-foreground max-md:px-[6vw] max-md:py-[1vw] max-md:text-muted"
+                        className="type-body border border-foreground/20 bg-foreground/6 backdrop-blur-lg px-[0.6vw] py-[0.3vw] capitalize text-foreground max-md:px-[6vw] max-md:py-[1vw] max-md:text-muted"
                       >
                         {dep}
                       </span>
@@ -511,7 +511,7 @@ export function EffectDetailContent({
                   >
                     <div className="flex items-center justify-between gap-[1.4vw] max-lg:flex-col max-lg:gap-[5vw]">
                       <HeadAnim rotate={0}>
-                        <h2 className="text64 text-center font-aeonik font-medium text-background">
+                        <h2 className="type-h1 text-center font-medium! text-background">
                           Related Effects
                         </h2>
                       </HeadAnim>
@@ -642,14 +642,14 @@ export function EffectDetailContent({
               </div>
             </button>
 
-            <h2 className="text24 font-aeonik font-medium text-foreground">Sign in to copy code</h2>
-            <p className="text18 text-center text-foreground/60">
+            <h2 className="type-h3 font-medium! text-foreground">Sign in to copy code</h2>
+            <p className="type-small text-center text-foreground/60">
               Create a free account or sign in to copy code and install
               commands from the vault.
             </p>
             <Link
               href={`/sign-in?redirect_url=${encodeURIComponent(pathname)}`}
-              className="text18 inline-flex w-fit items-center gap-1.5 bg-primary px-4 py-2 font-medium text-foreground transition-colors hover:bg-primary-hover"
+              className="type-small inline-flex w-fit items-center gap-1.5 bg-primary px-4 py-2 font-medium text-foreground transition-colors hover:bg-primary-hover"
               onClick={() => setShowSignInToCopyModal(false)}
             >
               Sign In
@@ -1108,11 +1108,11 @@ function LockedCodePlaceholder({ filename }) {
         <LockKeyhole className="h-16 w-16 text-white" strokeWidth={1.2} />
 
         <div className="flex flex-col items-center gap-0">
-          <h3 className="text-3xl font-bold text-white  max-md:text-xl">
+          <h3 className="type-h2 font-bold! text-foreground">
             This is a Pro Effect.
           </h3>
 
-          <p className="max-w-sm text-sm leading-[1.2]! max-lg:leading-relaxed text-white/50">
+          <p className="type-small max-w-sm text-foreground/50">
             {subtitle}
           </p>
         </div>
