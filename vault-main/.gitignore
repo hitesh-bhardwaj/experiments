@@ -5,3 +5,6 @@ node_modules/
 
 # clerk configuration (can include secrets)
 /.clerk/
+
+# Figma section exports used by scripts/build-exploded-manifest.mjs - kept locally, not in git
+/design/

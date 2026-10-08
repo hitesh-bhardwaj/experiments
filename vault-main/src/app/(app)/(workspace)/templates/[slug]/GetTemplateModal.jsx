@@ -112,6 +112,7 @@ export function GetTemplateModal({ template, open, tab = "buy", onTab, onClose, 
           aria-modal="true"
           aria-labelledby="get-template-title"
           data-lenis-prevent
+          data-sound-flow="off"
           onClick={(e) => e.target === e.currentTarget && onClose()}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -142,13 +143,9 @@ export function GetTemplateModal({ template, open, tab = "buy", onTab, onClose, 
               </span>
             </button>
 
-            <div ref={thumbRef} className="relative aspect-[3/4] w-[45%] shrink-0 overflow-hidden bg-grey max-md:aspect-video max-md:w-full">
+            <div ref={thumbRef} className="relative h-[28vw] w-[45%] shrink-0 overflow-hidden bg-grey max-md:aspect-video max-md:w-full">
               {shot && <Image src={shot} alt={`${template.title} homepage`} fill sizes="(max-width: 767px) 90vw, 26vw" quality={75} className="object-cover object-top" />}
-              <span
-                className={`absolute bottom-3 left-3 bg-primary px-2.5 py-1.5 ${LABEL} text-background transition-[opacity,transform] duration-700 ${redeemed ? "translate-y-0 opacity-100" : "translate-y-2.5 opacity-0"}`}
-              >
-                Redeemed (demo)
-              </span>
+              
             </div>
 
             <div className="flex min-w-0 flex-1 flex-col justify-center gap-4">
@@ -191,12 +188,7 @@ export function GetTemplateModal({ template, open, tab = "buy", onTab, onClose, 
                   >
                     Continue to payment
                   </button>
-                  <p className={`${T13} bg-primary/8 px-3.5 py-3 text-foreground/60 ring-1 ring-inset ring-primary/25`}>
-                    Planning more than one? Pro+ yearly comes with 5 template credits a year, plus every component and section.{" "}
-                    <Link href={COMPARE_HREF} onClick={onClose} className="text-[#FFB27A] underline underline-offset-3">
-                      Compare plans
-                    </Link>
-                  </p>
+                 
                 </div>
               ) : (
                 <div className="flex flex-col gap-3.5">
@@ -256,7 +248,7 @@ export function GetTemplateModal({ template, open, tab = "buy", onTab, onClose, 
                       </Link>
                     )}
                   </div>
-                  <p className={`${LABEL} text-foreground/40`}>Demo: template credits aren’t live yet. This wallet isn’t linked to your account.</p>
+                  
                 </div>
               )}
             </div>

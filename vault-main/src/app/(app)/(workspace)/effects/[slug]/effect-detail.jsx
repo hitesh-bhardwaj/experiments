@@ -411,8 +411,9 @@ export function EffectDetailContent({
       onRequireSignIn={() => setShowSignInToCopyModal(true)}
       onRequireUpgrade={openUpgradeModal}
     >
-      {/* No cursor-movement swish or hover sounds anywhere on the effect page. */}
-      <div data-sound-hover="off" data-sound-flow="off" className="min-h-screen text-foreground">
+      {/* Hover sounds everywhere above the white area; the cursor swish plays in the
+            header and hero but not over the stage. The white area below is silent. */}
+      <div className="min-h-screen text-foreground">
         <Suspense fallback={<div className="h-12" />}>
           <VaultHeader effectName={pageTitle || safeEffect.title}
             showSearch={true}
@@ -458,7 +459,7 @@ export function EffectDetailContent({
                 )}
               </section>
 
-              <section id="effect-stage" className="fadeup mx-auto w-full max-w-[1536px] px-[4.5vw] max-md:px-[6vw]">
+              <section id="effect-stage" data-sound-flow="off" className="fadeup mx-auto w-full max-w-[1536px] px-[4.5vw] max-md:px-[6vw]">
                 {/* Live stage + Playground (remixer), in place of the preview video */}
                 <EffectStage
                   effect={effect}
@@ -471,7 +472,7 @@ export function EffectDetailContent({
 
               {/* One white area for everything below the stage: the article, FAQ + custom
                     animation block, and related effects - so no dark gaps show between them. */}
-              <div className="bg-foreground text-background">
+              <div data-sound-hover="off" data-sound-flow="off" className="bg-foreground text-background">
                 {/* blog-theme-light: blog.css prose in its light colours on this white section */}
                 <section id="effect-content" className="blog-theme-light relative mx-auto w-full max-w-[1536px] px-[4.5vw] pt-[5.5vw] pb-6 max-md:px-[6vw] max-md:pt-[15vw]">
                   <div className="fixed right-[1vw] top-1/2 z-30 block -translate-y-1/2 max-lg:hidden">

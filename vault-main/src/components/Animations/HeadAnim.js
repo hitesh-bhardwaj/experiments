@@ -130,6 +130,8 @@ export default function HeadAnim({
   animationKey = "",
   // Tilt (deg) each char starts at as it rises in; 0 = a straight rise.
   rotate = 8,
+  // "chars" rises letter by letter; "words" rises whole words (same masks and timing feel).
+  by = "chars",
 }) {
   const containerRef = useRef(null);
   const splitRefs = useRef([]);
@@ -190,6 +192,7 @@ export default function HeadAnim({
       }
 
       const allChars = [];
+      const allWords = [];
       const maskPads = new Map();
 
       elements.forEach((element) => {
@@ -217,6 +220,7 @@ export default function HeadAnim({
         matchNaturalCharPositions(split, naturalChars);
 
         allChars.push(...split.chars);
+        allWords.push(...split.words);
       });
 
       if (!allChars.length) {
@@ -244,6 +248,7 @@ export default function HeadAnim({
       // tight line-height) would be cut off. Pad gradient chars like their masks
       // (negative margins keep them in place) so the gradient covers the whole glyph.
       const charHeights = new Map(allChars.map((char) => [char, char.offsetHeight]));
+      const wordHeights = new Map(allWords.map((word) => [word, word.offsetHeight]));
 
       gradientHosts.forEach((host) => {
         const hostBox = host.getBoundingClientRect();
@@ -272,10 +277,18 @@ export default function HeadAnim({
         host.classList.remove("gradient-text-animate");
       });
 
-      // Start each char fully below its padded mask (ink overhanging the char's box
+      // What rises: each char, or each word (its chars, gradient slices included,
+      // travel inside it).
+      const byWords = by === "words";
+      const units = byWords ? allWords : allChars;
+      const unitStart = byWords
+        ? (word) => wordHeights.get(word) + (maskPads.get(allChars.find((char) => word.contains(char))) || 0)
+        : (char) => charHeights.get(char) + (maskPads.get(char) || 0);
+
+      // Start each unit fully below its padded mask (ink overhanging its box
       // included), so nothing peeks out before it rises.
-      gsap.set(allChars, {
-        y: (index, char) => charHeights.get(char) + (maskPads.get(char) || 0),
+      gsap.set(units, {
+        y: (index, unit) => unitStart(unit),
         rotate,
         willChange: "transform",
       });
@@ -284,16 +297,16 @@ export default function HeadAnim({
         autoAlpha: 1,
       });
 
-      tweenRef.current = gsap.to(allChars, {
+      tweenRef.current = gsap.to(units, {
         y: 0,
         rotate: 0,
-        duration: 0.5,
-        stagger: 0.02,
+        duration: byWords ? 0.7 : 0.5,
+        stagger: byWords ? 0.08 : 0.02,
         ease: "power3.out",
         delay,
         paused: animateOnScroll,
         onComplete: () => {
-          gsap.set(allChars, {
+          gsap.set(units, {
             clearProps: "willChange",
           });
 
@@ -355,7 +368,7 @@ export default function HeadAnim({
         });
       }
     };
-  }, [animateOnScroll, delay, animationKey, rotate]);
+  }, [animateOnScroll, delay, animationKey, rotate, by]);
 
   const child =
     React.Children.count(children) === 1

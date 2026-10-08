@@ -86,7 +86,7 @@ function PagerArrow({ className = "" }) {
   return (
     <span
       aria-hidden="true"
-      className={`block size-[0.8vw] shrink-0 bg-current [mask-image:url(/homepage-v3/svgs/pixelated-arrow.svg)] mask-center mask-no-repeat mask-contain transition-transform duration-300 ${className}`}
+      className={`block size-[0.8vw] shrink-0 bg-current [mask-image:url(/svgs/pixelated-arrow.svg)] mask-center mask-no-repeat mask-contain transition-transform duration-300 ${className}`}
     />
   );
 }

@@ -216,7 +216,7 @@ export default function EffectStage({ effect, title, previewHref, getCode = null
           On phones the panel stacks below at full width. */}
       <div
         ref={gridRef}
-        className="flex items-start [--pg-w:17.8vw] max-lg:[--pg-w:33vw] max-md:flex-col max-md:gap-y-[3.5vw]"
+        className="flex items-start [--pg-w:17.65vw] max-lg:[--pg-w:33vw] max-md:flex-col max-md:gap-y-[3.5vw]"
         style={{ columnGap: play ? "1vw" : "0vw", transition: `column-gap .8s ${EASE}` }}
       >
         {/* Only in Playground: sticks centred on screen while the long panel scrolls past
@@ -237,7 +237,7 @@ export default function EffectStage({ effect, title, previewHref, getCode = null
           />
           {!loaded && (
             <div className="absolute bottom-4 right-4 z-10">
-              <div aria-label="Loading preview" role="status" className="size-8 animate-spin border-2 border-foreground/25 border-t-foreground" />
+              <div aria-label="Loading preview" role="status" className="size-8 animate-spin rounded-full border-2 border-foreground/25 border-t-foreground" />
             </div>
           )}
         </div>

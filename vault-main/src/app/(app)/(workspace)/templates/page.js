@@ -25,7 +25,7 @@ export const metadata = createPageMetadata({
 // (scripts/build-exploded-manifest.mjs), for the card and corridor hover.
 async function readFullShot(slug) {
   try {
-    const file = path.join(process.cwd(), "public/assets/templates-exploded", slug, "manifest.json");
+    const file = path.join(process.cwd(), "public/assets/templates/templates-exploded", slug, "manifest.json");
     return JSON.parse(await fs.readFile(file, "utf8")).full || null;
   } catch {
     return null;

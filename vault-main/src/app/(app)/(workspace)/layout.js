@@ -5,6 +5,7 @@ import {
   getRegistryIndex,
 } from "@/lib/registry";
 import { VaultLayout } from "@/components/layout/VaultLayout";
+import LenisSmoothScroll from "@/components/SmoothScroll/LenisScroll";
 // import NavbarMobile from "@/components/WebsiteComps/NavbarMobile";
 import WorkspaceFooter from "./WorkspaceFooter";
 
@@ -32,6 +33,12 @@ export default function WorkspaceLayout({ children }) {
 
   return (
     <Suspense fallback={<VaultLayoutFallback />}>
+      {/* One smooth scroll for every workspace page, mounted here rather than per
+          section so it stays alive across page changes - the page-change loader
+          (loading.js) can then stop it, and there is never a moment without it.
+          allowNestedScroll lets inner scroll areas (playground panel, dropdowns,
+          code blocks) scroll under the cursor before handing the wheel back. */}
+      <LenisSmoothScroll allowNestedScroll />
       {/* <NavbarMobile /> */}
       <VaultLayout
         effectCounts={effectCounts}

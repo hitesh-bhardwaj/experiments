@@ -183,16 +183,7 @@ export function EffectCard({
                 </Link>
               </Tooltip>
             )}
-            <Tooltip label="View Article">
-              <Link
-                href={getEffectHref(effect)}
-                aria-label={`Open the ${effect.title} page`}
-                onClick={(event) => event.stopPropagation()}
-                className={ICON_BTN}
-              >
-                <ArrowUpRight />
-              </Link>
-            </Tooltip>
+           
             <Tooltip label="Live demo">
               <Link
                 href={getEffectPreviewHref(effect)}
@@ -200,9 +191,19 @@ export function EffectCard({
                 rel="noopener noreferrer"
                 aria-label={`Open the live demo of ${effect.title}`}
                 onClick={(event) => event.stopPropagation()}
-                className={`${ICON_BTN} bg-primary! text-background! ring-0! hover:bg-primary-hover!`}
+                className={`${ICON_BTN}`}
               >
                 <Eye />
+              </Link>
+            </Tooltip>
+             <Tooltip label="View Article">
+              <Link
+                href={getEffectHref(effect)}
+                aria-label={`Open the ${effect.title} page`}
+                onClick={(event) => event.stopPropagation()}
+                className={`${ICON_BTN}  bg-primary! text-background! ring-0! hover:bg-primary-hover!`}
+              >
+                <ArrowUpRight />
               </Link>
             </Tooltip>
           </div>

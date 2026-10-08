@@ -215,7 +215,7 @@ export function PreviewDrawer({
   return createPortal(
     // [--scrollbar-thumb:initial] brings the panel's own scrollbar back: <html> hides the
     // page thumb through the same (inherited) variable while the drawer is open.
-    <div role="dialog" aria-modal="true" aria-labelledby="v4-drawer-title" className="fixed inset-0 z-990 [--scrollbar-thumb:initial]">
+    <div role="dialog" aria-modal="true" aria-labelledby="v4-drawer-title" data-sound-flow="off" className="fixed inset-0 z-990 [--scrollbar-thumb:initial]">
       <div ref={overlayRef} aria-hidden="true" onClick={onClose} className="absolute inset-0 bg-black/30 backdrop-blur-lg" />
       {/* data-lenis-prevent: the drawer is a modal, so the wheel stays inside it */}
       <div

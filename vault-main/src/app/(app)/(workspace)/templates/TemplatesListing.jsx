@@ -1,6 +1,9 @@
 "use client";
 
-import { Fragment, useCallback, useMemo, useRef, useState, useSyncExternalStore } from "react";
+import { Fragment, useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+// FAQ registers its reveal with the dist build, a separate ScrollTrigger copy with its own trigger list.
+import { ScrollTrigger as ScrollTriggerDist } from "gsap/dist/ScrollTrigger";
 import dynamic from "next/dynamic";
 import { motion } from "motion/react";
 import HeadAnim from "@/components/Animations/HeadAnim";
@@ -41,6 +44,16 @@ const CATALOGUES = [
   { id: "full", label: "Pro+ only" },
 ];
 const CARD_LAYOUT_TRANSITION = { layout: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } };
+// Cards fade up as they scroll into view, matching the site's .fadeup (50px, 1.2s,
+// power3.out, at 90% of the viewport), with the right column a beat behind the left.
+// Done with motion rather than .fadeup: useFadeUp only scans once, and the cards mount
+// and unmount as the filters change.
+const cardReveal = (index) => ({
+  initial: { opacity: 0, y: 50 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true, margin: "0px 0px -10% 0px" },
+  transition: { duration: 1.2, ease: [0.165, 0.84, 0.44, 1], delay: (index % 2) * 0.12 },
+});
 
 const CHIP = `inline-flex py-3 shrink-0 cursor-pointer items-center px-3.5 ${T16} backdrop-blur-lg transition-[background-color,color,box-shadow] duration-500`;
 const CHIP_OFF = "text-foreground/80 bg-foreground/5 ring-1 ring-inset ring-foreground/15 hover:ring-primary/60";
@@ -113,6 +126,31 @@ export function TemplatesListing({ templates = [], description = "", faqItems = 
 
   useFadeUp(rootRef);
 
+  // The corridor's height follows the filtered count (and it unmounts when nothing
+  // matches, or for the grid view), so the page's height jumps on a filter change and
+  // every ScrollTrigger below it (fade-ups, FAQ reveal...) keeps stale positions.
+  // Re-measure them whenever the listing's height actually changes.
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+    let height = root.offsetHeight;
+    let timer;
+    const observer = new ResizeObserver(() => {
+      if (root.offsetHeight === height) return;
+      height = root.offsetHeight;
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        ScrollTrigger.refresh();
+        if (ScrollTriggerDist !== ScrollTrigger) ScrollTriggerDist.refresh();
+      }, 120);
+    });
+    observer.observe(root);
+    return () => {
+      observer.disconnect();
+      clearTimeout(timer);
+    };
+  }, []);
+
   const categories = useMemo(() => ["All", ...new Set(templates.map((t) => t.category).filter(Boolean))], [templates]);
   const prices = useMemo(() => [...new Set(templates.map(priceOf).filter((p) => p != null))].sort((a, b) => a - b), [templates]);
   const filtered = useMemo(
@@ -142,9 +180,9 @@ export function TemplatesListing({ templates = [], description = "", faqItems = 
           <Breadcrumb />
         </motion.div>
 
-        <div className="flex items-end justify-between gap-12 max-lg:flex-col max-lg:items-stretch max-lg:gap-10">
+        <div className="flex justify-between gap-12 max-lg:flex-col max-lg:items-stretch max-lg:gap-10">
           <HeadAnim rotate={0} animateOnScroll={false} delay={0.2}>
-            <h1 className={`${DISPLAY} t96 w-[58%] font-aeonik max-lg:w-full`}>
+            <h1 className={`${DISPLAY} t96 w-[35vw] font-aeonik max-lg:w-full -mt-3`}>
               Whole sites. <span className="gradient-text-animate">Ready to ship.</span>
             </h1>
           </HeadAnim>
@@ -208,11 +246,13 @@ export function TemplatesListing({ templates = [], description = "", faqItems = 
       {/* ---------- grid + credits sheet ---------- */}
       <div data-sound-hover="off" data-sound-flow="off" className="relative flex flex-col gap-[8vw] bg-light py-[7%] text-ink max-md:gap-[15vw] max-md:py-[15%]">
         <section id="templates-grid" className={`${GUTTER} flex flex-col gap-12`}>
-          <div className="fadeup flex items-end justify-between gap-4">
-            <h2 className={`${DISPLAY} text64 font-aeonik`}>
-              All <span className="gradient-text-animate">templates.</span>
-            </h2>
-            <p aria-live="polite" className={`${LABEL} text-black/60`}>
+          <div className="flex items-end justify-between gap-4">
+            <HeadAnim rotate={0} by="words">
+              <h2 className={`${DISPLAY} text64 font-aeonik`}>
+                All <span className="gradient-text-animate">templates.</span>
+              </h2>
+            </HeadAnim>
+            <p aria-live="polite" className={`fadeup ${LABEL} text-black/60`}>
               {filtered.length} of {templates.length} templates
             </p>
           </div>
@@ -233,14 +273,16 @@ export function TemplatesListing({ templates = [], description = "", faqItems = 
             <div className="flex flex-wrap gap-x-[1.4vw] gap-y-14 max-md:gap-y-12">
               {filtered.map((template, index) => (
                 <motion.div key={template.slug} layout transition={CARD_LAYOUT_TRANSITION} className="w-[calc((100%-1.4vw)/2)] max-md:w-full">
-                  <TemplateCard
-                    template={template}
-                    priority={index < 2}
-                    isWishlisted={wishlist.includes(template.slug)}
-                    onToggleWishlist={toggleWishlist}
-                    onOpen={setDrawerTemplate}
-                    hasAccess={accessSlugs.includes(template.slug)}
-                  />
+                  <motion.div {...cardReveal(index)}>
+                    <TemplateCard
+                      template={template}
+                      priority={index < 2}
+                      isWishlisted={wishlist.includes(template.slug)}
+                      onToggleWishlist={toggleWishlist}
+                      onOpen={setDrawerTemplate}
+                      hasAccess={accessSlugs.includes(template.slug)}
+                    />
+                  </motion.div>
                 </motion.div>
               ))}
             </div>
@@ -249,9 +291,11 @@ export function TemplatesListing({ templates = [], description = "", faqItems = 
 
         {/* template credits */}
         <section id="template-credits" className={`${GUTTER} flex flex-col gap-12`}>
-          <h2 className={`fadeup ${DISPLAY} type-h1 font-aeonik`}>
-            One credit. <span className="gradient-text-animate">One whole site.</span>
-          </h2>
+          <HeadAnim rotate={0} by="words">
+            <h2 className={`${DISPLAY} type-h1 font-aeonik`}>
+              One credit. <span className="gradient-text-animate">One whole site.</span>
+            </h2>
+          </HeadAnim>
           <div className="fadeup flex flex-wrap gap-[0.9vw] max-md:gap-[3.5vw]">
             <CreditCard title="No plan needed" className="bg-[#fff4ea]">
               Buy any template outright{prices.length > 0 && <> for {formatPrices(prices)}</>}. One payment, and the source is yours.

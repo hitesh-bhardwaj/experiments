@@ -5,10 +5,9 @@ import { createPortal } from "react-dom";
 import Image from "next/image";
 import gsap from "gsap";
 import { useLenis } from "lenis/react";
-import { Heart } from "lucide-react";
+import { Download, Heart } from "lucide-react";
 import Button from "@/homepage/components/Button";
-import LinkButton from "@/components/WebsiteComps/LinkButton";
-import { BADGE, DISPLAY, PRICE, T11, T14, T16, T18, catalogueLabel, catalogueOf, priceOf } from "./tokens";
+import { BADGE, DISPLAY, PRICE, T11, T14, T16, T18, T24, catalogueLabel, catalogueOf, priceOf } from "./tokens";
 
 // Same open/close choreography as the effects preview drawer (PreviewDrawer):
 // the panel slides in from the right while the backdrop fades, then the content
@@ -165,7 +164,7 @@ export function TemplatePreviewDrawer({ template, templates = [], isWishlisted, 
   const href = shown.href || `/templates/${shown.slug}`;
 
   return createPortal(
-    <div role="dialog" aria-modal="true" aria-labelledby="tpl-drawer-title" className="fixed inset-0 z-990 [--scrollbar-thumb:initial]">
+    <div role="dialog" aria-modal="true" aria-labelledby="tpl-drawer-title" data-sound-flow="off" className="fixed inset-0 z-990 [--scrollbar-thumb:initial]">
       <div ref={overlayRef} aria-hidden="true" onClick={onClose} className="absolute inset-0 bg-black/30 backdrop-blur-lg" />
       <div
         ref={panelRef}
@@ -205,16 +204,23 @@ export function TemplatePreviewDrawer({ template, templates = [], isWishlisted, 
             )}
           </div>
 
-          {/* Same order as the effect drawer: tags, name, description, then the actions. */}
-          {shown.tags?.length > 0 && (
+          {/* Same order as the effect drawer: tags, name, description, then the actions.
+              The price sits on the right of the tags row, just under the preview. */}
+          <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="flex flex-wrap gap-1.5">
-              {shown.tags.map((tag) => (
+              {(shown.tags || []).map((tag) => (
                 <span key={tag} className={`inline-flex h-6 items-center border border-foreground/15 px-2 font-mono ${T11} text-foreground/70`}>
                   {tag}
                 </span>
               ))}
             </div>
-          )}
+            {price != null && (
+              <p className={`flex items-baseline gap-2 ${T14} text-foreground/60`}>
+                <b className={`${PRICE} ${T24} leading-none font-normal text-foreground`}>${price}</b>
+                {owned ? "yours" : "one-time, or 1 template credit"}
+              </p>
+            )}
+          </div>
 
           <div className="grid gap-6">
             {/* Catalogue sits beside the name at its usual small size. */}
@@ -222,8 +228,13 @@ export function TemplatePreviewDrawer({ template, templates = [], isWishlisted, 
               <h2 id="tpl-drawer-title" className={`${DISPLAY} text64 font-aeonik`}>
                 {shown.title}
               </h2>
-              <div className="mt-1.5">
+              <div className="mt-1.5 flex gap-1.5">
                 <span className={`${BADGE} ${full ? "bg-foreground text-background border-black/20 border" : "bg-primary text-background"}`}>{catalogueLabel(shown)}</span>
+                {owned && (
+                  <span className={`${BADGE} bg-foreground/5 text-foreground ring-1 ring-inset ring-foreground/15`}>
+                    Yours <span className="text-primary">✓</span>
+                  </span>
+                )}
               </div>
             </div>
 
@@ -241,29 +252,19 @@ export function TemplatePreviewDrawer({ template, templates = [], isWishlisted, 
                   <Heart className="size-full" aria-hidden="true" />
                 </span>
               </button>
-              <Button text="Demo" href={shown.previewHref || href} variant="outline" target_blank className="tracking-normal! bg-transparent! border-foreground/20" />
-              <Button text="View template" href={href} className="tracking-normal! border border-primary" />
+              <Button text="Demo" href={shown.previewHref || href}  variant="outline" className="tracking-normal! bg-transparent! border-foreground/20" />
+              <Button text="View template" href={href} target_blank className="tracking-normal! border border-primary"  />
+                {/* Buy opens the "Get this template" popup; once it's yours it downloads. */}
+                <button
+                  type="button"
+                  onClick={() => onBuy(shown)}
+                  // Same text size and font as the Button component beside it
+                  className="inline-flex cursor-pointer items-center gap-2 self-stretch bg-primary px-4 font-avenir text-[calc(var(--hx-vw,1vw)*1.15)] text-background transition-colors duration-500 hover:bg-primary-hover max-md:text-[calc(var(--hx-vw,1vw)*2.2)] max-sm:text-[calc(var(--hx-vw,1vw)*4)]"
+                >
+                  <Download className="size-4" aria-hidden="true" />
+                  {owned ? "Download" : "Buy template"}
+                </button>
             </div>
-          </div>
-
-          {/* Where the effect drawer has its Pro box: the price, and Buy (Download when it's yours). */}
-          <div className="flex flex-wrap items-center justify-between gap-4 border border-primary/35 bg-primary/6 px-4.5 py-4">
-            <p className={`flex items-baseline gap-2 ${T14} text-foreground/70`}>
-              {price != null && <b className={`${PRICE} ${T18} font-normal text-foreground`}>${price}</b>}
-              {owned ? "This template is yours." : "one-time, or 1 template credit"}
-            </p>
-            <LinkButton
-              href={owned ? `/api/templates/${shown.slug}/download` : "#"}
-              text={owned ? "Download" : "Buy template"}
-              underline
-              tilted={false}
-              underlineClassName="mt-0"
-              onClick={(event) => {
-                event.preventDefault();
-                onBuy(shown);
-              }}
-              className="text18 text-foreground transition-colors duration-300 hover:text-primary"
-            />
           </div>
 
           {others.length > 0 && (

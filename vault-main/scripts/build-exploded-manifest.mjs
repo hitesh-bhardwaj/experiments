@@ -10,6 +10,10 @@
  *      design/templates-exploded/<slug>/desktop/02-about.png
  *      design/templates-exploded/<slug>/phone/01-hero.png
  *
+ *    design/ is git-ignored: the exports stay on your machine, and only the
+ *    generated images in public/ are committed. Put the exports there before
+ *    running this.
+ *
  *    Devices: desktop, tablet, phone (any you have). Files are stacked in
  *    file-name order, top to bottom. The name after the number becomes the
  *    layer's label, matched to its name and notes in
@@ -18,7 +22,7 @@
  * 2. node scripts/build-exploded-manifest.mjs <slug> [<slug> ...]
  *
  * Writes web-sized WebP copies and manifest.json to
- * public/assets/templates-exploded/<slug>/, replacing what was there, plus
+ * public/assets/templates/templates-exploded/<slug>/, replacing what was there, plus
  * full-desktop.webp: the desktop sections stacked into one page, which the
  * listing card scrolls through on hover.
  */
@@ -30,7 +34,7 @@ import sharp from "sharp";
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const SOURCE = path.join(ROOT, "design/templates-exploded");
-const OUT = path.join(ROOT, "public/assets/templates-exploded");
+const OUT = path.join(ROOT, "public/assets/templates/templates-exploded");
 const DEVICES = ["desktop", "tablet", "phone"];
 // Width of the saved images: enough for the 3D slabs, small enough to load fast.
 const OUT_WIDTH = { desktop: 1200, tablet: 820, phone: 600 };
@@ -67,7 +71,7 @@ async function build(slug) {
         .webp({ quality: 80 })
         .toBuffer({ resolveWithObject: true });
       await writeFile(path.join(outDir, device, outName), data);
-      sections.push({ name, src: `/assets/templates-exploded/${slug}/${device}/${outName}`, width: info.width, height: info.height });
+      sections.push({ name, src: `/assets/templates/templates-exploded/${slug}/${device}/${outName}`, width: info.width, height: info.height });
     }
     manifest.devices[device] = { sections };
     console.log(`${slug} · ${device}: ${sections.length} sections`);
@@ -89,7 +93,7 @@ async function build(slug) {
         .webp({ quality: 78 })
         .toBuffer();
       await writeFile(path.join(outDir, "full-desktop.webp"), full);
-      manifest.full = { src: `/assets/templates-exploded/${slug}/full-desktop.webp`, width: FULL_WIDTH, height };
+      manifest.full = { src: `/assets/templates/templates-exploded/${slug}/full-desktop.webp`, width: FULL_WIDTH, height };
     }
   }
 

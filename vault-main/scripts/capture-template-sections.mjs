@@ -10,8 +10,8 @@
  *
  * Env: BASE_URL (default http://localhost:3000), CHROME (path to Chrome).
  *
- * Writes public/assets/templates-exploded/<slug>/<device>.webp and
- * public/assets/templates-exploded/<slug>/manifest.json.
+ * Writes public/assets/templates/templates-exploded/<slug>/<device>.webp and
+ * public/assets/templates/templates-exploded/<slug>/manifest.json.
  *
  * Pages are captured with prefers-reduced-motion: reduce, so they render
  * their static layout (no loaders, pins or scroll-hidden content). The page
@@ -27,7 +27,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
-const OUT = path.join(ROOT, "public/assets/templates-exploded");
+const OUT = path.join(ROOT, "public/assets/templates/templates-exploded");
 const BASE_URL = process.env.BASE_URL || "http://localhost:3000";
 const CHROME = process.env.CHROME || "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
 const PORT = 9333;
@@ -222,7 +222,7 @@ async function main() {
         const file = `${device}.webp`;
         await writeFile(path.join(OUT, slug, file), buffer);
         manifest.devices[device] = {
-          src: `/assets/templates-exploded/${slug}/${file}`,
+          src: `/assets/templates/templates-exploded/${slug}/${file}`,
           viewport: DEVICES[device].width,
           width: Math.round(DEVICES[device].width * scale),
           height: Math.round(cap.height * scale),

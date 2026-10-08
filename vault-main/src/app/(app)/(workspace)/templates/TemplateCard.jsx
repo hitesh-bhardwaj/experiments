@@ -7,7 +7,7 @@ import { ArrowUpRight, Download, Eye, Heart } from "lucide-react";
 import { Tooltip } from "@/components/ui/Tooltip";
 import { ICON_BTN } from "../effects/EffectCard";
 import { useTemplatePurchase } from "./useTemplatePurchase";
-import { BADGE, DISPLAY, PRICE, T13, T14, T16, T18, T20, catalogueLabel, catalogueOf, priceOf } from "./tokens";
+import { BADGE, DISPLAY, PRICE, T11, T13, T14, T16, T18, T20, catalogueLabel, catalogueOf, priceOf } from "./tokens";
 
 const formatViews = (n) => (n >= 1000 ? new Intl.NumberFormat("en", { notation: "compact", maximumFractionDigits: 1 }).format(n) : String(n));
 
@@ -85,31 +85,38 @@ export function TemplateCard({ template, priority = false, isWishlisted = false,
               <Heart className={isWishlisted ? "fill-primary text-primary" : ""} aria-hidden="true" />
             </button>
           </Tooltip>
-          <Tooltip label="View Article">
-            <Link href={href} prefetch={false} aria-label={`Open the ${template.title} page`} className={ICON_BTN}>
-              <ArrowUpRight aria-hidden="true" />
-            </Link>
-          </Tooltip>
+         
           <Tooltip label="Live demo">
             <a
               href={previewHref}
               target="_blank"
               rel="noopener noreferrer"
               aria-label={`Open the live demo of ${template.title}`}
-              className={`${ICON_BTN} bg-[#ff5f00]! text-[#141414]! shadow-none! hover:bg-[#ff7a26]!`}
+              className={`${ICON_BTN} `}
             >
               <Eye aria-hidden="true" />
             </a>
+          </Tooltip>
+           <Tooltip label="View Article">
+            <Link href={href} prefetch={false} aria-label={`Open the ${template.title} page`} className={`${ICON_BTN} bg-primary! text-background! ring-0! hover:bg-primary-hover!`}>
+              <ArrowUpRight aria-hidden="true" />
+            </Link>
           </Tooltip>
         </div>
       </div>
 
       <div className="flex flex-col gap-2">
         <div className="flex items-baseline justify-between gap-3">
-          <h3 className={`${DISPLAY} ${T20} min-w-0 font-aeonik font-medium`}>
+          <h3 className={`${DISPLAY} ${T20} flex min-w-0 flex-wrap items-center gap-2 font-aeonik font-medium`}>
             <Link href={href} prefetch={false} className="transition-colors duration-500 hover:text-primary">
               {template.title}
             </Link>
+            {/* Same "Yours" tag as the preview drawer, in the light section's colours. */}
+            {hasAccess && (
+              <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 ${T11} bg-black/5 font-normal text-ink ring-1 ring-inset ring-black/15`}>
+                Yours <span className="text-primary">✓</span>
+              </span>
+            )}
           </h3>
           {price != null && (
             <span className={`${DISPLAY} ${T18} flex shrink-0 items-baseline gap-1.5 font-medium`}>
@@ -144,7 +151,7 @@ export function TemplateCard({ template, priority = false, isWishlisted = false,
                   <Download className="size-3.5" aria-hidden="true" /> Download
                 </>
               ) : (
-                "Buy template"
+                "Buy Template"
               )}
             </button>
           )}

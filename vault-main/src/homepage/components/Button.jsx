@@ -208,7 +208,7 @@ export function ButtonChrome({ label, hovered = false, innerClassName = "" }) {
       </span>
       <span
         aria-hidden="true"
-        className="pointer-events-none absolute top-1/2 right-(--btn-inset) -translate-y-1/2 size-(--btn-arrow) bg-current [mask-image:url(/homepage-v3/svgs/pixelated-arrow.svg)] mask-center mask-no-repeat mask-contain translate-x-[calc(var(--btn-inset)+100%)] opacity-0 transition-all duration-300 group-hover:opacity-100 motion-safe:group-hover:translate-x-0 motion-reduce:translate-x-0 motion-reduce:transition-none max-md:static! max-md:shrink-0 max-md:translate-x-0! max-md:translate-y-0! max-md:opacity-100!"
+        className="pointer-events-none absolute top-1/2 right-(--btn-inset) -translate-y-1/2 size-(--btn-arrow) bg-current [mask-image:url(/svgs/pixelated-arrow.svg)] mask-center mask-no-repeat mask-contain translate-x-[calc(var(--btn-inset)+100%)] opacity-0 transition-all duration-300 group-hover:opacity-100 motion-safe:group-hover:translate-x-0 motion-reduce:translate-x-0 motion-reduce:transition-none max-md:static! max-md:shrink-0 max-md:translate-x-0! max-md:translate-y-0! max-md:opacity-100!"
       />
     </>
   );

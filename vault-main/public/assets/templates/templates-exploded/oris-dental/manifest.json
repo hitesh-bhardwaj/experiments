@@ -1,0 +1,127 @@
+{
+  "slug": "oris-dental",
+  "source": "figma",
+  "devices": {
+    "desktop": {
+      "sections": [
+        {
+          "name": "hero",
+          "src": "/assets/templates/templates-exploded/oris-dental/desktop/01-hero.webp",
+          "width": 1200,
+          "height": 725
+        },
+        {
+          "name": "about",
+          "src": "/assets/templates/templates-exploded/oris-dental/desktop/02-about.webp",
+          "width": 1200,
+          "height": 631
+        },
+        {
+          "name": "care comfort",
+          "src": "/assets/templates/templates-exploded/oris-dental/desktop/03-care-comfort.webp",
+          "width": 1200,
+          "height": 725
+        },
+        {
+          "name": "treatments",
+          "src": "/assets/templates/templates-exploded/oris-dental/desktop/04-treatments.webp",
+          "width": 1200,
+          "height": 888
+        },
+        {
+          "name": "statement break",
+          "src": "/assets/templates/templates-exploded/oris-dental/desktop/05-statement-break.webp",
+          "width": 1200,
+          "height": 806
+        },
+        {
+          "name": "reviews",
+          "src": "/assets/templates/templates-exploded/oris-dental/desktop/06-reviews.webp",
+          "width": 1200,
+          "height": 1419
+        },
+        {
+          "name": "passion meet purpose",
+          "src": "/assets/templates/templates-exploded/oris-dental/desktop/07-passion-meet-purpose.webp",
+          "width": 1200,
+          "height": 588
+        },
+        {
+          "name": "book an appointment",
+          "src": "/assets/templates/templates-exploded/oris-dental/desktop/08-book-an-appointment.webp",
+          "width": 1200,
+          "height": 724
+        },
+        {
+          "name": "footer",
+          "src": "/assets/templates/templates-exploded/oris-dental/desktop/09-footer.webp",
+          "width": 1200,
+          "height": 603
+        }
+      ]
+    },
+    "phone": {
+      "sections": [
+        {
+          "name": "hero",
+          "src": "/assets/templates/templates-exploded/oris-dental/phone/01-hero.webp",
+          "width": 600,
+          "height": 1618
+        },
+        {
+          "name": "about",
+          "src": "/assets/templates/templates-exploded/oris-dental/phone/02-about.webp",
+          "width": 600,
+          "height": 1282
+        },
+        {
+          "name": "care comfort",
+          "src": "/assets/templates/templates-exploded/oris-dental/phone/03-care-comfort.webp",
+          "width": 600,
+          "height": 1107
+        },
+        {
+          "name": "treatments",
+          "src": "/assets/templates/templates-exploded/oris-dental/phone/04-treatments.webp",
+          "width": 600,
+          "height": 1458
+        },
+        {
+          "name": "statement break",
+          "src": "/assets/templates/templates-exploded/oris-dental/phone/05-statement-break.webp",
+          "width": 600,
+          "height": 1360
+        },
+        {
+          "name": "reviews",
+          "src": "/assets/templates/templates-exploded/oris-dental/phone/06-reviews.webp",
+          "width": 600,
+          "height": 1266
+        },
+        {
+          "name": "passion meet purpose",
+          "src": "/assets/templates/templates-exploded/oris-dental/phone/07-passion-meet-purpose.webp",
+          "width": 600,
+          "height": 962
+        },
+        {
+          "name": "book an appointment",
+          "src": "/assets/templates/templates-exploded/oris-dental/phone/08-book-an-appointment.webp",
+          "width": 600,
+          "height": 1362
+        },
+        {
+          "name": "footer",
+          "src": "/assets/templates/templates-exploded/oris-dental/phone/09-footer.webp",
+          "width": 600,
+          "height": 1298
+        }
+      ]
+    }
+  },
+  "full": {
+    "src": "/assets/templates/templates-exploded/oris-dental/full-desktop.webp",
+    "width": 720,
+    "height": 4266
+  }
+}

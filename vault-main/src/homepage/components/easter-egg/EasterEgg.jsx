@@ -52,9 +52,18 @@ export function EasterEggProvider({ children, realHref = "/effects" }) {
         lastFocusRef.current?.focus?.();
     }, []);
 
+    // Stop smooth scroll while the game is open, and start it again only when the
+    // game closes - not on every run of this effect, which would restart Lenis
+    // that something else (e.g. the page-change loader) has stopped.
+    const stoppedLenisRef = useRef(false);
     useEffect(() => {
-        if (open) lenis?.stop();
-        else lenis?.start();
+        if (open) {
+            lenis?.stop();
+            stoppedLenisRef.current = true;
+        } else if (stoppedLenisRef.current) {
+            lenis?.start();
+            stoppedLenisRef.current = false;
+        }
     }, [open, lenis]);
 
     // Konami code

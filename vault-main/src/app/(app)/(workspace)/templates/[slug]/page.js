@@ -52,7 +52,7 @@ export async function generateMetadata({ params }) {
 
 async function readCapture(slug) {
   try {
-    const file = path.join(process.cwd(), "public/assets/templates-exploded", slug, "manifest.json");
+    const file = path.join(process.cwd(), "public/assets/templates/templates-exploded", slug, "manifest.json");
     return JSON.parse(await fs.readFile(file, "utf8"));
   } catch {
     return null;

@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useLenis } from "lenis/react";
+import { isRouteLoading } from "@/components/ui/RouteLoading";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { X } from "lucide-react";
@@ -411,11 +412,16 @@ export function GlobalSearch({ effects = [], externalOpen = 0 }) {
 
   useEffect(() => () => void tweenRef.current?.kill(), []);
 
+  // Stop smooth scroll while search is open; start it again only when search
+  // closes (not on every run), so it can't restart Lenis the page-change loader stopped.
+  const stoppedLenisRef = useRef(false);
   useEffect(() => {
     if (isOpen) {
       lenis?.stop?.();
-    } else {
-      lenis?.start?.();
+      stoppedLenisRef.current = true;
+    } else if (stoppedLenisRef.current) {
+      if (!isRouteLoading()) lenis?.start?.();
+      stoppedLenisRef.current = false;
     }
   }, [isOpen, lenis]);
 
@@ -516,15 +522,13 @@ export function GlobalSearch({ effects = [], externalOpen = 0 }) {
       document.body.style.removeProperty("overflow");
     }
 
-    lenis?.start?.();
-
-    requestAnimationFrame(() => {
-      lenis?.start?.();
-    });
-
-    window.setTimeout(() => {
-      lenis?.start?.();
-    }, 80);
+    // Never while the page-change loader is up (it restarts Lenis itself)
+    const start = () => {
+      if (!isRouteLoading()) lenis?.start?.();
+    };
+    start();
+    requestAnimationFrame(start);
+    window.setTimeout(start, 80);
   };
 
   const closeSearch = () => {

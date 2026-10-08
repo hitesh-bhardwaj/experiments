@@ -549,6 +549,7 @@ export function Sidebar({
 
   return (
     <aside
+      data-sound-flow="off"
       className={`sticky bottom-0 left-0 top-0 z-51 h-screen bg-[#111111] text-white max-lg:hidden ${
         disableInitialTransition
           ? "transition-none"

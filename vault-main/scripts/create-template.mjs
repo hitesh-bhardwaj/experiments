@@ -143,7 +143,7 @@ function mockTemplateSnippet(slug, title) {
     pricing: { standaloneOneTime: 39, includedInAnnualPro: true },
     tags: [],
     installCount: 0,
-    screenshots: ["/assets/templates-listing/${slug}.png"],
+    screenshots: ["/assets/templates/templates-listing/${slug}.png"],
     href: "/templates/${slug}",
     previewHref: "/template-demo/${slug}",
     publishedAt: "TODO",

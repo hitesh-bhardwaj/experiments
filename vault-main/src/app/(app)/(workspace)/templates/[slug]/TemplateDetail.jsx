@@ -333,15 +333,19 @@ export function TemplateDetail({ template, templateAccess = { allowed: false, re
       {/* ---------- what's inside + more templates ---------- */}
       <div data-sound-hover="off" data-sound-flow="off" className="relative flex flex-col gap-[7vw] bg-light py-[7%] text-ink max-md:gap-[15vw] max-md:py-[15%]">
         <section id="template-inside" className={`${GUTTER} flex items-start justify-between gap-[4vw] max-lg:flex-col`}>
-          {/* Article copy: styled by blog.css (light theme), no overrides */}
+          {/* Article copy: styled by blog.css. Its light theme applies to a .blog-content
+              inside a .blog-theme-light wrapper (as on the effect page), not to both on one
+              element; body text is #1d1d1d here rather than the theme's #3a3a3a. */}
           <div className="fadeup flex w-[32%] flex-col gap-6 max-lg:w-full">
-            <div className="blog-content blog-theme-light">
-              <h2>
-                What’s <span className="gradient-text-animate">inside.</span>
-              </h2>
-              {(template.overview || []).map((paragraph, i) => (
-                <p key={i}>{paragraph}</p>
-              ))}
+            <div className="blog-theme-light">
+              <div className="blog-content [--blog-text-secondary:#1d1d1d]">
+                <h2>
+                  What’s <span className="gradient-text-animate">inside.</span>
+                </h2>
+                {(template.overview || []).map((paragraph, i) => (
+                  <p key={i}>{paragraph}</p>
+                ))}
+              </div>
             </div>
             {published && <p className={`${LABEL} text-black/40`}>Published {published}</p>}
           </div>
@@ -383,11 +387,15 @@ export function TemplateDetail({ template, templateAccess = { allowed: false, re
 
         {related.length > 0 && (
           <section id="related-templates" className={`${GUTTER} flex flex-col gap-8`}>
-            <div className="fadeup flex flex-wrap items-end justify-between gap-4">
-              <h2 className={`${DISPLAY} text64 font-aeonik`}>
-                More <span className="gradient-text-animate">templates.</span>
-              </h2>
-              <Button className="tracking-normal!" text="All templates" href="/templates" />
+            <div className="flex flex-wrap items-end justify-between gap-4">
+              <HeadAnim rotate={0} by="words">
+                <h2 className={`${DISPLAY} text64 font-aeonik`}>
+                  More <span className="gradient-text-animate">templates.</span>
+                </h2>
+              </HeadAnim>
+              <div className="fadeup">
+                <Button className="tracking-normal!" text="All templates" href="/templates" />
+              </div>
             </div>
             <div className="flex flex-wrap gap-x-[1.4vw] gap-y-14">
               {related.map((t) => (

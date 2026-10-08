@@ -422,6 +422,7 @@ export default function TemplateCorridor({ templates, onUnsupported }) {
     <section
       ref={sectionRef}
       aria-label="Template corridor"
+      data-sound-flow="off"
       className="relative"
       style={{ height: `calc(${Math.max(1, n) * SCROLL_PER_FRAME}vh + 100vh)` }}
     >
@@ -480,12 +481,12 @@ export default function TemplateCorridor({ templates, onUnsupported }) {
                 ))}
               </div>
             </motion.div>
-            <div className="flex flex-wrap items-center gap-3.5 pt-1.5">
+            {/* <div className="flex flex-wrap items-center gap-3.5 pt-1.5">
               <Button className="tracking-normal!" text="View template" href={current.href || `/templates/${current.slug}`} />
               {priceOf(current) != null && (
                 <span className={`${LABEL} text-foreground/80`}><span className={PRICE}>${priceOf(current)}</span> · or 1 credit</span>
               )}
-            </div>
+            </div> */}
           </aside>
         )}
 

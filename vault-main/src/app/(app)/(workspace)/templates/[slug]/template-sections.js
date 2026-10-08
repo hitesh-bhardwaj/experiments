@@ -7,7 +7,7 @@
 // Dot Fill Button, effects/text-fill an adapted Text Fill Animation). Names
 // that aren't in the registry are components built just for that template.
 //
-// Sections are matched to the layers in public/assets/templates-exploded/
+// Sections are matched to the layers in public/assets/templates/templates-exploded/
 // <slug>/manifest.json by the layer's label (the Figma export's file name, or
 // for a stitched capture the section's DOM id or heading):
 //   match - the layer label starts with this (case-insensitive); a label equal

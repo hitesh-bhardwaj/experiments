@@ -1,0 +1,199 @@
+{
+  "slug": "lumera",
+  "source": "figma",
+  "devices": {
+    "desktop": {
+      "sections": [
+        {
+          "name": "hero",
+          "src": "/assets/templates/templates-exploded/lumera/desktop/01-hero.webp",
+          "width": 1200,
+          "height": 1500
+        },
+        {
+          "name": "about",
+          "src": "/assets/templates/templates-exploded/lumera/desktop/02-about.webp",
+          "width": 1200,
+          "height": 915
+        },
+        {
+          "name": "feature reveal",
+          "src": "/assets/templates/templates-exploded/lumera/desktop/03-feature-reveal.webp",
+          "width": 1200,
+          "height": 1410
+        },
+        {
+          "name": "services",
+          "src": "/assets/templates/templates-exploded/lumera/desktop/04-services.webp",
+          "width": 1200,
+          "height": 815
+        },
+        {
+          "name": "residences",
+          "src": "/assets/templates/templates-exploded/lumera/desktop/05-residences.webp",
+          "width": 1200,
+          "height": 2473
+        },
+        {
+          "name": "refinement",
+          "src": "/assets/templates/templates-exploded/lumera/desktop/06-refinement.webp",
+          "width": 1200,
+          "height": 863
+        },
+        {
+          "name": "heart of dubai",
+          "src": "/assets/templates/templates-exploded/lumera/desktop/07-heart-of-dubai.webp",
+          "width": 1200,
+          "height": 875
+        },
+        {
+          "name": "core features",
+          "src": "/assets/templates/templates-exploded/lumera/desktop/08-core-features.webp",
+          "width": 1200,
+          "height": 1025
+        },
+        {
+          "name": "new standard",
+          "src": "/assets/templates/templates-exploded/lumera/desktop/09-new-standard.webp",
+          "width": 1200,
+          "height": 1000
+        },
+        {
+          "name": "stats",
+          "src": "/assets/templates/templates-exploded/lumera/desktop/10-stats.webp",
+          "width": 1200,
+          "height": 635
+        },
+        {
+          "name": "faq",
+          "src": "/assets/templates/templates-exploded/lumera/desktop/11-faq.webp",
+          "width": 1200,
+          "height": 734
+        },
+        {
+          "name": "highlights",
+          "src": "/assets/templates/templates-exploded/lumera/desktop/12-highlights.webp",
+          "width": 1200,
+          "height": 644
+        },
+        {
+          "name": "roi",
+          "src": "/assets/templates/templates-exploded/lumera/desktop/13-roi.webp",
+          "width": 1200,
+          "height": 425
+        },
+        {
+          "name": "cta",
+          "src": "/assets/templates/templates-exploded/lumera/desktop/14-cta.webp",
+          "width": 1200,
+          "height": 775
+        },
+        {
+          "name": "footer",
+          "src": "/assets/templates/templates-exploded/lumera/desktop/15-footer.webp",
+          "width": 1200,
+          "height": 419
+        }
+      ]
+    },
+    "phone": {
+      "sections": [
+        {
+          "name": "hero",
+          "src": "/assets/templates/templates-exploded/lumera/phone/01-hero.webp",
+          "width": 390,
+          "height": 1528
+        },
+        {
+          "name": "about",
+          "src": "/assets/templates/templates-exploded/lumera/phone/02-about.webp",
+          "width": 390,
+          "height": 859
+        },
+        {
+          "name": "feature reveal",
+          "src": "/assets/templates/templates-exploded/lumera/phone/03-feature-reveal.webp",
+          "width": 390,
+          "height": 2023
+        },
+        {
+          "name": "services",
+          "src": "/assets/templates/templates-exploded/lumera/phone/04-services.webp",
+          "width": 390,
+          "height": 706
+        },
+        {
+          "name": "residences",
+          "src": "/assets/templates/templates-exploded/lumera/phone/05-residences.webp",
+          "width": 390,
+          "height": 2425
+        },
+        {
+          "name": "refinement",
+          "src": "/assets/templates/templates-exploded/lumera/phone/06-refinement.webp",
+          "width": 390,
+          "height": 709
+        },
+        {
+          "name": "heart of dubai",
+          "src": "/assets/templates/templates-exploded/lumera/phone/07-heart-of-dubai.webp",
+          "width": 390,
+          "height": 509
+        },
+        {
+          "name": "core features",
+          "src": "/assets/templates/templates-exploded/lumera/phone/08-core-features.webp",
+          "width": 390,
+          "height": 1368
+        },
+        {
+          "name": "new standard",
+          "src": "/assets/templates/templates-exploded/lumera/phone/09-new-standard.webp",
+          "width": 390,
+          "height": 771
+        },
+        {
+          "name": "stats",
+          "src": "/assets/templates/templates-exploded/lumera/phone/10-stats.webp",
+          "width": 390,
+          "height": 393
+        },
+        {
+          "name": "faq",
+          "src": "/assets/templates/templates-exploded/lumera/phone/11-faq.webp",
+          "width": 390,
+          "height": 739
+        },
+        {
+          "name": "highlights",
+          "src": "/assets/templates/templates-exploded/lumera/phone/12-highlights.webp",
+          "width": 390,
+          "height": 415
+        },
+        {
+          "name": "roi",
+          "src": "/assets/templates/templates-exploded/lumera/phone/13-roi.webp",
+          "width": 390,
+          "height": 480
+        },
+        {
+          "name": "cta",
+          "src": "/assets/templates/templates-exploded/lumera/phone/14-cta.webp",
+          "width": 390,
+          "height": 761
+        },
+        {
+          "name": "footer",
+          "src": "/assets/templates/templates-exploded/lumera/phone/15-footer.webp",
+          "width": 390,
+          "height": 537
+        }
+      ]
+    }
+  },
+  "full": {
+    "src": "/assets/templates/templates-exploded/lumera/full-desktop.webp",
+    "width": 720,
+    "height": 8705
+  }
+}

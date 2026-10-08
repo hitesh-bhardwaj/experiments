@@ -44,8 +44,10 @@ export default function TemplateExploded({
   const canvasRef = useRef(null);
   const labelRefs = useRef([]);
   const sceneRef = useRef(null);
-  const [explode, setExplode] = useState(0.7);
+  // Starts assembled; the build below flies it apart to 0.7.
+  const [explode, setExplode] = useState(0);
   const explodeRef = useRef(explode);
+  const introTween = useRef(null); // the fly-apart on (re)build; the slider stops it
   const onUnsupportedRef = useRef(onUnsupported);
   const [panelIndex, setPanelIndex] = useState(0);
   const [selected, setSelected] = useState(-1);
@@ -148,7 +150,7 @@ export default function TemplateExploded({
       if (!state.visible) return;
       const { slabs, rot, mouse } = state;
       const n = slabs.length;
-      const e = clamp(explodeRef.current ?? 0.7, 0, 1);
+      const e = clamp(explodeRef.current ?? 0, 0, 1);
       const st = stage.getBoundingClientRect();
 
       // turn
@@ -162,23 +164,27 @@ export default function TemplateExploded({
       const p = clamp(-sec.top / Math.max(1, sec.height - window.innerHeight), 0, 1);
       // From the first section's centre to the last one's, so the last section
       // comes fully into view; it holds there for the final 8% of the scroll.
+      // The focus is eased in the assembled page's coordinates and only then spread,
+      // so changing the explode amount fans the layers around the point in view
+      // rather than moving the target (which the easing would then chase).
       const spread = 1 + e * 0.18;
-      const firstY = n ? slabs[0].y0 * spread : 0;
-      const lastY = n ? slabs[n - 1].y0 * spread : 0;
+      const firstY = n ? slabs[0].y0 : 0;
+      const lastY = n ? slabs[n - 1].y0 : 0;
       const target = firstY + (lastY - firstY) * Math.min(1, p / 0.92);
       state.focus = state.focus == null ? target : state.focus + (target - state.focus) * Math.min(1, dt * 6);
-      G.position.y = -state.focus;
+      const focusY = state.focus * spread;
+      G.position.y = -focusY;
 
       // which section the focus sits in (fractional, for a smooth fan)
       let fi = 0;
       for (let i = 0; i < n; i++) {
         const top = (slabs[i].y0 + slabs[i].h / 2) * spread;
         const bottom = (slabs[i].y0 - slabs[i].h / 2) * spread;
-        if (state.focus <= top && state.focus >= bottom) {
-          fi = i + clamp((top - state.focus) / Math.max(0.001, top - bottom), 0, 1) - 0.5;
+        if (focusY <= top && focusY >= bottom) {
+          fi = i + clamp((top - focusY) / Math.max(0.001, top - bottom), 0, 1) - 0.5;
           break;
         }
-        if (state.focus < bottom) fi = i + 0.5;
+        if (focusY < bottom) fi = i + 0.5;
       }
       fi = clamp(fi, 0, Math.max(0, n - 1));
 
@@ -304,16 +310,21 @@ export default function TemplateExploded({
     });
     state.root.scale.setScalar(ROOT_SCALE[device] || 1);
 
-    // fly the layers apart on every (re)build
+    // fly the layers apart on every (re)build - assembled straight away (the ref
+    // too, so the very next frame draws it), not only once the delayed tween starts
+    explodeRef.current = 0;
+    setExplode(0);
     const proxy = { v: 0 };
-    const tween = gsap.to(proxy, {
+    const tween = (introTween.current = gsap.to(proxy, {
       v: 0.7,
       duration: 2.2,
       delay: 0.3,
       ease: "expo.inOut",
-      onStart: () => setExplode(0),
-      onUpdate: () => setExplode(proxy.v),
-    });
+      onUpdate: () => {
+        explodeRef.current = proxy.v;
+        setExplode(proxy.v);
+      },
+    }));
     return () => tween.kill();
   }, [capture, sections, device]);
 
@@ -326,8 +337,9 @@ export default function TemplateExploded({
     state.rot.ty = REST.y;
     state.sel = -1;
     setSelected(-1);
+    introTween.current?.kill();
     resetTween.current?.kill();
-    const proxy = { v: explodeRef.current ?? 0.7 };
+    const proxy = { v: explodeRef.current ?? 0 };
     resetTween.current = gsap.to(proxy, { v: 0.7, duration: 1.2, ease: "power2.inOut", onUpdate: () => setExplode(proxy.v) });
   };
   useEffect(() => () => resetTween.current?.kill(), []);
@@ -346,6 +358,7 @@ export default function TemplateExploded({
     <section
       ref={sectionRef}
       aria-label="Exploded template view"
+      data-sound-flow="off"
       className="relative"
       style={{ height: `calc(${Math.max(1, n) * SCROLL_PER_SECTION}vh + 100vh)` }}
     >
@@ -419,6 +432,7 @@ export default function TemplateExploded({
               max="100"
               value={Math.round(explode * 100)}
               onChange={(e) => {
+                introTween.current?.kill();
                 resetTween.current?.kill();
                 setExplode(e.target.value / 100);
               }}

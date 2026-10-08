@@ -7,7 +7,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Sidebar } from "./Sidebar";
 import { getEffectCategoryHref } from "@/lib/categories";
-import { GridDots } from "@/components/grid-dots";
+import { RouteLoading, isRouteLoading } from "@/components/ui/RouteLoading";
 
 const VaultLayoutContext = createContext({
   isSidebarOpen: true,
@@ -142,21 +142,22 @@ export function VaultLayout({
     refreshTimeoutsRef.current = [];
   }, []);
 
+  // Recovers Lenis after a route change in case something left it stopped, but
+  // never while the page-change loader is up - that keeps it stopped and
+  // starts it itself once the new page is in (see RouteLoading).
   const forceStartLenis = useCallback(() => {
     if (typeof document !== "undefined") {
       document.body.style.removeProperty("overflow");
     }
 
-    lenis?.start?.();
+    const start = () => {
+      if (!isRouteLoading()) lenis?.start?.();
+    };
+    start();
 
     if (typeof window !== "undefined") {
-      requestAnimationFrame(() => {
-        lenis?.start?.();
-      });
-
-      window.setTimeout(() => {
-        lenis?.start?.();
-      }, 80);
+      requestAnimationFrame(start);
+      window.setTimeout(start, 80);
     }
   }, [lenis]);
 
@@ -505,9 +506,8 @@ export function VaultLayout({
 
           <main className="relative min-w-0 flex-1">
             {isNavigating ? (
-              <div className="absolute inset-x-0 top-0 flex h-screen items-center justify-center">
-                <GridDots size={56} squareSize={8} className="text-primary" />
-              </div>
+              // Same loader as loading.js: locks scrolling and stops Lenis while it shows
+              <RouteLoading className="absolute inset-x-0 top-0 flex h-screen items-center justify-center" />
             ) : (
               renderedChildren
             )}

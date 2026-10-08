@@ -5,6 +5,7 @@ import { createPortal } from "react-dom";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import gsap from "gsap";
+import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { AnimatePresence, motion } from "motion/react";
 import { Search, X } from "lucide-react";
@@ -37,7 +38,7 @@ import { MEDIA } from "@/lib/breakpoints";
 import RollNumber from "@/components/Pricing/exploded/RollNumber";
 import RollText from "@/components/Pricing/exploded/RollText";
 
-gsap.registerPlugin(useGSAP);
+gsap.registerPlugin(useGSAP, ScrollTrigger);
 
 // Effects load in batches of 30; the next batch comes in from the "Show more" button.
 const PAGE = 30;
@@ -272,7 +273,7 @@ export function EffectsListing({
   const context = featured ? "Featured" : categoryName || (tier !== "all" ? `${tier === "free" ? "Free" : "Pro"} effects` : "");
 
   const actives = [
-    tier !== "all" && { id: "tier", label: tier === "free" ? "Free" : "Pro", clear: () => setTier("all") },
+    tier !== "all" && !TIER_SCOPES.includes(scope) && { id: "tier", label: tier === "free" ? "Free" : "Pro", clear: () => setTier("all") },
     featured && { id: "featured", label: "Featured", clear: () => setFeatured(false) },
     category && { id: "category", roll: true, label: getQuickCategoryLabel(category), clear: () => selectCategory(null) },
     ...stack.map((tag) => ({ id: `stack:${tag}`, label: tag, clear: () => setStack((s) => s.filter((t) => t !== tag)) })),
@@ -467,10 +468,44 @@ export function EffectsListing({
     [context], // eslint-disable-line react-hooks/exhaustive-deps
   );
 
+  // A filter, column or "show more" change resizes the grid, which moves everything
+  // below it (the FAQ's reveal included). Re-measure the scroll triggers once the
+  // cards' layout animation (0.5s) has settled, or those reveals fire in the wrong place.
+  useEffect(() => {
+    const id = setTimeout(() => ScrollTrigger.refresh(), 650);
+    return () => clearTimeout(id);
+  }, [filterKey, shown, cols, scope]);
+
   /* ---------- actions ---------- */
   const scrollToGrid = () => sheetRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
 
   const closeDrawer = useCallback(() => setDrawerEffect(null), []);
+
+  // Trending row, free mode: no snapping. Mouse drags, horizontal wheel/trackpad
+  // and the arrows all move one target scroll position, and a rAF loop eases the
+  // row toward it, so every input glides the same way; a drag released mid-flick
+  // carries on with its speed. Touch (tablet/mobile) keeps the native scroll.
+  const trendMotion = useRef({ target: 0, current: 0, raf: 0, drag: null });
+  const setTrendTarget = useCallback((left) => {
+    const row = trendRef.current;
+    const m = trendMotion.current;
+    if (!row) return;
+    m.target = Math.max(0, Math.min(row.scrollWidth - row.clientWidth, left));
+    if (m.raf) return;
+    m.current = row.scrollLeft;
+    let last = performance.now();
+    const step = (now) => {
+      // 14% of the way per 60fps frame, scaled so 120Hz screens glide at the same speed.
+      m.current += (m.target - m.current) * (1 - Math.pow(0.86, Math.min(4, (now - last) / 16.67)));
+      last = now;
+      if (Math.abs(m.target - m.current) < 0.5) m.current = m.target;
+      row.scrollLeft = m.current;
+      m.raf = m.current === m.target ? 0 : requestAnimationFrame(step);
+    };
+    m.raf = requestAnimationFrame(step);
+  }, []);
+  // Where a new input starts from: the running target while gliding, else the row.
+  const trendBase = () => (trendMotion.current.raf ? trendMotion.current.target : trendRef.current?.scrollLeft || 0);
 
   // One card (plus the row gap) per arrow click.
   const scrollTrending = (dir) => {
@@ -478,13 +513,75 @@ export function EffectsListing({
     const card = row?.firstElementChild;
     if (!card) return;
     const gap = parseFloat(getComputedStyle(row).columnGap) || 0;
-    row.scrollBy({ left: dir * (card.getBoundingClientRect().width + gap), behavior: "smooth" });
+    setTrendTarget(trendBase() + dir * (card.getBoundingClientRect().width + gap));
   };
 
+  // Horizontal wheel / trackpad swipes scroll the row (vertical wheel still scrolls the page).
+  useEffect(() => {
+    const row = trendRef.current;
+    const m = trendMotion.current;
+    if (!row) return;
+    const onWheel = (event) => {
+      if (Math.abs(event.deltaX) <= Math.abs(event.deltaY)) return;
+      event.preventDefault();
+      setTrendTarget(trendBase() + event.deltaX);
+    };
+    row.addEventListener("wheel", onWheel, { passive: false });
+    return () => {
+      row.removeEventListener("wheel", onWheel);
+      cancelAnimationFrame(m.raf);
+      m.raf = 0;
+    };
+  }, [setTrendTarget, trendingEffects]);
+
+  // The click that ends a drag doesn't open the card under the cursor.
+  const onTrendPointerDown = (event) => {
+    if (event.pointerType !== "mouse" || event.button !== 0) return;
+    trendMotion.current.drag = { x: event.clientX, left: trendBase(), moved: false, id: event.pointerId, lastX: event.clientX, lastT: performance.now(), vel: 0 };
+  };
+  const onTrendPointerMove = (event) => {
+    const drag = trendMotion.current.drag;
+    const row = trendRef.current;
+    if (!drag || !row) return;
+    const dx = event.clientX - drag.x;
+    if (!drag.moved) {
+      if (Math.abs(dx) < 5) return;
+      drag.moved = true;
+      row.setPointerCapture(drag.id);
+      row.style.cursor = "grabbing";
+    }
+    // Pointer speed (px/ms), smoothed, for the throw on release.
+    const now = performance.now();
+    const dt = Math.max(1, now - drag.lastT);
+    drag.vel = drag.vel * 0.6 + ((event.clientX - drag.lastX) / dt) * 0.4;
+    drag.lastX = event.clientX;
+    drag.lastT = now;
+    setTrendTarget(drag.left - dx);
+  };
+  const endTrendDrag = () => {
+    const m = trendMotion.current;
+    const drag = m.drag;
+    const row = trendRef.current;
+    m.drag = null;
+    if (!drag?.moved || !row) return;
+    row.style.cursor = "";
+    // Throw: keep going with the release speed (ignored if the pointer had stopped).
+    if (performance.now() - drag.lastT < 80) setTrendTarget(m.target - drag.vel * 320);
+    const swallow = (e) => {
+      e.stopPropagation();
+      e.preventDefault();
+    };
+    window.addEventListener("click", swallow, { capture: true, once: true });
+    setTimeout(() => window.removeEventListener("click", swallow, { capture: true }), 0);
+  };
+
+  // Only re-render when an end is actually reached or left (this runs every scroll frame).
   const updateTrendEdges = () => {
     const row = trendRef.current;
     if (!row) return;
-    setTrendEdges({ start: row.scrollLeft < 8, end: row.scrollLeft > row.scrollWidth - row.clientWidth - 8 });
+    const start = row.scrollLeft < 8;
+    const end = row.scrollLeft > row.scrollWidth - row.clientWidth - 8;
+    setTrendEdges((prev) => (prev.start === start && prev.end === end ? prev : { start, end }));
   };
 
   const faqItems = useMemo(
@@ -516,12 +613,12 @@ export function EffectsListing({
           <Breadcrumb />
         </div>
 
-        <div data-v4-hero className="flex items-end justify-between gap-[3vw] max-lg:flex-col max-lg:items-stretch max-lg:gap-[5vw]">
+        <div data-v4-hero className="flex justify-between gap-[3vw] max-lg:flex-col max-lg:items-stretch max-lg:gap-[5vw]">
           {/* Same entrances as the effect page: chars for the title, lines for the copy. */}
           {/* Keyed by page: SplitText owns the heading's text nodes, so a new page gets a
               fresh heading (and runs its entrance again) instead of a stale update. */}
           <HeadAnim key={scope || "all"} rotate={0} animateOnScroll={false}>
-            <h1 className={`${DISPLAY} t96 w-[58%] font-aeonik max-lg:w-full`}>
+            <h1 className={`${DISPLAY} t96 w-[58%] font-aeonik max-lg:w-full -mt-3`}>
               {scope ? (
                 <HeroTitle name={content?.name} />
               ) : (
@@ -532,7 +629,7 @@ export function EffectsListing({
             </h1>
           </HeadAnim>
 
-          <div className="flex w-[32%] flex-col gap-[1.6vw] max-lg:w-full max-md:gap-[6vw]">
+          <div className="flex w-[40%] flex-col gap-[1.6vw] max-lg:w-full max-md:gap-[6vw]">
             {(scope
               ? [].concat(content?.description || [])
               : ["Production-ready interaction effects for React and Next.js. Preview any of them live, then copy or install with one command."]
@@ -541,11 +638,15 @@ export function EffectsListing({
                 <p className={`w-full ${T16} text-foreground/80 max-lg:w-[70%] max-md:w-full`}>{paragraph}</p>
               </Copy>
             ))}
-            <div className={`${LABEL} flex flex-wrap gap-x-[2vw] gap-y-[0.7vw] max-md:gap-x-[7vw] max-md:gap-y-[2.5vw]`}>
+            <div data-v4-fade className={`${LABEL} flex flex-wrap gap-x-[2vw] gap-y-[0.7vw] max-md:gap-x-[7vw] max-md:gap-y-[2.5vw]`}>
               {heroStats.map(([value, label]) => (
                 <p key={`${scope || "all"}-${label}`}>
-                  {/* margin-left is set by alignStatInk() so the digit's ink lines up with the label's. */}
-                  <b data-v4-count={value} className={`${DISPLAY} block font-aeonik text-[2.4vw] leading-none text-light tabular-nums normal-case max-lg:text-[4.5vw] max-md:text-[8vw]`}>
+                  {/* margin-left is set by alignStatInk() so the digit's ink lines up with the label's;
+                      a leading "1" still sits a touch right of the label, so it moves 2px left. */}
+                  <b
+                    data-v4-count={value}
+                    className={`${DISPLAY} block font-aeonik text-[2.4vw] leading-none text-light tabular-nums normal-case max-lg:text-[4.5vw] max-md:text-[8vw] ${String(value).startsWith("1") ? "-translate-x-[2px]" : ""}`}
+                  >
                     <StatRoll value={value} />
                   </b>
                   <span className="text-[1vw] normal-case tracking-normal text-foreground/60">{label}</span>
@@ -574,10 +675,15 @@ export function EffectsListing({
             // overflow-y to auto, and the site's Lenis (allowNestedScroll) then treats this
             // row as a vertical scroller and traps the wheel inside it.
             onScroll={updateTrendEdges}
-            className="flex snap-x snap-mandatory gap-[0.9vw] overflow-x-hidden overflow-y-hidden pb-1 scrollbar-none max-lg:gap-[1.4vw] max-lg:overflow-x-auto max-md:gap-[3.6vw]"
+            onPointerDown={onTrendPointerDown}
+            onPointerMove={onTrendPointerMove}
+            onPointerUp={endTrendDrag}
+            onPointerCancel={endTrendDrag}
+            onDragStart={(event) => event.preventDefault()}
+            className="flex cursor-grab select-none gap-[0.9vw] overflow-x-hidden overflow-y-hidden pb-1 scrollbar-none max-lg:gap-[1.4vw] max-lg:overflow-x-auto max-md:gap-[3.6vw]"
           >
             {trendingEffects.map((effect, index) => (
-              <EffectCard key={effect.name} {...cardProps(effect, index)} small dark className="w-[calc((100%-1.8vw)/3)] shrink-0 snap-start max-lg:w-[45%] max-md:w-[82%]" tagClassName="text-foreground border-foreground/30" metaClassName="text-foreground/80" />
+              <EffectCard key={effect.name} {...cardProps(effect, index)} small dark className="w-[calc((100%-1.8vw)/3)] shrink-0 max-lg:w-[45%] max-md:w-[82%]" tagClassName="text-foreground border-foreground/30" metaClassName="text-foreground/80" />
             ))}
           </div>
         </section>
@@ -593,9 +699,10 @@ export function EffectsListing({
             Full-width bar so its background covers the sheet edge to edge while stuck. */}
         <div className="sticky top-[-2%] z-5 h-fit border-b border-black/8 bg-light max-lg:static max-lg:border-b-0">
           <div className={`${WRAP} flex flex-wrap items-end justify-between gap-[1vw] pt-10 pb-4 max-md:gap-[4vw] max-md:pt-8`}>
+            {/* A div, not a p: RollText renders a div, which a <p> can't contain. */}
             <div aria-live="polite" className={`${DISPLAY} ${T20} flex flex-wrap items-baseline font-aeonik tracking-tight`}>
               {/* Fixed-width slots, so nothing beside them moves when the count or page name changes */}
-              <span className="flex w-[6vw] shrink-0 items-baseline gap-x-[0.4vw] max-[1025px]:w-[14vw] max-md:w-[32vw] max-md:gap-x-[1.5vw]">
+              <span className="flex w-[6vw] shrink-0 items-baseline gap-x-[0.4vw] max-lg:w-[14vw] max-md:w-[32vw] max-md:gap-x-[1.5vw]">
                 <span className="relative -top-[0.05em] font-medium tabular-nums">
                   <RollNumber value={filtered.length} values={[0, effects.length]} />
                 </span>
@@ -604,12 +711,13 @@ export function EffectsListing({
               {/* The dot stays put, only the name rolls */}
               <span className="flex shrink-0 items-baseline gap-x-[0.3vw] pl-[0.3vw] max-md:gap-x-[1vw]">
                 <span aria-hidden="true" className={`${T15} text-black/60 transition-opacity duration-300 ${context ? "" : "opacity-0"}`}>·</span>
-                <RollText text={contextTail} block className="w-[14vw] shrink-0 overflow-x-visible! overflow-y-clip! whitespace-nowrap max-[1025px]:w-[24vw] max-md:w-[48vw]" />
+                <RollText text={contextTail} block className="w-[14vw] shrink-0 overflow-x-visible! overflow-y-clip! whitespace-nowrap max-lg:w-[24vw] max-md:w-[48vw]" />
               </span>
             </div>
 
             <div className="flex flex-wrap items-center gap-[0.7vw] max-md:gap-[2.5vw]">
-              <SlidingSegment label="Tier" items={TIERS} value={tier} onChange={setTier} itemClassName="w-14" />
+              {/* The Free / Pro pages are already one tier, so the All · Free · Pro toggle is left out there. */}
+              {!TIER_SCOPES.includes(scope) && <SlidingSegment label="Tier" items={TIERS} value={tier} onChange={setTier} itemClassName="w-14" />}
               <button
                 type="button"
                 aria-pressed={featured}
@@ -652,7 +760,7 @@ export function EffectsListing({
                   <>
                     {c.label}
                     {c.count != null && (
-                      <span className={`relative top-[0.1em] font-mono ${T11} tabular-nums ${active ? "text-background" : "text-black/50"}`}>{c.count}</span>
+                      <span className={`relative font-mono ${T11} tabular-nums ${active ? "text-background" : "text-black/50"}`}>{c.count}</span>
                     )}
                   </>
                 );
