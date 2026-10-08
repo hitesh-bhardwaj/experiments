@@ -1,6 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import gsap from "gsap";
+import { prefersReducedMotion } from "@/lib/motion";
 import { createPortal } from "react-dom";
 import { ChevronDown, X } from "lucide-react";
 import { EFFECT_SORT_OPTIONS, FILTER_OPTIONS } from "@/lib/effect-sort";
@@ -110,6 +112,17 @@ export function FilterMenu({
       return next;
     });
   };
+
+  // The panel slides down open (clip reveal), then its rows fade in
+  useLayoutEffect(() => {
+    const panel = panelRef.current;
+    if (!open || !panel || prefersReducedMotion()) return undefined;
+    const rows = Array.from(panel.children);
+    const tl = gsap.timeline();
+    tl.fromTo(panel, { clipPath: "inset(0 0 100% 0)" }, { clipPath: "inset(0 0 0% 0)", duration: 0.45, ease: "power3.out", clearProps: "clipPath" });
+    tl.fromTo(rows, { opacity: 0 }, { opacity: 1, duration: 0.3, ease: "power2.out", stagger: 0.03, clearProps: "opacity" }, 0.2);
+    return () => tl.kill();
+  }, [open]);
 
   const panel = open ? (
     <div

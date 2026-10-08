@@ -81,6 +81,30 @@ const PERIOD_COPY = Object.fromEntries(PLANS.map((plan) => {
     return [plan.id, { q: pair("q"), y: pair("y") }];
 }));
 
+// Cross-fades its content: fades out, swaps once hidden, fades back in
+function FadeSwap({ children, swapKey }) {
+    const [shown, setShown] = useState(children);
+    const [visible, setVisible] = useState(true);
+    const latest = useRef(children);
+    const first = useRef(true);
+    latest.current = children;
+    useEffect(() => {
+        if (first.current) { first.current = false; return; }
+        // Always fades toward the newest content, so quick toggles never strand it half-faded
+        setVisible(false);
+        const t = setTimeout(() => {
+            setShown(latest.current);
+            setVisible(true);
+        }, 250);
+        return () => clearTimeout(t);
+    }, [swapKey]);
+    return (
+        <div className={`transition-opacity duration-300 ease-out motion-reduce:transition-none ${visible ? "opacity-100" : "opacity-0"}`}>
+            {shown}
+        </div>
+    );
+}
+
 const ASSURANCES = [
     "Cancel anytime",
     "Everything you copy stays in your repo",
@@ -125,6 +149,8 @@ export default function PricingPlansHome() {
             const on = bill.querySelector('[aria-checked="true"]');
             if (!on) return;
             pillRef.current.style.width = `${on.offsetWidth}px`;
+            pillRef.current.style.height = `${on.offsetHeight}px`;
+            pillRef.current.style.top = `${on.offsetTop}px`;
             pillRef.current.style.transform = `translateX(${on.offsetLeft}px)`;
         };
         place();
@@ -143,16 +169,16 @@ export default function PricingPlansHome() {
     return (
         <section ref={rootRef} id="pricing" data-sound-flow="off" data-sound-hover="off" className="relative bg-white px-[calc(var(--cvw)*4.5)] space-y-[3vw] py-[7%] max-md:py-[15%] font-avenir text-[#1D1D1D] max-md:px-[calc(var(--cvw)*7)]">
             <div className="mx-auto flex w-full max-w-[1536px] flex-wrap items-end justify-between gap-[calc(var(--cvw)*2)] max-md:gap-[calc(var(--cvw)*5)]">
-                <LineReveal as="h2" className="type-h1">
-                    Two Plans.<br/> <span className="gradient-text-animate gradient-text-single">Every Moment Covered.</span>
+                <LineReveal as="h2" className="type-h1 leading-[1.2]! w-[40%]">
+                    Two plans. <span className="gradient-text-animate">Every moment covered.</span>
                 </LineReveal>
 
-                <div ref={billRef} role="radiogroup" aria-label="Billing period" className="fadeup  relative isolate inline-flex border border-[#1D1D1D]/15 bg-[#ececec] p-1.5 max-md:flex max-md:w-full">
+                <div ref={billRef} role="radiogroup" aria-label="Billing period" className="fadeup  relative isolate inline-flex border border-[#1D1D1D]/15 bg-[#ececec] p-1 max-md:flex max-md:w-full">
                     {/* <CornerMarks /> */}
                     <i
                         ref={pillRef}
                         aria-hidden="true"
-                        className="absolute top-1.5 bottom-1.5 left-0 z-0 bg-[#1D1D1D] transition-[transform,width] duration-800 motion-reduce:transition-none"
+                        className="absolute top-0 left-0 z-0 bg-[#1D1D1D] transition-[transform,width] duration-800 motion-reduce:transition-none"
                         style={{ transitionTimingFunction: EASE }}
                     />
                     {BILLING.map((b) => {
@@ -209,7 +235,7 @@ export default function PricingPlansHome() {
 
                             {/* Billing + savings, closed off by a thin rule */}
                             <div className={`relative grid gap-1 border-b pb-[calc(var(--cvw)*1.4)] type-body ${dark ? "border-[#F4F4F4]/12" : "border-[#1D1D1D]/12"}`}>
-                                <RollText text={PERIOD_COPY[plan.id][period]} dir={dir} block />
+                                <FadeSwap swapKey={period}>{PERIOD_COPY[plan.id][period]}</FadeSwap>
                             </div>
 
                             <ul className={`relative mt-[calc(var(--cvw)*0.4)] grid flex-1 content-start gap-[calc(var(--cvw)*1.2)] max-md:gap-[calc(var(--cvw)*4)] type-body`}>

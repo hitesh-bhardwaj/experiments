@@ -33,6 +33,8 @@ export default function RollText({ text, dir = 1, fixed = false, block = false, 
   const els = useRef(new Map());
   const splits = useRef(new Map());
   const last = useRef(text);
+  const layersRef = useRef(layers);
+  layersRef.current = layers;
 
   useEffect(() => {
     if (text === last.current) return;
@@ -44,8 +46,17 @@ export default function RollText({ text, dir = 1, fixed = false, block = false, 
     // Lines already on screen leave from wherever they are now
     splits.current.forEach((split) => gsap.killTweensOf(split.lines));
     els.current.forEach((el) => { delete el.dataset.anim; });
+    // Layers still on their way out are dropped at once, so at most two texts (the one
+    // leaving now and the new one) are ever on screen, however fast the text changes
+    layersRef.current.forEach((l) => {
+      if (!l.leaving) return;
+      const split = splits.current.get(l.id);
+      if (split) { gsap.killTweensOf(split.lines); split.revert(); }
+      splits.current.delete(l.id);
+      els.current.delete(l.id);
+    });
     setLayers((prev) => [
-      ...prev.map((l) => ({ ...l, leaving: true, enter: false, dir })),
+      ...prev.filter((l) => !l.leaving).map((l) => ({ ...l, leaving: true, enter: false, dir })),
       { id: nextId.current++, text, enter: true, dir },
     ]);
   }, [text]); // eslint-disable-line react-hooks/exhaustive-deps

@@ -86,9 +86,45 @@ export default function PricingFinder() {
   const rootRef = useRef(null);
   const outRef = useRef(null);
   const { sound } = useInteraction() ?? {};
-  const [templates, setTemplates] = useState(2);
-  const [copies, setCopies] = useState(4);
+  // The thumbs sit at a continuous position (so they can glide); the answers are the whole step nearest to it
+  const [pos, setPos] = useState({ templates: 2, copies: 4 });
+  const templates = Math.round(pos.templates);
+  const copies = Math.round(pos.copies);
   const [sections, setSections] = useState(false);
+  // Turning full page sections on moves the sliders to a Pro+ sized setup; turning it off restores them
+  const beforeSections = useRef(null);
+  const posRef = useRef(pos);
+  posRef.current = pos;
+  const tweens = useRef({});
+  const glideTo = (name, to, duration = 0.9) => {
+    tweens.current[name]?.kill();
+    if (prefersReducedMotion()) { setPos((p) => ({ ...p, [name]: to })); return; }
+    const proxy = { v: posRef.current[name] };
+    tweens.current[name] = gsap.to(proxy, {
+      v: to,
+      duration,
+      ease: "power3.inOut",
+      onUpdate: () => setPos((p) => ({ ...p, [name]: proxy.v })),
+    });
+  };
+  // Dragging follows the pointer freely, then settles on the nearest step on release
+  const dragProps = (name) => ({
+    onChange: (e) => { tweens.current[name]?.kill(); setPos((p) => ({ ...p, [name]: +e.target.value })); },
+    onPointerUp: () => glideTo(name, Math.round(posRef.current[name]), 0.3),
+    onKeyUp: () => glideTo(name, Math.round(posRef.current[name]), 0.3),
+  });
+  const toggleSections = () => {
+    if (!sections) {
+      beforeSections.current = { templates, copies };
+      glideTo("templates", 5);
+      glideTo("copies", 8);
+    } else if (beforeSections.current) {
+      glideTo("templates", beforeSections.current.templates);
+      glideTo("copies", beforeSections.current.copies);
+      beforeSections.current = null;
+    }
+    setSections(!sections);
+  };
   const rec = useMemo(() => recommend({ templates, copies, sections }), [templates, copies, sections]);
   const key = rec.key + rec.period;
 
@@ -101,14 +137,19 @@ export default function PricingFinder() {
     const tag = tagRef.current;
     const name = tag?.previousElementSibling;
     if (!tag || !name || typeof ResizeObserver === "undefined") return undefined;
-    let left = tag.offsetLeft;
+    // Tween by how much the name itself grew or shrank. The observer also fires once on
+    // observe and when fonts finish loading, which must not slide the tag in from afar.
+    let width = name.offsetWidth;
+    let started = false;
     const ro = new ResizeObserver(() => {
-      const next = tag.offsetLeft;
-      if (next !== left && !prefersReducedMotion()) {
-        const from = (gsap.getProperty(tag, "x") || 0) + left - next;
+      const next = name.offsetWidth;
+      const delta = next - width;
+      width = next;
+      if (!started) { started = true; return; }
+      if (delta && !prefersReducedMotion()) {
+        const from = (gsap.getProperty(tag, "x") || 0) - delta;
         gsap.fromTo(tag, { x: from }, { x: 0, duration: 0.9, ease: "expo.out", overwrite: "auto" });
       }
-      left = next;
     });
     ro.observe(name);
     return () => ro.disconnect();
@@ -140,14 +181,14 @@ export default function PricingFinder() {
               <span>Templates you’ll launch this year</span>
               <output htmlFor="fd-templates" className="flex shrink-0 justify-end text-foreground"><RollNumber value={templates} values={[0, 6]} /></output>
             </label>
-            <input id="fd-templates" type="range" min="0" max="6" step="1" value={templates} onChange={(e) => setTemplates(+e.target.value)} style={fill(templates, 0, 6)} className={RANGE} />
+            <input id="fd-templates" type="range" min="0" max="6" step="any" value={pos.templates} {...dragProps("templates")} style={fill(pos.templates, 0, 6)} className={RANGE} />
           </div>
           <div className="flex flex-col gap-[0.6vw] max-md:gap-[2vw]">
             <label htmlFor="fd-copies" className={`flex items-center justify-between gap-[1vw] text-foreground/60 ${LABEL}`}>
               <span>Components you copy on a busy day</span>
               <output htmlFor="fd-copies" className="flex shrink-0 justify-end text-foreground"><RollNumber value={copies} values={[1, 10]} /></output>
             </label>
-            <input id="fd-copies" type="range" min="1" max="10" step="1" value={copies} onChange={(e) => setCopies(+e.target.value)} style={fill(copies, 1, 10)} className={RANGE} />
+            <input id="fd-copies" type="range" min="1" max="10" step="any" value={pos.copies} {...dragProps("copies")} style={fill(pos.copies, 1, 10)} className={RANGE} />
           </div>
           </div>
           <ButtonV3
@@ -155,8 +196,8 @@ export default function PricingFinder() {
             variant={sections ? "orange" : "outline"}
             preventDefault
             ariaLabel={`I need full page sections, ${sections ? "on" : "off"}`}
-            onClick={() => { setSections((v) => !v); sound?.note?.(sections ? 1 : 3); }}
-            className="w-fit max-md:w-full max-md:justify-center"
+            onClick={() => { toggleSections(); sound?.note?.(sections ? 1 : 3); }}
+            className={`w-fit max-md:w-full max-md:justify-center ${sections ? "border border-transparent" : ""}`}
           />
         </div>
 
@@ -164,7 +205,7 @@ export default function PricingFinder() {
           <p data-pick className={`text-foreground/50 ${LABEL}`}>We’d pick</p>
           <div className={`text80 flex items-center gap-[1vw] text-foreground max-md:gap-[3vw]`}>
             <RollText text={rec.plan.name} dir={rec.key === "plus" ? 1 : -1} className="pb-[0.1em]" />
-            <span ref={tagRef} data-pick className={`bg-primary/20 px-[0.7vw] py-[0.4vw] text-primary-hover max-md:px-[2vw] max-md:py-[1vw] ${LABEL}`}>
+            <span ref={tagRef} className={`bg-primary/20 px-[0.7vw] py-[0.4vw] text-primary-hover max-md:px-[2vw] max-md:py-[1vw] ${LABEL}`}>
               {rec.period === "y" ? "Yearly" : "Quarterly"}
             </span>
           </div>

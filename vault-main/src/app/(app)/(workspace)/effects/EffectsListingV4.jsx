@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
-import { motion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import { Search, X } from "lucide-react";
 import { AppVaultHeader } from "@/components/layout/AppVaultHeader";
 import { useVaultLayout } from "@/components/layout/VaultLayout";
@@ -34,6 +34,8 @@ import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import HeadAnim from "@/components/Animations/HeadAnim";
 import Copy from "@/components/Animations/Copy";
 import { MEDIA } from "@/lib/breakpoints";
+import RollNumber from "@/components/Pricing/exploded/RollNumber";
+import RollText from "@/components/Pricing/exploded/RollText";
 
 gsap.registerPlugin(useGSAP);
 
@@ -103,6 +105,19 @@ const CHIP =
   `inline-flex h-8 shrink-0 cursor-pointer items-center gap-[0.5vw] px-3 ${T13} transition-[background-color,color,box-shadow] duration-500 max-md:gap-[2vw]`;
 const CHIP_OFF = "text-black/60 ring-1 ring-inset ring-black/10 hover:text-ink hover:ring-primary";
 const CHIP_ON = "bg-primary text-background";
+
+// Rolls from 0 up to the value, digit by digit, shortly after it mounts
+function StatRoll({ value }) {
+  const [shown, setShown] = useState(0);
+  useEffect(() => {
+    const t = setTimeout(() => setShown(value), 400);
+    return () => clearTimeout(t);
+  }, [value]);
+  return <RollNumber value={shown} values={[0, value]} />;
+}
+
+// Active filter chips: scale + fade in/out, the rest slide into place
+const FILTER_SPRING = { type: "spring", stiffness: 500, damping: 35, mass: 0.8 };
 
 const countWord = (n) => (n === 1 ? "effect" : "effects");
 
@@ -187,7 +202,6 @@ export function EffectsListingV4({
   const gridRef = useRef(null);
   const sheetRef = useRef(null);
   const searchRef = useRef(null);
-  const countRef = useRef(null);
   const trendRef = useRef(null);
   const [trendEdges, setTrendEdges] = useState({ start: true, end: false });
 
@@ -260,7 +274,7 @@ export function EffectsListingV4({
   const actives = [
     tier !== "all" && { id: "tier", label: tier === "free" ? "Free" : "Pro", clear: () => setTier("all") },
     featured && { id: "featured", label: "Featured", clear: () => setFeatured(false) },
-    category && { id: "category", label: getQuickCategoryLabel(category), clear: () => selectCategory(null) },
+    category && { id: "category", roll: true, label: getQuickCategoryLabel(category), clear: () => selectCategory(null) },
     ...stack.map((tag) => ({ id: `stack:${tag}`, label: tag, clear: () => setStack((s) => s.filter((t) => t !== tag)) })),
     query.trim() && { id: "q", label: `“${query.trim()}”`, clear: () => setQuery("") },
   ].filter(Boolean);
@@ -430,21 +444,6 @@ export function EffectsListingV4({
     { scope: rootRef },
   );
 
-  // Stat count-up - on load (after the fade) and again whenever the page changes.
-  const firstCount = useRef(true);
-  useGSAP(
-    () => {
-      const delay = firstCount.current ? 0.5 : 0.15;
-      firstCount.current = false;
-      gsap.utils.toArray("[data-v4-count]").forEach((el) => {
-        const target = Number(el.dataset.v4Count);
-        const counter = { v: 0 };
-        gsap.to(counter, { v: target, duration: 1.6, delay, ease: "expo.out", onUpdate: () => (el.textContent = Math.round(counter.v)) });
-      });
-    },
-    { dependencies: [scope], scope: rootRef },
-  );
-
   // Cards rise in whenever the result set changes.
   useGSAP(
     () => {
@@ -459,20 +458,13 @@ export function EffectsListingV4({
     { dependencies: [filterKey], scope: rootRef },
   );
 
-  // Result count tweens to its new value.
-  const lastCount = useRef(filtered.length);
-  useGSAP(
-    () => {
-      const counter = { v: lastCount.current };
-      lastCount.current = filtered.length;
-      gsap.to(counter, {
-        v: filtered.length,
-        duration: 0.8,
-        ease: "expo.out",
-        onUpdate: () => countRef.current && (countRef.current.textContent = Math.round(counter.v)),
-      });
-    },
-    { dependencies: [filtered.length] },
+  // Chips only animate their position when one is added or removed, not when the page shifts under them
+  const activeKey = actives.map((a) => a.id).join("|");
+
+  // The page name rolls when it changes (a stable element, so it only rolls on change)
+  const contextTail = useMemo(
+    () => (context ? <span className={`${T15} text-black/60`}>{context}</span> : <span aria-hidden="true">&nbsp;</span>),
+    [context], // eslint-disable-line react-hooks/exhaustive-deps
   );
 
   /* ---------- actions ---------- */
@@ -549,12 +541,12 @@ export function EffectsListingV4({
                 <p className={`w-full ${T16} text-foreground/80 max-lg:w-[70%] max-md:w-full`}>{paragraph}</p>
               </Copy>
             ))}
-            <div data-v4-fade className={`${LABEL} flex flex-wrap gap-x-[2vw] gap-y-[0.7vw] max-md:gap-x-[7vw] max-md:gap-y-[2.5vw]`}>
+            <div className={`${LABEL} flex flex-wrap gap-x-[2vw] gap-y-[0.7vw] max-md:gap-x-[7vw] max-md:gap-y-[2.5vw]`}>
               {heroStats.map(([value, label]) => (
                 <p key={`${scope || "all"}-${label}`}>
                   {/* margin-left is set by alignStatInk() so the digit's ink lines up with the label's. */}
                   <b data-v4-count={value} className={`${DISPLAY} block font-aeonik text-[2.4vw] leading-none text-light tabular-nums normal-case max-lg:text-[4.5vw] max-md:text-[8vw]`}>
-                    {value}
+                    <StatRoll value={value} />
                   </b>
                   <span className="text-[1vw] normal-case tracking-normal text-foreground/60">{label}</span>
                 </p>
@@ -601,12 +593,19 @@ export function EffectsListingV4({
             Full-width bar so its background covers the sheet edge to edge while stuck. */}
         <div className="sticky top-[-2%] z-5 h-fit border-b border-black/8 bg-light max-lg:static max-lg:border-b-0">
           <div className={`${WRAP} flex flex-wrap items-end justify-between gap-[1vw] pt-10 pb-4 max-md:gap-[4vw] max-md:pt-8`}>
-            <p aria-live="polite" className={`${DISPLAY} ${T20} flex flex-wrap items-baseline gap-x-[0.4vw] font-aeonik tracking-tight max-md:gap-x-[1.5vw]`}>
-              <span ref={countRef} className="font-medium tabular-nums">
-                {filtered.length}
+            <p aria-live="polite" className={`${DISPLAY} ${T20} flex flex-wrap items-baseline font-aeonik tracking-tight`}>
+              {/* Fixed-width slots, so nothing beside them moves when the count or page name changes */}
+              <span className="flex w-[6vw] shrink-0 items-baseline gap-x-[0.4vw] max-[1025px]:w-[14vw] max-md:w-[32vw] max-md:gap-x-[1.5vw]">
+                <span className="relative -top-[0.05em] font-medium tabular-nums">
+                  <RollNumber value={filtered.length} values={[0, effects.length]} />
+                </span>
+                <span className="text-black/60">{countWord(filtered.length)}</span>
               </span>
-              <span className="text-black/60">{countWord(filtered.length)}</span>
-              {context && <span className={`${T15} pl-[0.3vw] text-black/60`}>· {context}</span>}
+              {/* The dot stays put, only the name rolls */}
+              <span className="flex shrink-0 items-baseline gap-x-[0.3vw] pl-[0.3vw] max-md:gap-x-[1vw]">
+                <span aria-hidden="true" className={`${T15} text-black/60 transition-opacity duration-300 ${context ? "" : "opacity-0"}`}>·</span>
+                <RollText text={contextTail} block className="w-[14vw] shrink-0 overflow-x-visible! overflow-y-clip! whitespace-nowrap max-[1025px]:w-[24vw] max-md:w-[48vw]" />
+              </span>
             </p>
 
             <div className="flex flex-wrap items-center gap-[0.7vw] max-md:gap-[2.5vw]">
@@ -693,27 +692,53 @@ export function EffectsListingV4({
                 </div>
               </div>
             )}
-            {actives.length > 0 && (
-              <div className="flex flex-wrap items-center gap-[0.4vw] max-md:gap-[1.5vw]">
-                {actives.map((a) => (
-                  <button
-                    key={a.id}
-                    type="button"
-                    onClick={a.clear}
-                    aria-label={`Remove filter ${a.label}`}
-                    className={`inline-flex h-7.5 cursor-pointer items-center gap-[0.5vw] bg-ink px-2.5 ${T13} text-light transition-colors duration-500 hover:bg-ink/80 max-md:gap-[2vw]`}
-                  >
-                    {a.label}
-                    <X className="size-3" aria-hidden="true" />
-                  </button>
-                ))}
-                {actives.length > 1 && (
-                  <button type="button" onClick={clearAll} className={`${LABEL} h-7.5 cursor-pointer px-2 text-black/60 underline decoration-primary/0 underline-offset-4 transition-colors duration-500 hover:text-ink hover:decoration-primary`}>
-                    Clear all
-                  </button>
-                )}
-              </div>
-            )}
+            <AnimatePresence initial={false}>
+              {actives.length > 0 && (
+                <motion.div
+                  key="active-filters"
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="flex flex-wrap items-center gap-[0.4vw] max-md:gap-[1.5vw]"
+                >
+                  <AnimatePresence initial={false} mode="popLayout">
+                    {actives.map((a) => (
+                      <motion.button
+                        key={a.id}
+                        layout
+                        layoutDependency={activeKey}
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.8 }}
+                        transition={FILTER_SPRING}
+                        type="button"
+                        onClick={a.clear}
+                        aria-label={`Remove filter ${a.label}`}
+                        className={`group inline-flex h-7.5 cursor-pointer items-center gap-[0.5vw] bg-ink px-2.5 ${T13} text-light max-md:gap-[2vw] ${a.roll ? "w-[10vw] shrink-0 justify-between max-lg:w-[18vw] max-md:w-[34vw]" : ""}`}
+                      >
+                        {a.roll ? <RollText text={a.label} block className="min-w-0 flex-1 overflow-clip! whitespace-nowrap text-left" /> : a.label}
+                        <X className="size-3 transition-transform duration-300 ease-in-out group-hover:rotate-90 motion-reduce:transition-none" aria-hidden="true" />
+                      </motion.button>
+                    ))}
+                    {actives.length > 1 && (
+                      <motion.button
+                        key="clear-all"
+                        layout
+                        layoutDependency={activeKey}
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.8 }}
+                        transition={FILTER_SPRING}
+                        type="button"
+                        onClick={clearAll}
+                        className={`group ${LABEL} h-7.5 cursor-pointer px-2 text-black/60 transition-colors duration-500 hover:text-ink`}
+                      >
+                        <span className="relative inline-block after:absolute after:inset-x-0 after:-bottom-1 after:h-px after:origin-right after:scale-x-0 after:bg-primary after:transition-transform after:duration-300 after:ease-out group-hover:after:origin-left group-hover:after:scale-x-100 motion-reduce:after:transition-none">Clear all</span>
+                      </motion.button>
+                    )}
+                  </AnimatePresence>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
           {/* grid */}
