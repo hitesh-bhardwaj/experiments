@@ -109,7 +109,13 @@ export default function PricingFinder() {
   };
   // Dragging follows the pointer freely, then settles on the nearest step on release
   const dragProps = (name) => ({
-    onChange: (e) => { setTarget(null); tweens.current[name]?.kill(); setPos((p) => ({ ...p, [name]: +e.target.value })); },
+    onChange: (e) => {
+      // Moving a slider by hand means the answers are no longer "I need full page sections"
+      setSections(false);
+      beforeSections.current = null;
+      setTarget(null);
+      tweens.current[name]?.kill(); setPos((p) => ({ ...p, [name]: +e.target.value }));
+    },
     onPointerUp: () => glideTo(name, Math.round(posRef.current[name]), 0.3),
     onKeyUp: () => glideTo(name, Math.round(posRef.current[name]), 0.3),
   });
