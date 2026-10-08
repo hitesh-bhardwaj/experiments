@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
-import ButtonV3 from "@/homepage-v3/components/ButtonV3";
+import Button from "@/homepage/components/Button";
 
 // Shared auth helpers (also used by components/auth/vault-door) plus the
 // form building blocks CustomAnimationFormModal still renders.
@@ -101,7 +101,7 @@ export function GlobalError({ message }) {
   );
 }
 
-// ButtonV3 renders a <Link>, not a <button type="submit">, so a click on it
+// Button renders a <Link>, not a <button type="submit">, so a click on it
 // can't trigger native form submission on its own - requestSubmit() on the
 // owning form reuses the exact same submit event (and required-field
 // validation) a native type="submit" button relied on.
@@ -109,9 +109,9 @@ export function GlobalError({ message }) {
 // That same gap breaks Enter-to-submit: browsers only do implicit
 // submission-on-Enter when the form contains a real submit control, and an
 // <a> never counts. The visually-hidden button below is that real control -
-// it renders inside the same <form> as ButtonV3, so pressing Enter in any
+// it renders inside the same <form> as Button, so pressing Enter in any
 // field fires the browser's native submit against it, which runs this
-// step's onSubmit handler exactly like a ButtonV3 click does via
+// step's onSubmit handler exactly like a Button click does via
 // requestSubmit().
 export function SubmitButton({ loading, formRef, children, className }) {
   return (
@@ -123,7 +123,7 @@ export function SubmitButton({ loading, formRef, children, className }) {
         aria-hidden="true"
         className="h-0 w-0 overflow-hidden border-0 p-0 opacity-0"
       />
-      <ButtonV3
+      <Button
         href="#"
         preventDefault
         disabled={loading}
@@ -131,7 +131,7 @@ export function SubmitButton({ loading, formRef, children, className }) {
         className={className || "w-full justify-center"}
       >
         {loading ? "Please wait…" : children}
-      </ButtonV3>
+      </Button>
     </>
   );
 }

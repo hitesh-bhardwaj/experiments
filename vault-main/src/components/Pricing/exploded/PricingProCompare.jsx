@@ -4,7 +4,7 @@ import { useLayoutEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import LineReveal from "@/components/Animations/LineReveal";
 import { useFadeUp } from "@/components/Animations/gsapAnimations";
-import { useInteraction } from "@/homepage-v3/components/InteractionProvider";
+import { useInteraction } from "@/homepage/components/InteractionProvider";
 import { prefersReducedMotion } from "@/lib/motion";
 import RollNumber from "./RollNumber";
 import RollText from "./RollText";

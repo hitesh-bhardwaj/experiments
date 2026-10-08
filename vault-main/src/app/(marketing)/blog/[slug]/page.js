@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
-import NavbarV3 from "@/homepage-v3/components/NavbarV3";
-import FooterV3 from "@/homepage-v3/sections/FooterV3";
+import Navbar from "@/homepage/components/Navbar";
+import Footer from "@/homepage/sections/Footer";
 import LenisSmoothScroll from "@/components/SmoothScroll/LenisScroll";
 import {
   getSanityBlogPost,
@@ -85,7 +85,7 @@ export default async function BlogPostPage({ params }) {
       <BreadcrumbsJSONLD pathname={url} />
       <BlogPostingJsonLd post={postWithAuthor} url={url} />
       {faqs.length > 0 && <FAQJSONLD faqs={faqs} />}
-      <NavbarV3 effects={effects} />
+      <Navbar effects={effects} />
       <LenisSmoothScroll allowNestedScroll />
 
       <div className="px-[4vw] py-[8vw] max-lg:px-[5vw] max-lg:py-[10vh] max-md:px-[7vw] max-md:py-[26vw]">
@@ -109,7 +109,7 @@ export default async function BlogPostPage({ params }) {
         <RelatedBlogsSlider posts={relatedPosts} />
       </div>
 
-      <FooterV3 />
+      <Footer />
     </>
   );
 }

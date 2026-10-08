@@ -5,14 +5,14 @@ import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 import InteractionProvider, {
     useInteraction,
-} from "@/homepage-v3/components/InteractionProvider";
-import { readSoundPreference } from "@/homepage-v3/components/SoundToggle";
-import { EasterEggProvider } from "@/homepage-v3/components/easter-egg/EasterEgg";
+} from "@/homepage/components/InteractionProvider";
+import { readSoundPreference } from "@/homepage/components/SoundToggle";
+import { EasterEggProvider } from "@/homepage/components/easter-egg/EasterEgg";
 
 // Client-only: the fluid touches canvas/window on mount and has nothing to
 // server-render.
 const SiteBackground = dynamic(
-    () => import("@/homepage-v3/components/SiteBackground"),
+    () => import("@/homepage/components/SiteBackground"),
     { ssr: false },
 );
 
@@ -53,7 +53,7 @@ function ResumeSavedSound() {
 }
 
 // Mounted once in the root layout: one sound engine, the full-page dotted
-// grid and fluid (the sound toggle itself lives in NavbarV3), and the hidden "Ship at 60" game.
+// grid and fluid (the sound toggle itself lives in Navbar), and the hidden "Ship at 60" game.
 // The layout never remounts on client navigation, so the music keeps playing.
 export default function SiteInteractions({ children }) {
     const pathname = usePathname();

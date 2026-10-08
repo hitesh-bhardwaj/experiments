@@ -14,7 +14,7 @@ import { useFadeUp } from "@/components/Animations/gsapAnimations";
 import { TemplatePaywallModal } from "@/components/ui/TemplatePaywallModal";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import { useToastQueue, ToastViewport } from "@/components/ui/Toast";
-import ButtonV3 from "@/homepage-v3/components/ButtonV3";
+import Button from "@/homepage/components/Button";
 import { useTemplateWishlist } from "../useTemplateWishlist";
 import { useTemplateAccess } from "../useTemplateAccess";
 import { TemplateCardV4 } from "../TemplateCardV4";
@@ -55,7 +55,6 @@ const MODES = [
 
 const CHIP = `inline-flex h-7 items-center px-2.5 font-mono ${T13}`;
 
-/* ---------- can this device show the exploded view? (motion allowed, WebGL) ---------- */
 const EXPLODED_QUERY = "(prefers-reduced-motion: no-preference)";
 let webgl;
 const hasWebGL = () => {
@@ -298,7 +297,7 @@ export function TemplateDetailV4({ template, templateAccess = { allowed: false, 
                   )}
                 </button>
                 {/* The live template, in a new tab */}
-                <ButtonV3
+                <Button
                   text="Demo"
                   href={template.previewHref}
                   target_blank
@@ -387,7 +386,7 @@ export function TemplateDetailV4({ template, templateAccess = { allowed: false, 
               <h2 className={`${DISPLAY} text64 font-aeonik`}>
                 More <span className="gradient-text-animate">templates.</span>
               </h2>
-              <ButtonV3 className="tracking-normal!" text="All templates" href="/templates" />
+              <Button className="tracking-normal!" text="All templates" href="/templates" />
             </div>
             <div className="flex flex-wrap gap-x-[1.4vw] gap-y-14">
               {related.map((t) => (

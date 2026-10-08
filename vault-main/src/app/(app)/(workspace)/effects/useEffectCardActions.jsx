@@ -4,10 +4,10 @@ import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, use
 import { createPortal } from "react-dom";
 import { useUser } from "@clerk/nextjs";
 import { X } from "lucide-react";
-import ButtonV3 from "@/homepage-v3/components/ButtonV3";
+import Button from "@/homepage/components/Button";
 import { useToastQueue, ToastViewport } from "@/components/ui/Toast";
 import { emitWishlistChanged } from "@/lib/wishlistEvents";
-import { installCommand } from "./EffectCardV4";
+import { installCommand } from "./EffectCard";
 
 const T14 = "text-[0.97vw] max-lg:text-[1.7vw] max-md:text-[3.6vw]";
 const T24 = "text-[1.67vw] max-lg:text-[2.9vw] max-md:text-[6vw]";
@@ -40,7 +40,7 @@ function writeCachedWishlist(userId, list) {
 }
 
 /**
- * Everything an EffectCardV4's actions need - saved effects, copy install command,
+ * Everything an EffectCard's actions need - saved effects, copy install command,
  * the Pro lock - shared by the effects listing and the effect page's related effects
  * so both behave the same. Render `overlays` once on the page: it holds the toast
  * and the "sign in to save" prompt.
@@ -154,7 +154,7 @@ export function useEffectCardActions({ userPlan = "free", signInRedirect = "/eff
   const canInstall = useCallback((effect) => effect.tier !== "pro" || isProUser, [isProUser]);
   const isWishlisted = useCallback((effect) => wishlistSet.has(effect.name), [wishlistSet]);
 
-  // Spread onto an EffectCardV4: <EffectCardV4 effect={e} {...cardActions(e)} />
+  // Spread onto an EffectCard: <EffectCard effect={e} {...cardActions(e)} />
   const cardActions = (effect) => ({
     isWishlisted: isWishlisted(effect),
     canInstall: canInstall(effect),
@@ -169,7 +169,7 @@ export function useEffectCardActions({ userPlan = "free", signInRedirect = "/eff
         createPortal(
           <Modal open={signInPrompt} onClose={() => setSignInPrompt(false)} title="Sign in required">
             Create a free account or sign in to save effects and pick up right where you left off.
-            <ButtonV3 text="Sign In" href={`/sign-in?redirect_url=${encodeURIComponent(signInRedirect)}`} />
+            <Button text="Sign In" href={`/sign-in?redirect_url=${encodeURIComponent(signInRedirect)}`} />
           </Modal>,
           document.body,
         )}

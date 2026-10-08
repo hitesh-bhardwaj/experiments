@@ -4,7 +4,7 @@ import { useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
 import SplitLine from "@/components/WebsiteComps/SplitLine";
 import { useFadeUp } from "../Animations/gsapAnimations";
-import ButtonV3 from "@/homepage-v3/components/ButtonV3";
+import Button from "@/homepage/components/Button";
 
 const SHIMMER_ANGLE = -45;
 const SHIMMER_BASE_COLOR = "#272727";
@@ -108,7 +108,7 @@ export default function NotFoundContent() {
         </p>
         </SplitLine>
         <div className="mt-8 mx-auto w-fit fadeup">
-          <ButtonV3
+          <Button
             href="/"
             text="Return home"
             className="w-fit"

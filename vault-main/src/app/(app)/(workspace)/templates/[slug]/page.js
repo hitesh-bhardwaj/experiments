@@ -12,7 +12,7 @@ import { getRegistryIndex } from "@/lib/registry";
 import { getEffectHref } from "@/lib/categories";
 import { catalogueOf } from "../tokens";
 import { TEMPLATE_SECTIONS, resolveSections } from "./template-sections";
-import { TemplateDetailV4 } from "./TemplateDetailV4";
+import { TemplateDetail } from "./TemplateDetail";
 
 // Shared by generateMetadata and the page body below - the JSON-LD needs the
 // exact metadata object generateMetadata produced for the <head> tags.
@@ -136,9 +136,9 @@ export default async function TemplateDetailPage({ params }) {
     <>
       <WebpageJsonLd metadata={pageMetadata} />
       <BreadcrumbsJSONLD pathname={pageMetadata.url} />
-      {/* TemplateDetailV4 reads useSearchParams() to resume a purchase after sign-in. */}
+      {/* TemplateDetail reads useSearchParams() to resume a purchase after sign-in. */}
       <Suspense fallback={null}>
-      <TemplateDetailV4
+      <TemplateDetail
         template={template}
         templateAccess={templateAccess}
         devices={devices}

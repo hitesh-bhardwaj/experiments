@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import LineReveal from "@/components/Animations/LineReveal";
 import { useFadeUp } from "@/components/Animations/gsapAnimations";
-import { FAQRow } from "@/homepage-v3/sections/FAQV3";
+import { FAQRow } from "@/homepage/sections/FAQ";
 
 // Matches FAQRow's open / close (OPEN_DURATION 0.6s) plus a margin
 const OPEN_TRANSITION_MS = 700;

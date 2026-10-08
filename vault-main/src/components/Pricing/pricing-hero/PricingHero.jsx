@@ -6,8 +6,8 @@ import * as THREE from "three";
 import SplitLine from "@/components/WebsiteComps/SplitLine";
 import LineReveal from "@/components/Animations/LineReveal";
 import { useFadeUp } from "@/components/Animations/gsapAnimations";
-import ButtonV3 from "@/homepage-v3/components/ButtonV3";
-import { useInteraction } from "@/homepage-v3/components/InteractionProvider";
+import Button from "@/homepage/components/Button";
+import { useInteraction } from "@/homepage/components/InteractionProvider";
 import { mountExplodedTiers } from "./src/exploded-tiers";
 
 const HEADER_OFFSET = 96; // keeps the target section's title clear of the fixed header
@@ -97,8 +97,8 @@ export default function PricingHero({ isIndia = false }) {
               copy lands in your repo and stays yours, even if you cancel.
             </SplitLine>
             <div ref={ctaRef} className="flex w-fit gap-[1vw] opacity-0 max-md:w-full max-md:flex-col max-md:gap-[5vw]">
-              <ButtonV3 text="See the plans" href="#plans" scrollOffset={HEADER_OFFSET} variant="orange" className="max-md:w-full max-md:justify-center" />
-              <ButtonV3 text="Help me choose" href="#finder" scrollOffset={HEADER_OFFSET} variant="outline" className="max-md:w-full max-md:justify-center" />
+              <Button text="See the plans" href="#plans" scrollOffset={HEADER_OFFSET} variant="orange" className="max-md:w-full max-md:justify-center" />
+              <Button text="Help me choose" href="#finder" scrollOffset={HEADER_OFFSET} variant="outline" className="max-md:w-full max-md:justify-center" />
             </div>
           </div>
         </div>

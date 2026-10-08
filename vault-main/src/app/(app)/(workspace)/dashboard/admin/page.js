@@ -19,7 +19,7 @@ import {
   FileDown,
 } from "lucide-react";
 import { useAdminRole } from "@/lib/useAdminRole";
-import ButtonV3 from "@/homepage-v3/components/ButtonV3";
+import Button from "@/homepage/components/Button";
 import { CustomSelect } from "@/components/ui/CustomSelect";
 import { StatCard } from "@/components/admin/StatCard";
 import { DateRangeCalendarPicker } from "@/components/admin/DateRangeCalendarPicker";
@@ -453,7 +453,7 @@ function InviteModal({ onClose }) {
               />
             </label>
 
-            <ButtonV3
+            <Button
               href="#"
               preventDefault
               disabled={sending || pendingCount === 0 || atDailyLimit}
@@ -739,7 +739,7 @@ function ManageUserModal({ user, isOwnRow, onClose, onSaved }) {
             >
               Cancel
             </button>
-            <ButtonV3
+            <Button
               href="#"
               preventDefault
               disabled={!hasChanges}
@@ -784,7 +784,7 @@ function ManageUserModal({ user, isOwnRow, onClose, onSaved }) {
             >
               Back
             </button>
-            <ButtonV3
+            <Button
               href="#"
               preventDefault
               disabled={saving}

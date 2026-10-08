@@ -221,7 +221,7 @@ export default function DocsBody({ children }) {
               <DocsPageFooter />
             </div>
             {/* TOC lives in the sheet's right column, sticky at the vertical centre */}
-            <aside className="sticky top-1/2 h-fit w-[22%] shrink-0 -translate-y-1/2 max-lg:hidden">
+            <aside className="sticky top-1/2 flex h-fit w-[22%] shrink-0 -translate-y-1/2 justify-end max-[1025px]:hidden">
               <TableOfContents containerRef={contentRef} watchKey={pathname} hideNearFooter />
             </aside>
             </div>

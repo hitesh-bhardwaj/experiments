@@ -4,8 +4,8 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import LineReveal from "@/components/Animations/LineReveal";
 import { useFadeUp } from "@/components/Animations/gsapAnimations";
-import ButtonV3 from "@/homepage-v3/components/ButtonV3";
-import { useInteraction } from "@/homepage-v3/components/InteractionProvider";
+import Button from "@/homepage/components/Button";
+import { useInteraction } from "@/homepage/components/InteractionProvider";
 import { prefersReducedMotion } from "@/lib/motion";
 import CreditTiles from "./CreditTiles";
 import RollNumber from "./RollNumber";
@@ -257,7 +257,7 @@ export default function PricingCredits() {
               <RollText fixed text={note} dir={dir} className="h-full min-w-0 flex-1" />
             </div>
             <div className="relative mt-auto">
-              <ButtonV3 text="Reset wallet" variant="outline" preventDefault onClick={refill} className="w-fit" />
+              <Button text="Reset wallet" variant="outline" preventDefault onClick={refill} className="w-fit" />
             </div>
           </div>
 

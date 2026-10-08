@@ -6,7 +6,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { getSafeRedirectUrl } from "@/components/auth/AuthFormPrimitives";
-import { useInteraction } from "@/homepage-v3/components/InteractionProvider";
+import { useInteraction } from "@/homepage/components/InteractionProvider";
 import LinkButton from "@/components/WebsiteComps/LinkButton";
 import { CoreHud } from "./CoreHud";
 import { DoneList } from "./DoneList";

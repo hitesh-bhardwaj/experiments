@@ -81,7 +81,7 @@ function FeedbackMessage({ vote }) {
   );
 }
 
-// The site buttons' pixelated arrow (ButtonV3), sized to the label's cap height
+// The site buttons' pixelated arrow (Button), sized to the label's cap height
 function PagerArrow({ className = "" }) {
   return (
     <span

@@ -7,7 +7,7 @@ import { sortEffects } from "@/lib/effect-sort";
 import { getEffectCategoryContent, getEffectCategoryMetadata } from "@/lib/categories";
 import { BreadcrumbsJSONLD, FAQJSONLD, WebpageJsonLd } from "@/lib/json-ld";
 import { attachInstallCounts, getEffectInstallCounts } from "@/lib/cli-install-stats";
-import { EffectsListingV4 } from "./EffectsListingV4";
+import { EffectsListing } from "./EffectsListing";
 
 export const metadata = getEffectCategoryMetadata("all");
 const pageContent = getEffectCategoryContent("all");
@@ -35,7 +35,7 @@ export default async function EffectsPage() {
       <BreadcrumbsJSONLD pathname={metadata.url} />
       {pageContent.faqs?.length > 0 && <FAQJSONLD faqs={pageContent.faqs} />}
       <Suspense fallback={<VaultFallback />}>
-        <EffectsListingV4
+        <EffectsListing
           effects={effects}
           trendingEffects={trendingEffects}
           featuredNames={featuredNames}

@@ -22,7 +22,7 @@ Leave those working as they are. Don't restyle or refactor them to match this gu
 - Tailwind's default spacing classes (`pt-7`, `gap-3`, `p-4`, `mt-10`) are allowed.
 - Set smaller screens with overrides, also in `vw` (for example `text-[4.6vw] max-lg:text-[6vw] max-md:text-[9vw]`). Plain desktop `vw` text gets too small on phones without them.
 - Inside a `max-w-[1536px]` section, write sizes with `--cvw` instead of `vw`: `text-[calc(var(--cvw)*6.4)]`, not `text-[6.4vw]` (same for padding, gaps and widths). `--cvw` is `1vw` up to 1536px and then stops growing, so the content scales with its container. Plain `vw` keeps growing after the container stops, which makes text wrap and squeeze on 1800px+ screens. Below 1536px both are identical, so tablet/mobile overrides can use either. The homepage sections (`homepage-v3/sections`) already use it.
-- Shared components that also render outside the 1536px container (`ButtonV3`, used by the header) size with `calc(var(--hx-vw,1vw)*N)`: plain `vw` by default, capped where a parent sets `[--hx-vw:var(--cvw)]` (the homepage sections wrapper in `Homepage.jsx` does).
+- Shared components that also render outside the 1536px container (`Button`, used by the header) size with `calc(var(--hx-vw,1vw)*N)`: plain `vw` by default, capped where a parent sets `[--hx-vw:var(--cvw)]` (the homepage sections wrapper in `Homepage.jsx` does).
 
 ## Responsive breakpoints
 

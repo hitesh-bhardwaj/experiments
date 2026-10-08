@@ -9,15 +9,15 @@ import {
   BillingToggle,
   FeatureList,
   PriceDigits,
-} from "@/homepage-v3/sections/PricingV3";
-import { ScrambleText } from "@/homepage-v3/components/HoverLinkV3";
+} from "@/homepage/sections/Pricing";
+import { ScrambleText } from "@/homepage/components/HoverLink";
 
 // The pricing page's Pro card, in a modal - opened from the effect page when a
 // signed-in free user hits something only Pro unlocks (a Pro effect, or the
 // daily copy limit). Same prices, toggle, features and checkout button
-// (PricingV3Cta -> Razorpay) as /pricing, so the purchase behaves identically.
+// (PricingCta -> Razorpay) as /pricing, so the purchase behaves identically.
 
-const ProCta = dynamic(() => import("@/homepage-v3/sections/PricingV3Cta"), { ssr: false });
+const ProCta = dynamic(() => import("@/homepage/sections/PricingCta"), { ssr: false });
 
 const REASON_COPY = {
   "pro-effect": "This is a Pro effect. Upgrade to copy, install and use every effect in the vault.",

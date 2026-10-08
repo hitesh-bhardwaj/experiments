@@ -384,7 +384,7 @@ export function TableOfContents({
                   "block h-0.5 transition-all duration-300 ease-out",
                   activeId === item.id
                     ? "w-8 bg-primary"
-                    : "w-8 bg-foreground/25 hover:bg-foreground/60",
+                    : "w-8 bg-background/10 hover:bg-foreground/60",
                 ].join(" ")}
               />
             </Link>

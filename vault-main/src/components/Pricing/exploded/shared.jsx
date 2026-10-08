@@ -3,7 +3,7 @@
 import { useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
 import { prefersReducedMotion } from "@/lib/motion";
-import { useInteraction } from "@/homepage-v3/components/InteractionProvider";
+import { useInteraction } from "@/homepage/components/InteractionProvider";
 import { setYearly, useBilling } from "./billing";
 
 const ROLL_DURATION = 1.1;

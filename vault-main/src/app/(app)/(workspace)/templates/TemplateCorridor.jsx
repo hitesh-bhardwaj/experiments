@@ -6,7 +6,7 @@ import * as THREE from "three";
 import gsap from "gsap";
 import { useLenis } from "lenis/react";
 import { motion } from "motion/react";
-import ButtonV3 from "@/homepage-v3/components/ButtonV3";
+import Button from "@/homepage/components/Button";
 import { DISPLAY, LABEL, PRICE, T16, T13, catalogueOf, priceOf } from "./tokens";
 
 /*
@@ -481,7 +481,7 @@ export default function TemplateCorridor({ templates, onUnsupported }) {
               </div>
             </motion.div>
             <div className="flex flex-wrap items-center gap-3.5 pt-1.5">
-              <ButtonV3 className="tracking-normal!" text="View template" href={current.href || `/templates/${current.slug}`} />
+              <Button className="tracking-normal!" text="View template" href={current.href || `/templates/${current.slug}`} />
               {priceOf(current) != null && (
                 <span className={`${LABEL} text-foreground/80`}><span className={PRICE}>${priceOf(current)}</span> · or 1 credit</span>
               )}

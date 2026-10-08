@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import RemixerPanel from "@/components/remixer-panel/RemixerPanel";
-import ButtonV3 from "@/homepage-v3/components/ButtonV3";
+import Button from "@/homepage/components/Button";
 import { getGroupsFromRemixerControls } from "@/components/remixer-panel/RegistryRemixerDemo";
 import { useRemixerControls } from "@/components/remixer-panel/useRemixerControls";
 import { buildRemixerJsx } from "@/components/remixer-panel/build-remixer-code";
@@ -202,11 +202,11 @@ export default function EffectStage({ effect, title, previewHref, getCode = null
           </button>
 
         </div>
-        {/* items-stretch: Replay takes Live Preview's height (ButtonV3 scales with vw). */}
+        {/* items-stretch: Replay takes Live Preview's height (Button scales with vw). */}
         <div className="flex items-stretch gap-[0.5vw] max-md:gap-[2vw]">
 
           {getCode}
-          <ButtonV3 text="Demo " href={previewHref} target_blank variant="orange" className="shrink-0 border border-primary" />
+          <Button text="Demo " href={previewHref} target_blank variant="orange" className="shrink-0 border border-primary" />
         </div>
       </div>
 

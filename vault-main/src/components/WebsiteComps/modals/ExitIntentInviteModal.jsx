@@ -8,7 +8,7 @@ import { useLenis } from "lenis/react";
 import { useReCaptcha } from "next-recaptcha-v3";
 import { Mail } from "lucide-react";
 import { armRecaptcha } from "@/lib/recaptchaEvents";
-import { buttonV3ClassName, ButtonV3Chrome } from "@/homepage-v3/components/ButtonV3";
+import { buttonClassName, ButtonChrome } from "@/homepage/components/Button";
 
 // Site-wide exit-intent capture (except sign-in and /dashboard - see
 // isExcludedRoute below), mirroring WorkWithHyperiuxModal.jsx's technical
@@ -340,12 +340,12 @@ export function ExitIntentInviteModal() {
 
                   {error && <p className="text-xs text-red-400">{error}</p>}
 
-                  {/* Same buttonV3ClassName + ButtonV3Chrome pair
+                  {/* Same buttonClassName + ButtonChrome pair
                       TemplatePaywallModal's RazorpayButtonV3 uses - this is
                       a real form-submitting <button>, not a navigation
-                      <Link>, so it can't just render <ButtonV3> itself, but
+                      <Link>, so it can't just render <Button> itself, but
                       these two give it the exact same look (scramble label,
-                      square/arrow chrome) as every other ButtonV3 on the
+                      square/arrow chrome) as every other Button on the
                       site. */}
                   <div
                     className="contents"
@@ -356,11 +356,11 @@ export function ExitIntentInviteModal() {
                       type="submit"
                       disabled={isSubmitting}
                       data-sound-kind="primary"
-                      className={buttonV3ClassName({
+                      className={buttonClassName({
                         className: "w-fit disabled:pointer-events-none disabled:opacity-60",
                       })}
                     >
-                      <ButtonV3Chrome
+                      <ButtonChrome
                         label={isSubmitting ? "Sending…" : "Send it to me"}
                         hovered={sendHovered}
                       />

@@ -31,13 +31,13 @@ import { effectCategories, getEffectCategoryHref } from "@/lib/categories";
 import { WISHLIST_CHANGED_EVENT } from "@/lib/wishlistEvents";
 import { prefersReducedMotion } from "@/lib/motion";
 import { markScrollToPricingCards } from "@/lib/pricingScrollIntent";
-import ButtonV3 from "@/homepage-v3/components/ButtonV3";
-import SoundToggle from "@/homepage-v3/components/SoundToggle";
+import Button from "@/homepage/components/Button";
+import SoundToggle from "@/homepage/components/SoundToggle";
 
 const useIsoLayoutEffect =
   typeof window === "undefined" ? useEffect : useLayoutEffect;
 
-// Matches NavbarMobileV3's own overlay-reveal mechanism exactly - a
+// Matches NavbarMobile's own overlay-reveal mechanism exactly - a
 // clip-path wipe from the bottom up, rather than a translate/slide.
 const CLOSED_CLIP = "inset(0% 0% 100% 0%)";
 const OPEN_CLIP = "inset(0% 0% 0% 0%)";
@@ -69,7 +69,7 @@ function categoryLabel(category) {
   return category.name.replace("Website ", "").replace("Page ", "");
 }
 
-// Copied from NavbarMobileV3's Accordion verbatim - animates to the
+// Copied from NavbarMobile's Accordion verbatim - animates to the
 // measured height (then releases it to "auto" once open, so the panel can
 // still reflow on orientation change/font swap) rather than a fixed guess.
 function MobileNavAccordion({ open, children }) {
@@ -111,7 +111,7 @@ function MobileNavAccordion({ open, children }) {
 // marketing routes (docs/legal/tech) render this without ClerkProvider. App
 // routes use AppVaultHeader, which supplies live useUser() state.
 //
-// Mobile/tablet (<=1025px) is built to match NavbarMobileV3's bar + overlay
+// Mobile/tablet (<=1025px) is built to match NavbarMobile's bar + overlay
 // exactly (translucent blurred bar, custom two-span hamburger, full-screen
 // clip-path reveal, GSAP-height accordions) - see MobileNavAccordion above
 // and the effect below driving the overlay's own open/close timeline. The
@@ -214,7 +214,7 @@ export function VaultHeader({
   }, []);
 
   // Both fixed bars (desktop header, mobile/tablet bar) slide fully out of
-  // view once the page's footer (FooterV3, id="footer") starts entering the
+  // view once the page's footer (Footer, id="footer") starts entering the
   // viewport, instead of staying pinned on top of it - reverses the moment
   // the user scrolls back up past that point. Pages that don't render a
   // #footer (e.g. /tech) just never trigger this, nothing to guard beyond
@@ -310,7 +310,7 @@ export function VaultHeader({
   // A tapped link navigates under the open overlay, so the route landing is
   // what dismisses it. Adjusted during render (not from an effect) so the
   // overlay never paints once over the page it just left - same technique
-  // as NavbarMobileV3.
+  // as NavbarMobile.
   if (pathname !== routeShown) {
     setRouteShown(pathname);
     setOpen(false);
@@ -487,7 +487,7 @@ export function VaultHeader({
 
             {isLoaded && user?.publicMetadata?.plan !== "pro" && (
               <div className="flex max-lg:hidden">
-                <ButtonV3
+                <Button
                   text="Upgrade to Pro"
                   id={"upgrade-to-pro-navbar"}
                   href="/pricing#pricing-cards"
@@ -500,7 +500,7 @@ export function VaultHeader({
 
             {isLoaded && (!isSignedIn ? (
               <div className="flex max-lg:hidden">
-                <ButtonV3
+                <Button
                   text="Sign In"
                   id={"sign-in-navbar"}
                   href="/sign-in"
@@ -516,7 +516,7 @@ export function VaultHeader({
         </div>
       </header>
 
-      {/* Mobile/tablet bar - <=1025px only, matches NavbarMobileV3. */}
+      {/* Mobile/tablet bar - <=1025px only, matches NavbarMobile. */}
       <div
         ref={mobileBarRef}
         className="fixed top-0 left-0 z-950 hidden max-lg:flex w-full items-center justify-between border-b border-white/8 bg-background/60 px-[6vw] py-[5vw] backdrop-blur-xl max-lg:px-[3.5vw] max-md:px-[6vw] max-lg:py-[2.5vw] max-md:py-[5vw]"
@@ -730,7 +730,7 @@ export function VaultHeader({
           {isLoaded && (
             <div data-mobile-row className="mt-[8vw] flex flex-col gap-[3vw] max-lg:mt-[4.6vw] max-md:mt-[8vw] max-lg:gap-[1.5vw] max-md:gap-[3vw]">
               {user?.publicMetadata?.plan !== "pro" && (
-                <ButtonV3
+                <Button
                   text="Upgrade to Pro"
                   href="/pricing#pricing-cards"
                   onClick={() => {
@@ -743,7 +743,7 @@ export function VaultHeader({
               )}
 
               {!isSignedIn && (
-                <ButtonV3
+                <Button
                   text="Sign In"
                   href="/sign-in"
                   onClick={close}

@@ -1,0 +1,150 @@
+"use client";
+
+import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import Matter from "matter-js";
+import { createFellOver } from "../lib/fell-over";
+import { suggestPages } from "../lib/suggest-pages";
+import { useInteraction } from "./InteractionProvider";
+import Button from "./Button";
+
+// The physics digits are drawn on a canvas in Aeonik Pro Bold. next/font
+// renames the family behind --font-aeonik, so the real name is read at mount.
+function aeonikOptions() {
+    const family = getComputedStyle(document.body).getPropertyValue("--font-aeonik").trim() || "system-ui";
+    return {
+        font: `700 {s}px ${family}, system-ui, sans-serif`,
+        fontLoad: `700 100px ${family}`,
+    };
+}
+
+const MORE_LINKS = [
+    { label: "Templates", href: "/templates" },
+    { label: "Docs", href: "/docs" },
+    { label: "Pricing", href: "/pricing" },
+];
+const QUIP_MS = 3600;
+
+const label = "text20";
+// Button scales with the viewport; here it stays one compact size on every screen.
+const COMPACT_BTN = "py-2! text-[0.95vw]! max-[1025px]:text-[2.3vw]! max-md:px-[4vw]! max-md:text-[3.3vw]! [--btn-pad:1vw]! [--btn-gap:0.6vw]! [--btn-square:0.4vw]! [--btn-arrow:0.8vw]! max-md:[--btn-pad:4vw]! max-md:[--btn-gap:2vw]! max-md:[--btn-square:1.5vw]! max-md:[--btn-arrow:3vw]!";
+const riseIn = "motion-safe:animate-[hx-up_1s_cubic-bezier(.16,1,.3,1)_both]";
+
+// "This page fell over": drag 4 0 4 back onto the line (or skip the physics),
+// then pick from the closest real pages. Plays notes once sound is on.
+const noopSubscribe = () => () => {};
+
+export default function SiteNotFound({ pages = [] }) {
+    const canvasRef = useRef(null);
+    const fellRef = useRef(null);
+    const quipTimerRef = useRef(0);
+    const { sound } = useInteraction();
+    const asked = usePathname() || "/";
+    // Query params aren't in usePathname; read them after mount.
+    const search = useSyncExternalStore(noopSubscribe, () => window.location.search, () => "");
+    const suggestions = useMemo(() => suggestPages(asked, pages, { search, limit: 3 }), [asked, pages, search]);
+
+    const [standing, setStanding] = useState(false);
+    const [grabbed, setGrabbed] = useState(false);
+    const [revealed, setRevealed] = useState(false);
+    // The text stays put while the pill fades out, so the box never collapses empty mid-fade.
+    const [quip, setQuip] = useState("");
+    const [quipVisible, setQuipVisible] = useState(false);
+
+    const showQuip = useCallback((text) => {
+        clearTimeout(quipTimerRef.current);
+        if (!text) {
+            setQuipVisible(false);
+            return;
+        }
+        setQuip(text);
+        setQuipVisible(true);
+        quipTimerRef.current = setTimeout(() => setQuipVisible(false), QUIP_MS);
+    }, []);
+
+    useEffect(() => {
+        document.documentElement.style.overflow = "hidden";
+        const fell = createFellOver(canvasRef.current, {
+            Matter,
+            onFirstGrab: () => setGrabbed(true),
+            onGrab: (x) => sound?.hover?.(x),
+            onSnap: (i) => sound?.note?.(i + 2),
+            onHit: () => sound?.tap?.(),
+            onQuip: showQuip,
+            onDone: () => { sound?.reform?.(); setStanding(true); setRevealed(true); },
+            onUndone: () => setStanding(false),
+            ...aeonikOptions(),
+        });
+        fellRef.current = fell;
+        return () => {
+            clearTimeout(quipTimerRef.current);
+            fell.destroy();
+            fellRef.current = null;
+            document.documentElement.style.overflow = "";
+        };
+    }, [sound, showQuip]);
+
+    const skip = () => {
+        if (!fellRef.current?.tidy()) setRevealed(true);
+    };
+
+    return (
+        <main id="not-found" className="fixed inset-0 bg-dark-card font-aeonik text-light">
+            <canvas ref={canvasRef} className="fixed inset-0 block h-screen w-screen touch-none [&.can]:cursor-grab [&.grab]:cursor-grabbing" aria-hidden="true" />
+
+            <header className="pointer-events-none fixed inset-x-0 top-[var(--headY,18vh)] z-2 text-center">
+                <h1 key={standing ? "standing" : "fell"} className={`text64 font-normal ${riseIn}`}>
+                    {standing ? <>Standing <span className="gradient-text-animate">again.</span></> : <>This page <span className="gradient-text-animate">fell over.</span></>}
+                </h1>
+            </header>
+
+            <p className={`pointer-events-none fixed inset-x-0 top-[var(--hintY,62vh)] z-2 text-center text-foreground/60 transition-opacity duration-800 ${grabbed || revealed ? "opacity-0" : "motion-safe:animate-[hx-fade_1.2s_cubic-bezier(.16,1,.3,1)_.9s_both]"} ${label}`}>
+                Drag 4 0 4 back onto the line
+            </p>
+
+            {revealed && (
+                <section className="fixed top-[var(--hintY,62vh)] left-1/2 z-2 flex w-[50vw] -translate-x-1/2 flex-col items-center gap-[1.4vw] text-center max-[1025px]:w-[80vw] max-md:w-[88vw] max-md:gap-[5vw]" aria-live="polite">
+                    <p className={`text20 text-foreground/70 ${riseIn}`}>Shame the page still doesn’t exist.</p>
+                    <ul className={`flex flex-wrap justify-center gap-[0.7vw] max-md:gap-[2vw] ${riseIn} [animation-delay:.08s]`}>
+                        {suggestions.map((p) => (
+                            <li key={p.href}>
+                                <Link href={p.href} className="text18 inline-flex h-9 items-center border border-foreground/15 bg-foreground/4 px-4 text-light no-underline max-md:h-8.5 max-md:px-3 transition-[background-color,border-color] duration-400 hover:border-primary/60 hover:bg-primary/10 focus-visible:border-primary/60 focus-visible:bg-primary/10">
+                                    {p.label}
+                                </Link>
+                            </li>
+                        ))}
+                    </ul>
+                    <div className={`flex flex-wrap justify-center gap-[0.6vw] max-md:gap-[2vw] ${riseIn} [animation-delay:.16s]`}>
+                        <Button text="Back to home" href="/" className={COMPACT_BTN} />
+                        <Button text="Browse effects" href="/effects" variant="outline" className={`bg-transparent! ${COMPACT_BTN}`} />
+                    </div>
+                    <p className={`text18 text-foreground/60 ${riseIn} [animation-delay:.24s]`}>
+                        Or try{" "}
+                        {MORE_LINKS.map((l, i) => (
+                            <span key={l.href}>
+                                <Link href={l.href} className="bg-[linear-gradient(currentColor,currentColor)] bg-size-[100%_1px] bg-position-[100%_100%] bg-no-repeat pb-0.5 text-foreground/90 transition-colors duration-300 hover:text-primary focus-visible:text-primary motion-safe:hover:animate-[hx-underline-redraw_.8s_cubic-bezier(.65,0,.35,1)]">{l.label}</Link>
+                                {i < MORE_LINKS.length - 2 ? ", " : i === MORE_LINKS.length - 2 ? " or " : ""}
+                            </span>
+                        ))}
+                    </p>
+                </section>
+            )}
+
+            <button
+                type="button"
+                onClick={skip}
+                className={`fixed bottom-[2vw] left-1/2 z-3 -translate-x-1/2 cursor-pointer whitespace-nowrap text-foreground/60 underline decoration-foreground/20 underline-offset-4 transition-colors duration-400 hover:text-foreground hover:decoration-primary max-md:bottom-6 ${label}`}
+            >
+                Skip the physics
+            </button>
+
+            <p
+                aria-live="polite"
+                className={`pointer-events-none text18 fixed bottom-[6.4vw] left-1/2 z-3 -translate-x-1/2 border border-foreground/20 bg-transparent px-3.5 py-2.5 font-normal whitespace-nowrap text-foreground/80 transition-[opacity,transform] duration-[600ms] ease-[cubic-bezier(.16,1,.3,1)] max-md:bottom-20 ${quipVisible ? "translate-y-0 opacity-100" : "translate-y-1.5 opacity-0"}`}
+            >
+                {quip}
+            </p>
+        </main>
+    );
+}

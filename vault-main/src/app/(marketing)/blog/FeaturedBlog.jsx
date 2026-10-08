@@ -3,7 +3,7 @@
 import { useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import ButtonV3 from "@/homepage-v3/components/ButtonV3";
+import Button from "@/homepage/components/Button";
 import LineWipe from "@/components/Animations/LineWipe";
 import { useFadeUp } from "@/components/Animations/gsapAnimations";
 
@@ -81,7 +81,7 @@ function FeaturedBlogContent({ featuredPost }) {
             </LineWipe>
           )}
 
-          <ButtonV3
+          <Button
             text="Read More"
             href={`/blog/${featuredPost.slug}`}
             variant="orange"

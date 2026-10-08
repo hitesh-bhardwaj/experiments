@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import Link from "next/link";
 import { Check, ChevronDown, FileCode2, LoaderCircle, LockKeyhole } from "lucide-react";
-import { buttonV3ClassName, ButtonV3Chrome } from "@/homepage-v3/components/ButtonV3";
+import { buttonClassName, ButtonChrome } from "@/homepage/components/Button";
 import { useCopyLimit } from "./useCopyLimit";
 
 // "Get code" dropdown beside Live Preview - the only way to take an effect's
@@ -151,12 +151,12 @@ function ProLockOverlay({ onUpgrade }) {
           type="button"
           role="menuitem"
           onClick={onUpgrade}
-          className={buttonV3ClassName({
+          className={buttonClassName({
             variant: "orange",
             className: "cursor-pointer outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground",
           })}
         >
-          <ButtonV3Chrome label="Upgrade to Pro" hovered={hovered} />
+          <ButtonChrome label="Upgrade to Pro" hovered={hovered} />
         </button>
       </div>
     </div>

@@ -5,7 +5,7 @@ import { getSearchIndexEffects } from "@/lib/search-index";
 // a 404 actually renders - as a root boundary, a static import would have
 // them preloaded on every page. Still server-rendered.
 const SiteNotFound = dynamic(() =>
-  import("@/homepage-v3/components/SiteNotFound"),
+  import("@/homepage/components/SiteNotFound"),
 );
 
 // Only effect pages are suggested on the 404.

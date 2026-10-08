@@ -7,7 +7,7 @@ import { useGSAP } from "@gsap/react";
 import { useLenis } from "lenis/react";
 import LineReveal from "@/components/Animations/LineReveal";
 import { useFadeUp } from "@/components/Animations/gsapAnimations";
-import { useInteraction } from "@/homepage-v3/components/InteractionProvider";
+import { useInteraction } from "@/homepage/components/InteractionProvider";
 import { prefersReducedMotion } from "@/lib/motion";
 import { useCommunity } from "./community-store";
 import { CritiqueCard, FeaturedCard, TeardownCard, VoteCard } from "./WhyJoinPanels";

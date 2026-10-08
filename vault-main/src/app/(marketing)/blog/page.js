@@ -1,5 +1,5 @@
-import NavbarV3 from "@/homepage-v3/components/NavbarV3";
-import FooterV3 from "@/homepage-v3/sections/FooterV3";
+import Navbar from "@/homepage/components/Navbar";
+import Footer from "@/homepage/sections/Footer";
 import LenisSmoothScroll from "@/components/SmoothScroll/LenisScroll";
 import {
   getSanityBlogEntries,
@@ -45,7 +45,7 @@ export default async function BlogIndexPage({ searchParams }) {
   return (
     <>
       <WebpageJsonLd metadata={metadata} />
-      <NavbarV3 effects={effects} />
+      <Navbar effects={effects} />
       <LenisSmoothScroll />
       <BlogHero />
       <main className="relative z-20 mx-auto flex max-w-full flex-col gap-[8vw] px-[4vw] py-[6vw] max-lg:px-[5vw] max-md:gap-[14vw] max-md:px-0 max-md:py-[12vw]">
@@ -58,7 +58,7 @@ export default async function BlogIndexPage({ searchParams }) {
           pageCount={pageCount}
         />
       </main>
-      <FooterV3 />
+      <Footer />
     </>
   );
 }

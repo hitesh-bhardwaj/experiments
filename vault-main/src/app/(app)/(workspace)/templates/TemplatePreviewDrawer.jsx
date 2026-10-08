@@ -6,11 +6,11 @@ import Image from "next/image";
 import gsap from "gsap";
 import { useLenis } from "lenis/react";
 import { Heart } from "lucide-react";
-import ButtonV3 from "@/homepage-v3/components/ButtonV3";
+import Button from "@/homepage/components/Button";
 import LinkButton from "@/components/WebsiteComps/LinkButton";
 import { BADGE, DISPLAY, PRICE, T11, T14, T16, T18, catalogueLabel, catalogueOf, priceOf } from "./tokens";
 
-// Same open/close choreography as the effects preview drawer (PreviewDrawerV4):
+// Same open/close choreography as the effects preview drawer (PreviewDrawer):
 // the panel slides in from the right while the backdrop fades, then the content
 // fades in; closing runs it backwards before anything unmounts.
 const EASE = "power2.inOut";
@@ -116,7 +116,7 @@ export function TemplatePreviewDrawer({ template, templates = [], isWishlisted, 
 
   useEffect(() => () => tlRef.current?.kill(), []);
 
-  // Lock the page behind the drawer and close on Escape (as PreviewDrawerV4).
+  // Lock the page behind the drawer and close on Escape (as PreviewDrawer).
   useEffect(() => {
     if (!open) return undefined;
     document.documentElement.setAttribute("data-v4-drawer-open", "");
@@ -241,8 +241,8 @@ export function TemplatePreviewDrawer({ template, templates = [], isWishlisted, 
                   <Heart className="size-full" aria-hidden="true" />
                 </span>
               </button>
-              <ButtonV3 text="Demo" href={shown.previewHref || href} variant="outline" target_blank className="tracking-normal! bg-transparent! border-foreground/20" />
-              <ButtonV3 text="View template" href={href} className="tracking-normal! border border-primary" />
+              <Button text="Demo" href={shown.previewHref || href} variant="outline" target_blank className="tracking-normal! bg-transparent! border-foreground/20" />
+              <Button text="View template" href={href} className="tracking-normal! border border-primary" />
             </div>
           </div>
 

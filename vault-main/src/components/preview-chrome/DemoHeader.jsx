@@ -25,9 +25,9 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import RemixerPanel from "@/components/remixer-panel/RemixerPanel";
-import { ButtonV3Chrome, buttonV3ClassName } from "@/homepage-v3/components/ButtonV3";
+import { ButtonChrome, buttonClassName } from "@/homepage/components/Button";
 import { getEffectRouteSlug } from "@/lib/effect-slugs";
-import { useInteraction } from "@/homepage-v3/components/InteractionProvider";
+import { useInteraction } from "@/homepage/components/InteractionProvider";
 import { DEVICES, EMBED_MESSAGE, prefersReducedMotion, readEmbed, simulateReducedMotion } from "./embed";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
@@ -697,12 +697,12 @@ function PreviewBar({ title: titleProp, tier: tierProp, backHref: backHrefProp, 
               onClick={copy}
               onPointerEnter={() => setCopyHovered(true)}
               onPointerLeave={() => setCopyHovered(false)}
-              className={buttonV3ClassName({
+              className={buttonClassName({
                 className:
                   "ml-1 h-9.5 py-0! text-sm! [--btn-pad:16px]! [--btn-gap:8px]! [--btn-square:6px]! [--btn-arrow:12px]! focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F4F4F4] max-md:hidden",
               })}
             >
-              <ButtonV3Chrome label="Copy props" hovered={copyHovered} />
+              <ButtonChrome label="Copy props" hovered={copyHovered} />
             </button>
           ) : null} */}
         </header>

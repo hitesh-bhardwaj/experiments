@@ -9,7 +9,7 @@ import CommunityStack from "@/components/Community/CommunityStack";
 import CommunityFounding from "@/components/Community/CommunityFounding";
 import CommunityFAQ from "@/components/Community/CommunityFAQ";
 import CommunityJoin from "@/components/Community/CommunityJoin";
-import CursorV3 from "@/homepage-v3/components/CursorV3";
+import Cursor from "@/homepage/components/Cursor";
 
 // NEEDS PRODUCT CONFIRMATION: the bracketed answers are placeholders from the concept
 const COMMUNITY_FAQ = [
@@ -47,7 +47,7 @@ export default async function CommunityPage() {
       <WebpageJsonLd metadata={metadata} />
       <FAQJSONLD faqs={COMMUNITY_FAQ} />
       <VaultShell effects={effects}>
-        <CursorV3 />
+        <Cursor />
         <main id="main-content" className="cm-x relative isolate bg-transparent font-avenir text-base leading-[1.6] text-[#F4F4F4] [&_[id]]:scroll-mt-24">
           <CommunityCrowd />
           <CommunityHero />

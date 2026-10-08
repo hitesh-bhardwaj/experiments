@@ -1,8 +1,8 @@
 "use client";
 
 import { useId, useRef, useState } from "react";
-import { buttonV3ClassName, ButtonV3Chrome } from "@/homepage-v3/components/ButtonV3";
-import { useInteraction } from "@/homepage-v3/components/InteractionProvider";
+import { buttonClassName, ButtonChrome } from "@/homepage/components/Button";
+import { useInteraction } from "@/homepage/components/InteractionProvider";
 import { getCrowd, markJoined, useCommunity } from "./community-store";
 
 const WAITLIST_ROUTE = "/api/community/waitlist";
@@ -94,9 +94,9 @@ export default function WaitlistForm({ className = "" }) {
         onPointerEnter={() => setHovered(true)}
         onPointerLeave={() => setHovered(false)}
         data-sound-kind="primary"
-        className={buttonV3ClassName({ className: "max-md:w-full max-md:justify-center", disabled: joined || sending })}
+        className={buttonClassName({ className: "max-md:w-full max-md:justify-center", disabled: joined || sending })}
       >
-        <ButtonV3Chrome label={label} hovered={hovered} />
+        <ButtonChrome label={label} hovered={hovered} />
       </button>
       <p id={`${inputId}-msg`} className={`font-avenir text-[0.7vw] font-medium tracking-[0.1em] uppercase absolute top-[calc(100%+0.7vw)] left-[1.2vw] min-h-[1em] text-left text-[#ff8a78] max-md:static max-md:basis-full max-md:px-2.5 max-md:py-1 max-md:text-[2.8vw]`} aria-live="polite">{error}</p>
     </form>

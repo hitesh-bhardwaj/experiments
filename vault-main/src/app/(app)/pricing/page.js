@@ -4,14 +4,14 @@ import { getSearchIndexEffects } from "@/lib/search-index";
 import PricingHero from "@/components/Pricing/pricing-hero/PricingHero";
 import { FAQJSONLD, WebpageJsonLd } from "@/lib/json-ld";
 import { createPageMetadata } from "@/lib/seo-metadata";
-import CursorV3 from "@/homepage-v3/components/CursorV3";
-import FAQV3 from "@/homepage-v3/sections/FAQV3";
-import FooterV3 from "@/homepage-v3/sections/FooterV3";
+import Cursor from "@/homepage/components/Cursor";
+import FAQ from "@/homepage/sections/FAQ";
+import Footer from "@/homepage/sections/Footer";
 import PricingFinder from "@/components/Pricing/exploded/PricingFinder";
 import PricingCredits from "@/components/Pricing/exploded/PricingCredits";
 import PricingUseCase from "@/components/Pricing/exploded/PricingUseCase";
 import PricingProCompare from "@/components/Pricing/exploded/PricingProCompare";
-import PricingPlansHome from "@/homepage-v3/sections/PricingPlansHome";
+import PricingPlansHome from "@/homepage/sections/PricingPlansHome";
 
 export const metadata = createPageMetadata({
   title: "Hyperiux Vault Pricing | Pro React Effects Library",
@@ -22,10 +22,6 @@ export const metadata = createPageMetadata({
     "https://h1r7ltksnzlh2a5c.public.blob.vercel-storage.com/seo/pricing.jpg",
 });
 
-// Reads Vercel's edge-injected geo header - makes this route dynamic
-// (acceptable here: it's the checkout page, already personalized via
-// Clerk client hooks; unlike the homepage teaser, static rendering isn't
-// the priority for a page whose whole job is a live purchase flow).
 export default async function PricingPage() {
   const headersList = await headers();
   const isIndia = headersList.get("x-vercel-ip-country") === "IN";
@@ -36,7 +32,7 @@ export default async function PricingPage() {
       <WebpageJsonLd metadata={metadata} />
       <FAQJSONLD faqs={faqItems} />
       <VaultShell effects={effects}>
-        <CursorV3 />
+        <Cursor />
         <main id="main-content">
           <PricingHero isIndia={isIndia} />
           {/* The homepage plans section, reused as is; #plans is the hero's "See the plans" target */}
@@ -47,10 +43,9 @@ export default async function PricingPage() {
             <PricingProCompare />
           </div>
           <PricingUseCase useCases={USE_CASES} />
-          <FAQV3 faqItems={faqItems} translateTop={false} />
-          {/* <CTA2 /> */}
+          <FAQ faqItems={faqItems} translateTop={false} />
         </main>
-        <FooterV3/>
+        <Footer/>
       </VaultShell>
     </>
   );

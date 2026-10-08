@@ -29,7 +29,7 @@ export function SliderArrowButton({ direction = "next", onClick, disabled = fals
       onClick={onClick}
       disabled={disabled}
       aria-label={ariaLabel ?? (isPrev ? "Previous" : "Next")}
-      // twMerge so `className` can replace the default 44px size (e.g. to match a ButtonV3 beside it).
+      // twMerge so `className` can replace the default 44px size (e.g. to match a Button beside it).
       className={twMerge(
         `group relative grid size-11 cursor-pointer place-items-center overflow-hidden border backdrop-blur-lg transition-colors duration-400 ease-out hover:border-primary hover:bg-primary hover:text-black disabled:pointer-events-none disabled:opacity-40 ${TONES[tone] ?? TONES.dark}`,
         className,

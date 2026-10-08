@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { Check, User, X } from "lucide-react";
 import RazorpayCheckoutButton from "@/components/Payments/RazorpayCheckoutButton";
-import { buttonV3ClassName, ButtonV3Chrome } from "@/homepage-v3/components/ButtonV3";
+import { buttonClassName, ButtonChrome } from "@/homepage/components/Button";
 
 // Same USD figures Pricing.jsx displays for Vault Pro - kept local since
 // that component doesn't export its PRICING map. Templates checkout only
@@ -23,10 +23,10 @@ const ANNUAL_FEATURES = [
 
 // RazorpayCheckoutButton renders a real <button> with its own payment/
 // loading logic (Razorpay script load, order/subscription creation, the
-// checkout modal itself) - it isn't a navigation <Link> like ButtonV3, so
-// it can't just be swapped for one. This wraps it in ButtonV3's exact
-// visual chrome (buttonV3ClassName + ButtonV3Chrome, the same pieces the
-// real ButtonV3 is built from) while leaving RazorpayCheckoutButton's own
+// checkout modal itself) - it isn't a navigation <Link> like Button, so
+// it can't just be swapped for one. This wraps it in Button's exact
+// visual chrome (buttonClassName + ButtonChrome, the same pieces the
+// real Button is built from) while leaving RazorpayCheckoutButton's own
 // click handling, disabled/loading state, and props completely untouched.
 // The wrapping div only exists to catch pointer enter/leave for the
 // scramble-text hover (RazorpayCheckoutButton doesn't forward those props)
@@ -43,12 +43,12 @@ function RazorpayButtonV3({ variant = "orange", label, className = "", ...razorp
       <RazorpayCheckoutButton
         {...razorpayProps}
         data-sound-kind={variant === "outline" ? "secondary" : "primary"}
-        className={buttonV3ClassName({
+        className={buttonClassName({
           variant,
           className: `disabled:pointer-events-none disabled:opacity-60 ${className}`,
         })}
       >
-        <ButtonV3Chrome label={label} hovered={hovered} />
+        <ButtonChrome label={label} hovered={hovered} />
       </RazorpayCheckoutButton>
     </div>
   );

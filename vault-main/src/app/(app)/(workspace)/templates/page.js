@@ -5,7 +5,7 @@ import { TEMPLATES, TEMPLATES_OG_IMAGE } from "@/lib/mock-templates";
 import { getTemplateViewCounts } from "@/lib/template-views";
 import { BreadcrumbsJSONLD, FAQJSONLD, WebpageJsonLd } from "@/lib/json-ld";
 import { TEMPLATES_DESCRIPTION, templatesFaqItems } from "./content";
-import { TemplatesListingV4 } from "./TemplatesListingV4";
+import { TemplatesListing } from "./TemplatesListing";
 
 // No dynamic API (auth/cookies/headers) is called on this page, so Next
 // would otherwise statically prerender it once at build/deploy time - the
@@ -46,7 +46,7 @@ export default async function TemplatesPage() {
       <WebpageJsonLd metadata={metadata} />
       <BreadcrumbsJSONLD pathname={metadata.url} />
       <FAQJSONLD faqs={templatesFaqItems} />
-      <TemplatesListingV4 templates={templates} description={TEMPLATES_DESCRIPTION} faqItems={templatesFaqItems} />
+      <TemplatesListing templates={templates} description={TEMPLATES_DESCRIPTION} faqItems={templatesFaqItems} />
     </>
   );
 }

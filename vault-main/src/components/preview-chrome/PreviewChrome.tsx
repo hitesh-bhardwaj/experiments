@@ -7,7 +7,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import RemixerPanel from "@/components/remixer-panel/RemixerPanel";
 import type { RemixerGroup, RemixerValue, RemixerValues } from "@/components/remixer-panel/types";
 import { getEffectRouteSlug } from "@/lib/effect-slugs";
-import { useInteraction } from "@/homepage-v3/components/InteractionProvider";
+import { useInteraction } from "@/homepage/components/InteractionProvider";
 import { mountPreviewChrome } from "./src/preview-chrome";
 import "./src/preview-chrome.css";
 

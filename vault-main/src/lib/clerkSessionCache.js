@@ -6,7 +6,7 @@
 // already reads server-side; this is the client-side read of it.
 //
 // Meant for components rendered outside a live Clerk tree (marketing pages
-// with no ClerkProvider - see NavbarV3.jsx) that still want to avoid
+// with no ClerkProvider - see Navbar.jsx) that still want to avoid
 // showing a "Sign In" prompt to a browser that's actually signed in
 // elsewhere on the site. It is a cache, not a source of truth: a stale or
 // spoofed cookie can only ever hide a sign-in prompt it shouldn't, never

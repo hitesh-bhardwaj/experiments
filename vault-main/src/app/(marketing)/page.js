@@ -1,4 +1,4 @@
-import Homepage from "@/components/Homepage/Homepage";
+import Homepage from "@/homepage/Homepage";
 import { FAQJSONLD, WebpageJsonLd } from "@/lib/json-ld";
 import { createPageMetadata } from "@/lib/seo-metadata";
 import { getSearchIndexEffects } from "@/lib/search-index";

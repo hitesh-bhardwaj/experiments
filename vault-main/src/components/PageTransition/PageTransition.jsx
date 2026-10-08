@@ -4,7 +4,7 @@ import React, { useCallback, useEffect, useRef } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import gsap from 'gsap'
 import { useLenis } from 'lenis/react'
-import { useInteraction } from '@/homepage-v3/components/InteractionProvider'
+import { useInteraction } from '@/homepage/components/InteractionProvider'
 
 /** Bayer 8x8 ordered-dither matrix for retro halftone dissolve effect */
 const BAYER = [

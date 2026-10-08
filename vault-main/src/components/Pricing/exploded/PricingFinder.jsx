@@ -1,12 +1,12 @@
 "use client";
 
-import { useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import LineReveal from "@/components/Animations/LineReveal";
 import { useFadeUp } from "@/components/Animations/gsapAnimations";
-import ButtonV3 from "@/homepage-v3/components/ButtonV3";
-import { useInteraction } from "@/homepage-v3/components/InteractionProvider";
+import Button from "@/homepage/components/Button";
+import { useInteraction } from "@/homepage/components/InteractionProvider";
 import { prefersReducedMotion } from "@/lib/motion";
 import CreditTiles from "./CreditTiles";
 import ReasonList from "./ReasonList";
@@ -125,7 +125,7 @@ export default function PricingFinder() {
     }
     setSections(!sections);
   };
-  const rec = useMemo(() => recommend({ templates, copies, sections }), [templates, copies, sections]);
+  const rec = recommend({ templates, copies, sections });
   const key = rec.key + rec.period;
 
   useFadeUp(rootRef);
@@ -191,7 +191,7 @@ export default function PricingFinder() {
             <input id="fd-copies" type="range" min="1" max="10" step="any" value={pos.copies} {...dragProps("copies")} style={fill(pos.copies, 1, 10)} className={RANGE} />
           </div>
           </div>
-          <ButtonV3
+          <Button
             text="I need full page sections"
             variant={sections ? "orange" : "outline"}
             preventDefault
@@ -216,7 +216,7 @@ export default function PricingFinder() {
           <CreditTiles count={rec.tier.credits} used={templates} />
           <ReasonList items={rec.why} />
           <div>
-            <ButtonV3
+            <Button
               variant="orange"
               href="#plans"
               scrollOffset={HEADER_OFFSET}
@@ -224,7 +224,7 @@ export default function PricingFinder() {
               className="max-md:w-full max-md:justify-center"
             >
               <RollText text={`Start ${rec.label}`} dir={rec.key === "plus" ? 1 : -1} />
-            </ButtonV3>
+            </Button>
           </div>
         </div>
       </div>

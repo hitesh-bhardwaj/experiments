@@ -3,7 +3,7 @@
 import { useRef } from "react";
 import LineReveal from "@/components/Animations/LineReveal";
 import { useFadeUp } from "@/components/Animations/gsapAnimations";
-import CardFluid from "@/homepage-v3/components/CardFluid";
+import CardFluid from "@/homepage/components/CardFluid";
 
 const PERKS = [
   { title: "A founding badge", text: "Permanent, visible, earned by being early." },

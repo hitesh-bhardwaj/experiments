@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import FooterV3 from "@/homepage-v3/sections/FooterV3";
+import Footer from "@/homepage/sections/Footer";
 
 // This layout is shared by docs/templates/effects/legal AND dashboard -
 // dashboard has its own dense, app-like UI (DashboardShell's own nav/tabs)
@@ -12,5 +12,5 @@ export default function WorkspaceFooter() {
 
   if (pathname?.startsWith("/dashboard")) return null;
 
-  return <FooterV3 animations={false} />;
+  return <Footer animations={false} />;
 }

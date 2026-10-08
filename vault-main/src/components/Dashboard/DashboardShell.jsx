@@ -3,9 +3,8 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
-import Button from "../WebsiteComps/Button";
 import { useAdminRole } from "@/lib/useAdminRole";
-import ButtonV3 from "@/homepage-v3/components/ButtonV3";
+import Button from "@/homepage/components/Button";
 import { AppVaultHeader as VaultHeader } from "@/components/layout/AppVaultHeader";
 
 const BASE_TABS = [
@@ -112,7 +111,7 @@ export function DashboardShell({ children, totalEffects = 0, effects = [] }) {
             })}
           </div>
 
-          <ButtonV3
+          <Button
             href="/effects"
             text={"Browse Effects"}
           />

@@ -14,10 +14,10 @@ import Link from "next/link";
 import { createPortal } from "react-dom";
 import { useRouter, usePathname } from "next/navigation";
 import { AppVaultHeader as VaultHeader } from "@/components/layout/AppVaultHeader";
-import { EffectCardV4 } from "../EffectCardV4";
+import { EffectCard } from "../EffectCard";
 import { CustomAnimationCta } from "../CustomAnimationCta";
 import { useEffectCardActions } from "../useEffectCardActions";
-import FAQV3 from "@/homepage-v3/sections/FAQV3";
+import FAQ from "@/homepage/sections/FAQ";
 import { CodeBlock, CodeBlockLanguageProvider } from "@/components/ui/CodeBlock";
 import { TableOfContents } from "@/components/ui/TableOfContents";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
@@ -36,7 +36,7 @@ import { LockKeyhole } from "lucide-react";
 import { CopyLimitProvider, useCopyLimit } from "./useCopyLimit";
 import GetCodeMenu from "./GetCodeMenu";
 import UpgradeToProModal from "./UpgradeToProModal";
-import ButtonV3 from "@/homepage-v3/components/ButtonV3";
+import Button from "@/homepage/components/Button";
 import { SliderArrowButton } from "@/components/ui/SliderArrowButton";
 import EffectStage from "./EffectStage";
 
@@ -241,7 +241,7 @@ export function EffectDetailContent({
 
   const safeEffect = effect || {};
   const safeContent = content || null;
-  // The article's FAQ block renders as the site FAQ section (FAQV3) below the article,
+  // The article's FAQ block renders as the site FAQ section (FAQ) below the article,
   // exactly like the listing and homepage - not inside the prose.
   const faqItems = (safeContent?.body || [])
     .filter((block) => block?._type === "effectFaqAccordion")
@@ -496,7 +496,7 @@ export function EffectDetailContent({
 
                 {/* FAQ + custom animation block - the same components as the effects listing */}
                 <div className="flex h-full w-full flex-col gap-[2vw]">
-                  {faqItems.length > 0 && <FAQV3 faqItems={faqItems} translateTop={false} />}
+                  {faqItems.length > 0 && <FAQ faqItems={faqItems} translateTop={false} />}
                   <div className="mx-auto w-full max-w-[1536px] px-[4.5vw] max-md:px-[6vw]">
                     <CustomAnimationCta cta={safeContent?.ctaBanner} sectionRef={ctaSectionRef} />
                   </div>
@@ -514,11 +514,11 @@ export function EffectDetailContent({
                           Related Effects
                         </h2>
                       </HeadAnim>
-                      {/* The arrows are sized to the Explore button beside them: ButtonV3 is
+                      {/* The arrows are sized to the Explore button beside them: Button is
                           1.15vw text x 1.5 line height + 1rem padding + 2px border. */}
                       <div className="fadeup flex items-center gap-[0.5vw]">
-                        <div className="flex flex-col items-end justify-center max-lg:hidden">
-                          <ButtonV3
+                        <div className="flex flex-col items-end justify-center max-[1025px]:hidden">
+                          <Button
                             text="Explore All Effects"
                             href="/effects"
                             variant="orange"
@@ -571,7 +571,7 @@ export function EffectDetailContent({
                             onClickCapture={blockClickAfterDrag}
                             className="w-[32%] shrink-0 cursor-pointer snap-start max-lg:w-[60%] max-md:w-full"
                           >
-                            <EffectCardV4
+                            <EffectCard
                               effect={relatedEffect}
                               {...cardActions(relatedEffect)}
                               onOpen={(item) => router.push(getEffectHref(item))}
@@ -604,8 +604,8 @@ export function EffectDetailContent({
                       )}
                     </div>
 
-                    <div className="fadeup hidden w-fit self-center max-lg:flex">
-                      <ButtonV3
+                    <div className="fadeup hidden w-fit self-center max-[1025px]:flex">
+                      <Button
                         text="Explore all effects"
                         href="/effects"
                         variant="orange"
@@ -1117,7 +1117,7 @@ function LockedCodePlaceholder({ filename }) {
         </div>
 
         <div className="flex flex-wrap items-center pt-3 max-lg:pt-6 justify-center gap-3">
-          <ButtonV3
+          <Button
             text="Upgrade to Pro"
             variant="orange"
             href="/pricing"

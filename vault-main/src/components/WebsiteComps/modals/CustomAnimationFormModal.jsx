@@ -480,7 +480,7 @@ function CustomAnimationFormModalInner() {
                     {captchaError && <p className="mt-2 text-sm text-red-400">{captchaError}</p>}
                   </div>
 
-                  {/* Same submit control as the sign-in page: ButtonV3 + a hidden real
+                  {/* Same submit control as the sign-in page: Button + a hidden real
                       submit button so Enter in a field still submits. */}
                   <SubmitButton loading={isSubmitting} formRef={formRef} className="w-fit">
                     Send request

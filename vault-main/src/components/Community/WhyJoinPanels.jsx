@@ -3,8 +3,8 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { prefersReducedMotion } from "@/lib/motion";
-import { useInteraction } from "@/homepage-v3/components/InteractionProvider";
-import CardFluid from "@/homepage-v3/components/CardFluid";
+import { useInteraction } from "@/homepage/components/InteractionProvider";
+import CardFluid from "@/homepage/components/CardFluid";
 
 // Teardown timeline
 const TD_DURATION = 2.4;

@@ -5,7 +5,7 @@ import {
   getEffectCategoryContent,
   getEffectCategoryMetadata,
 } from "@/lib/categories";
-import { EffectsListingV4 } from "../EffectsListingV4";
+import { EffectsListing } from "../EffectsListing";
 import { getUserPlan } from "@/lib/subscription";
 import { auth } from "@clerk/nextjs/server";
 import { sortEffects } from "@/lib/effect-sort";
@@ -100,7 +100,7 @@ export default async function EffectsCategoryPage({ params }) {
       <BreadcrumbsJSONLD pathname={pageMetadata.url} />
       {pageContent.faqs?.length > 0 && <FAQJSONLD faqs={pageContent.faqs} />}
       <Suspense fallback={<VaultFallback />}>
-        <EffectsListingV4
+        <EffectsListing
           effects={effects}
           trendingEffects={trendingEffects}
           featuredNames={featuredNames}

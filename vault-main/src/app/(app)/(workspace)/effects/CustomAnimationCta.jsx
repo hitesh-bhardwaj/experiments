@@ -1,6 +1,6 @@
 "use client";
 
-import ButtonV3 from "@/homepage-v3/components/ButtonV3";
+import Button from "@/homepage/components/Button";
 import { CustomAnimationFormTrigger } from "@/components/WebsiteComps/modals/CustomAnimationFormModal";
 
 
@@ -24,7 +24,7 @@ export function CustomAnimationCta({ cta, sectionRef, className = "" }) {
       </div>
       {cta.buttonText && (
         <CustomAnimationFormTrigger>
-          <ButtonV3 preventDefault={false} text={cta.buttonText} href={cta.buttonLink || "#"} className="w-fit" />
+          <Button preventDefault={false} text={cta.buttonText} href={cta.buttonLink || "#"} className="w-fit" />
         </CustomAnimationFormTrigger>
       )}
     </section>

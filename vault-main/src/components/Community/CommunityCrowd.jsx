@@ -7,8 +7,8 @@ import { prefersReducedMotion } from "@/lib/motion";
 import { restoreJoined, setCrowd } from "./community-store";
 import { createPortal } from "react-dom";
 import { mountCrowd } from "./src/crowd";
-import { useInteraction } from "@/homepage-v3/components/InteractionProvider";
-import { getSiteFluid } from "@/homepage-v3/components/SiteBackground";
+import { useInteraction } from "@/homepage/components/InteractionProvider";
+import { getSiteFluid } from "@/homepage/components/SiteBackground";
 
 const SMALL_SCREEN = "(max-width: 760px)";
 const LOW_CORE_COUNT = 4;
