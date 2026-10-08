@@ -380,17 +380,17 @@ export default function GetCodeMenu({
         aria-expanded={open}
         aria-controls={open ? menuId : undefined}
         onClick={onTriggerClick}
-        className={`relative flex h-full cursor-pointer items-center border bg-foreground/5 backdrop-blur-lg py-2.75 pr-[3vw] pl-[1.2vw] text-left text-[1.1vw] border-foreground/20 tracking-wide text-foreground outline-none transition hover:border-foreground/25 focus-visible:border-foreground/25 max-[1025px]:py-3.75 max-[1025px]:pr-12 max-[1025px]:pl-5 max-[1025px]:text-[2vw] max-md:text-[4vw] ${triggerClassName}`}
+        className={`relative flex h-full cursor-pointer items-center border bg-foreground/5 backdrop-blur-lg py-2.75 pr-[3vw] pl-[1.2vw] text-left text-[1.1vw] border-foreground/20 tracking-wide text-foreground outline-none transition hover:border-foreground/25 focus-visible:border-foreground/25 max-lg:py-3.75 max-lg:pr-12 max-lg:pl-5 max-lg:text-[2vw] max-md:text-[4vw] ${triggerClassName}`}
       >
         {statusLabel ? (
           <span key={`${copyStatus.key}-${copyStatus.phase}`} className={`flex items-center gap-2 whitespace-nowrap ${fadeIn}`}>
             {copyStatus.phase === "copying" ? (
               <LoaderCircle
                 aria-hidden="true"
-                className="size-[1.1vw] shrink-0 animate-spin text-foreground/60 max-[1025px]:size-4 motion-reduce:animate-none"
+                className="size-[1.1vw] shrink-0 animate-spin text-foreground/60 max-lg:size-4 motion-reduce:animate-none"
               />
             ) : (
-              <Check aria-hidden="true" className="size-[1.1vw] shrink-0 text-primary max-[1025px]:size-4" />
+              <Check aria-hidden="true" className="size-[1.1vw] shrink-0 text-primary max-lg:size-4" />
             )}
             {statusLabel}
           </span>
@@ -401,7 +401,7 @@ export default function GetCodeMenu({
         )}
         <ChevronDown
           aria-hidden="true"
-          className={`pointer-events-none absolute top-1/2 right-[1vw] size-[1.1vw] -translate-y-1/2 text-foreground/40 transition-[transform,opacity] duration-300 max-[1025px]:right-4 max-[1025px]:size-4 motion-reduce:transition-none ${
+          className={`pointer-events-none absolute top-1/2 right-[1vw] size-[1.1vw] -translate-y-1/2 text-foreground/40 transition-[transform,opacity] duration-300 max-lg:right-4 max-lg:size-4 motion-reduce:transition-none ${
             open ? "rotate-180" : ""
           } ${statusLabel ? "opacity-0" : "opacity-100"}`}
         />
@@ -417,7 +417,7 @@ export default function GetCodeMenu({
           role="menu"
           aria-label={`Get the code for ${title}`}
           onKeyDown={onPanelKeyDown}
-          className={`absolute top-[calc(100%+0.5vw)] z-40 w-[24vw] min-w-72 border border-foreground/10 bg-dark-card p-1.5 shadow-2xl max-[1025px]:w-[55vw] max-md:w-full max-md:min-w-0 ${
+          className={`absolute top-[calc(100%+0.5vw)] z-40 w-[24vw] min-w-72 border border-foreground/10 bg-dark-card p-1.5 shadow-2xl max-lg:w-[55vw] max-md:w-full max-md:min-w-0 ${
             align === "left" ? "left-0" : "right-0"
           }`}
         >
@@ -495,7 +495,7 @@ export default function GetCodeMenu({
               </MenuItem>
 
               {codeLimited && (
-                <div className="flex items-center justify-between gap-3 border-t border-foreground/10 px-3 pt-3 pb-1.5 text-[0.9vw] text-foreground/60 max-[1025px]:text-[1.7vw] max-md:text-[3.4vw]">
+                <div className="flex items-center justify-between gap-3 border-t border-foreground/10 px-3 pt-3 pb-1.5 text-[0.9vw] text-foreground/60 max-lg:text-[1.7vw] max-md:text-[3.4vw]">
                   <span>You&apos;ve reached today&apos;s copy limit.</span>
                   {lockedCtaHref && (
                     <button

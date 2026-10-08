@@ -13,8 +13,8 @@ import { MEDIA } from "@/lib/breakpoints";
 // Same message the preview chrome sends its device iframe (onEmbedValues)
 const MSG = "vault-preview:values";
 const EASE = "cubic-bezier(.16,1,.3,1)";
-// 13px-equivalent text in vw: desktop · tablet (max-[1025px]) · mobile (max-md).
-const T13 = "text-[1.1vw] max-[1025px]:text-[1.6vw] max-md:text-[3.3vw]";
+// 13px-equivalent text in vw: desktop · tablet (max-lg) · mobile (max-md).
+const T13 = "text-[1.1vw] max-lg:text-[1.6vw] max-md:text-[3.3vw]";
 
 // JSON-safe copy, so the values can cross postMessage into the iframe
 function cloneable(values) {
@@ -216,7 +216,7 @@ export default function EffectStage({ effect, title, previewHref, getCode = null
           On phones the panel stacks below at full width. */}
       <div
         ref={gridRef}
-        className="flex items-start [--pg-w:17.8vw] max-[1025px]:[--pg-w:33vw] max-md:flex-col max-md:gap-y-[3.5vw]"
+        className="flex items-start [--pg-w:17.8vw] max-lg:[--pg-w:33vw] max-md:flex-col max-md:gap-y-[3.5vw]"
         style={{ columnGap: play ? "1vw" : "0vw", transition: `column-gap .8s ${EASE}` }}
       >
         {/* Only in Playground: sticks centred on screen while the long panel scrolls past

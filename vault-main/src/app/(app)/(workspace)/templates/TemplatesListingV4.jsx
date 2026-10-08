@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, useMemo, useRef, useState, useSyncExternalStore } from "react";
+import { Fragment, useCallback, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import dynamic from "next/dynamic";
 import { motion } from "motion/react";
 import HeadAnim from "@/components/Animations/HeadAnim";
@@ -10,9 +10,11 @@ import { useToastQueue, ToastViewport } from "@/components/ui/Toast";
 import FAQV3 from "@/homepage-v3/sections/FAQV3";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import ButtonV3 from "@/homepage-v3/components/ButtonV3";
-import { useTemplateWishlist } from "../templates/useTemplateWishlist";
-import { useTemplateAccess } from "../templates/useTemplateAccess";
+import { useTemplateWishlist } from "./useTemplateWishlist";
+import { useTemplateAccess } from "./useTemplateAccess";
 import { TemplateCardV4 } from "./TemplateCardV4";
+import { TemplatePreviewDrawer } from "./TemplatePreviewDrawer";
+import { useTemplatePurchase } from "./useTemplatePurchase";
 import { DISPLAY, GUTTER, LABEL, PRICE, T16, T20, catalogueOf, priceOf } from "./tokens";
 
 // three.js only loads when the corridor is shown.
@@ -99,6 +101,16 @@ export function TemplatesListingV4({ templates = [], description = "", faqItems 
   });
   const accessSlugs = useTemplateAccess();
 
+  // Preview drawer (opened from a card's shot) and the purchase it can start.
+  const [drawerTemplate, setDrawerTemplate] = useState(null);
+  const closeDrawer = useCallback(() => setDrawerTemplate(null), []);
+  const { buy, modals: purchaseModals } = useTemplatePurchase();
+  const buyFromDrawer = (template) => {
+    setDrawerTemplate(null);
+    // Let the drawer slide away before the "Get this template" popup opens.
+    setTimeout(() => buy(template, accessSlugs.includes(template.slug)), 650);
+  };
+
   useFadeUp(rootRef);
 
   const categories = useMemo(() => ["All", ...new Set(templates.map((t) => t.category).filter(Boolean))], [templates]);
@@ -125,31 +137,31 @@ export function TemplatesListingV4({ templates = [], description = "", faqItems 
   return (
     <div ref={rootRef} className="relative text-light">
       {/* ---------- hero ---------- */}
-      <section id="templates-hero" className={`${GUTTER} flex flex-col gap-7 pt-36 pb-12 max-[1025px]:pt-32 max-md:pt-28`}>
+      <section id="templates-hero" className={`${GUTTER} flex flex-col gap-7 pt-36 pb-12 max-lg:pt-32 max-md:pt-28`}>
         <motion.div {...heroFadeUp(1)}>
           <Breadcrumb />
         </motion.div>
 
-        <div className="flex items-end justify-between gap-12 max-[1025px]:flex-col max-[1025px]:items-stretch max-[1025px]:gap-10">
+        <div className="flex items-end justify-between gap-12 max-lg:flex-col max-lg:items-stretch max-lg:gap-10">
           <HeadAnim rotate={0} animateOnScroll={false} delay={0.2}>
-            <h1 className={`${DISPLAY} t96 w-[58%] font-aeonik max-[1025px]:w-full`}>
+            <h1 className={`${DISPLAY} t96 w-[58%] font-aeonik max-lg:w-full`}>
               Whole sites. <span className="gradient-text-animate">Ready to ship.</span>
             </h1>
           </HeadAnim>
 
-          <div className="flex w-[38%] flex-col gap-6 max-[1025px]:w-full">
+          <div className="flex w-[38%] flex-col gap-6 max-lg:w-full">
             <Copy animateOnScroll={false} delay={0.5}>
-              <p className={`w-[90%] ${T16} text-foreground/80 max-[1025px]:w-[70%] max-md:w-full`}>
+              <p className={`w-[90%] ${T16} text-foreground/80 max-lg:w-[70%] max-md:w-full`}>
                 {description} Buy one outright, or redeem a template credit from your plan.
               </p>
             </Copy>
             <motion.div {...heroFadeUp(1.1)} className={`${LABEL} flex flex-wrap gap-x-[2vw] gap-y-[0.7vw] max-md:gap-x-[7vw] max-md:gap-y-[2.5vw]`}>
               {stats.map(([value, label]) => (
                 <p key={label}>
-                  <b className={`${DISPLAY} block font-aeonik text-[2.4vw] leading-none text-light tabular-nums max-[1025px]:text-[4.5vw] max-md:text-[8vw]`}>
+                  <b className={`${DISPLAY} block font-aeonik text-[2.4vw] leading-none text-light tabular-nums max-lg:text-[4.5vw] max-md:text-[8vw]`}>
                     {value}
                   </b>
-                  <span className="text-[1vw] text-foreground/60 max-[1025px]:text-[1.8vw] max-md:text-[3.6vw]">{label}</span>
+                  <span className="text-[1vw] text-foreground/60 max-lg:text-[1.8vw] max-md:text-[3.6vw]">{label}</span>
                 </p>
               ))}
             </motion.div>
@@ -226,6 +238,7 @@ export function TemplatesListingV4({ templates = [], description = "", faqItems 
                     priority={index < 2}
                     isWishlisted={wishlist.includes(template.slug)}
                     onToggleWishlist={toggleWishlist}
+                    onOpen={setDrawerTemplate}
                     hasAccess={accessSlugs.includes(template.slug)}
                   />
                 </motion.div>
@@ -251,7 +264,7 @@ export function TemplatesListingV4({ templates = [], description = "", faqItems 
             </CreditCard>
           </div>
           <div className="fadeup flex">
-            <ButtonV3 className="tracking-normal!" text="Compare plans" href="/pricing" />
+            <ButtonV3 className="tracking-normal!" text="Compare plans" href="/pricing#compare" />
           </div>
         </section>
       </div>
@@ -263,6 +276,18 @@ export function TemplatesListingV4({ templates = [], description = "", faqItems 
         </div>
       )}
 
+      <TemplatePreviewDrawer
+        template={drawerTemplate}
+        templates={templates}
+        isWishlisted={(t) => wishlist.includes(t.slug)}
+        hasAccess={(t) => accessSlugs.includes(t.slug)}
+        onToggleWishlist={toggleWishlist}
+        onClose={closeDrawer}
+        onOpen={setDrawerTemplate}
+        onBuy={buyFromDrawer}
+      />
+      {purchaseModals}
+
       <ToastViewport toast={toast} onDismiss={dismissToast} />
     </div>
   );
@@ -270,7 +295,7 @@ export function TemplatesListingV4({ templates = [], description = "", faqItems 
 
 function CreditCard({ title, dark = false, className = "", children }) {
   return (
-    <div className={`flex w-[calc((100%-1.8vw)/3)] flex-col gap-2 p-6 max-[1025px]:w-[calc((100%-0.9vw)/2)] max-md:w-full ${dark ? "bg-ink text-light" : `bg-foreground ring-1 ring-inset ring-black/10 ${className}`}`}>
+    <div className={`flex w-[calc((100%-1.8vw)/3)] flex-col gap-2 p-6 max-lg:w-[calc((100%-0.9vw)/2)] max-md:w-full ${dark ? "bg-ink text-light" : `bg-foreground ring-1 ring-inset ring-black/10 ${className}`}`}>
       <b className={`${DISPLAY} ${T20} font-aeonik font-medium`}>{title}</b>
       <p className={`${T16} ${dark ? "text-light/60" : "text-black/60"}`}>{children}</p>
     </div>

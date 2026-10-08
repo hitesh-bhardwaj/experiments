@@ -213,15 +213,15 @@ export default function DocsBody({ children }) {
           {/* White sheet (Docs prototype's .sheet), square-edged, under the content, the
               docs footer and the TOC column. Code blocks stay dark. */}
           <section id="docs-content" data-sound-flow="off" className="docs-sheet py-[4vw]">
-            <div className="mx-auto flex w-full max-w-[1536px] items-start gap-[3vw] px-[4.5vw] max-[1025px]:flex-col max-md:px-[6vw]">
-            <div ref={contentRef} className="flex min-w-0 flex-1 flex-col gap-[5vw] max-[1025px]:w-full max-md:gap-[15vw]" onClick={onContentClick}>
+            <div className="mx-auto flex w-full max-w-[1536px] items-start gap-[3vw] px-[4.5vw] max-lg:flex-col max-md:px-[6vw]">
+            <div ref={contentRef} className="flex min-w-0 flex-1 flex-col gap-[5vw] max-lg:w-full max-md:gap-[15vw]" onClick={onContentClick}>
               <div className="blog-content">
                 {children}
               </div>
               <DocsPageFooter />
             </div>
             {/* TOC lives in the sheet's right column, sticky at the vertical centre */}
-            <aside className="sticky top-1/2 h-fit w-[22%] shrink-0 -translate-y-1/2 max-[1025px]:hidden">
+            <aside className="sticky top-1/2 h-fit w-[22%] shrink-0 -translate-y-1/2 max-lg:hidden">
               <TableOfContents containerRef={contentRef} watchKey={pathname} hideNearFooter />
             </aside>
             </div>

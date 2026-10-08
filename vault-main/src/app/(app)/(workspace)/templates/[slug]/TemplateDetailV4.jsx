@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from "react";
 import { preload } from "react-dom";
 import dynamic from "next/dynamic";
 import Link from "next/link";
@@ -15,8 +15,8 @@ import { TemplatePaywallModal } from "@/components/ui/TemplatePaywallModal";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import { useToastQueue, ToastViewport } from "@/components/ui/Toast";
 import ButtonV3 from "@/homepage-v3/components/ButtonV3";
-import { useTemplateWishlist } from "../../templates/useTemplateWishlist";
-import { useTemplateAccess } from "../../templates/useTemplateAccess";
+import { useTemplateWishlist } from "../useTemplateWishlist";
+import { useTemplateAccess } from "../useTemplateAccess";
 import { TemplateCardV4 } from "../TemplateCardV4";
 import { BADGE, DISPLAY, PRICE, GUTTER, LABEL, T13, T14, T16, catalogueOf, priceOf } from "../tokens";
 import { GetTemplateModal } from "./GetTemplateModal";
@@ -93,7 +93,8 @@ export function TemplateDetailV4({ template, templateAccess = { allowed: false, 
   const [hasAccess, setHasAccess] = useState(templateAccess.allowed);
   const [paywallOpen, setPaywallOpen] = useState(false);
   const [autoOpenCheckout, setAutoOpenCheckout] = useState(false);
-  const [getOpen, setGetOpen] = useState(null); // null | "buy" | "credit"
+  const [getOpen, setGetOpen] = useState(false);
+  const [getTab, setGetTab] = useState("buy");
 
   const explodedOk = useSyncExternalStore(subscribeExploded, canExplode, () => true);
   const [glFailed, setGlFailed] = useState(false);
@@ -135,6 +136,8 @@ export function TemplateDetailV4({ template, templateAccess = { allowed: false, 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const closeGet = useCallback(() => setGetOpen(false), []);
+
   const download = () => {
     window.location.href = downloadHref;
     showToast({ title: `${template.title} downloaded`, description: `${template.title} has been downloaded.` });
@@ -142,7 +145,7 @@ export function TemplateDetailV4({ template, templateAccess = { allowed: false, 
 
   // The real purchase: owned downloads, signed-out signs in and resumes here, signed-in opens the paywall.
   const buy = () => {
-    setGetOpen(null);
+    setGetOpen(false);
     if (hasAccess) return download();
     if (templateAccess.reason === "anonymous") {
       router.push(`/sign-in?redirect_url=${encodeURIComponent(`${pathname}?${RESUME_PURCHASE_PARAM}=1`)}`);
@@ -187,9 +190,8 @@ export function TemplateDetailV4({ template, templateAccess = { allowed: false, 
     capture.sections.forEach((sec, i) => sec.src && preload(sec.src, { as: "image", fetchPriority: i < 3 ? "high" : "low" }));
   }
 
-  // Effects with a Vault page vs components built just for this template.
+  // Only effects with a Vault page are listed.
   const vaultEffects = effects.filter((fx) => fx.href);
-  const customEffects = effects.filter((fx) => !fx.href);
 
   const facts = [
     ["Sections", sectionCount ? `${sectionCount} on one scrolling page` : "One scrolling page"],
@@ -216,19 +218,19 @@ export function TemplateDetailV4({ template, templateAccess = { allowed: false, 
       className="relative text-light"
     >
       {/* ---------- hero ---------- */}
-      <section id="template-hero" className={`${GUTTER} flex flex-col gap-10 pt-25 pb-16 max-[1025px]:pt-32 max-md:pt-28`}>
+      <section id="template-hero" className={`${GUTTER} flex flex-col gap-10 pt-25 pb-16 max-lg:pt-32 max-md:pt-28`}>
         <motion.div {...HERO_FADE}>
           <Breadcrumb />
         </motion.div>
 
-        <div className="flex items-start justify-between gap-12 max-[1025px]:flex-col max-[1025px]:gap-10">
-          <div className="sticky top-[20%] flex h-fit w-[57%] flex-col gap-6 max-[1025px]:static max-[1025px]:w-full">
+        <div className="flex items-start justify-between gap-12 max-lg:flex-col max-lg:gap-10">
+          <div className="sticky top-[20%] flex h-fit w-[57%] flex-col gap-6 max-lg:static max-lg:w-full">
             <HeadAnim rotate={0} animateOnScroll={false} delay={0.5}>
               <h1 className={`${DISPLAY} t96 font-aeonik`}>{template.title}</h1>
             </HeadAnim>
             {template.tagline && (
               <Copy animateOnScroll={false} delay={0.7}>
-                <p className="text22 w-[85%] leading-[1.3] text-foreground max-[1025px]:w-full">{template.tagline}</p>
+                <p className="text22 w-[85%] leading-[1.3] text-foreground max-lg:w-full">{template.tagline}</p>
               </Copy>
             )}
             <motion.div {...HERO_FADE} className="flex flex-wrap gap-1.5 pt-4">
@@ -240,11 +242,11 @@ export function TemplateDetailV4({ template, templateAccess = { allowed: false, 
             </motion.div>
           </div>
 
-          <motion.aside {...HERO_FADE} className="flex w-[38%] min-w-0 flex-col gap-6 max-[1025px]:w-full">
+          <motion.aside {...HERO_FADE} className="flex w-[38%] min-w-0 flex-col gap-6 max-lg:w-full">
             <dl className="flex flex-col gap-3">
               {facts.map(([term, value]) => (
                 <div key={term} className="flex items-center gap-3 border-b border-foreground/7 pb-3">
-                  <dt className={`${LABEL} w-[24%] shrink-0 text-foreground/60 max-[1025px]:w-[20%] max-md:w-[32%]`}>{term}</dt>
+                  <dt className={`${LABEL} w-[24%] shrink-0 text-foreground/60 max-lg:w-[20%] max-md:w-[32%]`}>{term}</dt>
                   <dd className={`flex min-w-0 flex-1 flex-wrap gap-1.25 ${T14} text-foreground/90`}>
                     {Array.isArray(value)
                       ? value.map((v) => (
@@ -277,7 +279,14 @@ export function TemplateDetailV4({ template, templateAccess = { allowed: false, 
                 </button>
                 <button
                   type="button"
-                  onClick={hasAccess ? download : () => setGetOpen("buy")}
+                  onClick={
+                    hasAccess
+                      ? download
+                      : () => {
+                          setGetTab("buy");
+                          setGetOpen(true);
+                        }
+                  }
                   className={`inline-flex h-11 cursor-pointer items-center gap-2 bg-primary px-5 ${T16} text-background transition-colors duration-500 hover:bg-primary-hover`}
                 >
                   {hasAccess ? (
@@ -323,9 +332,9 @@ export function TemplateDetailV4({ template, templateAccess = { allowed: false, 
 
       {/* ---------- what's inside + more templates ---------- */}
       <div data-sound-hover="off" data-sound-flow="off" className="relative flex flex-col gap-[7vw] bg-light py-[7%] text-ink max-md:gap-[15vw] max-md:py-[15%]">
-        <section id="template-inside" className={`${GUTTER} flex items-start justify-between gap-[4vw] max-[1025px]:flex-col`}>
+        <section id="template-inside" className={`${GUTTER} flex items-start justify-between gap-[4vw] max-lg:flex-col`}>
           {/* Article copy: styled by blog.css (light theme), no overrides */}
-          <div className="fadeup flex w-[32%] flex-col gap-6 max-[1025px]:w-full">
+          <div className="fadeup flex w-[32%] flex-col gap-6 max-lg:w-full">
             <div className="blog-content blog-theme-light">
               <h2>
                 What’s <span className="gradient-text-animate">inside.</span>
@@ -337,7 +346,7 @@ export function TemplateDetailV4({ template, templateAccess = { allowed: false, 
             {published && <p className={`${LABEL} text-black/40`}>Published {published}</p>}
           </div>
 
-          <div className="fadeup flex w-[64%] flex-wrap gap-[0.9vw] max-md:gap-[3.5vw] max-[1025px]:w-full">
+          <div className="fadeup flex w-[64%] flex-wrap gap-[0.9vw] max-md:gap-[3.5vw] max-lg:w-full">
             <InsideCard title="Sections included" className="w-[calc((100%-0.9vw)/2)] max-md:w-full">
               <ol className="flex flex-col gap-2">
                 {(devices.desktop?.sections || []).map((s, i) => (
@@ -356,18 +365,6 @@ export function TemplateDetailV4({ template, templateAccess = { allowed: false, 
                   </Link>
                 ))}
               </div>
-              {customEffects.length > 0 && (
-                <div className="flex flex-col gap-2 pt-1">
-                  <p className={`${LABEL} text-black/60`}>Built for this template</p>
-                  <div className="flex flex-wrap gap-1.5">
-                    {customEffects.map((fx) => (
-                      <span key={fx.name} className={`inline-flex h-7.5 items-center px-3 ${T14} text-black/60 ring-1 ring-inset ring-black/10`}>
-                        {fx.title}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              )}
             </InsideCard>
             <InsideCard title="Stack" className="w-full">
               <div className="flex flex-wrap gap-1.5">
@@ -390,7 +387,7 @@ export function TemplateDetailV4({ template, templateAccess = { allowed: false, 
               <h2 className={`${DISPLAY} text64 font-aeonik`}>
                 More <span className="gradient-text-animate">templates.</span>
               </h2>
-              <ButtonV3 className="tracking-normal!" text="All templates" href="/templates-v4" />
+              <ButtonV3 className="tracking-normal!" text="All templates" href="/templates" />
             </div>
             <div className="flex flex-wrap gap-x-[1.4vw] gap-y-14">
               {related.map((t) => (
@@ -408,7 +405,7 @@ export function TemplateDetailV4({ template, templateAccess = { allowed: false, 
         )}
       </div>
 
-      <GetTemplateModal template={template} tab={getOpen} onTab={setGetOpen} onClose={() => setGetOpen(null)} onBuy={buy} />
+      <GetTemplateModal template={template} open={getOpen} tab={getTab} onTab={setGetTab} onClose={closeGet} onBuy={buy} />
 
       <TemplatePaywallModal
         template={template}

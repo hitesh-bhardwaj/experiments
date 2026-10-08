@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 
@@ -33,6 +33,19 @@ export function useTemplateWishlist({ onSaved, onRemoved } = {}) {
     };
   }, [isSignedIn]);
 
+  // Optimistic, like the effects cards: the heart and toast change on click,
+  // and the server's answer only corrects it (or a failure reverts it).
+  const wishlistRef = useRef(wishlist);
+  useEffect(() => {
+    wishlistRef.current = wishlist;
+  }, [wishlist]);
+  const setSaved = (slug, saved) => {
+    const prev = wishlistRef.current;
+    const next = saved ? (prev.includes(slug) ? prev : [...prev, slug]) : prev.filter((s) => s !== slug);
+    wishlistRef.current = next; // so a quick second click sees this one
+    setWishlist(next);
+  };
+
   const toggleWishlist = async (template) => {
     if (!isLoaded) return;
 
@@ -41,29 +54,23 @@ export function useTemplateWishlist({ onSaved, onRemoved } = {}) {
       return;
     }
 
+    const willSave = !wishlistRef.current.includes(template.slug);
+    setSaved(template.slug, willSave);
+    (willSave ? onSaved : onRemoved)?.(template);
+
     try {
       const res = await fetch("/api/wishlist-templates", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ templateSlug: template.slug }),
       });
-
-      if (!res.ok) {
-        console.error(await res.json().catch(() => ({})));
-        return;
-      }
-
+      if (!res.ok) throw new Error(`wishlist-templates ${res.status}`);
       const { saved } = await res.json();
-
-      if (saved) {
-        setWishlist((prev) => (prev.includes(template.slug) ? prev : [...prev, template.slug]));
-        onSaved?.(template);
-      } else {
-        setWishlist((prev) => prev.filter((slug) => slug !== template.slug));
-        onRemoved?.(template);
-      }
+      // The server has the final say (e.g. after a double click).
+      if (typeof saved === "boolean" && saved !== willSave) setSaved(template.slug, saved);
     } catch (err) {
       console.error(err);
+      setSaved(template.slug, !willSave);
     }
   };
 

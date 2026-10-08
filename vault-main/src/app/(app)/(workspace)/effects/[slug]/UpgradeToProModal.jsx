@@ -69,7 +69,7 @@ export default function UpgradeToProModal({ open, onClose, reason = "pro-effect"
         aria-modal="true"
         aria-labelledby="upgrade-to-pro-title"
         onClick={(event) => event.stopPropagation()}
-        className={`relative flex max-h-[90vh] w-[38vw] flex-col gap-[1.6vw] overflow-y-auto border border-foreground/20 bg-background p-10 text-foreground shadow-2xl transition-transform duration-300 max-[1025px]:w-[75%] max-[1025px]:p-7 max-md:w-full max-md:gap-[6vw] max-md:p-6 ${
+        className={`relative flex max-h-[90vh] w-[38vw] flex-col gap-[1.6vw] overflow-y-auto border border-foreground/20 bg-background p-10 text-foreground shadow-2xl transition-transform duration-300 max-lg:w-[75%] max-lg:p-7 max-md:w-full max-md:gap-[6vw] max-md:p-6 ${
           open ? "scale-100" : "scale-95"
         }`}
       >
@@ -117,7 +117,7 @@ export default function UpgradeToProModal({ open, onClose, reason = "pro-effect"
           </div>
 
           {isIndia && (
-            <p className="font-mono text-[0.9vw] max-[1025px]:text-[1.7vw] max-md:text-[3.2vw] text-foreground/80">
+            <p className="font-mono text-[0.9vw] max-lg:text-[1.7vw] max-md:text-[3.2vw] text-foreground/80">
               +18% GST
             </p>
           )}
@@ -132,7 +132,7 @@ export default function UpgradeToProModal({ open, onClose, reason = "pro-effect"
           <ProCta isYearly={isYearly} currency={currency} />
         </div>
 
-        <p className="font-mono text-[0.9vw] max-[1025px]:text-[1.7vw] max-md:text-[3.2vw] text-light-grey">
+        <p className="font-mono text-[0.9vw] max-lg:text-[1.7vw] max-md:text-[3.2vw] text-light-grey">
           Instant access · npx hyperiux login · Cancel anytime
         </p>
       </div>

@@ -1,4 +1,4 @@
-// Detail-page data for the v4 sample, taken from each template's own source in
+// Template detail-page data, taken from each template's own source in
 // src/app/(marketing)/template-demo/<slug>: section names and notes from its
 // README, `effect` from the Vault effect that section's component imports,
 // and `effects`/`stack` from the effects its files import and its README.

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Builds the exploded-view manifest for a template from its section designs
- * exported from Figma. The /templates-v4/[slug] sample page reads it.
+ * exported from Figma. The /templates/[slug] page reads it.
  *
  * 1. In Figma, export each section of the homepage as its own frame image
  *    (PNG or JPG, 1x or 2x), one folder per device you have designs for:
@@ -13,7 +13,7 @@
  *    Devices: desktop, tablet, phone (any you have). Files are stacked in
  *    file-name order, top to bottom. The name after the number becomes the
  *    layer's label, matched to its name and notes in
- *    src/app/(app)/(workspace)/templates-v4/[slug]/template-sections.js.
+ *    src/app/(app)/(workspace)/templates/[slug]/template-sections.js.
  *
  * 2. node scripts/build-exploded-manifest.mjs <slug> [<slug> ...]
  *

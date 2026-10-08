@@ -195,7 +195,7 @@ export function FilterMenu({
             : `
           px-6 py-3  relative max-md:px-7 max-md:py-3
           backdrop-blur-lg flex items-center gap-2 justify-center
-          cursor-pointer transition-colors duration-300 text-[1vw] max-md:text-[4vw] max-[1025px]:text-[2.5vw]
+          cursor-pointer transition-colors duration-300 text-[1vw] max-md:text-[4vw] max-lg:text-[2.5vw]
           ${activeFilter
               ? "bg-primary text-background hover:bg-primary"
               : "bg-black/20 backdrop-blur-lg text-foreground hover:text-background hover:bg-primary"
@@ -212,7 +212,7 @@ export function FilterMenu({
           </>
         ) : (
           <>
-            <svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg" className={light ? "h-3 w-4" : "max-md:h-[4vw] h-[1vw] max-[1025px]:h-[2.5vw]"}>
+            <svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg" className={light ? "h-3 w-4" : "max-md:h-[4vw] h-[1vw] max-lg:h-[2.5vw]"}>
               <g clipPath="url(#clip0_491_803)">
                 <rect width="16" height="2" rx="1" fill="currentColor" />
                 <rect x="3" y="5" width="10" height="2" rx="1" fill="currentColor" />

@@ -84,7 +84,7 @@ function EffectDetailMainSkeleton() {
               <span className="text-foreground/25">/</span>
               <SkeletonBlock className="h-4 w-40" />
             </div>
-            <SkeletonBlock className="h-[5.2vw] w-[62%] max-[1025px]:h-14 max-[1025px]:w-[82%] max-md:h-12" />
+            <SkeletonBlock className="h-[5.2vw] w-[62%] max-lg:h-14 max-lg:w-[82%] max-md:h-12" />
             <div className="flex flex-col gap-3">
               <SkeletonBlock className="h-5 w-[72%]" />
               <SkeletonBlock className="h-5 w-[54%]" />
@@ -102,7 +102,7 @@ function EffectDetailMainSkeleton() {
 
         <div className="flex flex-col gap-[5vw] bg-foreground py-[5.5vw] max-md:gap-[10vw] max-md:py-[15vw]">
           <section className="mx-auto w-full max-w-[1536px] px-[4.5vw] max-md:px-[6vw]">
-            <div className="flex w-[70%] flex-col gap-8 max-[1025px]:w-full">
+            <div className="flex w-[70%] flex-col gap-8 max-lg:w-full">
               <SkeletonBlock className="h-10 w-[58%] bg-background/10" />
               <div className="flex flex-col gap-3">
                 <SkeletonBlock className="h-5 w-full bg-background/10" />
@@ -115,7 +115,7 @@ function EffectDetailMainSkeleton() {
                 <SkeletonBlock className="h-5 w-[88%] bg-background/10" />
                 <SkeletonBlock className="h-5 w-[64%] bg-background/10" />
               </div>
-              <SkeletonBlock className="h-[18vw] w-full bg-background/10 max-[1025px]:h-64" />
+              <SkeletonBlock className="h-[18vw] w-full bg-background/10 max-lg:h-64" />
             </div>
           </section>
 
@@ -131,13 +131,13 @@ function EffectDetailMainSkeleton() {
           </section>
 
           <section className="mx-auto w-full max-w-[1536px] px-[4.5vw] max-md:px-[6vw] flex flex-col gap-[2.8vw] max-md:gap-[10vw]">
-            <div className="flex items-center justify-between gap-[1.4vw] max-[1025px]:flex-col">
-              <SkeletonBlock className="h-12 w-[30%] bg-background/10 max-[1025px]:w-[60%] max-md:w-[80%]" />
-              <SkeletonBlock className="h-12 w-44 bg-primary/45 max-[1025px]:hidden" />
+            <div className="flex items-center justify-between gap-[1.4vw] max-lg:flex-col">
+              <SkeletonBlock className="h-12 w-[30%] bg-background/10 max-lg:w-[60%] max-md:w-[80%]" />
+              <SkeletonBlock className="h-12 w-44 bg-primary/45 max-lg:hidden" />
             </div>
-            <div className="flex gap-[1.5vw] overflow-hidden max-[1025px]:gap-[2vw] max-md:gap-[4vw]">
+            <div className="flex gap-[1.5vw] overflow-hidden max-lg:gap-[2vw] max-md:gap-[4vw]">
               {Array.from({ length: 3 }).map((_, index) => (
-                <div key={`related-effect-skeleton-${index}`} className="flex w-[32%] shrink-0 flex-col gap-5 max-[1025px]:w-[60%] max-md:w-full">
+                <div key={`related-effect-skeleton-${index}`} className="flex w-[32%] shrink-0 flex-col gap-5 max-lg:w-[60%] max-md:w-full">
                   <div className="flex aspect-[1/1] w-full items-center justify-center bg-background/10 p-[2vw] max-md:p-5">
                     <SkeletonBlock className="aspect-[1.8/1] w-[88%] bg-background/20" />
                   </div>
@@ -430,7 +430,7 @@ export function EffectDetailContent({
 
                 {pageTitle && (
                   <HeadAnim rotate={0}>
-                    <h1 className="text80 w-full font-aeonik font-normal text-foreground max-[1025px]:w-[90%] max-md:w-[80%]">
+                    <h1 className="text80 w-full font-aeonik font-normal text-foreground max-lg:w-[90%] max-md:w-[80%]">
                       {pageTitle}
                     </h1>
                   </HeadAnim>
@@ -438,7 +438,7 @@ export function EffectDetailContent({
 
                 {pageSummary && (
                   <Copy delay={0.5}>
-                    <p className="text22 w-[70%] leading-[1.6] text-foreground/90 max-[1025px]:w-[90%]">
+                    <p className="text22 w-[70%] leading-[1.6] text-foreground/90 max-lg:w-[90%]">
                       {pageSummary}
                     </p>
                   </Copy>
@@ -474,7 +474,7 @@ export function EffectDetailContent({
               <div className="bg-foreground text-background">
                 {/* blog-theme-light: blog.css prose in its light colours on this white section */}
                 <section id="effect-content" className="blog-theme-light relative mx-auto w-full max-w-[1536px] px-[4.5vw] pt-[5.5vw] pb-6 max-md:px-[6vw] max-md:pt-[15vw]">
-                  <div className="fixed right-[1vw] top-1/2 z-30 block -translate-y-1/2 max-[1025px]:hidden">
+                  <div className="fixed right-[1vw] top-1/2 z-30 block -translate-y-1/2 max-lg:hidden">
                     <TableOfContents
                       containerRef={contentRef}
                       stopRef={hasCtaSection ? ctaSectionRef : relatedEffectsRef}
@@ -508,7 +508,7 @@ export function EffectDetailContent({
                     id="related-effects"
                     className="relative mx-auto flex w-full max-w-[1536px] flex-col gap-[2.8vw] px-[4.5vw] py-[7%] max-md:gap-[10vw] max-md:px-[6vw]"
                   >
-                    <div className="flex items-center justify-between gap-[1.4vw] max-[1025px]:flex-col max-[1025px]:gap-[5vw]">
+                    <div className="flex items-center justify-between gap-[1.4vw] max-lg:flex-col max-lg:gap-[5vw]">
                       <HeadAnim rotate={0}>
                         <h2 className="text64 text-center font-aeonik font-medium text-background">
                           Related Effects
@@ -517,7 +517,7 @@ export function EffectDetailContent({
                       {/* The arrows are sized to the Explore button beside them: ButtonV3 is
                           1.15vw text x 1.5 line height + 1rem padding + 2px border. */}
                       <div className="fadeup flex items-center gap-[0.5vw]">
-                        <div className="flex flex-col items-end justify-center max-[1025px]:hidden">
+                        <div className="flex flex-col items-end justify-center max-lg:hidden">
                           <ButtonV3
                             text="Explore All Effects"
                             href="/effects"
@@ -525,7 +525,7 @@ export function EffectDetailContent({
                             className="shrink-0 border border-primary"
                           />
                         </div>
-                        <div className="max-[1025px]:hidden">
+                        <div className="max-lg:hidden">
                           {showRelatedSliderControls && (
                             <div className="flex h-full items-center justify-end gap-[0.5vw]">
                               <SliderArrowButton
@@ -563,13 +563,13 @@ export function EffectDetailContent({
                         onPointerLeave={handleRelatedPointerEnd}
                         onPointerCancel={handleRelatedPointerEnd}
                         onDragStart={(event) => event.preventDefault()}
-                        className="flex cursor-grab snap-x snap-mandatory select-none gap-[1.5vw] overflow-x-auto scroll-smooth pb-4 active:cursor-grabbing max-[1025px]:gap-[2vw] max-md:gap-[4vw]"
+                        className="flex cursor-grab snap-x snap-mandatory select-none gap-[1.5vw] overflow-x-auto scroll-smooth pb-4 active:cursor-grabbing max-lg:gap-[2vw] max-md:gap-[4vw]"
                       >
                         {safeRelatedEffects.map((relatedEffect) => (
                           <div
                             key={relatedEffect.name}
                             onClickCapture={blockClickAfterDrag}
-                            className="w-[32%] shrink-0 cursor-pointer snap-start max-[1025px]:w-[60%] max-md:w-full"
+                            className="w-[32%] shrink-0 cursor-pointer snap-start max-lg:w-[60%] max-md:w-full"
                           >
                             <EffectCardV4
                               effect={relatedEffect}
@@ -583,7 +583,7 @@ export function EffectDetailContent({
                       </div>
                     </div>
 
-                    <div className="hidden max-[1025px]:block">
+                    <div className="hidden max-lg:block">
                       {showRelatedSliderControls && (
                         <div className="flex items-center justify-center gap-[2vw]">
                           <SliderArrowButton
@@ -604,7 +604,7 @@ export function EffectDetailContent({
                       )}
                     </div>
 
-                    <div className="fadeup hidden w-fit self-center max-[1025px]:flex">
+                    <div className="fadeup hidden w-fit self-center max-lg:flex">
                       <ButtonV3
                         text="Explore all effects"
                         href="/effects"
@@ -626,14 +626,14 @@ export function EffectDetailContent({
           onClick={() => setShowSignInToCopyModal(false)}
         >
           <div
-            className={`relative flex w-[35vw] flex-col items-center gap-[1.6vw] border border-foreground/20 bg-background p-10 shadow-2xl transition-transform duration-300 max-[1025px]:w-[70%] max-[1025px]:p-6 max-md:w-full max-md:gap-[6vw] ${showSignInToCopyModal ? "scale-100" : "scale-95"}`}
+            className={`relative flex w-[35vw] flex-col items-center gap-[1.6vw] border border-foreground/20 bg-background p-10 shadow-2xl transition-transform duration-300 max-lg:w-[70%] max-lg:p-6 max-md:w-full max-md:gap-[6vw] ${showSignInToCopyModal ? "scale-100" : "scale-95"}`}
             onClick={(event) => event.stopPropagation()}
           >
             <button
               type="button"
               aria-label="Close"
               onClick={() => setShowSignInToCopyModal(false)}
-              className="group absolute right-5 top-5 flex h-10 w-10 items-center justify-center border border-foreground/20 bg-foreground/10 leading-none text-foreground/70 transition-all duration-500 ease-in-out hover:border-primary hover:bg-primary hover:text-foreground max-[1025px]:hidden"
+              className="group absolute right-5 top-5 flex h-10 w-10 items-center justify-center border border-foreground/20 bg-foreground/10 leading-none text-foreground/70 transition-all duration-500 ease-in-out hover:border-primary hover:bg-primary hover:text-foreground max-lg:hidden"
             >
               <div className="relative flex h-4 w-4 items-center justify-center duration-500 ease-in-out group-hover:rotate-90">
                 <span className="h-px w-4 rotate-45 bg-foreground" />

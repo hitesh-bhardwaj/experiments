@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import * as THREE from "three";
 import gsap from "gsap";
+import { useLenis } from "lenis/react";
 import { motion } from "motion/react";
 import ButtonV3 from "@/homepage-v3/components/ButtonV3";
 import { DISPLAY, LABEL, PRICE, T16, T13, catalogueOf, priceOf } from "./tokens";
@@ -88,12 +89,15 @@ export default function TemplateCorridor({ templates, onUnsupported }) {
   const router = useRouter();
   const routerRef = useRef(router);
   const onUnsupportedRef = useRef(onUnsupported);
+  const lenis = useLenis();
+  const lenisRef = useRef(lenis);
   const [active, setActive] = useState(0);
 
   useEffect(() => {
     templatesRef.current = templates;
     routerRef.current = router;
     onUnsupportedRef.current = onUnsupported;
+    lenisRef.current = lenis;
   });
 
   /* ---------- scene: renderer, runway, dust, loop (once) ---------- */
@@ -208,6 +212,7 @@ export default function TemplateCorridor({ templates, onUnsupported }) {
       }
       state.flying = true;
       state.flyIndex = state.hover;
+      lenisRef.current?.stop(); // no scrolling while the page changes
       const wp = new THREE.Vector3();
       f.g.getWorldPosition(wp);
       gsap.to(f.g.rotation, { y: 0, duration: 1 });
@@ -320,6 +325,7 @@ export default function TemplateCorridor({ templates, onUnsupported }) {
       stage.removeEventListener("pointerleave", onLeave);
       canvas.removeEventListener("click", onClick);
       gsap.killTweensOf(cam.position);
+      if (state.flying) lenisRef.current?.start();
       if (state.veil) {
         gsap.killTweensOf(state.veil);
         state.veil.remove();
@@ -442,7 +448,7 @@ export default function TemplateCorridor({ templates, onUnsupported }) {
         {current && (
           <aside
             aria-live="polite"
-            className="absolute right-[4.5vw] bottom-[10vh] flex w-[30vw] flex-col gap-2.5 bg-background/70 p-5.5 ring-1 ring-inset ring-foreground/10 shadow-[0_2.8vw_5.5vw_-2vw_black] backdrop-blur-lg max-[1025px]:w-[50vw] max-md:inset-x-[6vw] max-md:bottom-16 max-md:w-auto"
+            className="absolute right-[4.5vw] bottom-[10vh] flex w-[30vw] flex-col gap-2.5 bg-background/70 p-5.5 ring-1 ring-inset ring-foreground/10 shadow-[0_2.8vw_5.5vw_-2vw_black] backdrop-blur-lg max-lg:w-[50vw] max-md:inset-x-[6vw] max-md:bottom-16 max-md:w-auto"
           >
             <div className={`${LABEL} flex items-center gap-2.5 text-foreground/80`}>
               <span>{pad2(active + 1)}</span>
@@ -464,7 +470,7 @@ export default function TemplateCorridor({ templates, onUnsupported }) {
               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
               className="flex flex-col gap-2.5"
             >
-              <h2 className={`${DISPLAY} font-aeonik text-[2.2vw] leading-[1.1] max-[1025px]:text-[4vw] max-md:text-[7vw]`}>{current.title}</h2>
+              <h2 className={`${DISPLAY} font-aeonik text-[2.2vw] leading-[1.1] max-lg:text-[4vw] max-md:text-[7vw]`}>{current.title}</h2>
               <p className={`line-clamp-3 ${T13} text-foreground/70`}>{current.tagline}</p>
               <div className="flex flex-wrap gap-1.25">
                 {(current.tags || []).map((tag) => (

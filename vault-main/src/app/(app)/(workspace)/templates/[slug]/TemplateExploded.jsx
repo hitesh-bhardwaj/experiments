@@ -160,10 +160,12 @@ export default function TemplateExploded({
       // scroll progress → the point of the page in focus (G-local y, exploded)
       const sec = section.getBoundingClientRect();
       const p = clamp(-sec.top / Math.max(1, sec.height - window.innerHeight), 0, 1);
+      // From the first section's centre to the last one's, so the last section
+      // comes fully into view; it holds there for the final 8% of the scroll.
       const spread = 1 + e * 0.18;
-      const half = (state.PH / 2) * spread;
-      const margin = Math.min(half, 2.6 / root.scale.x);
-      const target = half - margin - p * 2 * (half - margin);
+      const firstY = n ? slabs[0].y0 * spread : 0;
+      const lastY = n ? slabs[n - 1].y0 * spread : 0;
+      const target = firstY + (lastY - firstY) * Math.min(1, p / 0.92);
       state.focus = state.focus == null ? target : state.focus + (target - state.focus) * Math.min(1, dt * 6);
       G.position.y = -state.focus;
 
@@ -374,7 +376,7 @@ export default function TemplateExploded({
           <aside
             data-exploded-ui
             aria-live="polite"
-            className="absolute top-28 left-[4.5vw] flex w-[22vw] flex-col gap-2 bg-background/70 p-4.5 ring-1 ring-inset ring-foreground/10 backdrop-blur-lg max-[1025px]:left-[4.5vw] max-[1025px]:w-[44vw] max-md:inset-x-[6vw] max-md:top-24 max-md:w-auto"
+            className="absolute top-28 left-[4.5vw] flex w-[22vw] flex-col gap-2 bg-background/70 p-4.5 ring-1 ring-inset ring-foreground/10 backdrop-blur-lg max-lg:left-[4.5vw] max-lg:w-[44vw] max-md:inset-x-[6vw] max-md:top-24 max-md:w-auto"
           >
             <p className={`${LABEL} flex justify-between text-foreground/50`}>
               <span>{selected >= 0 ? "Selected section" : "In view"}</span>
@@ -389,7 +391,7 @@ export default function TemplateExploded({
               transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
               className="flex flex-col gap-2"
             >
-              <h3 className={`${DISPLAY} text-[1.7vw] leading-[1.1] max-[1025px]:text-[4.5vw] max-md:text-[6vw]`}>{current.name}</h3>
+              <h3 className={`${DISPLAY} text-[1.7vw] leading-[1.1] max-lg:text-[4.5vw] max-md:text-[6vw]`}>{current.name}</h3>
               {current.note && <p className={`${T14} text-foreground/70 max-md:line-clamp-2`}>{current.note}</p>}
               <div className="flex flex-wrap gap-1.5 pt-1">
                 {selected >= 0 && (
@@ -406,7 +408,7 @@ export default function TemplateExploded({
           </aside>
         )}
 
-        <div data-exploded-ui className="absolute bottom-6 left-[4.5vw] right-[4.5vw] flex flex-wrap items-center justify-between gap-3 max-[1025px]:inset-x-[4.5vw] max-md:inset-x-[6vw] max-md:bottom-4">
+        <div data-exploded-ui className="absolute bottom-6 left-[4.5vw] right-[4.5vw] flex flex-wrap items-center justify-between gap-3 max-lg:inset-x-[4.5vw] max-md:inset-x-[6vw] max-md:bottom-4">
           {toolbar}
           <div className="flex items-center gap-3">
           <label className={`flex items-center gap-2.5 ${LABEL} text-foreground/50 max-md:hidden`}>
@@ -438,7 +440,7 @@ export default function TemplateExploded({
           </div>
         </div>
 
-        <p className={`${LABEL} pointer-events-none absolute top-28 right-[4.5vw] text-right text-foreground/60 max-[1025px]:hidden`}>
+        <p className={`${LABEL} pointer-events-none absolute top-28 right-[4.5vw] text-right text-foreground/60 max-lg:hidden`}>
           Scroll to move down the page
           <br />
           Drag to turn · click a layer

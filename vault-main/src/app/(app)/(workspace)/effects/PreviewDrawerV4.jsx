@@ -5,9 +5,9 @@ import { createPortal } from "react-dom";
 import Image from "next/image";
 import gsap from "gsap";
 import { useLenis } from "lenis/react";
-import Link from "next/link";
-import { ArrowUpRight, Check, Copy, Heart, Lock } from "lucide-react";
+import { Check, Copy, Heart, Lock } from "lucide-react";
 import ButtonV3 from "@/homepage-v3/components/ButtonV3";
+import LinkButton from "@/components/WebsiteComps/LinkButton";
 import { getEffectHref, getEffectPreviewHref, getEffectCategory, resolveEffectCategoryId } from "@/lib/categories";
 import { resolveEffectVideoUrl } from "@/lib/media";
 import {
@@ -19,10 +19,10 @@ import {
   resolveCover,
 } from "./EffectCardV4";
 
-// Text sizes in vw: desktop · tablet (max-[1025px]) · mobile (max-md).
-const T11 = "text-[0.76vw] max-[1025px]:text-[1.4vw] max-md:text-[2.8vw]";
-const T14 = "text-[0.97vw] max-[1025px]:text-[1.7vw] max-md:text-[3.6vw]";
-const T16 = "text-[1.1vw] max-[1025px]:text-[1.95vw] max-md:text-[4.1vw]";
+// Text sizes in vw: desktop · tablet (max-lg) · mobile (max-md).
+const T11 = "text-[0.76vw] max-lg:text-[1.4vw] max-md:text-[2.8vw]";
+const T14 = "text-[0.97vw] max-lg:text-[1.7vw] max-md:text-[3.6vw]";
+const T16 = "text-[1.1vw] max-lg:text-[1.95vw] max-md:text-[4.1vw]";
 
 // Open/close choreography borrowed from the information-drawer effect: the panel
 // slides in from the right (power2.inOut) while the backdrop fades, and only then
@@ -220,9 +220,9 @@ export function PreviewDrawerV4({
       <div
         ref={panelRef}
         data-lenis-prevent
-        className="absolute inset-y-0 right-0 w-[53vw] overflow-y-auto overscroll-contain border-l border-foreground/10 bg-background font-avenir text-foreground shadow-[-1.1vw_0_2.8vw_-1.7vw_color-mix(in_srgb,black_60%,transparent)] max-[1025px]:w-full max-[1025px]:border-l-0"
+        className="absolute inset-y-0 right-0 w-[53vw] overflow-y-auto overscroll-contain border-l border-foreground/10 bg-background font-avenir text-foreground shadow-[-1.1vw_0_2.8vw_-1.7vw_color-mix(in_srgb,black_60%,transparent)] max-lg:w-full max-lg:border-l-0"
       >
-      <div ref={contentRef} className="flex flex-col gap-10 px-10 pt-7 pb-16 max-[1025px]:px-8 max-md:px-[6vw] *:shrink-0">
+      <div ref={contentRef} className="flex flex-col gap-10 px-10 pt-7 pb-16 max-lg:px-8 max-md:px-[6vw] *:shrink-0">
         <div className="flex items-center justify-between">
           <span className={`${T16} text-foreground/80`}>{categoryName}</span>
           {/* Same close control as the site's modals: the cross turns a quarter on hover. */}
@@ -256,6 +256,16 @@ export function PreviewDrawerV4({
           )}
         </div>
 
+        {/* Tags sit right under the preview, above the name. */}
+        {shown.tags?.length > 0 && (
+          <div className="flex flex-wrap gap-1.5">
+            {shown.tags.map((tag) => (
+              <span key={tag} className={`${MONO} inline-flex h-6 items-center border border-foreground/15 px-2 ${T11} text-foreground/70`}>
+                {tag}
+              </span>
+            ))}
+          </div>
+        )}
         <div className="flex flex-col gap-6">
           {/* Tier sits beside the name at its usual small size. */}
           <div className="flex flex-wrap items-center gap-3">
@@ -266,19 +276,10 @@ export function PreviewDrawerV4({
           </div>
 
           {shown.description && (
-            <p className={`w-[80%] ${T16} leading-relaxed text-foreground/80 max-[1025px]:w-full`}>{shown.description}</p>
+            <p className={`w-[80%] ${T16} leading-relaxed text-foreground/80 max-lg:w-full`}>{shown.description}</p>
           )}
-          <div className="flex w-full flex-wrap justify-between gap-4">
-            {shown.tags?.length > 0 && (
-              <div className="flex flex-wrap gap-1.5">
-                {shown.tags.map((tag) => (
-                  <span key={tag} className={`${MONO} inline-flex h-6 items-center border border-foreground/15 px-2 ${T11} text-foreground/70`}>
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            )}
-            <div className="flex flex-wrap items-center justify-end gap-2">
+          <div className="flex w-full flex-wrap gap-4">
+            <div className="flex flex-wrap items-center gap-2">
               <button
                 type="button"
                 aria-pressed={saved}
@@ -320,10 +321,7 @@ export function PreviewDrawerV4({
               <Lock className="size-3.75 shrink-0 text-primary" aria-hidden="true" />
               This is a Pro effect. Pro unlocks it with the rest of the library.
             </p>
-            <Link href="/pricing" className={`group inline-flex items-center gap-1.5 ${T14} text-foreground`}>
-              <span className="border-b border-foreground/30 pb-0.5 transition-colors duration-500 group-hover:border-primary">Unlock with Pro</span>
-              <ArrowUpRight className="size-3.5 text-primary transition-transform duration-500 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden="true" />
-            </Link>
+            <LinkButton href="/pricing" text="Unlock with Pro" underline tilted={false} underlineClassName="mt-0" className="text18 text-foreground hover:text-primary transition-colors duration-300" />
           </div>
         )}
 

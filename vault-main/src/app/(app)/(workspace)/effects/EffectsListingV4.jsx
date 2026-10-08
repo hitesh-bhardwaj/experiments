@@ -86,14 +86,14 @@ const COLUMN_ITEMS = [2, 3].map((n) => ({
 const CARD_LAYOUT_TRANSITION = { layout: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } };
 
 /* ---------- text sizes (vw: desktop · tablet · mobile) ---------- */
-const T11 = "text-[0.76vw] max-[1025px]:text-[1.4vw] max-md:text-[2.8vw]";
-const T13 = "text-[0.9vw] max-[1025px]:text-[1.6vw] max-md:text-[3.3vw]";
-const T14 = "text-[0.97vw] max-[1025px]:text-[1.7vw] max-md:text-[3.6vw]";
-const T15 = "text-[1.04vw] max-[1025px]:text-[1.8vw] max-md:text-[3.8vw]";
-const T16 = "text-[1.1vw] max-[1025px]:text-[1.95vw] max-md:text-[4.1vw]";
-const T18 = "text-[1.25vw] max-[1025px]:text-[2.2vw] max-md:text-[4.4vw]";
-const T20 = "text-[1.4vw] max-[1025px]:text-[2.4vw] max-md:text-[5vw]";
-const T28 = "text-[1.95vw] max-[1025px]:text-[3.4vw] max-md:text-[7vw]";
+const T11 = "text-[0.76vw] max-lg:text-[1.4vw] max-md:text-[2.8vw]";
+const T13 = "text-[0.9vw] max-lg:text-[1.6vw] max-md:text-[3.3vw]";
+const T14 = "text-[0.97vw] max-lg:text-[1.7vw] max-md:text-[3.6vw]";
+const T15 = "text-[1.04vw] max-lg:text-[1.8vw] max-md:text-[3.8vw]";
+const T16 = "text-[1.1vw] max-lg:text-[1.95vw] max-md:text-[4.1vw]";
+const T18 = "text-[1.25vw] max-lg:text-[2.2vw] max-md:text-[4.4vw]";
+const T20 = "text-[1.4vw] max-lg:text-[2.4vw] max-md:text-[5vw]";
+const T28 = "text-[1.95vw] max-lg:text-[3.4vw] max-md:text-[7vw]";
 
 /* ---------- class tokens ---------- */
 // The standard section wrapper: capped width + page gutter
@@ -519,17 +519,17 @@ export function EffectsListingV4({
       <AppVaultHeader showSearch totalEffects={effects.length} effects={effects} />
 
       {/* ---------- hero ---------- */}
-      <section id="effects-hero" className={`${WRAP} flex flex-col gap-7 pt-36 pb-20 max-[1025px]:pt-32 max-[1025px]:pb-14 max-md:pt-28`}>
+      <section id="effects-hero" className={`${WRAP} flex flex-col gap-7 pt-36 pb-20 max-lg:pt-32 max-lg:pb-14 max-md:pt-28`}>
         <div data-v4-fade>
           <Breadcrumb />
         </div>
 
-        <div data-v4-hero className="flex items-end justify-between gap-[3vw] max-[1025px]:flex-col max-[1025px]:items-stretch max-[1025px]:gap-[5vw]">
+        <div data-v4-hero className="flex items-end justify-between gap-[3vw] max-lg:flex-col max-lg:items-stretch max-lg:gap-[5vw]">
           {/* Same entrances as the effect page: chars for the title, lines for the copy. */}
           {/* Keyed by page: SplitText owns the heading's text nodes, so a new page gets a
               fresh heading (and runs its entrance again) instead of a stale update. */}
           <HeadAnim key={scope || "all"} rotate={0} animateOnScroll={false}>
-            <h1 className={`${DISPLAY} t96 w-[58%] font-aeonik max-[1025px]:w-full`}>
+            <h1 className={`${DISPLAY} t96 w-[58%] font-aeonik max-lg:w-full`}>
               {scope ? (
                 <HeroTitle name={content?.name} />
               ) : (
@@ -540,20 +540,20 @@ export function EffectsListingV4({
             </h1>
           </HeadAnim>
 
-          <div className="flex w-[32%] flex-col gap-[1.6vw] max-[1025px]:w-full max-md:gap-[6vw]">
+          <div className="flex w-[32%] flex-col gap-[1.6vw] max-lg:w-full max-md:gap-[6vw]">
             {(scope
               ? [].concat(content?.description || [])
               : ["Production-ready interaction effects for React and Next.js. Preview any of them live, then copy or install with one command."]
             ).map((paragraph, index) => (
               <Copy key={`${scope || "all"}-${index}`} animateOnScroll={false} delay={0.3 + index * 0.15}>
-                <p className={`w-full ${T16} text-foreground/80 max-[1025px]:w-[70%] max-md:w-full`}>{paragraph}</p>
+                <p className={`w-full ${T16} text-foreground/80 max-lg:w-[70%] max-md:w-full`}>{paragraph}</p>
               </Copy>
             ))}
             <div data-v4-fade className={`${LABEL} flex flex-wrap gap-x-[2vw] gap-y-[0.7vw] max-md:gap-x-[7vw] max-md:gap-y-[2.5vw]`}>
               {heroStats.map(([value, label]) => (
                 <p key={`${scope || "all"}-${label}`}>
                   {/* margin-left is set by alignStatInk() so the digit's ink lines up with the label's. */}
-                  <b data-v4-count={value} className={`${DISPLAY} block font-aeonik text-[2.4vw] leading-none text-light tabular-nums normal-case max-[1025px]:text-[4.5vw] max-md:text-[8vw]`}>
+                  <b data-v4-count={value} className={`${DISPLAY} block font-aeonik text-[2.4vw] leading-none text-light tabular-nums normal-case max-lg:text-[4.5vw] max-md:text-[8vw]`}>
                     {value}
                   </b>
                   <span className="text-[1vw] normal-case tracking-normal text-foreground/60">{label}</span>
@@ -566,9 +566,9 @@ export function EffectsListingV4({
 
       {/* ---------- trending ---------- */}
       {trendingEffects.length > 0 && (
-        <section id="trending" data-v4-fade aria-labelledby="v4-trending" className={`${WRAP} flex flex-col gap-[1.5vw] pb-28 max-[1025px]:pb-20 max-md:gap-[5vw]`}>
+        <section id="trending" data-v4-fade aria-labelledby="v4-trending" className={`${WRAP} flex flex-col gap-[1.5vw] pb-28 max-lg:pb-20 max-md:gap-[5vw]`}>
           <div className="flex items-end justify-between">
-            <h2 id="v4-trending" className={`${DISPLAY} font-aeonik text-[2.2vw] max-[1025px]:text-[4vw] max-md:text-[7vw]`}>
+            <h2 id="v4-trending" className={`${DISPLAY} font-aeonik text-[2.2vw] max-lg:text-[4vw] max-md:text-[7vw]`}>
               Trending this week
             </h2>
             <div className="flex gap-[0.4vw] max-md:hidden">
@@ -582,10 +582,10 @@ export function EffectsListingV4({
             // overflow-y to auto, and the site's Lenis (allowNestedScroll) then treats this
             // row as a vertical scroller and traps the wheel inside it.
             onScroll={updateTrendEdges}
-            className="flex snap-x snap-mandatory gap-[0.9vw] overflow-x-hidden overflow-y-hidden pb-1 scrollbar-none max-[1025px]:gap-[1.4vw] max-[1025px]:overflow-x-auto max-md:gap-[3.6vw]"
+            className="flex snap-x snap-mandatory gap-[0.9vw] overflow-x-hidden overflow-y-hidden pb-1 scrollbar-none max-lg:gap-[1.4vw] max-lg:overflow-x-auto max-md:gap-[3.6vw]"
           >
             {trendingEffects.map((effect, index) => (
-              <EffectCardV4 key={effect.name} {...cardProps(effect, index)} small dark className="w-[calc((100%-1.8vw)/3)] shrink-0 snap-start max-[1025px]:w-[45%] max-md:w-[82%]" tagClassName="text-foreground border-foreground/30" metaClassName="text-foreground/80" />
+              <EffectCardV4 key={effect.name} {...cardProps(effect, index)} small dark className="w-[calc((100%-1.8vw)/3)] shrink-0 snap-start max-lg:w-[45%] max-md:w-[82%]" tagClassName="text-foreground border-foreground/30" metaClassName="text-foreground/80" />
             ))}
           </div>
         </section>
@@ -599,7 +599,7 @@ export function EffectsListingV4({
       <div ref={sheetRef} id="v4-grid" data-v4-fade data-sound-hover="off" data-sound-flow="off" data-vault-header-scroll-away className="relative scroll-mt-4 bg-light text-ink">
         {/* summary + view controls (sticky on desktop; tablet/mobile have a fixed header).
             Full-width bar so its background covers the sheet edge to edge while stuck. */}
-        <div className="sticky top-[-2%] z-5 h-fit border-b border-black/8 bg-light max-[1025px]:static max-[1025px]:border-b-0">
+        <div className="sticky top-[-2%] z-5 h-fit border-b border-black/8 bg-light max-lg:static max-lg:border-b-0">
           <div className={`${WRAP} flex flex-wrap items-end justify-between gap-[1vw] pt-10 pb-4 max-md:gap-[4vw] max-md:pt-8`}>
             <p aria-live="polite" className={`${DISPLAY} ${T20} flex flex-wrap items-baseline gap-x-[0.4vw] font-aeonik tracking-tight max-md:gap-x-[1.5vw]`}>
               <span ref={countRef} className="font-medium tabular-nums">
@@ -624,7 +624,7 @@ export function EffectsListingV4({
               <FilterMenu
                 tone="light"
                 // Open leftwards from the button's right edge on desktop (it sits near the screen edge).
-                panelClassName="left-auto! right-0 max-[1025px]:left-0! max-[1025px]:right-auto"
+                panelClassName="left-auto! right-0 max-lg:left-0! max-lg:right-auto"
                 options={SORT_OPTIONS}
                 activeFilter={sort === "trend" ? null : sort}
                 getLabel={sortLabel}
@@ -637,7 +637,7 @@ export function EffectsListingV4({
                 value={pendingCols ?? cols}
                 onChange={chooseCols}
                 itemClassName="w-8.5"
-                className="max-[1025px]:hidden"
+                className="max-lg:hidden"
               />
             </div>
           </div>
@@ -720,7 +720,7 @@ export function EffectsListingV4({
           {filtered.length === 0 ? (
             <div className="flex flex-col items-center gap-3.5 px-4 py-20 text-center">
               <b className={`${DISPLAY} text32 font-aeonik tracking-tight`}>Nothing matches that, yet.</b>
-              <p className={`w-[33%] ${T16} text-black/60 max-[1025px]:w-[66%] max-md:w-full`}>Try a broader search, or clear a filter. New effects land in the vault regularly.</p>
+              <p className={`w-[33%] ${T16} text-black/60 max-lg:w-[66%] max-md:w-full`}>Try a broader search, or clear a filter. New effects land in the vault regularly.</p>
               <button
                 type="button"
                 onClick={clearAll}
@@ -732,7 +732,7 @@ export function EffectsListingV4({
           ) : (
             <div ref={gridRef} className="flex flex-wrap gap-x-[1.4vw] gap-y-[2.8vw] max-md:gap-y-[10vw]">
               {visible.map((effect, index) => (
-                <motion.div key={effect.name} layout transition={CARD_LAYOUT_TRANSITION} className={`${GRID_COLS[cols]} max-[1025px]:w-[calc((100%-1.4vw)/2)] max-md:w-full`}>
+                <motion.div key={effect.name} layout transition={CARD_LAYOUT_TRANSITION} className={`${GRID_COLS[cols]} max-lg:w-[calc((100%-1.4vw)/2)] max-md:w-full`}>
                   <EffectCardV4 {...cardProps(effect, index)} tagClassName="border-black/20" />
                 </motion.div>
               ))}
@@ -761,15 +761,15 @@ export function EffectsListingV4({
         {/* upgrade band */}
         {!isProUser && (
           <section id="upgrade" className={`${WRAP} pb-24 max-md:pb-16`}>
-            <div className="relative flex items-start justify-between gap-8 overflow-hidden bg-ink px-10 py-12 text-light max-[1025px]:flex-col max-[1025px]:p-10 max-md:p-7">
-              <div className="relative flex w-[65%] flex-col gap-3.5 max-[1025px]:w-full">
+            <div className="relative flex items-start justify-between gap-8 overflow-hidden bg-ink px-10 py-12 text-light max-lg:flex-col max-lg:p-10 max-md:p-7">
+              <div className="relative flex w-[65%] flex-col gap-3.5 max-lg:w-full">
                 <h2 className={`${DISPLAY} text64 font-aeonik`}>
                   Everything in the vault.{" "}
                   <span className="gradient-text-animate">
                     One plan.
                   </span>
                 </h2>
-                <p className="text24 w-full text-light/80 max-[1025px]:w-[80%] max-md:w-full">
+                <p className="text24 w-full text-light/80 max-lg:w-[80%] max-md:w-full">
                   Pro unlocks every component, section and template, with template credits and new drops as they land. Everything you copy stays in your repo.
                 </p>
               </div>

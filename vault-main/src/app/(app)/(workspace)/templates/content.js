@@ -1,4 +1,4 @@
-// Copy shared by /templates and the /templates-v4 sample page.
+// Copy for the /templates page: description and FAQ.
 
 export const TEMPLATES_DESCRIPTION =
   "Start with the interaction layer already composed across layout, motion and behaviour, with React or Next.js source and Figma files ready to adapt to your project.";

@@ -76,6 +76,17 @@ const nextConfig = {
         destination: "/effects",
         permanent: true,
       },
+      // The v4 templates sample became /templates itself.
+      {
+        source: "/templates-v4",
+        destination: "/templates",
+        permanent: true,
+      },
+      {
+        source: "/templates-v4/:slug",
+        destination: "/templates/:slug",
+        permanent: true,
+      },
       {
         source: "/effects/components/book-flip",
         destination: "/effects/webgl-effects/book-flip",

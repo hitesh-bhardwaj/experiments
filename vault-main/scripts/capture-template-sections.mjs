@@ -2,7 +2,7 @@
 /**
  * Captures each live template (/template-demo/<slug>) as one tall image per
  * device width, plus where each top-level section starts and ends. The
- * /templates-v4/[slug] sample page uses these for its exploded 3D view.
+ * /templates/[slug] page uses these for its exploded 3D view.
  *
  *   npm run dev                                   # in another terminal
  *   node scripts/capture-template-sections.mjs    # all templates
