@@ -7,7 +7,7 @@ import CommunityHero from "@/components/Community/CommunityHero";
 import CommunityFamiliar from "@/components/Community/CommunityFamiliar";
 import CommunityStack from "@/components/Community/CommunityStack";
 import CommunityFounding from "@/components/Community/CommunityFounding";
-import CommunityFAQ from "@/components/Community/CommunityFAQ";
+import FAQ from "@/homepage/sections/FAQ";
 import CommunityJoin from "@/components/Community/CommunityJoin";
 import Cursor from "@/homepage/components/Cursor";
 
@@ -55,7 +55,9 @@ export default async function CommunityPage() {
           <CommunityStack />
           <div className="relative z-1 bg-light text-ink" data-zone="sheet" data-sound-flow="off">
             <CommunityFounding />
-            <CommunityFAQ items={COMMUNITY_FAQ} />
+            <div className="[--hx-vw:var(--cvw)]">
+              <FAQ faqItems={COMMUNITY_FAQ} />
+            </div>
           </div>
           <CommunityJoin />
         </main>

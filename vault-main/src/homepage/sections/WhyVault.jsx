@@ -117,7 +117,7 @@ export default function WhyVault() {
                     {WHY_VAULT_ITEMS.map((item, i) => (
                         <article key={item.id} data-wv-panel={i}>
                             <div className="fadeup">{renderCard(item.id, i)}</div>
-                            <LineReveal as="h3" className="mt-[calc(var(--cvw)*1.8)] max-md:mt-[calc(var(--cvw)*5)] type-h2">{item.title}</LineReveal>
+                            <LineReveal as="h3" className="mt-[calc(var(--cvw)*1.8)] max-md:mt-[calc(var(--cvw)*5)] type-h3">{item.title}</LineReveal>
                             <p data-fadeup-delay="0.15" className="fadeup mt-[calc(var(--cvw)*1)] max-md:mt-[calc(var(--cvw)*3)] max-w-[52ch] type-body text-[#6B6B6B]">{item.body}</p>
                         </article>
                     ))}

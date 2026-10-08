@@ -200,6 +200,56 @@ export function TeardownCard() {
   );
 }
 
+// Vote -> Voted: the label rolls up, and the check scales in beside it (and back out on un-vote)
+function VoteLabel({ on }) {
+  const checkRef = useRef(null);
+  const voteRef = useRef(null);
+  const votedRef = useRef(null);
+  const mounted = useRef(false);
+
+  useLayoutEffect(() => {
+    const [check, vote, voted] = [checkRef, voteRef, votedRef].map((r) => r.current);
+    const labelIn = on ? voted : vote;
+    const labelOut = on ? vote : voted;
+    if (!mounted.current) {
+      mounted.current = true;
+      gsap.set(check, { scale: on ? 1 : 0, opacity: on ? 1 : 0 });
+      gsap.set(vote, { yPercent: on ? -100 : 0, opacity: on ? 0 : 1 });
+      gsap.set(voted, { yPercent: on ? 0 : 100, opacity: on ? 1 : 0 });
+      return undefined;
+    }
+    if (prefersReducedMotion()) {
+      gsap.set(check, { scale: on ? 1 : 0, opacity: on ? 1 : 0 });
+      gsap.set(labelOut, { opacity: 0 });
+      gsap.set(labelIn, { yPercent: 0, opacity: 1 });
+      return undefined;
+    }
+    const tl = gsap.timeline({ defaults: { overwrite: "auto" } });
+    tl.to(labelOut, { yPercent: on ? -100 : 100, opacity: 0, duration: 0.5, ease: "power3.inOut" }, 0)
+      .fromTo(labelIn, { yPercent: on ? 100 : -100, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.5, ease: "power3.inOut" }, 0);
+    if (on) {
+      tl.fromTo(check, { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.5, ease: "back.out(2)" }, 0.2);
+    } else {
+      tl.to(check, { scale: 0, opacity: 0, duration: 0.3, ease: "power2.in" }, 0);
+    }
+    return () => tl.kill();
+  }, [on]);
+
+  return (
+    <span className="relative inline-flex items-center justify-center">
+      <span className="relative flex overflow-hidden leading-[1.4]">
+        <span aria-hidden="true" className="invisible">Voted</span>
+        <span ref={voteRef} className="absolute inset-0">Vote</span>
+        <span ref={votedRef} className="absolute inset-0">Voted</span>
+      </span>
+      {/* The check sits outside the label's right edge, so "Voted" never moves */}
+      <svg ref={checkRef} aria-hidden="true" className="absolute top-1/2 left-full ml-[0.4em] size-[1.1em] -translate-y-1/2" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
+        <path d="M5 12.5l4.5 4.5L19 7.5" />
+      </svg>
+    </span>
+  );
+}
+
 // 02 vote: toggle, and voted ideas float to the top
 export function VoteCard() {
   const listRef = useRef(null);
@@ -251,9 +301,9 @@ export function VoteCard() {
                 type="button"
                 aria-pressed={on}
                 onClick={() => toggle(i)}
-                className={`${LABEL} h-[2.4vw] shrink-0 px-[1vw] ring-1 ring-inset transition-[background-color,color,box-shadow] duration-600 ease-[cubic-bezier(.16,1,.3,1)] max-md:h-[9vw] max-md:px-[3.5vw] ${on ? "bg-primary text-background ring-primary" : "text-foreground/80 ring-foreground/15 hover:ring-primary/60"}`}
+                className={`${LABEL} h-[2.4vw] w-[6.6vw] shrink-0 px-[1vw] ring-1 ring-inset transition-[background-color,color,box-shadow] duration-600 ease-[cubic-bezier(.16,1,.3,1)] max-md:h-[9vw] max-md:w-[24vw] max-md:px-[3.5vw] ${on ? "bg-primary text-background ring-primary" : "text-foreground/80 ring-foreground/15 hover:ring-primary/60"}`}
               >
-                {on ? "Voted ✓" : "Vote"}
+                <VoteLabel on={on} />
               </button>
             </li>
           );

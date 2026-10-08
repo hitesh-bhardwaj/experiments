@@ -67,11 +67,10 @@ export default function CommunityFamiliar() {
       ScrollTrigger.create({
         trigger: li,
         start: "top 62%",
-        end: "bottom 38%",
-        onToggle: (self) => {
-          setLit((cur) => (self.isActive ? i : cur === i ? -1 : cur));
-          if (self.isActive) sound?.note?.(i);
-        },
+        end: "max",
+        // Lines stay lit once reached, and go dark again only when scrolled back above them
+        onEnter: () => { setLit((cur) => Math.max(cur, i)); sound?.note?.(i); },
+        onLeaveBack: () => setLit((cur) => Math.min(cur, i - 1)),
       });
     });
     root.querySelectorAll("[data-panel]").forEach((panel, i) => {
@@ -107,30 +106,30 @@ export default function CommunityFamiliar() {
               data-fam
               className="flex items-baseline gap-[1vw] border-t border-black/10 py-[1.9vw] last:border-b max-md:gap-[4vw] max-md:py-[6vw]"
             >
-              <span className={`w-[5vw] shrink-0 font-avenir text-[0.7vw] font-medium uppercase tracking-[0.1em] transition-colors duration-1200 ease-[cubic-bezier(.16,1,.3,1)] max-md:w-[11vw] max-md:text-[2.8vw] ${lit === i ? "text-primary" : "text-black/20"}`}>
+              <span className={`w-[5vw] shrink-0 font-avenir text-[0.7vw] font-medium uppercase tracking-[0.1em] transition-colors duration-1200 ease-[cubic-bezier(.16,1,.3,1)] max-md:w-[11vw] max-md:text-[2.8vw] ${lit >= i ? "text-primary" : "text-black/20"}`}>
                 {String(i + 1).padStart(2, "0")}
               </span>
-              <p className={`text32 min-w-0 flex-1 font-aeonik font-light leading-[1.1] tracking-tight transition-colors duration-1200 ease-[cubic-bezier(.16,1,.3,1)] ${lit === i ? "text-ink" : "text-black/20"}`}>
+              <p className={`text-[2.5vw] min-w-0 flex-1 font-aeonik font-light leading-[1.1] tracking-tight transition-colors duration-1200 ease-[cubic-bezier(.16,1,.3,1)] ${lit >= i ? "text-ink" : "text-black/20"}`}>
                 {item.text}
-                {item.em && <> <em className="text-primary not-italic">{item.em}</em>{item.after}</>}
+                {item.em && <> <em className=" not-italic">{item.em}</em>{item.after}</>}
               </p>
             </li>
           ))}
         </ol>
-        <LineReveal as="h2" id="fam-h" className="text80 w-[50%] font-aeonik font-normal max-[1025px]:w-[88%] max-md:w-full">
-          You’re not the only one. <span className="gradient-text-animate gradient-text-single">There’s a room for this.</span>
+        <LineReveal as="h2" id="fam-h" className="text80 w-[60%] font-aeonik font-normal max-[1025px]:w-[88%] max-md:w-full">
+          You’re Not the Only One. <span className="gradient-text-animate gradient-text-single">There’s a Room for This.</span>
         </LineReveal>
       </section>
 
-      <section id="why" className="mx-auto flex w-full max-w-[1536px] justify-between gap-[2vw] px-[4.5vw] pb-[10vw] max-[1025px]:flex-col max-md:px-[6vw]">
-        <div className="sticky top-1/2 flex w-[32%] -translate-y-1/2 flex-col items-start gap-[1.2vw] self-start max-[1025px]:hidden">
+      <section id="why" className="mx-auto mt-20 flex w-full max-w-[1536px] justify-between gap-[2vw] px-[4.5vw] pb-[10vw] max-[1025px]:flex-col max-md:px-[6vw]">
+        <div className="sticky top-[35vh] flex w-[32%] flex-col items-start gap-[1vw] self-start max-[1025px]:hidden">
           {PANELS.map((p, i) => (
             <button
               key={p.nav}
               type="button"
               aria-current={spy === i ? "true" : undefined}
               onClick={() => goToPanel(i)}
-              className={`text32 text-left font-aeonik font-normal transition-colors duration-900 ease-[cubic-bezier(.16,1,.3,1)] ${spy === i ? "text-ink" : "text-black/20 hover:text-black/40"}`}
+              className={`text-[2.4vw] text-left font-aeonik font-normal transition-colors duration-900 ease-[cubic-bezier(.16,1,.3,1)] ${spy === i ? "text-ink" : "text-black/20 hover:text-black/40"}`}
             >
               {p.nav}
             </button>

@@ -17,7 +17,7 @@ function Parts({ parts }) {
     typeof p === "string" ? (
       <span key={i}>{p}</span>
     ) : (
-      <span key={i} className="inline-flex align-[-0.2em]">
+      <span key={i} className="inline-flex align-[0em]">
         <RollNumber value={p.n} values={p.values} />
       </span>
     )

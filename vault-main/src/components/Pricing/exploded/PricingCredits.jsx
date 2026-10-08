@@ -172,14 +172,25 @@ export default function PricingCredits() {
     document.body.appendChild(el);
     const fly = { el, tweens: [] };
     fliesRef.current.add(fly);
-    gsap.set(el, { left: from.left + from.width / 2, top: from.top + from.height / 2 });
+    // The credit starts pinned to the page (where the coin was) and homes in on the card's
+    // live position every frame, so scrolling mid-flight doesn't leave it behind
+    const start = { x: from.left + from.width / 2 + window.scrollX, y: from.top + from.height / 2 + window.scrollY };
+    const progress = { p: 0 };
+    const place = () => {
+      const target = art.getBoundingClientRect();
+      const sx = start.x - window.scrollX;
+      const sy = start.y - window.scrollY;
+      const tx = target.left + target.width / 2;
+      const ty = target.top + target.height / 2;
+      gsap.set(el, { left: sx + (tx - sx) * progress.p, top: sy + (ty - sy) * progress.p, scale: 1 + 0.6 * progress.p });
+    };
+    place();
     fly.tweens.push(
-      gsap.to(el, {
-        left: to.left + to.width / 2,
-        top: to.top + to.height / 2,
-        scale: 1.6,
+      gsap.to(progress, {
+        p: 1,
         duration: FLY_DURATION,
         ease: "power3.inOut",
+        onUpdate: place,
         onComplete: () => {
           el.remove();
           fliesRef.current.delete(fly);
@@ -208,8 +219,8 @@ export default function PricingCredits() {
       <div className="mx-auto flex w-full max-w-[1536px] flex-col gap-[3vw] max-md:gap-[8vw]">
         <div className="flex flex-col gap-[1.8vw] max-md:gap-[5vw]">
           <LineReveal as="h2" className="text80">
-            One credit.<br />
-            <span className="gradient-text-animate">One whole site.</span>
+            One Credit.<br />
+            <span className="gradient-text-animate">One Whole Site.</span>
           </LineReveal>
           <p className={`fadeup text22 font-avenir leading-[1.6] w-[40%] text-background/60 max-md:w-full`}>
             A credit unlocks one complete template: every page, section and interaction, as source code you own. Try it: spend your credits below.

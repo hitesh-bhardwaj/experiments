@@ -118,9 +118,9 @@ export default function PricingProCompare() {
     <section ref={rootRef} id="compare" data-sound-flow="off" className="relative bg-foreground px-[4.5vw] max-md:px-0 py-[7%] max-md:py-[15%] font-avenir text-background">
       <div className="mx-auto flex w-full max-w-[1536px] flex-col gap-[3vw] max-md:gap-[8vw]">
         <div className="flex max-md:px-[6vw] items-end justify-between gap-[2vw] max-md:flex-col max-md:items-start max-md:gap-[6vw]">
-          <LineReveal as="h2" className="text80">
+          <LineReveal as="h2" className="type-h1 leading-[1.2]!">
             Pro vs Pro+,<br />
-            <span className="gradient-text-animate">line by line.</span>
+            <span className="gradient-text-animate">Line by Line.</span>
           </LineReveal>
 
           <div ref={toggleRef} role="radiogroup" aria-label="Billing period" data-sound-hover="off" className="fadeup relative  isolate flex w-fit border border-background/10 bg-background/10 p-[0.3vw] max-md:p-[1vw]">

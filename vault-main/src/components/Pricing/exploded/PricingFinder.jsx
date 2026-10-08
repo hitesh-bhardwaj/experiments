@@ -45,9 +45,8 @@ function recommend({ templates, copies, sections }) {
   const num = (n, values) => ({ n, values });
   if (sections) why.push({ id: "sections", parts: ["Full page sections come with Pro+."] });
   if (tier.copies === Infinity) {
-    if (copies > PLANS.pro.y.copies) {
-      why.push({ id: "copies", parts: [num(copies, [1, 10]), ` copies a day is past Pro's ${PLANS.pro.y.copies}-a-day limit. Pro+ copies are unlimited.`] });
-    }
+    // One wording for every count, so the row doesn't reword while the sliders glide past Pro's limit
+    why.push({ id: "copies", parts: [num(copies, [1, 10]), ` copies a day, unlimited on Pro+ (Pro stops at ${PLANS.pro.y.copies}).`] });
   } else {
     why.push({ id: "copies", parts: [num(copies, [1, 10]), ` copies a day fits inside ${label}'s `, num(tier.copies, [3, 5]), "-a-day limit."] });
   }
@@ -98,34 +97,42 @@ export default function PricingFinder() {
   const tweens = useRef({});
   const glideTo = (name, to, duration = 0.9) => {
     tweens.current[name]?.kill();
-    if (prefersReducedMotion()) { setPos((p) => ({ ...p, [name]: to })); return; }
+    if (prefersReducedMotion()) { setPos((p) => ({ ...p, [name]: to })); setTarget(null); return; }
     const proxy = { v: posRef.current[name] };
     tweens.current[name] = gsap.to(proxy, {
       v: to,
       duration,
       ease: "power3.inOut",
       onUpdate: () => setPos((p) => ({ ...p, [name]: proxy.v })),
+      onComplete: () => setTarget(null),
     });
   };
   // Dragging follows the pointer freely, then settles on the nearest step on release
   const dragProps = (name) => ({
-    onChange: (e) => { tweens.current[name]?.kill(); setPos((p) => ({ ...p, [name]: +e.target.value })); },
+    onChange: (e) => { setTarget(null); tweens.current[name]?.kill(); setPos((p) => ({ ...p, [name]: +e.target.value })); },
     onPointerUp: () => glideTo(name, Math.round(posRef.current[name]), 0.3),
     onKeyUp: () => glideTo(name, Math.round(posRef.current[name]), 0.3),
   });
+  // While the toggle glides the sliders, the recommendation reads the answers they are heading to,
+  // so the plan and its reasons change once instead of at every step the thumbs pass
+  const [target, setTarget] = useState(null);
   const toggleSections = () => {
+    let to = null;
     if (!sections) {
       beforeSections.current = { templates, copies };
-      glideTo("templates", 5);
-      glideTo("copies", 8);
+      to = { templates: 5, copies: 8 };
     } else if (beforeSections.current) {
-      glideTo("templates", beforeSections.current.templates);
-      glideTo("copies", beforeSections.current.copies);
+      to = beforeSections.current;
       beforeSections.current = null;
+    }
+    if (to) {
+      setTarget(to);
+      glideTo("templates", to.templates);
+      glideTo("copies", to.copies);
     }
     setSections(!sections);
   };
-  const rec = recommend({ templates, copies, sections });
+  const rec = recommend({ ...(target ?? { templates, copies }), sections });
   const key = rec.key + rec.period;
 
   useFadeUp(rootRef);
@@ -165,8 +172,8 @@ export default function PricingFinder() {
     <section ref={rootRef} id="finder" className="relative px-[4.5vw] py-[7%] max-md:py-[15%] text-foreground max-md:px-[6vw]">
       <div className="mx-auto flex w-full max-w-[1536px] items-center justify-between gap-[3vw] max-md:flex-col max-md:items-stretch max-md:gap-[10vw]">
       <div className="flex w-[40%] flex-col gap-[1.8vw] max-md:w-full max-md:gap-[5vw]">
-        <LineReveal as="h2" className={`text80 text-foreground w-[80%]`}>
-          Not sure? <span className="gradient-text-animate">Let’s size it.</span>
+        <LineReveal as="h2" className={`type-h1 text-foreground w-[80%] max-md:w-[80%]`}>
+          Not Sure? <span className="gradient-text-animate">Let’s Size it.</span>
         </LineReveal>
         <p className={`fadeup text22 font-avenir leading-[1.6] w-[80%] text-foreground/60 max-md:w-full`}>
           Tell us how you build. We’ll point you to the plan that fits, and show you exactly why.
@@ -210,7 +217,7 @@ export default function PricingFinder() {
             </span>
           </div>
           <p className={`text22 font-avenir leading-[1.6] flex items-baseline text-foreground`}>
-            <span className="flex items-baseline">$<span className="relative top-[0.2em]"><RollNumber value={rec.tier.month} values={[7.42, 9, 14.92, 19]} /></span></span>
+            <span className="flex items-baseline">$<span className="relative top-[0.1em]"><RollNumber value={rec.tier.month} values={[7.42, 9, 14.92, 19]} /></span></span>
             <span data-pick className="text-foreground/50">/mo · {rec.tier.billed}</span>
           </p>
           <CreditTiles count={rec.tier.credits} used={templates} />

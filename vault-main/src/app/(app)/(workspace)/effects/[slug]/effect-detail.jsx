@@ -449,7 +449,7 @@ export function EffectDetailContent({
                     {dependencies.map((dep) => (
                       <span
                         key={dep}
-                        className="text20 bg-grey px-[0.6vw] py-[0.3vw] capitalize text-foreground max-md:px-[6vw] max-md:py-[1vw] max-md:text-muted"
+                        className="text20 border border-foreground/20 bg-foreground/6 backdrop-blur-lg px-[0.6vw] py-[0.3vw] capitalize text-foreground max-md:px-[6vw] max-md:py-[1vw] max-md:text-muted"
                       >
                         {dep}
                       </span>

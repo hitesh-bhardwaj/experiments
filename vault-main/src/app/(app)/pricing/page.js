@@ -53,7 +53,7 @@ export default async function PricingPage() {
 const USE_CASES = [
   {
     id: 1,
-    title: "Commercial use",
+    title: "Commercial Use",
     text: "Free effects are commercial-friendly where marked in the license. Pro is built for production use on client sites, SaaS products, and internal tools alike.",
     link: "/effects",
   },
@@ -65,7 +65,7 @@ const USE_CASES = [
   },
   {
     id: 3,
-    title: "Team & agency use",
+    title: "Team & Agency Use",
     text: "Pro is licensed per seat by default. Agencies and teams working across multiple client projects should use agency licensing rather than sharing one login.",
     link: "mailto:hello@hyperiux.com",
   },

@@ -249,7 +249,7 @@ export function TemplatesListing({ templates = [], description = "", faqItems = 
 
         {/* template credits */}
         <section id="template-credits" className={`${GUTTER} flex flex-col gap-12`}>
-          <h2 className={`fadeup ${DISPLAY} text64 font-aeonik`}>
+          <h2 className={`fadeup ${DISPLAY} type-h1 font-aeonik`}>
             One credit. <span className="gradient-text-animate">One whole site.</span>
           </h2>
           <div className="fadeup flex flex-wrap gap-[0.9vw] max-md:gap-[3.5vw]">

@@ -13,7 +13,7 @@ export default function CommunityJoin() {
   return (
     <section ref={rootRef} className="relative z-1 flex min-h-svh items-center justify-center px-[4.5vw] pt-[10vh] pb-[14vh] text-center max-md:px-[6vw]" id="join" data-zone="ring" data-hold-zone>
       <div className="mx-auto flex w-full max-w-[1536px] flex-col items-center gap-[2.5vw] max-[1025px]:gap-[5vw]">
-        <LineReveal as="h2" className="font-aeonik text-[13vw] font-normal leading-[1] tracking-tight">
+        <LineReveal as="h2" className="font-aeonik text-[8vw] font-normal leading-[1] tracking-tight">
           Save Your <span className="gradient-text-animate gradient-text-single">Seat.</span>
         </LineReveal>
         <p className="fadeup text22 w-[33%] leading-[1.6] text-foreground/60 max-[1025px]:w-[66%] max-md:w-full">

@@ -25,7 +25,7 @@ export default function CommunityFounding() {
 
   return (
     <section ref={rootRef} className="mx-auto flex w-full max-w-[1536px] flex-col gap-[5vw] px-[4.5vw] py-[7%] max-md:gap-[10vw] max-md:px-[6vw]" id="founding" aria-labelledby="fd-h">
-      <LineReveal as="h2" id="fd-h" className="text80 w-[40%] font-aeonik font-normal max-[1025px]:w-[77%] max-md:w-full">
+      <LineReveal as="h2" id="fd-h" className="text80 w-[50%] font-aeonik font-normal max-[1025px]:w-[77%] max-md:w-full">
         The First Cohort <span className="gradient-text-animate gradient-text-single">Shapes the Room.</span>
       </LineReveal>
       <div className="flex items-start justify-between gap-[4vw] max-[1025px]:flex-col">

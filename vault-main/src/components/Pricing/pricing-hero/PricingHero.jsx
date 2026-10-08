@@ -89,7 +89,7 @@ export default function PricingHero({ isIndia = false }) {
       <div className="pointer-events-none relative z-2 mx-auto flex w-full max-w-[1536px] flex-col gap-[8vw] px-[4.5vw] pt-[8vw] pb-[3vw] max-md:gap-[12vw] max-md:px-[6vw] max-md:pt-[48svh] max-md:pb-10 [&_a]:pointer-events-auto [&_button]:pointer-events-auto">
         <div className="flex items-end justify-between gap-[3vw] max-md:flex-col max-md:items-stretch max-md:gap-[5vw]">
           <LineReveal as="h1" className="t96 relative w-[58%] font-aeonik text-foreground max-md:w-full">
-            Pick a plan. <span className="gradient-text-animate block">Keep the code.</span>
+            Pick a Plan. <span className="gradient-text-animate block">Keep the Code.</span>
           </LineReveal>
           <div className="flex w-[32%] flex-col gap-[2vw] max-md:w-full max-md:gap-[5vw]">
             <SplitLine as="p" start="top 120%" className="text22 w-full font-avenir leading-[1.6] text-foreground/80">
