@@ -29,11 +29,13 @@ const getServerSnapshot = () => null;
 let lastCenter = 0;
 function open(next) {
   clearTimeout(closeTimer);
-  const center = next.rect.left + next.rect.width / 2;
+  // Side tooltips (sidebar) stack vertically, so they slide up/down; the rest slide left/right.
+  const vertical = next.position === "right";
+  const center = vertical ? next.rect.top + next.rect.height / 2 : next.rect.left + next.rect.width / 2;
   // Which way the tooltip travels, so its text slides in from that side.
-  const dir = center === lastCenter ? 1 : center > lastCenter ? 1 : -1;
+  const dir = center >= lastCenter ? 1 : -1;
   lastCenter = center;
-  setState({ ...next, dir });
+  setState({ ...next, dir, vertical });
 }
 function close(id) {
   clearTimeout(closeTimer);
@@ -132,9 +134,9 @@ export function TooltipHost() {
               <AnimatePresence mode="popLayout" initial={false}>
                 <motion.div
                   key={`${tip.id}`}
-                  initial={{ opacity: 0, x: tip.dir * 16 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: tip.dir * -16 }}
+                  initial={{ opacity: 0, [tip.vertical ? "y" : "x"]: tip.dir * 16 }}
+                  animate={{ opacity: 1, x: 0, y: 0 }}
+                  exit={{ opacity: 0, [tip.vertical ? "y" : "x"]: tip.dir * -16 }}
                   transition={{ duration: 0.2, ease: "easeOut" }}
                 >
                   {/* Same trigger, new label (Copy -> Copied): roll vertically instead. */}
