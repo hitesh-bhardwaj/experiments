@@ -23,6 +23,7 @@ import WorkWithHyperiuxModal from "@/components/WebsiteComps/modals/WorkWithHype
 import { ExitIntentInviteModal } from "@/components/WebsiteComps/modals/ExitIntentInviteModal";
 import { CookieConsentNudge } from "@/components/WebsiteComps/CookieConsentNudge";
 import PageTransition from "@/components/PageTransition/PageTransition";
+import { TooltipHost } from "@/components/ui/Tooltip";
 import SiteInteractions from "@/components/WebsiteComps/SiteInteractions";
 
 // The site's two faces: Aeonik Pro (headings / display) and Avenir Next (text),
@@ -153,6 +154,7 @@ export default function RootLayout({ children }) {
             </LazyRecaptchaProvider>
           </CustomAnimationFormProvider>
         </SiteInteractions>
+        <TooltipHost />
         <Analytics />
         <SpeedInsights />
         <DeferredGTM />

@@ -3,9 +3,10 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowUpRight, Check, Copy, Download, Eye, Heart, Lock } from "lucide-react";
+import { ArrowUpRight, Download, Eye, Heart, Lock } from "lucide-react";
 import { getEffectHref, getEffectPreviewHref, getQuickCategoryLabel, resolveEffectCategoryId } from "@/lib/categories";
 import { Tooltip } from "@/components/ui/Tooltip";
+import { CopyButtonContent } from "@/components/ui/CodeBlock";
 import { resolveEffectVideoUrl, resolveMediaUrl, resizeR2ImageUrl } from "@/lib/media";
 import { useAutoplayPreviewVideo } from "@/hooks/useAutoplayPreviewVideo";
 import { twMerge } from "tailwind-merge";
@@ -169,11 +170,7 @@ export function EffectCard({
                   }}
                   className={`${ICON_BTN} ${copied ? "text-primary!" : ""}`}
                 >
-                  {/* Copy and tick share one spot and cross-fade (scale + turn) into each other. */}
-                  <span className="relative flex size-3.5 items-center justify-center" aria-hidden="true">
-                    <Copy className={`absolute transition-[opacity,transform] duration-300 ease-out ${copied ? "scale-50 -rotate-45 opacity-0" : "scale-100 rotate-0 opacity-100"}`} />
-                    <Check className={`absolute transition-[opacity,transform] duration-300 ease-out ${copied ? "scale-100 rotate-0 opacity-100" : "scale-50 rotate-45 opacity-0"}`} />
-                  </span>
+                  <CopyButtonContent copied={copied} iconOnly />
                 </button>
               </Tooltip>
             ) : (

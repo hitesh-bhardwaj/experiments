@@ -22,6 +22,20 @@ const TABS = [
 const COMPARE_HREF = "/pricing#compare";
 const EASE = [0.16, 1, 0.3, 1];
 
+// Tab panels: the old one slides out and fades first, then the new one slides in from the side
+// of the chosen tab (and the hidden one stays out of the tab order).
+const PANEL_ON = { opacity: 1, x: 0, visibility: "visible", transition: { duration: 0.5, delay: 0.2, ease: EASE } };
+const PANEL_OFF = (id) => ({ opacity: 0, x: id === "credit" ? SLIDE : -SLIDE, transition: { duration: 0.25, ease: EASE }, transitionEnd: { visibility: "hidden" } });
+
+// Content swaps (tab, plan): the old content slides out and fades, the new slides in from the
+// side the chosen option lies on, the way the pricing toggles move their highlight.
+const SLIDE = 18;
+const swap = {
+  enter: (dir) => ({ opacity: 0, x: dir * SLIDE }),
+  center: { opacity: 1, x: 0, transition: { duration: 0.5, ease: EASE } },
+  exit: (dir) => ({ opacity: 0, x: dir * -SLIDE, transition: { duration: 0.25, ease: EASE } }),
+};
+
 const subscribeNoop = () => () => {};
 
 /**
@@ -65,6 +79,7 @@ export function GetTemplateModal({ template, open, tab = "buy", onTab, onClose, 
   const credits = PLANS.find((p) => p.id === plan).credits;
   const locked = plan === "pro" && full;
   const remaining = left[plan];
+  const planDir = PLANS.findIndex((p) => p.id === plan) > 0 ? 1 : -1;
 
   const redeem = () => {
     if (flying || remaining < 1) return;
@@ -166,91 +181,113 @@ export function GetTemplateModal({ template, open, tab = "buy", onTab, onClose, 
                 trackClassName="bg-foreground/6"
               />
 
-              {tab === "buy" ? (
-                <div className="flex flex-col gap-3.5">
-                  {price != null && (
-                    <p className="flex items-baseline gap-2.5">
-                      <b className={`${DISPLAY} ${PRICE} text-[3vw] leading-none max-lg:text-[6vw] max-md:text-[11vw]`}>${price}</b>
-                      <span className={`${LABEL} text-foreground/50`}>one-time payment</span>
-                    </p>
-                  )}
-                  <ul className={`flex flex-col gap-1.5 ${T14} text-foreground/80`}>
-                    {["Every page, section and interaction, as source you own", "The Figma file for the whole site", "Licensed under MPL-2.0"].map((item) => (
-                      <li key={item} className="relative pl-4.5 before:absolute before:top-[.6em] before:left-0.5 before:size-1.5 before:bg-primary">
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                  <button
-                    type="button"
-                    onClick={onBuy}
-                    className={`inline-flex h-12 w-fit cursor-pointer items-center bg-primary px-5 ${T16} text-background transition-colors duration-500 hover:bg-primary-hover`}
-                  >
-                    Continue to payment
-                  </button>
-                 
-                </div>
-              ) : (
-                <div className="flex flex-col gap-3.5">
-                  <SlideToggle
-                    role="radiogroup"
-                    ariaLabel="Your plan (demo)"
-                    items={PLANS}
-                    value={plan}
-                    onChange={(id) => {
-                      setPlan(id);
-                      setRedeemed(false);
-                    }}
-                    activeClassName="bg-light"
-                    itemClassName={`h-7.5 w-28 ${T13}`}
-                    activeTextClassName="text-ink"
-                    inactiveTextClassName="text-foreground/70 hover:text-foreground"
-                    trackClassName="bg-foreground/8"
-                  />
-                  <div className="flex min-h-11 flex-wrap gap-2.5">
-                    {Array.from({ length: credits }, (_, i) => (
-                      <i
-                        key={`${plan}-${i}`}
-                        ref={(el) => {
-                          coinRefs.current[i] = el;
-                        }}
-                        className={`flex size-10 items-center justify-center font-mono not-italic ${T13} ${
-                          i < remaining
-                            ? "bg-[radial-gradient(circle_at_35%_30%,#FFD2B0,var(--primary)_55%,#B84300)] text-background shadow-[0_0_1.1vw_color-mix(in_srgb,var(--primary)_45%,transparent),inset_0_-0.1vw_0.3vw_color-mix(in_srgb,black_25%,transparent)]"
-                            : "bg-foreground/8 text-foreground/40 ring-1 ring-inset ring-foreground/16"
-                        }`}
-                      >
-                        {i + 1}
-                      </i>
-                    ))}
-                  </div>
-                  <p aria-live="polite" className={`min-h-[3em] ${T14} text-foreground/70`}>
-                    {message}
-                  </p>
-                  <div className="flex flex-wrap gap-2">
-                    {!redeemed && !locked && remaining > 0 && (
+              {/* Both panels share one grid cell, so the area is always as tall as the taller one */}
+              <div className="grid">
+                <motion.div
+                  key="buy"
+                  className="col-start-1 row-start-1"
+                  aria-hidden={tab !== "buy"}
+                  initial={false}
+                  style={{ visibility: tab === "buy" ? "visible" : "hidden" }}
+                  animate={tab === "buy" ? PANEL_ON : PANEL_OFF("buy")}
+                >
+                    <div className="flex flex-col gap-3.5">
+                      {price != null && (
+                        <p className="flex items-baseline gap-2.5">
+                          <b className={`${DISPLAY} ${PRICE} text-[3vw] leading-none max-lg:text-[6vw] max-md:text-[11vw]`}>${price}</b>
+                          <span className={`${LABEL} text-foreground/50`}>one-time payment</span>
+                        </p>
+                      )}
+                      <ul className={`flex flex-col gap-1.5 ${T14} text-foreground/80`}>
+                        {["Every page, section and interaction, as source you own", "The Figma file for the whole site", "Licensed under MPL-2.0"].map((item) => (
+                          <li key={item} className="relative pl-4.5 before:absolute before:top-[.6em] before:left-0.5 before:size-1.5 before:bg-primary">
+                            {item}
+                          </li>
+                        ))}
+                      </ul>
                       <button
                         type="button"
-                        onClick={redeem}
-                        disabled={flying}
-                        className={`inline-flex h-11 cursor-pointer items-center bg-primary px-5 ${T16} text-background transition-colors duration-500 hover:bg-primary-hover disabled:opacity-60`}
+                        onClick={onBuy}
+                        className={`inline-flex h-12 w-fit cursor-pointer items-center bg-primary px-5 ${T16} text-background transition-colors duration-500 hover:bg-primary-hover`}
                       >
-                        Redeem 1 credit
+                        Continue to payment
                       </button>
-                    )}
-                    {(redeemed || locked || remaining < 1) && (
-                      <Link
-                        href={COMPARE_HREF}
-                        onClick={onClose}
-                        className={`inline-flex h-11 items-center px-5 ${T16} text-light ring-1 ring-inset ring-foreground/14 transition-shadow duration-500 hover:ring-primary/70`}
-                      >
-                        {locked ? "See Pro+" : "Compare plans"}
-                      </Link>
-                    )}
-                  </div>
-                  
-                </div>
-              )}
+                     
+                    </div>
+                </motion.div>
+                <motion.div
+                  key="credit"
+                  className="col-start-1 row-start-1"
+                  aria-hidden={tab !== "credit"}
+                  initial={false}
+                  style={{ visibility: tab === "credit" ? "visible" : "hidden" }}
+                  animate={tab === "credit" ? PANEL_ON : PANEL_OFF("credit")}
+                >
+                    <div className="flex flex-col gap-3.5">
+                      <SlideToggle
+                        role="radiogroup"
+                        ariaLabel="Your plan (demo)"
+                        items={PLANS}
+                        value={plan}
+                        onChange={(id) => {
+                          setPlan(id);
+                          setRedeemed(false);
+                        }}
+                        activeClassName="bg-light"
+                        itemClassName={`h-7.5 w-28 ${T13}`}
+                        activeTextClassName="text-ink"
+                        inactiveTextClassName="text-foreground/70 hover:text-foreground"
+                        trackClassName="bg-foreground/8"
+                      />
+                      <AnimatePresence mode="wait" initial={false} custom={planDir}>
+                        <motion.div key={plan} custom={planDir} variants={swap} initial="enter" animate="center" exit="exit" className="flex flex-col gap-3.5">
+                      <div className="flex min-h-11 flex-wrap gap-2.5">
+                        {Array.from({ length: credits }, (_, i) => (
+                          <i
+                            key={`${plan}-${i}`}
+                            ref={(el) => {
+                              coinRefs.current[i] = el;
+                            }}
+                            className={`flex size-10 items-center justify-center font-mono not-italic ${T13} ${
+                              i < remaining
+                                ? "bg-[radial-gradient(circle_at_35%_30%,#FFD2B0,var(--primary)_55%,#B84300)] text-background shadow-[0_0_1.1vw_color-mix(in_srgb,var(--primary)_45%,transparent),inset_0_-0.1vw_0.3vw_color-mix(in_srgb,black_25%,transparent)]"
+                                : "bg-foreground/8 text-foreground/40 ring-1 ring-inset ring-foreground/16"
+                            }`}
+                          >
+                            {i + 1}
+                          </i>
+                        ))}
+                      </div>
+                      <p aria-live="polite" className={`min-h-[3em] ${T14} text-foreground/70`}>
+                        {message}
+                      </p>
+                      <div className="flex flex-wrap gap-2">
+                        {!redeemed && !locked && remaining > 0 && (
+                          <button
+                            type="button"
+                            onClick={redeem}
+                            disabled={flying}
+                            className={`inline-flex h-11 cursor-pointer items-center bg-primary px-5 ${T16} text-background transition-colors duration-500 hover:bg-primary-hover disabled:opacity-60`}
+                          >
+                            Redeem 1 credit
+                          </button>
+                        )}
+                        {(redeemed || locked || remaining < 1) && (
+                          <Link
+                            href={COMPARE_HREF}
+                            onClick={onClose}
+                            className={`inline-flex h-11 items-center px-5 ${T16} text-light ring-1 ring-inset ring-foreground/14 transition-shadow duration-500 hover:ring-primary/70`}
+                          >
+                            {locked ? "See Pro+" : "Compare plans"}
+                          </Link>
+                        )}
+                      </div>
+                        </motion.div>
+                      </AnimatePresence>
+                      
+                    </div>
+                </motion.div>
+              </div>
             </div>
           </motion.div>
         </motion.div>

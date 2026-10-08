@@ -50,7 +50,7 @@ function tokenize(line) {
 
 // Copy -> check swap: the outgoing icon scales down and rotates away while the incoming
 // one scales up and rotates in; the label rolls up from "Copy" to "Copied" (and back).
-export function CopyButtonContent({ copied }) {
+export function CopyButtonContent({ copied, iconOnly = false }) {
     const copyIconRef = useRef(null);
     const checkIconRef = useRef(null);
     const copyLabelRef = useRef(null);
@@ -69,8 +69,10 @@ export function CopyButtonContent({ copied }) {
             mounted.current = true;
             gsap.set(copyIcon, { scale: 1, rotation: 0, opacity: 1 });
             gsap.set(checkIcon, { scale: 0, rotation: -90, opacity: 0 });
-            gsap.set(copyLabel, { yPercent: 0, opacity: 1 });
-            gsap.set(copiedLabel, { yPercent: 100, opacity: 0 });
+            if (!iconOnly) {
+                gsap.set(copyLabel, { yPercent: 0, opacity: 1 });
+                gsap.set(copiedLabel, { yPercent: 100, opacity: 0 });
+            }
             return undefined;
         }
 
@@ -79,11 +81,13 @@ export function CopyButtonContent({ copied }) {
 
         const tl = gsap.timeline({ defaults: { overwrite: "auto" } });
         tl.to(hide, { scale: 0, rotation: copied ? 90 : -90, opacity: 0, duration: 0.25, ease: "power2.in" }, 0)
-            .fromTo(show, { scale: 0, rotation: copied ? -90 : 90, opacity: 0 }, { scale: 1, rotation: 0, opacity: 1, duration: 0.45, ease: "back.out(1.7)" }, 0.15)
-            .to(labelOut, { yPercent: -100, opacity: 0, duration: 0.4, ease: "power3.inOut" }, 0)
-            .fromTo(labelIn, { yPercent: 100, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.4, ease: "power3.inOut" }, 0);
+            .fromTo(show, { scale: 0, rotation: copied ? -90 : 90, opacity: 0 }, { scale: 1, rotation: 0, opacity: 1, duration: 0.45, ease: "back.out(1.7)" }, 0.15);
+        if (!iconOnly) {
+            tl.to(labelOut, { yPercent: -100, opacity: 0, duration: 0.4, ease: "power3.inOut" }, 0)
+                .fromTo(labelIn, { yPercent: 100, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.4, ease: "power3.inOut" }, 0);
+        }
         return () => tl.kill();
-    }, [copied]);
+    }, [copied, iconOnly]);
 
     return (
         <>
@@ -96,11 +100,13 @@ export function CopyButtonContent({ copied }) {
                     <path d="M5 12.5l4.5 4.5L19 7.5" />
                 </svg>
             </span>
-            <span className="relative flex h-[1.2em] overflow-hidden leading-[1.2]">
-                <span aria-hidden="true" className="invisible">Copied</span>
-                <span ref={copyLabelRef} className="absolute left-0 top-0">Copy</span>
-                <span ref={copiedLabelRef} className="absolute left-0 top-0">Copied</span>
-            </span>
+            {!iconOnly && (
+                <span className="relative flex h-[1.2em] overflow-hidden leading-[1.2]">
+                    <span aria-hidden="true" className="invisible">Copied</span>
+                    <span ref={copyLabelRef} className="absolute left-0 top-0">Copy</span>
+                    <span ref={copiedLabelRef} className="absolute left-0 top-0">Copied</span>
+                </span>
+            )}
         </>
     );
 }
