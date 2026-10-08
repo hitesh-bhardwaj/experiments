@@ -85,7 +85,7 @@ export default function RollText({ text, dir = 1, fixed = false, block = false, 
   useEffect(() => () => splits.current.forEach((split) => split.revert()), []);
 
   return (
-    <p aria-live="polite" className={`relative overflow-hidden ${className}`}>
+    <div aria-live="polite" className={`relative overflow-hidden ${className}`}>
       {layers.map((l) => (
         <span
           key={l.id}
@@ -95,6 +95,6 @@ export default function RollText({ text, dir = 1, fixed = false, block = false, 
           {l.text}
         </span>
       ))}
-    </p>
+    </div>
   );
 }

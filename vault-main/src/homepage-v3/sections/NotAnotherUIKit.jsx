@@ -133,7 +133,7 @@ export default function NotAnotherUIKit() {
                   </h3>
                   </div>
 
-                  <p className="type-small">
+                   <p className="type-body-lg">
                     {card.text}
                   </p>
                 </div>
