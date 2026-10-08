@@ -1,12 +1,6 @@
 import Image from "next/image";
 import { CodeBlock } from "@/components/ui/CodeBlock";
 import { getBlogHeadings } from "@/lib/blog-content";
-import {
-  FAQContent,
-  FAQGroup,
-  FAQTitle,
-  FAQWrapper,
-} from "@/components/animated-faq";
 
 // Renders a blogPost's Sanity `body` (the same effectBody portable-text
 // schema effectContent uses - block/effectImage/effectCodeBlock/
@@ -208,59 +202,8 @@ function BlogBlock({ block, headingId }) {
     );
   }
 
-  if (block._type === "effectFaqAccordion") {
-    const faqItems = block.items || [];
-
-    if (!faqItems.length) return null;
-
-    return (
-      <section className="fadeup blog-faq-section">
-        {block.title && (
-          <h2>{block.title}</h2>
-        )}
-
-        <FAQGroup
-          allowMultiple={false}
-          defaultOpenItems={faqItems[0]?._key ? [faqItems[0]._key] : []}
-        >
-          <div className="border border-grey">
-            {faqItems.map((item, index) => {
-              const itemId = item._key || `faq-${index}`;
-
-              return (
-                <FAQWrapper
-                  key={itemId}
-                  itemId={itemId}
-                  className={`group border-grey px-[2.5vw] py-[2vw] max-lg:px-[4vw] max-lg:py-[4vw] max-md:px-[6vw] max-md:py-[6vw] ${index > 0 ? "border-t" : ""
-                    }`}
-                  iconClassName="mt-[0.55vw] max-md:mt-[1vw] max-md:mt-[1.5vw] text-light-grey transition-colors duration-500 ease-out group-hover:text-white"
-                  iconSize={18}
-                  iconStrokeWidth={1.5}
-                  duration={0.6}
-                >
-                  <FAQTitle
-                    className="pb-0 items-start! justify-start! gap-[1.5vw]! max-lg:gap-[3vw]! max-md:gap-[4vw]!"
-                    iconPosition="left"
-                    iconMode="rotate-left-down"
-                  >
-                    <h3 className="my-0! leading-tight!">
-                      {item.question}
-                    </h3>
-                  </FAQTitle>
-
-                  <FAQContent className="pt-[1.2vw] pl-[2.8vw] max-lg:pt-[2.5vw] max-lg:pl-[7vw] max-md:pt-[4vw] max-md:pl-[8vw]">
-                    <p className="m-0! leading-[1.45]!">
-                      {item.answer}
-                    </p>
-                  </FAQContent>
-                </FAQWrapper>
-              );
-            })}
-          </div>
-        </FAQGroup>
-      </section>
-    );
-  }
+  // Rendered below the article as the site FAQ section (see faqItems in the blog post page), as on effect pages.
+  if (block._type === "effectFaqAccordion") return null;
 
   return null;
 }

@@ -13,11 +13,12 @@ function formatCardDate(value) {
   return `${month} ${day},${date.getFullYear()}`;
 }
 
-export default function BlogCard({ post, priority = false }) {
+// `light`: for the white area on the blog detail page (the listing is dark)
+export default function BlogCard({ post, priority = false, light = false }) {
   return (
     <div className="fadeup group/card relative h-full w-full">
-      <div className="flex h-full min-h-[32vw] flex-col gap-[1.2vw] bg-[#161616] p-[1.8vw] max-md:min-h-[45vh] max-lg:min-h-[45vh]  max-lg:gap-[3vw] max-md:gap-[5vw] max-md:p-[4vw] pb-9 max-md:pb-12">
-        <div className="h-[18vw] w-full shrink-0 overflow-hidden bg-[#202020] max-lg:h-[32vw] max-md:h-[30vh]">
+      <div className={`flex h-full min-h-[32vw] flex-col gap-[1.2vw] ${light ? "bg-light text-ink" : "bg-dark-card"} p-[1.8vw] max-md:min-h-[45vh] max-lg:min-h-[45vh]  max-lg:gap-[3vw] max-md:gap-[5vw] max-md:p-[4vw] pb-9 max-md:pb-12`}>
+        <div className="h-[18vw] w-full shrink-0 overflow-hidden bg-grey max-lg:h-[32vw] max-md:h-[30vh]">
           {post.coverImage?.url && (
             <Image
               src={post.coverImage.url}
@@ -35,24 +36,24 @@ export default function BlogCard({ post, priority = false }) {
         <div className="mt-2 flex items-center justify-between gap-3 pb-3 font-mono">
           <div className="flex min-w-0 flex-wrap items-center gap-2">
             {post.categories?.length > 0 && (
-              <span className="bg-[#2B2B2B] px-2 py-0.5 text-[0.9vw] text-white/90 max-lg:px-3 max-lg:py-1.5 max-lg:text-[2vw] max-md:px-3 max-md:py-1 max-md:text-[3vw]!">
+              <span className={`${light ? "bg-black/5 text-ink" : "bg-grey text-foreground/90"} px-2 py-0.5 text-[0.9vw] max-lg:px-3 max-lg:py-1.5 max-lg:text-[2vw] max-md:px-3 max-md:py-1 max-md:text-[3vw]!`}>
                 {post.categories[0].title}
               </span>
             )}
           </div>
-          <span className="shrink-0 text18 font-avenir text-[#AEAEAE] max-lg:text-[1.8vw] max-md:text-[3vw]!">
+          <span className={`shrink-0 text18 font-avenir ${light ? "text-black/60" : "text-foreground/70"} max-lg:text-[1.8vw] max-md:text-[3vw]!`}>
             {formatCardDate(post.publishedAt)}
           </span>
         </div>
 
-        <LineWipe>
-          <h3 className="shrink-0 text32 font-avenir font-medium leading-[1.2]! text-white max-lg:text-[2.8vw] max-md:text-[3vw] max-sm:text-[4.5vw]">
+        <LineWipe lit={light ? "var(--ink)" : undefined}>
+          <h3 className={`shrink-0 text32 font-avenir font-medium leading-[1.2]! ${light ? "text-ink" : "text-foreground"} max-lg:text-[2.8vw] max-md:text-[3vw] max-sm:text-[4.5vw]`}>
             {post.title}
           </h3>
         </LineWipe>
 
-        <LineWipe delay={0.15}>
-          <p className="grow text20 max-lg:text-[2vw] leading-[1.2] text-white max-md:text-[3.5vw]!">
+        <LineWipe delay={0.15} lit={light ? "var(--ink)" : undefined}>
+          <p className={`grow text20 max-lg:text-[2vw] leading-[1.2] ${light ? "text-black/60" : "text-foreground"} max-md:text-[3.5vw]!`}>
             {post.summary}
           </p>
         </LineWipe>
@@ -63,7 +64,7 @@ export default function BlogCard({ post, priority = false }) {
             text="Read More"
             tilted={false}
             underline={true}
-            className="relative text20 max-md:text-sm z-10 mt-5 max-md:mt-0! max-md:text34"
+            className={`relative text20 max-md:text-sm z-10 mt-5 max-md:mt-0! max-md:text34 ${light ? "text-ink!" : ""}`}
           />
         </div>
       </div>

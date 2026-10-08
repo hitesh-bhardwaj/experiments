@@ -2,6 +2,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import BlogCard from "../BlogCard";
 import { ArrowIcon } from "@/components/WebsiteComps/Icons";
+import Button from "@/homepage/components/Button";
 import { useFadeIn } from "@/components/Animations/gsapAnimations";
 import LineWipe from "@/components/Animations/LineWipe";
 
@@ -16,12 +17,12 @@ function SliderButton({ direction, disabled, onClick, activeOrange = false }) {
       onClick={onClick}
       disabled={disabled}
       aria-label={isNext ? "Show next related blogs" : "Show previous related blogs"}
-      className={`group relative flex h-8 w-8 items-center justify-center overflow-hidden text-white transition-colors duration-300 max-lg:size-10 ${
+      className={`group relative flex size-[3vw] items-center justify-center overflow-hidden text-ink transition-colors duration-300 max-[1025px]:size-10 ${
         disabled
-          ? "cursor-not-allowed bg-[#161616] opacity-40"
+          ? "cursor-not-allowed bg-black/5 opacity-40"
           : activeOrange
-            ? "cursor-pointer bg-[#ff5f00] text-black"
-            : "cursor-pointer bg-[#161616] hover:bg-[#ff5f00] hover:text-black"
+            ? "cursor-pointer bg-primary text-background"
+            : "cursor-pointer bg-black/5 hover:bg-primary hover:text-background"
       }`}
     >
       <ArrowIcon
@@ -158,19 +159,21 @@ export default function RelatedBlogsSlider({ posts = [] }) {
   const showMobileControls = posts.length > 1;
 
   return (
-    <section ref={sectionRef} className="relative mt-[10vw] flex flex-col gap-[3vw] max-lg:mt-[12vw] max-lg:gap-[5vw] max-md:mt-[16vw] max-md:gap-[8vw]">
-      <div className="flex items-center justify-between gap-5 max-lg:items-end">
-        <LineWipe lineStyle={RELATED_BLOGS_HEADING_LINE_STYLE}>
+    <section ref={sectionRef} id="related-blogs" className="relative mx-auto flex w-full max-w-[1536px] flex-col gap-[2.8vw] px-[4.5vw] py-[7%] max-md:gap-[10vw] max-md:px-[6vw]">
+      <div className="flex items-center justify-between gap-[1.4vw] max-[1025px]:flex-col max-[1025px]:gap-[5vw]">
+        <LineWipe lineStyle={RELATED_BLOGS_HEADING_LINE_STYLE} lit="var(--ink)">
           <h2
-            className="font-avenir text80 font-medium text-white max-lg:text-[7vw] max-md:text-[10vw]"
+            className="text64 text-center font-aeonik font-medium text-background"
             style={RELATED_BLOGS_HEADING_LINE_STYLE}
           >
             Related Blogs
           </h2>
         </LineWipe>
 
+        <div className="flex items-center gap-[0.5vw] max-[1025px]:hidden">
+          <Button text="Explore all blogs" href="/blog" variant="orange" className="shrink-0" />
         {showControls && (
-          <div className="flex items-center justify-end gap-2 max-md:hidden">
+          <div className="flex items-center justify-end gap-[0.5vw]">
             <SliderButton
               direction="previous"
               disabled={!canScrollPrev}
@@ -183,6 +186,7 @@ export default function RelatedBlogsSlider({ posts = [] }) {
             />
           </div>
         )}
+        </div>
       </div>
 
       <div
@@ -193,15 +197,15 @@ export default function RelatedBlogsSlider({ posts = [] }) {
         onPointerLeave={handlePointerEnd}
         onPointerCancel={handlePointerEnd}
         onDragStart={(event) => event.preventDefault()}
-        className="flex cursor-grab snap-x snap-mandatory select-none gap-6 overflow-x-auto scroll-smooth pb-4 active:cursor-grabbing max-lg:gap-5 max-md:gap-6"
+        className="flex cursor-grab snap-x snap-mandatory select-none gap-[1.5vw] overflow-x-auto scroll-smooth pb-4 active:cursor-grabbing max-[1025px]:gap-[2vw] max-md:gap-[4vw]"
       >
         {posts.map((post, index) => (
           <div
             key={post.slug}
             onClick={handleCardClick}
-            className="w-[31vw] flex-none snap-start max-lg:w-[55vw] max-md:w-full! max-sm:px-0"
+            className="w-[32%] flex-none snap-start max-[1025px]:w-[60%] max-md:w-full"
           >
-            <BlogCard post={post} priority={index === 0} />
+            <BlogCard post={post} priority={index === 0} light />
           </div>
         ))}
       </div>

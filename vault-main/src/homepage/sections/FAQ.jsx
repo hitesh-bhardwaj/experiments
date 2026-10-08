@@ -212,7 +212,8 @@ export function FAQRow({ item, isOpen, onToggle, index }) {
   );
 }
 
-export default function FAQ({ faqItems, translateTop = true}) {
+// `inline`: sits inside a content column (blog article) instead of being a full-width page section
+export default function FAQ({ faqItems, translateTop = true, inline = false }) {
   const container = useRef(null);
   const [isExpanded, setIsExpanded] = useState(false);
   const [openId, setOpenId] = useState(faqItems[0].id);
@@ -271,20 +272,22 @@ export default function FAQ({ faqItems, translateTop = true}) {
       ref={container}
       id="faq"
       data-sound-flow="off"
-      className="relative z-10 h-fit px-[calc(var(--cvw)*4.5)] w-full bg-foreground py-[7%] max-md:py-[15%] text-background max-md:mt-0! max-md:px-[calc(var(--cvw)*7)]"
+      className={inline
+        ? "relative z-10 h-fit w-full pt-[5vw] text-background max-md:pt-[12vw]"
+        : "relative z-10 h-fit px-[calc(var(--cvw)*4.5)] w-full bg-foreground py-[7%] max-md:py-[15%] text-background max-md:mt-0! max-md:px-[calc(var(--cvw)*7)]"}
     >
       <div className="mx-auto w-full max-w-[1536px]">
 
 
       <LineReveal
         as="h2"
-        className="type-h1 text-center mb-[calc(var(--cvw)*7)] relative z-110 max-md:mb-[calc(var(--cvw)*12)] max-md:w-full"
+        className={`type-h1 relative z-110 max-md:w-full ${inline ? "text64 text-left mb-[3vw] max-md:mb-[8vw]" : "text-center mb-[calc(var(--cvw)*7)] max-md:mb-[calc(var(--cvw)*12)]"}`}
       >
         Questions, <span className="gradient-text-animate">Answered.</span>
       </LineReveal>
 
 
-      <div className="mx-auto  max-w-[1536px] max-md:w-full px-[calc(var(--cvw)*5)] max-md:px-0" ref={container}>
+      <div className={`mx-auto max-w-[1536px] max-md:w-full ${inline ? "" : "px-[calc(var(--cvw)*5)] max-md:px-0"}`} ref={container}>
         {visibleItems.map((item, index) => (
           <FAQRow
             key={item.id}

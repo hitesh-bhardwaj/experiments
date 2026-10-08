@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import Navbar from "@/homepage/components/Navbar";
 import Footer from "@/homepage/sections/Footer";
+import FAQ from "@/homepage/sections/FAQ";
 import LenisSmoothScroll from "@/components/SmoothScroll/LenisScroll";
 import {
   getSanityBlogPost,
@@ -78,6 +79,8 @@ export default async function BlogPostPage({ params }) {
   const author = resolvedAuthor || post.author || null;
   const postWithAuthor = author ? {...post, author} : post;
   const faqs = extractFaqs(post.body || []);
+  // The same FAQ section as effect pages, below the article
+  const faqItems = faqs.map((item, index) => ({ id: item._key || `blog-faq-${index}`, question: item.question, answer: item.answer }));
 
   return (
     <>
@@ -88,26 +91,35 @@ export default async function BlogPostPage({ params }) {
       <Navbar effects={effects} />
       <LenisSmoothScroll allowNestedScroll />
 
-      <div className="px-[4vw] py-[8vw] max-lg:px-[5vw] max-lg:py-[10vh] max-md:px-[7vw] max-md:py-[26vw]">
-        <article className="text-white">
-          <BlogDetailHero post={postWithAuthor} />
+      <main className="relative flex w-full flex-col gap-[5.5vw] pt-25 max-md:gap-[15vw] max-md:pt-36">
+        <BlogDetailHero post={postWithAuthor} />
 
-          <BlogArticleBody
-            slug={slug}
-            author={author}
-            publishedAt={post.publishedAt}
-            categories={post.categories || []}
-            readingMinutes={getReadingTime(post.body || []).minutes}
-            shareUrl={canonicalUrl}
-            shareTitle={post.title}
-            afterContent={<BlogTags tags={post.tags || []} />}
-          >
-            <BlogBodyRenderer body={post.body || []} />
-          </BlogArticleBody>
-        </article>
+        {/* One white area for everything below the cover image, as on the effect page */}
+        <div data-sound-flow="off" className="bg-foreground text-background">
+          <article id="blog-content" className="blog-theme-light mx-auto w-full max-w-[1536px] px-[4.5vw] pt-[5.5vw] pb-6 max-md:px-[6vw] max-md:pt-[15vw]">
+            <BlogArticleBody
+              slug={slug}
+              author={author}
+              publishedAt={post.publishedAt}
+              categories={post.categories || []}
+              readingMinutes={getReadingTime(post.body || []).minutes}
+              shareUrl={canonicalUrl}
+              shareTitle={post.title}
+              afterContent={
+                <>
+                  <BlogTags tags={post.tags || []} />
+                  {/* FAQs sit in the article column, beside the sticky rail */}
+                  {faqItems.length > 0 && <FAQ faqItems={faqItems} translateTop={false} inline />}
+                </>
+              }
+            >
+              <BlogBodyRenderer body={post.body || []} />
+            </BlogArticleBody>
+          </article>
 
-        <RelatedBlogsSlider posts={relatedPosts} />
-      </div>
+          <RelatedBlogsSlider posts={relatedPosts} />
+        </div>
+      </main>
 
       <Footer />
     </>

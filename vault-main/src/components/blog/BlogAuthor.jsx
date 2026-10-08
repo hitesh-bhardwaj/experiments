@@ -25,19 +25,19 @@ export default function BlogAuthor({ author, className = "" }) {
         </div>
       ) : (
         <div
-          className={`${avatarClassName} flex items-center justify-center bg-[#181818] ring-1 ring-white/10`}
+          className={`${avatarClassName} flex items-center justify-center bg-black/5 ring-1 ring-black/10`}
           aria-label={author.name}
         >
-          <User className="h-[55%] w-[55%] text-white/60" strokeWidth={1.5} />
+          <User className="h-[55%] w-[55%] text-black/60" strokeWidth={1.5} />
         </div>
       )}
 
       <div className="flex flex-col gap-[0.4vw]">
-        <p className="font-avenir text-[0.9vw] leading-tight text-white max-lg:text-[2.6vw] max-md:text-[3.6vw]">
+        <p className="font-avenir text-[0.9vw] leading-tight text-ink max-[1025px]:text-[2.6vw] max-md:text-[3.6vw]">
           {author.name}
         </p>
         {designation && (
-          <p className="font-avenir text-[0.9vw] leading-tight text-[#AEAEAE] max-lg:text-[2.4vw] max-md:text-[3.4vw]">
+          <p className="font-avenir text-[0.9vw] leading-tight text-black/60 max-[1025px]:text-[2.4vw] max-md:text-[3.4vw]">
             {designation}
           </p>
         )}

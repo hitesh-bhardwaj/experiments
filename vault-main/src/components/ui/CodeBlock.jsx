@@ -176,9 +176,25 @@ function CopyLimitOverlay({ message, ctaHref }) {
 }
 
 // Small segmented switch in the header (package manager, JS / TS)
+// Segmented switch in the code block header. The orange pill slides to the chosen
+// option, like the site's other segmented controls; it's measured from the active
+// button because labels differ in width (npm / pnpm / yarn / bun).
 function HeaderSwitch({ label, options, value, onPick }) {
+    const groupRef = useRef(null);
+    const [pill, setPill] = useState(null);
+
+    useLayoutEffect(() => {
+        const btn = groupRef.current?.querySelector('[aria-checked="true"]');
+        if (btn) setPill({ x: btn.offsetLeft, w: btn.offsetWidth });
+    }, [value, options]);
+
     return (
-        <span role="radiogroup" aria-label={label} className="inline-flex gap-0.5 bg-[#f4f4f4]/6 p-0.5 max-sm:hidden">
+        <span ref={groupRef} role="radiogroup" aria-label={label} className="relative isolate inline-flex gap-0.5 bg-[#f4f4f4]/6 p-0.5 max-sm:hidden">
+            <span
+                aria-hidden="true"
+                className="absolute top-0.5 bottom-0.5 left-0 -z-1 bg-primary transition-[transform,width] duration-500 ease-[cubic-bezier(.16,1,.3,1)]"
+                style={pill ? { width: pill.w, transform: `translateX(${pill.x}px)` } : { opacity: 0 }}
+            />
             {options.map((option) => (
                 <button
                     key={option.value}
@@ -187,7 +203,7 @@ function HeaderSwitch({ label, options, value, onPick }) {
                     aria-checked={option.value === value}
                     onClick={() => onPick(option.value)}
                     className={`h-[26px] cursor-pointer px-[9px] font-mono text-[11.5px] transition-colors duration-500 ${
-                        option.value === value ? "bg-[#ff6b00] text-[#141414]" : "text-[#9c9c9c] hover:text-white"
+                        option.value === value ? "text-background" : "text-[#9c9c9c] hover:text-white"
                     }`}
                 >
                     {option.label}
@@ -303,7 +319,7 @@ export function CodeBlock({
                             aria-label="Copy code"
                             onClick={onCopy}
                             disabled={copyLocked}
-                            className={`inline-flex h-8 cursor-pointer items-center gap-[7px] px-[11px] text-[11px] font-semibold uppercase tracking-[.14em] transition-colors duration-500 disabled:cursor-not-allowed disabled:opacity-50 ${
+                            className={`inline-flex h-[30px] cursor-pointer items-center gap-[7px] px-[11px] text-[11px] font-medium uppercase tracking-[.14em] transition-colors duration-500 disabled:cursor-not-allowed disabled:opacity-50 ${
                                 copied
                                     ? "text-[#63d69a] shadow-[inset_0_0_0_1px_rgba(99,214,154,.45)]"
                                     : "text-[#d8d8d8] shadow-[inset_0_0_0_1px_rgba(244,244,244,.14)] hover:bg-[#f4f4f4]/8 hover:text-white"

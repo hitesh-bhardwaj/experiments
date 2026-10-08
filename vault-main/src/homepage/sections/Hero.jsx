@@ -7,7 +7,6 @@ import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
 import HeroToolsStrip from "../components/HeroToolsStrip";
 import SplitText from "gsap/SplitText";
 import { useGSAP } from "@gsap/react";
-
 import Button from "../components/Button";
 import { useLoaderComplete } from "../components/loader-state";
 import { prefersReducedMotion } from "@/lib/motion";
@@ -201,7 +200,7 @@ export default function Hero() {
                     </h1>
 
                     <div className="flex min-w-0 flex-[0.7] flex-col gap-[calc(var(--cvw)*2)] pb-[calc(var(--cvw)*0.6)] max-md:pb-0 max-md:gap-5">
-                        <p ref={copyRef} style={INTRO_HIDDEN} className="type-body-lg text-[#C9C9C9] max-w-[calc(var(--cvw)*40)] max-md:max-w-full max-md:w-full max-md:text-left">
+                        <p ref={copyRef} style={INTRO_HIDDEN} className="type-body-lg text-[#C9C9C9] max-w-[calc(var(--cvw)*30)] max-md:max-w-full max-md:w-full max-md:text-left">
                             Source-first scroll systems, cursor effects, text reveals, page transitions, loaders, backgrounds, and WebGL scenes for React and Next.js. Installed as real files in your project, not a dependency you rent.
                         </p>
 

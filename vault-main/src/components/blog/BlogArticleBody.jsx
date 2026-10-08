@@ -38,28 +38,28 @@ export default function BlogArticleBody({
   useFadeUp(articleRef, [slug]);
 
   return (
-    <div ref={articleRef} className="relative flex justify-between mt-[7vw] max-md:mt-[10vw]">
+    <div ref={articleRef} className="relative flex justify-between">
       {/* No `items-start` on the row above: that shrink-wraps each column to
           its own content height, leaving the sticky rail no distance to
           travel. Stretching gives it the article's full height.
 
           Author, share button and TOC share the one sticky container and all
           stay visible for the article's full height. */}
-      <div className="w-[30%] shrink-0 pl-0 max-lg:hidden">
+      <div className="w-[30%] shrink-0 max-[1025px]:hidden">
       
         <div className="sticky top-[15vh] flex flex-col gap-[1.6vw]">
           <BlogAuthor author={author} />
 
       
-          <div className="flex flex-col gap-[0.8vw]  text-[1vw] text-white max-lg:text-[2.4vw] max-md:text-[3.4vw]">
+          <div className="flex flex-col gap-[0.8vw] text-[1vw] text-ink max-[1025px]:text-[2.4vw] max-md:text-[3.4vw]">
             {(publishedAt || readingMinutes) && (
-              <div className="flex items-center text-[#AEAEAE] text-[0.9vw] gap-[1.2vw]">
+              <div className="flex items-center gap-[1.2vw] text-[0.9vw] text-black/60">
                 {publishedAt && (
                   <time dateTime={publishedAt}>Featured: {formatRailDate(publishedAt)}</time>
                 )}
 
                 {publishedAt && readingMinutes ? (
-                  <span aria-hidden="true" className="h-[1.6vw] w-px bg-white/25" />
+                  <span aria-hidden="true" className="h-[1.6vw] w-px bg-black/20" />
                 ) : null}
 
                 {readingMinutes ? <span>Read Time: {readingMinutes} mins</span> : null}
@@ -67,18 +67,18 @@ export default function BlogArticleBody({
             )}
 
             {categories.length > 0 && (
-              <p className="text-[0.9vw] text-[#AEAEAE]">Category: {categories.map((category) => category.title).join(", ")}</p>
+              <p className="text-[0.9vw] text-black/60">Category: {categories.map((category) => category.title).join(", ")}</p>
             )}
           </div>
 
-          <div className="flex items-center gap-[0.6vw] text-[#AEAEAE] text-[0.9vw] max-lg:text-[2.4vw] max-md:text-[3.4vw]">
+          <div className="flex items-center gap-[0.6vw] text-[0.9vw] text-black/60 max-[1025px]:text-[2.4vw] max-md:text-[3.4vw]">
             <span>Share this Article:</span>
             <BlogSharePopover url={shareUrl} title={shareTitle} />
           </div>
 
-          <hr className="h-0.5  w-[85%] border-0 bg-[#272727]" />
+          <hr className="h-0.5 w-[85%] border-0 bg-black/10" />
 
-          <div className="w-fit mt-[5vh]">
+          <div className="w-fit pt-[5vh]">
             <TableOfContents
               containerRef={contentRef}
               stopRef={stopRef}
@@ -90,11 +90,11 @@ export default function BlogArticleBody({
         </div>
       </div>
 
-      <div className="w-[66%] min-w-0 max-lg:w-full">
-        <div className="mb-[6vw] hidden flex-col gap-[3vw] max-lg:flex max-md:mb-[8vw] max-md:gap-[4vw]">
+      <div className="flex w-[66%] min-w-0 flex-col gap-[6vw] max-[1025px]:w-full max-md:gap-[8vw]">
+        <div className="hidden flex-col gap-[3vw] max-[1025px]:flex max-md:gap-[4vw]">
           <BlogAuthor author={author} />
 
-          <div className="flex flex-wrap items-center gap-x-[3vw] gap-y-2 text-[#AEAEAE] max-lg:text-[2.4vw] max-md:text-[3.4vw]">
+          <div className="flex flex-wrap items-center gap-x-[3vw] gap-y-2 text-black/60 max-[1025px]:text-[2.4vw] max-md:text-[3.4vw]">
             {publishedAt && (
               <time dateTime={publishedAt}>Featured: {formatRailDate(publishedAt)}</time>
             )}

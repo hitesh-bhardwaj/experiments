@@ -7,8 +7,8 @@ import Button from "@/homepage/components/Button";
 import LineWipe from "@/components/Animations/LineWipe";
 import { useFadeUp } from "@/components/Animations/gsapAnimations";
 
-// The featured block sets its date in mono and zero-pads the day, with no
-// space after the comma - "September 09,2026".
+const INK = "var(--ink)";
+
 function formatFeaturedDate(value) {
   if (!value) return "";
 
@@ -19,63 +19,59 @@ function formatFeaturedDate(value) {
   return `${month} ${day},${date.getFullYear()}`;
 }
 
+// The latest post, at the top of the light sheet (styled like the listing pages' light sections)
 function FeaturedBlogContent({ featuredPost }) {
   const sectionRef = useRef(null);
 
-  // Scoped to this section so it claims only its own `.fadeup` elements -
-  // useFadeUp falls back to scanning the whole document when the ref is
-  // empty, which would otherwise steal the listing's cards.
   useFadeUp(sectionRef);
 
   return (
-    <section ref={sectionRef} className="space-y-[8vw] max-md:px-[7vw] max-md:mt-[6vw]">
-      <div className="space-y-[2vw]">
-        <LineWipe>
-          <h2 className="t96 max-lg:text-[6.5vw] font-avenir text-center max-md:text-[9.5vw]">Latest From The Vault</h2>
+    <section ref={sectionRef} id="featured-blog" className="mx-auto flex w-full max-w-[1536px] flex-col gap-[5vw] px-[4.5vw] py-[7%] max-md:gap-[8vw] max-md:px-[6vw] max-md:pt-[15%]">
+      <div className="flex items-end justify-between gap-4 max-md:flex-col max-md:items-start">
+        <LineWipe lit={INK}>
+          <h2 className="text64 font-aeonik">Latest From The Vault</h2>
         </LineWipe>
-        <LineWipe delay={0.5}>
-          <p className="text24 max-lg:text-[3vw] text-center text-white font-avenir max-md:mt-[4vw] max-md:text-[2.4vw] max-sm:text-[4vw]">
+        <LineWipe delay={0.5} lit={INK}>
+          <p className="text22 w-[35%] text-black/60 max-md:w-full">
             Fresh notes on the effects, systems, and decisions behind Hyperiux Vault.
           </p>
         </LineWipe>
       </div>
 
-      <div className="mt-[5vw] flex items-start gap-[4vw] max-lg:flex-col max-md:mt-[10vw] max-md:gap-[6vw]">
+      <div className="flex items-center gap-[4vw] bg-light px-[2vw] py-[3.5vw] max-[1025px]:flex-col max-[1025px]:items-start max-md:gap-[6vw] max-md:px-[4vw] max-md:py-[8vw]">
         {featuredPost.coverImage?.url && (
           <Link
             href={`/blog/${featuredPost.slug}`}
-            className="fadeup group block  shrink-0 h-[80vh] w-[55%] bg-[#1a1a1a] p-[1.8vw] max-lg:h-[50vh] max-md:h-[40vh]  max-lg:w-full max-md:p-[4vw]"
+            className="fadeup group block h-[34vw] w-[55%] shrink-0 max-[1025px]:h-[50vw] max-[1025px]:w-full max-md:h-[60vw]"
           >
             <div className="relative h-full w-full overflow-hidden bg-grey">
               <Image
                 src={featuredPost.coverImage.url}
                 alt={featuredPost.coverImage.alt || featuredPost.title}
                 fill
-                sizes="(max-width: 768px) 100vw, 50vw"
+                sizes="(max-width: 1025px) 100vw, 50vw"
                 className="object-cover transition-transform duration-500 group-hover:scale-105"
               />
             </div>
           </Link>
         )}
 
-        <div className="flex w-[45%] grow flex-col gap-2 items-start justify-start my-4 max-lg:w-full">
-          <LineWipe>
-            <p className="text-[1vw] font-mono text-light-grey max-lg:text-[2.5vw] max-md:text-[4vw]">
+        <div className="flex grow flex-col items-start gap-[1.2vw] max-[1025px]:w-full max-md:gap-[4vw]">
+          <LineWipe lit={INK}>
+            <p className="font-mono text-[1vw] text-black/60 max-[1025px]:text-[2.5vw] max-md:text-[4vw]">
               {formatFeaturedDate(featuredPost.publishedAt)}
             </p>
           </LineWipe>
 
-          <Link href={`/blog/${featuredPost.slug}`}>
-            <LineWipe className='w-[85%]'>
-              <h3 className="text64 font-avenir mt-[1.2vw]  max-md:mt-[4vw] max-sm:text-[7.5vw]!">
-                {featuredPost.title}
-              </h3>
+          <Link href={`/blog/${featuredPost.slug}`} className="w-[90%] max-[1025px]:w-full">
+            <LineWipe lit={INK}>
+              <h3 className="text64 font-aeonik">{featuredPost.title}</h3>
             </LineWipe>
           </Link>
 
           {featuredPost.summary && (
-            <LineWipe delay={0.5}>
-              <p className="text24 font-avenir mt-[1.8vw] text-white w-[85%] max-md:mt-[4vw] max-lg:text-[2.5vw] max-md:text-[4vw]">
+            <LineWipe delay={0.5} lit={INK}>
+              <p className="text22 w-[90%] leading-[1.6] text-black/60 max-[1025px]:w-full">
                 {featuredPost.summary}
               </p>
             </LineWipe>
@@ -85,7 +81,7 @@ function FeaturedBlogContent({ featuredPost }) {
             text="Read More"
             href={`/blog/${featuredPost.slug}`}
             variant="orange"
-            className="fadeup mt-[2.5vw] w-fit max-md:mt-[6vw]"
+            className="fadeup w-fit"
           />
         </div>
       </div>

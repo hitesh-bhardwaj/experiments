@@ -374,16 +374,8 @@ export default function Loader({ exitMode = "dock" }) {
       data-cursor-off
       className="fixed inset-0 z-1000 overflow-hidden"
     >
-      {/* The lock above can only start once this has hydrated, and the markup
-          is scrollable from the moment it paints - which on a cold load is
-          long enough to wheel most of the way down the page before any of the
-          JS lock exists. Shipping the lock as markup closes that window: it is
-          in effect from the first byte, and by the time this element goes the
-          inline lock has long since taken over. */}
       <style>{"html{overflow:hidden}"}</style>
-      {/* Separate layer from the canvas so it can clear on its own - the
-          glyphs have to stay at full strength while they burst across the
-          hero, which a fade on the whole panel would take out with it. */}
+     
       <div
         ref={backdropRef}
         className="absolute inset-0 bg-background will-change-[opacity]"
@@ -393,13 +385,10 @@ export default function Loader({ exitMode = "dock" }) {
         className="absolute inset-0 block h-full w-full"
         aria-hidden="true"
       />
-      {/* Sits just under the canvas wordmark: it is centred, min(82vw, 1600px)
-          wide at 43/351 tall (92vw on phones), so its lower edge is half that
-          height below the middle of the screen. */}
       <div ref={entryRef} className="absolute inset-x-0 top-[calc(50%+min(5.02vw,98px)+2.5rem)] z-10 mx-auto flex w-full max-w-[44rem] flex-col items-center gap-4 px-6 text-center max-md:top-[calc(50%+5.64vw+2rem)]">
           <div className="flex items-center justify-center">
             <LoaderEntryButton
-              label="Enter the Vault"
+              label="Enter Vault"
               variant="orange"
               onClick={() => chooseEntry(true)}
             />

@@ -5,13 +5,13 @@ export default function BlogTags({ tags = [] }) {
     <div>
       {/* <hr className="blog-divider" /> */}
 
-      <div className="flex flex-wrap items-center gap-3 mt-10">
-        <span className="text-[0.9vw] max-lg:text-[2.2vw] max-md:text-lg text-light-grey">tags:</span>
+      <div className="flex flex-wrap items-center gap-3 pt-10">
+        <span className="text-[0.9vw] text-black/60 max-[1025px]:text-[2.2vw] max-md:text-[4.4vw]">tags:</span>
 
         {tags.map((tag) => (
           <span
             key={tag}
-            className="bg-[#2B2B2B] font-mono px-2 py-0.5 text-[0.85vw] max-lg:text-[2vw] flex items-center tracking-tight justify-center capitalize text-foreground max-md:px-2 max-md:text-muted max-md:text-sm"
+            className="flex items-center justify-center bg-black/5 px-2 py-0.5 font-mono text-[0.9vw] capitalize tracking-tight text-ink max-[1025px]:text-[2vw] max-md:text-[3.6vw]"
           >
             {tag}
           </span>

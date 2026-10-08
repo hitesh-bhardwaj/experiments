@@ -17,39 +17,39 @@ export default function BlogDetailHero({ post }) {
   useFadeUp(heroRef);
 
   return (
-    <div ref={heroRef} className="pt-[5vw]">
-      <header className="flex flex-col gap-[1.5vw] max-lg:gap-[6vw] max-md:gap-[8vw]">
+    <div ref={heroRef} className="flex flex-col gap-[3.5vw] max-md:gap-[8vw]">
+      <section id="blog-hero" className="mx-auto flex w-full max-w-[1536px] flex-col gap-[1.4vw] px-[4.5vw] max-md:gap-[5vw] max-md:px-[6vw]">
         <Breadcrumb maxWords={3} />
 
         <LineWipe>
-          <h1 className="text-[3.2vw] max-lg:text-[6vw] max-md:text-[9vw] font-avenir leading-[1.2]! text-foreground w-[80%] max-lg:w-full">
+          <h1 className="text80 w-[80%] font-aeonik font-normal text-foreground max-[1025px]:w-full">
             {post.title}
           </h1>
         </LineWipe>
 
         {post.summary && (
           <LineWipe delay={0.5}>
-            <p className="text-[1.25vw] leading-relaxed max-lg:leading-[1.2] w-[60%] max-lg:w-full text-white max-lg:text-[2.8vw] max-sm:text-[4vw]">
+            <p className="text22 w-[60%] leading-[1.6] text-foreground/90 max-[1025px]:w-full">
               {post.summary}
             </p>
           </LineWipe>
         )}
-
-      </header>
+      </section>
 
       {post.coverImage?.url && (
-        <div className="fadeup group relative mt-[5vw] h-[48vw] w-full overflow-hidden max-md:mt-[8vw] max-lg:mt-[6vh] max-md:h-[60vw] ">
-          <Image
-            src={post.coverImage.url}
-            alt={post.coverImage.alt || post.title}
-            width={1600}
-            height={900}
-            priority
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-          />
-        </div>
+        <section id="blog-cover" className="fadeup mx-auto w-full max-w-[1536px] px-[4.5vw] max-md:px-[6vw]">
+          <div className="group relative h-[48vw] w-full overflow-hidden max-md:h-[60vw]">
+            <Image
+              src={post.coverImage.url}
+              alt={post.coverImage.alt || post.title}
+              width={1600}
+              height={900}
+              priority
+              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            />
+          </div>
+        </section>
       )}
-
     </div>
   );
 }

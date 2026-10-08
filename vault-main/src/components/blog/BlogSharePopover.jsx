@@ -137,7 +137,7 @@ export default function BlogSharePopover({ url, title }) {
           aria-haspopup="menu"
           className="flex size-6 cursor-pointer items-center justify-center "
         >
-          <svg className="text-[#AEAEAE] size-4.5" width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg className="text-black/60 size-4.5" width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path fillRule="evenodd" clipRule="evenodd" d="M11.7 0H5.2C2.3283 0 0 2.3283 0 5.2V20.8C0 23.6717 2.3283 26 5.2 26H20.8C23.6717 26 26 23.6717 26 20.8C26 17.8477 26 14.3 26 14.3C26 13.5824 25.4176 13 24.7 13C23.9824 13 23.4 13.5824 23.4 14.3V20.8C23.4 22.2352 22.2352 23.4 20.8 23.4C16.471 23.4 9.5277 23.4 5.2 23.4C3.7635 23.4 2.6 22.2352 2.6 20.8C2.6 16.471 2.6 9.5277 2.6 5.2C2.6 3.7635 3.7635 2.6 5.2 2.6H11.7C12.4176 2.6 13 2.0176 13 1.3C13 0.5824 12.4176 0 11.7 0ZM21.5618 2.6H16.9C16.1824 2.6 15.6 2.0176 15.6 1.3C15.6 0.5824 16.1824 0 16.9 0H24.7C25.4176 0 26 0.5824 26 1.3V9.1C26 9.8176 25.4176 10.4 24.7 10.4C23.9824 10.4 23.4 9.8176 23.4 9.1V4.4382L13.9191 13.9191C13.4121 14.4261 12.5879 14.4261 12.0809 13.9191C11.5726 13.4121 11.5726 12.5879 12.0809 12.0809L21.5618 2.6Z" fill="#AEAEAE"/>
 </svg>
 
@@ -152,7 +152,7 @@ export default function BlogSharePopover({ url, title }) {
             initial="hidden"
             animate="visible"
             exit="hidden"
-            className="absolute bottom-[calc(100%+0.75rem)] left-0 z-50 w-[16vw] min-w-56 overflow-hidden bg-[#161616] shadow-2xl"
+            className="absolute bottom-[calc(100%+0.75rem)] left-0 z-50 w-[16vw] min-w-56 overflow-hidden bg-dark-card shadow-2xl"
           >
             {/* Same hover treatment as the TOC rows: an inset layer that
                 scales up from the top rather than a background swap, so the
@@ -162,11 +162,11 @@ export default function BlogSharePopover({ url, title }) {
               type="button"
               role="menuitem"
               onClick={copyLink}
-              className="group relative isolate flex w-full cursor-pointer items-center gap-3 border-b border-white/10 px-4 py-3 text-left text-[0.9vw] text-white"
+              className="group relative isolate flex w-full cursor-pointer items-center gap-3 border-b border-foreground/10 px-4 py-3 text-left text-[0.9vw] text-foreground"
             >
               <span
                 aria-hidden="true"
-                className="absolute inset-0 -z-10 origin-top scale-y-0 bg-[#ff5f00] transition-transform duration-300 ease-out group-hover:scale-y-100 motion-reduce:transition-none"
+                className="absolute inset-0 -z-10 origin-top scale-y-0 bg-primary transition-transform duration-300 ease-out group-hover:scale-y-100 motion-reduce:transition-none"
               />
               {copied ? (
                 <Check size={18} strokeWidth={1.75} className="shrink-0" />
@@ -189,7 +189,7 @@ export default function BlogSharePopover({ url, title }) {
               >
                 <span
                   aria-hidden="true"
-                  className="absolute inset-0 -z-10 origin-top scale-y-0 bg-[#ff5f00] transition-transform duration-300 ease-out group-hover:scale-y-100 motion-reduce:transition-none"
+                  className="absolute inset-0 -z-10 origin-top scale-y-0 bg-primary transition-transform duration-300 ease-out group-hover:scale-y-100 motion-reduce:transition-none"
                 />
                 <Icon size={18} strokeWidth={1.75} className="h-4.5 w-4.5 shrink-0" />
                 {label}

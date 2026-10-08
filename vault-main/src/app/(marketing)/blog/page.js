@@ -48,10 +48,12 @@ export default async function BlogIndexPage({ searchParams }) {
       <Navbar effects={effects} />
       <LenisSmoothScroll />
       <BlogHero />
-      <main className="relative z-20 mx-auto flex max-w-full flex-col gap-[8vw] px-[4vw] py-[6vw] max-lg:px-[5vw] max-md:gap-[14vw] max-md:px-0 max-md:py-[12vw]">
+      {/* One white sheet below the hero (as on the blog detail page): featured post, filters, grid */}
+      <main data-sound-hover="off" data-sound-flow="off" className="relative z-20 flex flex-col bg-foreground text-ink">
         <FeaturedBlog featuredPost={featuredPost} />
         <BlogListing
           posts={gridPosts}
+          total={total}
           categories={categories}
           activeCategory={category || "all"}
           page={page}
