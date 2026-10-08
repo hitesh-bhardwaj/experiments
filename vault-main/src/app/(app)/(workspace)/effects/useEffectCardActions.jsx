@@ -197,9 +197,9 @@ export function Modal({ open, onClose, title, children }) {
           type="button"
           aria-label="Close"
           onClick={onClose}
-          className="absolute top-5 right-5 grid size-10 cursor-pointer place-items-center border border-white/20 bg-white/10 text-white/70 transition-colors duration-500 hover:border-[#ff5f00] hover:bg-[#ff5f00] hover:text-white max-lg:hidden"
+          className="group absolute top-5 right-5 grid size-10 cursor-pointer place-items-center border border-white/20 bg-white/10 text-white/70 transition-colors duration-500 hover:border-[#ff5f00] hover:bg-[#ff5f00] hover:text-white max-lg:hidden"
         >
-          <X className="size-4" aria-hidden="true" />
+          <X className="size-4 transition-transform duration-300 ease-out group-hover:rotate-90 motion-reduce:transition-none" aria-hidden="true" />
         </button>
         <h2 className={`${T24} font-medium text-white`}>{title}</h2>
         <p className={`w-[80%] ${T14} text-white/60 max-lg:w-full`}>{text}</p>
