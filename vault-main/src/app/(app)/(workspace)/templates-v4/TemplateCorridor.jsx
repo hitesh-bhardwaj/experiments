@@ -67,8 +67,11 @@ function glowTexture() {
   c.width = c.height = 128;
   const g = c.getContext("2d");
   const gr = g.createRadialGradient(64, 64, 10, 64, 64, 64);
-  gr.addColorStop(0, "rgba(255,95,0,.55)");
-  gr.addColorStop(1, "rgba(255,95,0,0)");
+  // The site's primary token as rgb, for the canvas glow
+  const hex = (getComputedStyle(document.documentElement).getPropertyValue("--primary").trim() || "#ff5f00").replace("#", "");
+  const [r, g2, b] = [0, 2, 4].map((i) => parseInt(hex.slice(i, i + 2), 16));
+  gr.addColorStop(0, `rgba(${r},${g2},${b},0.55)`);
+  gr.addColorStop(1, `rgba(${r},${g2},${b},0)`);
   g.fillStyle = gr;
   g.fillRect(0, 0, 128, 128);
   const tex = new THREE.CanvasTexture(c);
@@ -211,7 +214,7 @@ export default function TemplateCorridor({ templates, onUnsupported }) {
       // Fade the whole page (header included) to the background as the frame
       // comes forward; the detail page then fades in from it.
       const veil = document.createElement("div");
-      Object.assign(veil.style, { position: "fixed", inset: "0", zIndex: "9999", background: "#111111", opacity: "0" });
+      Object.assign(veil.style, { position: "fixed", inset: "0", zIndex: "9999", background: "var(--background)", opacity: "0" });
       document.body.appendChild(veil);
       state.veil = veil;
       gsap.to(veil, { opacity: 1, duration: 0.75, ease: "power2.inOut" }); // done before the camera arrives
@@ -419,7 +422,7 @@ export default function TemplateCorridor({ templates, onUnsupported }) {
       <div className="sticky top-0 h-svh overflow-hidden">
         <canvas ref={canvasRef} aria-hidden="true" className="block size-full" />
         {/* blends the corridor into the hero above it */}
-        <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-[22vh] bg-linear-to-b from-[#111111] to-transparent" />
+        <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-[22vh] bg-linear-to-b from-background to-transparent" />
 
         <div aria-hidden="true" className="pointer-events-none absolute inset-0">
           {templates.map((t, i) => (
@@ -428,9 +431,9 @@ export default function TemplateCorridor({ templates, onUnsupported }) {
               ref={(el) => {
                 labelRefs.current[i] = el;
               }}
-              className={`absolute top-0 left-0 flex items-center gap-2.5 whitespace-nowrap text-[#e6e6e6] opacity-0 transition-opacity duration-500 ${T16}`}
+              className={`absolute top-0 left-0 flex items-center gap-2.5 whitespace-nowrap text-foreground/90 opacity-0 transition-opacity duration-500 ${T16}`}
             >
-              <b className="font-mono font-normal text-[#ff5f00]">{pad2(i + 1)}</b>
+              <b className="font-mono font-normal text-primary">{pad2(i + 1)}</b>
               {t.title}
             </div>
           ))}
@@ -439,13 +442,13 @@ export default function TemplateCorridor({ templates, onUnsupported }) {
         {current && (
           <aside
             aria-live="polite"
-            className="absolute right-[2.6vw] bottom-[10vh] grid w-[30vw] gap-2.5 bg-[rgba(16,16,16,.72)] p-5.5 shadow-[inset_0_0_0_1px_rgba(244,244,244,.1),0_40px_80px_-30px_#000] backdrop-blur-[18px] max-lg:w-[50vw] max-md:inset-x-4 max-md:bottom-16 max-md:w-auto"
+            className="absolute right-[4.5vw] bottom-[10vh] flex w-[30vw] flex-col gap-2.5 bg-background/70 p-5.5 ring-1 ring-inset ring-foreground/10 shadow-[0_2.8vw_5.5vw_-2vw_black] backdrop-blur-lg max-[1025px]:w-[50vw] max-md:inset-x-[6vw] max-md:bottom-16 max-md:w-auto"
           >
-            <div className={`${LABEL} flex items-center gap-2.5 text-white/80`}>
+            <div className={`${LABEL} flex items-center gap-2.5 text-foreground/80`}>
               <span>{pad2(active + 1)}</span>
-              <span className="h-0.5 flex-1 overflow-hidden bg-white/12">
+              <span className="h-0.5 flex-1 overflow-hidden bg-foreground/12">
                 <i
-                  className="block h-full origin-left bg-[#ff5f00] transition-transform duration-700 ease-[cubic-bezier(.16,1,.3,1)]"
+                  className="block h-full origin-left bg-primary transition-transform duration-700 ease-[cubic-bezier(.16,1,.3,1)]"
                   style={{ transform: `scaleX(${(active + 1) / n})` }}
                 />
               </span>
@@ -459,22 +462,22 @@ export default function TemplateCorridor({ templates, onUnsupported }) {
               initial={{ opacity: 0, y: 0 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-              className="grid gap-2.5"
+              className="flex flex-col gap-2.5"
             >
-              <h2 className={`${DISPLAY} text-[2.2vw] leading-[1.05] max-lg:text-[4vw] max-md:text-[7vw]`}>{current.title}</h2>
-              <p className={`line-clamp-3 ${T13} text-[#bdbdbd]`}>{current.tagline}</p>
+              <h2 className={`${DISPLAY} font-aeonik text-[2.2vw] leading-[1.1] max-[1025px]:text-[4vw] max-md:text-[7vw]`}>{current.title}</h2>
+              <p className={`line-clamp-3 ${T13} text-foreground/70`}>{current.tagline}</p>
               <div className="flex flex-wrap gap-1.25">
                 {(current.tags || []).map((tag) => (
-                  <span key={tag} className={`inline-flex h-5.5 items-center px-1.75 font-mono ${T13} text-[#bdbdbd] shadow-[inset_0_0_0_1px_rgba(244,244,244,.14)]`}>
+                  <span key={tag} className={`inline-flex h-5.5 items-center px-1.75 font-mono ${T13} text-foreground/70 ring-1 ring-inset ring-foreground/15`}>
                     {tag}
                   </span>
                 ))}
               </div>
             </motion.div>
-            <div className="mt-1.5 flex flex-wrap items-center gap-3.5">
+            <div className="flex flex-wrap items-center gap-3.5 pt-1.5">
               <ButtonV3 className="tracking-normal!" text="View template" href={current.href || `/templates/${current.slug}`} />
               {priceOf(current) != null && (
-                <span className={`${LABEL} text-white/80`}><span className={PRICE}>${priceOf(current)}</span> · or 1 credit</span>
+                <span className={`${LABEL} text-foreground/80`}><span className={PRICE}>${priceOf(current)}</span> · or 1 credit</span>
               )}
             </div>
           </aside>

@@ -17,13 +17,13 @@ const SLIDE_X_PERCENT = [110, 70, 70, 70, 70];
 
 function UseCaseBox({ item }) {
   return (
-    <article className="use-case-box relative -mt-px w-full border border-background/15">
-      <div className="border-b border-background/15 px-[2vw] py-[2.5vw] max-md:px-[4vw] max-md:py-[5vw] max-sm:px-[6vw] max-sm:py-[7vw]">
-        <h3 className={`text32 font-avenir text-[2.6vw]! max-md:text-[4vw]! max-sm:text-[6.6vw]! font-avenir`}>{item.title}</h3>
+    <article className="use-case-box relative w-full border border-t-0 border-background/15 first:border-t max-md:border-t">
+      <div className="border-b border-background/15 px-[2vw] py-[2.5vw] max-md:px-[6vw] max-md:py-[7vw]">
+        <h3 className="text32 font-aeonik">{item.title}</h3>
       </div>
 
-      <div className="flex flex-col justify-between gap-[4vw] px-[2vw] py-[2.5vw] max-md:gap-[7vw] max-md:px-[4vw] max-md:py-[5vw] max-sm:gap-[10vw] max-sm:px-[6vw] max-sm:py-[7vw]">
-        <p className={`text22 font-avenir text-[1.1vw]! leading-[1.6]! max-md:text-[2.2vw]! max-sm:text-[4.1vw]! w-[80%] max-md:w-full`}>{item.text}</p>
+      <div className="flex flex-col justify-between gap-[4vw] px-[2vw] py-[2.5vw] max-md:gap-[10vw] max-md:px-[6vw] max-md:py-[7vw]">
+        <p className="text22 w-[80%] font-avenir leading-[1.6] max-md:w-full">{item.text}</p>
         <LinkButton href={item.link} text={item.cta} prefetch={false} tilted={false} className="text-background!" />
       </div>
     </article>
@@ -58,21 +58,20 @@ export default function PricingUseCase({ useCases }) {
   );
 
   return (
-    <div
-      ref={container}
-      className="mx-auto flex h-fit w-full max-w-[1536px] items-start justify-between overflow-x-clip px-[4.5vw] py-[5%] max-md:py-[15%] text-background max-md:flex-col max-md:gap-[8vw] max-md:px-[calc(var(--cvw)*7)] max-md:pb-[30vw]!"
-    >
-      <MaskTextReveal stagger={0.08} scrub={false} duration={2} className="sticky top-[20vh] w-[40vw] max-md:static max-md:mb-[10vw]! max-md:w-full">
-        <h2 className="text64 font-avenir">
-          Built for teams where frontend is part of the brand & your interface needs to feel as premium as the product.
-        </h2>
-      </MaskTextReveal>
+    <section ref={container} id="use-cases" data-sound-flow="off" className="overflow-x-clip bg-foreground px-[4.5vw] py-[7%] text-background max-md:px-[6vw] max-md:py-[15%]">
+      <div className="mx-auto flex h-fit w-full max-w-[1536px] items-start justify-between max-md:flex-col max-md:gap-[10vw]">
+        <MaskTextReveal stagger={0.08} scrub={false} duration={2} className="sticky top-[20vh] w-[45%] max-md:static max-md:w-full">
+          <h2 className="text64 font-aeonik">
+            Built for teams where frontend is part of the brand & your interface needs to feel as premium as the product.
+          </h2>
+        </MaskTextReveal>
 
-      <div className="flex h-full w-[43vw] flex-col max-md:w-full max-md:gap-[8vw] max-sm:gap-[10vw]">
-        {useCases.map((item) => (
-          <UseCaseBox key={item.id} item={item} />
-        ))}
+        <div className="flex h-full w-[48%] flex-col max-md:w-full max-md:gap-[10vw]">
+          {useCases.map((item) => (
+            <UseCaseBox key={item.id} item={item} />
+          ))}
+        </div>
       </div>
-    </div>
+    </section>
   );
 }

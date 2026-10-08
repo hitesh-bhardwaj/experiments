@@ -204,17 +204,14 @@ export default function PricingCredits() {
   }
 
   return (
-    <section ref={rootRef} id="credits" data-sound-flow="off" className="relative bg-foreground px-[4.5vw] py-[4%]  max-md:py-[8%] font-avenir text-background max-md:px-[calc(var(--cvw)*7)]">
+    <section ref={rootRef} id="credits" data-sound-flow="off" className="relative bg-foreground px-[4.5vw] py-[7%] font-avenir text-background max-md:px-[6vw] max-md:py-[15%]">
       <div className="mx-auto flex w-full max-w-[1536px] flex-col gap-[3vw] max-md:gap-[8vw]">
         <div className="flex flex-col gap-[1.8vw] max-md:gap-[5vw]">
-          <p className={`fadeup flex items-center gap-[0.6vw] text-background/60 max-md:gap-[2vw] ${LABEL}`}>
-          
-          </p>
-          <LineReveal as="h2" className="text64 text-[4.6vw]! max-md:text-[6vw]! max-sm:text-[9vw]!">
+          <LineReveal as="h2" className="text80">
             One credit.<br />
             <span className="gradient-text-animate">One whole site.</span>
           </LineReveal>
-          <p className={`fadeup text22 font-avenir text-[1.1vw]! leading-[1.6]! max-md:text-[2.2vw]! max-sm:text-[4.1vw]! w-[40%] text-background/60 max-md:w-full`}>
+          <p className={`fadeup text22 font-avenir leading-[1.6] w-[40%] text-background/60 max-md:w-full`}>
             A credit unlocks one complete template: every page, section and interaction, as source code you own. Try it: spend your credits below.
           </p>
         </div>
@@ -253,7 +250,7 @@ export default function PricingCredits() {
               />
             </div>
 
-            <div className="relative flex h-[4vw] gap-[0.3vw] text-[1vw] leading-[1.6] text-foreground/60 max-md:h-[16vw] max-md:gap-[1vw] max-md:text-[3.8vw]">
+            <div className="relative flex h-[4vw] gap-[0.3vw] text20 leading-[1.6] text-foreground/60 max-md:h-[16vw] max-md:gap-[1vw]">
               <span className={`flex h-[1.6em] items-center ${left ? "" : "hidden"}`}>
                 <RollNumber value={left} values={[1, 5]} />
               </span>
@@ -281,7 +278,7 @@ export default function PricingCredits() {
                     <i className={`absolute top-[56%] left-[8%] h-[30%] w-[84%] transition-colors duration-1000 ${isOwned ? "bg-grey" : "bg-background/15"}`} />
                   </div>
                   <div className="flex flex-col gap-[0.3vw] max-md:flex-1 max-md:gap-[1vw]">
-                    <p className="text-[1.1vw] tracking-[-0.02em] max-md:text-[4vw]">{t.name}</p>
+                    <p className="text22 tracking-tight">{t.name}</p>
                     <p className={`flex items-center gap-[0.4vw] max-md:gap-[1.4vw] ${LABEL} ${t.full ? "text-background/60" : "text-primary"}`}>
                       {!t.full && <span aria-hidden="true">✦</span>}
                       {t.full ? "Full catalogue" : "Selected catalogue"}

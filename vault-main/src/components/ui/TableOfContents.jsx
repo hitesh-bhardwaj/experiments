@@ -307,19 +307,18 @@ export function TableOfContents({
   const isLeft = side === "left";
 
   return (
-    <div className="group relative flex items-center gap-4">
+    <div className="group relative flex items-center gap-[1vw]">
       <span
         aria-hidden="true"
         className={`absolute top-1/2 h-full min-h-48 w-8 -translate-y-1/2 ${isLeft ? "left-full" : "right-full"}`}
       />
 
       <div
-        className={`pointer-events-none absolute top-1/2 w-[18vw] max-h-[60vh] -translate-y-1/2 overflow-hidden border border-[rgba(29,29,29,.1)] bg-[#F4F4F4] p-2 opacity-0 shadow-[0_20px_50px_-24px_rgba(0,0,0,.35)] transition-[opacity,translate,scale] duration-500 ease-[cubic-bezier(.16,1,.3,1)] group-hover:pointer-events-auto group-hover:translate-x-0 group-hover:scale-100 group-hover:opacity-100 ${isLeft ? "left-[calc(100%+1rem)] -translate-x-3" : "right-[calc(100%+1rem)] translate-x-3"} scale-[.97]
+        className={`pointer-events-none absolute top-1/2 w-[18vw] max-h-[60vh] -translate-y-1/2 overflow-hidden border border-foreground/10 bg-[#F4F4F4] p-[0.5vw] opacity-0 shadow-[0_1.4vw_3.5vw_-1.7vw_color-mix(in_srgb,black_40%,transparent)] transition-[opacity,translate,scale] duration-500 ease-[cubic-bezier(.16,1,.3,1)] group-hover:pointer-events-auto group-hover:translate-x-0 group-hover:scale-100 group-hover:opacity-100 ${isLeft ? "left-[calc(100%+1vw)] -translate-x-3" : "right-[calc(100%+1vw)] translate-x-3"} scale-95
           }`}
       >
         <ul
-          data-lenis-prevent
-          className="flex flex-col gap-1 overflow-y-auto overscroll-contain max-h-[calc(60vh-1rem)] toc"
+          className="flex flex-col gap-[0.3vw] overflow-y-auto overscroll-contain max-h-[calc(60vh-1vw)] toc"
           onMouseLeave={() => setHoveredId(null)}
         >
           {items.map((item) => {
@@ -339,10 +338,10 @@ export function TableOfContents({
                 >
                   <span
                     aria-hidden="true"
-                    className={`absolute inset-0 -z-10 origin-top bg-[#ff5f00] transition-transform duration-300 ease-out motion-reduce:transition-none ${highlighted ? "scale-y-100" : "scale-y-0"
+                    className={`absolute inset-0 -z-10 origin-top bg-primary transition-transform duration-300 ease-out motion-reduce:transition-none ${highlighted ? "scale-y-100" : "scale-y-0"
                       }`}
                   />
-                  <span className={`relative z-10 block px-3 py-2 text20 font-normal leading-tight transition-colors duration-300 ${highlighted ? "text-[#141414]" : "text-(--docs-body,#3a3a3a)"}`}>
+                  <span className={`relative z-10 block px-3 py-2 text20 font-normal leading-tight transition-colors duration-300 ${highlighted ? "text-background" : "text-(--docs-body,#3a3a3a)"}`}>
                     {item.text}
                   </span>
                 </Link>
@@ -350,7 +349,7 @@ export function TableOfContents({
             );
           })}
           {showBackToTop && (
-            <li className="mt-1 border-t border-[rgba(29,29,29,.1)] pt-1">
+            <li className="border-t border-foreground/10 py-[0.3vw]">
               <a
                 href="#top"
                 onMouseEnter={() => setHoveredId("__top")}
@@ -359,9 +358,9 @@ export function TableOfContents({
               >
                 <span
                   aria-hidden="true"
-                  className={`absolute inset-0 -z-10 origin-top bg-[#ff5f00] transition-transform duration-300 ease-out motion-reduce:transition-none ${hoveredId === "__top" ? "scale-y-100" : "scale-y-0"}`}
+                  className={`absolute inset-0 -z-10 origin-top bg-primary transition-transform duration-300 ease-out motion-reduce:transition-none ${hoveredId === "__top" ? "scale-y-100" : "scale-y-0"}`}
                 />
-                <span className={`relative z-10 flex items-center gap-2 px-3 py-2 text20 font-normal leading-tight transition-colors duration-300 ${hoveredId === "__top" ? "text-[#141414]" : "text-(--docs-body,#3a3a3a)"}`}>
+                <span className={`relative z-10 flex items-center gap-2 px-3 py-2 text20 font-normal leading-tight transition-colors duration-300 ${hoveredId === "__top" ? "text-background" : "text-(--docs-body,#3a3a3a)"}`}>
                   <ArrowUp className="size-4" aria-hidden="true" />
                   Back to top
                 </span>
@@ -371,7 +370,7 @@ export function TableOfContents({
         </ul>
       </div>
 
-      <ul className="flex w-12 flex-col items-end gap-3">
+      <ul className="flex w-12 flex-col items-end gap-[0.8vw]">
         {items.map((item) => (
           <li key={item.id}>
             <Link
@@ -385,7 +384,7 @@ export function TableOfContents({
                   "block h-0.5 transition-all duration-300 ease-out",
                   activeId === item.id
                     ? "w-8 bg-primary"
-                    : "w-8 bg-[#1D1D1D]/25 hover:w-8 hover:bg-[#1D1D1D]/60",
+                    : "w-8 bg-foreground/25 hover:bg-foreground/60",
                 ].join(" ")}
               />
             </Link>

@@ -64,7 +64,7 @@ export default function WaitlistForm({ className = "" }) {
     <form
       onSubmit={onSubmit}
       noValidate
-      className={`relative flex w-[min(460px,100%)] items-center gap-1.5 bg-[rgba(20,20,20,.62)] py-1.5 pr-1.5 pl-[18px] backdrop-blur-[16px] transition-shadow duration-700 ease-[cubic-bezier(.16,1,.3,1)] max-sm:flex-wrap max-sm:p-2 ${
+      className={`relative flex w-full items-center gap-1.5 bg-background/60 py-1.5 pr-1.5 pl-[1.2vw] backdrop-blur-lg transition-shadow duration-700 ease-[cubic-bezier(.16,1,.3,1)] max-md:flex-wrap max-md:p-2 ${
         joined
           ? "shadow-[inset_0_0_0_1px_rgba(99,214,154,.55)]"
           : error
@@ -85,7 +85,7 @@ export default function WaitlistForm({ className = "" }) {
         onChange={(e) => { setEmail(e.target.value); if (error) setError(""); }}
         aria-invalid={!!error}
         aria-describedby={`${inputId}-msg`}
-        className={`h-11 min-w-0 flex-1 border-0 bg-transparent text-[15px] text-[#F4F4F4] outline-none max-sm:basis-full max-sm:px-2.5 ${joined ? "placeholder:text-[#9fd9b9]" : "placeholder:text-[#6b6b6b]"}`}
+        className={`text20 h-11 min-w-0 flex-1 border-0 bg-transparent text-foreground outline-none max-md:basis-full max-md:px-2.5 ${joined ? "placeholder:text-[#9fd9b9]" : "placeholder:text-foreground/40"}`}
       />
       <button
         ref={buttonRef}
@@ -94,11 +94,11 @@ export default function WaitlistForm({ className = "" }) {
         onPointerEnter={() => setHovered(true)}
         onPointerLeave={() => setHovered(false)}
         data-sound-kind="primary"
-        className={buttonV3ClassName({ className: "max-sm:w-full max-sm:justify-center", disabled: joined || sending })}
+        className={buttonV3ClassName({ className: "max-md:w-full max-md:justify-center", disabled: joined || sending })}
       >
         <ButtonV3Chrome label={label} hovered={hovered} />
       </button>
-      <p id={`${inputId}-msg`} className={`font-avenir text-[11px] font-medium tracking-[.14em] uppercase absolute top-[calc(100%+10px)] left-[18px] min-h-[1em] text-left text-[#ff8a78] max-sm:static max-sm:basis-full max-sm:px-2.5 max-sm:pt-1 max-sm:pb-0.5`} aria-live="polite">{error}</p>
+      <p id={`${inputId}-msg`} className={`font-avenir text-[0.7vw] font-medium tracking-[0.1em] uppercase absolute top-[calc(100%+0.7vw)] left-[1.2vw] min-h-[1em] text-left text-[#ff8a78] max-md:static max-md:basis-full max-md:px-2.5 max-md:py-1 max-md:text-[2.8vw]`} aria-live="polite">{error}</p>
     </form>
   );
 }

@@ -58,129 +58,99 @@ function SkeletonBlock({ className = "" }) {
   return (
     <div
       className={[
-        "relative overflow-hidden bg-[#272727]",
+        "relative overflow-hidden bg-grey",
         "before:absolute before:inset-0 before:-translate-x-full",
         "before:animate-[shimmer_1.4s_infinite]",
-        "before:bg-linear-to-r before:from-transparent before:via-white/10 before:to-transparent",
+        "before:bg-linear-to-r before:from-transparent before:via-foreground/10 before:to-transparent",
         className,
       ].join(" ")}
     />
   );
 }
 
+// Mirrors the page: hero, stage, article, CTA and related effects, same wrappers and gaps
 function EffectDetailMainSkeleton() {
   return (
-    <main className="mx-auto w-full relative px-14 max-lg:px-0 pt-25 max-md:pt-36">
-      <section className="space-y-7">
-        <div className="flex items-start max-md:px-[7vw] max-lg:px-[6vw] justify-between gap-5">
-          <div className="w-full space-y-5">
-            <div className="mb-6 flex w-fit max-w-full flex-wrap items-center gap-2 max-lg:mx-auto max-lg:justify-center">
-              <SkeletonBlock className="h-4 w-12  bg-[#272727]" />
-              <span className="text-white/25">/</span>
-              <SkeletonBlock className="h-4 w-16  bg-[#272727]" />
-              <span className="text-white/25">/</span>
-              <SkeletonBlock className="h-4 w-24  bg-[#272727]" />
-              <span className="text-white/25">/</span>
-              <SkeletonBlock className="h-4 w-40  bg-[#272727]" />
+    <main className="relative w-full pt-25 max-md:pt-36">
+      <div className="flex flex-col gap-[5.5vw] max-md:gap-[15vw]">
+        <div className="flex flex-col gap-7">
+          <section className="mx-auto w-full max-w-[1536px] px-[4.5vw] max-md:px-[6vw] flex flex-col gap-[1.4vw] max-md:gap-[5vw]">
+            <div className="flex w-fit max-w-full flex-wrap items-center gap-[0.5vw] max-md:gap-[2vw]">
+              <SkeletonBlock className="h-4 w-12" />
+              <span className="text-foreground/25">/</span>
+              <SkeletonBlock className="h-4 w-16" />
+              <span className="text-foreground/25">/</span>
+              <SkeletonBlock className="h-4 w-24" />
+              <span className="text-foreground/25">/</span>
+              <SkeletonBlock className="h-4 w-40" />
             </div>
-
-            <SkeletonBlock className="h-[5.2vw] w-[62%]  bg-[#272727] max-lg:mx-auto max-lg:h-14 max-lg:w-[82%] max-md:h-12" />
-
-            <div className="space-y-3 max-lg:mx-auto max-lg:w-[90%]">
-              <SkeletonBlock className="h-5 w-[72%]  bg-[#272727] max-lg:mx-auto" />
-              <SkeletonBlock className="h-5 w-[54%]  bg-[#272727] max-lg:mx-auto" />
+            <SkeletonBlock className="h-[5.2vw] w-[62%] max-[1025px]:h-14 max-[1025px]:w-[82%] max-md:h-12" />
+            <div className="flex flex-col gap-3">
+              <SkeletonBlock className="h-5 w-[72%]" />
+              <SkeletonBlock className="h-5 w-[54%]" />
             </div>
+            <div className="flex flex-wrap items-center gap-[0.8vw] max-md:gap-[3vw]">
+              <SkeletonBlock className="h-10 w-20" />
+              <SkeletonBlock className="h-10 w-24" />
+              <SkeletonBlock className="h-10 w-18" />
+            </div>
+          </section>
+          <section className="mx-auto w-full max-w-[1536px] px-[4.5vw] max-md:px-[6vw] h-[46vw]">
+            <SkeletonBlock className="h-full w-full" />
+          </section>
+        </div>
 
-            <div className="mt-12 flex w-full items-center justify-between gap-3">
-              <div className="flex flex-wrap items-center gap-2">
-                <SkeletonBlock className="h-10 w-20  bg-[#272727]" />
-                <SkeletonBlock className="h-10 w-24  bg-[#272727]" />
-                <SkeletonBlock className="h-10 w-18  bg-[#272727]" />
+        <div className="flex flex-col gap-[5vw] bg-foreground py-[5.5vw] max-md:gap-[10vw] max-md:py-[15vw]">
+          <section className="mx-auto w-full max-w-[1536px] px-[4.5vw] max-md:px-[6vw]">
+            <div className="flex w-[70%] flex-col gap-8 max-[1025px]:w-full">
+              <SkeletonBlock className="h-10 w-[58%] bg-background/10" />
+              <div className="flex flex-col gap-3">
+                <SkeletonBlock className="h-5 w-full bg-background/10" />
+                <SkeletonBlock className="h-5 w-[92%] bg-background/10" />
+                <SkeletonBlock className="h-5 w-[76%] bg-background/10" />
               </div>
-
-              <div className="ml-auto shrink-0 max-md:hidden">
-                <SkeletonBlock className="h-12 w-36  bg-[#ff5f00]/45" />
+              <SkeletonBlock className="h-9 w-[46%] bg-background/10" />
+              <div className="flex flex-col gap-3">
+                <SkeletonBlock className="h-5 w-full bg-background/10" />
+                <SkeletonBlock className="h-5 w-[88%] bg-background/10" />
+                <SkeletonBlock className="h-5 w-[64%] bg-background/10" />
               </div>
+              <SkeletonBlock className="h-[18vw] w-full bg-background/10 max-[1025px]:h-64" />
             </div>
-          </div>
-        </div>
+          </section>
 
-        <div className="max-md:px-[7vw] max-lg:px-[6vw] h-[46vw]  w-full">
-          <SkeletonBlock className="h-full w-full bg-[#272727]" />
-        </div>
-
-        <div className="max-md:flex max-md:px-[7vw] max-lg:px-[6vw] w-full max-md:pt-4 justify-center shrink-0 hidden">
-          <SkeletonBlock className="h-12 w-36  bg-[#ff5f00]/45" />
-        </div>
-
-        <div className="relative max-md:px-[7vw] max-lg:px-[6vw] pt-[1.5vw]">
-          <div className="space-y-8 w-[70%] max-lg:w-full">
-            <SkeletonBlock className="h-10 w-[58%]  bg-[#272727]" />
-
-            <div className="space-y-3">
-              <SkeletonBlock className="h-5 w-full  bg-[#272727]" />
-              <SkeletonBlock className="h-5 w-[92%]  bg-[#272727]" />
-              <SkeletonBlock className="h-5 w-[76%]  bg-[#272727]" />
+          <section className="mx-auto w-full max-w-[1536px] px-[4.5vw] max-md:px-[6vw]">
+            <div className="flex flex-col gap-5 bg-ink px-[2.8vw] py-[3.3vw] max-md:px-[7vw] max-md:py-[10vw]">
+              <SkeletonBlock className="h-10 w-[52%] bg-light/15 max-md:h-8 max-md:w-[84%]" />
+              <div className="flex flex-col gap-3">
+                <SkeletonBlock className="h-5 w-[78%] bg-light/15" />
+                <SkeletonBlock className="h-5 w-[58%] bg-light/15" />
+              </div>
+              <SkeletonBlock className="h-12 w-36 bg-primary/45" />
             </div>
+          </section>
 
-            <SkeletonBlock className="h-9 w-[46%]  bg-[#272727]" />
-
-            <div className="space-y-3">
-              <SkeletonBlock className="h-5 w-full  bg-[#272727]" />
-              <SkeletonBlock className="h-5 w-[88%]  bg-[#272727]" />
-              <SkeletonBlock className="h-5 w-[64%]  bg-[#272727]" />
+          <section className="mx-auto w-full max-w-[1536px] px-[4.5vw] max-md:px-[6vw] flex flex-col gap-[2.8vw] max-md:gap-[10vw]">
+            <div className="flex items-center justify-between gap-[1.4vw] max-[1025px]:flex-col">
+              <SkeletonBlock className="h-12 w-[30%] bg-background/10 max-[1025px]:w-[60%] max-md:w-[80%]" />
+              <SkeletonBlock className="h-12 w-44 bg-primary/45 max-[1025px]:hidden" />
             </div>
-
-            <div className="space-y-3">
-              <SkeletonBlock className="h-5 w-[82%]  bg-[#272727]" />
-              <SkeletonBlock className="h-5 w-[70%]  bg-[#272727]" />
-              <SkeletonBlock className="h-5 w-[74%]  bg-[#272727]" />
-            </div>
-
-            <SkeletonBlock className="h-[18vw] w-full  bg-[#171717] max-lg:h-64" />
-          </div>
-        </div>
-
-        <div className="w-[70%] max-lg:w-full max-md:px-[7vw] max-lg:px-[6vw] max-md:mt-[10vw]">
-          <div className="w-full  bg-[#272727] my-[5vw] mx-auto px-10 max-lg:px-6 max-md:px-[7vw] py-15">
-            <SkeletonBlock className="h-10 w-[52%]  bg-[#333333] max-md:h-8 max-md:w-[84%]" />
-
-            <div className="mt-5 space-y-3">
-              <SkeletonBlock className="h-5 w-[78%]  bg-[#333333]" />
-              <SkeletonBlock className="h-5 w-[58%]  bg-[#333333]" />
-            </div>
-
-            <SkeletonBlock className="mt-7 h-12 w-36  bg-white/40" />
-          </div>
-        </div>
-
-        <section className="my-20 relative space-y-10 max-lg:space-y-10">
-          <div className="flex items-center justify-between gap-5 max-lg:flex-col">
-            <SkeletonBlock className="h-12 w-[30%]  bg-[#272727] max-lg:w-[60%] max-md:w-[80%]" />
-            <SkeletonBlock className="h-12 w-44  bg-[#ff5f00]/45 max-lg:hidden" />
-          </div>
-
-          <div className="flex gap-6 overflow-hidden">
-            {Array.from({ length: 3 }).map((_, index) => (
-              <div
-                key={`related-effect-skeleton-${index}`}
-                className="min-w-[31vw] max-lg:min-w-[44vw] max-lg:min-w-[55vw] max-md:min-w-full"
-              >
-                <div className="relative aspect-[1.02/1] w-full overflow-hidden  bg-[#272727] p-[2vw] max-lg:p-5 max-md:p-5">
-                  <div className="flex h-full w-full items-center justify-center">
-                    <SkeletonBlock className="aspect-[1.78/1] w-[88%]  bg-[#111111]" />
+            <div className="flex gap-[1.5vw] overflow-hidden max-[1025px]:gap-[2vw] max-md:gap-[4vw]">
+              {Array.from({ length: 3 }).map((_, index) => (
+                <div key={`related-effect-skeleton-${index}`} className="flex w-[32%] shrink-0 flex-col gap-5 max-[1025px]:w-[60%] max-md:w-full">
+                  <div className="flex aspect-[1/1] w-full items-center justify-center bg-background/10 p-[2vw] max-md:p-5">
+                    <SkeletonBlock className="aspect-[1.8/1] w-[88%] bg-background/20" />
+                  </div>
+                  <div className="flex flex-col gap-2 px-3">
+                    <SkeletonBlock className="h-5 w-[58%] bg-background/10" />
+                    <SkeletonBlock className="h-4 w-[34%] bg-background/10" />
                   </div>
                 </div>
-
-                <div className="mt-5 px-3">
-                  <SkeletonBlock className="mb-2 h-5 w-[58%] bg-[#2f2f2f]" />
-                  <SkeletonBlock className="h-4 w-[34%] bg-[#242424]" />
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-      </section>
+              ))}
+            </div>
+          </section>
+        </div>
+      </div>
     </main>
   );
 }
@@ -452,48 +422,43 @@ export function EffectDetailContent({
         {isMainDataLoading ? (
           <EffectDetailMainSkeleton />
         ) : (
-          <main className="mx-auto w-full relative  max-lg:px-0 pt-25 max-md:pt-36">
-            <section className="space-y-7">
-              <div className="flex px-14 items-start max-md:px-[7vw] max-lg:px-[6vw] justify-between gap-5">
-                <div className="w-full space-y-5">
-                  <Breadcrumb />
+          <main className="relative w-full pt-25 max-md:pt-36">
+            <div className="flex flex-col gap-[5.5vw] max-md:gap-[15vw]">
+              <div className="flex flex-col gap-7">
+              <section id="effect-hero" className="mx-auto flex w-full max-w-[1536px] flex-col gap-[1.4vw] px-[4.5vw] max-md:gap-[5vw] max-md:px-[6vw]">
+                <Breadcrumb />
 
-                  {pageTitle && (
-                    <HeadAnim rotate={0}>
-                      <h1 className="w-full max-md:text-[6vw] max-md:font-bold max-lg:w-[90%] max-md:w-[80%]  font-semibold leading-[1.3]! text-foreground text80">
-                        {pageTitle}
-                      </h1>
-                    </HeadAnim>
-                  )}
+                {pageTitle && (
+                  <HeadAnim rotate={0}>
+                    <h1 className="text80 w-full font-aeonik font-normal text-foreground max-[1025px]:w-[90%] max-md:w-[80%]">
+                      {pageTitle}
+                    </h1>
+                  </HeadAnim>
+                )}
 
-                  {pageSummary && (
-                    <Copy delay={0.5}>
-                      <p className="mt-4 w-[70%] max-lg:w-[90%] text-foreground opacity-90 text22 leading-relaxed max-lg:leading-[1.3]">
-                        {pageSummary}
-                      </p>
-                    </Copy>
-                  )}
+                {pageSummary && (
+                  <Copy delay={0.5}>
+                    <p className="text22 w-[70%] leading-[1.6] text-foreground/90 max-[1025px]:w-[90%]">
+                      {pageSummary}
+                    </p>
+                  </Copy>
+                )}
 
-
-                  <div className="mt-10 flex w-full items-center justify-between gap-3 fadeup max-md:mt-8">
-                    {(dependencies.length > 0 || (content?.tier ?? safeEffect.tier) === "pro") && (
-                      <div className="flex flex-wrap items-center gap-3">
-                        {dependencies.map((dep) => (
-                          <span
-                            key={dep}
-                            className=" bg-[#272727] px-2 py-1 text20 capitalize text-foreground max-md:text-muted max-md:px-6"
-                          >
-                            {dep}
-                          </span>
-                        ))}
-                      </div>
-                    )}
-
+                {(dependencies.length > 0 || (content?.tier ?? safeEffect.tier) === "pro") && (
+                  <div className="fadeup flex flex-wrap items-center gap-[0.8vw] max-md:gap-[3vw]">
+                    {dependencies.map((dep) => (
+                      <span
+                        key={dep}
+                        className="text20 bg-grey px-[0.6vw] py-[0.3vw] capitalize text-foreground max-md:px-[6vw] max-md:py-[1vw] max-md:text-muted"
+                      >
+                        {dep}
+                      </span>
+                    ))}
                   </div>
-                </div>
-              </div>
+                )}
+              </section>
 
-              <div className="fadeup px-14 max-md:px-[7vw] max-lg:px-[6vw] h-auto  w-full">
+              <section id="effect-stage" className="fadeup mx-auto w-full max-w-[1536px] px-[4.5vw] max-md:px-[6vw]">
                 {/* Live stage + Playground (remixer), in place of the preview video */}
                 <EffectStage
                   effect={effect}
@@ -501,15 +466,15 @@ export function EffectDetailContent({
                   previewHref={previewHref}
                   getCode={<GetCodeMenu effectSlug={slug} effectTitle={pageTitle || safeEffect.title} isLocked={isLocked} />}
                 />
+              </section>
               </div>
-
 
               {/* One white area for everything below the stage: the article, FAQ + custom
                     animation block, and related effects - so no dark gaps show between them. */}
-              <div className="bg-white text-black mt-20">
+              <div className="bg-foreground text-background">
                 {/* blog-theme-light: blog.css prose in its light colours on this white section */}
-                <div className="blog-theme-light relative px-14 max-md:px-[7vw] max-lg:px-[6vw] pt-20 pb-6">
-                  <div className="fixed right-4 top-1/2 z-30 block -translate-y-1/2 max-lg:hidden">
+                <section id="effect-content" className="blog-theme-light relative mx-auto w-full max-w-[1536px] px-[4.5vw] pt-[5.5vw] pb-6 max-md:px-[6vw] max-md:pt-[15vw]">
+                  <div className="fixed right-[1vw] top-1/2 z-30 block -translate-y-1/2 max-[1025px]:hidden">
                     <TableOfContents
                       containerRef={contentRef}
                       stopRef={hasCtaSection ? ctaSectionRef : relatedEffectsRef}
@@ -527,31 +492,32 @@ export function EffectDetailContent({
                     effectRemixerControls={effect?.remixer?.controls}
                     changelog={safeEffect.changelog}
                   />
-                </div>
+                </section>
 
                 {/* FAQ + custom animation block - the same components as the effects listing */}
-                <div className="h-full w-full">
+                <div className="flex h-full w-full flex-col gap-[2vw]">
                   {faqItems.length > 0 && <FAQV3 faqItems={faqItems} translateTop={false} />}
-                  <div className="px-[3.4vw]">
-                  <CustomAnimationCta cta={safeContent?.ctaBanner} sectionRef={ctaSectionRef} className="mt-[2vw]" />
+                  <div className="mx-auto w-full max-w-[1536px] px-[4.5vw] max-md:px-[6vw]">
+                    <CustomAnimationCta cta={safeContent?.ctaBanner} sectionRef={ctaSectionRef} />
                   </div>
                 </div>
 
                 {safeRelatedEffects?.length > 0 && (
                   <section
                     ref={relatedEffectsRef}
-                    className="relative space-y-10 px-14 py-20 max-lg:space-y-10 max-lg:px-[6vw] max-md:px-[7vw]"
+                    id="related-effects"
+                    className="relative mx-auto flex w-full max-w-[1536px] flex-col gap-[2.8vw] px-[4.5vw] py-[7%] max-md:gap-[10vw] max-md:px-[6vw]"
                   >
-                    <div className="flex items-center justify-between gap-5 max-lg:flex-col">
+                    <div className="flex items-center justify-between gap-[1.4vw] max-[1025px]:flex-col max-[1025px]:gap-[5vw]">
                       <HeadAnim rotate={0}>
-                        <h2 className="text-center text-[3.32vw] max-lg:text-[5vw] max-md:text-[2rem] font-medium text-[#141414]">
+                        <h2 className="text64 text-center font-aeonik font-medium text-background">
                           Related Effects
                         </h2>
                       </HeadAnim>
                       {/* The arrows are sized to the Explore button beside them: ButtonV3 is
                           1.15vw text x 1.5 line height + 1rem padding + 2px border. */}
-                      <div className="flex items-center gap-2 fadeup">
-                        <div className=" flex max-lg:hidden flex-col justify-center items-end gap-5 max-lg:w-full max-lg:items-stretch">
+                      <div className="fadeup flex items-center gap-[0.5vw]">
+                        <div className="flex flex-col items-end justify-center max-[1025px]:hidden">
                           <ButtonV3
                             text="Explore All Effects"
                             href="/effects"
@@ -559,16 +525,16 @@ export function EffectDetailContent({
                             className="shrink-0 border border-primary"
                           />
                         </div>
-                        <div className="max-lg:hidden">
+                        <div className="max-[1025px]:hidden">
                           {showRelatedSliderControls && (
-                            <div className="flex h-full items-center justify-end gap-2">
+                            <div className="flex h-full items-center justify-end gap-[0.5vw]">
                               <SliderArrowButton
                                 direction="prev"
                                 tone="light"
                                 onClick={() => scrollRelatedEffects("previous")}
                                 disabled={!canScrollPrev}
                                 ariaLabel="Show previous related effects"
-                                className="size-[calc(1.725vw+18px)]"
+                                className="size-[3vw]"
                               />
                               <SliderArrowButton
                                 direction="next"
@@ -576,7 +542,7 @@ export function EffectDetailContent({
                                 onClick={() => scrollRelatedEffects("next")}
                                 disabled={!canScrollNext}
                                 ariaLabel="Show next related effects"
-                                className="size-[calc(1.725vw+18px)]"
+                                className="size-[3vw]"
                               />
                             </div>
                           )}
@@ -597,13 +563,13 @@ export function EffectDetailContent({
                         onPointerLeave={handleRelatedPointerEnd}
                         onPointerCancel={handleRelatedPointerEnd}
                         onDragStart={(event) => event.preventDefault()}
-                        className="flex cursor-grab snap-x snap-mandatory  bg select-none gap-6 overflow-x-auto max-md:gap-6 max-lg:gap-2 scroll-smooth pb-4 active:cursor-grabbing"
+                        className="flex cursor-grab snap-x snap-mandatory select-none gap-[1.5vw] overflow-x-auto scroll-smooth pb-4 active:cursor-grabbing max-[1025px]:gap-[2vw] max-md:gap-[4vw]"
                       >
                         {safeRelatedEffects.map((relatedEffect) => (
                           <div
                             key={relatedEffect.name}
                             onClickCapture={blockClickAfterDrag}
-                            className="min-w-[31vw] pl-1!  cursor-pointer max-md:px-[7vw] max-lg:px-[6vw] snap-start max-lg:min-w-[44vw] max-lg:min-w-[55vw]! max-md:min-w-full!"
+                            className="w-[32%] shrink-0 cursor-pointer snap-start max-[1025px]:w-[60%] max-md:w-full"
                           >
                             <EffectCardV4
                               effect={relatedEffect}
@@ -617,9 +583,9 @@ export function EffectDetailContent({
                       </div>
                     </div>
 
-                    <div className="hidden max-lg:block">
+                    <div className="hidden max-[1025px]:block">
                       {showRelatedSliderControls && (
-                        <div className="flex items-center justify-end gap-2 max-lg:justify-center">
+                        <div className="flex items-center justify-center gap-[2vw]">
                           <SliderArrowButton
                             direction="prev"
                             tone="light"
@@ -638,7 +604,7 @@ export function EffectDetailContent({
                       )}
                     </div>
 
-                    <div className="fadeup max-lg:mx-auto max-lg:flex hidden flex-col justify-center items-end gap-5 max-lg:w-fit max-lg:items-stretch">
+                    <div className="fadeup hidden w-fit self-center max-[1025px]:flex">
                       <ButtonV3
                         text="Explore all effects"
                         href="/effects"
@@ -649,42 +615,40 @@ export function EffectDetailContent({
                   </section>
                 )}
               </div>
-            </section>
+            </div>
           </main>
         )}
       </div>
 
       {mounted && createPortal(
         <div
-          className={`fixed inset-0 z-9999 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 transition-opacity duration-300 ${showSignInToCopyModal ? "opacity-100" : "pointer-events-none opacity-0"}`}
+          className={`fixed inset-0 z-9999 flex items-center justify-center bg-black/40 p-4 backdrop-blur-lg transition-opacity duration-300 ${showSignInToCopyModal ? "opacity-100" : "pointer-events-none opacity-0"}`}
           onClick={() => setShowSignInToCopyModal(false)}
         >
           <div
-            className={`flex w-[35vw] max-md:w-full max-lg:w-[70%] flex-col gap-6 items-center  border border-white/20 bg-[#0e0e0e] p-10 max-lg:p-6 shadow-2xl transition-transform duration-300 relative ${showSignInToCopyModal ? "scale-100" : "scale-95"}`}
+            className={`relative flex w-[35vw] flex-col items-center gap-[1.6vw] border border-foreground/20 bg-background p-10 shadow-2xl transition-transform duration-300 max-[1025px]:w-[70%] max-[1025px]:p-6 max-md:w-full max-md:gap-[6vw] ${showSignInToCopyModal ? "scale-100" : "scale-95"}`}
             onClick={(event) => event.stopPropagation()}
           >
             <button
               type="button"
               aria-label="Close"
               onClick={() => setShowSignInToCopyModal(false)}
-              className="max-lg:hidden group absolute right-5 top-5 flex h-10 w-10 items-center justify-center  border border-white/20 bg-white/10 text-xl leading-none text-white/70 transition-all duration-500 ease-in-out hover:border-[#ff5f00] hover:bg-[#ff5f00] hover:text-white "
+              className="group absolute right-5 top-5 flex h-10 w-10 items-center justify-center border border-foreground/20 bg-foreground/10 leading-none text-foreground/70 transition-all duration-500 ease-in-out hover:border-primary hover:bg-primary hover:text-foreground max-[1025px]:hidden"
             >
               <div className="relative flex h-4 w-4 items-center justify-center duration-500 ease-in-out group-hover:rotate-90">
-                <span className="h-px w-4 rotate-45 bg-white" />
-                <span className="absolute h-px w-4 -rotate-45 bg-white" />
+                <span className="h-px w-4 rotate-45 bg-foreground" />
+                <span className="absolute h-px w-4 -rotate-45 bg-foreground" />
               </div>
             </button>
 
-            <div className="flex items-start justify-between gap-3">
-              <h2 className="text-xl font-medium text-white">Sign in to copy code</h2>
-            </div>
-            <p className="text-sm text-white/60 text-center">
+            <h2 className="text24 font-aeonik font-medium text-foreground">Sign in to copy code</h2>
+            <p className="text18 text-center text-foreground/60">
               Create a free account or sign in to copy code and install
               commands from the vault.
             </p>
             <Link
               href={`/sign-in?redirect_url=${encodeURIComponent(pathname)}`}
-              className="inline-flex w-fit items-center gap-1.5  bg-[#ff5f00] px-4 py-2 text-sm font-medium text-white hover:bg-[#e05500] transition-colors"
+              className="text18 inline-flex w-fit items-center gap-1.5 bg-primary px-4 py-2 font-medium text-foreground transition-colors hover:bg-primary-hover"
               onClick={() => setShowSignInToCopyModal(false)}
             >
               Sign In
@@ -831,7 +795,7 @@ function SanityBodyRenderer({
   const shouldRenderChangelog = changelog?.length > 0;
 
   return (
-    <CodeBlockLanguageProvider>
+    <CodeBlockLanguageProvider defaultVariant="tsx">
       <div className="space-y-6">
         {shouldRenderChangelog && firstFaqIndex === -1 && (
           <EffectChangelogSection changelog={changelog} />

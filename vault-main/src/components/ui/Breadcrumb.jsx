@@ -54,7 +54,7 @@ export function Breadcrumb({ className = "", lastItemClassName = "", maxWords })
     <nav
       aria-label="Breadcrumb"
       className={[
-        "flex w-fit max-w-full fadeup flex-wrap items-center gap-2 text-muted",
+        "flex w-fit max-w-full fadeup flex-wrap items-center gap-[0.5vw] text-muted max-md:gap-[2vw]",
         className,
       ]
         .filter(Boolean)
@@ -66,9 +66,9 @@ export function Breadcrumb({ className = "", lastItemClassName = "", maxWords })
         return (
           <span
             key={`${item.href}-${item.label}`}
-            className="flex items-center gap-2"
+            className="flex items-center gap-[0.5vw] max-md:gap-[2vw]"
           >
-            {index > 0 && <span className="text-white/25">/</span>}
+            {index > 0 && <span className="text-foreground/25">/</span>}
 
             {isLast ? (
               <span

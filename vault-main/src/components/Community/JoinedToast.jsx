@@ -54,20 +54,20 @@ export default function JoinedToast() {
       ref={ref}
       role="status"
       aria-live="polite"
-      className="fixed bottom-[calc(72px+env(safe-area-inset-bottom,0px))] left-1/2 z-80 grid w-[min(440px,calc(100vw-2rem))] -translate-x-1/2 gap-2.5 bg-[rgba(22,22,22,.78)] px-6 py-[22px] text-left shadow-[inset_0_1px_0_rgba(255,255,255,.12),inset_0_0_0_1px_rgba(99,214,154,.35),0_30px_80px_-20px_rgba(255,107,0,.45)] backdrop-blur-[22px] backdrop-saturate-[160%]"
+      className="fixed bottom-[calc(5vw+env(safe-area-inset-bottom,0vw))] left-1/2 z-80 flex w-[30vw] -translate-x-1/2 flex-col gap-[0.7vw] bg-background/80 px-[1.7vw] py-[1.5vw] text-left ring-1 ring-inset ring-[rgba(99,214,154,.35)] shadow-[0_2vw_5.5vw_-1.4vw_color-mix(in_srgb,var(--primary)_45%,transparent)] backdrop-blur-lg backdrop-saturate-150 max-md:bottom-[calc(18vw+env(safe-area-inset-bottom,0vw))] max-md:w-[88vw] max-md:gap-[2.5vw] max-md:px-[6vw] max-md:py-[5.6vw]"
     >
-      <span className={`font-avenir text-[11px] font-medium tracking-[.14em] uppercase inline-flex items-center gap-2.5 text-[#9C9C9C] before:size-[5px] before:rounded-full before:bg-primary before:content-[''] text-[#FFB27A]!`}>You’re on the list</span>
-      <strong className="font-aeonik text-[26px] font-medium tracking-[-.03em]">Welcome to the crowd.</strong>
-      <p className="text-sm text-[#b8b8b8]">That bright dot joining the swarm? That’s you.{matched} We’ll email you when your invite is ready.</p>
-      <div className="mt-1.5 flex items-center justify-between gap-3">
+      <span className="font-avenir text-[0.7vw] font-medium uppercase tracking-[0.1em] max-md:text-[2.8vw] inline-flex items-center gap-[0.7vw] text-[#FFB27A] before:size-[0.35vw] before:bg-primary before:content-[''] max-md:gap-[2.5vw] max-md:before:size-[1.3vw]">You’re on the list</span>
+      <strong className="text32 font-aeonik font-medium tracking-tight">Welcome to the crowd.</strong>
+      <p className="text18 text-foreground/70">That bright dot joining the swarm? That’s you.{matched} We’ll email you when your invite is ready.</p>
+      <div className="flex items-center justify-between gap-[0.8vw] max-md:gap-[3vw]">
         <button
           type="button"
           onClick={share}
-          className={`font-avenir text-[11px] font-medium tracking-[.14em] uppercase h-10 bg-[rgba(244,244,244,.05)] px-4 shadow-[inset_0_0_0_1px_rgba(244,244,244,.14)] transition-shadow duration-600 ease-[cubic-bezier(.16,1,.3,1)] hover:shadow-[inset_0_0_0_1px_rgba(255,107,0,.6)]`}
+          className="font-avenir text-[0.7vw] font-medium uppercase tracking-[0.1em] max-md:text-[2.8vw] h-10 bg-foreground/5 px-4 ring-1 ring-inset ring-foreground/15 transition-shadow duration-600 ease-[cubic-bezier(.16,1,.3,1)] hover:ring-primary/60"
         >
           {copied ? "Invite copied ✓" : "Invite a friend"}
         </button>
-        <button type="button" className={`group relative inline-flex h-11 items-center opacity-85 transition-opacity duration-600 ease-[cubic-bezier(.16,1,.3,1)] hover:opacity-100 font-avenir text-[11px] font-medium tracking-[.14em] uppercase`} onClick={dismissCelebration}><span className="pb-[3px] bg-[linear-gradient(var(--primary),var(--primary)),linear-gradient(rgba(244,244,244,.25),rgba(244,244,244,.25))] bg-no-repeat bg-[position:0_100%,0_100%] bg-[size:0%_1px,100%_1px] transition-[background-size] duration-800 ease-[cubic-bezier(.16,1,.3,1)] group-hover:bg-[size:100%_1px,100%_1px]">Close</span></button>
+        <button type="button" className="font-avenir text-[0.7vw] font-medium uppercase tracking-[0.1em] max-md:text-[2.8vw] group relative inline-flex h-11 items-center opacity-80 transition-opacity duration-600 ease-[cubic-bezier(.16,1,.3,1)] hover:opacity-100" onClick={dismissCelebration}><span className="pb-[0.2vw] bg-[linear-gradient(var(--primary),var(--primary)),linear-gradient(color-mix(in_srgb,var(--foreground)_25%,transparent),color-mix(in_srgb,var(--foreground)_25%,transparent))] bg-no-repeat bg-[position:0_100%,0_100%] bg-[size:0%_1px,100%_1px] transition-[background-size] duration-800 ease-[cubic-bezier(.16,1,.3,1)] group-hover:bg-[size:100%_1px,100%_1px] max-md:pb-[0.8vw]">Close</span></button>
       </div>
     </div>
   );

@@ -111,18 +111,18 @@ function MenuItem({ children, trailing = null, onSelect, disabled = false, class
       role="menuitem"
       disabled={disabled}
       onClick={onSelect}
-      className={`group relative isolate flex w-full cursor-pointer items-center gap-3 px-3 py-2.5 text-left text-[0.95vw] leading-snug text-foreground outline-none max-lg:text-[1.9vw] max-md:text-[3.8vw] disabled:cursor-not-allowed disabled:opacity-50 ${className}`}
+      className={`group relative isolate flex w-full cursor-pointer items-center gap-3 px-3 py-2.5 text-left text18 leading-snug text-foreground outline-none disabled:cursor-not-allowed disabled:opacity-50 ${className}`}
       {...props}
     >
       <span
         aria-hidden="true"
-        className="absolute inset-0 -z-10 origin-top scale-y-0 bg-[#ff5f00] transition-transform duration-300 ease-out group-hover:scale-y-100 group-focus-visible:scale-y-100 group-disabled:scale-y-0! motion-reduce:transition-none"
+        className="absolute inset-0 -z-10 origin-top scale-y-0 bg-primary transition-transform duration-300 ease-out group-hover:scale-y-100 group-focus-visible:scale-y-100 group-disabled:scale-y-0! motion-reduce:transition-none"
       />
-      <span className="flex min-w-0 flex-1 flex-col gap-0.5 transition-colors duration-200 group-hover:text-[#111111] group-focus-visible:text-[#111111] group-disabled:text-foreground!">
+      <span className="flex min-w-0 flex-1 flex-col gap-0.5 transition-colors duration-200 group-hover:text-background group-focus-visible:text-background group-disabled:text-foreground!">
         {children}
       </span>
       {trailing && (
-        <span className="flex shrink-0 items-center text-white/40 transition-colors duration-200 group-hover:text-[#111111] group-focus-visible:text-[#111111] group-disabled:text-white/70!">
+        <span className="flex shrink-0 items-center text-foreground/40 transition-colors duration-200 group-hover:text-background group-focus-visible:text-background group-disabled:text-foreground/70!">
           {trailing}
         </span>
       )}
@@ -133,7 +133,7 @@ function MenuItem({ children, trailing = null, onSelect, disabled = false, class
 // End-of-row icon, only on rows the user can't copy from. Copy progress is
 // shown on the trigger, not per row.
 function LockTrail({ locked = false }) {
-  return locked ? <LockKeyhole className="size-4 text-[#ff5f00]" aria-hidden="true" /> : null;
+  return locked ? <LockKeyhole className="size-4 text-primary" aria-hidden="true" /> : null;
 }
 
 // Covers the open panel on a Pro effect for accounts without Pro.
@@ -141,9 +141,9 @@ function ProLockOverlay({ onUpgrade }) {
   const [hovered, setHovered] = useState(false);
 
   return (
-    <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-4 bg-[#1a1a1a]/75 px-6 text-center backdrop-blur-[3px]">
-      <LockKeyhole className="size-5 text-[#ff5f00]" aria-hidden="true" />
-      <p className="text-[0.95vw] leading-snug text-white/80 max-lg:text-[1.9vw] max-md:text-[3.8vw]">
+    <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-4 bg-dark-card/75 px-6 text-center backdrop-blur-lg">
+      <LockKeyhole className="size-5 text-primary" aria-hidden="true" />
+      <p className="text18 leading-snug text-foreground/80">
         Pro effect - upgrade to copy or install it.
       </p>
       <div className="contents" onPointerEnter={() => setHovered(true)} onPointerLeave={() => setHovered(false)}>
@@ -153,7 +153,7 @@ function ProLockOverlay({ onUpgrade }) {
           onClick={onUpgrade}
           className={buttonV3ClassName({
             variant: "orange",
-            className: "cursor-pointer outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white",
+            className: "cursor-pointer outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground",
           })}
         >
           <ButtonV3Chrome label="Upgrade to Pro" hovered={hovered} />
@@ -380,17 +380,17 @@ export default function GetCodeMenu({
         aria-expanded={open}
         aria-controls={open ? menuId : undefined}
         onClick={onTriggerClick}
-        className={`relative flex h-full cursor-pointer items-center border bg-white/5 backdrop-blur-lg py-2.75 pr-[3vw] pl-[1.2vw] text-left text-[1.1vw] border-white/20 tracking-wide text-white outline-none transition hover:border-white/25 focus-visible:border-white/25 max-lg:py-3.75 max-lg:pr-12 max-lg:pl-5 max-lg:text-[2vw] max-md:text-[4vw] ${triggerClassName}`}
+        className={`relative flex h-full cursor-pointer items-center border bg-foreground/5 backdrop-blur-lg py-2.75 pr-[3vw] pl-[1.2vw] text-left text-[1.1vw] border-foreground/20 tracking-wide text-foreground outline-none transition hover:border-foreground/25 focus-visible:border-foreground/25 max-[1025px]:py-3.75 max-[1025px]:pr-12 max-[1025px]:pl-5 max-[1025px]:text-[2vw] max-md:text-[4vw] ${triggerClassName}`}
       >
         {statusLabel ? (
           <span key={`${copyStatus.key}-${copyStatus.phase}`} className={`flex items-center gap-2 whitespace-nowrap ${fadeIn}`}>
             {copyStatus.phase === "copying" ? (
               <LoaderCircle
                 aria-hidden="true"
-                className="size-[1.1vw] shrink-0 animate-spin text-white/60 max-lg:size-4 motion-reduce:animate-none"
+                className="size-[1.1vw] shrink-0 animate-spin text-foreground/60 max-[1025px]:size-4 motion-reduce:animate-none"
               />
             ) : (
-              <Check aria-hidden="true" className="size-[1.1vw] shrink-0 text-[#ff5f00] max-lg:size-4" />
+              <Check aria-hidden="true" className="size-[1.1vw] shrink-0 text-primary max-[1025px]:size-4" />
             )}
             {statusLabel}
           </span>
@@ -401,7 +401,7 @@ export default function GetCodeMenu({
         )}
         <ChevronDown
           aria-hidden="true"
-          className={`pointer-events-none absolute top-1/2 right-[1vw] size-[1.1vw] -translate-y-1/2 text-white/40 transition-[transform,opacity] duration-300 max-lg:right-4 max-lg:size-4 motion-reduce:transition-none ${
+          className={`pointer-events-none absolute top-1/2 right-[1vw] size-[1.1vw] -translate-y-1/2 text-foreground/40 transition-[transform,opacity] duration-300 max-[1025px]:right-4 max-[1025px]:size-4 motion-reduce:transition-none ${
             open ? "rotate-180" : ""
           } ${statusLabel ? "opacity-0" : "opacity-100"}`}
         />
@@ -417,7 +417,7 @@ export default function GetCodeMenu({
           role="menu"
           aria-label={`Get the code for ${title}`}
           onKeyDown={onPanelKeyDown}
-          className={`absolute top-full z-40 mt-2 w-[24vw] min-w-72 border border-white/10 bg-[#1a1a1a] p-1.5 shadow-2xl max-lg:w-[55vw] max-md:w-full max-md:min-w-0 ${
+          className={`absolute top-[calc(100%+0.5vw)] z-40 w-[24vw] min-w-72 border border-foreground/10 bg-dark-card p-1.5 shadow-2xl max-[1025px]:w-[55vw] max-md:w-full max-md:min-w-0 ${
             align === "left" ? "left-0" : "right-0"
           }`}
         >
@@ -431,10 +431,10 @@ export default function GetCodeMenu({
           )}
           {view === "menu" ? (
             <div className="space-y-1" aria-hidden={codeLocked || undefined}>
-              <div className="flex items-center gap-2 px-3 pt-2 pb-1 text-[0.95vw] text-white max-lg:text-[1.6vw] max-md:text-[3.2vw]">
+              <div className="flex items-center gap-2 px-3 pt-2 pb-1 text18 text-foreground">
                 Copy Code
                 {codeLocked && (
-                  <span className="inline-flex items-center gap-1 normal-case tracking-normal text-[#ff5f00]">
+                  <span className="inline-flex items-center gap-1 normal-case tracking-normal text-primary">
                     <LockKeyhole className="size-3" aria-hidden="true" /> Pro
                   </span>
                 )}
@@ -456,7 +456,7 @@ export default function GetCodeMenu({
                 </MenuItem>
               ))}
 
-              <span aria-hidden="true" className="my-1.5 block h-px w-full bg-white/10" />
+              <span aria-hidden="true" className="block py-1.5"><span className="block h-px w-full bg-foreground/10" /></span>
 
               <MenuItem
                 onSelect={() => copyLocalText("cli", cliCommand)}
@@ -465,7 +465,7 @@ export default function GetCodeMenu({
                 trailing={<LockTrail locked={codeLocked} />}
               >
                 Copy CLI command
-                <span className="text-[0.8em] text-white/50 group-enabled:group-hover:text-[#111111]/70">
+                <span className="text-[0.8em] text-foreground/50 group-enabled:group-hover:text-background/70">
                   Install it in the terminal of your preferred IDE
                 </span>
               </MenuItem>
@@ -477,7 +477,7 @@ export default function GetCodeMenu({
                 trailing={<LockTrail locked={codeLocked} />}
               >
                 Copy MCP prompt
-                <span className="text-[0.8em] text-white/50 group-enabled:group-hover:text-[#111111]/70">
+                <span className="text-[0.8em] text-foreground/50 group-enabled:group-hover:text-background/70">
                   For agents with the Hyperiux MCP installed
                 </span>
               </MenuItem>
@@ -489,13 +489,13 @@ export default function GetCodeMenu({
                 trailing={<LockTrail locked={codeLocked} />}
               >
                 Copy AI prompt
-                <span className="text-[0.8em] text-white/50 group-enabled:group-hover:text-[#111111]/70">
+                <span className="text-[0.8em] text-foreground/50 group-enabled:group-hover:text-background/70">
                   Full source + setup steps for any coding agent
                 </span>
               </MenuItem>
 
               {codeLimited && (
-                <div className="mt-1.5 flex items-center justify-between gap-3 border-t border-white/10 px-3 pt-3 pb-1.5 text-[0.85vw] text-white/60 max-lg:text-[1.7vw] max-md:text-[3.4vw]">
+                <div className="flex items-center justify-between gap-3 border-t border-foreground/10 px-3 pt-3 pb-1.5 text-[0.9vw] text-foreground/60 max-[1025px]:text-[1.7vw] max-md:text-[3.4vw]">
                   <span>You&apos;ve reached today&apos;s copy limit.</span>
                   {lockedCtaHref && (
                     <button
@@ -505,7 +505,7 @@ export default function GetCodeMenu({
                         close();
                         requireUpgrade("limit");
                       }}
-                      className="shrink-0 cursor-pointer text-[#ff5f00] underline underline-offset-2 outline-none focus-visible:text-white"
+                      className="shrink-0 cursor-pointer text-primary underline underline-offset-2 outline-none focus-visible:text-foreground"
                     >
                       Upgrade to Pro
                     </button>
@@ -515,7 +515,7 @@ export default function GetCodeMenu({
             </div>
           ) : (
             <div className="space-y-1 p-2">
-              <p className="px-2 pb-2 text-[0.95vw] leading-snug text-foreground max-lg:text-[1.9vw] max-md:text-[3.8vw]">
+              <p className="px-2 pb-2 text18 leading-snug text-foreground">
                 Is the Hyperiux MCP installed in your project?
               </p>
               <MenuItem
@@ -530,17 +530,17 @@ export default function GetCodeMenu({
                 href="/docs/mcp"
                 role="menuitem"
                 onClick={close}
-                className="group relative isolate flex w-full items-center px-4 py-2.5 text-[0.95vw] text-foreground outline-none max-lg:text-[1.9vw] max-md:text-[3.8vw]"
+                className="group relative isolate flex w-full items-center px-4 py-2.5 text18 text-foreground outline-none"
               >
                 <span
                   aria-hidden="true"
-                  className="absolute inset-0 -z-10 origin-top scale-y-0 bg-[#ff5f00] transition-transform duration-300 ease-out group-hover:scale-y-100 group-focus-visible:scale-y-100 motion-reduce:transition-none"
+                  className="absolute inset-0 -z-10 origin-top scale-y-0 bg-primary transition-transform duration-300 ease-out group-hover:scale-y-100 group-focus-visible:scale-y-100 motion-reduce:transition-none"
                 />
-                <span className="transition-colors duration-200 group-hover:text-[#111111] group-focus-visible:text-[#111111]">
+                <span className="transition-colors duration-200 group-hover:text-background group-focus-visible:text-background">
                   No, show me how to install it
                 </span>
               </Link>
-              <MenuItem onSelect={() => setView("menu")} className="text-white/60">
+              <MenuItem onSelect={() => setView("menu")} className="text-foreground/60">
                 Back
               </MenuItem>
             </div>

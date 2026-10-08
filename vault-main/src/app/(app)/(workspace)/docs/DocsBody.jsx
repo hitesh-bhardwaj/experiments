@@ -51,12 +51,12 @@ function openDocsSearch() {
 function DocsHero({ pathname, meta }) {
   const hero = DOCS_HERO[pathname?.replace(/\/$/, "") || "/docs"];
   return (
-    <section className="pb-[10vw]">
+    <section id="docs-hero" className="mx-auto flex w-full max-w-[1536px] flex-col gap-7 px-[4.5vw] pb-[10vw] max-md:px-[6vw]">
       <Breadcrumb />
       {hero && (
-        <div className="mt-7 max-w-[980px] space-y-[1.5vw] max-md:space-y-[4vw]">
-          <h1 className="fadeup font-aeonik t96 font-normal leading-[1.02] text-white">{hero.title}</h1>
-          <p className="fadeup max-w-[40vw] max-md:max-w-[90%] font-avenir text-[1.2vw] max-md:text-[4vw] leading-[1.3] tracking-[-.02em] text-[#d6d6d6]">{hero.lede}</p>
+        <div className="flex w-[65%] flex-col gap-[1.5vw] max-md:w-full max-md:gap-[4vw]">
+          <h1 className="fadeup t96 font-aeonik font-normal text-foreground">{hero.title}</h1>
+          <p className="fadeup text24 w-[70%] font-avenir leading-[1.3] tracking-tight text-foreground/80 max-md:w-[90%]">{hero.lede}</p>
           {/* Read time · sections · search, hidden for now
           <div className="fadeup mt-[30px] flex flex-wrap items-center gap-x-3.5 gap-y-2.5 text-[13px] uppercase tracking-[.08em] text-[#8a8a8a]">
             {meta.read && <span>{meta.read}</span>}
@@ -212,19 +212,20 @@ export default function DocsBody({ children }) {
 
           {/* White sheet (Docs prototype's .sheet), square-edged, under the content, the
               docs footer and the TOC column. Code blocks stay dark. */}
-          {/* Full width: the negative margins cancel the docs layout's side padding (px-14 / 6vw / 7vw) */}
-          <div data-sound-flow="off" className="docs-sheet grid gap-10 grid-cols-[minmax(0,1fr)_320px] max-lg:grid-cols-1 -mx-14 max-lg:-mx-[6vw] max-md:mx-[-7vw] px-[clamp(20px,3.4vw,56px)] max-md:px-[7vw] py-[4vw]">
-            <div ref={contentRef} className="min-w-0" onClick={onContentClick}>
+          <section id="docs-content" data-sound-flow="off" className="docs-sheet py-[4vw]">
+            <div className="mx-auto flex w-full max-w-[1536px] items-start gap-[3vw] px-[4.5vw] max-[1025px]:flex-col max-md:px-[6vw]">
+            <div ref={contentRef} className="flex min-w-0 flex-1 flex-col gap-[5vw] max-[1025px]:w-full max-md:gap-[15vw]" onClick={onContentClick}>
               <div className="blog-content">
                 {children}
               </div>
               <DocsPageFooter />
             </div>
             {/* TOC lives in the sheet's right column, sticky at the vertical centre */}
-            <aside className="sticky top-1/2 h-fit -translate-y-1/2 self-start justify-self-end max-lg:hidden">
+            <aside className="sticky top-1/2 h-fit w-[22%] shrink-0 -translate-y-1/2 max-[1025px]:hidden">
               <TableOfContents containerRef={contentRef} watchKey={pathname} hideNearFooter />
             </aside>
-          </div>
+            </div>
+          </section>
         </div>
 
       </RouteFade>

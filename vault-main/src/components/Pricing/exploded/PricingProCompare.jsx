@@ -38,7 +38,7 @@ const ROWS = [
 
 const LABEL = "text-[0.7vw] uppercase tracking-[0.1em] max-md:text-[2.8vw]";
 const CELL = "flex w-[30%] items-center px-[1.6vw] max-md:px-[4vw]";
-const TEXT = "h-[1.7vw] text-[1.1vw] leading-[1.7vw] max-md:h-[6vw] max-md:text-[3.8vw] max-md:leading-[6vw]";
+const TEXT = "text22 h-[1.5em] leading-[1.5em]";
 
 function Mark({ on }) {
   return (
@@ -57,7 +57,7 @@ function Cell({ value, period, dir }) {
   const v = value !== null && typeof value === "object" ? value[period] : value;
   // Long text wraps to two lines on mobile, so its box is two lines tall
   const long = typeof v === "string" && v.length > 22;
-  return typeof v === "boolean" ? <Mark on={v} /> : <RollText fixed text={v} dir={dir} className={`w-full text-background/60 ${TEXT} ${long ? "max-md:h-[12vw]!" : ""}`} />;
+  return typeof v === "boolean" ? <Mark on={v} /> : <RollText fixed text={v} dir={dir} className={`w-full text-background/60 ${TEXT} ${long ? "max-md:h-[3em]!" : ""}`} />;
 }
 
 export default function PricingProCompare() {
@@ -117,8 +117,8 @@ export default function PricingProCompare() {
   return (
     <section ref={rootRef} id="compare" data-sound-flow="off" className="relative bg-foreground px-[4.5vw] max-md:px-0 py-[7%] max-md:py-[15%] font-avenir text-background">
       <div className="mx-auto flex w-full max-w-[1536px] flex-col gap-[3vw] max-md:gap-[8vw]">
-        <div className="flex max-md:px-[calc(var(--cvw)*7)] items-end justify-between gap-[2vw] max-md:flex-col max-md:items-start max-md:gap-[6vw]">
-          <LineReveal as="h2" className="text64 text-[4.6vw]! leading-[1.2]! max-md:text-[6vw]! max-sm:text-[9vw]!">
+        <div className="flex max-md:px-[6vw] items-end justify-between gap-[2vw] max-md:flex-col max-md:items-start max-md:gap-[6vw]">
+          <LineReveal as="h2" className="text80">
             Pro vs Pro+,<br />
             <span className="gradient-text-animate">line by line.</span>
           </LineReveal>
@@ -144,13 +144,13 @@ export default function PricingProCompare() {
           </div>
         </div>
 
-        <div className="fadeup overflow-x-auto px-[3vw] max-md:px-[calc(var(--cvw)*7)]">
+        <div className="fadeup overflow-x-auto px-[3vw] max-md:px-[6vw]">
           <div role="table" aria-label="Pro and Pro+ compared" className="flex min-w-full  flex-col border border-background/10 bg-foreground max-md:min-w-[170vw]">
             <div role="row" className="flex border-b border-background/10">
-              <div role="columnheader" className="flex w-[40%] items-center px-[1.6vw] py-[2.2vw] text-[1.1vw] text-background/30 max-md:px-[4vw] max-md:py-[6vw] max-md:text-[3.8vw]">Feature</div>
+              <div role="columnheader" className="flex w-[40%] items-center px-[1.6vw] py-[2.2vw] text22 text-background/30 max-md:px-[4vw] max-md:py-[6vw]">Feature</div>
               {[["pro", "Pro"], ["plus", "Pro+"]].map(([id, name]) => (
                 <div key={id} role="columnheader" className={`${CELL} flex-col items-start justify-center gap-[0.6vw] py-[2.2vw] max-md:gap-[2vw] max-md:py-[6vw] ${id === "plus" ? "bg-primary/5" : ""}`}>
-                  <p className="text-[1.6vw] max-md:text-[5.6vw]">{id === "plus" ? <>Pro<span className="text-primary">+</span></> : name}</p>
+                  <p className="text32">{id === "plus" ? <>Pro<span className="text-primary">+</span></> : name}</p>
                   <div className={`flex items-center text-background/60 max-md:flex-wrap ${LABEL}`}>
                     <span className="flex h-[1.2vw] items-center leading-none max-md:h-[4vw]">$<RollNumber value={PRICES[id][period]} values={[PRICES[id].q, PRICES[id].y]} /></span>
                     <span>/mo</span>
@@ -165,7 +165,7 @@ export default function PricingProCompare() {
               <i ref={hoverRef} aria-hidden="true" className="pointer-events-none absolute top-0 left-0 z-10 h-0 w-full bg-background/5 opacity-0" />
               {ROWS.map((row) => (
                 <div key={row.feature} role="row" className="flex border-b border-background/10 last:border-b-0" onPointerEnter={(e) => hoverRow(e.currentTarget)}>
-                  <div role="rowheader" className="flex w-[40%] items-center px-[1.6vw] py-[1.4vw] text-[1.1vw] max-md:px-[4vw] max-md:py-[4.6vw] max-md:text-[3.8vw]">{row.feature}</div>
+                  <div role="rowheader" className="flex w-[40%] items-center px-[1.6vw] py-[1.4vw] text22 max-md:px-[4vw] max-md:py-[4.6vw]">{row.feature}</div>
                   <div role="cell" className={`${CELL} py-[1.4vw] max-md:py-[4.6vw]`}>
                     <Cell value={row.pro} period={period} dir={dir} />
                   </div>

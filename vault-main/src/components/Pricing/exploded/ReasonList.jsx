@@ -17,7 +17,7 @@ function Parts({ parts }) {
     typeof p === "string" ? (
       <span key={i}>{p}</span>
     ) : (
-      <span key={i} className="inline-flex align-[-0.15em]">
+      <span key={i} className="inline-flex align-[-0.2em]">
         <RollNumber value={p.n} values={p.values} />
       </span>
     )
@@ -35,8 +35,8 @@ function Row({ item, mountedRef }) {
 
   return (
     <li ref={ref} data-id={item.id} className="overflow-hidden">
-      <div className="flex gap-[0.8vw] pb-[0.8vw] text-[1vw] leading-[1.6] text-foreground/70 max-md:gap-[3vw] max-md:pb-[3vw] max-md:text-[3.8vw]">
-        <i className="mt-[0.5vw] size-[0.4vw] shrink-0 bg-primary max-md:mt-[2vw] max-md:size-[1.5vw]" />
+      <div className="flex gap-[0.8vw] pb-[0.8vw] text20 leading-[1.6] text-foreground/70 max-md:gap-[3vw] max-md:pb-[3vw]">
+        <i className="relative top-[0.5vw] size-[0.4vw] shrink-0 bg-primary max-md:top-[2vw] max-md:size-[1.5vw]" />
         <p><Parts parts={item.parts} /></p>
       </div>
     </li>

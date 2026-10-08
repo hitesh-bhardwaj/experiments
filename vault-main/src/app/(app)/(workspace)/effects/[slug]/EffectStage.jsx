@@ -14,7 +14,7 @@ import { MEDIA } from "@/lib/breakpoints";
 const MSG = "vault-preview:values";
 const EASE = "cubic-bezier(.16,1,.3,1)";
 // 13px-equivalent text in vw: desktop · tablet (max-[1025px]) · mobile (max-md).
-const T13 = "text-[1.1vw] max-lg:text-[1.6vw] max-md:text-[3.3vw]";
+const T13 = "text-[1.1vw] max-[1025px]:text-[1.6vw] max-md:text-[3.3vw]";
 
 // JSON-safe copy, so the values can cross postMessage into the iframe
 function cloneable(values) {
@@ -170,18 +170,18 @@ export default function EffectStage({ effect, title, previewHref, getCode = null
   );
 
   const tabCls = (on) =>
-    `relative z-1  px-5 py-2.5 font-medium  ${T13} transition-colors duration-400 ease-out ${on ? "text-black" : "text-white/60 hover:text-white"}`;
+    `relative z-1 px-5 py-2.5 font-medium ${T13} transition-colors duration-400 ease-out ${on ? "text-background" : "text-foreground/60 hover:text-foreground"}`;
   const toolCls =
-    `inline-flex items-center border border-white/20 backdrop-blur-lg gap-2 px-3.5 ${T13} text-[#cfcfcf] bg-[rgba(244,244,244,.06)] transition-colors duration-500 hover:bg-[rgba(244,244,244,.08)] hover:text-white`;
+    `inline-flex items-center gap-[0.5vw] border border-foreground/20 bg-foreground/6 px-3.5 ${T13} text-foreground/80 backdrop-blur-lg transition-colors duration-500 hover:bg-foreground/8 hover:text-foreground max-md:gap-[2vw]`;
 
   return (
-    <section aria-label="Interactive preview" className="w-full">
-      <div className="mb-3.5 flex flex-wrap items-center justify-between gap-4">
-        <div className="flex gap-2">
+    <section aria-label="Interactive preview" className="flex w-full flex-col gap-[1vw] max-md:gap-[3.5vw]">
+      <div className="flex flex-wrap items-center justify-between gap-[1vw] max-md:gap-[3vw]">
+        <div className="flex gap-[0.5vw] max-md:gap-[2vw]">
           <div
             ref={tabsRef}
             role="tablist"
-            className="relative isolate inline-flex bg-[rgba(244,244,244,.06)] border border-white/20 backdrop-blur-lg p-0.75"
+            className="relative isolate inline-flex border border-foreground/20 bg-foreground/6 p-0.75 backdrop-blur-lg"
           >
             <button role="tab" type="button" data-view="preview" aria-selected={view === "preview"} onClick={() => setView("preview")} className={tabCls(view === "preview")}>
               Preview
@@ -203,32 +203,28 @@ export default function EffectStage({ effect, title, previewHref, getCode = null
 
         </div>
         {/* items-stretch: Replay takes Live Preview's height (ButtonV3 scales with vw). */}
-        <div className="flex items-stretch gap-2">
+        <div className="flex items-stretch gap-[0.5vw] max-md:gap-[2vw]">
 
           {getCode}
           <ButtonV3 text="Demo " href={previewHref} target_blank variant="orange" className="shrink-0 border border-primary" />
         </div>
       </div>
 
-      {/* Always two columns: the Playground column opens from 0 to --pg-w (same track
-          count both ways, so grid-template-columns can animate), and the panel fades
-          and slides in with it instead of mounting / unmounting in a jump.
-          --pg-w: 18vw on desktop, 340px on tablet (18vw would be too narrow there). */}
+      {/* Stage + Playground side by side: the Playground opens from 0 to --pg-w (its
+          width animates, through --pg-col) and fades and slides in with it instead of
+          mounting / unmounting in a jump. --pg-w: 17.8vw desktop, 33vw tablet.
+          On phones the panel stacks below at full width. */}
       <div
         ref={gridRef}
-        className="grid items-start [--pg-w:17.8vw] max-lg:[--pg-w:340px] max-md:grid-cols-1!"
-        style={{
-          gridTemplateColumns: play ? "minmax(0,1fr) var(--pg-w)" : "minmax(0,1fr) 0px",
-          columnGap: play ? 14 : 0,
-          transition: `grid-template-columns .8s ${EASE}, column-gap .8s ${EASE}`,
-        }}
+        className="flex items-start [--pg-w:17.8vw] max-[1025px]:[--pg-w:33vw] max-md:flex-col max-md:gap-y-[3.5vw]"
+        style={{ columnGap: play ? "1vw" : "0vw", transition: `column-gap .8s ${EASE}` }}
       >
         {/* Only in Playground: sticks centred on screen while the long panel scrolls past
             it, released where the panel ends. In Preview it's an ordinary block. */}
         <div
           ref={stageRef}
           style={play ? { top: stickyTop } : undefined}
-          className={`${play ? "sticky" : "relative"} aspect-16/8.5 w-full overflow-hidden bg-black isolate max-md:relative max-md:aspect-4/5`}
+          className={`${play ? "sticky" : "relative"} isolate aspect-16/8.5 w-full min-w-0 flex-1 overflow-hidden bg-black max-md:relative max-md:aspect-4/5`}
         >
           <iframe
             key={frameKey}
@@ -241,7 +237,7 @@ export default function EffectStage({ effect, title, previewHref, getCode = null
           />
           {!loaded && (
             <div className="absolute bottom-4 right-4 z-10">
-              <div aria-label="Loading preview" role="status" className="size-8 animate-spin rounded-full border-2 border-white/25 border-t-white" />
+              <div aria-label="Loading preview" role="status" className="size-8 animate-spin border-2 border-foreground/25 border-t-foreground" />
             </div>
           )}
         </div>
@@ -251,13 +247,13 @@ export default function EffectStage({ effect, title, previewHref, getCode = null
             aria-label="Playground"
             aria-hidden={!play}
             inert={!play}
-            className={`flex min-w-0 flex-col overflow-hidden border border-[rgba(244,244,244,.08)] bg-[#141414] transition-[opacity,transform] duration-700 max-md:mt-3.5 ${panelCollapsed ? "h-0 border-0" : ""} ${play ? "translate-x-0 opacity-100" : "pointer-events-none translate-x-6 opacity-0 max-md:hidden"}`}
-            style={{ transitionTimingFunction: EASE }}
+            className={`flex w-(--pg-col) shrink-0 flex-col overflow-hidden border border-foreground/8 bg-dark-card transition-[width,opacity,transform] duration-700 max-md:w-full! ${panelCollapsed ? "h-0 border-0" : ""} ${play ? "translate-x-0 opacity-100" : "pointer-events-none translate-x-6 opacity-0 max-md:hidden"}`}
+            style={{ "--pg-col": play ? "var(--pg-w)" : "0vw", transitionTimingFunction: EASE }}
           >
             {/* Fixed width: the column grows from 0 to --pg-w around it, so the controls
                 never re-wrap mid-animation. */}
             <div ref={panelContentRef} className="flex w-(--pg-w) shrink-0 flex-col max-md:w-full">
-              <p className={`px-4 py-2 ${T13} tracking-normal text-white bg-[#111111]`}>Tune the real props</p>
+              <p className={`bg-background px-4 py-2 ${T13} tracking-normal text-foreground`}>Tune the real props</p>
               <div className="min-h-0 flex-1 [&>aside]:h-full">
                 <RemixerPanel
                   compact

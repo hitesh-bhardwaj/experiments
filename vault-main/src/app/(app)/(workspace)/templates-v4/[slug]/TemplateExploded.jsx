@@ -349,7 +349,7 @@ export default function TemplateExploded({
     >
       <div
         ref={stageRef}
-        className="sticky top-0 h-svh touch-pan-y overflow-hidden bg-[radial-gradient(80%_70%_at_50%_40%,#1c1c1c,#0c0c0c)] select-none"
+        className="sticky top-0 h-svh touch-pan-y overflow-hidden bg-[radial-gradient(80%_70%_at_50%_40%,var(--dark-card),var(--background))] select-none"
       >
         <canvas ref={canvasRef} aria-hidden="true" className="block size-full" />
 
@@ -363,8 +363,8 @@ export default function TemplateExploded({
               className="group/xl absolute top-0 left-0 flex items-center gap-2.5 whitespace-nowrap opacity-0 transition-opacity duration-500"
             >
               <i className="block h-px w-10 bg-primary" />
-              <span className={`${T13} bg-[rgba(16,16,16,.7)] px-3 py-2 text-foreground shadow-[inset_0_0_0_1px_rgba(244,244,244,.1)] group-data-[on=true]/xl:bg-[#ff5f00] group-data-[on=true]/xl:text-[#141414]`}>
-                <b className="font-mono font-normal text-primary group-data-[on=true]/xl:text-[#141414]">{pad2(i + 1)}</b> {s.name}
+              <span className={`${T13} bg-background/70 px-3 py-2 text-foreground ring-1 ring-inset ring-foreground/10 group-data-[on=true]/xl:bg-primary group-data-[on=true]/xl:text-background`}>
+                <b className="font-mono font-normal text-primary group-data-[on=true]/xl:text-background">{pad2(i + 1)}</b> {s.name}
               </span>
             </div>
           ))}
@@ -374,9 +374,9 @@ export default function TemplateExploded({
           <aside
             data-exploded-ui
             aria-live="polite"
-            className="absolute top-28 left-[3.4vw] grid w-[22vw] gap-2 bg-[rgba(16,16,16,.72)] p-4.5 shadow-[inset_0_0_0_1px_rgba(244,244,244,.1)] backdrop-blur-[16px] max-lg:left-[5vw] max-lg:w-[44vw] max-md:inset-x-4 max-md:top-24 max-md:w-auto"
+            className="absolute top-28 left-[4.5vw] flex w-[22vw] flex-col gap-2 bg-background/70 p-4.5 ring-1 ring-inset ring-foreground/10 backdrop-blur-lg max-[1025px]:left-[4.5vw] max-[1025px]:w-[44vw] max-md:inset-x-[6vw] max-md:top-24 max-md:w-auto"
           >
-            <p className={`${LABEL} flex justify-between text-[#8a8a8a]`}>
+            <p className={`${LABEL} flex justify-between text-foreground/50`}>
               <span>{selected >= 0 ? "Selected section" : "In view"}</span>
               <span>
                 {pad2(panelIndex + 1)} / {pad2(n)}
@@ -387,16 +387,16 @@ export default function TemplateExploded({
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-              className="grid gap-2"
+              className="flex flex-col gap-2"
             >
-              <h3 className={`${DISPLAY} text-[1.7vw] leading-[1.1] max-lg:text-[3.4vw] max-md:text-[6vw]`}>{current.name}</h3>
-              {current.note && <p className={`${T14} text-[#bdbdbd] max-md:line-clamp-2`}>{current.note}</p>}
-              <div className="mt-1 flex flex-wrap gap-1.5">
+              <h3 className={`${DISPLAY} text-[1.7vw] leading-[1.1] max-[1025px]:text-[4.5vw] max-md:text-[6vw]`}>{current.name}</h3>
+              {current.note && <p className={`${T14} text-foreground/70 max-md:line-clamp-2`}>{current.note}</p>}
+              <div className="flex flex-wrap gap-1.5 pt-1">
                 {selected >= 0 && (
                   <button
                     type="button"
                     onClick={() => select(-1)}
-                    className={`inline-flex h-7.5 cursor-pointer items-center px-3 ${T13} text-[#8a8a8a] transition-colors duration-500 hover:text-white`}
+                    className={`inline-flex h-7.5 cursor-pointer items-center px-3 ${T13} text-foreground/50 transition-colors duration-500 hover:text-foreground`}
                   >
                     Deselect
                   </button>
@@ -406,10 +406,10 @@ export default function TemplateExploded({
           </aside>
         )}
 
-        <div data-exploded-ui className="absolute bottom-6 left-[3.4vw] right-[3.4vw] flex flex-wrap items-center justify-between gap-3 max-lg:inset-x-[5vw] max-md:inset-x-4 max-md:bottom-4">
+        <div data-exploded-ui className="absolute bottom-6 left-[4.5vw] right-[4.5vw] flex flex-wrap items-center justify-between gap-3 max-[1025px]:inset-x-[4.5vw] max-md:inset-x-[6vw] max-md:bottom-4">
           {toolbar}
           <div className="flex items-center gap-3">
-          <label className={`flex items-center gap-2.5 ${LABEL} text-[#8a8a8a] max-md:hidden`}>
+          <label className={`flex items-center gap-2.5 ${LABEL} text-foreground/50 max-md:hidden`}>
             <span>Assembled</span>
             <input
               type="range"
@@ -422,14 +422,14 @@ export default function TemplateExploded({
               }}
               aria-label="Explode the page into sections"
               // A thin borderless track with a square orange handle (WebKit and Firefox).
-              className="h-4 w-[11vw] cursor-pointer appearance-none bg-transparent [&::-moz-range-thumb]:size-3.5 [&::-moz-range-thumb]:rounded-none [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-[#ff5f00] [&::-moz-range-track]:h-0.5 [&::-moz-range-track]:border-0 [&::-moz-range-track]:bg-white/25 [&::-webkit-slider-runnable-track]:h-0.5 [&::-webkit-slider-runnable-track]:border-0 [&::-webkit-slider-runnable-track]:bg-white/25 [&::-webkit-slider-thumb]:-mt-1.5 [&::-webkit-slider-thumb]:size-3.5 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-none [&::-webkit-slider-thumb]:border-0 [&::-webkit-slider-thumb]:bg-[#ff5f00]"
+              className="h-4 w-[11vw] cursor-pointer appearance-none bg-transparent [&::-moz-range-thumb]:size-3.5 [&::-moz-range-thumb]:rounded-none [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-primary [&::-moz-range-track]:h-0.5 [&::-moz-range-track]:border-0 [&::-moz-range-track]:bg-foreground/25 [&::-webkit-slider-runnable-track]:h-0.5 [&::-webkit-slider-runnable-track]:border-0 [&::-webkit-slider-runnable-track]:bg-foreground/25 [&::-webkit-slider-thumb]:-mt-1.5 [&::-webkit-slider-thumb]:size-3.5 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-none [&::-webkit-slider-thumb]:border-0 [&::-webkit-slider-thumb]:bg-primary"
             />
             <span>Exploded</span>
           </label>
           <button
             type="button"
             onClick={reset}
-            className={`group/reset inline-flex h-9 cursor-pointer items-center gap-2 px-3.5 ${LABEL} text-[#cfcfcf] shadow-[inset_0_0_0_1px_rgba(244,244,244,.12)] transition-colors duration-500 hover:bg-white/8 hover:text-white`}
+            className={`group/reset inline-flex h-9 cursor-pointer items-center gap-2 px-3.5 ${LABEL} text-foreground/80 ring-1 ring-inset ring-foreground/12 transition-colors duration-500 hover:bg-foreground/8 hover:text-foreground`}
           >
             <RotateCcw className="size-3.5 transition-transform duration-500 ease-in-out group-hover/reset:-rotate-180" aria-hidden="true" />
             Reset view
@@ -438,7 +438,7 @@ export default function TemplateExploded({
           </div>
         </div>
 
-        <p className={`${LABEL} pointer-events-none absolute top-28 right-[3.4vw] text-right text-white/60 max-lg:hidden`}>
+        <p className={`${LABEL} pointer-events-none absolute top-28 right-[4.5vw] text-right text-foreground/60 max-[1025px]:hidden`}>
           Scroll to move down the page
           <br />
           Drag to turn · click a layer

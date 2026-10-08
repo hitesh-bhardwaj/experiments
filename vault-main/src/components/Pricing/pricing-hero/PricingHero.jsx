@@ -79,32 +79,30 @@ export default function PricingHero({ isIndia = false }) {
       aria-label="Pricing"
       data-hold-zone
       data-cursor-label="Hold to explore"
-      className="home-type relative mx-auto w-full max-w-[1536px] isolate flex min-h-[115vh] flex-col justify-end overflow-hidden bg-transparent pt-[8vw]! pb-[3vw]! text-foreground select-none [touch-action:pan-y] [&.pt-hover]:cursor-pointer max-md:pt-[48svh]! px-[4.5vw] max-md:px-[calc(var(--cvw)*7)]"
+      className="home-type relative isolate flex min-h-[115vh] w-full flex-col justify-end overflow-hidden bg-transparent text-foreground select-none [touch-action:pan-y] [&.pt-hover]:cursor-pointer"
     >
       <div
         ref={stageRef}
         className="absolute inset-0 z-0 [&_canvas]:absolute [&_canvas]:inset-0 [&_canvas]:block [&_canvas]:size-full"
         aria-hidden="true"
       />
-      <div className="pointer-events-none pb-[4vw] max-lg:pb-10 relative z-2 flex items-end justify-between gap-[2vw] max-md:flex-col max-md:items-stretch max-md:gap-[5vw] [&_a]:pointer-events-auto [&_button]:pointer-events-auto">
-        <div className="w-[67%] max-md:w-full ">
-          <LineReveal as="h1" className="relative font-aeonik t96 text-[6.4vw]! max-md:text-[13vw]! mt-[1.8vw] leading-[1.3]! text-foreground">
+      <div className="pointer-events-none relative z-2 mx-auto flex w-full max-w-[1536px] flex-col gap-[8vw] px-[4.5vw] pt-[8vw] pb-[3vw] max-md:gap-[12vw] max-md:px-[6vw] max-md:pt-[48svh] max-md:pb-10 [&_a]:pointer-events-auto [&_button]:pointer-events-auto">
+        <div className="flex items-end justify-between gap-[3vw] max-md:flex-col max-md:items-stretch max-md:gap-[5vw]">
+          <LineReveal as="h1" className="t96 relative w-[58%] font-aeonik text-foreground max-md:w-full">
             Pick a plan. <span className="gradient-text-animate block">Keep the code.</span>
           </LineReveal>
-        </div>
-        <div className="relative   flex w-[30%] flex-col gap-[1.8vw] pb-[1.5vw] max-md:top-0 max-md:w-full max-md:gap-[4vw]">
-          <SplitLine as="p" start="top 120%" className={`text22 font-avenir text-[1.1vw]! leading-[1.6]! max-md:text-[2.2vw]! max-sm:text-[4.1vw]! text-foreground max-md:w-[75%] max-sm:w-full max-md:text-left`}>
-            Two plans, Pro and Pro+, billed monthly or yearly. Every component you
-            copy lands in your repo and stays yours, even if you cancel.
-          </SplitLine>
-          <div ref={ctaRef} className="flex opacity-0 flex-wrap gap-[0.8vw] max-md:gap-[3vw]">
-            <ButtonV3 text="See the plans" href="#plans" scrollOffset={HEADER_OFFSET} variant="orange" className="max-sm:w-full max-sm:justify-center" />
-            <ButtonV3 text="Help me choose" href="#finder" scrollOffset={HEADER_OFFSET} variant="outline" className="max-sm:w-full max-sm:justify-center" />
+          <div className="flex w-[32%] flex-col gap-[2vw] max-md:w-full max-md:gap-[5vw]">
+            <SplitLine as="p" start="top 120%" className="text22 w-full font-avenir leading-[1.6] text-foreground/80">
+              Two plans, Pro and Pro+, billed monthly or yearly. Every component you
+              copy lands in your repo and stays yours, even if you cancel.
+            </SplitLine>
+            <div ref={ctaRef} className="flex w-fit gap-[1vw] opacity-0 max-md:w-full max-md:flex-col max-md:gap-[5vw]">
+              <ButtonV3 text="See the plans" href="#plans" scrollOffset={HEADER_OFFSET} variant="orange" className="max-md:w-full max-md:justify-center" />
+              <ButtonV3 text="Help me choose" href="#finder" scrollOffset={HEADER_OFFSET} variant="outline" className="max-md:w-full max-md:justify-center" />
+            </div>
           </div>
         </div>
-      </div>
-      <div className="fadeup relative z-2 mt-[4.5vw] max-md:pt-[7vw] max-md:pb-[8vw]" aria-hidden="true">
-        <p className="text-center text-[0.7vw] font-semibold uppercase tracking-widest text-foreground/40 max-md:text-[2.8vw]">
+        <p className="fadeup text-center text-[0.7vw] font-semibold uppercase tracking-[0.1em] text-foreground/40 max-md:text-[2.8vw]" aria-hidden="true">
           Hover a plan to take it apart · click to lock · hold to merge
         </p>
       </div>

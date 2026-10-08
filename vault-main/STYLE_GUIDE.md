@@ -84,11 +84,12 @@ Leave those working as they are. Don't restyle or refactor them to match this gu
 
 ## Colour
 
-- Use the colour tokens in `src/app/globals.css` with opacity modifiers (`bg-primary/10`, `text-foreground/60`): `primary`, `primary-hover`, `background`, `foreground`, `secondary`, `dark-card`, `grey`, `light-grey`, `border`, `muted`.
+- Use the colour tokens in `src/app/globals.css` with opacity modifiers (`bg-primary/10`, `text-foreground/60`): `primary`, `primary-hover`, `background`, `foreground`, `secondary`, `dark-card`, `grey`, `light-grey`, `border`, `muted`, `light` (#F4F4F4, light-section background) and `ink` (#1D1D1D, text on light sections).
 - Do not hard-code hex or rgba values.
 - For dim or secondary text and similar soft colours, use `black/20` on light surfaces and `white/20` on dark ones, so these shades stay uniform across the site. Never use one-off greys like `#C9C9C9`.
   - Tailwind: `text-black/20`, `text-white/20`, or the `black-20` / `white-20` tokens (`text-black-20`, `border-white-20`).
   - CSS and JS: `var(--black-20)` / `var(--white-20)`.
+- Greys on light sections: dim or inactive text `black/20`, hover `black/40`, body copy `black/60`.
 - In JS (GSAP, canvas), read colours from the CSS variable (`getComputedStyle(document.documentElement).getPropertyValue("--primary")`). Never write the hex.
 - Remove colour variables from `globals.css` once nothing uses them.
 
@@ -115,6 +116,20 @@ Leave those working as they are. Don't restyle or refactor them to match this gu
 
 - Style with Tailwind classes in the component.
 - Don't create new stylesheet files, and don't add classes to `globals.css`, unless Tailwind truly can't do it (for example third-party markup or complex keyframes).
+
+## Detail pages (blog.css)
+
+- Detail pages get their content styling from `src/styles/blog.css` (the `.blog-content` classes):
+  - blog posts
+  - effect detail
+  - docs
+  - template detail
+- No overrides on that content:
+  - don't add Tailwind classes that restyle it
+  - don't add `!` overrides
+  - don't add one-off CSS for it
+- To change how content looks, change `blog.css`, so every detail page stays in sync.
+- The rest of this guide still applies to the page around the content: hero, header, sidebars, TOC and page footer. It doesn't apply to the content itself.
 
 ## Data
 

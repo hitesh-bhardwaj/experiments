@@ -7,7 +7,7 @@ import Link from "next/link";
 import gsap from "gsap";
 import { useLenis } from "lenis/react";
 import { motion } from "motion/react";
-import { DISPLAY, LABEL, PRICE, T13, T14, T16, T40, catalogueOf, priceOf } from "../tokens";
+import { DISPLAY, LABEL, PRICE, T13, T14, T16, catalogueOf, priceOf } from "../tokens";
 
 // Demo wallet, same plans as the pricing page's credit demo.
 const PLANS = {
@@ -104,13 +104,13 @@ export function GetTemplateModal({ template, tab, onTab, onClose, onBuy }) {
       onClick={(e) => e.target === e.currentTarget && onClose()}
       // z-[310]: just above VaultLayout's z-300 page layer (the tablet/mobile header, z-950, stays on top).
       // The page behind is blurred and dimmed rather than covered with a dark fill.
-      className="fixed inset-0 z-[310] grid place-items-center bg-black/20 p-4 backdrop-blur-md backdrop-brightness-50"
+      className="fixed inset-0 z-[310] flex items-center justify-center bg-black/20 p-4 backdrop-blur-lg backdrop-brightness-50"
     >
       <motion.div
         initial={{ opacity: 0, y: 30, scale: 0.97 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        className="relative grid w-[60vw] grid-cols-[minmax(0,.9fr)_minmax(0,1.1fr)] gap-6.5 bg-[#141414] p-6.5 text-[#F4F4F4] shadow-[inset_0_0_0_1px_rgba(244,244,244,.1),0_50px_100px_-30px_#000] max-lg:w-[88vw] max-md:max-h-[90svh] max-md:w-full max-md:grid-cols-1 max-md:overflow-y-auto"
+        className="relative flex w-[60vw] items-stretch gap-6.5 bg-background p-6.5 text-light ring-1 ring-inset ring-foreground/10 shadow-[0_3.5vw_7vw_-2vw_black] max-[1025px]:w-[88vw] max-md:max-h-[90svh] max-md:w-full max-md:flex-col max-md:overflow-y-auto"
       >
         {/* Same close control as the effects preview drawer: the cross turns a quarter on hover. */}
         <button
@@ -118,30 +118,30 @@ export function GetTemplateModal({ template, tab, onTab, onClose, onBuy }) {
           type="button"
           aria-label="Close (Esc)"
           onClick={onClose}
-          className="group absolute top-4 right-4 z-1 grid size-10 cursor-pointer place-items-center border border-white/20 bg-white/10 transition-colors duration-500 hover:border-[#ff5f00] hover:bg-[#ff5f00]"
+          className="group absolute top-4 right-4 z-1 flex size-10 cursor-pointer items-center justify-center border border-foreground/20 bg-foreground/10 transition-colors duration-500 hover:border-primary hover:bg-primary"
         >
-          <span className="relative grid size-4 place-items-center transition-transform duration-500 ease-in-out group-hover:rotate-90">
-            <span className="h-px w-4 rotate-45 bg-white" />
-            <span className="absolute h-px w-4 -rotate-45 bg-white" />
+          <span className="relative flex size-4 items-center justify-center transition-transform duration-500 ease-in-out group-hover:rotate-90">
+            <span className="h-px w-4 rotate-45 bg-foreground" />
+            <span className="absolute h-px w-4 -rotate-45 bg-foreground" />
           </span>
         </button>
 
-        <div ref={thumbRef} className="relative aspect-[3/4] overflow-hidden bg-[#222] max-md:aspect-video">
+        <div ref={thumbRef} className="relative aspect-[3/4] w-[45%] shrink-0 overflow-hidden bg-grey max-md:aspect-video max-md:w-full">
           {shot && <Image src={shot} alt={`${template.title} homepage`} fill sizes="(max-width: 767px) 90vw, 26vw" quality={75} className="object-cover object-top" />}
           <span
-            className={`absolute bottom-3 left-3 bg-[#ff5f00] px-2.5 py-1.5 ${LABEL} text-[#141414] transition-[opacity,transform] duration-700 ${redeemed ? "translate-y-0 opacity-100" : "translate-y-2.5 opacity-0"}`}
+            className={`absolute bottom-3 left-3 bg-primary px-2.5 py-1.5 ${LABEL} text-background transition-[opacity,transform] duration-700 ${redeemed ? "translate-y-0 opacity-100" : "translate-y-2.5 opacity-0"}`}
           >
             Redeemed (demo)
           </span>
         </div>
 
-        <div className="grid content-center gap-4">
-          <p className={`${LABEL} text-[#8a8a8a]`}>Get this template</p>
-          <h3 id="get-template-title" className={`${DISPLAY} ${T40} leading-none`}>
+        <div className="flex min-w-0 flex-1 flex-col justify-center gap-4">
+          <p className={`${LABEL} text-foreground/50`}>Get this template</p>
+          <h3 id="get-template-title" className={`${DISPLAY} text64 font-aeonik leading-none`}>
             {template.title}
           </h3>
 
-          <div role="tablist" className="relative flex w-fit gap-0.5 bg-white/6 p-0.75">
+          <div role="tablist" className="relative flex w-fit gap-0.5 bg-foreground/6 p-0.75">
             {TABS.map((t) => (
               <button
                 key={t.id}
@@ -149,7 +149,7 @@ export function GetTemplateModal({ template, tab, onTab, onClose, onBuy }) {
                 role="tab"
                 aria-selected={tab === t.id}
                 onClick={() => onTab(t.id)}
-                className={`h-8.5 w-30 cursor-pointer ${T14} transition-colors duration-500 ${tab === t.id ? "bg-[#ff5f00] text-[#141414]" : "text-[#a9a9a9] hover:text-white"}`}
+                className={`h-8.5 w-30 cursor-pointer ${T14} transition-colors duration-500 ${tab === t.id ? "bg-primary text-background" : "text-foreground/60 hover:text-foreground"}`}
               >
                 {t.label}
               </button>
@@ -157,16 +157,16 @@ export function GetTemplateModal({ template, tab, onTab, onClose, onBuy }) {
           </div>
 
           {tab === "buy" ? (
-            <div className="grid gap-3.5">
+            <div className="flex flex-col gap-3.5">
               {price != null && (
                 <p className="flex items-baseline gap-2.5">
-                  <b className={`${DISPLAY} ${PRICE} text-[3vw] leading-none max-lg:text-[6vw] max-md:text-[11vw]`}>${price}</b>
-                  <span className={`${LABEL} text-[#8a8a8a]`}>one-time payment</span>
+                  <b className={`${DISPLAY} ${PRICE} text-[3vw] leading-none max-[1025px]:text-[6vw] max-md:text-[11vw]`}>${price}</b>
+                  <span className={`${LABEL} text-foreground/50`}>one-time payment</span>
                 </p>
               )}
-              <ul className={`grid gap-1.5 ${T14} text-[#cfcfcf]`}>
+              <ul className={`flex flex-col gap-1.5 ${T14} text-foreground/80`}>
                 {["Every page, section and interaction, as source you own", "The Figma file for the whole site", "Licensed under MPL-2.0"].map((item) => (
-                  <li key={item} className="relative pl-4.5 before:absolute before:top-[.6em] before:left-0.5 before:size-1.5 before:rounded-full before:bg-[#ff5f00]">
+                  <li key={item} className="relative pl-4.5 before:absolute before:top-[.6em] before:left-0.5 before:size-1.5 before:bg-primary">
                     {item}
                   </li>
                 ))}
@@ -174,11 +174,11 @@ export function GetTemplateModal({ template, tab, onTab, onClose, onBuy }) {
               <button
                 type="button"
                 onClick={onBuy}
-                className={`inline-flex h-12 w-fit cursor-pointer items-center bg-[#ff5f00] px-5 ${T16} text-[#141414] transition-colors duration-500 hover:bg-[#ff7300]`}
+                className={`inline-flex h-12 w-fit cursor-pointer items-center bg-primary px-5 ${T16} text-background transition-colors duration-500 hover:bg-primary-hover`}
               >
                 Continue to payment
               </button>
-              <p className={`${T13} bg-[#ff5f00]/8 px-3.5 py-3 text-[#9c9c9c] shadow-[inset_0_0_0_1px_rgba(255,95,0,.25)]`}>
+              <p className={`${T13} bg-primary/8 px-3.5 py-3 text-foreground/60 ring-1 ring-inset ring-primary/25`}>
                 Planning more than one? Pro+ yearly comes with 5 template credits a year, plus every component and section.{" "}
                 <Link href="/pricing" className="text-[#FFB27A] underline underline-offset-3">
                   Compare plans
@@ -186,8 +186,8 @@ export function GetTemplateModal({ template, tab, onTab, onClose, onBuy }) {
               </p>
             </div>
           ) : (
-            <div className="grid gap-3.5">
-              <div role="radiogroup" aria-label="Your plan (demo)" className="flex w-fit gap-0.5 bg-white/8 p-0.75">
+            <div className="flex flex-col gap-3.5">
+              <div role="radiogroup" aria-label="Your plan (demo)" className="flex w-fit gap-0.5 bg-foreground/8 p-0.75">
                 {Object.entries(PLANS).map(([id, p]) => (
                   <button
                     key={id}
@@ -198,7 +198,7 @@ export function GetTemplateModal({ template, tab, onTab, onClose, onBuy }) {
                       setPlan(id);
                       setRedeemed(false);
                     }}
-                    className={`h-7.5 cursor-pointer px-3 ${T13} transition-colors duration-500 ${plan === id ? "bg-[#F4F4F4] text-[#1D1D1D]" : "text-[#bdbdbd] hover:text-white"}`}
+                    className={`h-7.5 cursor-pointer px-3 ${T13} transition-colors duration-500 ${plan === id ? "bg-light text-ink" : "text-foreground/70 hover:text-foreground"}`}
                   >
                     {p.label}
                   </button>
@@ -211,17 +211,17 @@ export function GetTemplateModal({ template, tab, onTab, onClose, onBuy }) {
                     ref={(el) => {
                       coinRefs.current[i] = el;
                     }}
-                    className={`grid size-10 place-items-center rounded-full font-mono not-italic ${T13} ${
+                    className={`flex size-10 items-center justify-center font-mono not-italic ${T13} ${
                       i < remaining
-                        ? "bg-[radial-gradient(circle_at_35%_30%,#FFD2B0,#ff5f00_55%,#B84300)] text-[#141414] shadow-[0_0_16px_rgba(255,95,0,.45),inset_0_-2px_4px_rgba(0,0,0,.25)]"
-                        : "bg-white/8 text-[#6d6d6d] shadow-[inset_0_0_0_1px_rgba(244,244,244,.16)]"
+                        ? "bg-[radial-gradient(circle_at_35%_30%,#FFD2B0,var(--primary)_55%,#B84300)] text-background shadow-[0_0_1.1vw_color-mix(in_srgb,var(--primary)_45%,transparent),inset_0_-0.1vw_0.3vw_color-mix(in_srgb,black_25%,transparent)]"
+                        : "bg-foreground/8 text-foreground/40 ring-1 ring-inset ring-foreground/16"
                     }`}
                   >
                     {i + 1}
                   </i>
                 ))}
               </div>
-              <p aria-live="polite" className={`min-h-[3em] ${T14} text-[#bdbdbd]`}>
+              <p aria-live="polite" className={`min-h-[3em] ${T14} text-foreground/70`}>
                 {message}
               </p>
               <div className="flex flex-wrap gap-2">
@@ -230,7 +230,7 @@ export function GetTemplateModal({ template, tab, onTab, onClose, onBuy }) {
                     type="button"
                     onClick={redeem}
                     disabled={flying}
-                    className={`inline-flex h-11 cursor-pointer items-center bg-[#ff5f00] px-5 ${T16} text-[#141414] transition-colors duration-500 hover:bg-[#ff7300] disabled:opacity-60`}
+                    className={`inline-flex h-11 cursor-pointer items-center bg-primary px-5 ${T16} text-background transition-colors duration-500 hover:bg-primary-hover disabled:opacity-60`}
                   >
                     Redeem 1 credit
                   </button>
@@ -238,13 +238,13 @@ export function GetTemplateModal({ template, tab, onTab, onClose, onBuy }) {
                 {(redeemed || locked || remaining < 1) && (
                   <Link
                     href="/pricing"
-                    className={`inline-flex h-11 items-center px-5 ${T16} text-[#F4F4F4] shadow-[inset_0_0_0_1px_rgba(244,244,244,.14)] transition-shadow duration-500 hover:shadow-[inset_0_0_0_1px_rgba(255,95,0,.7)]`}
+                    className={`inline-flex h-11 items-center px-5 ${T16} text-light ring-1 ring-inset ring-foreground/14 transition-shadow duration-500 hover:ring-primary/70`}
                   >
                     {locked ? "See Pro+" : "Compare plans"}
                   </Link>
                 )}
               </div>
-              <p className={`${LABEL} text-[#6d6d6d]`}>Demo: template credits aren’t live yet. This wallet isn’t linked to your account.</p>
+              <p className={`${LABEL} text-foreground/40`}>Demo: template credits aren’t live yet. This wallet isn’t linked to your account.</p>
             </div>
           )}
         </div>

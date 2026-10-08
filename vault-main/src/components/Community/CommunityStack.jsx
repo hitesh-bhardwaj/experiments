@@ -52,30 +52,33 @@ export default function CommunityStack() {
   };
 
   return (
-    <section ref={rootRef} className={`mx-auto max-w-[1536px] px-[4.5vw] relative z-1 py-[18vw] text-center max-md:py-28`} id="stack" data-zone="crowd2" data-hold-zone>
-      {/* <p className="eyebrow label fadeup">Find your people</p> */}
-      <LineReveal as="h2" className={`font-aeonik font-normal tracking-[-.035em] leading-[1.02] mt-[22px] text80 max-md:text-[9vw] mx-auto`}>
-        What Do You <span className="gradient-text-animate gradient-text-single">Build With?</span>
-      </LineReveal>
-      <p className={`max-w-[40vw] max-lg:max-w-[70vw] max-md:max-w-full text-base leading-[1.65] text-[#9C9C9C] fadeup mx-auto mt-[3vw] max-md:mt-6`}>
-        Pick your stack. Watch your corner of the crowd light up. We’ll use it to match you with the
-        right channels, teardowns and people.
-      </p>
-      <div data-chips className="mx-auto mt-11 flex max-w-[760px] flex-wrap justify-center gap-2.5" role="group" aria-label="Your stack">
-        {STACKS.map((name, i) => (
-          <button
-            key={name}
-            type="button"
-            data-chip
-            aria-pressed={stack.includes(name)}
-            onClick={() => toggle(name, i)}
-            className={`font-avenir text-[0.75vw] font-medium tracking-[.14em] uppercase h-11 px-5 backdrop-blur-lg transition-[background-color,color,box-shadow] duration-700 ease-[cubic-bezier(.16,1,.3,1)] ${stack.includes(name) ? "bg-primary text-[#141414] shadow-[0_10px_30px_-10px_rgba(255,107,0,.7)]" : "bg-[rgba(20,20,20,.55)] text-[#d8d8d8] shadow-[inset_0_0_0_1px_rgba(244,244,244,.14)] hover:shadow-[inset_0_0_0_1px_rgba(255,107,0,.6)]"}`}
-          >
-            {name}
-          </button>
-        ))}
+    <section ref={rootRef} className="relative z-1 px-[4.5vw] py-[18vw] text-center max-md:px-[6vw] max-md:py-28" id="stack" data-zone="crowd2" data-hold-zone>
+      <div className="mx-auto flex w-full max-w-[1536px] flex-col items-center gap-[3vw] max-md:gap-[6vw]">
+        <LineReveal as="h2" className="text80 font-aeonik font-normal">
+          What Do You <span className="gradient-text-animate gradient-text-single">Build With?</span>
+        </LineReveal>
+        <p className="fadeup text22 w-[45%] leading-[1.6] text-foreground/60 max-[1025px]:w-[77%] max-md:w-full">
+          Pick your stack. Watch your corner of the crowd light up. We’ll use it to match you with the
+          right channels, teardowns and people.
+        </p>
+        <div className="flex w-[58%] flex-col items-center gap-[1.8vw] max-[1025px]:w-full max-md:gap-[6vw]">
+          <div data-chips className="flex flex-wrap justify-center gap-[0.7vw] max-md:gap-[2.5vw]" role="group" aria-label="Your stack">
+            {STACKS.map((name, i) => (
+              <button
+                key={name}
+                type="button"
+                data-chip
+                aria-pressed={stack.includes(name)}
+                onClick={() => toggle(name, i)}
+                className={`h-11 px-5 font-avenir text-[0.8vw] font-medium uppercase tracking-[0.1em] backdrop-blur-lg transition-[background-color,color,box-shadow] duration-700 ease-[cubic-bezier(.16,1,.3,1)] max-md:text-[2.8vw] ${stack.includes(name) ? "bg-primary text-background shadow-[0_0.7vw_2vw_-0.7vw_color-mix(in_srgb,var(--primary)_70%,transparent)]" : "bg-background/50 text-foreground/80 ring-1 ring-inset ring-foreground/15 hover:ring-primary/60"}`}
+              >
+                {name}
+              </button>
+            ))}
+          </div>
+          <p className="font-avenir text-[0.7vw] font-medium uppercase tracking-[0.1em] text-foreground/60 max-md:text-[2.8vw]" aria-live="polite">{readout(stack)}</p>
+        </div>
       </div>
-      <p className={`font-avenir text-[11px] font-medium tracking-[.14em] uppercase mt-[26px]  text-[#9C9C9C]`} aria-live="polite">{readout(stack)}</p>
     </section>
   );
 }

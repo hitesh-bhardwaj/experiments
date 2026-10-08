@@ -18,7 +18,7 @@ import ButtonV3 from "@/homepage-v3/components/ButtonV3";
 import { useTemplateWishlist } from "../../templates/useTemplateWishlist";
 import { useTemplateAccess } from "../../templates/useTemplateAccess";
 import { TemplateCardV4 } from "../TemplateCardV4";
-import { BADGE, DISPLAY, PRICE, GUTTER, LABEL, T13, T14, T16, T18, T40, catalogueOf, priceOf } from "../tokens";
+import { BADGE, DISPLAY, PRICE, GUTTER, LABEL, T13, T14, T16, catalogueOf, priceOf } from "../tokens";
 import { GetTemplateModal } from "./GetTemplateModal";
 
 // three.js only loads when the exploded view is shown.
@@ -213,43 +213,42 @@ export function TemplateDetailV4({ template, templateAccess = { allowed: false, 
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.9, ease: "easeInOut" }}
-      className="relative text-[#F4F4F4]"
+      className="relative text-light"
     >
       {/* ---------- hero ---------- */}
-      <section className={`${GUTTER} pt-25 pb-16 max-lg:pt-32 max-md:pt-28`}>
+      <section id="template-hero" className={`${GUTTER} flex flex-col gap-10 pt-25 pb-16 max-[1025px]:pt-32 max-md:pt-28`}>
         <motion.div {...HERO_FADE}>
           <Breadcrumb />
         </motion.div>
 
-        <div className="mt-10 grid grid-cols-[minmax(0,1.2fr)_minmax(0,.8fr)] items-start gap-12 max-lg:grid-cols-1 max-lg:gap-10">
-          <div className="sticky top-[20%] h-fit">
-           
+        <div className="flex items-start justify-between gap-12 max-[1025px]:flex-col max-[1025px]:gap-10">
+          <div className="sticky top-[20%] flex h-fit w-[57%] flex-col gap-6 max-[1025px]:static max-[1025px]:w-full">
             <HeadAnim rotate={0} animateOnScroll={false} delay={0.5}>
-              <h1 className={`${DISPLAY} text80 leading-[0.95]! max-lg:text-[9vw] max-md:text-[13vw]`}>{template.title}</h1>
+              <h1 className={`${DISPLAY} t96 font-aeonik`}>{template.title}</h1>
             </HeadAnim>
             {template.tagline && (
               <Copy animateOnScroll={false} delay={0.7}>
-                <p className={`mt-6 max-w-[40vw] text22 leading-[1.3] text-foreground max-lg:max-w-none`}>{template.tagline}</p>
+                <p className="text22 w-[85%] leading-[1.3] text-foreground max-[1025px]:w-full">{template.tagline}</p>
               </Copy>
             )}
-             <motion.div {...HERO_FADE} className="mt-10 flex flex-wrap gap-1.5">
-              <span className={`${BADGE} bg-white/5 text-[#d8d8d8]`}>{template.category}</span>
-              <span className={`${BADGE} ${full ? "bg-white text-black shadow-[inset_0_0_0_1px_rgba(255,178,122,.3)]" : "bg-primary text-black"}`}>
+            <motion.div {...HERO_FADE} className="flex flex-wrap gap-1.5 pt-4">
+              <span className={`${BADGE} bg-foreground/5 text-foreground/80`}>{template.category}</span>
+              <span className={`${BADGE} ${full ? "bg-foreground text-background ring-1 ring-inset ring-[rgba(255,178,122,.3)]" : "bg-primary text-background"}`}>
                 {full ? "Pro+ only" : "✦ Selected catalogue"}
               </span>
-              {hasAccess && <span className={`${BADGE} bg-white/5 backdrop-blur-lg text-white`}>Yours <span className="text-primary">✓</span></span>}
+              {hasAccess && <span className={`${BADGE} bg-foreground/5 text-foreground backdrop-blur-lg`}>Yours <span className="text-primary">✓</span></span>}
             </motion.div>
           </div>
 
-          <motion.aside {...HERO_FADE} className="grid min-w-0 gap-6">
-            <dl className="grid gap-3">
+          <motion.aside {...HERO_FADE} className="flex w-[38%] min-w-0 flex-col gap-6 max-[1025px]:w-full">
+            <dl className="flex flex-col gap-3">
               {facts.map(([term, value]) => (
-                <div key={term} className="grid grid-cols-[8vw_minmax(0,1fr)] items-center gap-3 border-b border-white/7 pb-3 max-lg:grid-cols-[18vw_minmax(0,1fr)] max-md:grid-cols-[28vw_minmax(0,1fr)]">
-                  <dt className={`${LABEL} text-white/60`}>{term}</dt>
-                  <dd className={`flex flex-wrap gap-1.25 ${T14} text-[#e0e0e0]`}>
+                <div key={term} className="flex items-center gap-3 border-b border-foreground/7 pb-3">
+                  <dt className={`${LABEL} w-[24%] shrink-0 text-foreground/60 max-[1025px]:w-[20%] max-md:w-[32%]`}>{term}</dt>
+                  <dd className={`flex min-w-0 flex-1 flex-wrap gap-1.25 ${T14} text-foreground/90`}>
                     {Array.isArray(value)
                       ? value.map((v) => (
-                          <span key={v} className={`${CHIP} h-5.5! px-1.75! text-[#bdbdbd] shadow-[inset_0_0_0_1px_rgba(244,244,244,.14)]`}>
+                          <span key={v} className={`${CHIP} h-5.5! px-1.75! text-foreground/70 ring-1 ring-inset ring-foreground/15`}>
                             {v}
                           </span>
                         ))
@@ -259,27 +258,27 @@ export function TemplateDetailV4({ template, templateAccess = { allowed: false, 
               ))}
             </dl>
 
-            <div className="grid gap-4">
+            <div className="flex flex-col gap-4">
               {price != null && (
                 <p className="flex items-baseline gap-3">
-                  <b className={`${DISPLAY} ${PRICE} text-[3.6vw] leading-none max-lg:text-[7vw] max-md:text-[12vw]`}>${price}</b>
-                  <span className={`${LABEL} text-white/60`}>one-time or 1 template credit</span>
+                  <b className={`${DISPLAY} ${PRICE} text64 leading-none`}>${price}</b>
+                  <span className={`${LABEL} text-foreground/60`}>one-time or 1 template credit</span>
                 </p>
               )}
               <div className="flex flex-wrap items-center gap-2">
-                 <button
+                <button
                   type="button"
                   onClick={() => toggleWishlist(template)}
                   aria-pressed={wishlist.includes(template.slug)}
                   aria-label={wishlist.includes(template.slug) ? "Remove from saved" : "Save template"}
-                  className="inline-flex size-11 cursor-pointer items-center justify-center bg-white/5 backdrop-blur-lg shadow-[inset_0_0_0_1px_rgba(244,244,244,.14)] transition-shadow duration-500 hover:shadow-[inset_0_0_0_1px_rgba(255,95,0,.7)]"
+                  className="inline-flex size-11 cursor-pointer items-center justify-center bg-foreground/5 ring-1 ring-inset ring-foreground/15 backdrop-blur-lg transition-shadow duration-500 hover:ring-primary/70"
                 >
-                  <Heart className={`size-4 ${wishlist.includes(template.slug) ? "fill-[#ff5f00] text-[#ff5f00]" : ""}`} aria-hidden="true" />
+                  <Heart className={`size-4 ${wishlist.includes(template.slug) ? "fill-primary text-primary" : ""}`} aria-hidden="true" />
                 </button>
                 <button
                   type="button"
                   onClick={hasAccess ? download : () => setGetOpen("buy")}
-                  className={`inline-flex h-11 cursor-pointer items-center gap-2 bg-[#ff5f00] px-5 ${T16} text-[#141414] transition-colors duration-500 hover:bg-[#ff7300]`}
+                  className={`inline-flex h-11 cursor-pointer items-center gap-2 bg-primary px-5 ${T16} text-background transition-colors duration-500 hover:bg-primary-hover`}
                 >
                   {hasAccess ? (
                     <>
@@ -315,69 +314,70 @@ export function TemplateDetailV4({ template, templateAccess = { allowed: false, 
             toolbar={toolbar}
           />
         ) : (
-          <section aria-label="Live template preview" className={`${GUTTER} pb-24`}>
-            <div className="mb-3.5">{toolbar}</div>
+          <section id="template-preview" aria-label="Live template preview" className={`${GUTTER} flex flex-col gap-3.5 pb-24`}>
+            {toolbar}
             <LivePreview template={template} device={device} />
           </section>
         )}
       </div>
 
       {/* ---------- what's inside + more templates ---------- */}
-      <div data-sound-hover="off" data-sound-flow="off" className="relative bg-[#F4F4F4] text-[#1D1D1D]">
-        <section className={`${GUTTER} grid grid-cols-[minmax(0,.8fr)_minmax(0,1.6fr)] gap-[4vw] pt-24 max-lg:grid-cols-1 max-md:pt-16`}>
-          <div className="fadeup">
-            <h2 className={`${DISPLAY} ${T40} leading-[1.02]`}>
-              What’s <span className="gradient-text-animate">inside.</span>
-            </h2>
-            {(template.overview || []).map((paragraph, i) => (
-              <p key={i} className={`mt-4.5 ${T16} leading-[1.7] text-[#6B6B6B]`}>
-                {paragraph}
-              </p>
-            ))}
-            {published && <p className={`mt-6 ${LABEL} text-[#8a8a8a]`}>Published {published}</p>}
+      <div data-sound-hover="off" data-sound-flow="off" className="relative flex flex-col gap-[7vw] bg-light py-[7%] text-ink max-md:gap-[15vw] max-md:py-[15%]">
+        <section id="template-inside" className={`${GUTTER} flex items-start justify-between gap-[4vw] max-[1025px]:flex-col`}>
+          {/* Article copy: styled by blog.css (light theme), no overrides */}
+          <div className="fadeup flex w-[32%] flex-col gap-6 max-[1025px]:w-full">
+            <div className="blog-content blog-theme-light">
+              <h2>
+                What’s <span className="gradient-text-animate">inside.</span>
+              </h2>
+              {(template.overview || []).map((paragraph, i) => (
+                <p key={i}>{paragraph}</p>
+              ))}
+            </div>
+            {published && <p className={`${LABEL} text-black/40`}>Published {published}</p>}
           </div>
 
-          <div className="fadeup grid grid-cols-2 gap-3.5 max-md:grid-cols-1">
-            <InsideCard title="Sections included">
-              <ol className="grid gap-2">
+          <div className="fadeup flex w-[64%] flex-wrap gap-[0.9vw] max-md:gap-[3.5vw] max-[1025px]:w-full">
+            <InsideCard title="Sections included" className="w-[calc((100%-0.9vw)/2)] max-md:w-full">
+              <ol className="flex flex-col gap-2">
                 {(devices.desktop?.sections || []).map((s, i) => (
                   <li key={`${s.name}-${i}`} className={`flex items-baseline gap-3 ${T16}`}>
-                    <span className={`font-mono ${T13} text-[#ff5f00]`}>{String(i + 1).padStart(2, "0")}</span>
+                    <span className={`font-mono ${T13} text-primary`}>{String(i + 1).padStart(2, "0")}</span>
                     {s.name}
                   </li>
                 ))}
               </ol>
             </InsideCard>
-            <InsideCard title="Built from Vault effects">
+            <InsideCard title="Built from Vault effects" className="w-[calc((100%-0.9vw)/2)] max-md:w-full">
               <div className="flex flex-wrap gap-1.5">
                 {vaultEffects.map((fx) => (
-                  <Link key={fx.name} href={fx.href} className={`inline-flex h-7.5 items-center bg-[#f2f0ec] px-3 ${T14} transition-colors duration-500 hover:bg-[#ff5f00] hover:text-[#141414]`}>
+                  <Link key={fx.name} href={fx.href} className={`inline-flex h-7.5 items-center bg-light px-3 ${T14} transition-colors duration-500 hover:bg-primary hover:text-background`}>
                     {fx.title}
                   </Link>
                 ))}
               </div>
               {customEffects.length > 0 && (
-                <>
-                  <p className={`mt-4.5 mb-2 ${LABEL} text-[#6B6B6B]`}>Built for this template</p>
+                <div className="flex flex-col gap-2 pt-1">
+                  <p className={`${LABEL} text-black/60`}>Built for this template</p>
                   <div className="flex flex-wrap gap-1.5">
                     {customEffects.map((fx) => (
-                      <span key={fx.name} className={`inline-flex h-7.5 items-center px-3 ${T14} text-[#6B6B6B] shadow-[inset_0_0_0_1px_rgba(29,29,29,.12)]`}>
+                      <span key={fx.name} className={`inline-flex h-7.5 items-center px-3 ${T14} text-black/60 ring-1 ring-inset ring-black/10`}>
                         {fx.title}
                       </span>
                     ))}
                   </div>
-                </>
+                </div>
               )}
             </InsideCard>
-            <InsideCard title="Stack" className="col-span-full">
+            <InsideCard title="Stack" className="w-full">
               <div className="flex flex-wrap gap-1.5">
                 {stack.map((s) => (
-                  <span key={s} className={`inline-flex h-7.5 items-center bg-[#f2f0ec] px-3 ${T14}`}>
+                  <span key={s} className={`inline-flex h-7.5 items-center bg-light px-3 ${T14}`}>
                     {s}
                   </span>
                 ))}
               </div>
-              <p className={`mt-3.5 ${T14} text-[#6B6B6B]`}>
+              <p className={`${T14} text-black/60`}>
                 Built from Vault effects, so every section ships with the same dependency notes, reduced-motion handling and mobile behaviour as the effects themselves.
               </p>
             </InsideCard>
@@ -385,22 +385,23 @@ export function TemplateDetailV4({ template, templateAccess = { allowed: false, 
         </section>
 
         {related.length > 0 && (
-          <section className={`${GUTTER} pt-28 pb-28 max-md:pt-20 max-md:pb-20`}>
-            <div className="fadeup mb-8 flex flex-wrap items-end justify-between gap-4">
-              <h2 className={`${DISPLAY} ${T40} leading-[1.02]`}>
+          <section id="related-templates" className={`${GUTTER} flex flex-col gap-8`}>
+            <div className="fadeup flex flex-wrap items-end justify-between gap-4">
+              <h2 className={`${DISPLAY} text64 font-aeonik`}>
                 More <span className="gradient-text-animate">templates.</span>
               </h2>
               <ButtonV3 className="tracking-normal!" text="All templates" href="/templates-v4" />
             </div>
-            <div className="grid grid-cols-2 gap-x-5 gap-y-14 max-md:grid-cols-1">
+            <div className="flex flex-wrap gap-x-[1.4vw] gap-y-14">
               {related.map((t) => (
-                <TemplateCardV4
-                  key={t.slug}
-                  template={t}
-                  isWishlisted={wishlist.includes(t.slug)}
-                  onToggleWishlist={toggleWishlist}
-                  hasAccess={relatedAccess.includes(t.slug)}
-                />
+                <div key={t.slug} className="w-[calc((100%-1.4vw)/2)] max-md:w-full">
+                  <TemplateCardV4
+                    template={t}
+                    isWishlisted={wishlist.includes(t.slug)}
+                    onToggleWishlist={toggleWishlist}
+                    hasAccess={relatedAccess.includes(t.slug)}
+                  />
+                </div>
               ))}
             </div>
           </section>
@@ -443,8 +444,8 @@ function LivePreview({ template, device }) {
   }, [size.width, size.height]);
 
   return (
-    <div ref={boxRef} className="relative flex h-[78vh] items-center justify-center overflow-hidden bg-[radial-gradient(80%_70%_at_50%_40%,#1c1c1c,#0c0c0c)] shadow-[inset_0_0_0_1px_rgba(244,244,244,.08)]">
-      <div style={{ width: size.width, height: size.height, transform: `scale(${scale})` }} className="shrink-0 origin-center bg-white transition-transform duration-300">
+    <div ref={boxRef} className="relative flex h-[78vh] items-center justify-center overflow-hidden bg-[radial-gradient(80%_70%_at_50%_40%,var(--dark-card),var(--background))] ring-1 ring-inset ring-foreground/8">
+      <div style={{ width: size.width, height: size.height, transform: `scale(${scale})` }} className="shrink-0 origin-center bg-foreground transition-transform duration-300">
         <iframe
           key={`${template.previewHref}-${device}`}
           src={template.previewHref}
@@ -460,8 +461,8 @@ function LivePreview({ template, device }) {
 
 function InsideCard({ title, className = "", children }) {
   return (
-    <div className={`bg-white p-5.5 shadow-[inset_0_0_0_1px_rgba(29,29,29,.1)] ${className}`}>
-      <p className={`mb-3.5 ${LABEL} text-[#6B6B6B]`}>{title}</p>
+    <div className={`flex flex-col gap-3.5 bg-foreground p-5.5 ring-1 ring-inset ring-black/10 ${className}`}>
+      <p className={`${LABEL} text-black/60`}>{title}</p>
       {children}
     </div>
   );
@@ -471,10 +472,10 @@ function InsideCard({ title, className = "", children }) {
 function Segment({ label, items, value, onChange, itemClassName }) {
   const index = Math.max(0, items.findIndex((item) => item.id === value));
   return (
-    <div role="radiogroup" aria-label={label} className="relative flex gap-0.5 bg-[rgba(20,20,20,.72)] p-0.75 shadow-[inset_0_0_0_1px_rgba(244,244,244,.1)] backdrop-blur-md">
+    <div role="radiogroup" aria-label={label} className="relative flex gap-0.5 bg-background/70 p-0.75 ring-1 ring-inset ring-foreground/10 backdrop-blur-lg">
       <span
         aria-hidden="true"
-        className={`pointer-events-none absolute top-0.75 bottom-0.75 left-0.75 bg-[#ff5f00] transition-transform duration-700 ease-[cubic-bezier(.16,1,.3,1)] ${itemClassName}`}
+        className={`pointer-events-none absolute top-0.75 bottom-0.75 left-0.75 bg-primary transition-transform duration-700 ease-[cubic-bezier(.16,1,.3,1)] ${itemClassName}`}
         style={{ transform: `translateX(calc(${index} * (100% + 2px)))` }}
       />
       {items.map((item) => {
@@ -486,8 +487,8 @@ function Segment({ label, items, value, onChange, itemClassName }) {
             role="radio"
             aria-checked={active}
             onClick={() => onChange(item.id)}
-            className={`relative z-1 grid h-8.5 cursor-pointer place-items-center ${T14} transition-colors duration-500 ${itemClassName} ${
-              active ? "text-[#141414]" : "text-[#a9a9a9] hover:text-white"
+            className={`relative z-1 flex h-8.5 cursor-pointer items-center justify-center ${T14} transition-colors duration-500 ${itemClassName} ${
+              active ? "text-background" : "text-foreground/60 hover:text-foreground"
             }`}
           >
             {item.label}

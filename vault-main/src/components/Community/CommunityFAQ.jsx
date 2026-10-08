@@ -24,12 +24,9 @@ export default function CommunityFAQ({ items = [] }) {
   }, [openId]);
 
   return (
-    <section ref={rootRef} className="mx-auto grid max-w-[1536px] grid-cols-[minmax(0,.8fr)_minmax(0,1.6fr)] items-start gap-8 px-[4.5vw] pt-[10vw] pb-[11vw] max-lg:grid-cols-1 max-md:pt-24 max-md:pb-24" id="faq">
-      <div className="grid content-start gap-[18px]">
-        {/* <p className="eyebrow label fadeup">Questions</p> */}
-        <LineReveal as="h2" className={`font-aeonik font-normal tracking-[-.035em] leading-[1.02] max-w-[10vw] max-lg:max-w-full text-[4.6vw] max-md:text-[9vw]`}>Frequently Asked Questions</LineReveal>
-      </div>
-      <div>
+    <section ref={rootRef} className="mx-auto flex w-full max-w-[1536px] items-start justify-between gap-[2vw] px-[4.5vw] py-[7%] max-[1025px]:flex-col max-[1025px]:gap-[5vw] max-md:px-[6vw] max-md:py-24" id="faq">
+      <LineReveal as="h2" className="text80 w-[32%] max-w-[10vw] font-aeonik font-normal max-[1025px]:w-full max-[1025px]:max-w-full">Frequently Asked Questions</LineReveal>
+      <div className="w-[66%] max-[1025px]:w-full">
         {items.map((item, i) => (
           <div key={item.id} className="fadeup" data-fadeup-delay={i * 0.1}>
             <FAQRow

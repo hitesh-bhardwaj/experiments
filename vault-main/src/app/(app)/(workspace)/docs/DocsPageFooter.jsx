@@ -15,7 +15,7 @@ const DOCS_PAGES = [
   { href: "/docs/license", label: "License" },
 ];
 
-const label = "text-[11px] font-medium uppercase tracking-[.16em]";
+const label = "text-[0.7vw] font-medium uppercase tracking-[0.2em] max-md:text-[2.8vw]";
 
 function FeedbackButton({ active, onClick, children }) {
   return (
@@ -25,8 +25,8 @@ function FeedbackButton({ active, onClick, children }) {
       onClick={onClick}
       className={`h-10 cursor-pointer border px-4 transition-colors duration-300 ${label} ${
         active
-          ? "border-primary bg-primary text-black"
-          : "border-white/15 text-white/80 hover:border-primary hover:text-white"
+          ? "border-primary bg-primary text-background"
+          : "border-foreground/15 text-foreground/80 hover:border-primary hover:text-foreground"
       }`}
     >
       {children}
@@ -72,7 +72,7 @@ function FeedbackMessage({ vote }) {
   }, [outgoing]);
 
   return (
-    <p aria-live="polite" className={`relative m-0! overflow-hidden ${label} text-[#1D1D1D]!`}>
+    <p aria-live="polite" className={`relative m-0! overflow-hidden ${label} text-foreground`}>
       <span ref={currentRef} className="block">{feedbackMessage(vote)}</span>
       {outgoing && (
         <span ref={outgoingRef} aria-hidden="true" className="absolute left-0 top-0 block w-full">{feedbackMessage(outgoing)}</span>
@@ -86,7 +86,7 @@ function PagerArrow({ className = "" }) {
   return (
     <span
       aria-hidden="true"
-      className={`block size-[11px] shrink-0 bg-current [mask-image:url(/homepage-v3/svgs/pixelated-arrow.svg)] mask-center mask-no-repeat mask-contain transition-transform duration-300 ${className}`}
+      className={`block size-[0.8vw] shrink-0 bg-current [mask-image:url(/homepage-v3/svgs/pixelated-arrow.svg)] mask-center mask-no-repeat mask-contain transition-transform duration-300 ${className}`}
     />
   );
 }
@@ -98,16 +98,16 @@ function PagerCard({ page, direction }) {
       href={page.href}
       // The site's full page transition (PageTransition), not the docs' in-place fade
       data-page-transition
-      className={`group flex flex-col gap-3 border border-white/10 bg-white/[.03] p-6 max-md:p-[4vw] transition-colors duration-300 hover:border-primary/60 hover:bg-primary/[.06] max-md:text-center ${
-        next ? "col-start-2 items-end max-md:text-center max-md:items-center text-right" : "items-start max-md:items-center"
+      className={`group flex w-[calc(50%-0.5vw)] flex-col gap-[0.8vw] border border-foreground/10 bg-foreground/3 p-[1.5vw] transition-colors duration-300 hover:border-primary/60 hover:bg-primary/6 max-md:gap-[3vw] max-md:p-[4vw] max-md:text-center ${
+        next ? "items-end text-right max-md:items-center max-md:text-center" : "items-start max-md:items-center"
       }`}
     >
-      <span className={`${label} flex items-center gap-2.5 leading-none text-white/50 transition-colors duration-300 group-hover:text-primary`}>
+      <span className={`${label} flex items-center gap-2.5 leading-none text-foreground/50 transition-colors duration-300 group-hover:text-primary`}>
         {/* {!next && <PagerArrow className="rotate-180 group-hover:-translate-x-1" />} */}
         {next ? "Next" : "Previous"}
         {/* {next && <PagerArrow className="group-hover:translate-x-1" />} */}
       </span>
-      <span className="text-[clamp(1.4rem,2vw,2rem)] max-md:text-[5vw] leading-none tracking-[-.03em] text-white">{page.label}</span>
+      <span className="text32 leading-none tracking-tight text-foreground">{page.label}</span>
     </Link>
   );
 }
@@ -120,10 +120,10 @@ export default function DocsPageFooter() {
   const next = index >= 0 && index < DOCS_PAGES.length - 1 ? DOCS_PAGES[index + 1] : null;
 
   return (
-    <div className="mt-20 grid gap-4 border-t border-white/10 pt-10">
-      <div className="flex flex-wrap items-center gap-x-6 gap-y-4 border border-white/10 p-6">
-        <p className="m-0! text-[1.05rem]! text-[#1D1D1D]!">Was this page helpful?</p>
-        <div className="flex gap-2">
+    <div className="flex flex-col gap-[1vw] border-t border-foreground/10 pt-[2.5vw] max-md:gap-[4vw] max-md:pt-[8vw]">
+      <div className="flex flex-wrap items-center gap-[1.5vw] border border-foreground/10 p-[1.5vw] max-md:gap-[4vw] max-md:p-[5vw]">
+        <p className="text20 m-0! text-foreground">Was this page helpful?</p>
+        <div className="flex gap-[0.5vw] max-md:gap-[2vw]">
           <FeedbackButton active={vote === "yes"} onClick={() => setVote("yes")}>Yes</FeedbackButton>
           <FeedbackButton active={vote === "no"} onClick={() => setVote("no")}>Not quite</FeedbackButton>
         </div>
@@ -131,7 +131,7 @@ export default function DocsPageFooter() {
       </div>
 
       {(prev || next) && (
-        <nav aria-label="Docs pages" className="grid grid-cols-2 gap-4">
+        <nav aria-label="Docs pages" className={`flex gap-[1vw] ${prev ? "justify-between" : "justify-end"}`}>
           {prev && <PagerCard page={prev} direction="prev" />}
           {next && <PagerCard page={next} direction="next" />}
         </nav>

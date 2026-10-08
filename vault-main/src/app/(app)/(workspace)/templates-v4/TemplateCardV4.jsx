@@ -57,12 +57,12 @@ export function TemplateCardV4({ template, priority = false, isWishlisted = fals
   };
 
   return (
-    <article className="group grid gap-4">
-      <div className="group/shot relative aspect-[16/11] overflow-hidden bg-[#dcdcdc] shadow-[inset_0_0_0_1px_rgba(29,29,29,.1),0_28px_50px_-24px_rgba(0,0,0,0)] transition-shadow duration-500 ease-in-out hover:shadow-[inset_0_0_0_1px_rgba(29,29,29,.1),0_28px_50px_-24px_rgba(0,0,0,.35)]">
+    <article className="group flex flex-col gap-4">
+      <div className="group/shot relative aspect-[16/11] overflow-hidden bg-black/10 ring-1 ring-inset ring-black/10 transition-shadow duration-500 ease-in-out hover:shadow-[0_1.9vw_3.5vw_-1.7vw_color-mix(in_srgb,black_35%,transparent)]">
         <Link href={href} prefetch={false} aria-label={template.title} className="absolute inset-0 block">
           {/* pans down the page only while the cursor is over the image (not the text
               below), then eases back to the top when it leaves */}
-          <span className="absolute inset-x-0 top-0 bottom-0 block overflow-hidden bg-[#202020]">
+          <span className="absolute inset-x-0 top-0 bottom-0 block overflow-hidden bg-grey">
             {shot && !imageError && (
               <Image
                 src={shot}
@@ -80,16 +80,16 @@ export function TemplateCardV4({ template, priority = false, isWishlisted = fals
 
           <span className="pointer-events-none absolute inset-x-3 top-4 z-1 flex justify-between gap-2">
             <span className="flex gap-1.5">
-              <span className={`${BADGE} bg-[rgba(20,20,20,.6)] text-[#d8d8d8] border-white/20 border`}>{template.category}</span>
+              <span className={`${BADGE} bg-background/60 text-foreground/85 border-foreground/20 border`}>{template.category}</span>
             </span>
-            <span className={`${BADGE} ${full ? "bg-white text-black border-black/20 border" : "bg-primary text-black "}`}>
+            <span className={`${BADGE} ${full ? "bg-foreground text-background border-black/20 border" : "bg-primary text-background"}`}>
               {catalogueLabel(template)}
             </span>
           </span>
         </Link>
 
         {/* hover actions (always shown on touch layouts) */}
-        <div className="absolute right-3 bottom-3 z-2 flex gap-1.5 opacity-0 transition-opacity duration-500 group-hover:opacity-100 group-focus-within:opacity-100 max-lg:opacity-100">
+        <div className="absolute right-3 bottom-3 z-2 flex gap-1.5 opacity-0 transition-opacity duration-500 group-hover:opacity-100 group-focus-within:opacity-100 max-[1025px]:opacity-100">
           <Tooltip label={isWishlisted ? "Saved" : "Save"}>
             <button
               type="button"
@@ -98,7 +98,7 @@ export function TemplateCardV4({ template, priority = false, isWishlisted = fals
               aria-label={isWishlisted ? `Remove ${template.title} from saved` : `Save ${template.title}`}
               className={ICON_BTN}
             >
-              <Heart className={isWishlisted ? "fill-[#ff5f00] text-[#ff5f00]" : ""} aria-hidden="true" />
+              <Heart className={isWishlisted ? "fill-primary text-primary" : ""} aria-hidden="true" />
             </button>
           </Tooltip>
           <Tooltip label="Live preview">
@@ -109,29 +109,30 @@ export function TemplateCardV4({ template, priority = false, isWishlisted = fals
         </div>
       </div>
 
-      <div className="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-x-3 gap-y-2">
-        <h3 className={`${DISPLAY} ${T20} font-medium`}>
-          <Link href={href} prefetch={false} className="transition-colors duration-500 hover:text-[#ff5f00]">
-            {template.title}
-          </Link>
-          
-        </h3>
-        {price != null && (
-          <span className={`${DISPLAY} ${T18} font-medium`}>
-            <span className={PRICE}>${price}</span>
-            <small className={`ml-1.5 font-normal text-[#6B6B6B] ${T13}`}>or 1 credit</small>
-          </span>
-        )}
-        <p className={`col-span-full line-clamp-2 ${T16} text-black/60`}>{template.tagline}</p>
-        <div className="col-span-full mt-4 flex items-center justify-between gap-3">
+      <div className="flex flex-col gap-2">
+        <div className="flex items-baseline justify-between gap-3">
+          <h3 className={`${DISPLAY} ${T20} min-w-0 font-aeonik font-medium`}>
+            <Link href={href} prefetch={false} className="transition-colors duration-500 hover:text-primary">
+              {template.title}
+            </Link>
+          </h3>
+          {price != null && (
+            <span className={`${DISPLAY} ${T18} flex shrink-0 items-baseline gap-1.5 font-medium`}>
+              <span className={PRICE}>${price}</span>
+              <small className={`font-normal text-black/60 ${T13}`}>or 1 credit</small>
+            </span>
+          )}
+        </div>
+        <p className={`line-clamp-2 ${T16} text-black/60`}>{template.tagline}</p>
+        <div className="flex items-center justify-between gap-3 pt-4">
           <div className="flex flex-wrap items-center gap-1.5">
             {(template.tags || []).map((tag) => (
-              <span key={tag} className={`inline-flex h-6 items-center px-2 font-mono ${T13} text-[#6B6B6B] shadow-[inset_0_0_0_1px_rgba(29,29,29,.12)]`}>
+              <span key={tag} className={`inline-flex h-6 items-center px-2 font-mono ${T13} text-black/60 ring-1 ring-inset ring-black/10`}>
                 {tag}
               </span>
             ))}
             {views > 0 && (
-              <span className={`ml-1.5 inline-flex items-center gap-1 ${T13} text-[#8a8a8a]`}>
+              <span className={`inline-flex items-center gap-1 pl-1.5 ${T13} text-black/50`}>
                 <Eye className="size-3.5" aria-hidden="true" />
                 {formatViews(views)}
               </span>
@@ -141,7 +142,7 @@ export function TemplateCardV4({ template, priority = false, isWishlisted = fals
             <button
               type="button"
               onClick={onBuy}
-              className={`inline-flex h-9 shrink-0 cursor-pointer items-center gap-1.5 bg-[#ff5f00] px-3.5 ${T14} text-[#141414] transition-colors duration-500 hover:bg-[#ff7300]`}
+              className={`inline-flex h-9 shrink-0 cursor-pointer items-center gap-1.5 bg-primary px-3.5 ${T14} text-background transition-colors duration-500 hover:bg-primary-hover`}
             >
               {hasAccess ? (
                 <>

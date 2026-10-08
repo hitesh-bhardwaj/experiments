@@ -229,7 +229,8 @@ export function CodeBlock({
     const rawCode = pmVariants ? pmVariants[packageManager] : variant === "tsx" && tsxCode ? tsxCode : code;
     const text = String((copyLocked ? LOCKED_CODE_SAMPLE : rawCode) || "").replace(/\n$/, "");
     const lines = useMemo(() => text.split("\n").map(tokenize), [text]);
-    const displayFilename = isJsVariant ? getVariantFilename(filename, variant) : filename;
+    // Only rename the file when a TS version exists, so JS-only blocks keep their real filename
+    const displayFilename = isJsVariant && tsxCode ? getVariantFilename(filename, variant) : filename;
 
     const [copied, setCopied] = useState(false);
     const { toast, showToast, dismissToast } = useToastQueue(2500);

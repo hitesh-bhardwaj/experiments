@@ -20,9 +20,9 @@ import {
 } from "./EffectCardV4";
 
 // Text sizes in vw: desktop · tablet (max-[1025px]) · mobile (max-md).
-const T11 = "text-[0.76vw] max-lg:text-[1.4vw] max-md:text-[2.8vw]";
-const T14 = "text-[0.97vw] max-lg:text-[1.7vw] max-md:text-[3.6vw]";
-const T16 = "text-[1.1vw] max-lg:text-[1.95vw] max-md:text-[4.1vw]";
+const T11 = "text-[0.76vw] max-[1025px]:text-[1.4vw] max-md:text-[2.8vw]";
+const T14 = "text-[0.97vw] max-[1025px]:text-[1.7vw] max-md:text-[3.6vw]";
+const T16 = "text-[1.1vw] max-[1025px]:text-[1.95vw] max-md:text-[4.1vw]";
 
 // Open/close choreography borrowed from the information-drawer effect: the panel
 // slides in from the right (power2.inOut) while the backdrop fades, and only then
@@ -215,32 +215,33 @@ export function PreviewDrawerV4({
     // [--scrollbar-thumb:initial] brings the panel's own scrollbar back: <html> hides the
     // page thumb through the same (inherited) variable while the drawer is open.
     <div role="dialog" aria-modal="true" aria-labelledby="v4-drawer-title" className="fixed inset-0 z-990 [--scrollbar-thumb:initial]">
-      <div ref={overlayRef} aria-hidden="true" onClick={onClose} className="absolute inset-0 bg-[rgba(8,8,8,.35)] backdrop-blur-[2px]" />
+      <div ref={overlayRef} aria-hidden="true" onClick={onClose} className="absolute inset-0 bg-black/30 backdrop-blur-lg" />
+      {/* data-lenis-prevent: the drawer is a modal, so the wheel stays inside it */}
       <div
         ref={panelRef}
         data-lenis-prevent
-        className="absolute inset-y-0 right-0 w-[min(760px,100vw)] overflow-y-auto overscroll-contain border-l border-white/10 bg-[#0e0e0e] font-neue-haas text-white shadow-[-16px_0_40px_-24px_rgba(0,0,0,.6)] max-lg:w-full max-lg:border-l-0"
+        className="absolute inset-y-0 right-0 w-[53vw] overflow-y-auto overscroll-contain border-l border-foreground/10 bg-background font-avenir text-foreground shadow-[-1.1vw_0_2.8vw_-1.7vw_color-mix(in_srgb,black_60%,transparent)] max-[1025px]:w-full max-[1025px]:border-l-0"
       >
-      <div ref={contentRef} className="flex flex-col gap-10 px-10 pt-7 pb-16 max-lg:px-8 max-md:px-5 *:shrink-0">
+      <div ref={contentRef} className="flex flex-col gap-10 px-10 pt-7 pb-16 max-[1025px]:px-8 max-md:px-[6vw] *:shrink-0">
         <div className="flex items-center justify-between">
-          <span className={`${T16} text-white/80`}>{categoryName}</span>
+          <span className={`${T16} text-foreground/80`}>{categoryName}</span>
           {/* Same close control as the site's modals: the cross turns a quarter on hover. */}
           <button
             ref={closeRef}
             type="button"
             aria-label="Close preview (Esc)"
             onClick={onClose}
-            className="group grid size-10 cursor-pointer place-items-center border border-white/20 bg-white/10 transition-colors duration-500 hover:border-[#ff5f00] hover:bg-[#ff5f00]"
+            className="group flex size-10 cursor-pointer items-center justify-center border border-foreground/20 bg-foreground/10 transition-colors duration-500 hover:border-primary hover:bg-primary"
           >
-            <span className="relative grid size-4 place-items-center transition-transform duration-500 ease-in-out group-hover:rotate-90">
-              <span className="h-px w-4 rotate-45 bg-white" />
-              <span className="absolute h-px w-4 -rotate-45 bg-white" />
+            <span className="relative flex size-4 items-center justify-center transition-transform duration-500 ease-in-out group-hover:rotate-90">
+              <span className="h-px w-4 rotate-45 bg-foreground" />
+              <span className="absolute h-px w-4 -rotate-45 bg-foreground" />
             </span>
           </button>
         </div>
 
-        <div className="relative aspect-[16/8.6] overflow-hidden border border-white/10 bg-[#0d0d0d]">
-          {cover && <Image src={cover} alt="" fill sizes="(max-width: 1025px) 100vw, 760px" className="object-cover" />}
+        <div className="relative aspect-[16/8.6] overflow-hidden border border-foreground/10 bg-background">
+          {cover && <Image src={cover} alt="" fill sizes="(max-width: 1025px) 100vw, 53vw" className="object-cover" />}
           {videoUrl && (
             <video
               key={videoUrl}
@@ -255,61 +256,49 @@ export function PreviewDrawerV4({
           )}
         </div>
 
-        {/* Actions sit right under the preview. */}
-       
-        <div className="grid gap-6">
-         
+        <div className="flex flex-col gap-6">
           {/* Tier sits beside the name at its usual small size. */}
           <div className="flex flex-wrap items-center gap-3">
-            <h2 id="v4-drawer-title" className={`${DISPLAY} text-[3vw] leading-[1]! tracking-[-.04em] max-lg:text-[6vw] max-md:text-[9vw]`}>
+            <h2 id="v4-drawer-title" className={`${DISPLAY} text64 font-aeonik`}>
               {shown.title}
             </h2>
-            
-            <div className="mt-1.5">
             <TierBadge tier={shown.tier} />
-            </div>
           </div>
-          
+
           {shown.description && (
-            <p className={`max-w-[42vw] ${T16} leading-relaxed text-white/80 max-lg:max-w-none`}>{shown.description}</p>
+            <p className={`w-[80%] ${T16} leading-relaxed text-foreground/80 max-[1025px]:w-full`}>{shown.description}</p>
           )}
-          <div className="flex w-full justify-between">
-          {shown.tags?.length > 0 && (
-            <div className="flex flex-wrap gap-1.5">
-              {shown.tags.map((tag) => (
-                <span key={tag} className={`${MONO} inline-flex h-6 items-center border border-white/15 px-2 ${T11} text-white/70`}>
-                  {tag}
-                </span>
-              ))}
+          <div className="flex w-full flex-wrap justify-between gap-4">
+            {shown.tags?.length > 0 && (
+              <div className="flex flex-wrap gap-1.5">
+                {shown.tags.map((tag) => (
+                  <span key={tag} className={`${MONO} inline-flex h-6 items-center border border-foreground/15 px-2 ${T11} text-foreground/70`}>
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            )}
+            <div className="flex flex-wrap items-center justify-end gap-2">
+              <button
+                type="button"
+                aria-pressed={saved}
+                onClick={() => onToggleWishlist(shown)}
+                className={`flex gap-2 self-center border border-foreground/20 px-3 py-3 leading-[1.2] ${T16} ${saved ? "text-primary! [&_svg]:fill-primary [&_svg]:stroke-primary" : ""}`}
+              >
+                <div className="size-4.5">
+                  <Heart className="size-full" />
+                </div>
+              </button>
+              <ButtonV3 text="Demo" href={getEffectPreviewHref(shown)} variant="outline" target_blank className="bg-transparent! border-foreground/20" />
+              <ButtonV3 text="View Article" href={getEffectHref(shown)} className="border border-primary" />
             </div>
-          )}
-           <div className=" flex justify-end">
-          <div className="flex flex-wrap items-center gap-2">
-          <button
-            type="button"
-            aria-pressed={saved}
-            onClick={() => onToggleWishlist(shown)}
-            className={` flex gap-2 border px-3 border-white/20 py-3 leading-[1.2] text-[1.1vw] self-center ${saved ? "text-[#ff5f00]! [&_svg]:fill-[#ff5f00] [&_svg]:stroke-[#ff5f00]" : ""}`}
-          >
-            <div className="size-4.5">
-            <Heart className="size-full" />
-            </div>
-          </button>
-          <ButtonV3 text="Demo" href={getEffectPreviewHref(shown)} variant="outline" target_blank className="bg-transparent! border-white/20" />
-          <ButtonV3 text="View Article" href={getEffectHref(shown)} className="border border-primary" />
-          {/* Same dark action button as the card's Save. */}
-
-          </div>
-        </div>
-
-
           </div>
         </div>
 
         {installable ? (
-          <div className="flex items-center gap-3 border border-white/10 bg-white/3 py-3 pr-2 pl-4">
-            <code className={`${MONO} min-w-0 flex-1 overflow-x-auto whitespace-nowrap ${T14} text-white/85`}>
-              <span className="text-[#ff5f00]">$</span> {installCommand(shown)}
+          <div className="flex items-center gap-3 border border-foreground/10 bg-foreground/3 py-3 pr-2 pl-4">
+            <code className={`${MONO} min-w-0 flex-1 overflow-x-auto whitespace-nowrap ${T14} text-foreground/80`}>
+              <span className="text-primary">$</span> {installCommand(shown)}
             </code>
             <button
               type="button"
@@ -319,31 +308,31 @@ export function PreviewDrawerV4({
                 clearTimeout(copiedTimerRef.current);
                 copiedTimerRef.current = setTimeout(() => setCopied(false), 1600);
               }}
-              className={`inline-flex shrink-0 cursor-pointer items-center gap-1.5 px-2 ${T14} transition-colors duration-300 ${copied ? "text-[#ff5f00]" : "text-white/70 hover:text-[#ff5f00]"}`}
+              className={`inline-flex shrink-0 cursor-pointer items-center gap-1.5 px-2 ${T14} transition-colors duration-300 ${copied ? "text-primary" : "text-foreground/70 hover:text-primary"}`}
             >
               {copied ? <Check className="size-3.5" aria-hidden="true" /> : <Copy className="size-3.5" aria-hidden="true" />}
               {copied ? "Copied" : "Copy"}
             </button>
           </div>
         ) : (
-          <div className="flex flex-wrap items-center justify-between gap-4 border border-[#ff5f00]/35 bg-[#ff5f00]/[.06] px-4.5 py-4">
-            <p className={`flex items-center gap-2 ${T14} text-white/70`}>
-              <Lock className="size-3.75 shrink-0 text-[#ff5f00]" aria-hidden="true" />
+          <div className="flex flex-wrap items-center justify-between gap-4 border border-primary/35 bg-primary/6 px-4.5 py-4">
+            <p className={`flex items-center gap-2 ${T14} text-foreground/70`}>
+              <Lock className="size-3.75 shrink-0 text-primary" aria-hidden="true" />
               This is a Pro effect. Pro unlocks it with the rest of the library.
             </p>
-            <Link href="/pricing" className={`group inline-flex items-center gap-1.5 ${T14} text-white`}>
-              <span className="border-b border-white/30 pb-0.5 transition-colors duration-500 group-hover:border-[#ff5f00]">Unlock with Pro</span>
-              <ArrowUpRight className="size-3.5 text-[#ff5f00] transition-transform duration-500 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden="true" />
+            <Link href="/pricing" className={`group inline-flex items-center gap-1.5 ${T14} text-foreground`}>
+              <span className="border-b border-foreground/30 pb-0.5 transition-colors duration-500 group-hover:border-primary">Unlock with Pro</span>
+              <ArrowUpRight className="size-3.5 text-primary transition-transform duration-500 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden="true" />
             </Link>
           </div>
         )}
 
         {related.length > 0 && (
-          <div className="border-t border-white/10 pt-6">
-            <p className={`mb-4 ${T16} text-white`}>More in this category</p>
-            <div className="grid grid-cols-2 gap-3.5 max-md:grid-cols-1">
+          <div className="flex flex-col gap-4 border-t border-foreground/10 pt-6">
+            <p className={`${T16} text-foreground`}>More in this category</p>
+            <div className="flex flex-wrap gap-[0.9vw] max-md:gap-[3.5vw]">
               {related.map((item) => (
-                <EffectCardV4 key={item.name} effect={item} small dark sizes="240px" onOpen={onOpen} tagClassName="border-white/20" />
+                <EffectCardV4 key={item.name} effect={item} small dark sizes="240px" onOpen={onOpen} className="w-[calc((100%-0.9vw)/2)] max-md:w-full" tagClassName="border-foreground/20" />
               ))}
             </div>
           </div>

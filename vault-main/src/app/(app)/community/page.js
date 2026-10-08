@@ -53,7 +53,7 @@ export default async function CommunityPage() {
           <CommunityHero />
           <CommunityFamiliar />
           <CommunityStack />
-          <div className="relative z-1 mx-auto max-w-[1536px] bg-[#F4F4F4] text-[#1D1D1D]" data-zone="sheet" data-sound-flow="off">
+          <div className="relative z-1 bg-light text-ink" data-zone="sheet" data-sound-flow="off">
             <CommunityFounding />
             <CommunityFAQ items={COMMUNITY_FAQ} />
           </div>

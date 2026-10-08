@@ -125,9 +125,9 @@ export function FilterMenu({
       }
       className={[
         light
-          ? "space-y-1.5 min-w-44 border border-[rgba(29,29,29,.1)] bg-white p-1.5 shadow-[0_20px_40px_-20px_rgba(0,0,0,.35)]"
+          ? "space-y-1.5 min-w-44 border border-black/10 bg-foreground p-1.5 shadow-[0_1.4vw_2.8vw_-1.4vw_color-mix(in_srgb,black_35%,transparent)]"
           : "space-y-1.5 min-w-44 border border-white/10 bg-black/20  p-1.5",
-        menuPos ? "fixed z-9999" : "absolute left-0 top-full mt-2 z-30",
+        menuPos ? "fixed z-9999" : "absolute left-0 top-[calc(100%+0.5vw)] z-30",
         panelClassName,
       ]
         .filter(Boolean)
@@ -142,11 +142,11 @@ export function FilterMenu({
           !EFFECT_SORT_OPTIONS.includes(options[index - 1]);
 
         return (
-          <div key={cat}>
+          <div key={cat} className="flex flex-col gap-1.5">
             {showDivider && (
               <span
                 aria-hidden="true"
-                className={`my-1.5 block h-px w-full ${light ? "bg-black/10" : "bg-white/10"}`}
+                className={`block h-px w-full ${light ? "bg-black/10" : "bg-foreground/10"}`}
               />
             )}
             <button
@@ -161,11 +161,11 @@ export function FilterMenu({
             >
               <span
                 aria-hidden="true"
-                className={`absolute inset-0 z-0 origin-top bg-[#ff5f00] transition-transform duration-300 ease-out motion-reduce:transition-none ${highlighted ? "scale-y-100" : "scale-y-0"
+                className={`absolute inset-0 z-0 origin-top bg-primary transition-transform duration-300 ease-out motion-reduce:transition-none ${highlighted ? "scale-y-100" : "scale-y-0"
                   }`}
               />
               <span
-                className={`relative z-10 leading-none transition-colors duration-200 ${highlighted ? "text-[#111111]" : light ? "text-[#1D1D1D]" : "text-foreground"
+                className={`relative z-10 leading-none transition-colors duration-200 ${highlighted ? "text-background" : light ? "text-ink" : "text-foreground"
                   }`}
               >
                 {getLabel(cat)}
@@ -189,16 +189,16 @@ export function FilterMenu({
         className={
           light
             ? `relative flex h-9.5 cursor-pointer items-center justify-center gap-2 px-4 text-sm transition-colors duration-300 ${activeFilter
-              ? "bg-[#ff5f00] text-black"
-              : "bg-white text-[#1D1D1D] shadow-[inset_0_0_0_1px_rgba(29,29,29,.1)] transition-shadow hover:shadow-[inset_0_0_0_1px_#ff5f00]"
+              ? "bg-primary text-background"
+              : "bg-foreground text-ink ring-1 ring-inset ring-black/10 transition-shadow hover:ring-primary"
             }`
             : `
           px-6 py-3  relative max-md:px-7 max-md:py-3
-          backdrop-blur-[6px] flex items-center gap-2 justify-center
-          cursor-pointer transition-colors duration-300 text-[1vw] max-md:text-[4vw] max-lg:text-[2.5vw]
+          backdrop-blur-lg flex items-center gap-2 justify-center
+          cursor-pointer transition-colors duration-300 text-[1vw] max-md:text-[4vw] max-[1025px]:text-[2.5vw]
           ${activeFilter
-              ? "bg-[#ff5f00] text-black hover:bg-[#ff5f00]"
-              : "bg-black/20 backdrop-blur-lg text-[#ffffff] hover:text-black hover:bg-[#ff5f00]"
+              ? "bg-primary text-background hover:bg-primary"
+              : "bg-black/20 backdrop-blur-lg text-foreground hover:text-background hover:bg-primary"
             }
         `}
       >
@@ -212,7 +212,7 @@ export function FilterMenu({
           </>
         ) : (
           <>
-            <svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg" className={light ? "h-3 w-4" : "max-md:h-[4vw] h-[1vw] max-lg:h-[2.5vw]"}>
+            <svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg" className={light ? "h-3 w-4" : "max-md:h-[4vw] h-[1vw] max-[1025px]:h-[2.5vw]"}>
               <g clipPath="url(#clip0_491_803)">
                 <rect width="16" height="2" rx="1" fill="currentColor" />
                 <rect x="3" y="5" width="10" height="2" rx="1" fill="currentColor" />

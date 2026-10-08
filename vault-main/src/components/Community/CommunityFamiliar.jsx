@@ -98,55 +98,56 @@ export default function CommunityFamiliar() {
   };
 
   return (
-    <div ref={rootRef} className="relative z-1 mx-auto  bg-[#F4F4F4] text-[#1D1D1D]" data-zone="sheet" data-sound-flow="off">
-      <section className="mx-auto max-w-[1536px] px-[4.5vw] py-[7vw]" aria-labelledby="fam-h">
-        <ol className="mt-12 flex flex-col px-[1vw]">
+    <div ref={rootRef} className="relative z-1 bg-light text-ink" data-zone="sheet" data-sound-flow="off">
+      <section id="familiar" className="mx-auto flex w-full max-w-[1536px] flex-col gap-[7vw] px-[4.5vw] py-[7%] max-md:gap-[12vw] max-md:px-[6vw]" aria-labelledby="fam-h">
+        <ol className="flex flex-col px-[1vw]">
           {FAMILIAR.map((item, i) => (
             <li
               key={item.text}
               data-fam
-              className={`flex items-baseline gap-4 border-t border-[rgba(29,29,29,.1)] py-[1.9vw] max-md:py-6 last:border-b`}
+              className="flex items-baseline gap-[1vw] border-t border-black/10 py-[1.9vw] last:border-b max-md:gap-[4vw] max-md:py-[6vw]"
             >
-              <span className={`w-[70px] shrink-0 max-sm:w-[44px] font-avenir text-[11px] font-medium tracking-[.14em] uppercase transition-colors duration-1200 ease-[cubic-bezier(.16,1,.3,1)] ${lit === i ? "text-primary" : "text-[#B4B4B4]"}`}>
+              <span className={`w-[5vw] shrink-0 font-avenir text-[0.7vw] font-medium uppercase tracking-[0.1em] transition-colors duration-1200 ease-[cubic-bezier(.16,1,.3,1)] max-md:w-[11vw] max-md:text-[2.8vw] ${lit === i ? "text-primary" : "text-black/20"}`}>
                 {String(i + 1).padStart(2, "0")}
               </span>
-              <p className={`min-w-0 flex-1 font-aeonik font-light  text-[2.8vw] leading-[1.12] tracking-[-.03em] transition-colors duration-1200 ease-[cubic-bezier(.16,1,.3,1)] ${lit === i ? "text-[#1D1D1D]" : "text-[#B4B4B4]"}`}>
+              <p className={`text32 min-w-0 flex-1 font-aeonik font-light leading-[1.1] tracking-tight transition-colors duration-1200 ease-[cubic-bezier(.16,1,.3,1)] ${lit === i ? "text-ink" : "text-black/20"}`}>
                 {item.text}
                 {item.em && <> <em className="text-primary not-italic">{item.em}</em>{item.after}</>}
               </p>
             </li>
           ))}
         </ol>
-        <LineReveal as="h2" className={`font-aeonik font-normal tracking-[-.035em] leading-[1.02]  text80 mt-[7vw] max-w-[45vw] max-lg:max-w-[80vw] max-md:max-w-full`}>
+        <LineReveal as="h2" id="fam-h" className="text80 w-[50%] font-aeonik font-normal max-[1025px]:w-[88%] max-md:w-full">
           You’re not the only one. <span className="gradient-text-animate gradient-text-single">There’s a room for this.</span>
         </LineReveal>
       </section>
 
-      <div className="mx-auto flex max-w-[1536px] gap-8 px-[4.5vw] pb-[10vw] max-lg:flex-col" id="why">
-        <div className="sticky top-1/2 -translate-y-1/2 flex mt-[6vw] min-w-0 flex-[.8] flex-col items-start gap-4.5 self-start max-lg:hidden">
-          {/* <p className="eyebrow label">Why join</p> */}
+      <section id="why" className="mx-auto flex w-full max-w-[1536px] justify-between gap-[2vw] px-[4.5vw] pb-[10vw] max-[1025px]:flex-col max-md:px-[6vw]">
+        <div className="sticky top-1/2 flex w-[32%] -translate-y-1/2 flex-col items-start gap-[1.2vw] self-start max-[1025px]:hidden">
           {PANELS.map((p, i) => (
             <button
               key={p.nav}
               type="button"
               aria-current={spy === i ? "true" : undefined}
               onClick={() => goToPanel(i)}
-              className={`font-aeonik font-normal tracking-[-.035em] leading-[1.02] text-left text-[2.6vw] transition-colors duration-900 ease-[cubic-bezier(.16,1,.3,1)] ${spy === i ? "text-[#1D1D1D]" : "text-[#B4B4B4] hover:text-[#8a8a8a]"}`}
+              className={`text32 text-left font-aeonik font-normal transition-colors duration-900 ease-[cubic-bezier(.16,1,.3,1)] ${spy === i ? "text-ink" : "text-black/20 hover:text-black/40"}`}
             >
               {p.nav}
             </button>
           ))}
         </div>
-        <div className="flex min-w-0 flex-[1.6] flex-col gap-[14vw]">
+        <div className="flex w-[66%] flex-col gap-[14vw] max-[1025px]:w-full max-md:gap-[20vw]">
           {PANELS.map(({ title, text, Card }, i) => (
-            <article key={title} data-panel={i}>
+            <article key={title} data-panel={i} className="flex flex-col gap-[1.8vw] max-md:gap-[5vw]">
               <Card joined={joined} />
-              <LineReveal as="h3" className="mt-[1.8vw] max-md:mt-[5vw] text32 font-aeonik text-[2.6vw]! max-md:text-[4vw]! max-sm:text-[6.6vw]!">{title}</LineReveal>
-              <p data-fadeup-delay="0.15" className="fadeup mt-[1vw] max-md:mt-[3vw] max-w-[52ch] text22 font-avenir text-[1.1vw]! leading-[1.6]! max-md:text-[2.2vw]! max-sm:text-[4.1vw]! text-[#6B6B6B]">{text}</p>
+              <div className="flex flex-col gap-[1vw] max-md:gap-[3vw]">
+                <LineReveal as="h3" className="text32 font-aeonik">{title}</LineReveal>
+                <p data-fadeup-delay="0.15" className="fadeup text22 max-w-[52ch] font-avenir leading-[1.6] text-black/60">{text}</p>
+              </div>
             </article>
           ))}
         </div>
-      </div>
+      </section>
     </div>
   );
 }

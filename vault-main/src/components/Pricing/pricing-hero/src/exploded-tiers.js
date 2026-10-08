@@ -68,6 +68,11 @@ function codeFontForCanvas() {
 }
 
 export function mountExplodedTiers(host, opts = {}) {
+  // Site colour tokens from globals.css (fallbacks match the tokens)
+  const token = (name, fallback) => getComputedStyle(document.documentElement).getPropertyValue(name).trim() || fallback;
+  const PRIMARY = token('--primary', '#ff5f00');
+  const FOREGROUND = token('--foreground', '#ffffff');
+  const fgAlpha = (a) => { const n = parseInt(FOREGROUND.replace('#', '').replace(/^(.)(.)(.)$/, '$1$1$2$2$3$3'), 16); return `rgba(${n >> 16},${(n >> 8) & 255},${n & 255},${a})`; };
   const {
     THREE: T, sound = null, plans = DEFAULT_PLANS, pricing = PRICING,
     canvasParent = host, holdMs = 900, pose: poseOpt = null, poseNarrow: poseNarrowOpt = null,
@@ -113,7 +118,7 @@ export function mountExplodedTiers(host, opts = {}) {
 
   scene.add(new T.HemisphereLight(linearHex(0x3a2a22), linearHex(0x050505), 0.4 * LK));
   const key = new T.DirectionalLight(linearHex(0xffe6d4), 0.9 * LK); key.position.set(-6, 10, 8); scene.add(key);
-  const rim = new T.PointLight(L('#FF6B00'), LEGACY_LIGHTS ? 2.2 : 30, 40, LEGACY_LIGHTS ? 2 : 1.4); rim.position.set(8, -4, 6); scene.add(rim);
+  const rim = new T.PointLight(L(PRIMARY), LEGACY_LIGHTS ? 2.2 : 30, 40, LEGACY_LIGHTS ? 2 : 1.4); rim.position.set(8, -4, 6); scene.add(rim);
 
   const G = new T.Group();
   scene.add(G);
@@ -125,26 +130,26 @@ export function mountExplodedTiers(host, opts = {}) {
   function drawLayer(c, layer, plan) {
     const g = c.getContext('2d'), w = c.width, h = c.height, ghost = !!layer.ghost;
     g.clearRect(0, 0, w, h);
-    g.strokeStyle = ghost ? 'rgba(244,244,244,.25)' : 'rgba(255,140,60,.75)'; g.lineWidth = 3;
+    g.strokeStyle = ghost ? fgAlpha(.25) : 'rgba(255,140,60,.75)'; g.lineWidth = 3;
     if (ghost) g.setLineDash([14, 10]);
     g.beginPath(); if (g.roundRect) g.roundRect(8, 8, w - 16, h - 16, 26); else g.rect(8, 8, w - 16, h - 16); g.stroke(); g.setLineDash([]);
-    const ix = 40, iy = 48; g.fillStyle = ghost ? 'rgba(244,244,244,.25)' : '#FF6B00';
+    const ix = 40, iy = 48; g.fillStyle = ghost ? fgAlpha(.25) : PRIMARY;
     const icon = ghost ? 'none' : layer.icon;
     if (icon === 'grid') { for (let r = 0; r < 3; r++) for (let q = 0; q < 3; q++) { g.globalAlpha = 0.35 + (r + q) * 0.1; g.fillRect(ix + q * 30, iy + r * 30, 22, 22); } g.globalAlpha = 1; }
     else if (icon === 'rows') { for (let r = 0; r < 3; r++) { g.globalAlpha = 0.9 - r * 0.2; g.fillRect(ix, iy + r * 30, 96, 20); } g.globalAlpha = 1; }
-    else if (icon === 'tpl') { g.strokeStyle = '#FF6B00'; g.lineWidth = 4; g.strokeRect(ix, iy, 96, 78); g.fillRect(ix, iy, 96, 18); g.globalAlpha = 0.5; g.fillRect(ix + 10, iy + 30, 50, 10); g.fillRect(ix + 10, iy + 48, 76, 20); g.globalAlpha = 1; }
-    else if (icon === 'coins') { for (let r = 0; r < 3; r++) { const gr = g.createRadialGradient(ix + 22 + r * 26 - 6, iy + 34, 2, ix + 22 + r * 26, iy + 40, 20); gr.addColorStop(0, '#FFD2B0'); gr.addColorStop(0.55, '#FF6B00'); gr.addColorStop(1, '#9a3800'); g.fillStyle = gr; g.beginPath(); g.arc(ix + 22 + r * 26, iy + 40, 20, 0, 7); g.fill(); } }
+    else if (icon === 'tpl') { g.strokeStyle = PRIMARY; g.lineWidth = 4; g.strokeRect(ix, iy, 96, 78); g.fillRect(ix, iy, 96, 18); g.globalAlpha = 0.5; g.fillRect(ix + 10, iy + 30, 50, 10); g.fillRect(ix + 10, iy + 48, 76, 20); g.globalAlpha = 1; }
+    else if (icon === 'coins') { for (let r = 0; r < 3; r++) { const gr = g.createRadialGradient(ix + 22 + r * 26 - 6, iy + 34, 2, ix + 22 + r * 26, iy + 40, 20); gr.addColorStop(0, '#FFD2B0'); gr.addColorStop(0.55, PRIMARY); gr.addColorStop(1, '#9a3800'); g.fillStyle = gr; g.beginPath(); g.arc(ix + 22 + r * 26, iy + 40, 20, 0, 7); g.fill(); } }
     else if (icon === 'star') { g.beginPath(); for (let r = 0; r < 10; r++) { const a = (r / 10) * Math.PI * 2 - Math.PI / 2, rr = r % 2 ? 16 : 40; g.lineTo(ix + 48 + Math.cos(a) * rr, iy + 40 + Math.sin(a) * rr); } g.closePath(); g.fill(); }
-    else { g.strokeStyle = 'rgba(244,244,244,.3)'; g.lineWidth = 3; g.beginPath(); g.arc(ix + 40, iy + 40, 30, 0, 7); g.moveTo(ix + 18, iy + 62); g.lineTo(ix + 62, iy + 18); g.stroke(); }
-    g.fillStyle = ghost ? 'rgba(244,244,244,.4)' : '#F4F4F4'; g.font = `400 40px ${faceFont()}`; g.fillText(layer.title, 190, 92);
-    g.fillStyle = ghost ? 'rgba(244,244,244,.3)' : '#FFB27A'; g.font = `400 26px ${monoFont}`;
+    else { g.strokeStyle = fgAlpha(.3); g.lineWidth = 3; g.beginPath(); g.arc(ix + 40, iy + 40, 30, 0, 7); g.moveTo(ix + 18, iy + 62); g.lineTo(ix + 62, iy + 18); g.stroke(); }
+    g.fillStyle = ghost ? fgAlpha(.4) : FOREGROUND; g.font = `400 40px ${faceFont()}`; g.fillText(layer.title, 190, 92);
+    g.fillStyle = ghost ? fgAlpha(.3) : '#FFB27A'; g.font = `400 26px ${monoFont}`;
     g.fillText(typeof layer.sub === 'function' ? layer.sub({ yearly, currency, plan }) : layer.sub || '', 190, 140);
   }
 
   function paintTitle(s) {
     const c = s.userData.c, g = c.getContext('2d');
     g.clearRect(0, 0, 512, 160); g.textAlign = 'center';
-    g.fillStyle = '#F4F4F4'; g.font = `400 72px ${faceFont()}`; g.fillText(s.userData.plan.name, 256, 72);
+    g.fillStyle = FOREGROUND; g.font = `400 72px ${faceFont()}`; g.fillText(s.userData.plan.name, 256, 72);
     g.fillStyle = '#FF8A3D'; g.font = `400 34px ${monoFont}`; g.fillText(priceLabel(s.userData.plan, { yearly, currency, pricing }), 256, 130);
     s.material.map.needsUpdate = true;
   }
