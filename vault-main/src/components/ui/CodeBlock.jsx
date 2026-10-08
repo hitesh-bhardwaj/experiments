@@ -50,7 +50,7 @@ function tokenize(line) {
 
 // Copy -> check swap: the outgoing icon scales down and rotates away while the incoming
 // one scales up and rotates in; the label rolls up from "Copy" to "Copied" (and back).
-function CopyButtonContent({ copied }) {
+export function CopyButtonContent({ copied }) {
     const copyIconRef = useRef(null);
     const checkIconRef = useRef(null);
     const copyLabelRef = useRef(null);

@@ -5,7 +5,8 @@ import { createPortal } from "react-dom";
 import Image from "next/image";
 import gsap from "gsap";
 import { useLenis } from "lenis/react";
-import { Check, Copy, Heart, Lock } from "lucide-react";
+import { Heart, Lock } from "lucide-react";
+import { CopyButtonContent } from "@/components/ui/CodeBlock";
 import ButtonV3 from "@/homepage-v3/components/ButtonV3";
 import LinkButton from "@/components/WebsiteComps/LinkButton";
 import { getEffectHref, getEffectPreviewHref, getEffectCategory, resolveEffectCategoryId } from "@/lib/categories";
@@ -311,8 +312,7 @@ export function PreviewDrawerV4({
               }}
               className={`inline-flex shrink-0 cursor-pointer items-center gap-1.5 px-2 ${T14} transition-colors duration-300 ${copied ? "text-primary" : "text-foreground/70 hover:text-primary"}`}
             >
-              {copied ? <Check className="size-3.5" aria-hidden="true" /> : <Copy className="size-3.5" aria-hidden="true" />}
-              {copied ? "Copied" : "Copy"}
+              <CopyButtonContent copied={copied} />
             </button>
           </div>
         ) : (

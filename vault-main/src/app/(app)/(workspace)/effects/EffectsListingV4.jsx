@@ -593,7 +593,7 @@ export function EffectsListingV4({
             Full-width bar so its background covers the sheet edge to edge while stuck. */}
         <div className="sticky top-[-2%] z-5 h-fit border-b border-black/8 bg-light max-lg:static max-lg:border-b-0">
           <div className={`${WRAP} flex flex-wrap items-end justify-between gap-[1vw] pt-10 pb-4 max-md:gap-[4vw] max-md:pt-8`}>
-            <p aria-live="polite" className={`${DISPLAY} ${T20} flex flex-wrap items-baseline font-aeonik tracking-tight`}>
+            <div aria-live="polite" className={`${DISPLAY} ${T20} flex flex-wrap items-baseline font-aeonik tracking-tight`}>
               {/* Fixed-width slots, so nothing beside them moves when the count or page name changes */}
               <span className="flex w-[6vw] shrink-0 items-baseline gap-x-[0.4vw] max-[1025px]:w-[14vw] max-md:w-[32vw] max-md:gap-x-[1.5vw]">
                 <span className="relative -top-[0.05em] font-medium tabular-nums">
@@ -606,7 +606,7 @@ export function EffectsListingV4({
                 <span aria-hidden="true" className={`${T15} text-black/60 transition-opacity duration-300 ${context ? "" : "opacity-0"}`}>·</span>
                 <RollText text={contextTail} block className="w-[14vw] shrink-0 overflow-x-visible! overflow-y-clip! whitespace-nowrap max-[1025px]:w-[24vw] max-md:w-[48vw]" />
               </span>
-            </p>
+            </div>
 
             <div className="flex flex-wrap items-center gap-[0.7vw] max-md:gap-[2.5vw]">
               <SlidingSegment label="Tier" items={TIERS} value={tier} onChange={setTier} itemClassName="w-14" />
