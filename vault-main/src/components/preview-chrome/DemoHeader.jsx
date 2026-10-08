@@ -46,8 +46,8 @@ const CODE_FONT = "font-code";
 const BTN =
   "inline-flex h-9.5 min-w-9.5 cursor-pointer items-center justify-center gap-2 px-2.5 text-[#cfcfcf] transition-colors duration-400 " +
   "hover:bg-[rgba(244,244,244,.08)] hover:text-white [&_svg]:size-4.25 " +
-  "aria-checked:bg-[rgba(255,107,0,.16)] aria-checked:text-[#FF6B00] aria-checked:shadow-[inset_0_0_0_1px_rgba(255,107,0,.45)] " +
-  "aria-pressed:bg-[rgba(255,107,0,.16)] aria-pressed:text-[#FF6B00] aria-pressed:shadow-[inset_0_0_0_1px_rgba(255,107,0,.45)] " +
+  "aria-checked:bg-primary aria-checked:text-black aria-checked:shadow-[inset_0_0_0_1px_rgba(255,107,0,.45)] " +
+  "aria-pressed:bg-primary aria-pressed:text-black aria-pressed:shadow-[inset_0_0_0_1px_rgba(255,107,0,.45)] " +
   "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F4F4F4]";
 const SEP = "mx-1 h-5.5 w-px bg-[rgba(244,244,244,.1)] max-md:hidden";
 
@@ -616,7 +616,7 @@ function PreviewBar({ title: titleProp, tier: tierProp, backHref: backHrefProp, 
           </Link>
 
           <span
-            className={`mr-1.5 ml-0.5 inline-flex h-6 items-center px-2.25 text-[10.5px] font-semibold uppercase tracking-[.12em] max-md:hidden ${
+            className={`mr-1.5 ml-0.5 inline-flex h-6 items-center px-2.25 text-[1vw] max-md:hidden ${
               tier === "pro" ? "bg-[#FF6B00] text-[#141414]" : "bg-[rgba(244,244,244,.9)] text-[#1D1D1D]"
             }`}
           >

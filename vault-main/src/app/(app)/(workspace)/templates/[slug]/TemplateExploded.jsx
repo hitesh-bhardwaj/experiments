@@ -83,6 +83,7 @@ export default function TemplateExploded({
       rot: { x: REST.x, y: REST.y, tx: REST.x, ty: REST.y },
       mouse: { x: 0, y: 0, on: false },
       drag: null, hover: -1, sel: -1, focus: null, panel: -1, visible: false,
+      frame: { shift: 0, zoom: 1 },
     };
     sceneRef.current = state;
 
@@ -162,10 +163,16 @@ export default function TemplateExploded({
     
       const sec = section.getBoundingClientRect();
       const p = clamp(-sec.top / Math.max(1, sec.height - window.innerHeight), 0, 1);
+      // From the first section's centre to the last one's over the whole pinned
+      // scroll - no hold at the end: a hold made the last stretch of scrolling move
+      // nothing on screen (a "freeze") before the stage unpinned and slid up.
+      // The focus is eased in the assembled page's coordinates and only then spread,
+      // so changing the explode amount fans the layers around the point in view
+      // rather than moving the target (which the easing would then chase).
       const spread = 1 + e * 0.18;
       const firstY = n ? slabs[0].y0 : 0;
       const lastY = n ? slabs[n - 1].y0 : 0;
-      const target = firstY + (lastY - firstY) * Math.min(1, p / 0.92);
+      const target = firstY + (lastY - firstY) * p;
       state.focus = state.focus == null ? target : state.focus + (target - state.focus) * Math.min(1, dt * 6);
       const focusY = state.focus * spread;
       G.position.y = -focusY;
@@ -182,6 +189,47 @@ export default function TemplateExploded({
         if (focusY < bottom) fi = i + 0.5;
       }
       fi = clamp(fi, 0, Math.max(0, n - 1));
+
+      // Keep the page in focus inside the stage's free area - below the fixed header
+      // (phones: below the info panel, which spans the top there) and above the
+      // toolbar - instead of filling the whole stage, where tall sections ran off its
+      // top edge and under the panel/header. The view is centred on that area and
+      // zoomed out only as far as the section in focus needs (its real projected
+      // height, perspective included), easing as you move between tall and short
+      // sections. View offset + zoom keep the labels and click-picking in step.
+      if (n) {
+        const narrow = st.width < 768;
+        const panelEl = narrow ? stage.querySelector("aside[data-exploded-ui]") : null;
+        const barEl = stage.querySelector("div[data-exploded-ui]");
+        const top = panelEl ? panelEl.getBoundingClientRect().bottom - st.top + 12 : 96;
+        const bottom = barEl ? barEl.getBoundingClientRect().top - st.top - 16 : st.height - 16;
+        const free = Math.max(120, bottom - top);
+        // The focused slab's height on screen at zoom 1 (last frame's matrices).
+        const slab = slabs[clamp(Math.round(fi), 0, n - 1)];
+        let fitZoom = 1;
+        if (slab?.m.matrixWorld) {
+          let lo = Infinity;
+          let hi = -Infinity;
+          for (const [cx, cy] of [[-1, -1], [1, -1], [-1, 1], [1, 1]]) {
+            V.set((cx * slab.w) / 2, (cy * slab.h) / 2, 0).applyMatrix4(slab.m.matrixWorld).project(cam);
+            lo = Math.min(lo, V.y);
+            hi = Math.max(hi, V.y);
+          }
+          const heightAt1 = (((hi - lo) / 2) * st.height) / cam.zoom;
+          if (heightAt1 > 0) fitZoom = clamp(free / heightAt1, 0.45, 1);
+        }
+        const fr = state.frame;
+        fr.zoom += (fitZoom - fr.zoom) * Math.min(1, dt * 4);
+        const shift = Math.round((top + bottom) / 2 - st.height / 2);
+        const zoom = Math.round(fr.zoom * 1000) / 1000;
+        if (shift !== fr.shift || zoom !== cam.zoom) {
+          fr.shift = shift;
+          cam.zoom = zoom;
+          if (shift) cam.setViewOffset(st.width, st.height, 0, -shift, st.width, st.height);
+          else cam.clearViewOffset();
+          cam.updateProjectionMatrix();
+        }
+      }
 
       // hover
       state.hover = -1;

@@ -25,7 +25,8 @@ const formatViews = (n) => (n >= 1000 ? new Intl.NumberFormat("en", { notation: 
  * The shot and the action buttons are siblings rather than nested, so there's
  * no button inside an <a>.
  */
-export function TemplateCard({ template, priority = false, isWishlisted = false, onToggleWishlist, onOpen, hasAccess = false }) {
+// small: no hover actions (save, live demo, article) - e.g. the detail page's "More templates".
+export function TemplateCard({ template, priority = false, isWishlisted = false, onToggleWishlist, onOpen, hasAccess = false, small = false }) {
   const [imageError, setImageError] = useState(false);
   const { buy, modals } = useTemplatePurchase();
 
@@ -73,6 +74,7 @@ export function TemplateCard({ template, priority = false, isWishlisted = false,
         </ShotTarget>
 
         {/* hover actions (always shown on touch layouts) */}
+        {!small && (
         <div className="absolute right-3 bottom-3 z-2 flex gap-1.5 opacity-0 transition-opacity duration-500 group-hover:opacity-100 group-focus-within:opacity-100 max-lg:opacity-100">
           <Tooltip label={isWishlisted ? "Saved" : "Save"}>
             <button
@@ -103,6 +105,7 @@ export function TemplateCard({ template, priority = false, isWishlisted = false,
             </Link>
           </Tooltip>
         </div>
+        )}
       </div>
 
       <div className="flex flex-col gap-2">

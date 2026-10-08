@@ -16,7 +16,6 @@ import { useRouter, usePathname } from "next/navigation";
 import { AppVaultHeader as VaultHeader } from "@/components/layout/AppVaultHeader";
 import { EffectCard } from "../EffectCard";
 import { CustomAnimationCta } from "../CustomAnimationCta";
-import { useEffectCardActions } from "../useEffectCardActions";
 import FAQ from "@/homepage/sections/FAQ";
 import { CodeBlock, CodeBlockLanguageProvider } from "@/components/ui/CodeBlock";
 import { TableOfContents } from "@/components/ui/TableOfContents";
@@ -172,8 +171,6 @@ export function EffectDetailContent({
 
   const router = useRouter();
   const pathname = usePathname();
-  // Related effects use the full listing card: save, copy install / Pro lock, live demo.
-  const { cardActions, overlays: cardOverlays } = useEffectCardActions({ userPlan, signInRedirect: pathname });
 
   const [mounted, setMounted] = useState(false);
   const [showSignInToCopyModal, setShowSignInToCopyModal] = useState(false);
@@ -574,7 +571,8 @@ export function EffectDetailContent({
                           >
                             <EffectCard
                               effect={relatedEffect}
-                              {...cardActions(relatedEffect)}
+                              // small: no hover buttons (save, copy, demo, article) on related cards
+                              small
                               onOpen={(item) => router.push(getEffectHref(item))}
                               tagClassName="border-black/20"
                               sizes="(max-width: 639px) 100vw, (max-width: 767px) 55vw, (max-width: 1023px) 44vw, 31vw"
@@ -658,7 +656,6 @@ export function EffectDetailContent({
         </div>,
         document.body
       )}
-      {cardOverlays}
       <UpgradeToProModal open={upgradeReason !== null} reason={upgradeReason ?? "pro-effect"} onClose={closeUpgradeModal} />
     </CopyLimitProvider>
   );

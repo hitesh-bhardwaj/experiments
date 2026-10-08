@@ -18,7 +18,7 @@ import { useTemplateAccess } from "./useTemplateAccess";
 import { TemplateCard } from "./TemplateCard";
 import { TemplatePreviewDrawer } from "./TemplatePreviewDrawer";
 import { useTemplatePurchase } from "./useTemplatePurchase";
-import { DISPLAY, GUTTER, LABEL, PRICE, T16, catalogueOf, priceOf } from "./tokens";
+import { DISPLAY, GUTTER, LABEL, PRICE, T16, cardReveal, catalogueOf, priceOf } from "./tokens";
 
 // three.js only loads when the corridor is shown.
 const TemplateCorridor = dynamic(() => import("./TemplateCorridor"), {
@@ -44,16 +44,6 @@ const CATALOGUES = [
   { id: "full", label: "Pro+ only" },
 ];
 const CARD_LAYOUT_TRANSITION = { layout: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } };
-// Cards fade up as they scroll into view, matching the site's .fadeup (50px, 1.2s,
-// power3.out, at 90% of the viewport), with the right column a beat behind the left.
-// Done with motion rather than .fadeup: useFadeUp only scans once, and the cards mount
-// and unmount as the filters change.
-const cardReveal = (index) => ({
-  initial: { opacity: 0, y: 50 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true, margin: "0px 0px -10% 0px" },
-  transition: { duration: 1.2, ease: [0.165, 0.84, 0.44, 1], delay: (index % 2) * 0.12 },
-});
 
 const CHIP = `inline-flex py-3 shrink-0 cursor-pointer items-center px-3.5 ${T16} backdrop-blur-lg transition-[background-color,color,box-shadow] duration-500`;
 const CHIP_OFF = "text-foreground/80 bg-foreground/5 ring-1 ring-inset ring-foreground/15 hover:ring-primary/60";
@@ -108,7 +98,7 @@ export function TemplatesListing({ templates = [], description = "", faqItems = 
   const view = corridorOk ? chosenView || "corr" : "grid";
 
   const { toast, showToast, dismissToast } = useToastQueue();
-  const { wishlist, toggleWishlist } = useTemplateWishlist({
+  const { wishlist, toggleWishlist, signInModal } = useTemplateWishlist({
     onSaved: (t) => showToast({ title: `${t.title} saved`, description: "You'll find it in your dashboard's My Templates." }),
     onRemoved: (t) => showToast({ title: `${t.title} removed`, description: "No longer in your saved templates." }),
   });
@@ -331,6 +321,7 @@ export function TemplatesListing({ templates = [], description = "", faqItems = 
         onBuy={buyFromDrawer}
       />
       {purchaseModals}
+      {signInModal}
 
       <ToastViewport toast={toast} onDismiss={dismissToast} />
     </div>

@@ -41,3 +41,15 @@ const SAMPLE_CATALOGUE = {
 export const catalogueOf = (template) => template.catalogue || SAMPLE_CATALOGUE[template.slug] || "selected";
 export const catalogueLabel = (template) => (catalogueOf(template) === "full" ? "Pro+ only" : "✦ Selected");
 export const priceOf = (template) => template.pricing?.standaloneOneTime ?? null;
+
+// Template cards fade up as they scroll into view, matching the site's .fadeup (50px,
+// 1.2s, power3.out, at 90% of the viewport), with the right column a beat behind the
+// left. Spread onto a motion element; used by the /templates grid and the detail page's
+// "More templates". Done with motion rather than .fadeup: useFadeUp only scans once, and
+// the listing's cards mount and unmount as the filters change.
+export const cardReveal = (index) => ({
+  initial: { opacity: 0, y: 50 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true, margin: "0px 0px -10% 0px" },
+  transition: { duration: 1.2, ease: [0.165, 0.84, 0.44, 1], delay: (index % 2) * 0.12 },
+});

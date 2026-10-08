@@ -1,20 +1,28 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { useRouter, usePathname } from "next/navigation";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { createPortal } from "react-dom";
+import { usePathname } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
+import Button from "@/homepage/components/Button";
+import { Modal } from "../effects/useEffectCardActions";
+
+const subscribeNever = () => () => {};
 
 // Shared by TemplatesGrid (the /templates listing) and TemplateDetail's
 // "Related Templates" section - both render TemplateCard, whose Save
 // button needs the same wishlisted_templates state and toggle behind it
 // (api/wishlist-templates), just from two different places in the tree.
-// Signed-out click bounces through /sign-in and back to this exact page,
-// same pattern TemplateDetail's own "Buy" button already uses.
+// Signed-out click opens the same "Sign in required" modal as the effect cards
+// (its Sign In button comes back to this exact page) - render `signInModal`
+// once wherever the hook is used.
 export function useTemplateWishlist({ onSaved, onRemoved } = {}) {
   const { isLoaded, isSignedIn } = useUser();
-  const router = useRouter();
   const pathname = usePathname();
   const [wishlist, setWishlist] = useState([]);
+  const [signInPrompt, setSignInPrompt] = useState(false);
+  // Portals need <body>; false on the server and during hydration.
+  const mounted = useSyncExternalStore(subscribeNever, () => true, () => false);
 
   useEffect(() => {
     if (!isSignedIn) return;
@@ -50,7 +58,7 @@ export function useTemplateWishlist({ onSaved, onRemoved } = {}) {
     if (!isLoaded) return;
 
     if (!isSignedIn) {
-      router.push(`/sign-in?redirect_url=${encodeURIComponent(pathname)}`);
+      setSignInPrompt(true);
       return;
     }
 
@@ -74,5 +82,15 @@ export function useTemplateWishlist({ onSaved, onRemoved } = {}) {
     }
   };
 
-  return { wishlist, toggleWishlist };
+  const signInModal = mounted
+    ? createPortal(
+        <Modal open={signInPrompt} onClose={() => setSignInPrompt(false)} title="Sign in required">
+          Create a free account or sign in to save templates and pick up right where you left off.
+          <Button text="Sign In" href={`/sign-in?redirect_url=${encodeURIComponent(pathname)}`} />
+        </Modal>,
+        document.body,
+      )
+    : null;
+
+  return { wishlist, toggleWishlist, signInModal };
 }

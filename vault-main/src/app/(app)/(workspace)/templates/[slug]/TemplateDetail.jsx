@@ -18,7 +18,7 @@ import Button from "@/homepage/components/Button";
 import { useTemplateWishlist } from "../useTemplateWishlist";
 import { useTemplateAccess } from "../useTemplateAccess";
 import { TemplateCard } from "../TemplateCard";
-import { BADGE, GUTTER, LABEL, T13, T14, T16, catalogueOf, priceOf } from "../tokens";
+import { BADGE, GUTTER, LABEL, T13, T14, T16, cardReveal, catalogueOf, priceOf } from "../tokens";
 import { GetTemplateModal } from "./GetTemplateModal";
 
 // three.js only loads when the exploded view is shown.
@@ -104,7 +104,7 @@ export function TemplateDetail({ template, templateAccess = { allowed: false, re
   const [device, setDevice] = useState("desktop");
 
   const { toast, showToast, dismissToast } = useToastQueue();
-  const { wishlist, toggleWishlist } = useTemplateWishlist({
+  const { wishlist, toggleWishlist, signInModal } = useTemplateWishlist({
     onSaved: (t) => showToast({ title: `${t.title} saved`, description: "You'll find it in your dashboard's My Templates." }),
     onRemoved: (t) => showToast({ title: `${t.title} removed`, description: "No longer in your saved templates." }),
   });
@@ -398,21 +398,18 @@ export function TemplateDetail({ template, templateAccess = { allowed: false, re
               </div>
             </div>
             <div className="flex flex-wrap gap-x-[1.4vw] gap-y-14">
-              {related.map((t) => (
-                <div key={t.slug} className="w-[calc((100%-1.4vw)/2)] max-md:w-full">
-                  <TemplateCard
-                    template={t}
-                    isWishlisted={wishlist.includes(t.slug)}
-                    onToggleWishlist={toggleWishlist}
-                    hasAccess={relatedAccess.includes(t.slug)}
-                  />
-                </div>
+              {/* Same fade-up as the /templates grid (cardReveal). */}
+              {related.map((t, index) => (
+                <motion.div key={t.slug} {...cardReveal(index)} className="w-[calc((100%-1.4vw)/2)] max-md:w-full">
+                  <TemplateCard small template={t} hasAccess={relatedAccess.includes(t.slug)} />
+                </motion.div>
               ))}
             </div>
           </section>
         )}
       </div>
 
+      {signInModal}
       <GetTemplateModal template={template} open={getOpen} tab={getTab} onTab={setGetTab} onClose={closeGet} onBuy={buy} />
 
       <TemplatePaywallModal
