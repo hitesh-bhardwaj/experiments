@@ -20,11 +20,11 @@ export default function NavLinks({
             className="relative ml-[13.5vw]"
             onMouseLeave={onNavLeave}
         >
-            <div className="text20 relative flex gap-[0.6vw] rounded-full bg-grey p-[0.6vw] py-[0.4vw] font-medium">
+            <div className="text20 relative flex gap-[0.6vw] bg-grey p-[0.6vw] py-[0.4vw] font-medium">
                 {vaultLinks.map(({ label, href, dropdown }, index) => {
                     const highlighted = isHighlighted(index, dropdown)
                     const isExternal = href.startsWith('http')
-                    const itemClassName = `relative z-10 rounded-full p-[0.4vw] px-[1.2vw] text-[1.15vw] font-medium tracking-wide transition-colors duration-300 motion-reduce:transition-none ${
+                    const itemClassName = `relative z-10 p-[0.4vw] px-[1.2vw] text-[1.15vw] font-medium tracking-wide transition-colors duration-300 motion-reduce:transition-none ${
                         highlighted ? 'text-foreground' : 'text-white/70'
                     }`
 
@@ -37,7 +37,7 @@ export default function NavLinks({
                                     layoutId={
                                         reduceMotion ? undefined : 'nav-pill'
                                     }
-                                    className="absolute inset-0 -z-10 rounded-full bg-primary"
+                                    className="absolute inset-0 -z-10 bg-primary"
                                     initial={{
                                         opacity: 0,
                                     }}

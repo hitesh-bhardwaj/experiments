@@ -43,8 +43,8 @@ function UnlockNotice({ onClose }) {
                 aria-live="polite"
                 className={`pointer-events-auto relative w-[min(26rem,100%)] border border-white/10 bg-black/30 p-5 pr-12 text-left backdrop-blur-sm ${closing === "fade" ? "motion-safe:animate-[hx-fade-out_.32s_ease-out_both]" : closing ? "motion-safe:animate-[hx-scale-out_.32s_cubic-bezier(.7,0,.84,0)_both]" : "motion-safe:animate-[hx-scale-in_.8s_cubic-bezier(.16,1,.3,1)_both]"}`}
             >
-                <p className="text-[11px] font-semibold uppercase tracking-[.14em] text-primary">{UNLOCK_TITLE}</p>
-                <p className="mt-2 text-sm leading-relaxed text-white/80">{UNLOCK_BODY}</p>
+                <p className="type-label text-primary">{UNLOCK_TITLE}</p>
+                <p className="mt-2 type-small text-white/80">{UNLOCK_BODY}</p>
                 <button
                     type="button"
                     onClick={() => requestClose()}

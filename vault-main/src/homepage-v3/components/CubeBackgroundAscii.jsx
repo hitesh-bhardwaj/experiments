@@ -6,6 +6,7 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { DEFAULT_CHAR_SET, resolveCharSet } from "./char-sets";
 import { shouldSkipRealtimeGPU } from "@/lib/audit";
 import { prefersReducedMotion } from "@/lib/motion";
+import { MEDIA } from "@/lib/breakpoints";
 
 export const VIDEO_SRC = "/cube.mp4";
 
@@ -139,8 +140,8 @@ export const CUBE_ASCII_DEFAULTS = {
   grainOnEmpty: 1.0,
 };
 
-/** Viewport the phone framing below takes over at - Tailwind's `md` edge. */
-const MOBILE_QUERY = "(max-width: 1025px)";
+/** Viewport the phone framing below takes over at: tablet and below (the max-lg: range). */
+const MOBILE_QUERY = MEDIA.tablet;
 
 /**
  * Phone framing. A portrait canvas is nowhere near the 16:9 clip's shape, so the
@@ -1124,7 +1125,7 @@ function CubeAsciiCanvas({ config, intro, src, className }) {
     const mouse = { x: -9999, y: -9999, vx: 0, vy: 0 };
     const trail = [];
     const now = () => performance.now();
-    const isMobile = () => window.matchMedia("(max-width: 1025px)").matches;
+    const isMobile = () => window.matchMedia(MEDIA.tablet).matches;
 
     const onMove = (event) => {
       if (isMobile()) return;

@@ -69,7 +69,7 @@ export default function UpgradeToProModal({ open, onClose, reason = "pro-effect"
         aria-modal="true"
         aria-labelledby="upgrade-to-pro-title"
         onClick={(event) => event.stopPropagation()}
-        className={`relative flex max-h-[90vh] w-[38vw] flex-col overflow-y-auto border border-white/20 bg-[#0e0e0e] p-10 text-foreground shadow-2xl transition-transform duration-300 max-[1025px]:w-[75%] max-[1025px]:p-7 max-md:w-full max-md:p-6 ${
+        className={`relative flex max-h-[90vh] w-[38vw] flex-col overflow-y-auto border border-white/20 bg-[#0e0e0e] p-10 text-foreground shadow-2xl transition-transform duration-300 max-lg:w-[75%] max-lg:p-7 max-md:w-full max-md:p-6 ${
           open ? "scale-100" : "scale-95"
         }`}
       >
@@ -97,7 +97,7 @@ export default function UpgradeToProModal({ open, onClose, reason = "pro-effect"
         </div>
 
         <div className="mt-5 flex flex-wrap items-end gap-x-3 gap-y-1">
-          <p className="flex items-center font-aeonik text-[4.5vw] leading-none max-[1025px]:text-[8vw] max-sm:text-[12vw]">
+          <p className="flex items-center font-aeonik text-[4.5vw] leading-none max-lg:text-[8vw] max-sm:text-[12vw]">
             <span className="sr-only">{`${symbol}${planPrice} ${planLabel.toLowerCase()}`}</span>
             <span aria-hidden="true" className="flex items-center leading-none">
               <span>{symbol}</span>
@@ -116,7 +116,7 @@ export default function UpgradeToProModal({ open, onClose, reason = "pro-effect"
         </div>
 
         {isIndia && (
-          <p className="mt-1 font-geist-mono text-[0.9vw] text-[#c5c5c5] max-[1025px]:text-[1.7vw] max-sm:text-[3.2vw]">
+          <p className="mt-1 font-geist-mono text-[0.9vw] text-[#c5c5c5] max-lg:text-[1.7vw] max-sm:text-[3.2vw]">
             +18% GST
           </p>
         )}
@@ -130,7 +130,7 @@ export default function UpgradeToProModal({ open, onClose, reason = "pro-effect"
           <ProCta isYearly={isYearly} currency={currency} />
         </div>
 
-        <p className="mt-4 font-geist-mono text-[0.85vw] text-light-grey max-[1025px]:text-[1.7vw] max-sm:text-[3.2vw]">
+        <p className="mt-4 font-geist-mono text-[0.85vw] text-light-grey max-lg:text-[1.7vw] max-sm:text-[3.2vw]">
           Instant access · npx hyperiux login · Cancel anytime
         </p>
       </div>

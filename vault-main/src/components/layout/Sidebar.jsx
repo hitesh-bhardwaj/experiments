@@ -128,7 +128,7 @@ function SectionButton({
       type="button"
       onClick={onClick}
       onMouseEnter={onMouseEnter}
-      className={`group relative flex h-10 cursor-pointer items-center rounded-md px-4 py-[1.5vw] text-left text22 font-medium text-white/90 transition-[width,color] duration-300 ease-out hover:text-white ${
+      className={`group relative flex h-10 cursor-pointer items-center px-4 py-[1.5vw] text-left text22 font-medium text-white/90 transition-[width,color] duration-300 ease-out hover:text-white ${
         isExpanded ? "w-[18vw]" : "w-[3.6vw]"
       } ${isExpanded ? "gap-3" : "gap-1.5"}`}
     >
@@ -549,7 +549,7 @@ export function Sidebar({
 
   return (
     <aside
-      className={`sticky bottom-0 left-0 top-0 z-51 h-screen bg-[#111111] text-white max-[1025px]:hidden ${
+      className={`sticky bottom-0 left-0 top-0 z-51 h-screen bg-[#111111] text-white max-lg:hidden ${
         disableInitialTransition
           ? "transition-none"
           : "transition-[width] duration-300 ease-out"
@@ -744,7 +744,7 @@ export function Sidebar({
                         navigateDocumentation(event, link.href)
                       }
                       onMouseEnter={() => setHoveredSidebarKey("docs")}
-                      className={`relative flex w-full items-center rounded-full py-2 text-left text-sm transition-colors cursor-pointer ${
+                      className={`relative flex w-full items-center py-2 text-left text-sm transition-colors cursor-pointer ${
                         index === 0 ? "mt-[0.7vw]" : ""
                       } ${
                         index === resolvedTopLinks.length - 1 ? "mb-[0.7vw]" : ""
@@ -801,7 +801,7 @@ export function Sidebar({
                       scroll={false}
                       onClick={(event) => navigateLegal(event, link.href)}
                       onMouseEnter={() => setHoveredSidebarKey("legal")}
-                      className={`relative flex w-full items-center rounded-full py-2 text-left text-sm transition-colors cursor-pointer ${
+                      className={`relative flex w-full items-center py-2 text-left text-sm transition-colors cursor-pointer ${
                         index === 0 ? "mt-[0.7vw]" : ""
                       } ${
                         index === resolvedLegalLinks.length - 1 ? "mb-[0.7vw]" : ""

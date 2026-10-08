@@ -353,7 +353,7 @@ export default function UsagePage() {
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-3 gap-4 max-[1025px]:grid-cols-2 max-md:grid-cols-1 max-md:gap-12">
+          <div className="grid grid-cols-3 gap-4 max-lg:grid-cols-2 max-md:grid-cols-1 max-md:gap-12">
             {filteredEffects.map((effect) => (
               <EffectCard
                 key={effect.name}

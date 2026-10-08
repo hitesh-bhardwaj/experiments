@@ -32,8 +32,8 @@ const Solution = () => {
             <div className='w-full h-fit px-[2vw]' id="code-block">
                 <CodeBlockWorkflow />
 
-                <div className='flex w-full justify-center max-[1025px]:justify-center mt-[2vw] max-[1025px]:mt-0'>
-                    <div className="pl-[0.65vw] text24 max-md:leading-[1.4] max-[1025px]:text-center leading-relaxed text-[#939393] max-[1025px]:pl-0 max-[1025px]:text-sm! ">
+                <div className='flex w-full justify-center max-lg:justify-center mt-[2vw] max-lg:mt-0'>
+                    <div className="pl-[0.65vw] text24 max-md:leading-[1.4] max-lg:text-center leading-relaxed text-[#939393] max-lg:pl-0 max-lg:text-sm! ">
                         <span className="inline-block">That&apos;s the whole workflow. The files land in your project. You change anything you want.&nbsp;</span>
                         <LinkButton href={"#Workflow"} shimmer tilted={false} showArrow text={"See How it Works"} />
                     </div>

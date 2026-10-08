@@ -65,10 +65,10 @@ export function DashboardShell({ children, totalEffects = 0, effects = [] }) {
           just be a redundant second one. */}
       <VaultHeader mobileOnly showSearch totalEffects={totalEffects} effects={effects} />
 
-      <div className="max-w-[1600px] mx-auto px-14 pt-20 pb-16 max-[1025px]:pt-28 max-md:px-[7vw] max-md:pt-32">
+      <div className="max-w-[1600px] mx-auto px-14 pt-20 pb-16 max-lg:pt-28 max-md:px-[7vw] max-md:pt-32">
 
         <div className="mb-12">
-          <div className="flex flex-col justify-center gap-4 mb-4 max-md:gap-12 max-[1025px]:gap-8">
+          <div className="flex flex-col justify-center gap-4 mb-4 max-md:gap-12 max-lg:gap-8">
             <button
               type="button"
               onClick={() => router.back()}
@@ -78,7 +78,7 @@ export function DashboardShell({ children, totalEffects = 0, effects = [] }) {
               <ArrowLeft className="h-5 w-5" />
             </button>
 
-            <h1 className="text-7xl font-aeonik max-md:text-[12vw] max-[1025px]:text-[5vw]">
+            <h1 className="text-7xl font-aeonik max-md:text-[12vw] max-lg:text-[5vw]">
               Dashboard
             </h1>
           </div>
@@ -88,7 +88,7 @@ export function DashboardShell({ children, totalEffects = 0, effects = [] }) {
           </p>
         </div>
 
-        <div className="flex items-start justify-between gap-4 mb-12 max-[1025px]:flex-col">
+        <div className="flex items-start justify-between gap-4 mb-12 max-lg:flex-col">
           <div className="flex gap-3 overflow-x-auto max-w-full pb-3 max-md:pb-[4vw] max-md:flex-wrap">
             {tabs.map((tab) => {
               const active = tab.href === activeTabHref;

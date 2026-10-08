@@ -451,7 +451,7 @@ export default function AdminUserActivityPage({ params }) {
         {purchasedTemplates.length > 0 && (
           <div>
             <p className="mb-4 text-white text-xl">Purchased Templates ({purchasedTemplates.length})</p>
-            <div className="grid grid-cols-3 gap-4 max-[1025px]:grid-cols-2 max-md:grid-cols-1">
+            <div className="grid grid-cols-3 gap-4 max-lg:grid-cols-2 max-md:grid-cols-1">
               {purchasedTemplates.map((template) => (
                 <TemplateCard key={template.slug} template={template} />
               ))}

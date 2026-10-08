@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { ChevronDown, X } from "lucide-react";
 import { EFFECT_SORT_OPTIONS, FILTER_OPTIONS } from "@/lib/effect-sort";
+import { BREAKPOINTS } from "@/lib/breakpoints";
 
 export { FILTER_OPTIONS };
 
@@ -92,7 +93,7 @@ export function FilterMenu({
       if (
         next &&
         typeof window !== "undefined" &&
-        window.innerWidth <= 1025
+        window.innerWidth < BREAKPOINTS.lg
       ) {
         const rect = buttonRef.current?.getBoundingClientRect();
 
@@ -194,7 +195,7 @@ export function FilterMenu({
             : `
           px-6 py-3  relative max-md:px-7 max-md:py-3
           backdrop-blur-[6px] flex items-center gap-2 justify-center
-          cursor-pointer transition-colors duration-300 text-[1vw] max-md:text-[4vw] max-[1025px]:text-[2.5vw]
+          cursor-pointer transition-colors duration-300 text-[1vw] max-md:text-[4vw] max-lg:text-[2.5vw]
           ${activeFilter
               ? "bg-[#ff5f00] text-black hover:bg-[#ff5f00]"
               : "bg-black/20 backdrop-blur-lg text-[#ffffff] hover:text-black hover:bg-[#ff5f00]"
@@ -211,7 +212,7 @@ export function FilterMenu({
           </>
         ) : (
           <>
-            <svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg" className={light ? "h-3 w-4" : "max-md:h-[4vw] h-[1vw] max-[1025px]:h-[2.5vw]"}>
+            <svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg" className={light ? "h-3 w-4" : "max-md:h-[4vw] h-[1vw] max-lg:h-[2.5vw]"}>
               <g clipPath="url(#clip0_491_803)">
                 <rect width="16" height="2" rx="1" fill="currentColor" />
                 <rect x="3" y="5" width="10" height="2" rx="1" fill="currentColor" />

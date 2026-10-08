@@ -1,17 +1,14 @@
 "use client";
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import gsap from "gsap";
-import { useGSAP } from "@gsap/react";
 import LineReveal from "@/components/Animations/LineReveal";
 import { useFadeUp } from "@/components/Animations/gsapAnimations";
 import ButtonV3 from "../components/ButtonV3";
 import { RollingPrice } from "../components/PriceDigit";
 import { useInteraction } from "../components/InteractionProvider";
-import { prefersReducedMotion } from "@/lib/motion";
+import RollText from "@/components/Pricing/exploded/RollText";
 import { createFluidField } from "../lib/fluid-field";
 
-gsap.registerPlugin(useGSAP);
 
 const CARD_FLUID = { cell: 18, iterations: 8, scrollDrift: false, dyeDecay: 0.985, pointerForce: 0.2, pointerInk: 0.006 };
 
@@ -71,6 +68,19 @@ const PLANS = [
     },
 ];
 
+// The billing line and the savings chip roll as one block, so each period's pair is built once
+// (RollText tells a change by the element itself)
+const PERIOD_COPY = Object.fromEntries(PLANS.map((plan) => {
+    const dark = plan.id === "plus";
+    const pair = (p) => (
+        <div className="flex flex-col gap-1">
+            <span className={`min-h-[1.5em] ${dark ? "text-[#a9a9a9]" : "text-[#6B6B6B]"}`}>{plan.billLine[p]}</span>
+            <span className={dark ? "text-primary" : "text-[#8a8a8a]"}>{plan.chip[p]}</span>
+        </div>
+    );
+    return [plan.id, { q: pair("q"), y: pair("y") }];
+}));
+
 const ASSURANCES = [
     "Cancel anytime",
     "Everything you copy stays in your repo",
@@ -104,6 +114,8 @@ export default function PricingPlansHome() {
     const pillRef = useRef(null);
     const { sound } = useInteraction();
     const [period, setPeriod] = useState("y");
+    // Which way the card text rolls: up when going to yearly, down when going back
+    const dir = period === "y" ? 1 : -1;
 
     useFadeUp(rootRef);
 
@@ -122,11 +134,6 @@ export default function PricingPlansHome() {
         return () => ro.disconnect();
     }, [period]);
 
-    useGSAP(() => {
-        if (prefersReducedMotion()) return;
-        gsap.fromTo("[data-period-copy]", { opacity: 0 }, { opacity: 1, duration: 0.8, ease: "power2.out" });
-    }, { scope: rootRef, dependencies: [period], revertOnUpdate: false });
-
     const choose = (id) => {
         if (id === period) return;
         setPeriod(id);
@@ -134,18 +141,18 @@ export default function PricingPlansHome() {
     };
 
     return (
-        <section ref={rootRef} id="pricing" data-sound-flow="off" data-sound-hover="off" className="relative bg-white px-[calc(var(--cvw)*4.5)] py-[7%] max-md:py-[15%] font-avenir text-[#1D1D1D] max-md:px-[calc(var(--cvw)*7)]">
+        <section ref={rootRef} id="pricing" data-sound-flow="off" data-sound-hover="off" className="relative bg-white px-[calc(var(--cvw)*4.5)] space-y-[3vw] py-[7%] max-md:py-[15%] font-avenir text-[#1D1D1D] max-md:px-[calc(var(--cvw)*7)]">
             <div className="mx-auto flex w-full max-w-[1536px] flex-wrap items-end justify-between gap-[calc(var(--cvw)*2)] max-md:gap-[calc(var(--cvw)*5)]">
-                <LineReveal as="h2" className="text64 leading-[1.2]! font-aeonik text-[calc(var(--cvw)*4.6)]! max-md:text-[calc(var(--cvw)*6)]! max-sm:text-[calc(var(--cvw)*9)]!">
+                <LineReveal as="h2" className="type-h1">
                     Two Plans.<br/> <span className="gradient-text-animate gradient-text-single">Every Moment Covered.</span>
                 </LineReveal>
 
-                <div ref={billRef} role="radiogroup" aria-label="Billing period" className="fadeup relative isolate inline-flex border border-[#1D1D1D]/15 bg-[#ececec] p-1.5 max-md:flex max-md:w-full">
+                <div ref={billRef} role="radiogroup" aria-label="Billing period" className="fadeup  relative isolate inline-flex border border-[#1D1D1D]/15 bg-[#ececec] p-1.5 max-md:flex max-md:w-full">
                     {/* <CornerMarks /> */}
                     <i
                         ref={pillRef}
                         aria-hidden="true"
-                        className="absolute top-1.5 bottom-1.5 left-0 z-0 bg-[#1D1D1D] transition-[transform,width] duration-[800ms] motion-reduce:transition-none"
+                        className="absolute top-1.5 bottom-1.5 left-0 z-0 bg-[#1D1D1D] transition-[transform,width] duration-800 motion-reduce:transition-none"
                         style={{ transitionTimingFunction: EASE }}
                     />
                     {BILLING.map((b) => {
@@ -169,7 +176,7 @@ export default function PricingPlansHome() {
                 </div>
             </div>
 
-            <div className={`mx-auto grid w-full max-w-[1536px] grid-cols-2 gap-[calc(var(--cvw)*1)] pt-[calc(var(--cvw)*3)] max-md:grid-cols-1 max-md:gap-[calc(var(--cvw)*4)] max-md:pt-[calc(var(--cvw)*6)]`}>
+            <div className={`mx-auto grid w-full max-w-[1536px] px-10 max-md:px-0 grid-cols-2 gap-[calc(var(--cvw)*1)] pt-[calc(var(--cvw)*3)] max-md:grid-cols-1 max-md:gap-[calc(var(--cvw)*4)] max-md:pt-[calc(var(--cvw)*6)]`}>
                 {PLANS.map((plan, planIndex) => {
                     const dark = plan.id === "plus";
                     return (
@@ -181,14 +188,14 @@ export default function PricingPlansHome() {
                             {/* <CornerMarks /> */}
                             {dark && <CardFluid />}
                             {plan.badge && (
-                                <span className="text-shimmer absolute top-[22px] right-[22px] z-1 text-[11px] font-medium tracking-[.14em] uppercase max-sm:static max-sm:self-start">
+                                <span className="text-shimmer absolute top-[22px] right-[22px] z-1 type-label max-sm:static max-sm:self-start">
                                     {plan.badge}
                                 </span>
                             )}
 
                             <div className="relative grid gap-2">
-                                <h3 className="text32 font-aeonik text-[calc(var(--cvw)*2.6)]! max-md:text-[calc(var(--cvw)*4)]! max-sm:text-[calc(var(--cvw)*6.6)]! uppercase">{plan.name}</h3>
-                                <span className={`text22 font-avenir text-[calc(var(--cvw)*1.1)]! leading-[1.6]! max-md:text-[calc(var(--cvw)*2.2)]! max-sm:text-[calc(var(--cvw)*4.1)]! ${dark ? "text-[#a9a9a9]" : "text-[#6B6B6B]"}`}>{plan.for}</span>
+                                <h3 className="type-h2 uppercase">{plan.name}</h3>
+                                <span className={`type-body-lg ${dark ? "text-[#a9a9a9]" : "text-[#6B6B6B]"}`}>{plan.for}</span>
                             </div>
 
                             <div className="relative mt-2 flex items-baseline leading-none tracking-[-.05em]">
@@ -201,16 +208,15 @@ export default function PricingPlansHome() {
                             </div>
 
                             {/* Billing + savings, closed off by a thin rule */}
-                            <div className={`relative grid gap-1 border-b pb-[calc(var(--cvw)*1.4)] text22 font-avenir text-[calc(var(--cvw)*1.1)]! leading-[1.6]! max-md:text-[calc(var(--cvw)*2.2)]! max-sm:text-[calc(var(--cvw)*4.1)]! ${dark ? "border-[#F4F4F4]/12" : "border-[#1D1D1D]/12"}`}>
-                                <p data-period-copy className={`min-h-[1.5em] ${dark ? "text-[#a9a9a9]" : "text-[#6B6B6B]"}`}>{plan.billLine[period]}</p>
-                                <p data-period-copy className={dark ? "text-primary" : "text-[#8a8a8a]"}>{plan.chip[period]}</p>
+                            <div className={`relative grid gap-1 border-b pb-[calc(var(--cvw)*1.4)] type-body ${dark ? "border-[#F4F4F4]/12" : "border-[#1D1D1D]/12"}`}>
+                                <RollText text={PERIOD_COPY[plan.id][period]} dir={dir} block />
                             </div>
 
-                            <ul className={`relative mt-[calc(var(--cvw)*0.4)] grid flex-1 content-start gap-[calc(var(--cvw)*1.2)] max-md:gap-[calc(var(--cvw)*4)] text22 font-avenir text-[calc(var(--cvw)*1.1)]! leading-[1.6]! max-md:text-[calc(var(--cvw)*2.2)]! max-sm:text-[calc(var(--cvw)*4.1)]!`}>
+                            <ul className={`relative mt-[calc(var(--cvw)*0.4)] grid flex-1 content-start gap-[calc(var(--cvw)*1.2)] max-md:gap-[calc(var(--cvw)*4)] type-body`}>
                                 {plan.features.map((f, i) => (
                                     <li key={i} className="grid grid-cols-[22px_minmax(0,1fr)] items-start gap-2.5">
                                         <Tick tone={dark ? "primary" : "ink"} />
-                                        <span data-period-copy={f.text ? undefined : ""} className="[&_b]:font-medium">{f.text ?? f[period]}</span>
+                                        <RollText text={f.text ?? f[period]} dir={dir} block className="[&_b]:font-medium" />
                                     </li>
                                 ))}
                             </ul>
@@ -222,7 +228,7 @@ export default function PricingPlansHome() {
                                 className={`relative mt-2.5 w-fit self-start justify-center ${plan.cta.variant === "outline" ? LIGHT_OUTLINE : ""}`}
                             />
                             {/* Same line reserved in every card, so the buttons sit level */}
-                            <p aria-hidden={!plan.yearlyNote} className="relative -mt-1 min-h-[1.5em] text-left text-[calc(var(--cvw)*0.9)] max-md:text-[calc(var(--cvw)*3.4)] text-[#8a8a8a]">
+                            <p aria-hidden={!plan.yearlyNote} className="relative -mt-1 min-h-[1.5em] text-left type-small text-[#8a8a8a]">
                                 {plan.yearlyNote ?? ""}
                             </p>
                         </article>
@@ -230,7 +236,7 @@ export default function PricingPlansHome() {
                 })}
             </div>
 
-            <ul className="mx-auto mt-[calc(var(--cvw)*2)] flex w-full max-w-[1536px] flex-wrap justify-center max-md:justify-start max-md:gap-[2.5vw] max-md:mt-[5vh] gap-x-[calc(var(--cvw)*2)] gap-y-[calc(var(--cvw)*0.8)] text-[calc(var(--cvw)*0.8)] max-md:text-[calc(var(--cvw)*2.8)] font-medium tracking-[.14em] text-[#6B6B6B] uppercase">
+            <ul className="mx-auto mt-[calc(var(--cvw)*2)] flex w-full max-w-[1536px] flex-wrap justify-center max-md:justify-start max-md:gap-[2.5vw] max-md:mt-[5vh] gap-x-[calc(var(--cvw)*2)] gap-y-[calc(var(--cvw)*0.8)] type-label text-[#6B6B6B]">
                 {ASSURANCES.map((a) => (
                     <li key={a} className="flex items-center  gap-2"><Tick />{a}</li>
                 ))}

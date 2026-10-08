@@ -325,19 +325,19 @@ export default function Workflow() {
     }, [])
 
     return (
-        <div ref={containerRef} className="text-white mt-[10vw] max-[1025px]:pt-[10vh] max-md:pt-[14vh] max-[1025px]:overflow-x-clip">
+        <div ref={containerRef} className="text-white mt-[10vw] max-lg:pt-[10vh] max-md:pt-[14vh] max-lg:overflow-x-clip">
             {/* ── Accordion Section ── */}
             <section
                 ref={accordionRef}
                 id="Workflow"
                 className="h-[200vh] max-md:mb-4 max-md:h-[300vh] relative"
             >
-                <LineReveal as="h2" className="text110 max-[1025px]:hidden w-[80vw] mx-auto text-center">
+                <LineReveal as="h2" className="text110 max-lg:hidden w-[80vw] mx-auto text-center">
                     Preview. Install. Tune. <span className='gradient-text-animate'>Ship.</span>
                 </LineReveal>
 
-                <div className="h-screen max-md:h-[85vh] max-[1025px]:h-[80vh]  w-full  sticky top-0 flex flex-col justify-center max-[1025px]:pt-0">
-                    <LineReveal as="h2" className="text110 w-[80vw] mx-auto hidden max-[1025px]:block max-[1025px]:pt-[12vh] max-md:pt-[14vh] text-center">
+                <div className="h-screen max-md:h-[85vh] max-lg:h-[80vh]  w-full  sticky top-0 flex flex-col justify-center max-lg:pt-0">
+                    <LineReveal as="h2" className="text110 w-[80vw] mx-auto hidden max-lg:block max-lg:pt-[12vh] max-md:pt-[14vh] text-center">
                         Preview. Install. Tune. <span className='gradient-text-animate'>Ship.</span>
                     </LineReveal>
                     <div className="w-full h-full flex items-center justify-center flex-col relative z-10">
@@ -352,18 +352,18 @@ export default function Workflow() {
                         ></div>
 
                         {/* Steps */}
-                        <div className="h-full w-full flex-col gap-0 flex items-center justify-center relative pt-[5vw] max-[1025px]:pt-[15vw] max-md:pt-[25vw] z-100">
+                        <div className="h-full w-full flex-col gap-0 flex items-center justify-center relative pt-[5vw] max-lg:pt-[15vw] max-md:pt-[25vw] z-100">
                             {STEPS.map((step, idx) => (
-                                <div key={idx} className="flex items-stretch w-[52vw] max-md:w-[80vw] max-[1025px]:w-[80vw]">
+                                <div key={idx} className="flex items-stretch w-[52vw] max-md:w-[80vw] max-lg:w-[80vw]">
                                     {/* Left column: number box + connecting line */}
-                                    <div className="flex flex-col items-center w-[5vw] max-md:w-[10vw] max-[1025px]:w-[10vw] shrink-0">
+                                    <div className="flex flex-col items-center w-[5vw] max-md:w-[10vw] max-lg:w-[10vw] shrink-0">
                                         {/* Number / Icon box */}
-                                        <div className="wf-num-box h-[5vw] w-[5vw] max-md:h-[12vw] max-md:w-[12vw] max-[1025px]:h-[10vw] max-[1025px]:w-[10vw] aspect-square flex items-center justify-center rounded-sm bg-dark-card relative overflow-hidden shrink-0">
+                                        <div className="wf-num-box h-[5vw] w-[5vw] max-md:h-[12vw] max-md:w-[12vw] max-lg:h-[10vw] max-lg:w-[10vw] aspect-square flex items-center justify-center bg-dark-card relative overflow-hidden shrink-0">
                                             <div className="wf-num absolute inset-0 flex items-center justify-center">
                                                 <p className="text34 pr-[.2vw] ">{step.num}</p>
                                             </div>
                                             <div className="wf-icon absolute inset-0 flex items-center justify-center">
-                                                <step.Icon className="w-[2.5vw] h-[2.5vw] max-md:w-[5vw] max-md:h-[5vw] max-[1025px]:w-[4vw] max-[1025px]:h-[4vw]" />
+                                                <step.Icon className="w-[2.5vw] h-[2.5vw] max-md:w-[5vw] max-md:h-[5vw] max-lg:w-[4vw] max-lg:h-[4vw]" />
                                             </div>
                                         </div>
 
@@ -376,11 +376,11 @@ export default function Workflow() {
                                     </div>
 
                                     {/* Right column: content box */}
-                                    <div className="flex flex-col ml-[1vw] max-[1025px]:ml-[2vw] max-md:ml-[4vw] flex-1 mb-[1.5vw] max-[1025px]:mb-[3vw] max-md:mb-[6vw]">
-                                        <div className="wf-content-box h-[5vw] max-[1025px]:h-[10vw] max-md:h-[12vw] flex-col flex justify-between w-full text34 rounded-sm px-[2vw] py-[1.4vw] max-[1025px]:px-[3vw] max-[1025px]:py-[2.5vw] max-md:px-[4vw] max-md:py-[3.5vw] bg-dark-card overflow-hidden">
+                                    <div className="flex flex-col ml-[1vw] max-lg:ml-[2vw] max-md:ml-[4vw] flex-1 mb-[1.5vw] max-lg:mb-[3vw] max-md:mb-[6vw]">
+                                        <div className="wf-content-box h-[5vw] max-lg:h-[10vw] max-md:h-[12vw] flex-col flex justify-between w-full text34 px-[2vw] py-[1.4vw] max-lg:px-[3vw] max-lg:py-[2.5vw] max-md:px-[4vw] max-md:py-[3.5vw] bg-dark-card overflow-hidden">
                                             <p className="leading-none mt-[.25vw] max-md:text-[5.5vw] font-heading font-medium">{step.title}</p>
                                             <div className="wf-text w-[85%] max-md:w-full overflow-hidden">
-                                                <p className="text24 max-md:text-[4vw]! pt-[1.5vw] max-[1025px]:pt-[2vw] max-md:pt-[3vw] leading-[1.3]">{step.text}</p>
+                                                <p className="text24 max-md:text-[4vw]! pt-[1.5vw] max-lg:pt-[2vw] max-md:pt-[3vw] leading-[1.3]">{step.text}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -392,11 +392,11 @@ export default function Workflow() {
             </section>
 
             {/* ── Video Section ── */}
-            <section ref={videoSectionRef} className="w-full flex items-center justify-center py-[10vw] max-md:py-[20vw] h-screen max-md:h-[100vw] max-[1025px]:h-[80vw]">
-                <div ref={videoRef} className="w-screen h-auto max-[1025px]:p-0 max-[1025px]:h-full max-md:rounded-0 overflow-hidden bg-primary rounded-md">
+            <section ref={videoSectionRef} className="w-full flex items-center justify-center py-[10vw] max-md:py-[20vw] h-screen max-md:h-[100vw] max-lg:h-[80vw]">
+                <div ref={videoRef} className="w-screen h-auto max-lg:p-0 max-lg:h-full overflow-hidden bg-primary">
                     <LazyVideo
                         src={VIDEO_SRC}
-                        className="w-full h-full object-cover rounded-sm"
+                        className="w-full h-full object-cover"
                     />
                 </div>
             </section>

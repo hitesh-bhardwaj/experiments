@@ -72,7 +72,7 @@ export default function CliTokenManager({ plan }) {
 
   return (
     <div className=" bg-[#272727] p-6 backdrop-blur-lg">
-      <div className="flex items-start justify-between gap-6 max-[1025px]:flex-col">
+      <div className="flex items-start justify-between gap-6 max-lg:flex-col">
         <div>
           <h2 className="text-2xl font-semibold text-white">
             CLI Token

@@ -26,7 +26,7 @@ export default function Heading3({ children, text, className, id, ...props }) {
       /> */}
       {/* only the words (and the icon) reveal the copy link, not the full-width row */}
       <span className="group/htext">
-        <span className="relative inline-block">{children ?? text}</span>
+        <span className="relative inline-block fadeup">{children ?? text}</span>
         <HeadingAnchor id={anchorId} />
       </span>
     </h3>

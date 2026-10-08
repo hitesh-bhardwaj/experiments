@@ -45,13 +45,13 @@ export default function BlogArticleBody({
 
           Author, share button and TOC share the one sticky container and all
           stay visible for the article's full height. */}
-      <div className="w-[30%] shrink-0 pl-0 max-[1025px]:hidden">
+      <div className="w-[30%] shrink-0 pl-0 max-lg:hidden">
       
         <div className="sticky top-[15vh] flex flex-col gap-[1.6vw]">
           <BlogAuthor author={author} />
 
       
-          <div className="flex flex-col gap-[0.8vw]  text-[1vw] text-white max-[1025px]:text-[2.4vw] max-md:text-[3.4vw]">
+          <div className="flex flex-col gap-[0.8vw]  text-[1vw] text-white max-lg:text-[2.4vw] max-md:text-[3.4vw]">
             {(publishedAt || readingMinutes) && (
               <div className="flex items-center text-[#AEAEAE] text-[0.9vw] gap-[1.2vw]">
                 {publishedAt && (
@@ -71,7 +71,7 @@ export default function BlogArticleBody({
             )}
           </div>
 
-          <div className="flex items-center gap-[0.6vw] text-[#AEAEAE] text-[0.9vw] max-[1025px]:text-[2.4vw] max-md:text-[3.4vw]">
+          <div className="flex items-center gap-[0.6vw] text-[#AEAEAE] text-[0.9vw] max-lg:text-[2.4vw] max-md:text-[3.4vw]">
             <span>Share this Article:</span>
             <BlogSharePopover url={shareUrl} title={shareTitle} />
           </div>
@@ -90,11 +90,11 @@ export default function BlogArticleBody({
         </div>
       </div>
 
-      <div className="w-[66%] min-w-0 max-[1025px]:w-full">
-        <div className="mb-[6vw] hidden flex-col gap-[3vw] max-[1025px]:flex max-md:mb-[8vw] max-md:gap-[4vw]">
+      <div className="w-[66%] min-w-0 max-lg:w-full">
+        <div className="mb-[6vw] hidden flex-col gap-[3vw] max-lg:flex max-md:mb-[8vw] max-md:gap-[4vw]">
           <BlogAuthor author={author} />
 
-          <div className="flex flex-wrap items-center gap-x-[3vw] gap-y-2 text-[#AEAEAE] max-[1025px]:text-[2.4vw] max-md:text-[3.4vw]">
+          <div className="flex flex-wrap items-center gap-x-[3vw] gap-y-2 text-[#AEAEAE] max-lg:text-[2.4vw] max-md:text-[3.4vw]">
             {publishedAt && (
               <time dateTime={publishedAt}>Featured: {formatRailDate(publishedAt)}</time>
             )}

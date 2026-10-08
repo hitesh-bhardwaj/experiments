@@ -16,7 +16,7 @@ const copyButtonStyles = tv({
   variants: {
     size: {
       sm: { iconWrap: "size-4" },
-      md: { iconWrap: "size-5 max-[1025px]:size-6 max-md:size-4" },
+      md: { iconWrap: "size-5 max-lg:size-6 max-md:size-4" },
     },
     color: {
       primary: { icon: "text-primary" },

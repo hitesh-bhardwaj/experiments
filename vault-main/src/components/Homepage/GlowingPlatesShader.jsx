@@ -910,7 +910,7 @@ export default function GlowingPlatesShader({
     <div
       ref={containerRef}
       className={[
-        "absolute inset-0 z-10 h-[140vh] max-[1025px]:hidden w-full bg-background",
+        "absolute inset-0 z-10 h-[140vh] max-lg:hidden w-full bg-background",
         containerClassName,
       ].join(" ")}
     >

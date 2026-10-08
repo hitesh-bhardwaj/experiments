@@ -13,7 +13,6 @@ const EASINGS = [
 
 const TUNE_TEXT = "Tune it until it feels right.";
 const WORDS = TUNE_TEXT.split(" ");
-const label = "text-[11px] font-semibold uppercase tracking-[.14em]";
 const range =
     "col-span-full mt-1.5 h-[calc(var(--cvw)*1.4)] w-full cursor-pointer appearance-none bg-transparent max-md:h-[calc(var(--cvw)*6)] " +
     "[&::-webkit-slider-runnable-track]:h-[calc(var(--cvw)*0.2)] [&::-webkit-slider-runnable-track]:bg-[linear-gradient(90deg,var(--primary)_var(--fill),rgba(29,29,29,.15)_var(--fill))] max-md:[&::-webkit-slider-runnable-track]:h-[calc(var(--cvw)*0.5)] " +
@@ -46,7 +45,7 @@ function SmoothRange({ min, max, step, defaultValue, digits, label, onRelease })
     }, [min, max, digits]);
 
     return (
-        <label className={`grid grid-cols-[1fr_auto] text-[#6B6B6B] font-medium! ${label === "Duration" || label === "Stagger" ? "" : ""} text-[11px] font-semibold uppercase tracking-[.14em]`}>
+        <label className="grid grid-cols-[1fr_auto] text-[#6B6B6B] type-label">
             {label} <output ref={outRef} className="text-[#1D1D1D]">{defaultValue.toFixed(digits)}s</output>
             <input
                 ref={inputRef}
@@ -93,8 +92,8 @@ export default function TuneCard({ replayKey }) {
     useEffect(() => () => gsap.killTweensOf(wordsRef.current.filter(Boolean)), []);
 
     return (
-        <div className="relative grid aspect-[16/11] grid-cols-[1.1fr_.9fr] overflow-hidden bg-[#ececec] text-[#1D1D1D] max-md:aspect-[4/5] max-md:grid-cols-1">
-            <div className="grid place-items-center border-r border-[#1D1D1D]/10 p-6 max-md:hidden">
+        <div className="relative grid aspect-[16/11] grid-cols-[1.1fr_.9fr] overflow-hidden bg-[#ececec] text-[#1D1D1D] max-md:aspect-[4/5] max-md:grid-cols-1 max-md:grid-rows-[auto_1fr]">
+            <div className="grid place-items-center border-r border-[#1D1D1D]/10 p-6 max-md:border-r-0 max-md:border-b max-md:px-[7vw] max-md:py-[8vw]">
                 <p className="text-center font-avenir text-[clamp(1.6rem,calc(var(--cvw)*2.8),2.6rem)] leading-[1.05] tracking-[-.03em]">
                     {WORDS.map((word, i) => (
                         <Fragment key={i}>
@@ -116,7 +115,7 @@ export default function TuneCard({ replayKey }) {
                     onRelease={(v) => { tune.current.stagger = v; replay(); }}
                 />
                 <div className="font-medium!">
-                    <span className={`text-[#6B6B6B] font-medium! ${label}`}>Easing</span>
+                    <span className="text-[#6B6B6B] type-label">Easing</span>
                     <div className="mt-2.5 flex flex-wrap gap-1">
                         {EASINGS.map(([name, value]) => (
                             <button

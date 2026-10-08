@@ -443,7 +443,7 @@ export default function EffectBox({
   };
 
   const mark =
-    "pointer-events-none absolute size-[0.3vw] border-grey transition-all duration-300 group-hover:border-primary max-[1025px]:size-1.5 max-md:size-2 max-sm:size-1.5";
+    "pointer-events-none absolute size-[0.3vw] border-grey transition-all duration-300 group-hover:border-primary max-lg:size-1.5 max-md:size-2 max-sm:size-1.5";
 
   return (
     <Link
@@ -493,13 +493,13 @@ export default function EffectBox({
         {enableDitherTrail ? <DitherTrailCanvas blend={ditherBlend} /> : null}
 
         {tag ? (
-          <span className="absolute left-[0.7vw] top-[0.7vw] z-30 bg-[#404040] px-[0.55vw] py-[0.45vw] font-mono text-[0.72vw] leading-none tracking-wide text-white backdrop-blur-sm max-[1025px]:left-[1.2vw] max-[1025px]:top-[1.2vw] max-[1025px]:px-[1vw] max-[1025px]:py-[0.8vw] max-[1025px]:text-[1.3vw] max-md:left-2 max-md:top-2 max-md:px-3 max-md:py-1.5 max-md:text-[1.5vw] max-sm:text-[2.6vw]">
+          <span className="absolute left-[0.7vw] top-[0.7vw] z-30 bg-[#404040] px-[0.55vw] py-[0.45vw] font-mono text-[0.72vw] leading-none tracking-wide text-white backdrop-blur-sm max-lg:left-[1.2vw] max-lg:top-[1.2vw] max-lg:px-[1vw] max-lg:py-[0.8vw] max-lg:text-[1.3vw] max-md:left-2 max-md:top-2 max-md:px-3 max-md:py-1.5 max-md:text-[1.5vw] max-sm:text-[2.6vw]">
             {tag}
           </span>
         ) : null}
       </div>
 
-      <div className="relative flex items-end justify-between gap-[1vw] max-[1025px]:gap-[2vw] max-[1025px]:px-[1.5vw] max-[1025px]:py-[1.5vw] max-[1025px]:mt-[2vw] max-md:px-[3vw] max-md:py-[2vw] py-[1vw] px-[1vw] max-md:mt-[3vw] mt-[1vw]">
+      <div className="relative flex items-end justify-between gap-[1vw] max-lg:gap-[2vw] max-lg:px-[1.5vw] max-lg:py-[1.5vw] max-lg:mt-[2vw] max-md:px-[3vw] max-md:py-[2vw] py-[1vw] px-[1vw] max-md:mt-[3vw] mt-[1vw]">
         <span className={`${mark} -top-px -left-px border-t border-l`} />
         <span className={`${mark} -top-px -right-px border-t border-r`} />
         <span className={`${mark} -bottom-px -left-px border-b border-l`} />
@@ -509,11 +509,11 @@ export default function EffectBox({
           {title}
         </p>
 
-        <span className="flex items-center gap-[0.35vw] text18 leading-none text-light-grey transition-colors duration-500 max-[1025px]:gap-[0.8vw] max-[1025px]:text-[1.5vw] max-md:text-foreground! group-hover:text-white motion-reduce:transition-none max-md:gap-1 max-md:text-[1.7vw] max-sm:text-[3vw]">
+        <span className="flex items-center gap-[0.35vw] text18 leading-none text-light-grey transition-colors duration-500 max-lg:gap-[0.8vw] max-lg:text-[1.5vw] max-md:text-foreground! group-hover:text-white motion-reduce:transition-none max-md:gap-1 max-md:text-[1.7vw] max-sm:text-[3vw]">
           {action}
           {/* Two arrows on a diagonal rail: the resting one leaves through the
               top-right as its replacement arrives from the bottom-left. */}
-          <span className="relative inline-block overflow-hidden max-[1025px]:size-[2.5vw] max-md:size-[5vw] size-[1.8vw]">
+          <span className="relative inline-block overflow-hidden max-lg:size-[2.5vw] max-md:size-[5vw] size-[1.8vw]">
             <ArrowUpRight className="transition-transform duration-500 ease-out motion-safe:group-hover:translate-x-full motion-safe:group-hover:-translate-y-full motion-reduce:transition-none" />
             <ArrowUpRight className="absolute inset-0 -translate-x-full translate-y-full transition-transform duration-500 ease-out motion-safe:group-hover:translate-x-0 motion-safe:group-hover:translate-y-0 motion-reduce:transition-none" />
           </span>

@@ -374,7 +374,7 @@ export default function TemplateExploded({
           <aside
             data-exploded-ui
             aria-live="polite"
-            className="absolute top-28 left-[3.4vw] grid w-[22vw] gap-2 bg-[rgba(16,16,16,.72)] p-4.5 shadow-[inset_0_0_0_1px_rgba(244,244,244,.1)] backdrop-blur-[16px] max-[1025px]:left-[5vw] max-[1025px]:w-[44vw] max-md:inset-x-4 max-md:top-24 max-md:w-auto"
+            className="absolute top-28 left-[3.4vw] grid w-[22vw] gap-2 bg-[rgba(16,16,16,.72)] p-4.5 shadow-[inset_0_0_0_1px_rgba(244,244,244,.1)] backdrop-blur-[16px] max-lg:left-[5vw] max-lg:w-[44vw] max-md:inset-x-4 max-md:top-24 max-md:w-auto"
           >
             <p className={`${LABEL} flex justify-between text-[#8a8a8a]`}>
               <span>{selected >= 0 ? "Selected section" : "In view"}</span>
@@ -389,7 +389,7 @@ export default function TemplateExploded({
               transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
               className="grid gap-2"
             >
-              <h3 className={`${DISPLAY} text-[1.7vw] leading-[1.1] max-[1025px]:text-[3.4vw] max-md:text-[6vw]`}>{current.name}</h3>
+              <h3 className={`${DISPLAY} text-[1.7vw] leading-[1.1] max-lg:text-[3.4vw] max-md:text-[6vw]`}>{current.name}</h3>
               {current.note && <p className={`${T14} text-[#bdbdbd] max-md:line-clamp-2`}>{current.note}</p>}
               <div className="mt-1 flex flex-wrap gap-1.5">
                 {selected >= 0 && (
@@ -406,7 +406,7 @@ export default function TemplateExploded({
           </aside>
         )}
 
-        <div data-exploded-ui className="absolute bottom-6 left-[3.4vw] right-[3.4vw] flex flex-wrap items-center justify-between gap-3 max-[1025px]:inset-x-[5vw] max-md:inset-x-4 max-md:bottom-4">
+        <div data-exploded-ui className="absolute bottom-6 left-[3.4vw] right-[3.4vw] flex flex-wrap items-center justify-between gap-3 max-lg:inset-x-[5vw] max-md:inset-x-4 max-md:bottom-4">
           {toolbar}
           <div className="flex items-center gap-3">
           <label className={`flex items-center gap-2.5 ${LABEL} text-[#8a8a8a] max-md:hidden`}>
@@ -438,7 +438,7 @@ export default function TemplateExploded({
           </div>
         </div>
 
-        <p className={`${LABEL} pointer-events-none absolute top-28 right-[3.4vw] text-right text-white/60 max-[1025px]:hidden`}>
+        <p className={`${LABEL} pointer-events-none absolute top-28 right-[3.4vw] text-right text-white/60 max-lg:hidden`}>
           Scroll to move down the page
           <br />
           Drag to turn · click a layer

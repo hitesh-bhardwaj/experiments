@@ -63,25 +63,25 @@ export default function FAQs({ faqItems, isHomePage = false, fixWidth = false })
                     Questions <span className='gradient-text-animate'>Answered.</span>
                 </LineReveal>
             </div>
-            <div className={`mx-auto w-full max-[1025px]:max-w-[90%] max-md:max-w-full   ${fixWidth ? ' max-w-[70vw] max-md:w-[87%]' : ''}`}>
+            <div className={`mx-auto w-full max-lg:max-w-[90%] max-md:max-w-full   ${fixWidth ? ' max-w-[70vw] max-md:w-[87%]' : ''}`}>
                 <FAQGroup allowMultiple={false} defaultOpenItems={defaultOpenItems}>
                     {visibleFaqItems.map((item) => (
                         <FAQWrapper
                             key={item.id}
                             itemId={item.id}
-                            className="rounded-md border border-white/20 px-6 py-5 fadeup mb-4"
+                            className="border border-white/20 px-6 py-5 fadeup mb-4"
                             titleClassName="text-[1.1rem] font-medium text-white"
                             iconSize={16}
                             iconStrokeWidth={2}
                             duration={0.5}
                         >
-                            <FAQTitle iconPosition="left" className="pb-0 text-[1.5vw] max-md:text-[5vw] max-[1025px]:text-[3.2vw] max-[1025px]:leading-[1.3] max-md:leading-[1.3]">
+                            <FAQTitle iconPosition="left" className="pb-0 text-[1.5vw] max-md:text-[5vw] max-lg:text-[3.2vw] max-lg:leading-[1.3] max-md:leading-[1.3]">
                                 <h3>
                                     {item.question}
                                 </h3>
                             </FAQTitle>
 
-                            <FAQContent className="pt-4 w-[80%] max-[1025px]:w-[95%] text22 max-md:text-[4vw]! max-[1025px]:text-[2.5vw]! pl-10">
+                            <FAQContent className="pt-4 w-[80%] max-lg:w-[95%] text22 max-md:text-[4vw]! max-lg:text-[2.5vw]! pl-10">
                                 {item.answer}
                             </FAQContent>
                         </FAQWrapper>

@@ -111,7 +111,7 @@ function MenuItem({ children, trailing = null, onSelect, disabled = false, class
       role="menuitem"
       disabled={disabled}
       onClick={onSelect}
-      className={`group relative isolate flex w-full cursor-pointer items-center gap-3 px-3 py-2.5 text-left text-[0.95vw] leading-snug text-foreground outline-none max-[1025px]:text-[1.9vw] max-md:text-[3.8vw] disabled:cursor-not-allowed disabled:opacity-50 ${className}`}
+      className={`group relative isolate flex w-full cursor-pointer items-center gap-3 px-3 py-2.5 text-left text-[0.95vw] leading-snug text-foreground outline-none max-lg:text-[1.9vw] max-md:text-[3.8vw] disabled:cursor-not-allowed disabled:opacity-50 ${className}`}
       {...props}
     >
       <span
@@ -143,7 +143,7 @@ function ProLockOverlay({ onUpgrade }) {
   return (
     <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-4 bg-[#1a1a1a]/75 px-6 text-center backdrop-blur-[3px]">
       <LockKeyhole className="size-5 text-[#ff5f00]" aria-hidden="true" />
-      <p className="text-[0.95vw] leading-snug text-white/80 max-[1025px]:text-[1.9vw] max-md:text-[3.8vw]">
+      <p className="text-[0.95vw] leading-snug text-white/80 max-lg:text-[1.9vw] max-md:text-[3.8vw]">
         Pro effect - upgrade to copy or install it.
       </p>
       <div className="contents" onPointerEnter={() => setHovered(true)} onPointerLeave={() => setHovered(false)}>
@@ -380,17 +380,17 @@ export default function GetCodeMenu({
         aria-expanded={open}
         aria-controls={open ? menuId : undefined}
         onClick={onTriggerClick}
-        className={`relative flex h-full cursor-pointer items-center border bg-white/5 backdrop-blur-lg py-2.75 pr-[3vw] pl-[1.2vw] text-left text-[1.1vw] border-white/20 tracking-wide text-white outline-none transition hover:border-white/25 focus-visible:border-white/25 max-[1025px]:py-3.75 max-[1025px]:pr-12 max-[1025px]:pl-5 max-[1025px]:text-[2vw] max-md:text-[4vw] ${triggerClassName}`}
+        className={`relative flex h-full cursor-pointer items-center border bg-white/5 backdrop-blur-lg py-2.75 pr-[3vw] pl-[1.2vw] text-left text-[1.1vw] border-white/20 tracking-wide text-white outline-none transition hover:border-white/25 focus-visible:border-white/25 max-lg:py-3.75 max-lg:pr-12 max-lg:pl-5 max-lg:text-[2vw] max-md:text-[4vw] ${triggerClassName}`}
       >
         {statusLabel ? (
           <span key={`${copyStatus.key}-${copyStatus.phase}`} className={`flex items-center gap-2 whitespace-nowrap ${fadeIn}`}>
             {copyStatus.phase === "copying" ? (
               <LoaderCircle
                 aria-hidden="true"
-                className="size-[1.1vw] shrink-0 animate-spin text-white/60 max-[1025px]:size-4 motion-reduce:animate-none"
+                className="size-[1.1vw] shrink-0 animate-spin text-white/60 max-lg:size-4 motion-reduce:animate-none"
               />
             ) : (
-              <Check aria-hidden="true" className="size-[1.1vw] shrink-0 text-[#ff5f00] max-[1025px]:size-4" />
+              <Check aria-hidden="true" className="size-[1.1vw] shrink-0 text-[#ff5f00] max-lg:size-4" />
             )}
             {statusLabel}
           </span>
@@ -401,7 +401,7 @@ export default function GetCodeMenu({
         )}
         <ChevronDown
           aria-hidden="true"
-          className={`pointer-events-none absolute top-1/2 right-[1vw] size-[1.1vw] -translate-y-1/2 text-white/40 transition-[transform,opacity] duration-300 max-[1025px]:right-4 max-[1025px]:size-4 motion-reduce:transition-none ${
+          className={`pointer-events-none absolute top-1/2 right-[1vw] size-[1.1vw] -translate-y-1/2 text-white/40 transition-[transform,opacity] duration-300 max-lg:right-4 max-lg:size-4 motion-reduce:transition-none ${
             open ? "rotate-180" : ""
           } ${statusLabel ? "opacity-0" : "opacity-100"}`}
         />
@@ -417,7 +417,7 @@ export default function GetCodeMenu({
           role="menu"
           aria-label={`Get the code for ${title}`}
           onKeyDown={onPanelKeyDown}
-          className={`absolute top-full z-40 mt-2 w-[24vw] min-w-72 border border-white/10 bg-[#1a1a1a] p-1.5 shadow-2xl max-[1025px]:w-[55vw] max-md:w-full max-md:min-w-0 ${
+          className={`absolute top-full z-40 mt-2 w-[24vw] min-w-72 border border-white/10 bg-[#1a1a1a] p-1.5 shadow-2xl max-lg:w-[55vw] max-md:w-full max-md:min-w-0 ${
             align === "left" ? "left-0" : "right-0"
           }`}
         >
@@ -431,7 +431,7 @@ export default function GetCodeMenu({
           )}
           {view === "menu" ? (
             <div className="space-y-1" aria-hidden={codeLocked || undefined}>
-              <div className="flex items-center gap-2 px-3 pt-2 pb-1 text-[0.95vw] text-white max-[1025px]:text-[1.6vw] max-md:text-[3.2vw]">
+              <div className="flex items-center gap-2 px-3 pt-2 pb-1 text-[0.95vw] text-white max-lg:text-[1.6vw] max-md:text-[3.2vw]">
                 Copy Code
                 {codeLocked && (
                   <span className="inline-flex items-center gap-1 normal-case tracking-normal text-[#ff5f00]">
@@ -495,7 +495,7 @@ export default function GetCodeMenu({
               </MenuItem>
 
               {codeLimited && (
-                <div className="mt-1.5 flex items-center justify-between gap-3 border-t border-white/10 px-3 pt-3 pb-1.5 text-[0.85vw] text-white/60 max-[1025px]:text-[1.7vw] max-md:text-[3.4vw]">
+                <div className="mt-1.5 flex items-center justify-between gap-3 border-t border-white/10 px-3 pt-3 pb-1.5 text-[0.85vw] text-white/60 max-lg:text-[1.7vw] max-md:text-[3.4vw]">
                   <span>You&apos;ve reached today&apos;s copy limit.</span>
                   {lockedCtaHref && (
                     <button
@@ -515,7 +515,7 @@ export default function GetCodeMenu({
             </div>
           ) : (
             <div className="space-y-1 p-2">
-              <p className="px-2 pb-2 text-[0.95vw] leading-snug text-foreground max-[1025px]:text-[1.9vw] max-md:text-[3.8vw]">
+              <p className="px-2 pb-2 text-[0.95vw] leading-snug text-foreground max-lg:text-[1.9vw] max-md:text-[3.8vw]">
                 Is the Hyperiux MCP installed in your project?
               </p>
               <MenuItem
@@ -530,7 +530,7 @@ export default function GetCodeMenu({
                 href="/docs/mcp"
                 role="menuitem"
                 onClick={close}
-                className="group relative isolate flex w-full items-center px-4 py-2.5 text-[0.95vw] text-foreground outline-none max-[1025px]:text-[1.9vw] max-md:text-[3.8vw]"
+                className="group relative isolate flex w-full items-center px-4 py-2.5 text-[0.95vw] text-foreground outline-none max-lg:text-[1.9vw] max-md:text-[3.8vw]"
               >
                 <span
                   aria-hidden="true"

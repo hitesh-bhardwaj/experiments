@@ -211,7 +211,7 @@ export function ExitIntentInviteModal() {
           />
 
           <motion.div
-            className="relative z-10 w-[36vw] max-md:w-full max-[1025px]:w-[70%] border border-white/20 bg-[#0e0e0e] p-10 max-md:p-6 shadow-2xl"
+            className="relative z-10 w-[36vw] max-md:w-full max-lg:w-[70%] border border-white/20 bg-[#0e0e0e] p-10 max-md:p-6 shadow-2xl"
             initial={{ opacity: 0, scale: 0.97, y: 10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.97, y: 10 }}

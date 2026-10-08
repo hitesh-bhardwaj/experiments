@@ -118,6 +118,11 @@ export default function LineReveal({
         aria: "none",
       });
 
+      // Each word's mask clips at its line box, which cuts the tails off g, y and p
+      // on tightly set headings. Extend the clip box below the line; the equal
+      // negative margin keeps the layout exactly as it was.
+      gsap.set(splitRef.current.masks, { paddingBottom: "0.1em", marginBottom: "-0.1em" });
+
       const words = splitRef.current.words;
 
       if (!words.length) {

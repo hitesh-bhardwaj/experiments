@@ -47,7 +47,7 @@ export default function NotAnotherUIKit() {
     let ctx = gsap.context(() => {
       const reduceMotion = prefersReducedMotion();
 
-      if (globalThis.matchMedia("(min-width: 768px)").matches) {
+      if (globalThis.matchMedia("(min-width: 1026px)").matches) {
         gsap.set(".use-case", { y: reduceMotion ? "0vw" : "37vw" });
 
         const tl = gsap.timeline({
@@ -103,7 +103,7 @@ export default function NotAnotherUIKit() {
   }, []);
 
   return (
-    <div id="uikit-section" className="w-full h-[250vh] text-white max-md:overflow-hidden max-md:h-fit max-sm:pb-[25%] max-sm:pt-0 max-md:py-[12%] relative z-20">
+    <div id="uikit-section" className="w-full h-[250vh] text-white max-lg:overflow-hidden max-lg:h-fit max-lg:py-[12%] max-md:overflow-hidden max-md:h-fit max-sm:pb-[25%] max-sm:pt-0 max-md:py-[12%] relative z-20">
         {/* <div>
             <LineReveal as="h2" className="t96 w-[calc(var(--cvw)*90)] font-avenir max-md:text-center max-md:w-full mx-auto text-center">
                Not <span className='gradient-text-animate'>Another UI Kit.</span>  Not a Side Project.
@@ -111,29 +111,29 @@ export default function NotAnotherUIKit() {
         </div> */}
 
       {/* Use Case Cards */}
-      <div className="md:pointer-events-none w-screen h-screen sticky mt-[-60vh]  max-sm:mt-[8vh] top-0  overflow-hidden px-[calc(var(--cvw)*3)] max-md:overflow-y-hidden max-md:h-fit max-md:static max-md:mt-[calc(var(--cvw)*12)] max-md:pb-[calc(var(--cvw)*4)] max-md:overflow-x-scroll mobile-scrollbar max-md:pr-[calc(var(--cvw)*7)] z-15 ">
-        <div className="w-fit h-full flex gap-[calc(var(--cvw)*3)] max-md:gap-[calc(var(--cvw)*4)] max-sm:gap-[calc(var(--cvw)*6)] items-end use-case-container translate-x-[20%] max-md:translate-x-0 max-sm:pl-[calc(var(--cvw)*5)] ">
+      <div className="pointer-events-none max-lg:pointer-events-auto w-screen h-screen sticky mt-[-60vh] max-lg:static max-lg:h-fit max-lg:mt-[calc(var(--cvw)*12)] max-lg:pb-[calc(var(--cvw)*4)] max-lg:overflow-x-scroll max-lg:overflow-y-hidden max-lg:pr-[calc(var(--cvw)*7)] max-sm:mt-[8vh] top-0  overflow-hidden px-[calc(var(--cvw)*3)] max-md:overflow-y-hidden max-md:h-fit max-md:static max-md:mt-[calc(var(--cvw)*12)] max-md:pb-[calc(var(--cvw)*4)] max-md:overflow-x-scroll mobile-scrollbar max-md:pr-[calc(var(--cvw)*7)] z-15 ">
+        <div className="w-fit h-full flex gap-[calc(var(--cvw)*3)] max-md:gap-[calc(var(--cvw)*8)]  items-end use-case-container translate-x-[20%] max-lg:translate-x-0 max-lg:gap-[calc(var(--cvw)*6)] max-sm:pl-[calc(var(--cvw)*5)] ">
           {UI_CARDS.map((card) => (
             <div
               key={card.id}
-              className="pointer-events-auto w-[calc(var(--cvw)*28)] h-fit flex flex-col relative use-case justify-between max-sm:w-[calc(var(--cvw)*70)] max-md:w-[calc(var(--cvw)*55)] bg-background/40 backdrop-blur-lg"
+              className="pointer-events-auto w-[calc(var(--cvw)*28)] h-fit flex flex-col relative use-case justify-between max-lg:w-[calc(var(--cvw)*45)] max-md:w-[calc(var(--cvw)*80)]  bg-background/40 backdrop-blur-lg"
             >
               {/* Always visible top orange bar */}
               <div className="w-full h-[calc(var(--cvw)*0.5)] bg-[#ff5f00] max-md:h-[calc(var(--cvw)*1)] max-sm:h-[calc(var(--cvw)*1.5)] shrink-0" />
 
               {/* Expanding card content */}
-              <div className="w-full h-[calc(var(--cvw)*37)] border border-grey content-container overflow-hidden max-sm:h-[40vh] max-md:h-[calc(var(--cvw)*60)]">
+              <div className="w-full h-[calc(var(--cvw)*37)] border border-grey content-container overflow-hidden max-lg:h-[calc(var(--cvw)*60)] max-md:h-[calc(var(--cvw)*100)]">
                 <div className="p-[calc(var(--cvw)*2.5)] flex flex-col justify-between h-full max-md:p-[calc(var(--cvw)*5)]">
-                  <div className="space-y-[calc(var(--cvw)*1.5)]">
-                  <div className='relative size-[calc(var(--cvw)*3.2)]'>
-                    {card.icon && <Image src={card.icon} alt="" aria-hidden="true" fill sizes="5vw" className="object-contain" />}
+                  <div className="space-y-[calc(var(--cvw)*1.5)] max-md:space-y-[calc(var(--cvw)*4)]">
+                  <div className='relative size-[calc(var(--cvw)*3.2)] max-md:size-[calc(var(--cvw)*14)]'>
+                    {card.icon && <Image src={card.icon} alt="" aria-hidden="true" fill sizes="(max-width: 1025px) 10vw, 5vw" className="object-contain" />}
                   </div>
-                  <h3 className="text-[calc(var(--cvw)*3)] font-aeonik max-sm:text-[calc(var(--cvw)*6.5)]! max-sm:w-[80%]">
+                  <h3 className="type-h2 max-md:w-[80%]">
                     {card.title}
                   </h3>
                   </div>
 
-                  <p className="text24 font-avenir max-sm:text-[calc(var(--cvw)*4)]! max-sm:leading-[1.2]">
+                  <p className="type-small">
                     {card.text}
                   </p>
                 </div>

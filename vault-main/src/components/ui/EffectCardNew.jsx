@@ -216,11 +216,11 @@ export function EffectCard({
       </div>
 
      
-      <div className="pointer-events-none mt-4 relative flex items-start justify-between gap-4 px-3 pt-3 pb-1.5 max-[1025px]:pt-5 max-md:gap-3 max-md:px-2 max-md:pt-2">
-        {/* <span className="pointer-events-none max-sm:hidden absolute -top-px -left-px h-1.5 w-1.5 border-t border-l border-primary opacity-0 transition-opacity duration-300 group-hover:opacity-100 max-[1025px]:opacity-100 max-md:h-3 max-md:w-3" />
-        <span className="pointer-events-none max-sm:hidden absolute -top-px -right-px h-1.5 w-1.5 border-t border-r border-primary opacity-0 transition-opacity duration-300 group-hover:opacity-100 max-[1025px]:opacity-100 max-md:h-3 max-md:w-3" />
-        <span className="pointer-events-none max-sm:hidden absolute -bottom-px -left-px h-1.5 w-1.5 border-b border-l border-primary opacity-0 transition-opacity duration-300 group-hover:opacity-100 max-[1025px]:opacity-100 max-md:h-3 max-md:w-3" />
-        <span className="pointer-events-none max-sm:hidden absolute -bottom-px -right-px h-1.5 w-1.5 border-b border-r border-primary opacity-0 transition-opacity duration-300 group-hover:opacity-100 max-[1025px]:opacity-100 max-md:h-3 max-md:w-3" /> */}
+      <div className="pointer-events-none mt-4 relative flex items-start justify-between gap-4 px-3 pt-3 pb-1.5 max-lg:pt-5 max-md:gap-3 max-md:px-2 max-md:pt-2">
+        {/* <span className="pointer-events-none max-sm:hidden absolute -top-px -left-px h-1.5 w-1.5 border-t border-l border-primary opacity-0 transition-opacity duration-300 group-hover:opacity-100 max-lg:opacity-100 max-md:h-3 max-md:w-3" />
+        <span className="pointer-events-none max-sm:hidden absolute -top-px -right-px h-1.5 w-1.5 border-t border-r border-primary opacity-0 transition-opacity duration-300 group-hover:opacity-100 max-lg:opacity-100 max-md:h-3 max-md:w-3" />
+        <span className="pointer-events-none max-sm:hidden absolute -bottom-px -left-px h-1.5 w-1.5 border-b border-l border-primary opacity-0 transition-opacity duration-300 group-hover:opacity-100 max-lg:opacity-100 max-md:h-3 max-md:w-3" />
+        <span className="pointer-events-none max-sm:hidden absolute -bottom-px -right-px h-1.5 w-1.5 border-b border-r border-primary opacity-0 transition-opacity duration-300 group-hover:opacity-100 max-lg:opacity-100 max-md:h-3 max-md:w-3" /> */}
 
         <div className="flex min-w-0 flex-col gap-0.5">
           <h3 className="truncate  text-[1.25vw] max-md:text-[3vw] max-sm:text-[4.5vw] font-medium leading-[1.2]! text-white max-md:text-base">
@@ -233,7 +233,7 @@ export function EffectCard({
           </p>
         </div>
 
-        <div className="pointer-events-auto relative z-30 flex shrink-0 items-center gap-3 opacity-0 transition-opacity duration-300 max-md:gap-3 group-hover:opacity-100 max-[1025px]:opacity-100 ">
+        <div className="pointer-events-auto relative z-30 flex shrink-0 items-center gap-3 opacity-0 transition-opacity duration-300 max-md:gap-3 group-hover:opacity-100 max-lg:opacity-100 ">
           {installCount > 0 && (
             <span className="flex items-center gap-1.5 text-[1vw]  text-white/55 max-sm:text-[3vw]!">
               {installCountLabel}
@@ -250,11 +250,11 @@ export function EffectCard({
                 e.stopPropagation();
                 toggleWishlist?.(effect);
               }}
-              className="flex h-8 w-8 cursor-pointer items-center justify-center  bg-[#242424] text-white transition-colors hover:bg-white/10 max-[1025px]:h-11 max-[1025px]:w-11 max-md:h-9 max-md:w-9"
+              className="flex h-8 w-8 cursor-pointer items-center justify-center  bg-[#242424] text-white transition-colors hover:bg-white/10 max-lg:h-11 max-lg:w-11 max-md:h-9 max-md:w-9"
               aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
             >
               <Heart
-                className={`h-4.5 w-4.5 max-[1025px]:h-5 max-[1025px]:w-5 max-md:h-4 max-md:w-4 ${
+                className={`h-4.5 w-4.5 max-lg:h-5 max-lg:w-5 max-md:h-4 max-md:w-4 ${
                   isWishlisted ? "fill-white" : ""
                 }`}
               />
@@ -270,16 +270,16 @@ export function EffectCard({
                 e.stopPropagation();
                 window.open(previewHref, "_blank", "noopener,noreferrer");
               }}
-              className="flex h-8 w-8 cursor-pointer items-center justify-center bg-[#242424] text-white transition-colors hover:bg-white/10 max-[1025px]:h-11 max-[1025px]:w-11 max-md:h-9 max-md:w-9"
+              className="flex h-8 w-8 cursor-pointer items-center justify-center bg-[#242424] text-white transition-colors hover:bg-white/10 max-lg:h-11 max-lg:w-11 max-md:h-9 max-md:w-9"
               aria-label="Preview"
             >
-              <Eye className="h-4.5 w-4.5 max-[1025px]:h-5 max-[1025px]:w-5 max-md:h-4 max-md:w-4" />
+              <Eye className="h-4.5 w-4.5 max-lg:h-5 max-lg:w-5 max-md:h-4 max-md:w-4" />
             </button>
           </Tooltip>
 
           <Tooltip label="View Detail">
             <div
-              className="flex h-8 w-8 relative items-center justify-center bg-primary text-black max-[1025px]:h-11 max-[1025px]:w-11 max-md:h-9 max-md:w-9 group/arrow overflow-hidden arrow-container"
+              className="flex h-8 w-8 relative items-center justify-center bg-primary text-black max-lg:h-11 max-lg:w-11 max-md:h-9 max-md:w-9 group/arrow overflow-hidden arrow-container"
               aria-hidden="true"
             >
               <ArrowIcon className="h-4.5 w-4.5 max-md:h-3.5 max-md:w-3.5 group-hover/arrow:-translate-y-[180%] group-hover/arrow:translate-x-[180%] duration-300 ease-in-out"/>

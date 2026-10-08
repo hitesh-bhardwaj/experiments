@@ -439,7 +439,7 @@ export default function TemplateCorridor({ templates, onUnsupported }) {
         {current && (
           <aside
             aria-live="polite"
-            className="absolute right-[2.6vw] bottom-[10vh] grid w-[30vw] gap-2.5 bg-[rgba(16,16,16,.72)] p-5.5 shadow-[inset_0_0_0_1px_rgba(244,244,244,.1),0_40px_80px_-30px_#000] backdrop-blur-[18px] max-[1025px]:w-[50vw] max-md:inset-x-4 max-md:bottom-16 max-md:w-auto"
+            className="absolute right-[2.6vw] bottom-[10vh] grid w-[30vw] gap-2.5 bg-[rgba(16,16,16,.72)] p-5.5 shadow-[inset_0_0_0_1px_rgba(244,244,244,.1),0_40px_80px_-30px_#000] backdrop-blur-[18px] max-lg:w-[50vw] max-md:inset-x-4 max-md:bottom-16 max-md:w-auto"
           >
             <div className={`${LABEL} flex items-center gap-2.5 text-white/80`}>
               <span>{pad2(active + 1)}</span>
@@ -461,7 +461,7 @@ export default function TemplateCorridor({ templates, onUnsupported }) {
               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
               className="grid gap-2.5"
             >
-              <h2 className={`${DISPLAY} text-[2.2vw] leading-[1.05] max-[1025px]:text-[4vw] max-md:text-[7vw]`}>{current.title}</h2>
+              <h2 className={`${DISPLAY} text-[2.2vw] leading-[1.05] max-lg:text-[4vw] max-md:text-[7vw]`}>{current.title}</h2>
               <p className={`line-clamp-3 ${T13} text-[#bdbdbd]`}>{current.tagline}</p>
               <div className="flex flex-wrap gap-1.25">
                 {(current.tags || []).map((tag) => (

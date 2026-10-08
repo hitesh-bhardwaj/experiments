@@ -158,7 +158,7 @@ export default function DocsIntro() {
       </Para>
 
       <Para>
-        <strong>Copy the code. Tune the motion. Ship the moment.</strong>
+        <span className="font-semibold">Copy the code. Tune the motion. Ship the moment.</span>
       </Para>
 
       <Heading2 id="whats-inside">What&rsquo;s Inside</Heading2>
@@ -532,7 +532,7 @@ export default function DocsIntro() {
       </Para>
 
       <Para>
-        <strong>Small motion. Big signal.</strong>
+        <span className="font-semibold">Small motion. Big signal.</span>
       </Para>
     </DocsContent>
   );

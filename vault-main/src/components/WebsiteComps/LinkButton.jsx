@@ -138,7 +138,7 @@ export default function LinkButton({
       onMouseLeave={handleLeave}
       onClick={handleClick}
     >
-      <div className="flex items-center gap-[0.5vw] max-[1025px]:gap-2 w-fit cursor-pointer">
+      <div className="flex items-center gap-[0.5vw] max-lg:gap-2 w-fit cursor-pointer">
         <span className="relative">
           <span className="relative overflow-hidden inline-flex h-[1.4em]">
             <span

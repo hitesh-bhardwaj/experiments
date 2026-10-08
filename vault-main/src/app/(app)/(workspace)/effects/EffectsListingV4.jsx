@@ -33,6 +33,7 @@ import { SliderArrowButton } from "@/components/ui/SliderArrowButton";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import HeadAnim from "@/components/Animations/HeadAnim";
 import Copy from "@/components/Animations/Copy";
+import { MEDIA } from "@/lib/breakpoints";
 
 gsap.registerPlugin(useGSAP);
 
@@ -84,17 +85,17 @@ const COLUMN_ITEMS = [2, 3].map((n) => ({
 const CARD_LAYOUT_TRANSITION = { layout: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } };
 
 /* ---------- text sizes (vw: desktop · tablet · mobile) ---------- */
-const T11 = "text-[0.76vw] max-[1025px]:text-[1.4vw] max-md:text-[2.8vw]";
-const T13 = "text-[0.9vw] max-[1025px]:text-[1.6vw] max-md:text-[3.3vw]";
-const T14 = "text-[0.97vw] max-[1025px]:text-[1.7vw] max-md:text-[3.6vw]";
-const T15 = "text-[1.04vw] max-[1025px]:text-[1.8vw] max-md:text-[3.8vw]";
-const T16 = "text-[1.1vw] max-[1025px]:text-[1.95vw] max-md:text-[4.1vw]";
-const T18 = "text-[1.25vw] max-[1025px]:text-[2.2vw] max-md:text-[4.4vw]";
-const T20 = "text-[1.4vw] max-[1025px]:text-[2.4vw] max-md:text-[5vw]";
-const T28 = "text-[1.95vw] max-[1025px]:text-[3.4vw] max-md:text-[7vw]";
+const T11 = "text-[0.76vw] max-lg:text-[1.4vw] max-md:text-[2.8vw]";
+const T13 = "text-[0.9vw] max-lg:text-[1.6vw] max-md:text-[3.3vw]";
+const T14 = "text-[0.97vw] max-lg:text-[1.7vw] max-md:text-[3.6vw]";
+const T15 = "text-[1.04vw] max-lg:text-[1.8vw] max-md:text-[3.8vw]";
+const T16 = "text-[1.1vw] max-lg:text-[1.95vw] max-md:text-[4.1vw]";
+const T18 = "text-[1.25vw] max-lg:text-[2.2vw] max-md:text-[4.4vw]";
+const T20 = "text-[1.4vw] max-lg:text-[2.4vw] max-md:text-[5vw]";
+const T28 = "text-[1.95vw] max-lg:text-[3.4vw] max-md:text-[7vw]";
 
 /* ---------- class tokens ---------- */
-const GUTTER = "px-[3.4vw] max-[1025px]:px-[5vw] max-md:px-5";
+const GUTTER = "px-[3.4vw] max-lg:px-[5vw] max-md:px-5";
 
 const CHIP =
   `inline-flex h-8 shrink-0 cursor-pointer items-center gap-2 px-3 ${T13} transition-[background-color,color,box-shadow] duration-500`;
@@ -312,7 +313,7 @@ export function EffectsListingV4({
 
   const chooseCols = (n) => {
     clearTimeout(colsTimerRef.current);
-    if (n === 3 && isSidebarOpen && window.matchMedia("(min-width: 1026px)").matches) {
+    if (n === 3 && isSidebarOpen && !window.matchMedia(MEDIA.tablet).matches) {
       setPendingCols(3);
       toggleSidebar(false);
       colsTimerRef.current = setTimeout(() => {
@@ -516,17 +517,17 @@ export function EffectsListingV4({
       <AppVaultHeader showSearch totalEffects={effects.length} effects={effects} />
 
       {/* ---------- hero ---------- */}
-      <section className={`${GUTTER} pt-36 pb-20 max-[1025px]:pt-32 max-[1025px]:pb-14 max-md:pt-28`}>
+      <section className={`${GUTTER} pt-36 pb-20 max-lg:pt-32 max-lg:pb-14 max-md:pt-28`}>
         <div data-v4-fade>
           <Breadcrumb />
         </div>
 
-        <div data-v4-hero className="mt-7 grid grid-cols-[minmax(0,1.25fr)_minmax(0,.75fr)] items-end gap-12 max-[1025px]:grid-cols-1 max-[1025px]:gap-10">
+        <div data-v4-hero className="mt-7 grid grid-cols-[minmax(0,1.25fr)_minmax(0,.75fr)] items-end gap-12 max-lg:grid-cols-1 max-lg:gap-10">
           {/* Same entrances as the effect page: chars for the title, lines for the copy. */}
           {/* Keyed by page: SplitText owns the heading's text nodes, so a new page gets a
               fresh heading (and runs its entrance again) instead of a stale update. */}
           <HeadAnim key={scope || "all"} rotate={0} animateOnScroll={false}>
-            <h1 className={`${DISPLAY} max-w-[45vw] text-[6vw] leading-[0.9]! max-[1025px]:max-w-none max-[1025px]:text-[9vw] max-md:text-[13vw]`}>
+            <h1 className={`${DISPLAY} max-w-[45vw] text-[6vw] leading-[0.9]! max-lg:max-w-none max-lg:text-[9vw] max-md:text-[13vw]`}>
               {scope ? (
                 <HeroTitle name={content?.name} />
               ) : (
@@ -543,14 +544,14 @@ export function EffectsListingV4({
               : ["Production-ready interaction effects for React and Next.js. Preview any of them live, then copy or install with one command."]
             ).map((paragraph, index) => (
               <Copy key={`${scope || "all"}-${index}`} animateOnScroll={false} delay={0.3 + index * 0.15}>
-                <p className={`max-w-[32vw] ${T16} text-[#bdbdbd] max-[1025px]:max-w-[70vw] max-md:max-w-none`}>{paragraph}</p>
+                <p className={`max-w-[32vw] ${T16} text-[#bdbdbd] max-lg:max-w-[70vw] max-md:max-w-none`}>{paragraph}</p>
               </Copy>
             ))}
             <div data-v4-fade className={`${LABEL} flex flex-wrap gap-x-7.5 gap-y-2.5`}>
               {heroStats.map(([value, label]) => (
                 <p key={`${scope || "all"}-${label}`}>
                   {/* margin-left is set by alignStatInk() so the digit's ink lines up with the label's. */}
-                  <b data-v4-count={value} className={`${DISPLAY} block text-[2.4vw] leading-none text-[#F4F4F4] tabular-nums normal-case max-[1025px]:text-[4.5vw] max-md:text-[8vw]`}>
+                  <b data-v4-count={value} className={`${DISPLAY} block text-[2.4vw] leading-none text-[#F4F4F4] tabular-nums normal-case max-lg:text-[4.5vw] max-md:text-[8vw]`}>
                     {value}
                   </b>
                   <span className="text-white/60 normal-case tracking-normal text-[1vw]">{label}</span>
@@ -568,7 +569,7 @@ export function EffectsListingV4({
                 onKeyDown={(event) => event.key === "Enter" && scrollToGrid()}
                 placeholder="Search effects, categories or libraries"
                 autoComplete="off"
-                className="h-full min-w-0 flex-1 bg-transparent text-[1.1vw] max-[1025px]:text-[1.95vw] max-md:text-[4.1vw] text-[#F4F4F4] outline-none placeholder:text-[#6d6d6d]"
+                className="h-full min-w-0 flex-1 bg-transparent text-[1.1vw] max-lg:text-[1.95vw] max-md:text-[4.1vw] text-[#F4F4F4] outline-none placeholder:text-[#6d6d6d]"
               />
             </label> */}
           </div>
@@ -577,9 +578,9 @@ export function EffectsListingV4({
 
       {/* ---------- trending ---------- */}
       {trendingEffects.length > 0 && (
-        <section data-v4-fade aria-labelledby="v4-trending" className={`${GUTTER} pb-28 max-[1025px]:pb-20`}>
+        <section data-v4-fade aria-labelledby="v4-trending" className={`${GUTTER} pb-28 max-lg:pb-20`}>
           <div className="mb-5.5 flex items-end justify-between">
-            <h2 id="v4-trending" className={`${DISPLAY} text-[2.2vw] max-[1025px]:text-[4vw] max-md:text-[7vw]`}>
+            <h2 id="v4-trending" className={`${DISPLAY} text-[2.2vw] max-lg:text-[4vw] max-md:text-[7vw]`}>
               Trending this week
             </h2>
             <div className="flex gap-1.5 max-md:hidden">
@@ -593,7 +594,7 @@ export function EffectsListingV4({
             // overflow-y to auto, and the site's Lenis (allowNestedScroll) then treats this
             // row as a vertical scroller and traps the wheel inside it.
             onScroll={updateTrendEdges}
-            className="grid snap-x snap-mandatory auto-cols-[calc((100%-28px)/3)] grid-flow-col gap-3.5 overflow-x-hidden overflow-y-hidden pb-1 scrollbar-none max-[1025px]:overflow-x-auto max-[1025px]:auto-cols-[45%] max-md:auto-cols-[82%]"
+            className="grid snap-x snap-mandatory auto-cols-[calc((100%-28px)/3)] grid-flow-col gap-3.5 overflow-x-hidden overflow-y-hidden pb-1 scrollbar-none max-lg:overflow-x-auto max-lg:auto-cols-[45%] max-md:auto-cols-[82%]"
           >
             {trendingEffects.map((effect, index) => (
               <EffectCardV4 key={effect.name} {...cardProps(effect, index)} small dark className="snap-start" tagClassName="text-white border-white/30" metaClassName="text-white/80" />
@@ -610,7 +611,7 @@ export function EffectsListingV4({
       <div ref={sheetRef} id="v4-grid" data-v4-fade data-sound-hover="off" data-sound-flow="off" data-vault-header-scroll-away className="relative scroll-mt-4 bg-[#F4F4F4] text-[#1D1D1D] max-md:mx-0">
         <div className={`${GUTTER}  pb-24 max-md:pt-8 max-md:pb-16`}>
           {/* summary + view controls (sticky on desktop; tablet/mobile have a fixed header) */}
-          <div className="sticky top-[-2%] h-fit z-5 mx-[-3.4vw] flex flex-wrap items-end justify-between gap-4 bg-[#F4F4F4] px-[3.5vw] pt-10 pb-4 shadow-[0_1px_0_rgba(29,29,29,.08)] max-[1025px]:static max-[1025px]:shadow-none max-[1025px]:mx-[-5vw] max-[1025px]:px-[5vw] max-md:-mx-5 max-md:px-5">
+          <div className="sticky top-[-2%] h-fit z-5 mx-[-3.4vw] flex flex-wrap items-end justify-between gap-4 bg-[#F4F4F4] px-[3.5vw] pt-10 pb-4 shadow-[0_1px_0_rgba(29,29,29,.08)] max-lg:static max-lg:shadow-none max-lg:mx-[-5vw] max-lg:px-[5vw] max-md:-mx-5 max-md:px-5">
             <p aria-live="polite" className={`${DISPLAY} ${T20} tracking-[-.02em]`}>
               <span ref={countRef} className="font-medium tabular-nums">
                 {filtered.length}
@@ -634,7 +635,7 @@ export function EffectsListingV4({
               <FilterMenu
                 tone="light"
                 // Open leftwards from the button's right edge on desktop (it sits near the screen edge).
-                panelClassName="min-[1026px]:left-auto! min-[1026px]:right-0"
+                panelClassName="lg:left-auto! lg:right-0"
                 options={SORT_OPTIONS}
                 activeFilter={sort === "trend" ? null : sort}
                 getLabel={sortLabel}
@@ -647,7 +648,7 @@ export function EffectsListingV4({
                 value={pendingCols ?? cols}
                 onChange={chooseCols}
                 itemClassName="w-8.5"
-                className="max-[1025px]:hidden"
+                className="max-lg:hidden"
               />
             </div>
           </div>
@@ -728,7 +729,7 @@ export function EffectsListingV4({
           {filtered.length === 0 ? (
             <div className="grid justify-items-center gap-3.5 px-4 py-20 text-center">
               <b className={`${DISPLAY} ${T28} tracking-[-.03em]`}>Nothing matches that, yet.</b>
-              <p className={`max-w-[30vw] ${T16} text-[#6B6B6B] max-[1025px]:max-w-[60vw] max-md:max-w-none`}>Try a broader search, or clear a filter. New effects land in the vault regularly.</p>
+              <p className={`max-w-[30vw] ${T16} text-[#6B6B6B] max-lg:max-w-[60vw] max-md:max-w-none`}>Try a broader search, or clear a filter. New effects land in the vault regularly.</p>
               <button
                 type="button"
                 onClick={clearAll}
@@ -738,7 +739,7 @@ export function EffectsListingV4({
               </button>
             </div>
           ) : (
-            <div ref={gridRef} className={`grid gap-x-5 gap-y-10 ${GRID_COLS[cols]} max-[1025px]:grid-cols-2 max-md:grid-cols-1 max-md:gap-y-10`}>
+            <div ref={gridRef} className={`grid gap-x-5 gap-y-10 ${GRID_COLS[cols]} max-lg:grid-cols-2 max-md:grid-cols-1 max-md:gap-y-10`}>
               {visible.map((effect, index) => (
                 <motion.div key={effect.name} layout transition={CARD_LAYOUT_TRANSITION}>
                   <EffectCardV4 {...cardProps(effect, index)} tagClassName="border-black/20" />
@@ -769,16 +770,16 @@ export function EffectsListingV4({
         {/* upgrade band */}
         {!isProUser && (
           <section className={`${GUTTER} pb-24 max-md:pb-16`}>
-            <div className="relative grid grid-cols-[minmax(0,1.3fr)_auto] gap-8 overflow-hidden bg-[#1D1D1D] p-10 py-12 text-[#F4F4F4] max-[1025px]:grid-cols-1 max-[1025px]:p-10 max-md:p-7">
+            <div className="relative grid grid-cols-[minmax(0,1.3fr)_auto] gap-8 overflow-hidden bg-[#1D1D1D] p-10 py-12 text-[#F4F4F4] max-lg:grid-cols-1 max-lg:p-10 max-md:p-7">
              
               <div className="relative">
-                <h2 className={`${DISPLAY} max-w-[45vw] text-[3vw] leading-[1.02] max-[1025px]:max-w-none max-[1025px]:text-[5vw] max-md:text-[8vw]`}>
+                <h2 className={`${DISPLAY} max-w-[45vw] text-[3vw] leading-[1.02] max-lg:max-w-none max-lg:text-[5vw] max-md:text-[8vw]`}>
                   Everything in the vault.{" "}
                    <span className="gradient-text-animate">
                     One plan.
                   </span>
                 </h2>
-                <p className={`mt-3.5 max-w-[45vw] ${T18} text-white/80 max-[1025px]:max-w-[70vw] max-md:max-w-none`}>
+                <p className={`mt-3.5 max-w-[45vw] ${T18} text-white/80 max-lg:max-w-[70vw] max-md:max-w-none`}>
                   Pro unlocks every component, section and template, with template credits and new drops as they land. Everything you copy stays in your repo.
                 </p>
               </div>

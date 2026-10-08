@@ -15,10 +15,10 @@ const Hero = () => {
         aria-hidden="true"
         fill
         sizes="100vw"
-        className="pointer-events-none -z-10 hidden object-cover max-[1025px]:block"
+        className="pointer-events-none -z-10 hidden object-cover max-lg:block"
       /> */}
             <div
-                className="space-y-[2vw] max-[1025px]:space-y-[8vw] mt-[2vw] max-[1025px]:mt-0 relative z-2 w-[75%] max-[1025px]:w-full"
+                className="space-y-[2vw] max-lg:space-y-[8vw] mt-[2vw] max-lg:mt-0 relative z-2 w-[75%] max-lg:w-full"
             >
 
                 <div className="h-fit flex max-md:flex-col max-md:justify-start items-center w-full">

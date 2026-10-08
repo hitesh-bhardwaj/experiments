@@ -16,7 +16,7 @@ export default function BlogHeroTags({ tags = [] }) {
   const showToggle = !expanded && hiddenCount > 0;
 
   return (
-    <div className="flex w-[30%] flex-wrap items-center justify-end gap-2.5 max-[1025px]:w-[50%]">
+    <div className="flex w-[30%] flex-wrap items-center justify-end gap-2.5 max-lg:w-[50%]">
       {tags.map((tag, index) => {
         // Past the cap the pill still renders for wider screens - it's only
         // hidden at max-md, and only until the viewer expands the list.

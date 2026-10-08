@@ -173,14 +173,14 @@ function MobileDropdownItem({
       href={href}
       onClick={onNavigate}
       prefetch={false}
-      className={`flex items-center gap-3 rounded-xl px-3 py-3 transition-colors duration-200 ${
+      className={`flex items-center gap-3 px-3 py-3 transition-colors duration-200 ${
         isActive
           ? "bg-primary/10 text-primary"
           : "text-white/70 hover:bg-white/5 hover:text-white"
       }`}
     >
       {icon && (
-        <span className="flex max-md:size-5 max-[1025px]:size-[4vw] shrink-0 items-center justify-center">
+        <span className="flex max-md:size-5 max-lg:size-[4vw] shrink-0 items-center justify-center">
           <Image
             src={icon}
             alt="icon"
@@ -191,7 +191,7 @@ function MobileDropdownItem({
         </span>
       )}
 
-      <span className="max-md:text-[4vw] max-[1025px]:text-[3vw] font-medium">
+      <span className="max-md:text-[4vw] max-lg:text-[3vw] font-medium">
         {label}
       </span>
     </Link>
@@ -242,7 +242,7 @@ function MobileDropdown({
         className="flex w-full items-center justify-between py-5 text-left"
       >
         <span
-          className={`max-md:text-[5vw] max-[1025px]:text-[4vw] font-medium transition-colors duration-200 ${
+          className={`max-md:text-[5vw] max-lg:text-[4vw] font-medium transition-colors duration-200 ${
             isActive ? "text-primary" : "text-white/90"
           }`}
         >
@@ -250,7 +250,7 @@ function MobileDropdown({
         </span>
 
         <ChevronDown
-          className={`size-5 transition-transform duration-300 max-[1025px]:size-[4vw] ${
+          className={`size-5 transition-transform duration-300 max-lg:size-[4vw] ${
             isOpen || isActive ? "text-primary" : "text-white/50"
           } ${isOpen ? "rotate-180" : ""}`}
         />
@@ -562,30 +562,30 @@ export default function NavbarMobile() {
           visibility: "hidden",
           transform: "translate3d(0, -18px, 0)",
         }}
-        className="fixed left-0 top-(--announcement-offset) transition-[top] duration-300 ease-out z-1100 hidden w-full items-center justify-between border-b border-white/5 bg-black/90 px-6 py-4 backdrop-blur-xl max-[1025px]:flex"
+        className="fixed left-0 top-(--announcement-offset) transition-[top] duration-300 ease-out z-1100 hidden w-full items-center justify-between border-b border-white/5 bg-black/90 px-6 py-4 backdrop-blur-xl max-lg:flex"
       >
         <Link prefetch={false} href="/" onClick={handleNavigate} aria-label="Hyperiux Vault home">
-          <HyperiuxLogo className="h-auto max-md:w-[40vw] text-primary max-[1025px]:w-[25vw]" />
+          <HyperiuxLogo className="h-auto max-md:w-[40vw] text-primary max-lg:w-[25vw]" />
         </Link>
 
         <button
           type="button"
           onClick={() => setIsMenuOpen((open) => !open)}
-          className="relative flex max-md:size-[11vw] max-[1025px]:size-[8vw] items-center justify-center rounded-full text-white transition-colors"
+          className="relative flex max-md:size-[11vw] max-lg:size-[8vw] items-center justify-center rounded-full text-white transition-colors"
           aria-label={isMenuOpen ? "Close menu" : "Open menu"}
           aria-expanded={isMenuOpen}
         >
           {isMenuOpen ? (
-            <X className="max-md:size-[7vw] max-[1025px]:size-[4vw]" />
+            <X className="max-md:size-[7vw] max-lg:size-[4vw]" />
           ) : (
-            <HamburgerIcon className="max-md:size-[7vw] max-[1025px]:size-[4vw]" />
+            <HamburgerIcon className="max-md:size-[7vw] max-lg:size-[4vw]" />
           )}
         </button>
       </nav>
 
       <div
         ref={menuRef}
-        className="fixed inset-0 z-999 hidden bg-black opacity-0 pointer-events-none max-[1025px]:flex"
+        className="fixed inset-0 z-999 hidden bg-black opacity-0 pointer-events-none max-lg:flex"
       >
         <div
           data-lenis-prevent
@@ -642,7 +642,7 @@ export default function NavbarMobile() {
                   target={isExternal ? "_blank" : undefined}
                   rel={isExternal ? "noopener noreferrer" : undefined}
                   onClick={handleNavigate}
-                  className={` py-5 max-md:text-[5vw] max-[1025px]:text-[4vw] font-medium transition-colors duration-200 ${
+                  className={` py-5 max-md:text-[5vw] max-lg:text-[4vw] font-medium transition-colors duration-200 ${
                     isActive
                       ? "text-primary"
                       : "text-white/90 hover:text-white"

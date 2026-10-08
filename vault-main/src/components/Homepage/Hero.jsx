@@ -193,7 +193,7 @@ export default function Hero() {
   );
 
   return (
-    <section className="pointer-events-none relative z-20 flex h-screen w-full max-[1025px]:w-screen max-[1025px]:h-fit max-[1025px]:py-[35vw]! max-[1025px]:py-[30vw]! items-center self-padd">
+    <section className="pointer-events-none relative z-20 flex h-screen w-full max-lg:w-screen max-lg:h-fit max-lg:py-[35vw]! max-lg:py-[30vw]! items-center self-padd">
       <Image
         src="/landing-page/hero-bg.webp"
         alt="hero-background image"
@@ -202,14 +202,14 @@ export default function Hero() {
         priority
         fetchPriority="high"
         sizes="100vw"
-        className="pointer-events-none -z-10 hidden object-cover max-[1025px]:block"
+        className="pointer-events-none -z-10 hidden object-cover max-lg:block"
       />
 
       <div
         ref={containerRef}
-        className="relative z-2 mt-[2vw] space-y-[2vw] max-[1025px]:mt-0 max-[1025px]:space-y-[10vw] max-[1025px]:space-y-[12vw]"
+        className="relative z-2 mt-[2vw] space-y-[2vw] max-lg:mt-0 max-lg:space-y-[10vw] max-lg:space-y-[12vw]"
       >
-        <div className="flex flex-col h-fit w-full items-start max-[1025px]:flex-col max-[1025px]:items-start max-[1025px]:gap-2 max-[1025px]:gap-5 max-[1025px]:justify-start">
+        <div className="flex flex-col h-fit w-full items-start max-lg:flex-col max-lg:items-start max-lg:gap-2 max-lg:gap-5 max-lg:justify-start">
           <p
             ref={labelRef}
             className="text20 font-medium text-[#cdcdcd]"
@@ -219,7 +219,7 @@ export default function Hero() {
 
           <h1
             ref={headingRef}
-            className="relative text120 mt-[1vw] w-fit capitalize max-[1025px]:font-medium! font-semibold max-[1025px]:w-[90%] max-[1025px]:w-[95%] max-[1025px]:indent-0!"
+            className="relative text120 mt-[1vw] w-fit capitalize max-lg:font-medium! font-semibold max-lg:w-[90%] max-lg:w-[95%] max-lg:indent-0!"
           >
             The Interaction Layer your
             <br />
@@ -229,14 +229,14 @@ export default function Hero() {
 
         <p
           ref={descRef}
-          className="text24 w-[40vw]  text-[#C9C9C9] max-[1025px]:w-[80%] max-[1025px]:w-full max-[1025px]:text-left max-[1025px]:text-left"
+          className="text24 w-[40vw]  text-[#C9C9C9] max-lg:w-[80%] max-lg:w-full max-lg:text-left max-lg:text-left"
         >
           Source-first scroll systems, cursor effects, text reveals, page transitions, loaders backgrounds, and WebGL scenes for React and Next.js. Start with 30+ Free Core effects today.
         </p>
 
         <div
           ref={buttonWrapRef}
-          className="pointer-events-auto flex max-[1025px]:pt-4 max-[1025px]:flex-col w-fit max-[1025px]:w-[88%] gap-[1vw] max-[1025px]:gap-5"
+          className="pointer-events-auto flex max-lg:pt-4 max-lg:flex-col w-fit max-lg:w-[88%] gap-[1vw] max-lg:gap-5"
         >
           <Button
             text="Browse Free Effects"
@@ -257,16 +257,16 @@ export default function Hero() {
 
         <p
           ref={shimmerRef}
-          className="shimmer-text flex items-center max-[1025px]:items-start gap-[0.5vw] max-[1025px]:mt-[-3vw] max-[1025px]:mt-[-6vw] max-[1025px]:pl-0 max-[1025px]:pl-2 text-[#939393] leading-none max-[1025px]:justify-center max-[1025px]:gap-2"
+          className="shimmer-text flex items-center max-lg:items-start gap-[0.5vw] max-lg:mt-[-3vw] max-lg:mt-[-6vw] max-lg:pl-0 max-lg:pl-2 text-[#939393] leading-none max-lg:justify-center max-lg:gap-2"
         >
-          <span className="inline-block size-[0.9vw] shrink-0 text-[#939393] max-[1025px]:size-3">
+          <span className="inline-block size-[0.9vw] shrink-0 text-[#939393] max-lg:size-3">
             <UnlockIcon className="h-full w-full" />
           </span>
 
           <ShimmerText
             baseColor="#939393"
             shimmerColor="#ffffff"
-            className="max-[1025px]:text-[3.5vw] capitalize leading-[1.2]"
+            className="max-lg:text-[3.5vw] capitalize leading-[1.2]"
           >
             150+ effects · 32 free · 83 Pro · React + Next.js · CLI install ·
             Source-first code

@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
+import { createContext, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import gsap from "gsap";
 import {
     PACKAGE_MANAGERS,
@@ -48,12 +48,60 @@ function tokenize(line) {
     return out;
 }
 
-function CopyIcon() {
+// Copy -> check swap: the outgoing icon scales down and rotates away while the incoming
+// one scales up and rotates in; the label rolls up from "Copy" to "Copied" (and back).
+function CopyButtonContent({ copied }) {
+    const copyIconRef = useRef(null);
+    const checkIconRef = useRef(null);
+    const copyLabelRef = useRef(null);
+    const copiedLabelRef = useRef(null);
+    const mounted = useRef(false);
+    const shown = useRef(copied);
+
+    useLayoutEffect(() => {
+        const [copyIcon, checkIcon, copyLabel, copiedLabel] = [copyIconRef, checkIconRef, copyLabelRef, copiedLabelRef].map((r) => r.current);
+        const show = copied ? checkIcon : copyIcon;
+        const hide = copied ? copyIcon : checkIcon;
+        const labelIn = copied ? copiedLabel : copyLabel;
+        const labelOut = copied ? copyLabel : copiedLabel;
+
+        if (!mounted.current) {
+            mounted.current = true;
+            gsap.set(copyIcon, { scale: 1, rotation: 0, opacity: 1 });
+            gsap.set(checkIcon, { scale: 0, rotation: -90, opacity: 0 });
+            gsap.set(copyLabel, { yPercent: 0, opacity: 1 });
+            gsap.set(copiedLabel, { yPercent: 100, opacity: 0 });
+            return undefined;
+        }
+
+        if (shown.current === copied) return undefined;
+        shown.current = copied;
+
+        const tl = gsap.timeline({ defaults: { overwrite: "auto" } });
+        tl.to(hide, { scale: 0, rotation: copied ? 90 : -90, opacity: 0, duration: 0.25, ease: "power2.in" }, 0)
+            .fromTo(show, { scale: 0, rotation: copied ? -90 : 90, opacity: 0 }, { scale: 1, rotation: 0, opacity: 1, duration: 0.45, ease: "back.out(1.7)" }, 0.15)
+            .to(labelOut, { yPercent: -100, opacity: 0, duration: 0.4, ease: "power3.inOut" }, 0)
+            .fromTo(labelIn, { yPercent: 100, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.4, ease: "power3.inOut" }, 0);
+        return () => tl.kill();
+    }, [copied]);
+
     return (
-        <svg aria-hidden="true" className="size-3.5" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
-            <rect height="12" rx="2" width="12" x="8" y="8" />
-            <path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2" />
-        </svg>
+        <>
+            <span aria-hidden="true" className="relative size-3.5 shrink-0">
+                <svg ref={copyIconRef} className="absolute inset-0" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
+                    <rect height="12" rx="2" width="12" x="8" y="8" />
+                    <path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2" />
+                </svg>
+                <svg ref={checkIconRef} className="absolute inset-0" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
+                    <path d="M5 12.5l4.5 4.5L19 7.5" />
+                </svg>
+            </span>
+            <span className="relative flex h-[1.2em] overflow-hidden leading-[1.2]">
+                <span aria-hidden="true" className="invisible">Copied</span>
+                <span ref={copyLabelRef} className="absolute left-0 top-0">Copy</span>
+                <span ref={copiedLabelRef} className="absolute left-0 top-0">Copied</span>
+            </span>
+        </>
     );
 }
 
@@ -260,8 +308,7 @@ export function CodeBlock({
                                     : "text-[#d8d8d8] shadow-[inset_0_0_0_1px_rgba(244,244,244,.14)] hover:bg-[#f4f4f4]/8 hover:text-white"
                             }`}
                         >
-                            <CopyIcon />
-                            <span>{copied ? "Copied" : "Copy"}</span>
+                            <CopyButtonContent copied={copied} />
                         </button>
                     )}
                 </span>
@@ -275,7 +322,7 @@ export function CodeBlock({
                 >
                     <code ref={codeRef} className="block">
                         {lines.map((tokens, i) => (
-                            <span key={i} className="flex pr-5 transition-colors duration-200 hover:bg-white/[.035]">
+                            <span key={i} className="flex pr-5">
                                 <span aria-hidden="true" className="inline-block w-12 shrink-0 select-none pr-4 text-right text-[#4a4a4a]">{i + 1}</span>
                                 <span className="whitespace-pre">
                                     {tokens.length ? tokens.map(([k, v], j) => (k ? <span key={j} className={TOKEN[k]}>{v}</span> : v)) : " "}

@@ -83,7 +83,7 @@ function FooterBlockLink({ href, children }) {
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 -z-10 bg-primary opacity-0 transition-opacity duration-200 ease-out group-hover:opacity-100 group-hover:duration-0 motion-reduce:transition-none"
       />
-      <span className="block py-[calc(var(--cvw)*0.15)] max-md:py-1.5 max-md:px-2 text20 text-foreground transition-transform duration-200 ease-out group-hover:translate-x-5 group-hover:duration-0 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0">
+      <span className="block py-[calc(var(--cvw)*0.15)] max-md:py-1.5 max-md:px-2 type-body text-foreground transition-transform duration-200 ease-out group-hover:translate-x-5 group-hover:duration-0 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0">
         {children}
       </span>
     </Link>
@@ -175,7 +175,7 @@ export default function FooterV3() {
       <div className={`mx-auto max-w-[1536px] w-full max-md:space-y-[calc(var(--cvw)*6)] max-sm:space-y-[calc(var(--cvw)*8)] h-fit relative z-3`}>
         <LineReveal
           as="h2"
-          className="text-[calc(var(--cvw)*4)] max-md:text-[calc(var(--cvw)*7.5)] max-sm:text-[calc(var(--cvw)*8)] leading-[1.1] font-aeonik pointer-events-auto max-md:w-full max-sm:px-0! w-[60%]"
+          className="type-h1 pointer-events-auto max-md:w-full max-sm:px-0! w-[60%]"
         >
           Build the Interaction Layer Your Website is Missing.
         </LineReveal>
@@ -210,7 +210,7 @@ export default function FooterV3() {
       {/* Pinned to the footer's bottom edge but inside the same 1536px container
           (and side padding) as the rest of the footer, so it lines up on wide screens */}
       <div className="absolute inset-x-0 bottom-[calc(var(--cvw)*2)] z-4 px-[calc(var(--cvw)*4.5)] max-md:bottom-[calc(var(--cvw)*4)] max-md:px-[calc(var(--cvw)*5)] max-sm:bottom-[calc(var(--cvw)*10)] max-sm:px-[calc(var(--cvw)*7)]">
-        <p className="mx-auto w-full max-w-[1536px] text18 text-light-grey max-md:text-center max-sm:text-[calc(var(--cvw)*3.5)]!">
+        <p className="mx-auto w-full max-w-[1536px] type-small text-light-grey max-md:text-center">
           © 2026 Hyperiux. All rights reserved. Psst, the first sentence is hiding something .
           {/* <EggHint className="ml-2" /> */}
         </p>
@@ -220,14 +220,14 @@ export default function FooterV3() {
         {/* Platform label */}
         <div className="flex items-center gap-[calc(var(--cvw)*1)] max-md:gap-2 pb-[calc(var(--cvw)*1)] max-md:pb-[calc(var(--cvw)*3)]">
           <span className="size-[calc(var(--cvw)*0.45)] max-md:size-2 bg-[#ff5f00]" />
-          <span className="text24 text-[#B3B3B3] font-heading">Platform</span>
+          <span className="type-body font-aeonik text-[#B3B3B3]">Platform</span>
         </div>
 
         {/* Top 4-column grid: Vault | Categories | Documents | Legal */}
         <div className="grid grid-cols-[1fr_2.5fr_1fr_1fr]  gap-[calc(var(--cvw)*2)] max-md:gap-[calc(var(--cvw)*4)] max-md:grid-cols-2 max-sm:grid-cols-1 ">
           {/* Vault */}
           <div className="flex flex-col gap-[calc(var(--cvw)*1.5)] py-[calc(var(--cvw)*1.2)] max-md:py-[calc(var(--cvw)*2.5)] max-sm:py-[calc(var(--cvw)*6)] border-t  border-foreground/50 max-md:pb-[calc(var(--cvw)*5)] max-md:gap-[calc(var(--cvw)*3)] max-sm:pb-[calc(var(--cvw)*6)]">
-            <h3 className="text24 font-medium text-[#979797]">Vault</h3>
+            <h3 className="type-body font-aeonik text-[#979797]">Vault</h3>
             <ul className="flex flex-col max-md:gap-1">
               {vaultFooterLinks.map(({ label, href }) => (
                 <li key={label}>
@@ -239,7 +239,7 @@ export default function FooterV3() {
 
           {/* Categories */}
           <div className="flex flex-col gap-[calc(var(--cvw)*1.5)] py-[calc(var(--cvw)*1.2)] max-md:py-[calc(var(--cvw)*2.5)] max-sm:py-[calc(var(--cvw)*6)]  border-t  border-foreground/50  max-md:pb-[calc(var(--cvw)*5)] max-md:gap-[calc(var(--cvw)*3)] max-sm:px-0 max-sm:pt-[calc(var(--cvw)*6)] max-sm:pb-[calc(var(--cvw)*6)] max-sm:border-t max-sm:border-foreground/50">
-            <h3 className="text24 font-medium text-[#979797]">Categories</h3>
+            <h3 className="type-body font-aeonik text-[#979797]">Categories</h3>
             <div className="grid grid-cols-2 gap-x-[calc(var(--cvw)*1)] max-md:gap-x-[calc(var(--cvw)*2)] max-sm:grid-cols-2 max-sm:gap-x-4">
               {categoryColumns.map((col, ci) => (
                 <ul key={ci} className="flex flex-col max-md:gap-1">
@@ -255,7 +255,7 @@ export default function FooterV3() {
 
           {/* Documents */}
           <div className="flex flex-col gap-[calc(var(--cvw)*1.5)] py-[calc(var(--cvw)*1.2)] max-md:py-[calc(var(--cvw)*2.5)] max-sm:py-[calc(var(--cvw)*6)]  border-t  border-foreground/50 max-md:border-t max-md:border-foreground/50 max-md:pt-[calc(var(--cvw)*5)] max-md:gap-[calc(var(--cvw)*3)] max-sm:px-0 max-sm:pt-[calc(var(--cvw)*6)] max-sm:pb-[calc(var(--cvw)*6)]">
-            <h3 className="text24 font-medium text-[#979797]">Documents</h3>
+            <h3 className="type-body font-aeonik text-[#979797]">Documents</h3>
             <ul className="flex flex-col max-md:gap-1">
               {docsLinks.map(({ label, href }) => (
                 <li key={label}>
@@ -267,7 +267,7 @@ export default function FooterV3() {
 
           {/* Legal */}
           <div className="flex flex-col gap-[calc(var(--cvw)*1.5)] py-[calc(var(--cvw)*1.2)] max-md:py-[calc(var(--cvw)*2.5)] max-sm:py-[calc(var(--cvw)*6)]  border-t  border-foreground/50  max-md:border-foreground/50 max-md:border-t max-md:pt-[calc(var(--cvw)*5)] max-md:gap-[calc(var(--cvw)*3)] max-sm:pl-0 max-sm:border-t max-sm:border-foreground/50 max-sm:pt-[calc(var(--cvw)*6)]">
-            <h3 className="text24 font-medium text-[#979797]">Legal</h3>
+            <h3 className="type-body font-aeonik text-[#979797]">Legal</h3>
             <ul className="flex flex-col max-md:gap-1">
               {legalLinks.map(({ label, href }) => (
                 <li key={label}>
@@ -284,7 +284,7 @@ export default function FooterV3() {
           <div className="flex flex-col gap-[calc(var(--cvw)*1.1)]  border-foreground/50 max-md:pb-[calc(var(--cvw)*5)] max-md:gap-[calc(var(--cvw)*3)] max-sm:pb-[calc(var(--cvw)*6)]">
             <div className="flex items-center gap-[calc(var(--cvw)*1)] max-md:gap-2">
               <span className="size-[calc(var(--cvw)*0.45)] max-md:size-2  bg-[#ff5f00]" />
-              <span className="text24 text-[#B3B3B3] font-heading">
+              <span className="type-body font-aeonik text-[#B3B3B3]">
                 Socials
               </span>
             </div>
@@ -303,7 +303,7 @@ export default function FooterV3() {
           <div className="flex flex-col gap-[calc(var(--cvw)*1.1)]  border-foreground/50  max-md:pb-[calc(var(--cvw)*5)] max-md:gap-[calc(var(--cvw)*3)] max-sm:px-0 max-sm:pt-[calc(var(--cvw)*6)] max-sm:pb-[calc(var(--cvw)*6)] max-sm:border-foreground/50">
             <div className="flex items-center gap-[calc(var(--cvw)*1)] max-md:gap-2">
               <span className="size-[calc(var(--cvw)*0.45)] max-md:size-2  bg-[#ff5f00] " />
-              <span className="text24 text-[#B3B3B3] font-heading">
+              <span className="type-body font-aeonik text-[#B3B3B3]">
                 Contact Us
               </span>
             </div>
@@ -329,16 +329,16 @@ export default function FooterV3() {
           <div className="flex flex-col gap-[calc(var(--cvw)*1.15)]  border-foreground/50  max-md:pb-[calc(var(--cvw)*12)] max-md:border-foreground/50 max-md:pt-[calc(var(--cvw)*5)] max-md:col-span-2 max-md:pl-0 max-md:gap-[calc(var(--cvw)*3)] max-sm:py-[calc(var(--cvw)*6)] max-sm:pb-[calc(var(--cvw)*20)]">
             <div className="flex items-center gap-[calc(var(--cvw)*1)] max-md:gap-2">
               <span className="size-[calc(var(--cvw)*0.45)] max-md:size-2  bg-[#ff5f00]" />
-              <span className="text24 text-[#B3B3B3] font-heading">
+              <span className="type-body font-aeonik text-[#B3B3B3]">
                 New effects, in your inbox
               </span>
             </div>
-            <p className="text18 leading-[1.45] max-w-[calc(var(--cvw)*25)] mb-[calc(var(--cvw)*1)] max-md:mb-[calc(var(--cvw)*2)] max-md:max-w-full max-sm:mb-[calc(var(--cvw)*6)] text-[#979797]">
+            <p className="type-body max-w-[calc(var(--cvw)*25)] mb-[calc(var(--cvw)*1)] max-md:mb-[calc(var(--cvw)*2)] max-md:max-w-full max-sm:mb-[calc(var(--cvw)*6)] text-[#979797]">
               Every new drop, plus the occasional behind-the-scenes build. No
               spam. Unsubscribe anytime.
             </p>
             {status === "success" ? (
-              <p className="text18 text-[#ff5f00]">
+              <p className="type-body text-[#ff5f00]">
                 You&apos;re in. Welcome to the list.
               </p>
             ) : (
@@ -373,7 +373,7 @@ export default function FooterV3() {
                   </button>
                 </div>
                 {status === "error" && (
-                  <p className="text-sm text-red-400 px-[calc(var(--cvw)*1.2)] max-md:px-0">
+                  <p className="type-small text-red-400 px-[calc(var(--cvw)*1.2)] max-md:px-0">
                     {errorMessage}
                   </p>
                 )}

@@ -90,7 +90,7 @@ function TutorialVideoModal() {
             data-lenis-prevent
         >
             <div
-                className={`relative w-full max-w-[80vw] max-[1025px]:max-w-full ${closing ? "motion-safe:animate-[hx-scale-out_.32s_cubic-bezier(.7,0,.84,0)_both]" : "motion-safe:animate-[hx-scale-in_.8s_cubic-bezier(.16,1,.3,1)_both]"}`}
+                className={`relative w-full max-w-[80vw] max-lg:max-w-full ${closing ? "motion-safe:animate-[hx-scale-out_.32s_cubic-bezier(.7,0,.84,0)_both]" : "motion-safe:animate-[hx-scale-in_.8s_cubic-bezier(.16,1,.3,1)_both]"}`}
                 onClick={(e) => e.stopPropagation()}
             >
                 <button

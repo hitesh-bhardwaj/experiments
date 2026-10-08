@@ -20,9 +20,9 @@ import {
 } from "./EffectCardV4";
 
 // Text sizes in vw: desktop · tablet (max-[1025px]) · mobile (max-md).
-const T11 = "text-[0.76vw] max-[1025px]:text-[1.4vw] max-md:text-[2.8vw]";
-const T14 = "text-[0.97vw] max-[1025px]:text-[1.7vw] max-md:text-[3.6vw]";
-const T16 = "text-[1.1vw] max-[1025px]:text-[1.95vw] max-md:text-[4.1vw]";
+const T11 = "text-[0.76vw] max-lg:text-[1.4vw] max-md:text-[2.8vw]";
+const T14 = "text-[0.97vw] max-lg:text-[1.7vw] max-md:text-[3.6vw]";
+const T16 = "text-[1.1vw] max-lg:text-[1.95vw] max-md:text-[4.1vw]";
 
 // Open/close choreography borrowed from the information-drawer effect: the panel
 // slides in from the right (power2.inOut) while the backdrop fades, and only then
@@ -219,9 +219,9 @@ export function PreviewDrawerV4({
       <div
         ref={panelRef}
         data-lenis-prevent
-        className="absolute inset-y-0 right-0 w-[min(760px,100vw)] overflow-y-auto overscroll-contain border-l border-white/10 bg-[#0e0e0e] font-neue-haas text-white shadow-[-16px_0_40px_-24px_rgba(0,0,0,.6)] max-[1025px]:w-full max-[1025px]:border-l-0"
+        className="absolute inset-y-0 right-0 w-[min(760px,100vw)] overflow-y-auto overscroll-contain border-l border-white/10 bg-[#0e0e0e] font-neue-haas text-white shadow-[-16px_0_40px_-24px_rgba(0,0,0,.6)] max-lg:w-full max-lg:border-l-0"
       >
-      <div ref={contentRef} className="flex flex-col gap-10 px-10 pt-7 pb-16 max-[1025px]:px-8 max-md:px-5 *:shrink-0">
+      <div ref={contentRef} className="flex flex-col gap-10 px-10 pt-7 pb-16 max-lg:px-8 max-md:px-5 *:shrink-0">
         <div className="flex items-center justify-between">
           <span className={`${T16} text-white/80`}>{categoryName}</span>
           {/* Same close control as the site's modals: the cross turns a quarter on hover. */}
@@ -258,18 +258,10 @@ export function PreviewDrawerV4({
         {/* Actions sit right under the preview. */}
        
         <div className="grid gap-6">
-         {shown.tags?.length > 0 && (
-            <div className="flex flex-wrap gap-1.5">
-              {shown.tags.map((tag) => (
-                <span key={tag} className={`${MONO} inline-flex h-6 items-center border border-white/15 px-2 ${T11} text-white/70`}>
-                  {tag}
-                </span>
-              ))}
-            </div>
-          )}
+         
           {/* Tier sits beside the name at its usual small size. */}
           <div className="flex flex-wrap items-center gap-3">
-            <h2 id="v4-drawer-title" className={`${DISPLAY} text-[3vw] leading-[1]! tracking-[-.04em] max-[1025px]:text-[6vw] max-md:text-[9vw]`}>
+            <h2 id="v4-drawer-title" className={`${DISPLAY} text-[3vw] leading-[1]! tracking-[-.04em] max-lg:text-[6vw] max-md:text-[9vw]`}>
               {shown.title}
             </h2>
             
@@ -279,11 +271,19 @@ export function PreviewDrawerV4({
           </div>
           
           {shown.description && (
-            <p className={`max-w-[42vw] ${T16} leading-relaxed text-white/80 max-[1025px]:max-w-none`}>{shown.description}</p>
+            <p className={`max-w-[42vw] ${T16} leading-relaxed text-white/80 max-lg:max-w-none`}>{shown.description}</p>
           )}
           <div className="flex w-full justify-between">
-          
-          <div className=" flex justify-end">
+          {shown.tags?.length > 0 && (
+            <div className="flex flex-wrap gap-1.5">
+              {shown.tags.map((tag) => (
+                <span key={tag} className={`${MONO} inline-flex h-6 items-center border border-white/15 px-2 ${T11} text-white/70`}>
+                  {tag}
+                </span>
+              ))}
+            </div>
+          )}
+           <div className=" flex justify-end">
           <div className="flex flex-wrap items-center gap-2">
           <button
             type="button"

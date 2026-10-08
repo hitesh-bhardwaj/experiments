@@ -56,6 +56,9 @@ body {
   --radius-2xl: 40px;
   --radius-pill: 56px;
   --radius-full: 100000px;
+  /* Tablet breakpoint at 1025px (Tailwind's default lg is 1024px), so max-lg:
+     is exactly the old max-[1025px]: and 1024px iPads stay on tablet */
+  --breakpoint-lg: 1025px;
 }
 
 html,
@@ -101,10 +104,12 @@ body {
   }
 }
 
-h1,
-h2,
-h3,
-h4 {
+/* Heading defaults. They stay unlayered, so every existing heading renders as
+   before, but skip headings that use the shared type scale (`type-*`, see
+   STYLE_GUIDE.md) so the scale and any utility next to it apply normally.
+   The exclusion sits in :where(), so it adds no specificity: the selector
+   ranks exactly like a bare h1 against the classes below. */
+:is(h1, h2, h3, h4):where(:not([class*="type-"])) {
   font-family: var(--font-aeonik), system-ui, sans-serif;
   font-weight: 400;
   line-height: 1.2;
@@ -115,7 +120,7 @@ h4 {
   font-size: 16px;
   line-height: 1.6;
 }
-.home-type :is(h1, h2, h3, h4),
+.home-type :is(h1, h2, h3, h4):where(:not([class*="type-"])),
 .home-type :is(.t96, .text64, .text80, .text110, .text120, .text140) {
   font-family: var(--font-aeonik);
 }
@@ -271,7 +276,7 @@ h4 {
 .hyperiux-clerk .cl-cardBox {
   width: 100% !important;
   padding: 4.5vw 6vw;
-  border-radius: clamp(20px, 1vw, 28px) !important;
+  border-radius: 0 !important;
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
   /* background: transparent !important; */
   /* box-shadow: 0 25px 80px rgba(0, 0, 0, 0.45) !important; */
@@ -340,7 +345,7 @@ h4 {
   width: 100% !important;
   min-height: 44px !important;
   height: clamp(44px, 3vw, 56px) !important;
-  border-radius: 999px !important;
+  border-radius: 0 !important;
   border: 1px solid rgba(255, 255, 255, 0.12) !important;
   background: rgba(255, 255, 255, 0.06) !important;
   padding: 0.75rem 1.25rem !important;
@@ -367,7 +372,7 @@ h4 {
 }
 
 .hyperiux-clerk .cl-formFieldInputGroup {
-  border-radius: 999px !important;
+  border-radius: 0 !important;
   box-shadow: none !important;
 }
 
@@ -389,7 +394,7 @@ h4 {
   width: 100% !important;
   min-height: 44px !important;
   height: clamp(46px, 3vw, 58px) !important;
-  border-radius: 999px !important;
+  border-radius: 0 !important;
   border: none !important;
   background: #ff5f00 !important;
   padding: 0.75rem 1.5rem !important;
@@ -469,7 +474,7 @@ h4 {
 }
 
 .hyperiux-clerk .cl-alert {
-  border-radius: 1rem !important;
+  border-radius: 0 !important;
   border: 1px solid rgba(239, 68, 68, 0.2) !important;
   background: rgba(239, 68, 68, 0.1) !important;
   padding: 0.75rem 1rem !important;
@@ -489,7 +494,7 @@ h4 {
 .hyperiux-clerk .cl-otpCodeFieldInput {
   width: 48px !important;
   height: 48px !important;
-  border-radius: 14px !important;
+  border-radius: 0 !important;
   border: 1px solid rgba(255, 255, 255, 0.12) !important;
   background: rgba(255, 255, 255, 0.08) !important;
   color: #ffffff !important;
@@ -573,7 +578,7 @@ input:-webkit-autofill:active {
   }
 
   .hyperiux-clerk .cl-cardBox {
-    border-radius: 1.5rem !important;
+    border-radius: 0 !important;
   }
 
   .cl-internal-arrfyj {
@@ -586,7 +591,7 @@ input:-webkit-autofill:active {
 
 @media (max-width: 640px) {
   .hyperiux-clerk .cl-cardBox {
-    border-radius: 1.5rem !important;
+    border-radius: 0 !important;
   }
 
   .hyperiux-clerk .cl-card {
@@ -1063,4 +1068,91 @@ html[data-v4-drawer-open] {
 
 html.lenis.lenis-stopped[data-v4-drawer-open] {
   overflow: visible;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Shared design system (STYLE_GUIDE.md). Real Tailwind utilities, so a
+   one-off utility on the same element still overrides them without `!`.
+   Sizes use --cvw (1vw capped at the 1536px container); breakpoints are
+   Tailwind's max-lg (<1025px, set above), max-md (<768px), max-sm (<640px).
+   ───────────────────────────────────────────────────────────────────────── */
+
+/* Type scale */
+@utility type-display {
+  font-family: var(--font-aeonik), system-ui, sans-serif;
+  font-weight: 400;
+  font-size: calc(var(--cvw) * 6.4);
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+  @variant max-lg { font-size: 8.5vw; }
+  @variant max-md { font-size: min(13vw, 65px); }
+}
+@utility type-h1 {
+  font-family: var(--font-aeonik), system-ui, sans-serif;
+  font-weight: 400;
+  font-size: calc(var(--cvw) * 4.6);
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+  @variant max-lg { font-size: 6vw; }
+  @variant max-md { font-size: min(9vw, 46px); }
+}
+@utility type-h2 {
+  font-family: var(--font-aeonik), system-ui, sans-serif;
+  font-weight: 400;
+  font-size: calc(var(--cvw) * 2.6);
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  @variant max-lg { font-size: 4vw; }
+  @variant max-md { font-size: min(6.5vw, 31px); }
+}
+@utility type-h3 {
+  font-family: var(--font-aeonik), system-ui, sans-serif;
+  font-weight: 400;
+  font-size: calc(var(--cvw) * 1.6);
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  @variant max-lg { font-size: 2.6vw; }
+  @variant max-md { font-size: min(5vw, 20px); }
+}
+@utility type-body-lg {
+  font-family: var(--font-avenir), "Avenir Next", system-ui, sans-serif;
+  font-size: calc(var(--cvw) * 1.1);
+  line-height: 1.6;
+  @variant max-lg { font-size: 2.2vw; }
+  @variant max-md { font-size: clamp(15px, 4.1vw, 17px); }
+}
+@utility type-body {
+  font-family: var(--font-avenir), "Avenir Next", system-ui, sans-serif;
+  font-size: clamp(15px, calc(var(--cvw) * 1.05), 17px);
+  line-height: 1.65;
+}
+@utility type-small {
+  font-family: var(--font-avenir), "Avenir Next", system-ui, sans-serif;
+  font-size: clamp(13px, calc(var(--cvw) * 0.9), 15px);
+  line-height: 1.5;
+}
+@utility type-label {
+  font-family: var(--font-avenir), "Avenir Next", system-ui, sans-serif;
+  font-size: clamp(11px, calc(var(--cvw) * 0.72), 12px);
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+/* Layout */
+@utility site-container {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 1536px;
+}
+@utility section-x {
+  padding-inline: calc(var(--cvw) * 4.5);
+  @variant max-lg { padding-inline: 6vw; }
+  @variant max-md { padding-inline: 7vw; }
+}
+@utility section-y {
+  padding-block: calc(var(--cvw) * 7);
+  @variant max-lg { padding-block: 10vw; }
+  @variant max-md { padding-block: 15vw; }
 }
