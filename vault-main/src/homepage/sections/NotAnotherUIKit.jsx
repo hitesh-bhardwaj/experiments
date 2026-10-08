@@ -18,7 +18,7 @@ const UI_CARDS = [
   },
   {
     id: 2,
-    icon: "/icons/source-code.png",
+    icon: "/icons/source-code.svg",
     title: "Source code you own",
     text: "Vault is built for people who want control. Every effect lands in your repo as real, inspectable code. No runtime dependency on us. No lock-in. Change anything, keep everything.",
   },
