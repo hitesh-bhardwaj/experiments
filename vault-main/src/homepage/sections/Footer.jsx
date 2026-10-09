@@ -241,12 +241,12 @@ export default function Footer() {
     <footer
       ref={footerRef}
       id="footer"
-      className="relative z-200 py-[calc(var(--cvw)*7)]  w-full overflow-hidden max-md:px-[calc(var(--cvw)*5)] max-md:py-[calc(var(--cvw)*10)] max-sm:mt-16 px-[calc(var(--cvw)*4.5)] max-sm:px-[calc(var(--cvw)*7)] max-sm:py-[calc(var(--cvw)*15)] max-md:bg-[#111110]"
+      className="relative z-200 py-[calc(var(--cvw)*7)]  w-full overflow-x-clip max-md:px-[calc(var(--cvw)*5)] max-md:py-[calc(var(--cvw)*10)] max-sm:mt-16 px-[calc(var(--cvw)*4.5)] max-sm:px-[calc(var(--cvw)*7)] max-sm:py-[calc(var(--cvw)*15)] max-md:bg-[#111110]"
     >
       <canvas
         ref={ribbonCanvasRef}
         aria-hidden="true"
-        className="pointer-events-none absolute top-0 left-[3%] z-0 block h-full w-full"
+        className="pointer-events-none absolute top-[-12vh] left-[3%] z-0 block h-[calc(100%+12vh)] w-full"
       />
       <div className={`mx-auto max-w-[1536px] w-full max-md:space-y-[calc(var(--cvw)*6)] max-sm:space-y-[calc(var(--cvw)*8)] h-fit relative z-3`}>
         <LineReveal

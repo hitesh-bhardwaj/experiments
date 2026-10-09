@@ -600,8 +600,13 @@ export function mountThereminRibbons(host, canvas, { pose = "hero", sound = null
     renderer.setPixelRatio(pr);
     SU.uPR.value = pr;
     renderer.setSize(w, h, false);
-    camera.aspect = w / h;
+    // The footer canvas bleeds above the footer (so the rings aren't cut when the sheet above lifts away).
+    // Frame the scene as if the canvas were only the footer's height, then reveal the extra strip on top.
+    const bleed = isHero ? 0 : Math.max(0, h - host.clientHeight);
+    camera.aspect = w / (h - bleed);
     camera.fov = camera.aspect < 0.8 ? 46 : 32;
+    if (bleed) camera.setViewOffset(w, h - bleed, 0, -bleed, w, h);
+    else camera.clearViewOffset();
     camera.updateProjectionMatrix();
   };
   const ro = new ResizeObserver(onResize);

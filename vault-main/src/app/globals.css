@@ -87,9 +87,13 @@ html {
   line-height: 1.2;
 }
 
+html {
+  overflow-x: clip;
+}
+
 body {
-  width: 100vw;
-  overflow-x: hidden;
+  width: 100%;
+  overflow-x: clip;
   font-family: var(--font-avenir), "Avenir Next", system-ui, sans-serif;
   line-height: 1.5;
   font-size: 16px;
@@ -912,8 +916,8 @@ html.loader-first-visit body {
   }
 
   body {
-    overflow-x: hidden;
-    width: 100vw;
+    overflow-x: clip;
+    width: 100%;
   }
 
   .self-padd {
