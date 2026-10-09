@@ -51,7 +51,7 @@ const images = [
 
 export default function Home() {
   return (
-    <main className="min-h-screen overflow-hidden bg-black text-white">
+    <main className="min-h-screen overflow-hidden bg-black text-foreground">
       <section className="mx-auto flex min-h-screen max-w-6xl items-center px-6">
         <PhantomImageTrail images={images} />
       </section>

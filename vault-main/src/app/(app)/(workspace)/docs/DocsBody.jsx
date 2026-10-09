@@ -56,9 +56,9 @@ function DocsHero({ pathname, meta }) {
       {hero && (
         <div className="flex w-[65%] flex-col gap-[1.5vw] max-md:w-full max-md:gap-[4vw]">
           <h1 className="fadeup type-display text-foreground">{hero.title}</h1>
-          <p className="fadeup type-body-lg w-[70%] text-foreground/80 max-md:w-[90%]">{hero.lede}</p>
+          <p className="fadeup type-body-lg w-[70%] text-white/70 max-md:w-[90%]">{hero.lede}</p>
           {/* Read time · sections · search, hidden for now
-          <div className="fadeup mt-[30px] flex flex-wrap items-center gap-x-3.5 gap-y-2.5 text-[13px] uppercase tracking-[.08em] text-[#8a8a8a]">
+          <div className="fadeup mt-[30px] flex flex-wrap items-center gap-x-3.5 gap-y-2.5 text-[13px] uppercase tracking-[.08em] text-white/70">
             {meta.read && <span>{meta.read}</span>}
             {meta.read && <span aria-hidden="true">·</span>}
             {meta.secs && <span>{meta.secs}</span>}
@@ -66,14 +66,14 @@ function DocsHero({ pathname, meta }) {
             <button
               type="button"
               onClick={openDocsSearch}
-              className="inline-flex h-9 items-center gap-2.5 pr-2 pl-3 text-[13px] font-medium normal-case tracking-normal text-[#cfcfcf] shadow-[inset_0_0_0_1px_rgba(244,244,244,.14)] transition-[background-color,color,box-shadow] duration-500 hover:bg-[rgba(244,244,244,.06)] hover:text-white hover:shadow-[inset_0_0_0_1px_rgba(255,107,0,.5)]"
+              className="inline-flex h-9 items-center gap-2.5 pr-2 pl-3 text-[13px] font-medium normal-case tracking-normal text-white/70 shadow-[inset_0_0_0_1px_rgba(244,244,244,.14)] transition-[background-color,color,box-shadow] duration-500 hover:bg-[rgba(244,244,244,.06)] hover:text-white hover:shadow-[inset_0_0_0_1px_rgba(255,107,0,.5)]"
             >
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="size-3.5">
                 <circle cx="11" cy="11" r="7" />
                 <path d="m20 20-3.5-3.5" />
               </svg>
               <span>Search the docs</span>
-              <span className="px-1.5 py-0.5 font-mono text-[11px] text-[#8a8a8a] shadow-[inset_0_0_0_1px_rgba(244,244,244,.14)]">⌘ K</span>
+              <span className="px-1.5 py-0.5 font-avenir text-[11px] text-white/70 shadow-[inset_0_0_0_1px_rgba(244,244,244,.14)]">⌘ K</span>
             </button>
           </div>
           */}
