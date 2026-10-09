@@ -48,7 +48,7 @@ export default async function CommunityPage() {
       <FAQJSONLD faqs={COMMUNITY_FAQ} />
       <VaultShell effects={effects}>
         <Cursor />
-        <main id="main-content" className="cm-x relative isolate bg-transparent font-avenir text-base leading-[1.6] text-[#F4F4F4] [&_[id]]:scroll-mt-24">
+        <main id="main-content" className="cm-x relative isolate bg-transparent font-avenir text-base leading-[1.6] text-white [&_[id]]:scroll-mt-24">
           <CommunityCrowd />
           <CommunityHero />
           <CommunityFamiliar />

@@ -21,7 +21,7 @@ const JANK_FALLBACK = { right: "catch", wrong: "bug", streak: "level", start: "o
 
 const label = "text-[11px] font-semibold uppercase tracking-[.14em]";
 const btnBase = `inline-flex h-11 items-center px-5 no-underline transition-[box-shadow,background-color] duration-[600ms] ease-[cubic-bezier(.16,1,.3,1)] ${label}`;
-const btnGhost = `${btnBase} bg-white/5 text-[#F4F4F4] shadow-[inset_0_0_0_1px_rgba(244,244,244,.14)] hover:shadow-[inset_0_0_0_1px_rgba(255,107,0,.6)]`;
+const btnGhost = `${btnBase} bg-white/5 text-white shadow-[inset_0_0_0_1px_rgba(244,244,244,.14)] hover:shadow-[inset_0_0_0_1px_rgba(255,107,0,.6)]`;
 
 function readSaved() {
     try {
@@ -274,7 +274,7 @@ export default function SpotTheJank({ onClose, sound, toast, realHref = "/effect
 
     const lives = "●●●".slice(0, hud.lives) + "○○○".slice(0, MAX_LIVES - hud.lives);
     const screenCls = "absolute inset-0 grid place-content-center justify-items-center gap-[18px] bg-[radial-gradient(60%_60%_at_50%_50%,rgba(15,15,15,.6),rgba(15,15,15,.92))] p-8 text-center";
-    const display = "font-avenir text-[clamp(2.6rem,6vw,5rem)] font-normal leading-[1.02] tracking-[-.035em]";
+    const display = "font-aeonik text-[clamp(2.6rem,6vw,5rem)] font-normal leading-[1.02] tracking-[-.035em]";
     const eyebrow = `inline-flex items-center gap-2.5 text-[#9c9c9c] before:size-[5px] before:bg-primary before:content-[''] ${label}`;
 
     return createPortal(
@@ -283,7 +283,7 @@ export default function SpotTheJank({ onClose, sound, toast, realHref = "/effect
             role="dialog"
             aria-modal="true"
             aria-labelledby="stj-title"
-            className={`fixed inset-0 z-[2147482000] grid place-items-center bg-[rgba(8,8,8,.78)] p-[clamp(12px,3vw,40px)] font-avenir leading-relaxed text-[#F4F4F4] backdrop-blur-[18px] backdrop-saturate-[1.4] ${closing ? "motion-safe:animate-[hx-fade-out_.32s_ease-in_both]" : "motion-safe:animate-[hx-fade-in_.5s_ease-out_both]"}`}
+            className={`fixed inset-0 z-[2147482000] grid place-items-center bg-[rgba(8,8,8,.78)] p-[clamp(12px,3vw,40px)] font-avenir leading-relaxed text-white backdrop-blur-[18px] backdrop-saturate-[1.4] ${closing ? "motion-safe:animate-[hx-fade-out_.32s_ease-in_both]" : "motion-safe:animate-[hx-fade-in_.5s_ease-out_both]"}`}
             data-lenis-prevent
             onClick={(e) => { if (e.target === e.currentTarget) requestClose(); }}
         >
@@ -291,10 +291,10 @@ export default function SpotTheJank({ onClose, sound, toast, realHref = "/effect
                 {/* <CornerMarks /> */}
                 <div className={`pointer-events-none absolute inset-x-0 top-0 flex items-center gap-[clamp(12px,3vw,34px)] px-[22px] py-[18px] text-[#8a8a8a] max-md:flex-wrap max-md:gap-y-1 max-md:pr-[70px] ${label}`} aria-hidden="true">
                     {[["Score", hud.score], ["Streak", hud.streak], ["Lives", lives], ["Round", hud.round], ["Best", hud.best]].map(([name, value]) => (
-                        <span key={name}>{name} <b className="ml-1.5 font-semibold text-[#F4F4F4] tabular-nums">{value}</b></span>
+                        <span key={name}>{name} <b className="ml-1.5 font-semibold text-white tabular-nums">{value}</b></span>
                     ))}
                 </div>
-                <button type="button" onClick={requestClose} aria-label="Close game" className={`absolute top-3 right-4 z-20 h-[30px] border border-grey bg-[#0f0f0f] px-2.5 text-[#F4F4F4] transition-colors duration-500 hover:border-primary hover:text-white ${label}`}>
+                <button type="button" onClick={requestClose} aria-label="Close game" className={`absolute top-3 right-4 z-20 h-[30px] border border-grey bg-[#0f0f0f] px-2.5 text-white transition-colors duration-500 hover:border-primary hover:text-foreground ${label}`}>
                     Esc
                 </button>
 

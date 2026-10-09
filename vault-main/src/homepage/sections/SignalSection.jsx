@@ -117,7 +117,7 @@ export default function SignalSection() {
     }, [sound, webgl]); // sound is stable (created once by the provider)
 
     return (
-        <section ref={sectionRef} id="signal" className="relative z-20 text-[#F4F4F4]">
+        <section ref={sectionRef} id="signal" className="relative z-20 text-white">
            
             <div className="pointer-events-none absolute inset-x-0 -top-[100vh] -bottom-[100vh] z-50 max-md:hidden" aria-hidden="true">
                 <div className="sticky top-0 h-screen">

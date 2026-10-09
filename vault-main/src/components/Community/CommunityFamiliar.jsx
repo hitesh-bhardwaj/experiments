@@ -109,7 +109,7 @@ export default function CommunityFamiliar() {
               <span className={`type-label w-[5vw] shrink-0 transition-colors duration-1200 ease-[cubic-bezier(.16,1,.3,1)] max-md:w-[11vw] ${lit >= i ? "text-primary" : "text-black/20"}`}>
                 {String(i + 1).padStart(2, "0")}
               </span>
-              <p className={`type-h2 min-w-0 flex-1 font-light! transition-colors duration-1200 tracking-tight ease-[cubic-bezier(.16,1,.3,1)] ${lit >= i ? "text-ink" : "text-black/20"}`}>
+              <p className={`type-h2 font-avenir min-w-0 flex-1 font-light! transition-colors duration-1200 tracking-tight ease-[cubic-bezier(.16,1,.3,1)] ${lit >= i ? "text-ink" : "text-black/20"}`}>
                 {item.text}
                 {item.em && <> <em className=" not-italic">{item.em}</em>{item.after}</>}
               </p>
@@ -129,7 +129,7 @@ export default function CommunityFamiliar() {
               type="button"
               aria-current={spy === i ? "true" : undefined}
               onClick={() => goToPanel(i)}
-              className={`type-h2 text-left transition-colors duration-900 ease-[cubic-bezier(.16,1,.3,1)] ${spy === i ? "text-ink" : "text-black/20 hover:text-black/40"}`}
+              className={`type-h2 font-avenir text-left transition-colors duration-900 ease-[cubic-bezier(.16,1,.3,1)] ${spy === i ? "text-ink" : "text-black/20 hover:text-black/40"}`}
             >
               {p.nav}
             </button>

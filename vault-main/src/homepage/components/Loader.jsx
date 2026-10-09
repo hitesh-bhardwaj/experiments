@@ -102,7 +102,7 @@ function LoaderEntryButton({ label, onClick, variant = "outline" }) {
       className={buttonClassName({
         variant,
         className:
-          `${variant === "outline" ? "bg-background/70 text-white backdrop-blur-md" : ""}`,
+          `${variant === "outline" ? "bg-background/70 text-foreground backdrop-blur-md" : ""}`,
       })}
     >
       <ButtonChrome label={label} hovered={hovered} />

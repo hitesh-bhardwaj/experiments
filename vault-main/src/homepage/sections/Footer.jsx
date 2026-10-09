@@ -63,6 +63,82 @@ const socialLinks = [
   { label: "Instagram", href: "https://www.instagram.com/_hyperiux_/" },
 ];
 
+// True when the segment (x0,y0)->(x1,y1) passes through `rect`
+// (Liang-Barsky clipping).
+function segmentHitsRect(x0, y0, x1, y1, rect) {
+  const dx = x1 - x0;
+  const dy = y1 - y0;
+  const p = [-dx, dx, -dy, dy];
+  const q = [x0 - rect.left, rect.right - x0, y0 - rect.top, rect.bottom - y0];
+  let t0 = 0;
+  let t1 = 1;
+
+  for (let i = 0; i < 4; i++) {
+    if (p[i] === 0) {
+      if (q[i] < 0) return false;
+    } else {
+      const t = q[i] / p[i];
+      if (p[i] < 0) {
+        if (t > t1) return false;
+        if (t > t0) t0 = t;
+      } else {
+        if (t < t0) return false;
+        if (t < t1) t1 = t;
+      }
+    }
+  }
+
+  return true;
+}
+
+
+function useSweepHover(rootRef) {
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+
+    let last = null;
+
+    const flash = (link) => {
+      link.setAttribute("data-swept", "");
+      // Two frames: one to paint the hover state, then release it so the
+      // fade-out transition runs from full.
+      requestAnimationFrame(() =>
+        requestAnimationFrame(() => link.removeAttribute("data-swept")),
+      );
+    };
+
+    const onMove = (event) => {
+      if (event.pointerType !== "mouse") return;
+
+      const { clientX: x, clientY: y } = event;
+
+      if (last && (last.x !== x || last.y !== y)) {
+        root.querySelectorAll("[data-sweep-link]").forEach((link) => {
+          if (link.matches(":hover")) return;
+          if (segmentHitsRect(last.x, last.y, x, y, link.getBoundingClientRect())) {
+            flash(link);
+          }
+        });
+      }
+
+      last = { x, y };
+    };
+
+    const onLeave = () => {
+      last = null;
+    };
+
+    root.addEventListener("pointermove", onMove, { passive: true });
+    root.addEventListener("pointerleave", onLeave);
+
+    return () => {
+      root.removeEventListener("pointermove", onMove);
+      root.removeEventListener("pointerleave", onLeave);
+    };
+  }, [rootRef]);
+}
+
 function FooterBlockLink({ href, children }) {
   const isExternal = href?.startsWith("http");
   return (
@@ -71,19 +147,18 @@ function FooterBlockLink({ href, children }) {
       prefetch={false}
       target={isExternal ? "_blank" : "_self"}
       rel={isExternal ? "noopener noreferrer" : undefined}
+      data-sweep-link
       className="group relative isolate block overflow-hidden"
     >
-      {/* Orange block behind the label: snaps on, fades out over 150ms. The
-          40ms delay on the way in (label too) is what stops the flicker when
-          the cursor sweeps fast across the list - crossing into the next link
-          can graze the previous one for a single frame, which used to snap it
-          back to full orange and fade it out again. 40ms outlasts a graze and
-          still reads as instant for a real hover. */}
+      {/* Orange block behind the label: snaps on, fades out over 200ms. The
+          label slides in instantly and eases back over the same 200ms.
+          data-swept (useSweepHover) applies the same state for links a fast
+          cursor skips over. */}
       <span
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 -z-10 bg-primary opacity-0 transition-opacity duration-200 ease-out group-hover:opacity-100 group-hover:duration-0 motion-reduce:transition-none"
+        className="pointer-events-none absolute inset-0 -z-10 bg-primary opacity-0 transition-opacity duration-200 ease-out group-hover:opacity-100 group-hover:duration-0 group-data-swept:opacity-100 group-data-swept:duration-0 motion-reduce:transition-none"
       />
-      <span className="block py-[calc(var(--cvw)*0.15)] max-md:py-1.5 max-md:px-2 type-body text-foreground transition-transform duration-200 ease-out group-hover:translate-x-5 group-hover:duration-0 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0">
+      <span className="block py-[calc(var(--cvw)*0.15)] max-md:py-1.5 max-md:px-2 type-body text-foreground transition-transform duration-200 ease-out group-hover:translate-x-5 group-hover:duration-0 group-data-swept:translate-x-5 group-data-swept:duration-0 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0 motion-reduce:group-data-swept:translate-x-0">
         {children}
       </span>
     </Link>
@@ -99,6 +174,7 @@ export default function Footer() {
   const { sound } = useInteraction();
 
   useFadeUp(footerRef);
+  useSweepHover(footerRef);
 
   // Hero ribbons, mirrored (footer pose). Loaded on demand so three.js stays
   // out of the footer's chunk; they only render while the footer is near.
@@ -220,7 +296,7 @@ export default function Footer() {
         {/* Platform label */}
         <div className="flex items-center gap-[calc(var(--cvw)*1)] max-md:gap-2 pb-[calc(var(--cvw)*1)] max-md:pb-[calc(var(--cvw)*3)]">
           <span className="size-[calc(var(--cvw)*0.45)] max-md:size-2 bg-[#ff5f00]" />
-          <span className="type-body font-aeonik text-[#B3B3B3]">Platform</span>
+          <span className="type-body font-avenir text-[#B3B3B3]">Platform</span>
         </div>
 
         {/* Top 4-column grid: Vault | Categories | Documents | Legal */}
@@ -284,7 +360,7 @@ export default function Footer() {
           <div className="flex flex-col gap-[calc(var(--cvw)*1.1)]  border-foreground/50 max-md:pb-[calc(var(--cvw)*5)] max-md:gap-[calc(var(--cvw)*3)] max-sm:pb-[calc(var(--cvw)*6)]">
             <div className="flex items-center gap-[calc(var(--cvw)*1)] max-md:gap-2">
               <span className="size-[calc(var(--cvw)*0.45)] max-md:size-2  bg-[#ff5f00]" />
-              <span className="type-body font-aeonik text-[#B3B3B3]">
+              <span className="type-body font-avenir text-[#B3B3B3]">
                 Socials
               </span>
             </div>
@@ -303,7 +379,7 @@ export default function Footer() {
           <div className="flex flex-col gap-[calc(var(--cvw)*1.1)]  border-foreground/50  max-md:pb-[calc(var(--cvw)*5)] max-md:gap-[calc(var(--cvw)*3)] max-sm:px-0 max-sm:pt-[calc(var(--cvw)*6)] max-sm:pb-[calc(var(--cvw)*6)] max-sm:border-foreground/50">
             <div className="flex items-center gap-[calc(var(--cvw)*1)] max-md:gap-2">
               <span className="size-[calc(var(--cvw)*0.45)] max-md:size-2  bg-[#ff5f00] " />
-              <span className="type-body font-aeonik text-[#B3B3B3]">
+              <span className="type-body font-avenir text-[#B3B3B3]">
                 Contact Us
               </span>
             </div>
@@ -329,7 +405,7 @@ export default function Footer() {
           <div className="flex flex-col gap-[calc(var(--cvw)*1.15)]  border-foreground/50  max-md:pb-[calc(var(--cvw)*12)] max-md:border-foreground/50 max-md:pt-[calc(var(--cvw)*5)] max-md:col-span-2 max-md:pl-0 max-md:gap-[calc(var(--cvw)*3)] max-sm:py-[calc(var(--cvw)*6)] max-sm:pb-[calc(var(--cvw)*20)]">
             <div className="flex items-center gap-[calc(var(--cvw)*1)] max-md:gap-2">
               <span className="size-[calc(var(--cvw)*0.45)] max-md:size-2  bg-[#ff5f00]" />
-              <span className="type-body font-aeonik text-[#B3B3B3]">
+              <span className="type-body font-avenir text-[#B3B3B3]">
                 New effects, in your inbox
               </span>
             </div>
@@ -362,7 +438,7 @@ export default function Footer() {
                       "--input-autofill-bg": "#111210",
                       "--input-autofill-text": "#ffffff",
                     }}
-                    className="h-auto min-w-0 flex-1 rounded-none border-0 bg-transparent! px-0 py-[calc(var(--cvw)*0.9)] max-md:py-3 text24 text-white shadow-none! outline-none ring-0! placeholder:text-[#6e6e6e] disabled:opacity-50"
+                    className="h-auto min-w-0 flex-1 rounded-none border-0 bg-transparent! px-0 py-[calc(var(--cvw)*0.9)] max-md:py-3 text24 text-foreground shadow-none! outline-none ring-0! placeholder:text-[#6e6e6e] disabled:opacity-50"
                   />
                   <button
                     type="submit"

@@ -33,7 +33,7 @@ function ToolRow({ hidden = false }) {
     return (
         <div className="flex shrink-0 items-center gap-[calc(var(--cvw)*7)] pr-[calc(var(--cvw)*7)] max-md:gap-12 max-md:pr-12" aria-hidden={hidden || undefined}>
             {TOOLS.map((tool) => (
-                <span key={tool.name} className="flex items-center gap-[calc(var(--cvw)*0.8)] whitespace-nowrap text-white opacity-55 max-md:gap-3">
+                <span key={tool.name} className="flex items-center gap-[calc(var(--cvw)*0.8)] whitespace-nowrap text-foreground opacity-55 max-md:gap-3">
                     {tool.icon}
                     {!tool.wordmark && <span className="text-[calc(var(--cvw)*1.8)] font-avenir font-normal tracking-[-0.02em] max-md:text-[calc(var(--cvw)*5.5)]">{tool.name}</span>}
                 </span>

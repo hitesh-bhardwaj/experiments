@@ -49,7 +49,7 @@ function UnlockNotice({ onClose }) {
                     type="button"
                     onClick={() => requestClose()}
                     aria-label="Dismiss"
-                    className="absolute top-3 right-3 flex size-7 items-center justify-center text-white/60 transition-colors hover:text-white"
+                    className="absolute top-3 right-3 flex size-7 items-center justify-center text-white/60 transition-colors hover:text-foreground"
                 >
                     <svg viewBox="0 0 24 24" className="size-3.5" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
                         <path d="M6 6l12 12M18 6L6 18" strokeLinecap="round" />

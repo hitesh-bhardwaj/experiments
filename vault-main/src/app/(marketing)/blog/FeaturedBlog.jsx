@@ -58,20 +58,20 @@ function FeaturedBlogContent({ featuredPost }) {
 
         <div className="flex grow flex-col items-start gap-[1.2vw] max-[1025px]:w-full max-md:gap-[4vw]">
           <LineWipe lit={INK}>
-            <p className="font-mono text-[1vw] text-black/60 max-[1025px]:text-[2.5vw] max-md:text-[4vw]">
+            <p className="font-avenir text-[1vw] text-black/60 max-[1025px]:text-[2.5vw] max-md:text-[4vw]">
               {formatFeaturedDate(featuredPost.publishedAt)}
             </p>
           </LineWipe>
 
-          <Link href={`/blog/${featuredPost.slug}`} className="w-[90%] max-[1025px]:w-full">
+          <Link href={`/blog/${featuredPost.slug}`} className="w-[90%]  max-[1025px]:w-full">
             <LineWipe lit={INK}>
-              <h3 className="text64 font-aeonik">{featuredPost.title}</h3>
+              <h3 className="text64 font-aeonik leading-[1.1]! ">{featuredPost.title}</h3>
             </LineWipe>
           </Link>
 
           {featuredPost.summary && (
             <LineWipe delay={0.5} lit={INK}>
-              <p className="text22 w-[90%] leading-[1.6] text-black/60 max-[1025px]:w-full">
+              <p className="text22 w-[90%] leading-[1.3] mt-4 text-black/60 max-[1025px]:w-full">
                 {featuredPost.summary}
               </p>
             </LineWipe>
@@ -81,7 +81,7 @@ function FeaturedBlogContent({ featuredPost }) {
             text="Read More"
             href={`/blog/${featuredPost.slug}`}
             variant="orange"
-            className="fadeup w-fit"
+            className="fadeup w-fit mt-3"
           />
         </div>
       </div>

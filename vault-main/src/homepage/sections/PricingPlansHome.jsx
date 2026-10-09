@@ -106,7 +106,7 @@ const LIGHT_OUTLINE = "border-[#1D1D1D]/40! bg-transparent! text-[#1D1D1D]!";
 
 function Tick({ tone = "primary" }) {
     return (
-        <i className={`mt-px grid size-5 place-items-center text-white ${tone === "ink" ? "bg-[#1D1D1D]" : "bg-primary"}`}>
+        <i className={`mt-px grid size-5 place-items-center text-foreground ${tone === "ink" ? "bg-[#1D1D1D]" : "bg-primary"}`}>
             <svg viewBox="0 0 24 24" className="size-3.5" fill="none" stroke="currentColor" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <path d="M5 12.5l4.2 4L19 7" />
             </svg>
@@ -173,7 +173,7 @@ export default function PricingPlansHome() {
                                 role="radio"
                                 aria-checked={on}
                                 onClick={() => choose(b.id)}
-                                className={`relative z-1 inline-flex h-10 items-center gap-2.5 px-[2vw] text-[11px] whitespace-nowrap max-md:h-[12vw] max-md:grow max-md:justify-center max-md:gap-[2vw] max-md:px-[3vw] max-md:text-[2.8vw] font-medium tracking-[.14em] uppercase transition-colors duration-700 ${on ? "text-[#F4F4F4]" : "text-[#6B6B6B]"}`}
+                                className={`relative z-1 inline-flex h-10 items-center gap-2.5 px-[2vw] text-[11px] whitespace-nowrap max-md:h-[12vw] max-md:grow max-md:justify-center max-md:gap-[2vw] max-md:px-[3vw] max-md:text-[2.8vw] font-medium tracking-[.14em] uppercase transition-colors duration-700 ${on ? "text-white" : "text-[#6B6B6B]"}`}
                             >
                                 {b.label}
                                 {b.save && (
@@ -192,7 +192,7 @@ export default function PricingPlansHome() {
                         <article
                             key={plan.id}
                             data-fadeup-delay={planIndex * 0.12}
-                            className={`fadeup relative flex flex-col gap-[18px] p-[calc(var(--cvw)*3)] max-md:p-[calc(var(--cvw)*6)] ${dark ? "isolate overflow-hidden bg-background text-light" : "border border-[#999999]/30 bg-white text-[#1D1D1D]"}`}
+                            className={`fadeup relative flex flex-col gap-[18px] p-[calc(var(--cvw)*3)] max-md:p-[calc(var(--cvw)*6)] ${dark ? "bg-[#141414] text-white" : "border border-[#999999]/30 bg-white text-[#1D1D1D]"}`}
                         >
                             {/* Dotted grid + mouse fluid on the dark card; no swish (the section sets data-sound-flow="off") */}
                             {dark && <CardFluid />}

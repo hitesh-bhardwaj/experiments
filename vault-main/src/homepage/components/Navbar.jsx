@@ -263,7 +263,7 @@ export default function Navbar({
             <button
               type="button"
               onClick={openSearch}
-              className="group flex cursor-pointer items-center gap-4 bg-[#121212]/60 px-3 py-[.86vw] text-xs text-white backdrop-blur-md transition-colors duration-300 hover:bg-white/10 hover:text-forground max-md:hidden max-md:gap-3"
+              className="group flex cursor-pointer items-center gap-4 bg-[#121212]/60 px-3 py-[.86vw] text-xs text-foreground backdrop-blur-md transition-colors duration-300 hover:bg-white/10 hover:text-forground max-md:hidden max-md:gap-3"
               aria-label="Search effects"
             >
               <div className="flex items-center gap-2">
@@ -282,7 +282,7 @@ export default function Navbar({
                 </svg>
               </div>
 
-              <kbd className="space-x-2 bg-foreground/20 px-1.5 py-0.5 text-sm text-current max-md:hidden">
+              <kbd className="font-avenir space-x-2 bg-foreground/20 px-1.5 py-0.5 text-sm text-current max-md:hidden">
                 ⌘ K
               </kbd>
             </button>
@@ -291,7 +291,7 @@ export default function Navbar({
             <Link
               href="/dashboard"
               aria-label="Account"
-              className="group flex size-12 items-center justify-center rounded-full border border-primary bg-[#161616] text-white/80 transition-colors hover:bg-[#1f1f1f] hover:text-white"
+              className="group flex size-12 items-center justify-center rounded-full border border-primary bg-[#161616] text-white/80 transition-colors hover:bg-[#1f1f1f] hover:text-foreground"
             >
               <User className="size-4" />
             </Link>

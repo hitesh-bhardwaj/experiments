@@ -57,7 +57,7 @@ export default function JoinedToast() {
       className="fixed bottom-[calc(5vw+env(safe-area-inset-bottom,0vw))] left-1/2 z-80 flex w-[30vw] -translate-x-1/2 flex-col gap-[0.7vw] bg-background/80 px-[1.7vw] py-[1.5vw] text-left ring-1 ring-inset ring-[rgba(99,214,154,.35)] shadow-[0_2vw_5.5vw_-1.4vw_color-mix(in_srgb,var(--primary)_45%,transparent)] backdrop-blur-lg backdrop-saturate-150 max-md:bottom-[calc(18vw+env(safe-area-inset-bottom,0vw))] max-md:w-[88vw] max-md:gap-[2.5vw] max-md:px-[6vw] max-md:py-[5.6vw]"
     >
       <span className="type-label inline-flex items-center gap-[0.7vw] text-[#FFB27A] before:size-[0.35vw] before:bg-primary before:content-[''] max-md:gap-[2.5vw] max-md:before:size-[1.3vw]">You’re on the list</span>
-      <strong className="type-h2 font-medium!">Welcome to the crowd.</strong>
+      <strong className="type-h2 font-avenir font-medium!">Welcome to the crowd.</strong>
       <p className="type-small text-foreground/70">That bright dot joining the swarm? That’s you.{matched} We’ll email you when your invite is ready.</p>
       <div className="flex items-center justify-between gap-[0.8vw] max-md:gap-[3vw]">
         <button

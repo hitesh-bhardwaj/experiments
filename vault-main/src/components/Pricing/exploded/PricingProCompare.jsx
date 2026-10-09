@@ -154,7 +154,7 @@ export default function PricingProCompare() {
               <div role="columnheader" className="flex w-[40%] items-center px-[1.6vw] py-[2.2vw] type-body text-background/30 max-md:px-[4vw] max-md:py-[6vw]">Feature</div>
               {[["pro", "Pro"], ["plus", "Pro+"]].map(([id, name]) => (
                 <div key={id} role="columnheader" className={`${CELL} flex-col items-start justify-center gap-[0.6vw] py-[2.2vw] max-md:gap-[2vw] max-md:py-[6vw] ${id === "plus" ? "bg-primary/10" : ""}`}>
-                  <p className="type-h3">{id === "plus" ? <>Pro<span className="text-primary">+</span></> : name}</p>
+                  <p className="type-h3 font-avenir">{id === "plus" ? <>Pro<span className="text-primary">+</span></> : name}</p>
                   <div className={`flex items-center text-background/60 max-md:flex-wrap ${LABEL}`}>
                     <span className="flex h-[1.2vw] items-center leading-none max-md:h-[4vw]">$<RollNumber value={PRICES[id][period]} values={[PRICES[id].q, PRICES[id].y]} /></span>
                     <span>/mo</span>

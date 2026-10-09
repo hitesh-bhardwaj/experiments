@@ -26,7 +26,7 @@ function FeedbackButton({ active, onClick, children }) {
       className={`h-10 cursor-pointer border px-4 transition-colors duration-300 ${label} ${
         active
           ? "border-primary bg-primary text-background"
-          : "border-foreground/15 text-foreground/80 hover:border-primary hover:text-foreground"
+          : "border-foreground/15 text-white/70 hover:border-primary hover:text-foreground"
       }`}
     >
       {children}
@@ -102,7 +102,7 @@ function PagerCard({ page, direction }) {
         next ? "items-end text-right max-md:items-center max-md:text-center" : "items-start max-md:items-center"
       }`}
     >
-      <span className={`${label} flex items-center gap-2.5 leading-none text-foreground/50 transition-colors duration-300 group-hover:text-primary`}>
+      <span className={`${label} flex items-center gap-2.5 leading-none text-white/70 transition-colors duration-300 group-hover:text-primary`}>
         {/* {!next && <PagerArrow className="rotate-180 group-hover:-translate-x-1" />} */}
         {next ? "Next" : "Previous"}
         {/* {next && <PagerArrow className="group-hover:translate-x-1" />} */}
