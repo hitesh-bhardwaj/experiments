@@ -6,7 +6,7 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Download, Heart } from "lucide-react";
-import { motion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import { useLenis } from "lenis/react";
 import HeadAnim from "@/components/Animations/HeadAnim";
 import Copy from "@/components/Animations/Copy";
@@ -37,7 +37,8 @@ const DEVICES = [
 ];
 // Live preview viewports: the iframe renders at the real size and is scaled to fit.
 const LIVE_SIZE = {
-  desktop: { width: 1440, height: 900 },
+  // A real full-HD desktop viewport, scaled down to fit - as on the effect pages.
+  desktop: { width: 1920, height: 1080 },
   tablet: { width: 820, height: 1180 },
   phone: { width: 390, height: 844 },
 };
@@ -314,21 +315,32 @@ export function TemplateDetail({ template, templateAccess = { allowed: false, re
       </section>
 
       {/* ---------- exploded view / live preview ---------- */}
+      {/* The two views cross-fade (opacity only, so the exploded stage stays sticky), and
+          share one shell: a full-height stage with the toolbar at its bottom - the
+          View / Device toggles stay put when switching. */}
       <div ref={stageTopRef} className="scroll-mt-20">
-        {mode === "exploded" ? (
-          <TemplateExploded
-            device={device}
-            capture={capture}
-            sections={capture?.sections || []}
-            onUnsupported={() => setGlFailed(true)}
-            toolbar={toolbar}
-          />
-        ) : (
-          <section id="template-preview" aria-label="Live template preview" className={`${GUTTER} flex flex-col gap-3.5 pb-24`}>
-            {toolbar}
-            <LivePreview template={template} device={device} />
-          </section>
-        )}
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.div
+            key={mode}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } }}
+            exit={{ opacity: 0, transition: { duration: 0.35, ease: [0.7, 0, 0.84, 0] } }}
+          >
+            {mode === "exploded" ? (
+              <TemplateExploded
+                device={device}
+                capture={capture}
+                sections={capture?.sections || []}
+                onUnsupported={() => setGlFailed(true)}
+                toolbar={toolbar}
+              />
+            ) : (
+              <section id="template-preview" aria-label="Live template preview">
+                <LivePreview template={template} device={device} toolbar={toolbar} />
+              </section>
+            )}
+          </motion.div>
+        </AnimatePresence>
       </div>
 
       {/* ---------- what's inside + more templates ---------- */}
@@ -431,9 +443,11 @@ export function TemplateDetail({ template, templateAccess = { allowed: false, re
 }
 
 /** The live template in an iframe at a real device size, scaled to fit the box (as on the live detail page). */
-function LivePreview({ template, device }) {
+function LivePreview({ template, device, toolbar = null }) {
   const boxRef = useRef(null);
+  const frameRef = useRef(null);
   const [scale, setScale] = useState(1);
+  const [frameKey, setFrameKey] = useState(0);
   const size = LIVE_SIZE[device] || LIVE_SIZE.desktop;
 
   useEffect(() => {
@@ -446,17 +460,86 @@ function LivePreview({ template, device }) {
     return () => ro.disconnect();
   }, [size.width, size.height]);
 
+  // Click to interact (as on the effect pages): until the preview is clicked, a layer
+  // over it keeps wheel / touch scrolling on the page instead of the template. Leaving
+  // the preview (or tapping outside it) puts the layer back.
+  const [interactive, setInteractive] = useState(false);
+  const tipRef = useRef(null);
+  const moveTip = (event) => {
+    const tip = tipRef.current;
+    if (!tip) return;
+    const rect = event.currentTarget.getBoundingClientRect();
+    tip.style.left = `${event.clientX - rect.left}px`;
+    tip.style.top = `${event.clientY - rect.top}px`;
+  };
+  useEffect(() => {
+    if (!interactive) return undefined;
+    const onDown = (event) => {
+      if (!boxRef.current?.contains(event.target)) setInteractive(false);
+    };
+    document.addEventListener("pointerdown", onDown);
+    return () => document.removeEventListener("pointerdown", onDown);
+  }, [interactive]);
+
+  // The preview must only ever show the template: if it lands on any other page of
+  // ours (which would nest the whole site in here), the main window goes there instead
+  // and the preview resets to the template.
+  const onFrameLoad = () => {
+    try {
+      const location = frameRef.current?.contentWindow?.location;
+      if (location && location.origin === window.location.origin && !location.pathname.startsWith("/template-demo/")) {
+        const url = location.href;
+        setFrameKey((k) => k + 1);
+        window.location.assign(url);
+      }
+    } catch {
+      // Cross-origin page: nothing to read, leave it.
+    }
+  };
+
+  // Same shell as the exploded view's stage (full-height, same background, toolbar at
+  // the bottom), with the device frame fitted between the header area and the toolbar.
   return (
-    <div ref={boxRef} className="relative flex h-[78vh] items-center justify-center overflow-hidden bg-[radial-gradient(80%_70%_at_50%_40%,var(--dark-card),var(--background))] ring-1 ring-inset ring-foreground/8">
+    <div className="relative h-svh overflow-hidden bg-[radial-gradient(80%_70%_at_50%_40%,var(--dark-card),var(--background))]">
+    <div
+      ref={boxRef}
+      onPointerLeave={(event) => event.pointerType === "mouse" && setInteractive(false)}
+      className="absolute inset-x-[4.5vw] top-28 bottom-24 flex items-center justify-center overflow-hidden max-md:inset-x-[6vw] max-md:top-24 max-md:bottom-40"
+    >
       <div style={{ width: size.width, height: size.height, transform: `scale(${scale})` }} className="shrink-0 origin-center bg-foreground transition-transform duration-300">
         <iframe
-          key={`${template.previewHref}-${device}`}
+          key={`${template.previewHref}-${device}-${frameKey}`}
+          ref={frameRef}
           src={template.previewHref}
           title={`${template.title} live preview`}
           width={size.width}
           height={size.height}
+          onLoad={onFrameLoad}
           className="block border-0"
         />
+      </div>
+      {!interactive && (
+        <button
+          type="button"
+          aria-label="Click to interact with the live preview"
+          onClick={() => setInteractive(true)}
+          onPointerMove={moveTip}
+          className="group/interact absolute inset-0 z-5 cursor-pointer"
+        >
+          {/* Hidden until the cursor enters, then follows it; centred on touch screens. */}
+          <span
+            ref={tipRef}
+            aria-hidden="true"
+            className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[calc(100%+0.8vw)] bg-background/80 px-3 py-1.5 text-[0.9vw] whitespace-nowrap text-foreground opacity-0 ring-1 ring-inset ring-foreground/15 backdrop-blur-lg transition-opacity duration-300 group-hover/interact:opacity-100 [@media(hover:none)]:opacity-100 max-lg:text-[1.6vw] max-md:-translate-y-1/2 max-md:text-[3.3vw]"
+          >
+            Click to interact
+          </span>
+        </button>
+      )}
+    </div>
+      {/* Same position and spacing as the exploded view's toolbar. */}
+      <div className="absolute right-[4.5vw] bottom-6 left-[4.5vw] z-10 flex flex-wrap items-center justify-between gap-3 max-md:inset-x-[6vw] max-md:bottom-4">
+        {toolbar}
       </div>
     </div>
   );

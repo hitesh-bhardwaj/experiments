@@ -34,12 +34,12 @@ export const ICON_BTN =
 // plus its own height, so the clipped frame hides it) up into place, and back. Ease-out
 // coming in, ease-in going out (the timing on the hovered state drives the entrance,
 // the resting one the exit); will-change keeps it on the GPU.
-const ACTION_SLIDE =
+export const ACTION_SLIDE =
   "translate-y-[calc(100%+0.75rem)] will-change-transform transition-transform duration-350 ease-[cubic-bezier(.55,0,1,.45)] group-hover/preview:translate-y-0 group-hover/preview:ease-[cubic-bezier(.22,1,.36,1)] group-focus-within/preview:translate-y-0 group-focus-within/preview:ease-[cubic-bezier(.22,1,.36,1)] max-lg:translate-y-0 motion-reduce:transition-none";
 // The card's action buttons: no backdrop blur - a blur re-rendered every frame under
 // a moving button (inside the lifted preview) made the slide flicker and pop - and a
 // slightly more opaque fill instead.
-const CARD_BTN = twMerge(ICON_BTN, "backdrop-blur-none bg-background/85");
+export const CARD_BTN = twMerge(ICON_BTN, "backdrop-blur-none bg-background/85");
 
 export const isNewEffect = (effect) => !!effect?.addedAt && Date.now() - effect.addedAt < NEW_WINDOW_MS;
 export const installCommand = (effect) => `npx hyperiux add ${effect.name}`;

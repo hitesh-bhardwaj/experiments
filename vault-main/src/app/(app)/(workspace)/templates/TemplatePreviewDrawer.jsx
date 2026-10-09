@@ -240,27 +240,28 @@ export function TemplatePreviewDrawer({ template, templates = [], isWishlisted, 
 
             {shown.tagline && <p className={`w-[80%] ${T16} leading-relaxed text-foreground/80 max-lg:w-full`}>{shown.tagline}</p>}
 
-            {/* Phones: each button grows to fill its row, so wrapped rows line up full width. */}
-            <div className="flex flex-wrap items-center gap-2 max-md:items-stretch">
+            {/* items-stretch: the heart and Buy take the buttons' height. Buttons keep their own
+                width on every screen (w-fit on phones), as in the effect preview drawer. */}
+            <div className="flex flex-wrap items-stretch gap-2">
               <button
                 type="button"
                 aria-pressed={saved}
                 aria-label={saved ? `Remove ${shown.title} from saved` : `Save ${shown.title}`}
                 onClick={() => onToggleWishlist(shown)}
-                className={`flex cursor-pointer gap-2 self-center border border-foreground/20 px-3 py-3 leading-[1.2] ${saved ? "text-primary! [&_svg]:fill-primary [&_svg]:stroke-primary" : ""}`}
+                className={`flex cursor-pointer items-center justify-center gap-2 border border-foreground/20 px-3 leading-[1.2] ${saved ? "text-primary! [&_svg]:fill-primary [&_svg]:stroke-primary" : ""}`}
               >
                 <span className="size-4.5">
                   <Heart className="size-full" aria-hidden="true" />
                 </span>
               </button>
-              <Button text="Demo" href={shown.previewHref || href}  variant="outline" className="tracking-normal! bg-transparent! border-foreground/20 max-md:grow" />
-              <Button text="View template" href={href} target_blank className="tracking-normal! border border-primary max-md:grow" />
+              <Button text="Demo" href={shown.previewHref || href}  variant="outline" className="tracking-normal! bg-transparent! border-foreground/20 max-md:w-fit" />
+              <Button text="View template" href={href} target_blank className="tracking-normal! border border-primary max-md:w-fit" />
                 {/* Buy opens the "Get this template" popup; once it's yours it downloads. */}
                 <button
                   type="button"
                   onClick={() => onBuy(shown)}
                   // Same text size and font as the Button component beside it
-                  className="inline-flex cursor-pointer items-center gap-2 self-stretch bg-primary px-4 max-md:min-h-11 max-md:grow max-md:justify-center font-avenir text-[calc(var(--hx-vw,1vw)*1.15)] max-lg:text-[clamp(13px,calc(var(--hx-vw,1vw)*1.6),15px)] text-background transition-colors duration-500 hover:bg-primary-hover max-md:text-[calc(var(--hx-vw,1vw)*2.2)] max-sm:text-[calc(var(--hx-vw,1vw)*4)]"
+                  className="inline-flex cursor-pointer items-center gap-2 bg-primary px-4 max-md:min-h-11 font-avenir text-[calc(var(--hx-vw,1vw)*1.15)] max-lg:text-[clamp(13px,calc(var(--hx-vw,1vw)*1.6),15px)] text-background transition-colors duration-500 hover:bg-primary-hover max-md:text-[calc(var(--hx-vw,1vw)*2.2)] max-sm:text-[calc(var(--hx-vw,1vw)*4)]"
                 >
                   <Download className="size-4" aria-hidden="true" />
                   {owned ? "Download" : "Buy template"}

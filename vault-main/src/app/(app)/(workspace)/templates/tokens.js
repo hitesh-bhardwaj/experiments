@@ -23,7 +23,9 @@ export const PRICE = "font-aeonik";
 export const GUTTER = "mx-auto w-full max-w-[1536px] px-[4.5vw] max-md:px-[6vw]";
 
 // Small pill on a template shot (category, price, catalogue).
-export const BADGE = `inline-flex py-1 items-center gap-1.5 px-2.25 ${T14} backdrop-blur-lg`;
+// Badges sit on the card shot - a barely-there shadow (as on the effect cards) keeps
+// them readable over any screenshot.
+export const BADGE = `inline-flex py-1 items-center gap-1.5 px-2.25 ${T14} backdrop-blur-lg shadow-[0_0.1vw_0.4vw_color-mix(in_srgb,black_8%,transparent)]`;
 
 /*
  * Which credit catalogue a template sits in: "selected" templates can be
@@ -39,7 +41,7 @@ const SAMPLE_CATALOGUE = {
 };
 
 export const catalogueOf = (template) => template.catalogue || SAMPLE_CATALOGUE[template.slug] || "selected";
-export const catalogueLabel = (template) => (catalogueOf(template) === "full" ? "Pro+ only" : "wSelected");
+export const catalogueLabel = (template) => (catalogueOf(template) === "full" ? "Pro+ only" : "Selected");
 export const priceOf = (template) => template.pricing?.standaloneOneTime ?? null;
 
 // Template cards fade up as they scroll into view, matching the site's .fadeup (50px,

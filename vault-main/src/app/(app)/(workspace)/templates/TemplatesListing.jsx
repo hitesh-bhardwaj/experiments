@@ -26,8 +26,8 @@ const TemplateCorridor = dynamic(() => import("./TemplateCorridor"), {
   loading: () => <div className="h-svh" />,
 });
 
-// Hero: the heading and description animate in first; the breadcrumb, stats and
-// filter bar then fade up after them, one after another.
+// Hero: the heading and description animate in first (no stats row - as on the effects
+// listing); the breadcrumb and filter bar then fade up after them, one after another.
 const heroFadeUp = (delay) => ({
   initial: { opacity: 0, y: 24 },
   animate: { opacity: 1, y: 0 },
@@ -151,12 +151,6 @@ export function TemplatesListing({ templates = [], description = "", faqItems = 
     [templates, category, catalogue],
   );
 
-  const stats = [
-    [templates.length, "Templates"],
-    [prices.length ? <span className={PRICE}>${prices[0]}</span> : "-", "or 1 credit"],
-    [categories.length - 1, "Industries"],
-  ];
-
   const clearFilters = () => {
     setCategory("All");
     setCatalogue("all");
@@ -183,16 +177,6 @@ export function TemplatesListing({ templates = [], description = "", faqItems = 
                 {description} Buy one outright, or redeem a template credit from your plan.
               </p>
             </Copy>
-            <motion.div {...heroFadeUp(1.1)} className={`${LABEL} flex flex-wrap gap-x-[2vw] gap-y-[0.7vw] max-md:gap-x-[7vw] max-md:gap-y-[2.5vw]`}>
-              {stats.map(([value, label]) => (
-                <p key={label}>
-                  <b className={`${DISPLAY} block font-aeonik text-[2.4vw] leading-none text-light tabular-nums max-lg:text-[4.5vw] max-md:text-[8vw]`}>
-                    {value}
-                  </b>
-                  <span className="text-[1vw] text-foreground/60 max-lg:text-[1.8vw] max-md:text-[3.6vw]">{label}</span>
-                </p>
-              ))}
-            </motion.div>
           </div>
         </div>
 
@@ -214,7 +198,8 @@ export function TemplatesListing({ templates = [], description = "", faqItems = 
               ))}
             </div>
           </div>
-          <div role="group" aria-label="Catalogue" className="flex flex-wrap gap-1.5">
+          {/* Phones: just the category chips - the All / Selected / Pro+ filter is hidden. */}
+          <div role="group" aria-label="Catalogue" className="flex flex-wrap gap-1.5 max-md:hidden">
             {CATALOGUES.map((c) => (
               <button
                 key={c.id}
@@ -260,9 +245,9 @@ export function TemplatesListing({ templates = [], description = "", faqItems = 
               </button>
             </div>
           ) : (
-            <div className="flex flex-wrap gap-x-[1.4vw] gap-y-14 max-md:gap-y-12">
+            <div className="flex flex-wrap gap-x-[2vw] gap-y-[5vw] max-md:gap-y-[12vw]">
               {filtered.map((template, index) => (
-                <motion.div key={template.slug} layout transition={CARD_LAYOUT_TRANSITION} className="w-[calc((100%-1.4vw)/2)] max-md:w-full">
+                <motion.div key={template.slug} layout transition={CARD_LAYOUT_TRANSITION} className="w-[calc((100%-2vw)/2)] max-md:w-full">
                   <motion.div {...cardReveal(index)}>
                     <TemplateCard
                       template={template}
