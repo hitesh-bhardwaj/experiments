@@ -22,7 +22,7 @@ const SYMBOL = "h-[calc(var(--cvw)*1.9)] w-auto max-md:h-7";
 const TOOLS = [
     { name: "React", icon: <ReactMark className={SYMBOL} /> },
     { name: "Next.js", icon: <NextMark className={MARK} />, wordmark: true },
-    { name: "GSAP", icon: <Image src="/icons/gsap-icon.svg" alt="" width={104} height={104} className={SYMBOL} /> },
+    { name: "GSAP", icon: <Image src="/icons/gsap-icon.png" alt="" width={104} height={104} className={SYMBOL} /> },
     { name: "Three.js", icon: <ThreeMark className={SYMBOL} /> },
     { name: "WebGL", icon: <WebGLMark className={MARK} />, wordmark: true },
     { name: "Lenis" },

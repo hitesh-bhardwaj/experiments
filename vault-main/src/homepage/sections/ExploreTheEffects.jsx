@@ -9,7 +9,8 @@ import LazyVideo from "@/components/WebsiteComps/LazyVideo";
 import LinkButton from "@/components/WebsiteComps/LinkButton";
 import { useInteraction } from "@/homepage/components/InteractionProvider";
 import { prefersReducedMotion } from "@/lib/motion";
-import { resolveEffectVideoUrl, resolveMediaUrl, resizeR2ImageUrl } from "@/lib/media";
+import { getImageProps } from "next/image";
+import { resolveEffectVideoUrl, resolveMediaUrl } from "@/lib/media";
 
 gsap.registerPlugin(useGSAP);
 
@@ -21,7 +22,9 @@ function effectMedia(slug, categorySlug) {
         `/homepage-v3/imgs/${slug}.webp`;
     return {
         video: resolveEffectVideoUrl({ videoUrl: `${slug}.mp4`, categorySlug, effectSlug: slug }),
-        poster: image.startsWith("/") ? image : resizeR2ImageUrl(image, POSTER_SIZE),
+        // R2 serves the original full-size PNG (2-4MB) and ignores size params, so the
+        // poster goes through the Next image optimizer: resized, WebP/AVIF, cached a year
+        poster: image.startsWith("/") ? image : getImageProps({ src: image, alt: "", ...POSTER_SIZE }).props.src,
         href: `/effects/${categorySlug}/${slug}`,
     };
 }

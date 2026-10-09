@@ -1,13 +1,15 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 // Background-loop video that costs nothing until it approaches the viewport.
 // preload="none" + no autoPlay means the browser fetches zero bytes up front;
 // the IntersectionObserver starts playback (which triggers the fetch) just
-// before the video scrolls into view, and pauses it again off-screen.
-export default function LazyVideo({ src, className = "", rootMargin = "300px 0px", ...props }) {
+// before the video scrolls into view, and pauses it again off-screen. The poster
+// is held back the same way, since browsers fetch a poster image eagerly.
+export default function LazyVideo({ src, poster, className = "", rootMargin = "300px 0px", ...props }) {
   const videoRef = useRef(null);
+  const [near, setNear] = useState(false);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -16,6 +18,7 @@ export default function LazyVideo({ src, className = "", rootMargin = "300px 0px
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
+          setNear(true);
           video.play().catch(() => {});
         } else {
           video.pause();
@@ -32,6 +35,7 @@ export default function LazyVideo({ src, className = "", rootMargin = "300px 0px
     <video
       ref={videoRef}
       src={src}
+      poster={near ? poster : undefined}
       muted
       loop
       playsInline
