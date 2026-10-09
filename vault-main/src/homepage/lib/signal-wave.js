@@ -139,7 +139,12 @@ export function createSignalWave(canvas, options = {}) {
     }
     mainMat.uniforms.uFlare.value = st.flare; trailMat.uniforms.uGlow.value = 1 + st.flare * 1.5;
     o.onLevel && o.onLevel(inZone ? st.prox * 0.45 + st.energy * 0.6 + charge * 0.4 : 0, yN, st.energy + charge * 0.6);
+    // Tells the page's cursor tag when the pointer is actually near the line, not just over the section
+    const isNear = hit && st.prox > NEAR_PROX;
+    if (isNear !== near) { near = isNear; if (near) zone.dataset.near = ""; else delete zone.dataset.near; dispatchEvent(new Event('hx-near')); }
   }
+  const NEAR_PROX = 0.25; // proximity 0..1 (1 = on the line, 0 = 1.8 units away)
+  let near = false;
 
   /* ---- the line is playable (and sounds) while its zone crosses the viewport middle, as in the prototype ---- */
   let inZone = false;

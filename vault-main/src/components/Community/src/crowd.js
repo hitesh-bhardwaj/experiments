@@ -17,11 +17,34 @@ const COUNT_SMALL = 2600;
 // Formation centres per zone, desktop and narrow screens
 const CENTER = { crowd: [3.9, 0.9, 0], crowd2: [0, -0.3, -2], ring: [0, 0.4, 0] };
 const CENTER_NARROW = { crowd: [0, 2.6, -3], crowd2: [0, 0, -4], ring: [0, 0.2, -2] };
+// Hero blob: particles spread evenly over a sphere whose surface wobbles and slowly turns
+const BLOB_RADIUS = 3.4;
+const BLOB_RADIUS_NARROW = 2.3;
+const BLOB_TILT = 0.45; // radians: the blob tips toward the viewer
+// "What do you build with": the blob spreads into a rolling sheet of dots
+const SHEET_W = 34;
+const SHEET_DEPTH = 26;
+const SHEET_BACK = -22;
+const SHEET_Y = -5.4; // low: the sheet lies along the bottom of the section
+// Blob + sheet animation speed (1 = the first version)
+const SHAPE_SPEED = 2.4;
+// Hero blob: extra turn per pixel scrolled
+const SCROLL_SPIN = 0.0016;
+
+// Join: rings as fractions of the ring radius (inner → outer) and their tilt
+const RIBBON_RINGS = 2;
+const RIBBON_R0 = 0.62;
+const RIBBON_GAP = 0.26;
+const RIBBON_ARC = 0.7; // each ribbon is an open arc, this share of a full circle
+const RIBBON_TILT_X = -0.28;
+const RIBBON_TILT_Y = -0.42;
 const RING_RADIUS = 5.8;
 const RING_RADIUS_NARROW = 3.2;
 
 // Cursor
 const GATHER_RADIUS_SQ = 10;
+// Cursor gathers / swirls the particles (off: they ignore the mouse)
+const POINTER_INTERACTION = true;
 const MOUSE_SPEED_CAP = 60;
 
 // Highlight groups: every particle belongs to one of these, matching one chip each
@@ -32,24 +55,27 @@ const MAX_PIXEL_RATIO = 1.75;
 const MAX_PIXEL_RATIO_SMALL = 1.25;
 
 const VERTEX_SHADER = /* glsl */ `
-attribute float aHot, aR;
-uniform float uPR, uTime, uPulse;
-varying float vHot, vR, vA;
+attribute float aHot, aR, aRib;
+uniform float uPR, uTime, uPulse, uRing;
+varying float vHot, vR, vA, vSolid;
 void main() {
   vec4 mv = modelViewMatrix * vec4(position, 1.);
   gl_Position = projectionMatrix * mv;
   float tw = .75 + .25 * sin(uTime * 1.7 + aR * 40.);
   gl_PointSize = uPR * (2.4 + aR * 3.6 + aHot * 2.6 + uPulse * 1.8) * (24. / -mv.z) * (aHot > 1.5 ? 2.6 : 1.);
   vHot = aHot; vR = aR; vA = tw;
+  vSolid = aRib * uRing;
 }`;
 
 const FRAGMENT_SHADER = /* glsl */ `
-varying float vHot, vR, vA;
+varying float vHot, vR, vA, vSolid;
 void main() {
   float d = length(gl_PointCoord - .5);
   if (d > .5) discard;
   float s = smoothstep(.5, 0., d);
   vec3 base = mix(vec3(.78, .74, .7), vec3(1., .36, .05), step(.62, vR));
+  // The Join ribbons: the second ribbon is all orange
+  base = mix(base, vec3(1., .36, .05), vSolid);
   vec3 hotc = mix(vec3(1., .42, 0.), vec3(1., .95, .9), clamp(vHot - 1., 0., 1.));
   vec3 c = mix(base, hotc, clamp(vHot, 0., 1.));
   gl_FragColor = vec4(c * s * vA * (.95 + clamp(vHot, 0., 2.) * .7), 1.);
@@ -101,11 +127,27 @@ export function mountCrowd(canvas, opts = {}) {
     rnd[i] = Math.random();
     grp[i] = i % CROWD_GROUPS;
   }
+  // Blob + sheet layout: a latitude/longitude grid, so the dots line up in visible rows (the blob's
+  // rings, the sheet's furrows)
+  const ROWS = Math.max(8, Math.round(Math.sqrt(N / 1.7)));
+  const COLS = Math.ceil(N / ROWS);
+  const lat = new Float32Array(N), lon = new Float32Array(N), gu = new Float32Array(N), gv = new Float32Array(N);
+  for (let i = 0; i < N; i++) {
+    const r = Math.floor(i / COLS), c = i % COLS;
+    gu[i] = c / (COLS - 1);
+    gv[i] = r / (ROWS - 1);
+    lat[i] = -Math.PI / 2 + (Math.PI * (r + 0.5)) / ROWS;
+    lon[i] = (2 * Math.PI * c) / COLS;
+  }
   const geo = new T.BufferGeometry();
   geo.setAttribute("position", new T.BufferAttribute(pos, 3));
   geo.setAttribute("aHot", new T.BufferAttribute(hot, 1));
   geo.setAttribute("aR", new T.BufferAttribute(rnd, 1));
-  const uniforms = { uPR: { value: 1 }, uTime: { value: 0 }, uPulse: { value: 0 } };
+  // Which Join ribbon a particle lands in (matches the ribbon layout in step): 1 = the single-colour one
+  const rib = new Float32Array(N);
+  for (let i = 0; i < N; i++) rib[i] = Math.min(RIBBON_RINGS - 1, Math.floor(gv[i] * RIBBON_RINGS)) === 1 ? 1 : 0;
+  geo.setAttribute("aRib", new T.BufferAttribute(rib, 1));
+  const uniforms = { uPR: { value: 1 }, uTime: { value: 0 }, uPulse: { value: 0 }, uRing: { value: 0 } };
   const mat = new T.ShaderMaterial({
     transparent: true,
     depthWrite: false,
@@ -121,9 +163,13 @@ export function mountCrowd(canvas, opts = {}) {
 
   // Zones
   const zones = Array.from(zoneRoot.querySelectorAll("[data-zone]"));
+  const NEAR_STIR = 3; // particles stirred this frame for the pointer to count as "near"
+  const nearState = { v: false };
   let zone = "crowd";
   const center = new T.Vector3(3.6, reducedMotion ? 0.9 : -6, 0);
   let ringMix = 0;
+  let blobMix = 0;
+  let sheetMix = 0;
 
   // Pointer, projected onto the z = 0 plane
   const mouse = { cx: -1, cy: -1, on: false, speed: 0, lastX: -1, lastY: -1 };
@@ -182,6 +228,33 @@ export function mountCrowd(canvas, opts = {}) {
   };
 
   // Simulation step
+  // Opening on the hero: place every particle straight onto the blob (no flying in to form it);
+  // the canvas itself fades in (CommunityCrowd)
+  const startInBlob = () => {
+    const vh = innerHeight;
+    const heroZone = zones.find((el) => el.dataset.zone === "crowd");
+    if (!heroZone) return;
+    const r = heroZone.getBoundingClientRect();
+    if (!(r.top < vh * 0.6 && r.bottom > vh * 0.4)) return;
+    const narrow = innerWidth / innerHeight < 0.9;
+    const C = (narrow ? CENTER_NARROW : CENTER).crowd;
+    center.set(C[0], C[1], C[2]);
+    blobMix = 1;
+    const blobR = narrow ? BLOB_RADIUS_NARROW : BLOB_RADIUS;
+    const spin = window.scrollY * SCROLL_SPIN, tc = Math.cos(BLOB_TILT), ts = Math.sin(BLOB_TILT);
+    for (let i = 0; i < N; i++) {
+      const q = i * 3, la = lat[i], lo = lon[i] + spin, cl = Math.cos(la);
+      const rr = blobR * (1 + Math.sin(6 * lo) * cl * 0.12 + Math.sin(la * 9) * 0.045 + Math.sin(3 * lo - 2 * la) * 0.04);
+      const px = cl * Math.cos(lo), py = Math.sin(la), pz = cl * Math.sin(lo);
+      pos[q] = C[0] + px * rr;
+      pos[q + 1] = C[1] + (py * tc - pz * ts) * rr;
+      pos[q + 2] = C[2] + (py * ts + pz * tc) * rr;
+      vel[q] = vel[q + 1] = vel[q + 2] = 0;
+    }
+    geo.attributes.position.needsUpdate = true;
+  };
+  startInBlob();
+
   const step = (dt, time) => {
     const narrow = camera.aspect < 0.9;
     const C = (narrow ? CENTER_NARROW : CENTER)[zone] || CENTER.crowd;
@@ -189,7 +262,16 @@ export function mountCrowd(canvas, opts = {}) {
     center.x += (C[0] - center.x) * k;
     center.y += (C[1] - center.y) * k;
     center.z += (C[2] - center.z) * k;
-    ringMix += ((zone === "ring" ? 1 : 0) - ringMix) * k * 0.8;
+    ringMix += ((zone === "ring" ? 1 : 0) - ringMix) * k * 1.6;
+    blobMix += ((zone === "crowd" ? 1 : 0) - blobMix) * k * 1.6;
+    sheetMix += ((zone === "crowd2" ? 1 : 0) - sheetMix) * k * 1.4;
+    const st = time * SHAPE_SPEED;
+    const rcx = Math.cos(RIBBON_TILT_X), rsx = Math.sin(RIBBON_TILT_X), rcy = Math.cos(RIBBON_TILT_Y), rsy = Math.sin(RIBBON_TILT_Y);
+    const blobR = narrow ? BLOB_RADIUS_NARROW : BLOB_RADIUS;
+    // Turns on its own, and further as the page scrolls
+    const spin = st * 0.12 + window.scrollY * SCROLL_SPIN;
+    // Seen a little from above, so the latitude rings read (as in the reference video)
+    const tc = Math.cos(BLOB_TILT), ts = Math.sin(BLOB_TILT);
 
     const moved = Math.hypot(mouse.cx - mouse.lastX, mouse.cy - mouse.lastY);
     mouse.lastX = mouse.cx;
@@ -198,15 +280,19 @@ export function mountCrowd(canvas, opts = {}) {
     const hasMouse = mouse.on && !state.covered && toWorld(mouse.cx, mouse.cy, hit);
     state.pulse *= Math.pow(0.2, dt);
     uniforms.uPulse.value = state.pulse;
+    uniforms.uRing.value = ringMix;
 
     const damp = Math.pow(0.955, dt * 60);
     const ringR = narrow ? RING_RADIUS_NARROW : RING_RADIUS;
     const spd = Math.min(1, mouse.speed / 25);
     // Hold: the charge eases the crowd into the Hyperiux wordmark (prototype)
     const ch = charge.v;
-    state.logoMix += ((hasLogo && ch > 0.02 ? Math.min(1, ch * 1.4) : 0) - state.logoMix) * Math.min(1, dt * 3);
+    // The hold-to-logo was removed: the particles never form the wordmark
+    state.logoMix = 0;
     const logoMix = state.logoMix;
-    const pull = 1.4 + ringMix * 1.4 + logoMix * 7;
+    const pull = 1.4 + ringMix * 1.4 + blobMix * 2.2 + sheetMix * 2.2;
+    // The blob reads as a clean surface: the drifting current is mostly calmed while it forms
+    const drift = 1 - Math.max(blobMix, sheetMix) * 0.85;
     let stir = 0;
 
     for (let i = 0; i < N; i++) {
@@ -217,15 +303,47 @@ export function mountCrowd(canvas, opts = {}) {
       let ax = (Math.sin(y * 0.55 + time * 0.35 + rnd[i] * 2) + Math.cos(z * 0.7 - time * 0.25)) * 0.55;
       let ay = (Math.sin(z * 0.5 + time * 0.4) + Math.cos(x * 0.45 + time * 0.2)) * 0.45;
       let az = (Math.sin(x * 0.4 - time * 0.3) + Math.cos(y * 0.5 + time * 0.35)) * 0.35;
+      ax *= drift; ay *= drift; az *= drift;
 
       // Formation: cloud, easing into a ring in the Join zone
       let hx = center.x + home[q], hy = center.y + home[q + 1], hz = center.z + home[q + 2];
+      if (blobMix > 0.01) {
+        // Petal-like lobes around the rim that slowly turn, plus ripples travelling down from the top
+        const la = lat[i], lo = lon[i] + spin, cl = Math.cos(la);
+        const wobble =
+          Math.sin(6 * lo + st * 0.5) * cl * 0.12 +
+          Math.sin(la * 9 - st * 1.6) * 0.045 +
+          Math.sin(3 * lo - 2 * la + st * 0.9) * 0.04;
+        const rr = blobR * (1 + wobble);
+        const px = cl * Math.cos(lo), py = Math.sin(la), pz = cl * Math.sin(lo);
+        const ty = py * tc - pz * ts, tz = py * ts + pz * tc;
+        hx = lerp(hx, center.x + px * rr, blobMix);
+        hy = lerp(hy, center.y + ty * rr, blobMix);
+        hz = lerp(hz, center.z + tz * rr, blobMix);
+      }
+      if (sheetMix > 0.01) {
+        // A wide sheet in perspective (back rows far, front rows close), rolling in slow waves
+        const sx = (gu[i] - 0.5) * SHEET_W;
+        const sz = SHEET_BACK + gv[i] * SHEET_DEPTH;
+        const sy = SHEET_Y +
+          Math.sin(sx * 0.32 + st * 0.8) * Math.cos(sz * 0.25 - st * 0.6) * 1.1 +
+          Math.sin((sx + sz) * 0.18 - st) * 0.5;
+        hx = lerp(hx, sx, sheetMix);
+        hy = lerp(hy, sy, sheetMix);
+        hz = lerp(hz, sz, sheetMix);
+      }
       if (ringMix > 0.01) {
-        const an = rnd[i] * 6.283 + time * 0.08 * (rnd[i] > 0.5 ? 1 : -1);
-        const rr = ringR + (rnd[i] - 0.5) * 1.1;
-        hx = lerp(hx, center.x + Math.cos(an) * rr, ringMix);
-        hy = lerp(hy, center.y + Math.sin(an) * rr * 0.9, ringMix);
-        hz = lerp(hz, center.z + home[q + 2] * 0.3, ringMix);
+        // Join (the page's end): the particles form the theremin footer ribbons, concentric rings
+        // tilted like the site's footer ribbons: two open arcs (not full circles), turning in
+        // opposite directions, each a band with some width
+        const j = Math.min(RIBBON_RINGS - 1, Math.floor(gv[i] * RIBBON_RINGS));
+        const an = j * 2.4 + gu[i] * 6.283 * RIBBON_ARC + st * 0.12 * (j % 2 ? -1 : 1);
+        const rr = ringR * (RIBBON_R0 + j * RIBBON_GAP) + Math.sin(an * 3 + st * 0.8 + j) * 0.12 + (rnd[i] - 0.5) * 0.4;
+        const rx = Math.cos(an) * rr, ry = Math.sin(an) * rr, rz = (rnd[i] - 0.5) * 0.15;
+        const y1 = ry * rcx - rz * rsx, z1 = ry * rsx + rz * rcx;
+        hx = lerp(hx, center.x + rx * rcy + z1 * rsy, ringMix);
+        hy = lerp(hy, center.y + y1, ringMix);
+        hz = lerp(hz, center.z - rx * rsy + z1 * rcy, ringMix);
       }
       if (logoMix > 0.01) {
         hx = lerp(hx, center.x + logo[q], logoMix);
@@ -237,7 +355,8 @@ export function mountCrowd(canvas, opts = {}) {
       az += (hz - z) * pull;
 
       // School-of-fish cursor: gather and swirl
-      if (hasMouse && logoMix < 0.5) {
+      // The particles don't react to the mouse on the community page
+      if (POINTER_INTERACTION && hasMouse && logoMix < 0.5) {
         const dx = hit.x - x, dy = hit.y - y, d2 = dx * dx + dy * dy;
         if (d2 < GATHER_RADIUS_SQ) {
           stir++;
@@ -261,6 +380,14 @@ export function mountCrowd(canvas, opts = {}) {
     geo.attributes.position.needsUpdate = true;
     geo.attributes.aHot.needsUpdate = true;
     // No sparkle jingle while the pointer stirs the particles (hero or any other zone)
+    // Tells the page's cursor tag when the pointer is among the particles (enough of them stirred),
+    // not just anywhere over the canvas: marks every hold zone (the cursor reads the one it's over)
+    const isNear = POINTER_INTERACTION && hasMouse && stir > NEAR_STIR;
+    if (isNear !== nearState.v) {
+      nearState.v = isNear;
+      zoneRoot.querySelectorAll("[data-hold-zone]").forEach((z) => { if (isNear) z.dataset.near = ""; else delete z.dataset.near; });
+      dispatchEvent(new Event("hx-near"));
+    }
   };
 
   const render = () => renderer.render(scene, camera);
@@ -402,7 +529,7 @@ export function mountCrowd(canvas, opts = {}) {
   };
   addEventListener("pointerup", onPointerUp);
   addEventListener("pointercancel", onPointerUp);
-  zoneRoot.addEventListener("pointerdown", onPointerDown);
+  // (No press-and-hold on the particles any more)
 
   window.addEventListener("resize", onResize);
   onResize();
@@ -452,7 +579,6 @@ export function mountCrowd(canvas, opts = {}) {
       window.removeEventListener("pointermove", onPointerMove);
       document.removeEventListener("pointerleave", onPointerLeave);
       window.removeEventListener("resize", onResize);
-      zoneRoot.removeEventListener("pointerdown", onPointerDown);
       removeEventListener("pointerup", onPointerUp);
       removeEventListener("pointercancel", onPointerUp);
       cancelAnimationFrame(chargeRaf);

@@ -5,7 +5,7 @@ import { getSearchIndexEffects } from "@/lib/search-index";
 import PricingHero from "@/components/Pricing/pricing-hero/PricingHero";
 import { FAQJSONLD, WebpageJsonLd } from "@/lib/json-ld";
 import { createPageMetadata } from "@/lib/seo-metadata";
-import Cursor from "@/homepage/components/Cursor";
+import SquareCursor from "@/homepage/components/SquareCursor";
 import SectionOverlay from "@/components/Animations/SectionOverlay";
 
 // Below-the-fold sections load as separate chunks (still server-rendered)
@@ -36,7 +36,7 @@ export default async function PricingPage() {
       <WebpageJsonLd metadata={metadata} />
       <FAQJSONLD faqs={faqItems} />
       <VaultShell effects={effects}>
-        <Cursor />
+        <SquareCursor />
         <main id="main-content">
           <PricingHero isIndia={isIndia} />
           {/* The homepage plans section, reused as is; #plans is the hero's "See the plans" target */}

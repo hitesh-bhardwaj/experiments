@@ -284,7 +284,7 @@ export function mountExplodedTiers(host, opts = {}) {
     // hold charge → absorb
     if (holding) {
       hold = clamp((performance.now() - holdStart) / holdMs, 0, 1);
-      if (hold >= 1 && !holdFired) { holdFired = true; sfx('ready'); host.dispatchEvent(new CustomEvent('tiers:absorb')); }
+      if (hold >= 1 && !holdFired) { holdFired = true; sfx('ready'); host.dispatchEvent(new CustomEvent('tiers:absorb')); dispatchEvent(new Event('hx-hold-ready')); /* cursor tag: "Release" */ }
     } else if (holdFired && performance.now() > holdRelease) { hold = Math.max(0, hold - dt * 0.6); if (hold === 0) { holdFired = false; sfx('reform'); } }
     else if (!holdFired) hold = Math.max(0, hold - dt * 3);
     absorb += (hold - absorb) * Math.min(1, dt * 3);

@@ -279,8 +279,10 @@ export function wireSoundUI(sound, { root = document, hover = 'a,button,[role=ta
   const onOver = (e) => { const t = e.target.closest && e.target.closest(hover); if (t && !t.contains(e.relatedTarget) && !t.closest('[data-sound-hover="off"]')) sound.hover(e.clientX / innerWidth, hoverKind(t)); };
   const onClick = (e) => { const t = e.target.closest && e.target.closest(click); if (t && !t.closest('[data-sound-click="off"]')) sound.click(); };
   let lx = -1, ly = -1, raf = 0, speed = 0;
-  // No swish over still, light sections: data-sound-flow="off" (nearest marker wins, so "on" re-enables inside)
-  const onMove = (e) => { const f = e.target.closest && e.target.closest('[data-sound-flow]'); if (f && f.dataset.soundFlow === 'off') { lx = e.clientX; ly = e.clientY; return; } if (lx >= 0) speed = Math.max(speed, Math.hypot(e.clientX - lx, e.clientY - ly)); lx = e.clientX; ly = e.clientY; };
+  // No swish over still, light sections: data-sound-flow="off"; a quieter one under an instrument
+  // (the signal wave's theremin): data-sound-flow="soft". Nearest marker wins, so "on" re-enables inside.
+  const SOFT_FLOW = 0.35;
+  const onMove = (e) => { const f = e.target.closest && e.target.closest('[data-sound-flow]'); const mode = f ? f.dataset.soundFlow : 'on'; if (mode === 'off') { lx = e.clientX; ly = e.clientY; return; } if (lx >= 0) speed = Math.max(speed, Math.hypot(e.clientX - lx, e.clientY - ly) * (mode === 'soft' ? SOFT_FLOW : 1)); lx = e.clientX; ly = e.clientY; };
   const tick = () => { raf = requestAnimationFrame(tick); sound.flow(speed / 55); speed *= 0.8; };
   root.addEventListener('pointerover', onOver);
   root.addEventListener('click', onClick, true);

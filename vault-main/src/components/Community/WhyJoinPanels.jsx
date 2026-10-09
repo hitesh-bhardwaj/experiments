@@ -24,9 +24,9 @@ const MANUAL_HOLD_MS = 1500;
 // Critique loop
 const CRIT_LOOP_S = 4.2;
 const CRIT_PINS = [
-  { at: 0.18, who: "@lena", text: "The ease-in at the start reads hesitant. Try expo.out and let it land." },
-  { at: 0.46, who: "@arjun", text: "Two frames drop here on my Pixel. Promote the card to its own layer." },
-  { at: 0.78, who: "@mika", text: "The settle is gorgeous. Shave 80ms off and it’ll feel snappier." },
+  { at: 0.18, who: "@hitesh", text: "The card leaves a beat late. Start the move on press, not release, and it’ll feel instant." },
+  { at: 0.46, who: "@vidushi", text: "This ease reads flat. Try expo.out on the y and keep the fade linear underneath it." },
+  { at: 0.78, who: "@ishita", text: "Lovely settle. Hold the last frame ~120ms before it loops so the eye can land." },
 ];
 const PIN_WINDOW = 0.09;
 
@@ -319,6 +319,10 @@ export function CritiqueCard() {
   const canvasRef = useRef(null);
   const playRef = useRef(null);
   const [activePin, setActivePin] = useState(-1);
+  // How many pins the playhead has passed: each square fills once the progress reaches it
+  const [reached, setReached] = useState(0);
+  // A hovered (or focused) pin keeps its comment open alongside the playhead's one
+  const [hoveredPin, setHoveredPin] = useState(-1);
 
   useVisibleLoop(cardRef, (now) => {
     const cv = canvasRef.current;
@@ -343,6 +347,8 @@ export function CritiqueCard() {
     if (playRef.current) playRef.current.style.width = `${p * 100}%`;
     const hitPin = CRIT_PINS.findIndex((pin) => Math.abs(p - pin.at) < PIN_WINDOW);
     setActivePin((cur) => (cur === hitPin ? cur : hitPin));
+    const passed = CRIT_PINS.filter((pin) => p >= pin.at).length;
+    setReached((cur) => (cur === passed ? cur : passed));
   }, CRIT_LOOP_S * 1000 * 0.6);
 
   return (
@@ -360,10 +366,17 @@ export function CritiqueCard() {
               key={pin.who}
               type="button"
               style={{ left: `${pin.at * 100}%` }}
-              className={`group/pin absolute -top-[0.6vw] -ml-[0.6vw] size-[1.2vw] bg-primary transition-shadow duration-600 ease-[cubic-bezier(.16,1,.3,1)] hover:ring-[0.5vw] hover:ring-primary/30 focus-visible:ring-[0.5vw] focus-visible:ring-primary/30 max-md:-top-[2.3vw] max-md:-ml-[2.3vw] max-md:size-[4.6vw] ${activePin === i ? "ring-[0.5vw] ring-primary/30" : "ring-[0.3vw] ring-primary/20"}`}
+              onPointerEnter={() => setHoveredPin(i)}
+              onPointerLeave={() => setHoveredPin(-1)}
+              onFocus={() => setHoveredPin(i)}
+              onBlur={() => setHoveredPin(-1)}
+              className={`group/pin absolute -top-[0.6vw] -ml-[0.6vw] size-[1.2vw] border transition-[background-color,border-color,box-shadow] duration-600 ${i < reached ? "border-primary bg-primary" : "border-primary/60 bg-dark-card"} ease-[cubic-bezier(.16,1,.3,1)] hover:ring-[0.5vw] hover:ring-primary/30 focus-visible:ring-[0.5vw] focus-visible:ring-primary/30 max-md:-top-[2.3vw] max-md:-ml-[2.3vw] max-md:size-[4.6vw] ${activePin === i ? "ring-[0.5vw] ring-primary/30" : i < reached ? "ring-[0.3vw] ring-primary/20" : "ring-0"}`}
             >
               <span
-                className={`pointer-events-none absolute bottom-[calc(100%+0.8vw)] w-[17vw] bg-light px-[1vw] py-[0.8vw] text-left type-small text-ink transition-opacity duration-500 ease-[cubic-bezier(.16,1,.3,1)] group-hover/pin:opacity-100 group-focus-visible/pin:opacity-100 max-md:w-[52vw] max-md:px-[3.5vw] max-md:py-[3vw] ${activePin === i ? "opacity-100" : "opacity-0"} ${i === 0 ? "-left-[1.4vw]" : i === CRIT_PINS.length - 1 ? "-right-[1.4vw]" : "left-1/2 -translate-x-1/2"}`}
+                className={`pointer-events-none absolute bottom-[calc(100%+0.8vw)] w-[17vw] bg-light px-[1vw] py-[0.8vw] text-left type-small text-ink transition-opacity ease-[cubic-bezier(.16,1,.3,1)] max-md:w-[52vw] max-md:px-[3.5vw] max-md:py-[3vw] ${i === hoveredPin || i === activePin
+                    ? "opacity-100 duration-500"
+                    // Comments the playhead has left hide at once
+                    : "opacity-0 duration-0"} left-1/2 -translate-x-1/2`}
               >
                 <b className="block font-bold text-[#B34A00]">{pin.who}</b> {pin.text}
               </span>
@@ -380,7 +393,7 @@ export function FeaturedCard({ joined }) {
   return (
     <div className={`${CARD} items-center justify-center p-[2.8vw] max-md:p-[6vw]`}>
       <CardFluid />
-      <div className="relative flex aspect-[4/5] w-[78%] max-w-[29vw] flex-col justify-end gap-[0.7vw] overflow-hidden bg-black/20 p-[1.8vw] ring-1 ring-inset ring-primary/45 backdrop-blur-lg max-md:max-w-none max-md:gap-[2.5vw] max-md:p-[6.6vw] after:absolute after:-top-[30%] after:-right-[30%] after:aspect-square after:w-4/5 after:bg-[radial-gradient(circle,color-mix(in_srgb,var(--primary)_45%,transparent),transparent_65%)] after:content-['']">
+      <div className="relative flex aspect-[4/5] w-[78%] max-w-[29vw] flex-col justify-end gap-[0.7vw] overflow-hidden bg-black/20 p-[1.8vw] border-beam backdrop-blur-lg max-md:max-w-none max-md:gap-[2.5vw] max-md:p-[6.6vw] after:absolute after:-top-[30%] after:-right-[30%] after:aspect-square after:w-4/5 after:bg-[radial-gradient(circle,color-mix(in_srgb,var(--primary)_45%,transparent),transparent_65%)] after:content-['']">
         <p className={`${LABEL} relative text-[#FFB27A]`}>Featured on Vault · this week</p>
         <p className="type-h2 font-avenir relative text-foreground">Your work<br />could be here.</p>
         <p className={`${LABEL} relative text-foreground/60`}>by <span className="text-foreground">{joined ? "you, founding member" : "you"}</span></p>

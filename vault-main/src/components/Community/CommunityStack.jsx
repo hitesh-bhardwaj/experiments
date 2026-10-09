@@ -8,7 +8,7 @@ import LineReveal from "@/components/Animations/LineReveal";
 import { useFadeUp } from "@/components/Animations/gsapAnimations";
 import { useInteraction } from "@/homepage/components/InteractionProvider";
 import { prefersReducedMotion } from "@/lib/motion";
-import { getCrowd, setStack, useCommunity } from "./community-store";
+import { setStack, useCommunity } from "./community-store";
 
 const STACKS = ["React", "Next.js", "GSAP", "Three.js", "WebGL", "Motion", "Lenis", "Vue", "Svelte", "Webflow"];
 
@@ -47,12 +47,11 @@ export default function CommunityStack() {
   const toggle = (name, i) => {
     const next = stack.includes(name) ? stack.filter((s) => s !== name) : STACKS.filter((s) => s === name || stack.includes(s));
     setStack(next);
-    getCrowd()?.highlight(new Set(next.map((s) => STACKS.indexOf(s))));
     sound?.note?.(i);
   };
 
   return (
-    <section ref={rootRef} className="relative z-1 px-[4.5vw] py-[18vw] text-center max-md:px-[6vw] max-md:py-[12%]" id="stack" data-zone="crowd2" data-hold-zone>
+    <section ref={rootRef} className="relative z-1 px-[4.5vw] py-[18vw] text-center max-md:px-[6vw] max-md:py-[12%]" id="stack" data-zone="crowd2">
       <div className="mx-auto flex w-full max-w-[1536px] flex-col items-center gap-[3vw] max-md:gap-[10vw]">
         <LineReveal as="h2" className="type-h1">
           What Do You <span className="gradient-text-animate gradient-text-single">Build With?</span>

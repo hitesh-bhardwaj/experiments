@@ -6,7 +6,7 @@ import { FAQJSONLD, WebpageJsonLd } from "@/lib/json-ld";
 import { createPageMetadata } from "@/lib/seo-metadata";
 import CommunityCrowd from "@/components/Community/CommunityCrowd";
 import CommunityHero from "@/components/Community/CommunityHero";
-import Cursor from "@/homepage/components/Cursor";
+import SquareCursor from "@/homepage/components/SquareCursor";
 
 // Below-the-fold sections load as separate chunks (still server-rendered)
 const CommunityFamiliar = dynamic(() => import("@/components/Community/CommunityFamiliar"));
@@ -51,7 +51,7 @@ export default async function CommunityPage() {
       <WebpageJsonLd metadata={metadata} />
       <FAQJSONLD faqs={COMMUNITY_FAQ} />
       <VaultShell effects={effects}>
-        <Cursor />
+        <SquareCursor />
         <main id="main-content" className="cm-x relative isolate bg-transparent font-avenir text-base leading-[1.6] text-white [&_[id]]:scroll-mt-24">
           <CommunityCrowd />
           <CommunityHero />

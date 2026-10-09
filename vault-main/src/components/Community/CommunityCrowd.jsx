@@ -47,6 +47,8 @@ export default function CommunityCrowd() {
     };
     const crowd = mountCrowd(canvas, { THREE, zoneRoot, small, reducedMotion: prefersReducedMotion(), sound, getFluid: getSiteFluid, onToast });
     setCrowd(crowd);
+    // The blob fades in (it starts already formed, see crowd.js startInBlob)
+    requestAnimationFrame(() => requestAnimationFrame(() => { canvas.style.opacity = "1"; }));
 
     // Pause the loop (and hide the fixed canvas) once the page's crowd
     // sections are off-screen, e.g. over the footer
@@ -70,7 +72,7 @@ export default function CommunityCrowd() {
         aria-hidden="true"
         className="pointer-events-none fixed inset-0 z-0 size-full bg-[radial-gradient(50%_45%_at_72%_42%,rgba(255,107,0,.16),transparent_70%),radial-gradient(35%_30%_at_70%_45%,rgba(244,244,244,.05),transparent_70%)]"
       />}
-      {!skipGPU && createPortal(<canvas ref={canvasRef} className="pointer-events-none fixed inset-0 -z-2 size-full" aria-hidden="true" />, document.body)}
+      {!skipGPU && createPortal(<canvas ref={canvasRef} className="pointer-events-none fixed inset-0 -z-2 size-full opacity-0 transition-opacity duration-[1400ms] ease-out" aria-hidden="true" />, document.body)}
       {/* The prototype's toast (a full hold explodes the wordmark) */}
       <div
         role="status"

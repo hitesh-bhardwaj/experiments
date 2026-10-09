@@ -16,7 +16,7 @@ export default function CommunityHero() {
       <section
         id="hero"
         data-zone="crowd"
-        data-hold-zone
+       
         className="relative z-1 flex h-screen w-full flex-col justify-end max-[1025px]:h-auto max-[1025px]:min-h-svh"
       >
         <div className="mx-auto flex w-full max-w-[1536px] items-end justify-between gap-[3vw] px-[4.5vw] pb-[3vw] max-[1025px]:flex-col max-[1025px]:items-stretch max-[1025px]:gap-[5vw] max-[1025px]:pt-36 max-md:px-[6vw] max-md:pt-32">
@@ -38,7 +38,7 @@ export default function CommunityHero() {
           </div>
         </div>
       </section>
-      <div className="relative z-1 mx-auto w-full max-w-[1536px] px-[4.5vw] pt-[2vw] pb-[4vh] max-md:px-[6vw]" data-zone="crowd" data-hold-zone>
+      <div className="relative z-1 mx-auto w-full max-w-[1536px] px-[4.5vw] pt-[2vw] pb-[4vh] max-md:px-[6vw]" data-zone="crowd">
         <p
           aria-hidden="true"
           className="type-label flex items-center justify-center text-foreground/35"

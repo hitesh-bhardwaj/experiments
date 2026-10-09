@@ -61,6 +61,7 @@ export default function SignalSection() {
             // As in the prototype, the hold sound only starts once the dead zone has passed,
             // so a quick click is just a pluck
             let sounding = false;
+            let ready = false;
             let raf = 0;
             const charge = { v: 0 };
             let decay = null;
@@ -73,14 +74,19 @@ export default function SignalSection() {
                     sound?.holdStart?.();
                 }
                 wave.setCharge(charge.v);
+                // Fully charged: the cursor swaps its label to "Release to explode" (Cursor.jsx)
+                if (!ready && charge.v > FULL_CHARGE) { ready = true; dispatchEvent(new Event("hx-hold-ready")); }
             };
             const onDown = (e) => {
                 // Same exclusions as the prototype's ring cursor
                 if (e.button !== 0 || e.target.closest("a,button,input,h1,h2,h3,p")) return;
+                // Playing the wave never starts a text selection
+                e.preventDefault();
                 pressedAt = performance.now();
                 decay?.kill();
                 charge.v = 0;
                 sounding = false;
+                ready = false;
                 raf = requestAnimationFrame(tick);
             };
             const onUp = () => {
@@ -91,7 +97,8 @@ export default function SignalSection() {
                 const full = charge.v > FULL_CHARGE;
                 if (sounding) sound?.holdEnd?.(full);
                 sounding = false;
-                if (held < TAP_MAX_MS) wave.tap();
+                // As in the prototype: a quick click plucks the string and plays the tap chord
+                if (held < TAP_MAX_MS) { wave.tap(); sound?.crowdTap?.(); }
                 else {
                     const kind = wave.release(full);
                     if (kind) sound?.release?.(kind);
@@ -117,7 +124,7 @@ export default function SignalSection() {
     }, [sound, webgl]); // sound is stable (created once by the provider)
 
     return (
-        <section ref={sectionRef} id="signal" className="relative z-20 text-white">
+        <section ref={sectionRef} id="signal" data-sound-flow="soft" data-hold-zone data-cursor-label="Hold to explore" className="relative z-20 select-none text-white">
            
             <div className="pointer-events-none absolute inset-x-0 -top-[100vh] -bottom-[100vh] z-50 max-md:hidden" aria-hidden="true">
                 <div className="sticky top-0 h-screen">

@@ -31,11 +31,13 @@ export default function CommunityFounding() {
       <div className="flex items-start justify-between gap-[4vw] max-[1025px]:flex-col">
         <div className="fadeup relative isolate w-[52%] overflow-hidden bg-ink p-[3vw] text-white max-[1025px]:w-full max-md:p-[7vw] max-md:py-[12%]">
           <CardFluid />
-          <ul className="relative flex flex-col gap-[2vw] max-[1025px]:gap-[5vw]">
+          <ul className="relative flex flex-col gap-[3vw] max-lg:gap-[5vw]">
             {PERKS.map((perk) => (
               <li key={perk.title} className="flex items-start gap-[1vw] max-md:gap-[4vw]">
-                {/* diamond sits on the title's line */}
-                <i aria-hidden="true" className="relative top-[0.6vw] size-[0.6vw] shrink-0 rotate-45 bg-primary max-md:top-[2.2vw] max-md:size-[2vw]" />
+                {/* A box one title-line tall (type-h3, line height 1.25) centres the diamond on the title */}
+                <span aria-hidden="true" className="type-h3 flex h-[1.25em] shrink-0 items-center">
+                  <i className="block size-[0.6vw] rotate-45 bg-primary max-md:size-[2vw]" />
+                </span>
                 <div className="flex min-w-0 flex-col gap-1">
                   <b className="type-h3 font-avenir font-medium!">{perk.title}</b>
                   <span className="type-body text-white/60">{perk.text}</span>
@@ -44,10 +46,14 @@ export default function CommunityFounding() {
             ))}
           </ul>
         </div>
-        <ol className="flex w-[43%] flex-col max-[1025px]:w-full">
+        {/* Rows padded by half the perks' gap, and inset to start level with the first perk */}
+        <ol className="flex w-[43%] flex-col pt-[1.5vw] max-lg:w-full max-lg:pt-0">
           {STEPS.map((step, i) => (
-            <li key={step.title} className="fadeup flex gap-[0.8vw] border-t border-black/10 py-[1.5vw] last:border-b max-md:gap-[3vw] max-md:py-[5.6vw]" data-fadeup-delay={i * 0.1}>
-              <span className="type-label relative top-[0.3vw] w-[3.3vw] shrink-0 text-primary max-md:top-[1vw] max-md:w-[12vw]">{String(i + 1).padStart(2, "0")}</span>
+            <li key={step.title} className="fadeup flex gap-[0.8vw] border-t border-black/10 py-[1.5vw] last:border-b max-lg:py-[2.5vw] max-md:gap-[3vw]" data-fadeup-delay={i * 0.1}>
+              {/* Same one-line box as the diamonds, so the number centres on the title */}
+              <span className="type-h3 flex h-[1.25em] w-[3.3vw] shrink-0 items-center max-md:w-[12vw]">
+                <span className="type-label text-primary">{String(i + 1).padStart(2, "0")}</span>
+              </span>
               <div className="flex min-w-0 flex-col gap-1">
                 <b className="type-h3 font-avenir font-medium!">{step.title}</b>
                 <p className="type-body text-black/60">{step.text}</p>

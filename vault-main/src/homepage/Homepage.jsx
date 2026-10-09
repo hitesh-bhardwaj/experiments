@@ -6,7 +6,7 @@ import Navbar from "@/homepage/components/Navbar";
 import Loader from "@/homepage/components/Loader";
 import ScrollTopOnLoad from "@/homepage/components/ScrollTopOnLoad";
 import SectionOverlay from "@/components/Animations/SectionOverlay";
-import Cursor from "@/homepage/components/Cursor";
+import SquareCursor from "@/homepage/components/SquareCursor";
 
 // Below-the-fold sections load as separate chunks (still server-rendered)
 const ExplainVault = dynamic(() => import("@/homepage/sections/ExplainVault"));
@@ -22,7 +22,7 @@ export default function Homepage({ faqItems, effects = [] }) {
   return (
     <div className="home-type">
       <Loader />
-      <Cursor />
+      <SquareCursor />
       <Navbar effects={effects} introOnLoader />
       <LenisSmoothScroll lerp={0.065} wheelMultiplier={0.85} />
       <ScrollTopOnLoad />

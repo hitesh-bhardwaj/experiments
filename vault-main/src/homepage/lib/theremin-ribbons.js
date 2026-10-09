@@ -365,6 +365,17 @@ export function mountThereminRibbons(host, canvas, { pose = "hero", sound = null
     if (shattered) zone.dataset.ribbonsShattered = ""; else delete zone.dataset.ribbonsShattered;
     dispatchEvent(new CustomEvent("hx-ribbons-state", { detail: { shattered } }));
   }
+  // Lets the page's cursor tag know when the pointer is actually near the ribbons (on or close
+  // to a ring, or anywhere in the cloud once shattered), not just anywhere over the canvas
+  const NEAR_RING = 0.9; // ribbon-space units from a ring
+  let near = false;
+  function announceNear(next) {
+    if (next === near) return;
+    near = next;
+    const zone = host.closest("main, footer, section") || host;
+    if (near) zone.dataset.near = ""; else delete zone.dataset.near;
+    dispatchEvent(new Event("hx-near"));
+  }
   function startShatter() {
     for (let n = 0; n < SN; n++) {
       const k = n * 3, sp = 2.2 + sR[n] * 5.5;
@@ -703,6 +714,16 @@ export function mountThereminRibbons(host, canvas, { pose = "hero", sound = null
     mouseSpeed = damp(mouseSpeed, moved, 0.18, dt);
     if (moved > 2 && SH.mode === 2) SH.t = Math.min(SH.t, LINGER_S - 2.5); // keep lingering while stirred
     hoverAmp = damp(hoverAmp, mouse.on && played && !SH.mode ? 0.45 + Math.min(0.6, mouseSpeed * 0.03) + ch * 0.5 : 0, 0.05, dt);
+
+    // Near the ribbons (see announceNear)
+    let isNear = false;
+    if (mouse.on && played && pointerWorld(pv)) {
+      const r = Math.hypot(pv.x - ribbons.position.x, pv.y - ribbons.position.y) / ribbons.scale.x;
+      const outer = RIBBON_RADIUS + (ribbonCount - 1) * RIBBON_STEP;
+      if (SH.mode) isNear = r < outer + NEAR_RING;
+      else for (let j = 0; j < ribbonCount && !isNear; j++) isNear = Math.abs(r - (RIBBON_RADIUS + j * RIBBON_STEP)) < NEAR_RING;
+    }
+    announceNear(isNear);
     if (pointerWorld(pv)) {
       trail[0].x = damp(trail[0].x, pv.x, 0.12, dt);
       trail[0].y = damp(trail[0].y, pv.y, 0.12, dt);

@@ -54,9 +54,9 @@ export default function Cursor() {
                     return setMode("hold", " ");
                 }
                 // Charging: the ring's primary stroke fills in step with the ribbons' hold
-                if (holding) root.dataset.charging = ""; else delete root.dataset.charging;
+                if (holding || ready) root.dataset.charging = ""; else delete root.dataset.charging;
                 // Charged and waiting: tell them to let go
-                return setMode("hold", holding ? (ready ? "Release" : "") : zone.dataset.cursorLabel || "Hold to explore");
+                return setMode("hold", ready ? "Release" : holding ? "" : zone.dataset.cursorLabel || "Hold to explore");
             }
             delete root.dataset.charging;
             return setMode("off");
@@ -92,7 +92,8 @@ export default function Cursor() {
         // Ribbons shattered / re-formed under a still pointer
         const onRibbons = () => { if (lastTarget) resolve(lastTarget); };
         // The ribbons' hold is fully charged (or was cancelled by scrolling away)
-        const onReady = () => { if (!holding) return; ready = true; if (lastTarget) resolve(lastTarget); };
+        // The hold owner says "ready" (fully charged): show it whether or not this saw the press
+        const onReady = () => { ready = true; lastTarget = lastTarget || document.elementFromPoint(pos.x, pos.y); if (lastTarget) resolve(lastTarget); };
         const onCancel = () => { ready = false; if (lastTarget) resolve(lastTarget); };
 
         addEventListener("pointermove", onMove, { passive: true });
