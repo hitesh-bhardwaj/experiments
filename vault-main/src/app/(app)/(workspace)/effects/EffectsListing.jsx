@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -89,7 +89,7 @@ const COLUMN_ITEMS = [2, 3].map((n) => ({
 const CARD_LAYOUT_TRANSITION = { layout: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } };
 
 /* ---------- text sizes (vw: desktop · tablet · mobile) ---------- */
-const T11 = "text-[0.76vw] max-lg:text-[1.4vw] max-md:text-[2.8vw]";
+const T11 = "text-[0.76vw] max-lg:text-[1.4vw] max-md:text-[2.9vw]";
 const T13 = "text-[0.9vw] max-lg:text-[1.6vw] max-md:text-[3.3vw]";
 const T14 = "text-[0.97vw] max-lg:text-[1.7vw] max-md:text-[3.6vw]";
 const T15 = "text-[1.04vw] max-lg:text-[1.8vw] max-md:text-[3.8vw]";
@@ -107,15 +107,6 @@ const CHIP =
 const CHIP_OFF = "text-black/60 ring-1 ring-inset ring-black/10 hover:text-ink hover:ring-primary";
 const CHIP_ON = "bg-primary text-background";
 
-// Rolls from 0 up to the value, digit by digit, shortly after it mounts
-function StatRoll({ value }) {
-  const [shown, setShown] = useState(0);
-  useEffect(() => {
-    const t = setTimeout(() => setShown(value), 400);
-    return () => clearTimeout(t);
-  }, [value]);
-  return <RollNumber value={shown} values={[0, value]} />;
-}
 
 // Active filter chips: scale + fade in/out, the rest slide into place
 const FILTER_SPRING = { type: "spring", stiffness: 500, damping: 35, mass: 0.8 };
@@ -190,7 +181,6 @@ export function EffectsListing({
   // On a category route the category comes from the route, not the query string.
   // ?category= is the old in-place filter link - still honoured on /effects.
   const [category, setCategory] = useState(() => scopeCategory || (initialScope ? null : searchParams.get("category")) || null);
-  const [stack, setStack] = useState(() => (searchParams.get("stack") ? searchParams.get("stack").split(",") : []));
   const [query, setQuery] = useState(() => searchParams.get("q") || "");
   const [sort, setSort] = useState(() => (SORTS[searchParams.get("sort")] ? searchParams.get("sort") : "trend"));
   const [cols, setCols] = useState(3);
@@ -208,25 +198,6 @@ export function EffectsListing({
 
   /* ---------- derived data ---------- */
   const featuredSet = useMemo(() => new Set(featuredNames), [featuredNames]);
-  // Hero stats describe the page's scope (everything, or this category / tier / featured).
-  const heroStats = useMemo(() => {
-    const inScope = effects.filter((effect) => {
-      if (scope === "free") return effect.tier !== "pro";
-      if (scope === "pro") return effect.tier === "pro";
-      if (scope === "featured") return featuredNames.includes(effect.name);
-      if (scopeCategory) return resolveEffectCategoryId(effect) === scopeCategory;
-      return true;
-    });
-    const free = inScope.filter((e) => e.tier !== "pro").length;
-    const pro = inScope.length - free;
-    const categories = new Set(inScope.map((e) => resolveEffectCategoryId(e)).filter(Boolean)).size;
-    return [
-      [inScope.length, "Effects"],
-      free > 0 && free < inScope.length && [free, "Free"],
-      scope && pro > 0 && pro < inScope.length && [pro, "Pro"],
-      categories > 1 && [categories, "Categories"],
-    ].filter(Boolean);
-  }, [effects, scope, scopeCategory, featuredNames]);
 
   const categoryOptions = useMemo(() => {
     const counts = {};
@@ -237,15 +208,6 @@ export function EffectsListing({
     return effectCategories.filter((c) => c.id !== "featured" && counts[c.id]).map((c) => ({ id: c.id, name: c.name, count: counts[c.id] }));
   }, [effects]);
 
-  // The libraries effects are built with, most common first.
-  const stackOptions = useMemo(() => {
-    const counts = {};
-    for (const effect of effects) for (const tag of effect.tags || []) counts[tag] = (counts[tag] || 0) + 1;
-    return Object.entries(counts)
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 8)
-      .map(([tag]) => tag);
-  }, [effects]);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -255,7 +217,6 @@ export function EffectsListing({
       if (featured && !featuredSet.has(effect.name)) return false;
       const catId = resolveEffectCategoryId(effect);
       if (category && catId !== category) return false;
-      if (stack.length && !stack.some((tag) => effect.tags?.includes(tag))) return false;
       if (q) {
         const haystack = [effect.title, effect.name, catId, effect.description, ...(effect.tags || []), effect.tier].join(" ").toLowerCase();
         if (!haystack.includes(q)) return false;
@@ -264,11 +225,11 @@ export function EffectsListing({
     });
     if (sort === "free-first") return [...list].sort((a, b) => (a.tier === "pro") - (b.tier === "pro"));
     return sort === "trend" ? list : sortEffects(list, sort);
-  }, [effects, tier, featured, featuredSet, category, stack, query, sort]);
+  }, [effects, tier, featured, featuredSet, category, query, sort]);
 
   const visible = filtered.slice(0, shown);
   const hasMore = shown < filtered.length;
-  const filterKey = [tier, featured, category, stack.join(","), query.trim(), sort].join("|");
+  const filterKey = [tier, featured, category, query.trim(), sort].join("|");
   const categoryName = categoryOptions.find((c) => c.id === category)?.name;
   const context = featured ? "Featured" : categoryName || (tier !== "all" ? `${tier === "free" ? "Free" : "Pro"} effects` : "");
 
@@ -276,7 +237,6 @@ export function EffectsListing({
     tier !== "all" && !TIER_SCOPES.includes(scope) && { id: "tier", label: tier === "free" ? "Free" : "Pro", clear: () => setTier("all") },
     featured && { id: "featured", label: "Featured", clear: () => setFeatured(false) },
     category && { id: "category", roll: true, label: getQuickCategoryLabel(category), clear: () => selectCategory(null) },
-    ...stack.map((tag) => ({ id: `stack:${tag}`, label: tag, clear: () => setStack((s) => s.filter((t) => t !== tag)) })),
     query.trim() && { id: "q", label: `“${query.trim()}”`, clear: () => setQuery("") },
   ].filter(Boolean);
 
@@ -310,7 +270,6 @@ export function EffectsListing({
     setTier("all");
     setFeatured(false);
     setCategory(null);
-    setStack([]);
     setQuery("");
   }, []);
 
@@ -378,13 +337,12 @@ export function EffectsListing({
     if (tier !== "all") params.set("tier", tier);
     if (featured) params.set("featured", "1");
     if (category && !scope) params.set("category", category);
-    if (stack.length) params.set("stack", stack.join(","));
     if (query.trim()) params.set("q", query.trim());
     if (sort !== "trend") params.set("sort", sort);
     const next = params.toString();
     const path = scope ? getEffectCategoryHref(scope) : "/effects";
     window.history.replaceState(window.history.state, "", `${path}${next ? `?${next}` : ""}`);
-  }, [tier, featured, category, stack, query, sort, scope]);
+  }, [tier, featured, category, query, sort, scope]);
 
   // The tab title follows the page too (the first page keeps its server title).
   const initialTitleRef = useRef(null);
@@ -402,36 +360,6 @@ export function EffectsListing({
 
 
 
-  /* ---------- hero stats: optical alignment ---------- */
-  // Each glyph carries its own left side-bearing, and the big number's is wider than
-  // the small label's - so their boxes line up but their ink doesn't. Measure where
-  // the ink of the number's first digit and the label's first letter actually starts
-  // (canvas actualBoundingBoxLeft, in each element's real font and size) and shift the
-  // number by the difference. Uses the final value, so the count-up doesn't move it.
-  // Re-runs once the web fonts load and on resize (the sizes are in vw).
-  useLayoutEffect(() => {
-    const root = rootRef.current;
-    if (!root) return undefined;
-    const ctx = document.createElement("canvas").getContext("2d");
-    const inkLeft = (el, text) => {
-      const cs = getComputedStyle(el);
-      ctx.font = `${cs.fontStyle} ${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`;
-      return -ctx.measureText(text).actualBoundingBoxLeft;
-    };
-    const align = () => {
-      root.querySelectorAll("[data-v4-count]").forEach((number) => {
-        const label = number.nextElementSibling;
-        if (!label) return;
-        number.style.marginLeft = "0px";
-        const offset = inkLeft(number, String(number.dataset.v4Count).charAt(0)) - inkLeft(label, label.textContent.trim().charAt(0));
-        number.style.marginLeft = `${-offset}px`;
-      });
-    };
-    align();
-    document.fonts?.ready.then(align);
-    window.addEventListener("resize", align);
-    return () => window.removeEventListener("resize", align);
-  }, [heroStats]);
 
   /* ---------- GSAP ---------- */
   // Page entrance (the title's chars and the paragraph's lines animate themselves via
@@ -629,7 +557,7 @@ export function EffectsListing({
             </h1>
           </HeadAnim>
 
-          <div className="flex w-[40%] flex-col gap-[1.6vw] max-lg:w-full max-md:gap-[6vw]">
+          <div className="flex w-[25vw] flex-col gap-[1.6vw] max-lg:w-full max-md:gap-[6vw]">
             {(scope
               ? [].concat(content?.description || [])
               : ["Production-ready interaction effects for React and Next.js. Preview any of them live, then copy or install with one command."]
@@ -638,32 +566,18 @@ export function EffectsListing({
                 <p className="type-body-lg w-full text-foreground/80 max-lg:w-[70%] max-md:w-full">{paragraph}</p>
               </Copy>
             ))}
-            <div data-v4-fade className={`${LABEL} flex flex-wrap gap-x-[2vw] gap-y-[0.7vw] max-md:gap-x-[7vw] max-md:gap-y-[2.5vw]`}>
-              {heroStats.map(([value, label]) => (
-                <p key={`${scope || "all"}-${label}`}>
-                  {/* margin-left is set by alignStatInk() so the digit's ink lines up with the label's;
-                      a leading "1" still sits a touch right of the label, so it moves 2px left. */}
-                  <b
-                    data-v4-count={value}
-                    className={`${DISPLAY} block font-aeonik text-[2.4vw] leading-none text-light tabular-nums normal-case max-lg:text-[4.5vw] max-md:text-[8vw] ${String(value).startsWith("1") ? "-translate-x-[2px]" : ""}`}
-                  >
-                    <StatRoll value={value} />
-                  </b>
-                  <span className="text-[1vw] normal-case tracking-normal text-foreground/60">{label}</span>
-                </p>
-              ))}
-            </div>
           </div>
         </div>
       </section>
 
       {/* ---------- trending ---------- */}
       {trendingEffects.length > 0 && (
-        <section id="trending" data-v4-fade aria-labelledby="v4-trending" className={`${WRAP} flex flex-col gap-[1.5vw] pb-28 max-lg:pb-20 max-md:gap-[5vw]`}>
+        <section id="trending" data-v4-fade aria-labelledby="v4-trending" className={`${WRAP} flex flex-col gap-[2.5vw] pb-28 pt-4 max-lg:pb-20 max-lg:pt-16 max-lg:gap-8`}>
           <div className="flex items-end justify-between">
             <h2 id="v4-trending" className={`${DISPLAY} font-aeonik text-[2.2vw] max-lg:text-[4vw] max-md:text-[7vw]`}>
               Trending this week
             </h2>
+            {/* Desktop / tablet: arrows beside the heading (phones: below the slider). */}
             <div className="flex gap-[0.4vw] max-md:hidden">
               <SliderArrowButton direction="prev" ariaLabel="Previous" disabled={trendEdges.start} onClick={() => scrollTrending(-1)} />
               <SliderArrowButton direction="next" ariaLabel="Next" disabled={trendEdges.end} onClick={() => scrollTrending(1)} />
@@ -680,11 +594,19 @@ export function EffectsListing({
             onPointerUp={endTrendDrag}
             onPointerCancel={endTrendDrag}
             onDragStart={(event) => event.preventDefault()}
-            className="flex cursor-grab select-none gap-[0.9vw] overflow-x-hidden overflow-y-hidden pb-1 scrollbar-none max-lg:gap-[1.4vw] max-lg:overflow-x-auto max-md:gap-[3.6vw]"
+            // -m/p 1vw: room inside the clipped row for a card's hover lift (translateZ),
+            // which the row's overflow would otherwise cut off; the negative margin keeps
+            // the cards exactly where they were.
+            className="mx-[-1vw] my-[-1vw] flex cursor-grab select-none gap-[1.3vw] overflow-x-hidden overflow-y-hidden px-[1vw] py-[1vw] scrollbar-none max-lg:gap-[1.4vw] max-lg:overflow-x-auto max-md:gap-[3.6vw]"
           >
             {trendingEffects.map((effect, index) => (
               <EffectCard key={effect.name} {...cardProps(effect, index)} small dark className="w-[calc((100%-1.8vw)/3)] shrink-0 max-lg:w-[45%] max-md:w-[82%]" tagClassName="text-foreground border-foreground/30" metaClassName="text-foreground/80" />
             ))}
+          </div>
+          {/* Phones: arrows below the slider, on the left. */}
+          <div className="hidden gap-[2vw] max-md:flex">
+            <SliderArrowButton direction="prev" ariaLabel="Previous" disabled={trendEdges.start} onClick={() => scrollTrending(-1)} />
+            <SliderArrowButton direction="next" ariaLabel="Next" disabled={trendEdges.end} onClick={() => scrollTrending(1)} />
           </div>
         </section>
       )}
@@ -698,7 +620,7 @@ export function EffectsListing({
         {/* summary + view controls (sticky on desktop; tablet/mobile have a fixed header).
             Full-width bar so its background covers the sheet edge to edge while stuck. */}
         <div className="sticky top-[-2%] z-5 h-fit border-b border-black/8 bg-light max-lg:static max-lg:border-b-0">
-          <div className={`${WRAP} flex flex-wrap items-end justify-between gap-[1vw] pt-10 pb-4 max-md:gap-[4vw] max-md:pt-8`}>
+          <div className={`${WRAP} flex flex-wrap items-end justify-between gap-[1vw] pt-10 pb-4 max-md:gap-[8vw] max-md:pt-8`}>
             {/* A div, not a p: RollText renders a div, which a <p> can't contain. */}
             <div aria-live="polite" className={`${DISPLAY} ${T20} flex flex-wrap items-baseline font-aeonik tracking-tight`}>
               {/* Fixed-width slots, so nothing beside them moves when the count or page name changes */}
@@ -730,8 +652,10 @@ export function EffectsListing({
               </button>
               <FilterMenu
                 tone="light"
-                // Open leftwards from the button's right edge on desktop (it sits near the screen edge).
-                panelClassName="left-auto! right-0 max-lg:left-0! max-lg:right-auto"
+                // Opens leftwards from the button's right edge (it sits near the screen edge);
+                // below lg alignRight keeps the fixed panel under it, 16px inside the screen.
+                alignRight
+                panelClassName="left-auto! right-0"
                 options={SORT_OPTIONS}
                 activeFilter={sort === "trend" ? null : sort}
                 getLabel={sortLabel}
@@ -778,28 +702,7 @@ export function EffectsListing({
               })}
             </div>
 
-            {/* built with + active filters */}
-            {stackOptions.length > 0 && (
-              <div className="flex flex-wrap items-center gap-[0.8vw] max-md:gap-[3vw]">
-                <span className={`${LABEL} text-black/60`}>Built with</span>
-                <div className="flex flex-wrap gap-[0.4vw] max-md:gap-[1.5vw]">
-                  {stackOptions.map((tag) => {
-                    const on = stack.includes(tag);
-                    return (
-                      <button
-                        key={tag}
-                        type="button"
-                        aria-pressed={on}
-                        onClick={() => setStack((s) => (on ? s.filter((t) => t !== tag) : [...s, tag]))}
-                        className={`${CHIP} ${on ? CHIP_ON : CHIP_OFF}`}
-                      >
-                        {tag}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
+            {/* active filters */}
             <AnimatePresence initial={false}>
               {actives.length > 0 && (
                 <motion.div
@@ -863,7 +766,7 @@ export function EffectsListing({
               </button>
             </div>
           ) : (
-            <div ref={gridRef} className="flex flex-wrap gap-x-[1.4vw] gap-y-[2.8vw] max-md:gap-y-[10vw]">
+            <div ref={gridRef} className="flex flex-wrap gap-x-[1.4vw] gap-y-8">
               {visible.map((effect, index) => (
                 <motion.div key={effect.name} layout transition={CARD_LAYOUT_TRANSITION} className={`${GRID_COLS[cols]} max-lg:w-[calc((100%-1.4vw)/2)] max-md:w-full`}>
                   <EffectCard {...cardProps(effect, index)} tagClassName="border-black/20" />
@@ -894,20 +797,21 @@ export function EffectsListing({
         {/* upgrade band */}
         {!isProUser && (
           <section id="upgrade" className={`${WRAP} pb-24 max-md:pb-16`}>
-            <div className="relative flex items-start justify-between gap-8 overflow-hidden bg-ink px-10 py-12 text-light max-lg:flex-col max-lg:p-10 max-md:p-7">
-              <div className="relative flex w-[65%] flex-col gap-3.5 max-lg:w-full">
-                <h2 className="type-h1">
+            <div className="relative flex items-start justify-between gap-6 overflow-hidden bg-ink px-10 py-12 text-light max-lg:flex-col max-lg:p-10 max-md:p-7">
+              <div className="relative flex w-[70%] flex-col gap-6 max-lg:w-full">
+                <h2 className="text-[4.2vw] max-lg:text-[5.5vw] max-md:text-[9vw]">
                   Everything in the vault.{" "}
+                  <br/>
                   <span className="gradient-text-animate">
                     One plan.
                   </span>
                 </h2>
-                <p className="type-body-lg w-full text-light/80 max-lg:w-[80%] max-md:w-full">
+                <p className="type-body-lg  text-light/80 w-[85%] max-md:w-full">
                   Pro unlocks every component, section and template, with template credits and new drops as they land. Everything you copy stays in your repo.
                 </p>
               </div>
-              <div className="relative flex h-fit flex-wrap gap-2">
-                <Button text="See plans" href="/pricing" />
+              <div className="relative flex h-fit flex-wrap gap-2 mt-5">
+                <Button text="See Plans" href="/pricing" />
               </div>
             </div>
           </section>
@@ -915,7 +819,7 @@ export function EffectsListing({
       </div>
 
       {/* ---------- FAQ + custom work CTA (from the current listing) ---------- */}
-      <div data-v4-fade className="flex h-full w-full flex-col gap-[2vw] bg-foreground pb-[5vw]">
+      <div data-v4-fade className="flex h-full w-full flex-col gap-[2vw] bg-foreground pb-[5vw] max-lg:pb-14">
         {faqItems.length > 0 && <FAQ faqItems={faqItems} translateTop={false} />}
         <div className={WRAP}>
           <CustomAnimationCta cta={cta} />
@@ -957,7 +861,7 @@ export function EffectsListing({
 function SlidingSegment({ label, items, value, onChange, itemClassName, className = "" }) {
   const index = Math.max(0, items.findIndex((item) => item.id === value));
   return (
-    <div role="group" aria-label={label} className={`relative flex gap-0.5 bg-black/10 p-0.75 ${className}`}>
+    <div role="group" aria-label={label} className={`relative flex gap-0.5 bg-white p-0.75 ring-1 ring-inset ring-black/10  ${className}`}>
       <span
         aria-hidden="true"
         className={`pointer-events-none absolute top-0.75 bottom-0.75 left-0.75 bg-ink transition-transform duration-500 ease-[cubic-bezier(.16,1,.3,1)] ${itemClassName}`}

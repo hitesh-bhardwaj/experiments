@@ -1,19 +1,20 @@
 "use client";
 
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import RemixerPanel from "@/components/remixer-panel/RemixerPanel";
 import Button from "@/homepage/components/Button";
 import { getGroupsFromRemixerControls } from "@/components/remixer-panel/RegistryRemixerDemo";
 import { useRemixerControls } from "@/components/remixer-panel/useRemixerControls";
 import { buildRemixerJsx } from "@/components/remixer-panel/build-remixer-code";
 import gsap from "gsap";
-import { useVaultLayout } from "@/components/layout/VaultLayout";
 import { MEDIA } from "@/lib/breakpoints";
 
 // Same message the preview chrome sends its device iframe (onEmbedValues)
 const MSG = "vault-preview:values";
 const EASE = "cubic-bezier(.16,1,.3,1)";
 // 13px-equivalent text in vw: desktop · tablet (max-lg) · mobile (max-md).
+const DESKTOP_FRAME = { width: 1920, height: 1080 };
+
 const T13 = "text-[1.1vw] max-lg:text-[1.6vw] max-md:text-[3.3vw]";
 
 // JSON-safe copy, so the values can cross postMessage into the iframe
@@ -41,61 +42,77 @@ export default function EffectStage({ effect, title, previewHref, getCode = null
   });
   const hasPlayground = !!remixer.enabled && groups.some((g) => g.controls?.length);
 
-  const [view, setView] = useState("preview");
-  // Opening the Playground closes the desktop sidebar to give the stage room. Only this
-  // way round: reopening the sidebar leaves the Playground open.
-  const { isSidebarOpen, toggleSidebar } = useVaultLayout();
-  const openPlayground = () => {
-    setView("play");
-    if (isSidebarOpen && !window.matchMedia(MEDIA.tablet).matches) toggleSidebar(false);
-  };
+  // The Preview / Playground tabs were removed from the toolbar, so the stage always
+  // shows Preview; the Playground plumbing below stays for when it comes back.
+  const [view] = useState("preview");
   const [frameKey, setFrameKey] = useState(0);
   const [loaded, setLoaded] = useState(false);
+
+  // Click to interact: until the visitor clicks the stage, a transparent layer sits
+  // over the iframe so wheel / touch scrolling keeps moving the page instead of being
+  // swallowed by the demo. Leaving the stage (or tapping outside it) puts it back.
+  const [interactive, setInteractive] = useState(false);
+  const tipRef = useRef(null);
+  const moveTip = (event) => {
+    const tip = tipRef.current;
+    if (!tip) return;
+    const box = event.currentTarget.getBoundingClientRect();
+    tip.style.left = `${event.clientX - box.left}px`;
+    tip.style.top = `${event.clientY - box.top}px`;
+  };
+  useEffect(() => {
+    if (!interactive) return undefined;
+    const onDown = (event) => {
+      if (!stageRef.current?.contains(event.target)) setInteractive(false);
+    };
+    document.addEventListener("pointerdown", onDown);
+    return () => document.removeEventListener("pointerdown", onDown);
+  }, [interactive]);
+
+  // The iframe must only ever show this demo. Demo pages hand our own links to the
+  // main window themselves (DemoHeader, embed mode); this catches anything else that
+  // lands the iframe on a non-demo page (which would nest the whole site inside it):
+  // the main window goes there instead and the iframe resets to the demo.
+  const onFrameLoad = () => {
+    try {
+      const location = frameRef.current?.contentWindow?.location;
+      if (location && location.origin === window.location.origin && !location.pathname.startsWith("/demo/")) {
+        const url = new URL(location.href);
+        url.searchParams.delete("embed");
+        setFrameKey((k) => k + 1);
+        window.location.assign(url.toString());
+        return;
+      }
+    } catch {
+      // Cross-origin page: nothing to read, leave it.
+    }
+    setLoaded(true);
+  };
   const frameRef = useRef(null);
-  const tabsRef = useRef(null);
   // The stage sticks vertically centred while a long Playground scrolls past
   const stageRef = useRef(null);
   const [stickyTop, setStickyTop] = useState(96);
 
-  // Opening the Playground narrows the stage by the panel's column, which would drop the
-  // demo into its tablet layout. Instead the iframe keeps the full (Preview) width and is
-  // scaled down to fit, so it always renders its desktop layout and never reflows while
-  // the column animates. On phones the panel stacks below, so nothing is scaled there.
+  // Desktop and tablet: the demo always renders at a real 1920x1080 desktop viewport,
+  // scaled down to fit the (16:9) stage - so demos lay out exactly as on a full-HD screen
+  // (at the stage's own ~1000px width some wrapped and overlapped), and opening the
+  // Playground only changes the scale, never the demo's layout. Phones: no scaling, the
+  // demo shows its mobile layout in a taller stage.
   const gridRef = useRef(null);
   const [frameBox, setFrameBox] = useState(null);
   useEffect(() => {
-    const grid = gridRef.current;
     const stage = stageRef.current;
-    if (!grid || !stage) return;
+    if (!stage) return undefined;
     const phone = window.matchMedia(MEDIA.mobile);
-    const target = () => (phone.matches ? stage.clientWidth : grid.clientWidth);
-    // While the layout animates (Playground column, sidebar) only the scale follows it;
-    // the iframe's own width - what the demo lays itself out at - is updated once, after
-    // the resizing has settled, so the demo doesn't re-layout on every frame.
-    let width = target();
-    let settle = 0;
-    const apply = () => {
-      const scale = width ? stage.clientWidth / width : 1;
-      setFrameBox(width === stage.clientWidth ? null : { width, height: stage.clientHeight / scale, scale });
-    };
     const measure = () => {
-      if (phone.matches) width = target();
-      else if (target() !== width) {
-        clearTimeout(settle);
-        settle = setTimeout(() => {
-          width = target();
-          apply();
-        }, 200);
-      }
-      apply();
+      if (phone.matches || !stage.clientWidth) return setFrameBox(null);
+      setFrameBox({ ...DESKTOP_FRAME, scale: stage.clientWidth / DESKTOP_FRAME.width });
     };
     const ro = new ResizeObserver(measure);
-    ro.observe(grid);
     ro.observe(stage);
     phone.addEventListener("change", measure);
     measure();
     return () => {
-      clearTimeout(settle);
       ro.disconnect();
       phone.removeEventListener("change", measure);
     };
@@ -110,7 +127,6 @@ export default function EffectStage({ effect, title, previewHref, getCode = null
     window.addEventListener("resize", update);
     return () => { ro.disconnect(); window.removeEventListener("resize", update); };
   }, []);
-  const [pill, setPill] = useState({ x: 0, w: 0 });
   const play = hasPlayground && view === "play";
 
   // In Preview the hidden Playground column collapses to zero height (once its
@@ -144,12 +160,6 @@ export default function EffectStage({ effect, title, previewHref, getCode = null
 
   const src = `${previewHref}?embed=1`;
 
-  // Sliding accent pill under the active tab
-  useLayoutEffect(() => {
-    const btn = tabsRef.current?.querySelector(`[data-view="${view}"]`);
-    if (btn) setPill({ x: btn.offsetLeft - 3, w: btn.offsetWidth });
-  }, [view, hasPlayground]);
-
   const post = useCallback(() => {
     frameRef.current?.contentWindow?.postMessage({ type: MSG, values: cloneable(values) }, location.origin);
   }, [values]);
@@ -159,64 +169,32 @@ export default function EffectStage({ effect, title, previewHref, getCode = null
     if (loaded) post();
   }, [loaded, post]);
 
-  const replay = () => {
-    setLoaded(false);
-    setFrameKey((k) => k + 1);
-  };
-
   const copyCode = useMemo(
     () => () => buildRemixerJsx({ componentName: String(effect?.title ?? title ?? effect?.name ?? ""), values, groups }),
     [effect, title, values, groups],
   );
 
-  const tabCls = (on) =>
-    `relative z-1 px-5 py-2.5 font-medium ${T13} transition-colors duration-400 ease-out ${on ? "text-background" : "text-foreground/60 hover:text-foreground"}`;
-  const toolCls =
-    `inline-flex items-center gap-[0.5vw] border border-foreground/20 bg-foreground/6 px-3.5 ${T13} text-foreground/80 backdrop-blur-lg transition-colors duration-500 hover:bg-foreground/8 hover:text-foreground max-md:gap-[2vw]`;
-
   return (
     <section aria-label="Interactive preview" className="flex w-full flex-col gap-[1vw] max-md:gap-[3.5vw]">
-      <div className="flex flex-wrap items-center justify-between gap-[1vw] max-md:gap-[3vw]">
-        <div className="flex gap-[0.5vw] max-md:gap-[2vw]">
-          <div
-            ref={tabsRef}
-            role="tablist"
-            className="relative isolate inline-flex border border-foreground/20 bg-foreground/6 p-0.75 backdrop-blur-lg"
-          >
-            <button role="tab" type="button" data-view="preview" aria-selected={view === "preview"} onClick={() => setView("preview")} className={tabCls(view === "preview")}>
-              Preview
-            </button>
-            {hasPlayground && (
-              <button role="tab" type="button" data-view="play" aria-selected={view === "play"} onClick={openPlayground} className={tabCls(view === "play")}>
-                Playground
-              </button>
-            )}
-            <i
-              aria-hidden="true"
-              className="absolute top-0.75 bottom-0.75 left-0.75 z-0 bg-primary"
-              style={{ width: pill.w, transform: `translateX(${pill.x}px)`, transition: `transform .7s ${EASE}, width .7s ${EASE}` }}
-            />
-          </div>
-          <button type="button" onClick={replay} className={toolCls}>
-            ↺ Replay
-          </button>
-
-        </div>
-        {/* items-stretch: Replay takes Live Preview's height (Button scales with vw). */}
+      {/* Get Code + Demo (the Preview / Playground tabs and Replay were removed). */}
+      <div className="mb-6 flex flex-wrap items-center justify-end gap-[1vw] max-md:justify-start max-md:gap-[3vw]">
+        {/* items-stretch: Get Code takes Demo's height. */}
         <div className="flex items-stretch gap-[0.5vw] max-md:gap-[2vw]">
 
           {getCode}
-          <Button text="Demo " href={previewHref} target_blank variant="orange" className="shrink-0 border border-primary" />
+          {/* T13 text, 13px padding: the toolbar's button size. */}
+          <Button text="Demo" href={previewHref} target_blank variant="orange" className="shrink-0 border border-primary py-3.25! text-[1.1vw]! max-lg:text-[1.6vw]! max-md:text-[3.3vw]! max-md:[--btn-arrow:3.3vw]! max-md:[--btn-square:1.8vw]!" />
         </div>
       </div>
 
       {/* Stage + Playground side by side: the Playground opens from 0 to --pg-w (its
           width animates, through --pg-col) and fades and slides in with it instead of
-          mounting / unmounting in a jump. --pg-w: 17.8vw desktop, 33vw tablet.
-          On phones the panel stacks below at full width. */}
+          mounting / unmounting in a jump. --pg-w: 17.65vw desktop. On tablet and phones
+          the panel stacks below the stage at full width (side by side, the stage
+          shrank to half the screen with a sticky gap above it). */}
       <div
         ref={gridRef}
-        className="flex items-start [--pg-w:17.65vw] max-lg:[--pg-w:33vw] max-md:flex-col max-md:gap-y-[3.5vw]"
+        className="flex items-start [--pg-w:17.65vw] max-lg:flex-col max-lg:gap-y-[2vw] max-md:gap-y-[3.5vw] "
         style={{ columnGap: play ? "1vw" : "0vw", transition: `column-gap .8s ${EASE}` }}
       >
         {/* Only in Playground: sticks centred on screen while the long panel scrolls past
@@ -224,17 +202,38 @@ export default function EffectStage({ effect, title, previewHref, getCode = null
         <div
           ref={stageRef}
           style={play ? { top: stickyTop } : undefined}
-          className={`${play ? "sticky" : "relative"} isolate aspect-16/8.5 w-full min-w-0 flex-1 overflow-hidden bg-black max-md:relative max-md:aspect-4/5`}
+          onPointerLeave={(event) => event.pointerType === "mouse" && setInteractive(false)}
+          // Phones get a taller (4:5) stage: the demo renders its mobile layout there.
+          className={`${play ? "sticky" : "relative"} isolate aspect-video w-full min-w-0 flex-1 overflow-hidden bg-black max-lg:relative max-lg:top-auto! max-md:aspect-4/5`}
         >
           <iframe
             key={frameKey}
             ref={frameRef}
             src={src}
             title={`${title || "Effect"} preview`}
-            onLoad={() => setLoaded(true)}
+            onLoad={onFrameLoad}
             style={frameBox ? { width: frameBox.width, height: frameBox.height, transform: `scale(${frameBox.scale})`, transformOrigin: "0 0" } : undefined}
             className={`absolute inset-0 size-full border-0 transition-opacity duration-700 ${loaded ? "opacity-100" : "opacity-0"}`}
           />
+          {!interactive && (
+            <button
+              type="button"
+              aria-label="Click to interact with the preview"
+              onClick={() => setInteractive(true)}
+              onPointerMove={moveTip}
+              className="group/interact absolute inset-0 z-5 cursor-pointer"
+            >
+              {/* Hidden until the cursor enters the stage, then follows it. Touch screens
+                  (no hover) show it centred as a hint. */}
+              <span
+                ref={tipRef}
+                aria-hidden="true"
+                className="pointer-events-none absolute top-1/2 left-1/2 opacity-0 transition-opacity duration-300 group-hover/interact:opacity-100 [@media(hover:none)]:opacity-100 -translate-x-1/2 -translate-y-[calc(100%+0.8vw)] bg-background/80 px-3 py-1.5 text-[0.9vw] whitespace-nowrap text-foreground ring-1 ring-inset ring-foreground/15 backdrop-blur-lg max-lg:text-[1.6vw] max-md:-translate-y-1/2 max-md:text-[3.3vw]"
+              >
+                Click to interact
+              </span>
+            </button>
+          )}
           {!loaded && (
             <div className="absolute bottom-4 right-4 z-10">
               <div aria-label="Loading preview" role="status" className="size-8 animate-spin rounded-full border-2 border-foreground/25 border-t-foreground" />
@@ -247,12 +246,12 @@ export default function EffectStage({ effect, title, previewHref, getCode = null
             aria-label="Playground"
             aria-hidden={!play}
             inert={!play}
-            className={`flex w-(--pg-col) shrink-0 flex-col overflow-hidden border border-foreground/8 bg-dark-card transition-[width,opacity,transform] duration-700 max-md:w-full! ${panelCollapsed ? "h-0 border-0" : ""} ${play ? "translate-x-0 opacity-100" : "pointer-events-none translate-x-6 opacity-0 max-md:hidden"}`}
+            className={`flex w-(--pg-col) shrink-0 flex-col overflow-hidden border border-foreground/8 bg-dark-card transition-[width,opacity,transform] duration-700 max-lg:w-full! ${panelCollapsed ? "h-0 border-0" : ""} ${play ? "translate-x-0 opacity-100" : "pointer-events-none translate-x-6 opacity-0 max-lg:hidden"}`}
             style={{ "--pg-col": play ? "var(--pg-w)" : "0vw", transitionTimingFunction: EASE }}
           >
             {/* Fixed width: the column grows from 0 to --pg-w around it, so the controls
                 never re-wrap mid-animation. */}
-            <div ref={panelContentRef} className="flex w-(--pg-w) shrink-0 flex-col max-md:w-full">
+            <div ref={panelContentRef} className="flex w-(--pg-w) shrink-0 flex-col max-lg:w-full">
               <p className={`bg-background px-4 py-2 ${T13} tracking-normal text-foreground`}>Tune the real props</p>
               <div className="min-h-0 flex-1 [&>aside]:h-full">
                 <RemixerPanel

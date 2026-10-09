@@ -6,6 +6,7 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useLenis } from "lenis/react";
+import { useHideOnScrollDown } from "@/components/layout/useHideOnScrollDown";
 import gsap from "gsap";
 
 import { HyperiuxLogo } from "@/utils/Icons";
@@ -120,6 +121,10 @@ export default function NavbarMobile({
 
   const [open, setOpen] = useState(false);
   const [section, setSection] = useState(null);
+  // Hide on scroll down / show on scroll up from the real scroll position - the
+  // desktop bar's `visible` comes from Lenis velocity, which native touch scrolling
+  // doesn't report reliably.
+  const scrollHidden = useHideOnScrollDown();
 
   const pathname = usePathname();
   const [routeShown, setRouteShown] = useState(pathname);
@@ -265,9 +270,9 @@ export default function NavbarMobile({
         data-site-header
         // Translucent rather than solid: the hero's ASCII field keeps moving
         // under the bar, and the blur is what keeps the logo readable over it.
-        className={`fixed top-0 left-0 z-1000 hidden max-lg:flex w-full items-center justify-between border-b border-white/8 bg-background/30 px-[6vw] py-[5vw] backdrop-blur-xl transition-[transform,translate,opacity] duration-500 ease-out motion-reduce:transition-none md:px-[3.5vw] md:py-[2.5vw]  ${!intro
+        className={`fixed top-0 left-0 z-1000 hidden max-lg:flex w-full items-center justify-between border-b border-white/8 bg-background px-[6vw] py-[5vw]  transition-[transform,translate,opacity] duration-500 ease-out motion-reduce:transition-none md:px-[3.5vw] md:py-[2.5vw]  ${!intro
           ? "pointer-events-none translate-y-0 opacity-0"
-          : visible || open
+          : (visible && !scrollHidden) || open
             ? "translate-y-0 opacity-100"
             : "translate-y-[-120%] opacity-100"
           }`}
@@ -288,13 +293,13 @@ export default function NavbarMobile({
         <div className="flex items-center gap-[3vw] md:gap-[2vw]">
           {SHOW_HEADER_TUTORIAL && (
             <TutorialVideoButton
-              className={`relative flex size-[10vw] shrink-0 items-center justify-center bg-grey/30 text-primary backdrop-blur-md transition-opacity duration-500 delay-200 ease-out motion-reduce:transition-none md:size-[5vw] ${intro ? "opacity-100" : "opacity-0"}`}
+              className={`relative flex size-[10vw] shrink-0 items-center justify-center bg-[#161616] text-primary backdrop-blur-md transition-opacity duration-500 delay-200 ease-out motion-reduce:transition-none md:size-[5vw] ${intro ? "opacity-100" : "opacity-0"}`}
               iconClassName="size-[4.5vw] md:size-[2.4vw]"
             />
           )}
           <SoundToggle
             size={40}
-            className={`bg-[#121212]/30 backdrop-blur-md transition-opacity duration-500 delay-200 ease-out motion-reduce:transition-none ${intro ? "opacity-100" : "opacity-0"}`}
+            className={`bg-[#161616]! transition-opacity duration-500 delay-200 ease-out motion-reduce:transition-none ${intro ? "opacity-100" : "opacity-0"}`}
           />
           {SHOW_HEADER_SEARCH && (
             <button
@@ -302,7 +307,7 @@ export default function NavbarMobile({
               onClick={handleSearch}
               aria-label="Search effects"
               // Trails the logo on the way in, same as the hamburger beside it.
-              className={`relative flex size-[10vw] shrink-0 items-center justify-center bg-grey/30 text-primary backdrop-blur-md transition-opacity duration-500 delay-200 ease-out motion-reduce:transition-none md:size-[5vw] ${intro ? "opacity-100" : "opacity-0"}`}
+              className={`relative flex size-[10vw] shrink-0 items-center justify-center bg-[#161616] text-primary backdrop-blur-md transition-opacity duration-500 delay-200 ease-out motion-reduce:transition-none md:size-[5vw] ${intro ? "opacity-100" : "opacity-0"}`}
             >
               <svg
                 className="size-[4.5vw] shrink-0 md:size-[2.4vw]"
@@ -327,7 +332,7 @@ export default function NavbarMobile({
             aria-label={open ? "Close menu" : "Open menu"}
             aria-expanded={open}
             // Trails the logo on the way in, the way the desktop bar's links do.
-            className={`relative flex size-[10vw] shrink-0 items-center justify-center bg-grey text-primary transition-opacity duration-500 delay-200 ease-out motion-reduce:transition-none md:size-[5vw] ${intro ? "opacity-100" : "opacity-0"}`}
+            className={`relative flex size-[10vw] shrink-0 items-center justify-center bg-[#161616] text-primary transition-opacity duration-500 delay-200 ease-out motion-reduce:transition-none md:size-[5vw] ${intro ? "opacity-100" : "opacity-0"}`}
           >
             <span
               aria-hidden="true"

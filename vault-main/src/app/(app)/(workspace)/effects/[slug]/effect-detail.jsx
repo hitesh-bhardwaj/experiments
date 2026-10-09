@@ -10,8 +10,6 @@ import {
   forwardRef,
 } from "react";
 import Image from "next/image";
-import Link from "next/link";
-import { createPortal } from "react-dom";
 import { useRouter, usePathname } from "next/navigation";
 import { AppVaultHeader as VaultHeader } from "@/components/layout/AppVaultHeader";
 import { EffectCard } from "../EffectCard";
@@ -35,6 +33,7 @@ import { LockKeyhole } from "lucide-react";
 import { CopyLimitProvider, useCopyLimit } from "./useCopyLimit";
 import GetCodeMenu from "./GetCodeMenu";
 import UpgradeToProModal from "./UpgradeToProModal";
+import { SignInRequiredModal } from "@/components/ui/SignInRequiredModal";
 import Button from "@/homepage/components/Button";
 import { SliderArrowButton } from "@/components/ui/SliderArrowButton";
 import EffectStage from "./EffectStage";
@@ -172,19 +171,12 @@ export function EffectDetailContent({
   const router = useRouter();
   const pathname = usePathname();
 
-  const [mounted, setMounted] = useState(false);
   const [showSignInToCopyModal, setShowSignInToCopyModal] = useState(false);
   // "Get code" asks for Pro (a Pro effect, or the daily copy limit) through this modal.
   const [upgradeReason, setUpgradeReason] = useState(null);
   const openUpgradeModal = useCallback((reason) => setUpgradeReason(reason || "pro-effect"), []);
   const closeUpgradeModal = useCallback(() => setUpgradeReason(null), []);
 
-  // SSR-safe mounted flag - `mounted` gates a createPortal() call further
-  // down, which needs document.body and so can only run after mount.
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setMounted(true);
-  }, []);
 
   const [videoReady, setVideoReady] = useState(false);
   const [videoError, setVideoError] = useState(false);
@@ -447,7 +439,7 @@ export function EffectDetailContent({
                     {dependencies.map((dep) => (
                       <span
                         key={dep}
-                        className="type-body border border-foreground/20 bg-foreground/6 backdrop-blur-lg px-[0.6vw] py-[0.3vw] capitalize text-foreground max-md:px-[6vw] max-md:py-[1vw] max-md:text-muted"
+                        className="type-body text-[0.8vw] max-md:text-[3vw] max-lg:text-[2vw] border border-foreground/20 bg-foreground/6 backdrop-blur-lg px-[0.6vw] py-[0.3vw] capitalize text-foreground max-md:px-[6vw] max-md:py-[1vw] max-md:text-muted"
                       >
                         {dep}
                       </span>
@@ -504,18 +496,18 @@ export function EffectDetailContent({
                   <section
                     ref={relatedEffectsRef}
                     id="related-effects"
-                    className="relative mx-auto flex w-full max-w-[1536px] flex-col gap-[2.8vw] px-[4.5vw] py-[7%] max-md:gap-[10vw] max-md:px-[6vw]"
+                    className="relative mx-auto flex w-full max-w-[1536px] flex-col gap-[2.8vw] px-[4.5vw] py-[7%] max-md:gap-[10vw] max-md:px-[6vw] max-lg:pt-20"
                   >
                     <div className="flex items-center justify-between gap-[1.4vw] max-lg:flex-col max-lg:gap-[5vw]">
                       <HeadAnim rotate={0}>
-                        <h2 className="type-h1 text-center font-medium! text-background">
+                        <h2 className="type-h1 text-center text-background">
                           Related Effects
                         </h2>
                       </HeadAnim>
                       {/* The arrows are sized to the Explore button beside them: Button is
                           1.15vw text x 1.5 line height + 1rem padding + 2px border. */}
                       <div className="fadeup flex items-center gap-[0.5vw]">
-                        <div className="flex flex-col items-end justify-center max-[1025px]:hidden">
+                        <div className="flex flex-col items-end justify-center max-lg:hidden">
                           <Button
                             text="Explore All Effects"
                             href="/effects"
@@ -603,14 +595,7 @@ export function EffectDetailContent({
                       )}
                     </div>
 
-                    <div className="fadeup hidden w-fit self-center max-[1025px]:flex">
-                      <Button
-                        text="Explore all effects"
-                        href="/effects"
-                        variant="orange"
-                        className="shrink-0"
-                      />
-                    </div>
+                    
                   </section>
                 )}
               </div>
@@ -619,43 +604,13 @@ export function EffectDetailContent({
         )}
       </div>
 
-      {mounted && createPortal(
-        <div
-          className={`fixed inset-0 z-9999 flex items-center justify-center bg-black/40 p-4 backdrop-blur-lg transition-opacity duration-300 ${showSignInToCopyModal ? "opacity-100" : "pointer-events-none opacity-0"}`}
-          onClick={() => setShowSignInToCopyModal(false)}
-        >
-          <div
-            className={`relative flex w-[35vw] flex-col items-center gap-[1.6vw] border border-foreground/20 bg-background p-10 shadow-2xl transition-transform duration-300 max-lg:w-[70%] max-lg:p-6 max-md:w-full max-md:gap-[6vw] ${showSignInToCopyModal ? "scale-100" : "scale-95"}`}
-            onClick={(event) => event.stopPropagation()}
-          >
-            <button
-              type="button"
-              aria-label="Close"
-              onClick={() => setShowSignInToCopyModal(false)}
-              className="group absolute right-5 top-5 flex h-10 w-10 items-center justify-center border border-foreground/20 bg-foreground/10 leading-none text-foreground/70 transition-all duration-500 ease-in-out hover:border-primary hover:bg-primary hover:text-foreground max-lg:hidden"
-            >
-              <div className="relative flex h-4 w-4 items-center justify-center duration-500 ease-in-out group-hover:rotate-90">
-                <span className="h-px w-4 rotate-45 bg-foreground" />
-                <span className="absolute h-px w-4 -rotate-45 bg-foreground" />
-              </div>
-            </button>
-
-            <h2 className="type-h3 font-medium! text-foreground">Sign in to copy code</h2>
-            <p className="type-small text-center text-foreground/60">
-              Create a free account or sign in to copy code and install
-              commands from the vault.
-            </p>
-            <Link
-              href={`/sign-in?redirect_url=${encodeURIComponent(pathname)}`}
-              className="type-small inline-flex w-fit items-center gap-1.5 bg-primary px-4 py-2 font-medium text-foreground transition-colors hover:bg-primary-hover"
-              onClick={() => setShowSignInToCopyModal(false)}
-            >
-              Sign In
-            </Link>
-          </div>
-        </div>,
-        document.body
-      )}
+      {/* Same sign-in prompt as the effect cards' Save (components/ui/SignInRequiredModal). */}
+      <SignInRequiredModal
+        open={showSignInToCopyModal}
+        onClose={() => setShowSignInToCopyModal(false)}
+        redirect={pathname}
+        action="copy code and install commands"
+      />
       <UpgradeToProModal open={upgradeReason !== null} reason={upgradeReason ?? "pro-effect"} onClose={closeUpgradeModal} />
     </CopyLimitProvider>
   );
@@ -1102,14 +1057,14 @@ function LockedCodePlaceholder({ filename }) {
       </div>
 
       <div className="relative z-10 min-h-[40vh] max-md:min-h-[40vh] max-lg:min-h-[30vh] flex   flex-col items-center justify-center gap-2  bg-white/5 px-8 py-6 text-center  max-md:px-6">
-        <LockKeyhole className="h-16 w-16 text-white" strokeWidth={1.2} />
+        <LockKeyhole className="size-12 text-white" strokeWidth={1.2} />
 
         <div className="flex flex-col items-center gap-0">
-          <h3 className="type-h2 font-bold! text-foreground">
+          <h3 className="type-h2 text-foreground">
             This is a Pro Effect.
           </h3>
 
-          <p className="type-small max-w-sm text-foreground/50">
+          <p className="type-small max-w-xs text-foreground/80">
             {subtitle}
           </p>
         </div>

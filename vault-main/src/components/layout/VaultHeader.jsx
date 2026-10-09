@@ -33,6 +33,7 @@ import { prefersReducedMotion } from "@/lib/motion";
 import { markScrollToPricingCards } from "@/lib/pricingScrollIntent";
 import Button from "@/homepage/components/Button";
 import SoundToggle from "@/homepage/components/SoundToggle";
+import { useHideOnScrollDown } from "./useHideOnScrollDown";
 
 const useIsoLayoutEffect =
   typeof window === "undefined" ? useEffect : useLayoutEffect;
@@ -135,6 +136,8 @@ export function VaultHeader({
   const [isScrolled, setIsScrolled] = useState(false);
 
   const [open, setOpen] = useState(false);
+  // Mobile/tablet bar slides up out of view while scrolling down, back on scroll up.
+  const barHidden = useHideOnScrollDown();
   const [section, setSection] = useState(null);
   const overlayRef = useRef(null);
   const timelineRef = useRef(null);
@@ -221,7 +224,10 @@ export function VaultHeader({
   // the null check.
   useEffect(() => {
     const footer = document.getElementById("footer");
-    const targets = [desktopHeaderRef.current, mobileBarRef.current].filter(Boolean);
+    // Desktop header only: the mobile/tablet bar hides on scroll down and returns on any
+    // scroll up (useHideOnScrollDown) - including over the footer, where this rule kept
+    // it hidden until the footer left the view entirely.
+    const targets = [desktopHeaderRef.current].filter(Boolean);
 
     if (!footer || !targets.length) return;
 
@@ -519,7 +525,7 @@ export function VaultHeader({
       {/* Mobile/tablet bar - <=1025px only, matches NavbarMobile. */}
       <div
         ref={mobileBarRef}
-        className="fixed top-0 left-0 z-950 hidden max-lg:flex w-full items-center justify-between border-b border-white/8 bg-background/60 px-[6vw] py-[5vw] backdrop-blur-xl max-lg:px-[3.5vw] max-md:px-[6vw] max-lg:py-[2.5vw] max-md:py-[5vw]"
+        className={`fixed top-0 left-0 z-950 hidden max-lg:flex w-full items-center justify-between border-b border-white/8 bg-background px-[6vw] py-[5vw] transition-[translate] duration-500 ease-out motion-reduce:transition-none max-lg:px-[3.5vw] max-md:px-[6vw] max-lg:py-[2.5vw] max-md:py-[5vw] ${barHidden && !open ? "-translate-y-[120%]" : "translate-y-0"}`}
       >
         <Link
           href="/"
@@ -647,7 +653,7 @@ export function VaultHeader({
                   <span aria-hidden="true" className="absolute h-px w-[3.5vw] bg-current max-lg:w-[2vw] max-md:w-[3.5vw]" />
                   <span
                     aria-hidden="true"
-                    className={`absolute h-px w-[3.5vw] bg-current max-lg:w-[2vw] transition-transform duration-300 ease-out motion-reduce:transition-none ${section === "categories" ? "rotate-180" : "rotate-90"
+                    className={`absolute h-px w-[3.5vw] bg-current max-lg:w-[2vw] max-md:w-[3.5vw] transition-transform duration-300 ease-out motion-reduce:transition-none ${section === "categories" ? "rotate-180" : "rotate-90"
                       }`}
                   />
                 </div>
@@ -690,7 +696,7 @@ export function VaultHeader({
                   <span aria-hidden="true" className="absolute h-px w-[3.5vw] bg-current max-lg:w-[2vw] max-md:w-[3.5vw]" />
                   <span
                     aria-hidden="true"
-                    className={`absolute h-px w-[3.5vw] bg-current max-lg:w-[2vw] transition-transform duration-300 ease-out motion-reduce:transition-none ${section === "documentation" ? "rotate-180" : "rotate-90"
+                    className={`absolute h-px w-[3.5vw] bg-current max-lg:w-[2vw] max-md:w-[3.5vw] transition-transform duration-300 ease-out motion-reduce:transition-none ${section === "documentation" ? "rotate-180" : "rotate-90"
                       }`}
                   />
                 </div>

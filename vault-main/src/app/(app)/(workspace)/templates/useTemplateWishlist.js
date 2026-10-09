@@ -1,13 +1,10 @@
 "use client";
 
-import { useEffect, useRef, useState, useSyncExternalStore } from "react";
-import { createPortal } from "react-dom";
+import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
-import Button from "@/homepage/components/Button";
-import { Modal } from "../effects/useEffectCardActions";
+import { SignInRequiredModal } from "@/components/ui/SignInRequiredModal";
 
-const subscribeNever = () => () => {};
 
 // Shared by TemplatesGrid (the /templates listing) and TemplateDetail's
 // "Related Templates" section - both render TemplateCard, whose Save
@@ -21,8 +18,6 @@ export function useTemplateWishlist({ onSaved, onRemoved } = {}) {
   const pathname = usePathname();
   const [wishlist, setWishlist] = useState([]);
   const [signInPrompt, setSignInPrompt] = useState(false);
-  // Portals need <body>; false on the server and during hydration.
-  const mounted = useSyncExternalStore(subscribeNever, () => true, () => false);
 
   useEffect(() => {
     if (!isSignedIn) return;
@@ -82,15 +77,9 @@ export function useTemplateWishlist({ onSaved, onRemoved } = {}) {
     }
   };
 
-  const signInModal = mounted
-    ? createPortal(
-        <Modal open={signInPrompt} onClose={() => setSignInPrompt(false)} title="Sign in required">
-          Create a free account or sign in to save templates and pick up right where you left off.
-          <Button text="Sign In" href={`/sign-in?redirect_url=${encodeURIComponent(pathname)}`} />
-        </Modal>,
-        document.body,
-      )
-    : null;
+  const signInModal = (
+    <SignInRequiredModal open={signInPrompt} onClose={() => setSignInPrompt(false)} redirect={pathname} action="save templates" />
+  );
 
   return { wishlist, toggleWishlist, signInModal };
 }

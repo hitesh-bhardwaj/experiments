@@ -20,6 +20,10 @@ export function FilterMenu({
   options = FILTER_OPTIONS,
   variant = "icon",
   panelClassName = "",
+  // Below lg the panel is fixed-positioned under the button: by default from its left
+  // edge; alignRight lines it up with the button's right edge instead (kept 16px
+  // inside the screen) - for a button near the right of the page.
+  alignRight = false,
   // "light" restyles the trigger and panel for light surfaces (the v4 listing sheet).
   tone = "dark",
 }) {
@@ -100,10 +104,11 @@ export function FilterMenu({
         const rect = buttonRef.current?.getBoundingClientRect();
 
         if (rect) {
-          setMenuPos({
-            top: rect.bottom + 8,
-            left: rect.left,
-          });
+          setMenuPos(
+            alignRight
+              ? { top: rect.bottom + 8, right: Math.max(16, window.innerWidth - rect.right) }
+              : { top: rect.bottom + 8, left: rect.left },
+          );
         }
       } else {
         setMenuPos(null);
@@ -133,6 +138,7 @@ export function FilterMenu({
           ? {
             top: menuPos.top,
             left: menuPos.left,
+            right: menuPos.right,
           }
           : undefined
       }
