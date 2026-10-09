@@ -52,8 +52,8 @@ export default function CommunityStack() {
   };
 
   return (
-    <section ref={rootRef} className="relative z-1 px-[4.5vw] py-[18vw] text-center max-md:px-[6vw] max-md:py-28" id="stack" data-zone="crowd2" data-hold-zone>
-      <div className="mx-auto flex w-full max-w-[1536px] flex-col items-center gap-[3vw] max-md:gap-[6vw]">
+    <section ref={rootRef} className="relative z-1 px-[4.5vw] py-[18vw] text-center max-md:px-[6vw] max-md:py-[12%]" id="stack" data-zone="crowd2" data-hold-zone>
+      <div className="mx-auto flex w-full max-w-[1536px] flex-col items-center gap-[3vw] max-md:gap-[10vw]">
         <LineReveal as="h2" className="type-h1">
           What Do You <span className="gradient-text-animate gradient-text-single">Build With?</span>
         </LineReveal>
@@ -61,7 +61,7 @@ export default function CommunityStack() {
           Pick your stack. Watch your corner of the crowd light up. We’ll use it to match you with the
           right channels, teardowns and people.
         </p>
-        <div className="flex w-[58%] flex-col items-center gap-[1.8vw] max-[1025px]:w-full max-md:gap-[6vw]">
+        <div className="flex w-[58%] flex-col items-center gap-[1.8vw] max-[1025px]:w-full max-md:gap-[10vw]">
           <div data-chips className="flex flex-wrap justify-center gap-[0.7vw] max-md:gap-[2.5vw]" role="group" aria-label="Your stack">
             {STACKS.map((name, i) => (
               <button

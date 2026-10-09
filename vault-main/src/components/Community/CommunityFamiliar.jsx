@@ -98,7 +98,7 @@ export default function CommunityFamiliar() {
 
   return (
     <div ref={rootRef} className="relative z-1 bg-light text-ink" data-zone="sheet" data-sound-flow="off">
-      <section id="familiar" className="mx-auto flex w-full max-w-[1536px] flex-col gap-[7vw] px-[7.5vw] py-[10%] max-md:gap-[12vw] max-md:px-[6vw]" aria-labelledby="fam-h">
+      <section id="familiar" className="mx-auto flex w-full max-w-[1536px] flex-col gap-[7vw] px-[7.5vw] py-[10%] max-md:gap-[10vw] max-md:px-[6vw] max-md:py-[12%]" aria-labelledby="fam-h">
         <ol className="flex flex-col px-[1vw]">
           {FAMILIAR.map((item, i) => (
             <li
@@ -109,7 +109,7 @@ export default function CommunityFamiliar() {
               <span className={`type-label w-[5vw] shrink-0 transition-colors duration-1200 ease-[cubic-bezier(.16,1,.3,1)] max-md:w-[11vw] ${lit >= i ? "text-primary" : "text-black/20"}`}>
                 {String(i + 1).padStart(2, "0")}
               </span>
-              <p className={`type-h2 font-avenir min-w-0 flex-1 font-light! transition-colors duration-1200 tracking-tight ease-[cubic-bezier(.16,1,.3,1)] ${lit >= i ? "text-ink" : "text-black/20"}`}>
+              <p className={`type-h2 max-md:text-[5vw] font-avenir min-w-0 flex-1 font-light! transition-colors duration-1200 tracking-tight ease-[cubic-bezier(.16,1,.3,1)] ${lit >= i ? "text-ink" : "text-black/20"}`}>
                 {item.text}
                 {item.em && <> <em className=" not-italic">{item.em}</em>{item.after}</>}
               </p>
@@ -121,7 +121,7 @@ export default function CommunityFamiliar() {
         </LineReveal>
       </section>
 
-      <section id="why" className="mx-auto mt-20 flex w-full max-w-[1536px] justify-between gap-[2vw] px-[4.5vw] pb-[10vw] max-[1025px]:flex-col max-md:px-[6vw]">
+      <section id="why" className="mx-auto mt-20 flex w-full max-w-[1536px] justify-between gap-[2vw] px-[4.5vw] pb-[10vw] max-[1025px]:flex-col max-md:mt-0 max-md:px-[6vw] max-md:py-[12%]">
         <div className="sticky top-[35vh] flex w-[32%] flex-col items-start gap-[1vw] self-start max-[1025px]:hidden">
           {PANELS.map((p, i) => (
             <button
@@ -137,7 +137,7 @@ export default function CommunityFamiliar() {
         </div>
         <div className="flex w-[66%] flex-col gap-[14vw] max-[1025px]:w-full max-md:gap-[20vw]">
           {PANELS.map(({ title, text, Card }, i) => (
-            <article key={title} data-panel={i} className="flex flex-col gap-[1.8vw] max-md:gap-[5vw]">
+            <article key={title} data-panel={i} className="flex flex-col gap-[1.8vw] max-md:gap-[10vw]">
               <Card joined={joined} />
               <div className="flex flex-col gap-[1vw] max-md:gap-[3vw]">
                 <LineReveal as="h3" className="type-h3">{title}</LineReveal>

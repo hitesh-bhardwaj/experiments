@@ -281,7 +281,7 @@ export function VoteCard() {
   };
 
   return (
-    <div className={`${CARD} gap-[1vw] p-[2vw] max-md:gap-[3.5vw] max-md:p-[5vw]`}>
+    <div className={`${CARD} gap-[1vw] p-[2vw] max-md:aspect-auto! max-md:gap-[5vw] max-md:p-[5vw] max-md:py-[8vw]`}>
       <CardFluid />
       <p className={`${LABEL} relative text-foreground/60`}>Up next in the vault · you decide</p>
       <ul ref={listRef} className="relative flex flex-col gap-[0.6vw] max-md:gap-[2vw]">

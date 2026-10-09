@@ -44,7 +44,7 @@ export default function ExplainVault() {
     }, [])
 
     return (
-        <section id='explain-vault' className='mx-auto h-fit w-full max-w-[1536px] px-[calc(var(--cvw)*4.5)] py-[7%] max-md:px-[calc(var(--cvw)*5)] max-sm:px-[calc(var(--cvw)*7)]'>
+        <section id='explain-vault' className='mx-auto h-fit w-full max-w-[1536px] px-[calc(var(--cvw)*4.5)] py-[7%] max-md:py-[12%] max-md:px-[calc(var(--cvw)*5)] max-sm:px-[calc(var(--cvw)*7)]'>
 
             <TextFillPixel
                 as="h2"
@@ -60,7 +60,7 @@ export default function ExplainVault() {
                 settleBlend={0.45}
                 className="type-h2"
                 wrapperClassName="w-[80%] max-md:w-full"
-                containerClassName="py-[calc(var(--cvw)*15)] font-avenir max-md:py-24"
+                containerClassName="py-[calc(var(--cvw)*15)] font-avenir max-md:py-[12%]"
             />
         </section>
     )

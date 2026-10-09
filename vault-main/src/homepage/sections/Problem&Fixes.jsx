@@ -162,7 +162,7 @@ export default function ProblemFixes() {
   return (
     <section
       ref={sectionRef}
-      className="relative z-200  max-md:mt-[calc(var(--cvw)*-8)] w-full overflow-hidden px-[calc(var(--cvw)*4.5)] py-[7%] text-foreground max-md:px-[calc(var(--cvw)*7)] "
+      className="relative z-200  max-md:mt-[calc(var(--cvw)*-8)] w-full overflow-hidden px-[calc(var(--cvw)*4.5)] py-[7%] max-md:py-[12%] text-foreground max-md:px-[calc(var(--cvw)*7)] "
     >
       <div className="mx-auto relative z-200 flex w-full max-w-[1536px] flex-col items-center">
         <div className=" text-center w-[70%] max-md:w-full">

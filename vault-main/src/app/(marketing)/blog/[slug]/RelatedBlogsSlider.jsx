@@ -159,8 +159,8 @@ export default function RelatedBlogsSlider({ posts = [] }) {
   const showMobileControls = posts.length > 1;
 
   return (
-    <section ref={sectionRef} id="related-blogs" className="relative mx-auto flex w-full max-w-[1536px] flex-col gap-[2.8vw] px-[4.5vw] py-[7%] max-md:gap-[10vw] max-md:px-[6vw]">
-      <div className="flex items-center justify-between gap-[1.4vw] max-[1025px]:flex-col max-[1025px]:gap-[5vw]">
+    <section ref={sectionRef} id="related-blogs" className="relative mx-auto flex w-full max-w-[1536px] flex-col gap-[2.8vw] px-[4.5vw] py-[7%] max-md:gap-[10vw] max-md:px-[6vw] max-md:py-[12%]">
+      <div className="flex items-center justify-between gap-[1.4vw] max-[1025px]:flex-col max-[1025px]:gap-[5vw] max-md:gap-[10vw]">
         <LineWipe lineStyle={RELATED_BLOGS_HEADING_LINE_STYLE} lit="var(--ink)">
           <h2
             className="type-h1 text-center text-background"

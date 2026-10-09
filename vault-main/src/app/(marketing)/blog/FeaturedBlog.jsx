@@ -26,8 +26,8 @@ function FeaturedBlogContent({ featuredPost }) {
   useFadeUp(sectionRef);
 
   return (
-    <section ref={sectionRef} id="featured-blog" className="mx-auto flex w-full max-w-[1536px] flex-col gap-[5vw] px-[4.5vw] py-[7%] max-md:gap-[8vw] max-md:px-[6vw] max-md:pt-[15%]">
-      <div className="flex items-end justify-between gap-4 max-md:flex-col max-md:items-start">
+    <section ref={sectionRef} id="featured-blog" className="mx-auto flex w-full max-w-[1536px] flex-col gap-[5vw] px-[4.5vw] py-[7%] max-md:gap-[10vw] max-md:px-[6vw] max-md:pt-[15%] max-md:py-[12%]">
+      <div className="flex items-end justify-between gap-4 max-md:flex-col max-md:items-start max-md:gap-[10vw]">
         <LineWipe lit={INK}>
           <h2 className="type-h1">Latest From The Vault</h2>
         </LineWipe>

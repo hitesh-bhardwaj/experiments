@@ -163,7 +163,7 @@ export default function BlogListing({
         </div>
       </div>
 
-      <div className="mx-auto flex w-full max-w-[1536px] flex-col gap-[2.8vw] px-[4.5vw] pt-6 pb-24 max-md:gap-[10vw] max-md:px-[6vw] max-md:pb-16">
+      <div className="mx-auto flex w-full max-w-[1536px] flex-col gap-[2.8vw] px-[4.5vw] pt-6 pb-24 max-md:gap-[10vw] max-md:px-[6vw] max-md:py-[12%]">
         {posts.length === 0 ? (
           <div className="flex flex-col items-center gap-3.5 px-4 py-20 text-center">
             <b className="type-h3">Nothing here, yet.</b>

@@ -24,12 +24,12 @@ export default function CommunityFounding() {
   useFadeUp(rootRef);
 
   return (
-    <section ref={rootRef} className="mx-auto flex w-full max-w-[1536px] flex-col gap-[5vw] px-[4.5vw] py-[7%] max-md:gap-[10vw] max-md:px-[6vw]" id="founding" aria-labelledby="fd-h">
+    <section ref={rootRef} className="mx-auto flex w-full max-w-[1536px] flex-col gap-[5vw] px-[4.5vw] py-[7%] max-md:gap-[10vw] max-md:px-[6vw] max-md:py-[12%]" id="founding" aria-labelledby="fd-h">
       <LineReveal as="h2" id="fd-h" className="type-h1 w-[50%] max-[1025px]:w-[77%] max-md:w-full">
         The First Cohort <span className="gradient-text-animate gradient-text-single">Shapes the Room.</span>
       </LineReveal>
       <div className="flex items-start justify-between gap-[4vw] max-[1025px]:flex-col">
-        <div className="fadeup relative isolate w-[52%] overflow-hidden bg-ink p-[3vw] text-white max-[1025px]:w-full max-md:p-[7vw]">
+        <div className="fadeup relative isolate w-[52%] overflow-hidden bg-ink p-[3vw] text-white max-[1025px]:w-full max-md:p-[7vw] max-md:py-[12%]">
           <CardFluid />
           <ul className="relative flex flex-col gap-[2vw] max-[1025px]:gap-[5vw]">
             {PERKS.map((perk) => (

@@ -95,7 +95,7 @@ export default function CreditTiles({ count, used, sizeClass = "size-[1.8vw] tex
   }, [count]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <div ref={rootRef} className="flex" aria-label={`${count} template credits, ${Math.min(used, count)} used`}>
+    <div ref={rootRef} className="flex max-md:gap-2 max-md:my-2" aria-label={`${count} template credits, ${Math.min(used, count)} used`}>
       {Array.from({ length: shown }, (_, i) => (
         <Tile key={i} index={i} filled={i < used} leaving={i >= count} sizeClass={sizeClass} onTile={onTile} delay={Math.max(0, i - (shown - 1)) * 0.08} />
       ))}

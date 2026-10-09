@@ -74,7 +74,7 @@ function RedeemButton({ done, label, disabled, onClick }) {
       type="button"
       disabled={disabled}
       onClick={onClick}
-      className={`flex w-full cursor-pointer items-center justify-center gap-[0.6vw] rounded-none border py-[0.8vw] text-background transition-opacity duration-700 disabled:cursor-default max-md:gap-[2vw] max-md:py-[3vw] ${done ? "border-primary bg-primary" : "border-background/15 disabled:opacity-40"} ${LABEL}`}
+      className={`flex w-full cursor-pointer items-center justify-center gap-[0.6vw] rounded-none border py-[0.8vw] max-md:px-4 text-background transition-opacity duration-700 disabled:cursor-default max-md:gap-[1vw] max-md:py-[3vw] ${done ? "border-primary bg-primary" : "border-background/15 disabled:opacity-40"} ${LABEL}`}
     >
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="square" aria-hidden="true" className="size-[1vw] max-md:size-[4vw]">
         {(done ? CHECK : PLUS).map((p, i) => (
@@ -216,9 +216,9 @@ export default function PricingCredits() {
   }
 
   return (
-    <section ref={rootRef} id="credits" data-sound-flow="off" className="relative bg-foreground px-[4.5vw] py-[7%] font-avenir text-background max-md:px-[6vw] max-md:py-[15%]">
-      <div className="mx-auto flex w-full max-w-[1536px] flex-col gap-[3vw] max-md:gap-[8vw]">
-        <div className="flex flex-col gap-[1.8vw] max-md:gap-[5vw]">
+    <section ref={rootRef} id="credits" data-sound-flow="off" className="relative bg-foreground px-[4.5vw] py-[7%] font-avenir text-background max-md:px-[6vw] max-md:py-[12%]">
+      <div className="mx-auto flex w-full max-w-[1536px] flex-col gap-[3vw] max-md:gap-[10vw]">
+        <div className="flex flex-col gap-[1.8vw] max-md:gap-[10vw]">
           <LineReveal as="h2" className="type-h1">
             One Credit.<br />
             <span className="gradient-text-animate">One Whole Site.</span>
@@ -274,13 +274,13 @@ export default function PricingCredits() {
             </div>
           </div>
 
-          <ul className="flex w-[70%] flex-wrap content-start gap-[1vw] max-md:w-full max-md:gap-[3vw]">
+          <ul className="flex w-[70%] flex-wrap content-start gap-[1vw] max-md:w-full max-md:gap-[3vw] max-md:gap-y-[10vw]">
             {TEMPLATES.map((t, i) => {
               const isOwned = owned.includes(i);
               const locked = t.full && !plan.full;
               const unavailable = !isOwned && (locked || (!left && !pending.includes(i)));
               return (
-                <li key={t.name} className={`flex w-[32%] flex-col gap-[0.8vw] bg-foreground p-[0.8vw] transition-shadow duration-700 max-md:w-[48%] max-md:gap-[5vw] max-md:p-[2.4vw] ${isOwned ? "shadow-[inset_0_0_0_0.1vw_var(--primary)]" : "shadow-[inset_0_0_0_0.1vw_color-mix(in_srgb,var(--background)_10%,transparent)]"}`}>
+                <li key={t.name} className={`flex w-[32%] flex-col gap-[0.8vw] bg-foreground p-[0.8vw] max-md:px-3 transition-shadow duration-700 max-md:w-[48%] max-md:gap-[5vw] max-md:p-[2.4vw] ${isOwned ? "shadow-[inset_0_0_0_0.1vw_var(--primary)]" : "shadow-[inset_0_0_0_0.1vw_color-mix(in_srgb,var(--background)_10%,transparent)]"}`}>
                   <div
                     ref={(el) => { artRefs.current[i] = el; }}
                     aria-hidden="true"
