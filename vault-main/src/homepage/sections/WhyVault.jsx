@@ -84,7 +84,7 @@ export default function WhyVault() {
             id="why"
             aria-label="Why Vault"
             data-sound-flow="off"
-            className="relative bg-[#F4F4F4] px-[calc(var(--cvw)*4.5)] py-[7%] max-md:py-[15%]  font-avenir text-[#1D1D1D]  max-md:px-[calc(var(--cvw)*7)]"
+            className="relative bg-[#F4F4F4] px-[calc(var(--cvw)*4.5)] py-[7%] max-md:py-[15%]  text-[#1D1D1D]  max-md:px-[calc(var(--cvw)*7)]"
         >
             <div className="mx-auto grid max-w-[1536px] grid-cols-[minmax(0,.8fr)_minmax(0,1.6fr)] max-md:gap-4 gap-[calc(var(--cvw)*2)] max-md:grid-cols-1">
                 <p className="fadeup type-body-lg max-w-[calc(var(--cvw)*15)] max-lg:max-w-[36ch]">
@@ -95,18 +95,16 @@ export default function WhyVault() {
                 </LineReveal>
             </div>
 
-            <div className="mx-auto grid max-w-[1536px] grid-cols-[minmax(0,.8fr)_minmax(0,1.6fr)] gap-[calc(var(--cvw)*2)] pt-[calc(var(--cvw)*5)] max-md:grid-cols-1 max-md:pt-12">
-                <nav className="sticky top-1/2 -translate-y-1/2 grid gap-[18px] self-start max-md:hidden" aria-label="Why Vault">
-                    {/* <p className="mb-2.5 inline-flex items-center gap-2.5 text-[11px] font-semibold tracking-[.14em] text-[#6B6B6B] uppercase before:size-[5px] before:rounded-full before:bg-primary before:content-['']">
-                        Why Vault
-                    </p> */}
+            <div className="mx-auto grid max-w-[1536px] grid-cols-[minmax(0,.8fr)_minmax(0,1.6fr)] gap-[calc(var(--cvw)*2)] pt-[calc(var(--cvw)*7)] max-md:grid-cols-1 max-md:pt-12">
+                <nav className="sticky top-[40svh] grid gap-[18px] self-start max-md:hidden" aria-label="Why Vault">
+                    
                     {WHY_VAULT_ITEMS.map((item, i) => (
                         <button
                             key={item.id}
                             type="button"
                             onClick={() => goTo(i)}
                             aria-current={active === i ? "true" : undefined}
-                            className={`w-fit justify-self-start text-left type-h2 transition-colors duration-[600ms] ease-[cubic-bezier(.16,1,.3,1)] ${active === i ? "text-[#1D1D1D]" : "text-[#B4B4B4] hover:text-[#8a8a8a]"}`}
+                            className={`w-fit justify-self-start text-left type-h2 font-aeonik transition-colors duration-[600ms] ease-[cubic-bezier(.16,1,.3,1)] ${active === i ? "text-[#1D1D1D]" : "text-[#B4B4B4] hover:text-[#8a8a8a]"}`}
                         >
                            <span> {item.nav}</span>
                         </button>

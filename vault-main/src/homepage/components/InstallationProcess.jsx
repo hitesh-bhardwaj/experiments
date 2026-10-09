@@ -49,7 +49,7 @@ function Panel({ title, children, className = "" }) {
       className={`overflow-hidden bg-[rgba(20,20,20,.86)] shadow-[inset_0_0_0_1px_rgba(244,244,244,.08)] backdrop-blur-[10px] ${className}`}
     >
       <div className="flex h-[30px] items-center border-b border-white/6 px-3">
-        <p className="text-[11px] text-[#8a8a8a]">
+        <p className="font-mono text-[#8a8a8a]">
           {title}
         </p>
       </div>
@@ -508,7 +508,7 @@ export default function InstallationProcess({ id = "code-block", play }) {
     <section
       id={id || undefined}
       ref={sectionRef}
-      className="relative w-full overflow-hidden text-white max-md:px-0 max-md:py-20 max-sm:py-0 max-sm:pb-8"
+      className="relative w-full overflow-hidden text-foreground max-md:px-0 max-md:py-20 max-sm:py-0 max-sm:pb-8"
     >
       <div className="mx-auto w-full max-w-450">
         <div className="grid grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] gap-[calc(var(--cvw)*1.4)] max-md:grid-cols-1 max-md:gap-5">

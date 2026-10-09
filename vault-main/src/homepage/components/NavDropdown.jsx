@@ -23,10 +23,10 @@ function MenuItem({ item, onNavigate }) {
       leading={
         <NavMenuIcon
           src={item.icon}
-          className="size-[1.2vw] text-[#f4f4f4] transition-colors duration-300 group-hover:text-primary motion-reduce:transition-none"
+          className="size-[1.2vw] text-white transition-colors duration-300 group-hover:text-primary motion-reduce:transition-none"
         />
       }
-      className="relative isolate px-[0.8vw] py-[0.55vw] text18 leading-[1.15] text-white/75 hover:text-white"
+      className="relative isolate px-[0.8vw] py-[0.55vw] text18 leading-[1.15] text-white/75 hover:text-foreground"
     >
       <span
         aria-hidden="true"
@@ -298,7 +298,7 @@ export default function NavDropdown({ panel, onNavigate }) {
 
               <p
                 data-nav-v3-head
-                className="border-b border-white/10 bg-white/2 px-[1.5vw] py-[0.85vw] text18 flex items-center gap-[1vw] text-[#f4f4f4] capitalize"
+                className="border-b border-white/10 bg-white/2 px-[1.5vw] py-[0.85vw] text18 flex items-center gap-[1vw] text-white capitalize"
               >
 
                 <span className="size-[.6vw] font-avenir bg-primary inline-block" />

@@ -200,7 +200,7 @@ export default function Footer() {
             <ShimmerText
               baseColor="#d2d2d2"
               shimmerColor="#ffffff"
-              className="max-sm:text-sm font-mono max-sm:leading-[1.2] tracking-tight"
+              className="max-sm:text-sm font-avenir max-sm:leading-[1.2] tracking-tight"
             >
               50+ effects free, forever. No credit card.
             </ShimmerText>
@@ -220,7 +220,7 @@ export default function Footer() {
         {/* Platform label */}
         <div className="flex items-center gap-[calc(var(--cvw)*1)] max-md:gap-2 pb-[calc(var(--cvw)*1)] max-md:pb-[calc(var(--cvw)*3)]">
           <span className="size-[calc(var(--cvw)*0.45)] max-md:size-2 bg-[#ff5f00]" />
-          <span className="type-body font-aeonik text-[#B3B3B3]">Platform</span>
+          <span className="type-body font-avenir text-[#B3B3B3]">Platform</span>
         </div>
 
         {/* Top 4-column grid: Vault | Categories | Documents | Legal */}
@@ -284,7 +284,7 @@ export default function Footer() {
           <div className="flex flex-col gap-[calc(var(--cvw)*1.1)]  border-foreground/50 max-md:pb-[calc(var(--cvw)*5)] max-md:gap-[calc(var(--cvw)*3)] max-sm:pb-[calc(var(--cvw)*6)]">
             <div className="flex items-center gap-[calc(var(--cvw)*1)] max-md:gap-2">
               <span className="size-[calc(var(--cvw)*0.45)] max-md:size-2  bg-[#ff5f00]" />
-              <span className="type-body font-aeonik text-[#B3B3B3]">
+              <span className="type-body font-avenir text-[#B3B3B3]">
                 Socials
               </span>
             </div>
@@ -303,7 +303,7 @@ export default function Footer() {
           <div className="flex flex-col gap-[calc(var(--cvw)*1.1)]  border-foreground/50  max-md:pb-[calc(var(--cvw)*5)] max-md:gap-[calc(var(--cvw)*3)] max-sm:px-0 max-sm:pt-[calc(var(--cvw)*6)] max-sm:pb-[calc(var(--cvw)*6)] max-sm:border-foreground/50">
             <div className="flex items-center gap-[calc(var(--cvw)*1)] max-md:gap-2">
               <span className="size-[calc(var(--cvw)*0.45)] max-md:size-2  bg-[#ff5f00] " />
-              <span className="type-body font-aeonik text-[#B3B3B3]">
+              <span className="type-body font-avenir text-[#B3B3B3]">
                 Contact Us
               </span>
             </div>
@@ -329,7 +329,7 @@ export default function Footer() {
           <div className="flex flex-col gap-[calc(var(--cvw)*1.15)]  border-foreground/50  max-md:pb-[calc(var(--cvw)*12)] max-md:border-foreground/50 max-md:pt-[calc(var(--cvw)*5)] max-md:col-span-2 max-md:pl-0 max-md:gap-[calc(var(--cvw)*3)] max-sm:py-[calc(var(--cvw)*6)] max-sm:pb-[calc(var(--cvw)*20)]">
             <div className="flex items-center gap-[calc(var(--cvw)*1)] max-md:gap-2">
               <span className="size-[calc(var(--cvw)*0.45)] max-md:size-2  bg-[#ff5f00]" />
-              <span className="type-body font-aeonik text-[#B3B3B3]">
+              <span className="type-body font-avenir text-[#B3B3B3]">
                 New effects, in your inbox
               </span>
             </div>
@@ -362,7 +362,7 @@ export default function Footer() {
                       "--input-autofill-bg": "#111210",
                       "--input-autofill-text": "#ffffff",
                     }}
-                    className="h-auto min-w-0 flex-1 rounded-none border-0 bg-transparent! px-0 py-[calc(var(--cvw)*0.9)] max-md:py-3 text24 text-white shadow-none! outline-none ring-0! placeholder:text-[#6e6e6e] disabled:opacity-50"
+                    className="h-auto min-w-0 flex-1 rounded-none border-0 bg-transparent! px-0 py-[calc(var(--cvw)*0.9)] max-md:py-3 text24 text-foreground shadow-none! outline-none ring-0! placeholder:text-[#6e6e6e] disabled:opacity-50"
                   />
                   <button
                     type="submit"

@@ -124,7 +124,7 @@ export default function TuneCard({ replayKey }) {
                                 aria-pressed={ease === value}
                                 data-sound-hover="off"
                                 onClick={() => { tune.current.ease = value; setEase(value); replay(); }}
-                                className={`h-7 px-2.5 text-xs shadow-[inset_0_0_0_1px_rgba(29,29,29,.1)] transition-colors duration-[600ms] ${ease === value ? "bg-[#1D1D1D] text-[#F4F4F4]" : ""}`}
+                                className={`h-7 px-2.5 text-xs shadow-[inset_0_0_0_1px_rgba(29,29,29,.1)] transition-colors duration-[600ms] ${ease === value ? "bg-[#1D1D1D] text-white" : ""}`}
                             >
                                 {name}
                             </button>

@@ -17,7 +17,7 @@ function Toast({ message }) {
         <div
             role="status"
             aria-live="polite"
-            className={`fixed bottom-[calc(24px+env(safe-area-inset-bottom,0px))] left-1/2 z-[2147482001] max-w-[calc(100vw-2rem)] -translate-x-1/2 border border-grey bg-[#1f1f1f] px-[18px] py-3 text-sm text-[#F4F4F4] shadow-[0_20px_40px_-12px_#000] transition-transform duration-1000 ease-[cubic-bezier(.16,1,.3,1)] motion-reduce:transition-none ${message ? "translate-y-0" : "translate-y-[240%]"}`}
+            className={`fixed bottom-[calc(24px+env(safe-area-inset-bottom,0px))] left-1/2 z-[2147482001] max-w-[calc(100vw-2rem)] -translate-x-1/2 border border-grey bg-[#1f1f1f] px-[18px] py-3 text-sm text-white shadow-[0_20px_40px_-12px_#000] transition-transform duration-1000 ease-[cubic-bezier(.16,1,.3,1)] motion-reduce:transition-none ${message ? "translate-y-0" : "translate-y-[240%]"}`}
         >
             {message}
         </div>

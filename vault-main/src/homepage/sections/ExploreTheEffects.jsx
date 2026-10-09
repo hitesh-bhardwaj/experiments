@@ -176,7 +176,7 @@ export default function ExploreTheEffects() {
                     style={{ transitionTimingFunction: EASE }}
                 >
                     {CATEGORIES.map((category) => (
-                        <span key={category.label} className="flex h-[calc(var(--cvw)*2.6)] max-md:h-[calc(var(--cvw)*9)] shrink-0 items-center px-[calc(var(--cvw)*1.2)] max-md:px-[calc(var(--cvw)*3.5)] font-mono text-[calc(var(--cvw)*0.9)] max-md:text-[calc(var(--cvw)*3)] font-medium tracking-wide text-[#111111] uppercase">
+                        <span key={category.label} className="flex h-[calc(var(--cvw)*2.6)] max-md:h-[calc(var(--cvw)*9)] shrink-0 items-center px-[calc(var(--cvw)*1.2)] max-md:px-[calc(var(--cvw)*3.5)] font-avenir text-[calc(var(--cvw)*0.9)] max-md:text-[calc(var(--cvw)*3)] font-medium tracking-wide text-[#111111] uppercase">
                             {category.label}
                         </span>
                     ))}
@@ -189,7 +189,7 @@ export default function ExploreTheEffects() {
                         aria-selected={tab === i}
                         aria-controls="explore-the-effects-panel"
                         onClick={() => choose(i)}
-                        className="relative z-1 h-[calc(var(--cvw)*2.6)] max-md:h-[calc(var(--cvw)*9)] shrink-0 px-[calc(var(--cvw)*1.2)] max-md:px-[calc(var(--cvw)*3.5)] font-mono text-[calc(var(--cvw)*0.9)] max-md:text-[calc(var(--cvw)*3)] font-medium tracking-wide text-white/50 uppercase transition-colors duration-300 hover:text-white/80"
+                        className="relative z-1 h-[calc(var(--cvw)*2.6)] max-md:h-[calc(var(--cvw)*9)] shrink-0 px-[calc(var(--cvw)*1.2)] max-md:px-[calc(var(--cvw)*3.5)] font-avenir text-[calc(var(--cvw)*0.9)] max-md:text-[calc(var(--cvw)*3)] font-medium tracking-wide text-white/50 uppercase transition-colors duration-300 hover:text-white/80"
                     >
                         {category.label}
                     </button>
@@ -211,7 +211,7 @@ export default function ExploreTheEffects() {
                         // Starts hidden; the slide-in brings it up.
                         key={`${shown}-${item.slug}`}
                         style={{ opacity: 0 }}
-                        className="relative grid grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] gap-6 border border-white/20 bg-black/30 backdrop-blur-lg p-4 text-[#F4F4F4] max-sm:grid-cols-1 max-sm:gap-4"
+                        className="relative grid grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] gap-6 border border-white/20 bg-black/30 backdrop-blur-lg p-4 text-white max-sm:grid-cols-1 max-sm:gap-4"
                     >
                         {/* <CornerMarks /> */}
                         <div className="aspect-16/10 overflow-hidden bg-white/5">
@@ -222,7 +222,7 @@ export default function ExploreTheEffects() {
                                 <h3 className="type-h3">{item.title}</h3>
                                 <p className="type-body leading-[1.3] mt-[calc(var(--cvw)*0.5)] text-white/60">{item.text}</p>
                             </div>
-                            <LinkButton href={item.href} text="Explore" underline tilted={false} underlineClassName="mt-0" className="text18 text-white hover:text-primary transition-colors duration-300" />
+                            <LinkButton href={item.href} text="Explore" underline tilted={false} underlineClassName="mt-0" className="text18 text-foreground hover:text-primary transition-colors duration-300" />
                         </div>
                     </article>
                 ))}

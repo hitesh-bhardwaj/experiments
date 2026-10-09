@@ -98,7 +98,7 @@ function TutorialVideoModal() {
                     type="button"
                     onClick={requestClose}
                     aria-label="Close video"
-                    className="absolute -top-12 right-0 flex size-10 items-center justify-center bg-grey text-white transition-colors hover:text-primary"
+                    className="absolute -top-12 right-0 flex size-10 items-center justify-center bg-grey text-foreground transition-colors hover:text-primary"
                 >
                     <svg viewBox="0 0 24 24" className="size-4" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
                         <path d="M6 6l12 12M18 6L6 18" strokeLinecap="round" />

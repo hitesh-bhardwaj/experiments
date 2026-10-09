@@ -162,7 +162,7 @@ export default function ProblemFixes() {
   return (
     <section
       ref={sectionRef}
-      className="relative z-200  max-md:mt-[calc(var(--cvw)*-8)] w-full overflow-hidden px-[calc(var(--cvw)*4.5)] py-[7%] text-white max-md:px-[calc(var(--cvw)*7)] "
+      className="relative z-200  max-md:mt-[calc(var(--cvw)*-8)] w-full overflow-hidden px-[calc(var(--cvw)*4.5)] py-[7%] text-foreground max-md:px-[calc(var(--cvw)*7)] "
     >
       <div className="mx-auto relative z-200 flex w-full max-w-[1536px] flex-col items-center">
         <div className=" text-center w-[70%] max-md:w-full">
@@ -170,7 +170,7 @@ export default function ProblemFixes() {
             Good Motion is{' '}
             <span className="gradient-text-animate">Harder</span> Than it Looks
           </LineReveal>
-          <p data-fadeup-delay="0.2" className="type-body-lg fadeup mx-auto mt-[calc(var(--cvw)*3.5)] max-w-[calc(var(--cvw)*55)] text-white max-md:mt-[calc(var(--cvw)*5)] max-md:w-full max-md:max-w-full max-sm:mt-[calc(var(--cvw)*10)]">
+          <p data-fadeup-delay="0.2" className="type-body-lg fadeup mx-auto mt-[calc(var(--cvw)*3.5)] max-w-[calc(var(--cvw)*55)] text-foreground max-md:mt-[calc(var(--cvw)*5)] max-md:w-full max-md:max-w-full max-sm:mt-[calc(var(--cvw)*10)]">
           Anyone can add a fade. What&apos;s hard is everything around it. Get timing, restraint, or performance wrong, and the moment meant to impress becomes the reason the site feels worse. Most teams see that risk and drop their ambitions to play it safe. And your interface ends up looking like everyone else&apos;s.  Vault is engineered around that discipline by default, not as an afterthought.
           </p>
         </div>
