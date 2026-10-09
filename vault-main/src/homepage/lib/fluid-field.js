@@ -140,8 +140,8 @@ export function createFluidField({ ink, dots, ...options }) {
     if (!visible || document.hidden) return;
     if (calm) {
       if (!stirred()) { if (dirty) { draw(); dirty = false; } return; }
-      /* wake without a jump: movement while calm isn't replayed as one big push */
-      calm = kicked = scrolled = false; lastSY = getScroll(); m.px = m.x; m.py = m.y;
+      /* wake without a scroll jump; m.px stays so the pointer move that woke us still pushes the ink */
+      calm = kicked = scrolled = false; lastSY = getScroll();
     }
     if (!reduced) step();
     draw();
