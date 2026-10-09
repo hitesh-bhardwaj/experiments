@@ -212,7 +212,19 @@ export default function TemplateCorridor({ templates, onUnsupported }) {
       }
       state.flying = true;
       state.flyIndex = state.hover;
-      lenisRef.current?.stop(); // no scrolling while the page changes
+      // No scrolling while the page changes. Flag the page first (the drawers' flag):
+      // lenis-stopped alone means overflow: clip on <html>, which dropped the scrollbar
+      // and shifted the pinned corridor to the top of the screen mid-flight. With the flag
+      // the page keeps its layout; wheel / touch / keys are blocked here instead.
+      document.documentElement.setAttribute("data-v4-drawer-open", "");
+      state.blockScroll = (event) => event.preventDefault();
+      state.blockKeys = (event) => {
+        if ([" ", "PageUp", "PageDown", "Home", "End", "ArrowUp", "ArrowDown"].includes(event.key)) event.preventDefault();
+      };
+      window.addEventListener("wheel", state.blockScroll, { passive: false });
+      window.addEventListener("touchmove", state.blockScroll, { passive: false });
+      window.addEventListener("keydown", state.blockKeys);
+      lenisRef.current?.stop();
       const wp = new THREE.Vector3();
       f.g.getWorldPosition(wp);
       gsap.to(f.g.rotation, { y: 0, duration: 1 });
@@ -325,7 +337,13 @@ export default function TemplateCorridor({ templates, onUnsupported }) {
       stage.removeEventListener("pointerleave", onLeave);
       canvas.removeEventListener("click", onClick);
       gsap.killTweensOf(cam.position);
-      if (state.flying) lenisRef.current?.start();
+      if (state.flying) {
+        lenisRef.current?.start();
+        document.documentElement.removeAttribute("data-v4-drawer-open");
+        window.removeEventListener("wheel", state.blockScroll);
+        window.removeEventListener("touchmove", state.blockScroll);
+        window.removeEventListener("keydown", state.blockKeys);
+      }
       if (state.veil) {
         gsap.killTweensOf(state.veil);
         state.veil.remove();

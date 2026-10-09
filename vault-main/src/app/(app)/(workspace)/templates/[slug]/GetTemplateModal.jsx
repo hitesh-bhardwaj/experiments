@@ -250,7 +250,7 @@ export function GetTemplateModal({ template, open, tab = "buy", onTab, onClose, 
                             }}
                             className={`flex size-10 items-center justify-center font-mono not-italic ${T13} ${
                               i < remaining
-                                ? "bg-[radial-gradient(circle_at_35%_30%,#FFD2B0,var(--primary)_55%,#B84300)] text-background shadow-[0_0_1.1vw_color-mix(in_srgb,var(--primary)_45%,transparent),inset_0_-0.1vw_0.3vw_color-mix(in_srgb,black_25%,transparent)]"
+                                ? "bg-primary text-background "
                                 : "bg-foreground/8 text-foreground/40 ring-1 ring-inset ring-foreground/16"
                             }`}
                           >

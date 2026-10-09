@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import gsap from "gsap";
 import { motion } from "motion/react";
+import { useLenis } from "lenis/react";
 import { RotateCcw } from "lucide-react";
 import { LABEL, T13, T14 } from "../tokens";
 import { BREAKPOINTS } from "@/lib/breakpoints";
@@ -29,7 +30,7 @@ import { BREAKPOINTS } from "@/lib/breakpoints";
 const PAGE_WIDTH = { desktop: 4.2, tablet: 3, phone: 1.6 }; // slab width, world units
 const ROOT_SCALE = { desktop: 1, tablet: 1, phone: 1.25 };
 const SCROLL_PER_SECTION = 18; // vh of page scroll per section
-const REST = { x: -0.12, y: 0.55 }; // default turn
+const REST = { x: -0.06, y: 0.3 }; // default turn - a gentle angle, the page stays readable
 const pad2 = (n) => String(n).padStart(2, "0");
 const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
 
@@ -52,6 +53,32 @@ export default function TemplateExploded({
   const onUnsupportedRef = useRef(onUnsupported);
   const [panelIndex, setPanelIndex] = useState(0);
   const [selected, setSelected] = useState(-1);
+
+  // While a section is zoomed the page holds still: Lenis stops and wheel / touch /
+  // scroll keys are swallowed until the zoom is released. The drawers' flag goes on
+  // first so lenis-stopped doesn't clip <html> (that drops the scrollbar and shifts the
+  // sticky stage).
+  const lenis = useLenis();
+  useEffect(() => {
+    if (selected < 0) return undefined;
+    const html = document.documentElement;
+    html.setAttribute("data-v4-drawer-open", "");
+    const block = (event) => event.preventDefault();
+    const blockKeys = (event) => {
+      if ([" ", "PageUp", "PageDown", "Home", "End", "ArrowUp", "ArrowDown"].includes(event.key)) event.preventDefault();
+    };
+    window.addEventListener("wheel", block, { passive: false });
+    window.addEventListener("touchmove", block, { passive: false });
+    window.addEventListener("keydown", blockKeys);
+    lenis?.stop();
+    return () => {
+      window.removeEventListener("wheel", block);
+      window.removeEventListener("touchmove", block);
+      window.removeEventListener("keydown", blockKeys);
+      lenis?.start();
+      html.removeAttribute("data-v4-drawer-open");
+    };
+  }, [selected, lenis]);
 
   useEffect(() => {
     explodeRef.current = explode;
@@ -104,6 +131,9 @@ export default function TemplateExploded({
     });
     io.observe(section);
 
+    const ray = new THREE.Raycaster();
+    const ndc = new THREE.Vector2();
+
     /* drag to turn, click to select */
     const onDown = (e) => {
       if (e.target.closest("[data-exploded-ui]")) return;
@@ -118,18 +148,45 @@ export default function TemplateExploded({
       if (!d) return;
       const dx = e.clientX - d.x;
       const dy = e.clientY - d.y;
-      if (Math.abs(dx) + Math.abs(dy) > 4) d.moved = true;
+      if (Math.hypot(dx, dy) > 6) d.moved = true; // small jitter still counts as a click
       state.rot.ty = clamp(d.ry + dx * 0.006, -1.1, 1.1);
       state.rot.tx = clamp(d.rx + dy * 0.004, -0.7, 0.5);
     };
-    const onUp = () => {
+    // A click on a section zooms it up (straightened, centred); while one is zoomed, any
+    // click - on it, beside it, or outside the stage - returns to the exploded view.
+    const deselect = () => {
+      if (state.sel < 0) return;
+      state.sel = -1;
+      setSelected(-1);
+    };
+    // The layer under the pointer, picked at release (the per-frame hover is cleared
+    // while the button is held, so it can't be read here).
+    const pick = (e) => {
+      if (!state.slabs.length) return -1;
+      const r = canvas.getBoundingClientRect();
+      ndc.set(((e.clientX - r.left) / r.width) * 2 - 1, -(((e.clientY - r.top) / r.height) * 2 - 1));
+      ray.setFromCamera(ndc, cam);
+      const hit = ray.intersectObjects(state.slabs.map((s) => s.m))[0];
+      return hit ? hit.object.userData.i : -1;
+    };
+    const onUp = (e) => {
       const d = state.drag;
       state.drag = null;
-      if (d && !d.moved && state.hover >= 0) {
-        state.sel = state.sel === state.hover ? -1 : state.hover;
-        setSelected(state.sel);
+      if (!d || d.moved) return;
+      if (state.sel >= 0) {
+        deselect();
+        return;
+      }
+      const i = pick(e);
+      if (i >= 0) {
+        state.sel = i;
+        setSelected(i);
       }
     };
+    const onDocDown = (e) => {
+      if (state.sel >= 0 && !stage.contains(e.target)) deselect();
+    };
+    document.addEventListener("pointerdown", onDocDown);
     const onLeave = () => {
       state.mouse.on = false;
     };
@@ -139,8 +196,6 @@ export default function TemplateExploded({
     window.addEventListener("pointerup", onUp);
     window.addEventListener("pointercancel", onUp);
 
-    const ray = new THREE.Raycaster();
-    const ndc = new THREE.Vector2();
     const V = new THREE.Vector3();
     let last = performance.now();
     let raf = 0;
@@ -155,10 +210,17 @@ export default function TemplateExploded({
       const e = clamp(explodeRef.current ?? 0, 0, 1);
       const st = stage.getBoundingClientRect();
 
-      // turn
+      // zoom-in amount of the selected section (0 exploded view .. 1 zoomed)
+      const zoomed = state.sel >= 0 && state.sel < n;
+      state.zoomIn = (state.zoomIn ?? 0) + ((zoomed ? 1 : 0) - (state.zoomIn ?? 0)) * Math.min(1, dt * 5);
+      const zi = state.zoomIn;
+
+      // turn (straightened while a section is zoomed; the view angle comes back after)
       const k = Math.min(1, dt * 5);
-      rot.x += (rot.tx + (state.drag ? 0 : mouse.y * 0.05) - rot.x) * k;
-      rot.y += (rot.ty + (state.drag ? 0 : mouse.x * 0.08) - rot.y) * k;
+      const turnX = zoomed ? 0 : rot.tx + (state.drag ? 0 : mouse.y * 0.05);
+      const turnY = zoomed ? 0 : rot.ty + (state.drag ? 0 : mouse.x * 0.08);
+      rot.x += (turnX - rot.x) * k;
+      rot.y += (turnY - rot.y) * k;
       root.rotation.set(rot.x, rot.y, 0);
 
     
@@ -173,7 +235,8 @@ export default function TemplateExploded({
       const spread = 1 + e * 0.18;
       const firstY = n ? slabs[0].y0 : 0;
       const lastY = n ? slabs[n - 1].y0 : 0;
-      const target = firstY + (lastY - firstY) * p;
+      state.progress = p;
+      const target = zoomed ? slabs[state.sel].y0 : firstY + (lastY - firstY) * p;
       state.focus = state.focus == null ? target : state.focus + (target - state.focus) * Math.min(1, dt * 6);
       const focusY = state.focus * spread;
       G.position.y = -focusY;
@@ -206,18 +269,28 @@ export default function TemplateExploded({
         const bottom = barEl ? barEl.getBoundingClientRect().top - st.top - 16 : st.height - 16;
         const free = Math.max(120, bottom - top);
         // The focused slab's height on screen at zoom 1 (last frame's matrices).
-        const slab = slabs[clamp(Math.round(fi), 0, n - 1)];
+        const slab = slabs[zoomed ? state.sel : clamp(Math.round(fi), 0, n - 1)];
         let fitZoom = 1;
         if (slab?.m.matrixWorld) {
           let lo = Infinity;
           let hi = -Infinity;
+          let left = Infinity;
+          let right = -Infinity;
           for (const [cx, cy] of [[-1, -1], [1, -1], [-1, 1], [1, 1]]) {
             V.set((cx * slab.w) / 2, (cy * slab.h) / 2, 0).applyMatrix4(slab.m.matrixWorld).project(cam);
             lo = Math.min(lo, V.y);
             hi = Math.max(hi, V.y);
+            left = Math.min(left, V.x);
+            right = Math.max(right, V.x);
           }
           const heightAt1 = (((hi - lo) / 2) * st.height) / cam.zoom;
-          if (heightAt1 > 0) fitZoom = clamp(free / heightAt1, 0.45, 1);
+          const widthAt1 = (((right - left) / 2) * st.width) / cam.zoom;
+          if (heightAt1 > 0) {
+            // Exploded view: fit the section in focus (never bigger than 1). Zoomed: the
+            // selected section fills the free area - up to 2.5x - within the width too.
+            const fit = zoomed ? Math.min(free / heightAt1, (st.width * 0.86) / Math.max(1, widthAt1)) : free / heightAt1;
+            fitZoom = clamp(fit, 0.45, zoomed ? 2.5 : 1);
+          }
         }
         const fr = state.frame;
         fr.zoom += (fitZoom - fr.zoom) * Math.min(1, dt * 4);
@@ -242,14 +315,17 @@ export default function TemplateExploded({
       }
       stage.style.cursor = state.drag ? "grabbing" : state.hover >= 0 ? "pointer" : "grab";
 
+      // the frontmost layer's depth - a zoomed section comes out in front of it
+      const frontZ = e * Math.max(0, n - 1 - fi) * 0.62;
       slabs.forEach((s, i) => {
         s.pop += ((i === state.sel ? 1 : 0) - s.pop) * Math.min(1, dt * 5);
         const y = s.y0 * spread;
-        const z = e * (i - fi) * 0.62 + s.pop * 1.1;
-        const x = e * (i - fi) * 0.06;
+        const baseZ = e * (i - fi) * 0.62;
+        const z = baseZ + s.pop * (frontZ - baseZ + 0.6);
+        const x = e * (i - fi) * 0.06 * (1 - s.pop);
         s.m.position.set(x, y, z);
         s.edge.position.copy(s.m.position);
-        const dim = state.sel >= 0 && i !== state.sel ? 0.35 : 1;
+        const dim = state.sel >= 0 && i !== state.sel ? 0.12 : 1;
         s.m.material.opacity += (dim - s.m.material.opacity) * Math.min(1, dt * 6);
         s.edge.material.opacity = (i === state.hover || i === state.sel ? 0.9 : e * 0.25) * (dim > 0.5 ? 1 : 0.5);
 
@@ -258,7 +334,8 @@ export default function TemplateExploded({
           V.set(x + s.w / 2, y, z).applyMatrix4(G.matrixWorld).project(cam);
           const onScreen = Math.abs(V.y) < 0.92 && V.x < 0.98;
           label.style.transform = `translate(${((V.x + 1) / 2) * st.width + 8}px, ${((1 - V.y) / 2) * st.height - 12}px)`;
-          label.style.opacity = onScreen ? Math.max(0, (e - 0.25) * 1.6) * dim : 0;
+          // Always named (assembled too); hidden only while a section is zoomed.
+          label.style.opacity = onScreen ? (1 - zi) * dim : 0;
           label.dataset.on = i === state.sel ? "true" : "false";
         }
       });
@@ -280,6 +357,7 @@ export default function TemplateExploded({
       stage.removeEventListener("pointermove", onMove);
       stage.removeEventListener("pointerleave", onLeave);
       window.removeEventListener("pointerup", onUp);
+      document.removeEventListener("pointerdown", onDocDown);
       window.removeEventListener("pointercancel", onUp);
       disposeSlabs(state);
       state.textures.forEach((t) => t.dispose());
@@ -389,7 +467,9 @@ export default function TemplateExploded({
   // Selection lives in the scene's state (read every frame); this mirrors it for the panel.
   const select = (i) => {
     const state = sceneRef.current;
-    if (state) state.sel = i;
+    if (state) {
+      state.sel = i;
+    }
     setSelected(i);
   };
 
@@ -470,6 +550,8 @@ export default function TemplateExploded({
             <span>Assembled</span>
             <input
               type="range"
+              // The track fills orange up to the handle as the page explodes.
+              style={{ "--fill": `${Math.round(explode * 100)}%` }}
               min="0"
               max="100"
               value={Math.round(explode * 100)}
@@ -479,7 +561,7 @@ export default function TemplateExploded({
                 setExplode(e.target.value / 100);
               }}
               aria-label="Explode the page into sections"
-              className="h-4 w-[11vw] cursor-pointer appearance-none bg-transparent [&::-moz-range-thumb]:size-3.5 [&::-moz-range-thumb]:rounded-none [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-primary [&::-moz-range-track]:h-0.5 [&::-moz-range-track]:border-0 [&::-moz-range-track]:bg-foreground/25 [&::-webkit-slider-runnable-track]:h-0.5 [&::-webkit-slider-runnable-track]:border-0 [&::-webkit-slider-runnable-track]:bg-foreground/25 [&::-webkit-slider-thumb]:-mt-1.5 [&::-webkit-slider-thumb]:size-3.5 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-none [&::-webkit-slider-thumb]:border-0 [&::-webkit-slider-thumb]:bg-primary"
+              className="h-4 w-[11vw] cursor-pointer appearance-none bg-transparent [&::-moz-range-thumb]:size-3.5 [&::-moz-range-thumb]:rounded-none [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-primary [&::-moz-range-track]:h-0.5 [&::-moz-range-track]:border-0 [&::-moz-range-track]:bg-foreground/25 [&::-moz-range-progress]:h-0.5 [&::-moz-range-progress]:bg-primary [&::-webkit-slider-runnable-track]:h-0.5 [&::-webkit-slider-runnable-track]:border-0 [&::-webkit-slider-runnable-track]:bg-[linear-gradient(to_right,var(--primary)_var(--fill),color-mix(in_srgb,var(--foreground)_25%,transparent)_var(--fill))] [&::-webkit-slider-thumb]:-mt-1.5 [&::-webkit-slider-thumb]:size-3.5 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-none [&::-webkit-slider-thumb]:border-0 [&::-webkit-slider-thumb]:bg-primary"
             />
             <span>Exploded</span>
           </label>
