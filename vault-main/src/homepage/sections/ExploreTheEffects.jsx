@@ -176,7 +176,7 @@ export default function ExploreTheEffects() {
                     style={{ transitionTimingFunction: EASE }}
                 >
                     {CATEGORIES.map((category) => (
-                        <span key={category.label} className="flex h-[30px] shrink-0 items-center px-3.5 font-mono text-[11px] font-medium tracking-wide text-[#111111] uppercase">
+                        <span key={category.label} className="flex h-[calc(var(--cvw)*2.6)] max-md:h-[calc(var(--cvw)*9)] shrink-0 items-center px-[calc(var(--cvw)*1.2)] max-md:px-[calc(var(--cvw)*3.5)] font-mono text-[calc(var(--cvw)*0.9)] max-md:text-[calc(var(--cvw)*3)] font-medium tracking-wide text-[#111111] uppercase">
                             {category.label}
                         </span>
                     ))}
@@ -189,7 +189,7 @@ export default function ExploreTheEffects() {
                         aria-selected={tab === i}
                         aria-controls="explore-the-effects-panel"
                         onClick={() => choose(i)}
-                        className="relative z-1 h-[30px] shrink-0 px-3.5 font-mono text-[11px] font-medium tracking-wide text-white/50 uppercase transition-colors duration-300 hover:text-white/80"
+                        className="relative z-1 h-[calc(var(--cvw)*2.6)] max-md:h-[calc(var(--cvw)*9)] shrink-0 px-[calc(var(--cvw)*1.2)] max-md:px-[calc(var(--cvw)*3.5)] font-mono text-[calc(var(--cvw)*0.9)] max-md:text-[calc(var(--cvw)*3)] font-medium tracking-wide text-white/50 uppercase transition-colors duration-300 hover:text-white/80"
                     >
                         {category.label}
                     </button>

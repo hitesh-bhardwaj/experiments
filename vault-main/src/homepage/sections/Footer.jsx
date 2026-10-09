@@ -367,7 +367,7 @@ export default function Footer() {
                   <button
                     type="submit"
                     disabled={status === "loading"}
-                    className="shrink-0 cursor-pointer py-[calc(var(--cvw)*0.9)] text-[calc(var(--cvw)*0.9)] font-medium text-[#d8d8d8] uppercase transition-colors duration-300 hover:text-primary disabled:pointer-events-none disabled:opacity-50 max-md:py-3"
+                    className="shrink-0 cursor-pointer py-[calc(var(--cvw)*0.9)] text-[calc(var(--cvw)*0.9)] font-medium text-[#d8d8d8] uppercase transition-colors duration-300 hover:text-primary max-md:text-base disabled:pointer-events-none disabled:opacity-50 max-md:py-3"
                   >
                     {status === "loading" ? "Subscribing…" : "Subscribe"}
                   </button>

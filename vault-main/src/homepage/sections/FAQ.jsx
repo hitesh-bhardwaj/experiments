@@ -274,7 +274,7 @@ export default function FAQ({ faqItems, translateTop = true, inline = false }) {
       data-sound-flow="off"
       className={inline
         ? "relative z-10 h-fit w-full pt-[5vw] text-background max-md:pt-[12vw]"
-        : "relative z-10 h-fit px-[calc(var(--cvw)*4.5)] w-full bg-foreground py-[7%] max-md:py-[15%] text-background max-md:mt-0! max-md:px-[calc(var(--cvw)*7)]"}
+        : "relative z-10 h-fit px-[calc(var(--cvw)*9.5)] w-full bg-foreground py-[7%] max-md:py-[15%] text-background max-md:mt-0! max-md:px-[calc(var(--cvw)*7)]"}
     >
       <div className="mx-auto w-full max-w-[1536px]">
 
