@@ -462,7 +462,7 @@ export default function TemplateCorridor({ templates, onUnsupported }) {
               <span>{pad2(n)}</span>
             </div>
             <p className={`${LABEL} text-primary`}>
-              {current.category} · {catalogueOf(current) === "full" ? "Pro+ only" : "✦ Selected catalogue"}
+              {current.category} · {catalogueOf(current) === "full" ? "Pro+ only" : "Selected catalogue"}
             </p>
             <motion.div
               key={current.slug}

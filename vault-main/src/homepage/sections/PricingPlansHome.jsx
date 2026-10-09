@@ -7,6 +7,7 @@ import Button from "../components/Button";
 import { RollingPrice } from "../components/PriceDigit";
 import { useInteraction } from "../components/InteractionProvider";
 import RollText from "@/components/Pricing/exploded/RollText";
+import CardFluid from "../components/CardFluid";
 
 
 // Content from the "Exploded tiers" pricing concept, word for word.
@@ -32,7 +33,7 @@ const PLANS = [
     {
         id: "plus",
         name: <>Pro<span className="gradient-text-animate">+</span></>,
-        badge: "Most complete",
+        badge: "Most Complete",
         for: "For builders who ship whole sites",
         amount: { q: 19, y: 14.92 },
         billLine: { q: "Billed $57 every 3 months", y: <>Billed $179 yearly <s className="ml-1.5 opacity-60">$228</s></> },
@@ -57,7 +58,7 @@ const PERIOD_COPY = Object.fromEntries(PLANS.map((plan) => {
     const pair = (p) => (
         <div className="flex flex-col gap-1">
             <span className={`min-h-[1.5em] ${dark ? "text-[#a9a9a9]" : "text-[#6B6B6B]"}`}>{plan.billLine[p]}</span>
-            <span className={dark ? "text-primary" : "text-[#8a8a8a]"}>{plan.chip[p]}</span>
+            <span className="text-primary">{plan.chip[p]}</span>
         </div>
     );
     return [plan.id, { q: pair("q"), y: pair("y") }];
@@ -191,9 +192,10 @@ export default function PricingPlansHome() {
                         <article
                             key={plan.id}
                             data-fadeup-delay={planIndex * 0.12}
-                            className={`fadeup relative flex flex-col gap-[18px] p-[calc(var(--cvw)*3)] max-md:p-[calc(var(--cvw)*6)] ${dark ? "bg-[#141414] text-[#F4F4F4]" : "border border-[#999999]/30 bg-white text-[#1D1D1D]"}`}
+                            className={`fadeup relative flex flex-col gap-[18px] p-[calc(var(--cvw)*3)] max-md:p-[calc(var(--cvw)*6)] ${dark ? "isolate overflow-hidden bg-background text-light" : "border border-[#999999]/30 bg-white text-[#1D1D1D]"}`}
                         >
-                            {/* <CornerMarks /> */}
+                            {/* Dotted grid + mouse fluid on the dark card; no swish (the section sets data-sound-flow="off") */}
+                            {dark && <CardFluid />}
                             {plan.badge && (
                                 <span className="text-shimmer absolute top-[22px] right-[22px] z-1 type-label max-sm:static max-sm:self-start">
                                     {plan.badge}
@@ -222,7 +224,7 @@ export default function PricingPlansHome() {
                             <ul className={`relative mt-[calc(var(--cvw)*0.4)] grid flex-1 content-start gap-[calc(var(--cvw)*1.2)] max-md:gap-[calc(var(--cvw)*4)] type-body`}>
                                 {plan.features.map((f, i) => (
                                     <li key={i} className="grid grid-cols-[22px_minmax(0,1fr)] items-start gap-2.5">
-                                        <Tick tone={dark ? "primary" : "ink"} />
+                                        <Tick />
                                         <RollText text={f.text ?? f[period]} dir={dir} block className="[&_b]:font-medium" />
                                     </li>
                                 ))}

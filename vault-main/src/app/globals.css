@@ -1138,11 +1138,11 @@ html.lenis.lenis-stopped[data-v4-drawer-open] {
 }
 @utility type-label {
   font-family: var(--font-avenir), "Avenir Next", system-ui, sans-serif;
-  font-size: clamp(11px, calc(var(--cvw) * 0.72), 12px);
+  font-size: clamp(15px, calc(var(--cvw) * 0.92), 16px);
   font-weight: 500;
   line-height: 1.4;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  /* text-transform: uppercase; */
 }
 
 /* Layout */

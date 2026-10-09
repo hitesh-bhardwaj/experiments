@@ -3,7 +3,6 @@ import React, { useEffect } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
 import { prefersReducedMotion } from '@/lib/motion'
-import Image from 'next/image'
 
 if (typeof window !== "undefined") {
     gsap.registerPlugin(ScrollTrigger)
@@ -125,9 +124,14 @@ export default function NotAnotherUIKit() {
               <div className="w-full h-[calc(var(--cvw)*37)] border border-grey content-container overflow-hidden max-lg:h-[calc(var(--cvw)*60)] max-md:h-[calc(var(--cvw)*100)]">
                 <div className="p-[calc(var(--cvw)*2.5)] flex flex-col justify-between h-full max-md:p-[calc(var(--cvw)*5)]">
                   <div className="space-y-[calc(var(--cvw)*1.5)] max-md:space-y-[calc(var(--cvw)*4)]">
-                  <div className='relative size-[calc(var(--cvw)*3.2)] max-md:size-[calc(var(--cvw)*14)]'>
-                    {card.icon && <Image src={card.icon} alt="" aria-hidden="true" fill sizes="(max-width: 1025px) 10vw, 5vw" className="object-contain" />}
-                  </div>
+                  {/* The icon's shape masks the same moving gradient the headings use */}
+                  {card.icon && (
+                    <span
+                      aria-hidden="true"
+                      className="gradient-text-animate block size-[calc(var(--cvw)*4.2)] [-webkit-background-clip:border-box]! [background-clip:border-box]! mask-contain mask-center mask-no-repeat max-md:size-[calc(var(--cvw)*18)]"
+                      style={{ maskImage: `url(${card.icon})`, WebkitMaskImage: `url(${card.icon})` }}
+                    />
+                  )}
                   <h3 className="type-h2 max-md:w-[80%]">
                     {card.title}
                   </h3>

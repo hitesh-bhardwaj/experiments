@@ -236,7 +236,7 @@ export function TemplateDetail({ template, templateAccess = { allowed: false, re
             <motion.div {...HERO_FADE} className="flex flex-wrap gap-1.5 pt-4">
               <span className={`${BADGE} bg-foreground/5 text-foreground/80`}>{template.category}</span>
               <span className={`${BADGE} ${full ? "bg-foreground text-background ring-1 ring-inset ring-[rgba(255,178,122,.3)]" : "bg-primary text-background"}`}>
-                {full ? "Pro+ only" : "✦ Selected catalogue"}
+                {full ? "Pro+ only" : "Selected catalogue"}
               </span>
               {hasAccess && <span className={`${BADGE} bg-foreground/5 text-foreground backdrop-blur-lg`}>Yours <span className="text-primary">✓</span></span>}
             </motion.div>

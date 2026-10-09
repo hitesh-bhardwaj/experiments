@@ -114,7 +114,7 @@ export function GetTemplateModal({ template, open, tab = "buy", onTab, onClose, 
 
   let message = "";
   if (redeemed) message = `Redeemed in this demo. When credits go live, ${template.title} would be yours to keep, even if you cancel. Nothing was charged and nothing was unlocked.`;
-  else if (locked) message = "This template is in the full catalogue. Pro credits cover the selected catalogue (✦); Pro+ credits unlock it.";
+  else if (locked) message = "This template is in the full catalogue. Pro credits cover the selected catalogue; Pro+ credits unlock it.";
   else if (remaining < 1) message = "That’s your credits for the year. Pro+ quarterly adds one every quarter.";
   else message = `Spend 1 of your ${remaining} credits on ${template.title}. You keep it forever, even if you cancel.`;
 

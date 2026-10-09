@@ -31,7 +31,7 @@ export default function Cursor() {
         const root = rootRef.current, label = labelRef.current, eyes = eyesRef.current;
         const look = { x: 0, y: 0 };
         const pos = { x: -100, y: -100 }, cur = { x: -100, y: -100 };
-        let mode = "off", holding = false, raf = 0, lastTarget = null;
+        let mode = "off", holding = false, ready = false, raf = 0, lastTarget = null;
 
         const setMode = (next, text = "") => {
             if (label.textContent !== text) label.textContent = text;
@@ -55,7 +55,8 @@ export default function Cursor() {
                 }
                 // Charging: the ring's primary stroke fills in step with the ribbons' hold
                 if (holding) root.dataset.charging = ""; else delete root.dataset.charging;
-                return setMode("hold", holding ? "" : zone.dataset.cursorLabel || "Hold to explore");
+                // Charged and waiting: tell them to let go
+                return setMode("hold", holding ? (ready ? "Release" : "") : zone.dataset.cursorLabel || "Hold to explore");
             }
             delete root.dataset.charging;
             return setMode("off");
@@ -83,13 +84,16 @@ export default function Cursor() {
             resolve(e.target);
             kick();
         };
-        const onDown = () => { holding = true; if (mode === "hold") resolve(lastTarget); root.dataset.pressed = ""; };
-        const onUp = () => { holding = false; resolve(lastTarget); delete root.dataset.pressed; };
+        const onDown = () => { holding = true; ready = false; if (mode === "hold") resolve(lastTarget); root.dataset.pressed = ""; };
+        const onUp = () => { holding = false; ready = false; resolve(lastTarget); delete root.dataset.pressed; };
         // Content scrolls under a still pointer
         const onScroll = () => { clearTextRects(); if (pos.x > -100) { lastTarget = document.elementFromPoint(pos.x, pos.y); resolve(lastTarget); } };
         const onLeave = () => setMode("off");
         // Ribbons shattered / re-formed under a still pointer
         const onRibbons = () => { if (lastTarget) resolve(lastTarget); };
+        // The ribbons' hold is fully charged (or was cancelled by scrolling away)
+        const onReady = () => { if (!holding) return; ready = true; if (lastTarget) resolve(lastTarget); };
+        const onCancel = () => { ready = false; if (lastTarget) resolve(lastTarget); };
 
         addEventListener("pointermove", onMove, { passive: true });
         addEventListener("pointerdown", onDown);
@@ -98,7 +102,11 @@ export default function Cursor() {
         addEventListener("resize", clearTextRects);
         document.addEventListener("pointerleave", onLeave);
         addEventListener("hx-ribbons-state", onRibbons);
+        addEventListener("hx-hold-ready", onReady);
+        addEventListener("hx-hold-cancel", onCancel);
         return () => {
+            removeEventListener("hx-hold-ready", onReady);
+            removeEventListener("hx-hold-cancel", onCancel);
             removeEventListener("hx-ribbons-state", onRibbons);
             cancelAnimationFrame(raf);
             removeEventListener("pointermove", onMove);

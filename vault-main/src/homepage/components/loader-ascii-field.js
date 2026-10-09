@@ -1,62 +1,18 @@
 import { resolveCharSet } from "./char-sets";
-
-/**
- * Full-screen dithered-text loader field.
- *
- * The wordmark SVG (/hyperiux-wordmark.svg) is loaded and rasterised into a
- * coverage buffer, so every cell knows how much ink it carries.
- *
- * Two layers share one grid:
- *   static  - churning random glyphs, thinned out as progress rises.
- *   reveal  - the wordmark shape, dithered in by the Bayer threshold.
- *
- * There are two ways out, chosen by `mode`:
- *
- *   dock  - the whole field collapses onto the navbar's logo. One similarity
- *           transform carries every cell, so the mark keeps its shape all the
- *           way down and lands exactly on the rect the real svg will occupy,
- *           which is what lets the two cross-fade as a single mark hardening.
- *           The background static fades out ahead of it, so only the wordmark
- *           is still travelling by the time it arrives.
- *   burst - exit is per-cell, not per-letter: the field bursts outward from the
- *           centre of the screen, every cell shrinking as it travels its own
- *           ray, so the mark breaks into particles that clear the viewport
- *           rather than the word collapsing letter by letter.
- *
- * Either way it hands off to the hero's own ASCII field, which is fading up
- * underneath while this is still in flight.
- *
- * Every cell is drawn with a real alpha, so nothing pops on or off - cells are
- * batched by (colour, alpha step) through a counting sort, which keeps the
- * whole frame down to a few dozen fillStyle changes.
- *
- * Deliberately 2D canvas, not WebGL: the hero's ASCII effect is compiling its
- * shaders and decoding its video while this is on screen.
- */
-
 const WORDMARK_GLYPHS = Array.from("HYPERIUX");
 
-// ── Colours ──────────────────────────────────────────────────────────────────
+
 const STATIC_COLOR = "#1a1a1a";
 const REVEAL_COLOR = "#ff5f00";
 const FLASH_COLOR = "#ffffff";
-// What the mark cools to on its way out. The orange is the loader's own accent
-// and carrying it across the hero would read as a second colour crossing the
-// screen; grey lets the particles pass over the ASCII field instead of
-// competing with it.
+
 const BURST_COLOR = "#8f8f8f";
 // Steps in the orange → grey ramp. Quantised like alpha and scale, so a cooling
 // cell is still one bucket in the sort rather than its own fillStyle change.
 const BURST_STEPS = 5;
-
-// ── Timing / density ────────────────────────────────────────────────────────
 const FRAME_MS = 1000 / 60;
-// How often a cell swaps glyph, and how far apart neighbouring cells' churn
-// clocks are pushed. Without the spread the whole grid flips on the same tick,
-// which reads as a screen-wide glitch instead of a texture.
 const CHURN_MS = 110;
 const CHURN_SPREAD = 1;
-// A dissolving cell churns harder than a settled one.
 const CHURN_EXIT_BOOST = 2.5;
 const STATIC_DENSITY = 0.18;
 // Width of the soft edge on the static density test - cells inside this band
@@ -67,41 +23,13 @@ const STATIC_BREATH = 0.9;
 const FLASH_BAND = 0.07;
 const INK_FEATHER = 0.05;
 const SWEEP = 0.35;
-
-// ── Exit ────────────────────────────────────────────────────────────────────
-// The burst. Every cell travels a straight line outward from the centre of the
-// screen at constant velocity - linear in time, which is what separates this
-// from an eased explosion: the field opens up rather than detonating.
-//
-// Distances are fractions of the viewport's half-diagonal, so the burst covers
-// the same proportion of the screen whatever the window size.
-//
-// Flat distance every cell travels regardless of where it sits. This is the
-// term that moves the middle of the wordmark: cells near the origin have no
-// meaningful ray to be pushed along, and without a flat push the centre of the
-// mark would sit still while only its edges appeared to burst.
 const EXIT_LAUNCH = 0.55;
-// Extra distance handed to a cell in proportion to how far out it already is,
-// so the edges of the field clear the viewport at the same moment the centre
-// does rather than lagging behind it.
 const EXIT_REACH = 1.1;
-// How far each cell's direction is pulled off its radial ray toward a stable
-// random one. Pure rays expand the wordmark along its own shape - it is a thin
-// horizontal band, so it opens sideways and barely at all vertically. Mixing in
-// a random direction is what gives the band real spread on both axes; too much
-// and it stops reading as a burst from a point.
 const EXIT_SCATTER = 0.45;
-// Glyph size at the end of a cell's own burst, as a fraction of the resting
-// size. Shrinking as they travel is what makes the field read as breaking into
-// particles instead of sliding away at full size.
 const EXIT_SCALE_MIN = 0.18;
-// Portion of the exit timeline spent handing out per-cell start times. The
-// remainder (1 - spread) is how long any single cell takes to dissolve. Kept
-// short so the field goes mostly together - a long stagger reads as a
-// dissolve, and this wants to read as one release.
 const EXIT_SPREAD = 0.35;
 // How much of that stagger follows radius rather than being random. Centre
-// cells leave first, so the break-up travels outward as a front.
+
 const EXIT_RADIAL_BIAS = 0.55;
 // Background static clears a touch ahead of the wordmark.
 const EXIT_STATIC_LEAD = 0.25;
@@ -531,11 +459,10 @@ export function createAsciiLoaderField(canvas, state, options = {}) {
     return v ? `${v}, system-ui, sans-serif` : "system-ui, sans-serif";
   })();
 
-  // Status line in place of a percentage: "Opening the vault" with three
-  // dots blinking in turn, then "Vault is open" once loading reaches 100.
+  
   const paintCounter = (w, h, alpha, now) => {
     const full = Math.round(state.progress * 100) >= 100;
-    const text = full ? "VAULT IS OPEN" : "OPENING THE VAULT";
+    const text = full ? "" : "";
 
     ctx.save();
     ctx.textBaseline = "bottom";

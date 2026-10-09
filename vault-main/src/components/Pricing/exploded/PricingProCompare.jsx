@@ -40,14 +40,18 @@ const LABEL = "type-label";
 const CELL = "flex w-[30%] items-center px-[1.6vw] max-md:px-[4vw]";
 const TEXT = "type-body h-[1.7em]";
 
+// Same tick as the Pricing Plans cards (orange square, white check); a muted dash when not included
 function Mark({ on }) {
-  return (
-    <i
-      aria-label={on ? "Included" : "Not included"}
-      className={`flex size-[1.8vw] items-center justify-center not-italic max-md:size-[6vw] ${on ? "bg-primary/15 text-primary" : "bg-background/5 text-background/30"}`}
-    >
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="square" aria-hidden="true" className="size-[0.9vw] max-md:size-[3vw]">
-        <path d={on ? "M5 12.5l4.2 4L19 7" : "M7 12h10"} />
+  return on ? (
+    <i className="flex size-5 shrink-0 items-center justify-center bg-primary not-italic text-foreground" aria-label="Included">
+      <svg viewBox="0 0 24 24" className="size-3.5" fill="none" stroke="currentColor" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <path d="M5 12.5l4.2 4L19 7" />
+      </svg>
+    </i>
+  ) : (
+    <i className="flex size-5 shrink-0 items-center justify-center bg-background/5 not-italic text-background/30" aria-label="Not included">
+      <svg viewBox="0 0 24 24" className="size-3.5" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" aria-hidden="true">
+        <path d="M6 12h12" />
       </svg>
     </i>
   );
@@ -149,7 +153,7 @@ export default function PricingProCompare() {
             <div role="row" className="flex border-b border-background/10">
               <div role="columnheader" className="flex w-[40%] items-center px-[1.6vw] py-[2.2vw] type-body text-background/30 max-md:px-[4vw] max-md:py-[6vw]">Feature</div>
               {[["pro", "Pro"], ["plus", "Pro+"]].map(([id, name]) => (
-                <div key={id} role="columnheader" className={`${CELL} flex-col items-start justify-center gap-[0.6vw] py-[2.2vw] max-md:gap-[2vw] max-md:py-[6vw] ${id === "plus" ? "bg-primary/5" : ""}`}>
+                <div key={id} role="columnheader" className={`${CELL} flex-col items-start justify-center gap-[0.6vw] py-[2.2vw] max-md:gap-[2vw] max-md:py-[6vw] ${id === "plus" ? "bg-primary/10" : ""}`}>
                   <p className="type-h3">{id === "plus" ? <>Pro<span className="text-primary">+</span></> : name}</p>
                   <div className={`flex items-center text-background/60 max-md:flex-wrap ${LABEL}`}>
                     <span className="flex h-[1.2vw] items-center leading-none max-md:h-[4vw]">$<RollNumber value={PRICES[id][period]} values={[PRICES[id].q, PRICES[id].y]} /></span>
@@ -169,7 +173,7 @@ export default function PricingProCompare() {
                   <div role="cell" className={`${CELL} py-[1.4vw] max-md:py-[4.6vw]`}>
                     <Cell value={row.pro} period={period} dir={dir} />
                   </div>
-                  <div role="cell" className={`${CELL} bg-primary/5 py-[1.4vw] max-md:py-[4.6vw]`}>
+                  <div role="cell" className={`${CELL} bg-primary/10 py-[1.4vw] max-md:py-[4.6vw]`}>
                     <Cell value={row.plus} period={period} dir={dir} />
                   </div>
                 </div>

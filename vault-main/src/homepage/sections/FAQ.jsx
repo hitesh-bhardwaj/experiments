@@ -212,7 +212,7 @@ export function FAQRow({ item, isOpen, onToggle, index }) {
   );
 }
 
-// `inline`: sits inside a content column (blog article) instead of being a full-width page section
+
 export default function FAQ({ faqItems, translateTop = true, inline = false }) {
   const container = useRef(null);
   const [isExpanded, setIsExpanded] = useState(false);
@@ -220,7 +220,6 @@ export default function FAQ({ faqItems, translateTop = true, inline = false }) {
 
   const visibleItems = isExpanded ? faqItems : faqItems.slice(0, INITIAL_COUNT);
 
-  // Rows rise into place once, as the list scrolls in.
   useGSAP(
     () => {
       const rows = gsap.utils.toArray(".faq-v3-row");
@@ -312,9 +311,9 @@ export default function FAQ({ faqItems, translateTop = true, inline = false }) {
             text="View More"
             underlineClassName="mt-0.5"
             shimmer
-            shimmerBaseColor="var(--primary)"
-            shimmerColor="#ffe2c8"
-            className="text-primary! hover:text-primary-hover! transition-colors duration-300 max-md:text34"
+            shimmerBaseColor="#111111"
+            shimmerColor="#C9C9C9"
+            className="text-[#111111]! font-medium hover:text-[#111111]! transition-colors duration-300 max-md:text34"
           />
         </div>
       )}

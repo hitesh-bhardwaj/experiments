@@ -388,14 +388,11 @@ export default function Loader({ exitMode = "dock" }) {
       <div ref={entryRef} className="absolute inset-x-0 top-[calc(50%+min(5.02vw,98px)+2.5rem)] z-10 mx-auto flex w-full max-w-[44rem] flex-col items-center gap-4 px-6 text-center max-md:top-[calc(50%+5.64vw+2rem)]">
           <div className="flex items-center justify-center">
             <LoaderEntryButton
-              label="Enter Vault"
+              label="Enter the Vault"
               variant="orange"
               onClick={() => chooseEntry(true)}
             />
           </div>
-          {/* <p className="font-avenir text-[10px] uppercase tracking-[0.22em] text-white/40">
-            Headphones recommended
-          </p> */}
       </div>
     </div>
   );

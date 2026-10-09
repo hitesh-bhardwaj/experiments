@@ -6,7 +6,7 @@ import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { prefersReducedMotion } from "@/lib/motion";
 import LinkButton from "@/components/WebsiteComps/LinkButton";
-import MaskTextReveal from "@/components/mask-text-reveal";
+import LineWipe from "@/components/Animations/LineWipe";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger, useGSAP);
@@ -60,11 +60,14 @@ export default function PricingUseCase({ useCases }) {
   return (
     <section ref={container} id="use-cases" data-sound-flow="off" className="overflow-x-clip bg-foreground px-[4.5vw] py-[7%] text-background max-md:px-[6vw] max-md:py-[15%]">
       <div className="mx-auto flex h-fit w-full max-w-[1536px] items-start justify-between max-md:flex-col max-md:gap-[10vw]">
-        <MaskTextReveal stagger={0.08} scrub={false} duration={2} className="sticky top-[20vh] w-[45%] max-md:static max-md:w-full">
-          <h2 className="type-h1">
-            Built for teams where frontend is part of the brand & your interface needs to feel as premium as the product.
-          </h2>
-        </MaskTextReveal>
+        <div className="sticky top-[20vh] w-[45%] max-md:static max-md:w-full">
+          {/* The blog card's line wipe, scrubbed with the scroll like the cards beside it */}
+          <LineWipe scrub start="top 95%" end="top top" lit="var(--background)">
+            <h2 className="font-aeonik text-[calc(var(--cvw)*3.6)] leading-[1.1] max-lg:text-[5vw] max-md:text-[8vw]">
+              Built for teams where frontend is part of the brand & your interface needs to feel as premium as the product.
+            </h2>
+          </LineWipe>
+        </div>
 
         <div className="flex h-full w-[48%] flex-col max-md:w-full max-md:gap-[10vw]">
           {useCases.map((item) => (

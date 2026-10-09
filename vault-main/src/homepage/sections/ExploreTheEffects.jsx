@@ -156,19 +156,15 @@ export default function ExploreTheEffects() {
                 data-fadeup-delay="0.1"
                 className="fadeup relative mt-[34px] inline-flex max-w-full max-md:overflow-x-auto gap-0.5 border border-white/20 bg-black/30 p-[3px] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
             >
-                {/* <CornerMarks /> */}
-                {/* Sliding active pill, framed like the cards */}
+              
                 <span
                     ref={pillRef}
                     aria-hidden="true"
                     className="absolute inset-y-0.75 left-0 border border-primary bg-primary transition-[transform,width] duration-[600ms] motion-reduce:transition-none"
                     style={{ transitionTimingFunction: EASE }}
                 >
-                    {/* <CornerMarks /> */}
+                   
                 </span>
-                {/* The labels again in dark, clipped to the pill's box with the same timing,
-                    so whatever the orange covers reads dark at every moment of the slide
-                    instead of the text switching colour on its own clock (the blink). */}
                 <span
                     ref={inkRef}
                     aria-hidden="true"
@@ -176,7 +172,7 @@ export default function ExploreTheEffects() {
                     style={{ transitionTimingFunction: EASE }}
                 >
                     {CATEGORIES.map((category) => (
-                        <span key={category.label} className="flex h-[calc(var(--cvw)*2.6)] max-md:h-[calc(var(--cvw)*9)] shrink-0 items-center px-[calc(var(--cvw)*1.2)] max-md:px-[calc(var(--cvw)*3.5)] font-mono text-[calc(var(--cvw)*0.9)] max-md:text-[calc(var(--cvw)*3)] font-medium tracking-wide text-[#111111] uppercase">
+                        <span key={category.label} className="flex h-[calc(var(--cvw)*2.6)] max-md:h-[calc(var(--cvw)*9)] shrink-0 items-center px-[calc(var(--cvw)*1.2)] max-md:px-[calc(var(--cvw)*3.5)] font-avenir text-[calc(var(--cvw)*1)] max-md:text-[calc(var(--cvw)*3)] font-medium tracking-wide text-[#111111] uppercase">
                             {category.label}
                         </span>
                     ))}
@@ -189,7 +185,7 @@ export default function ExploreTheEffects() {
                         aria-selected={tab === i}
                         aria-controls="explore-the-effects-panel"
                         onClick={() => choose(i)}
-                        className="relative z-1 h-[calc(var(--cvw)*2.6)] max-md:h-[calc(var(--cvw)*9)] shrink-0 px-[calc(var(--cvw)*1.2)] max-md:px-[calc(var(--cvw)*3.5)] font-mono text-[calc(var(--cvw)*0.9)] max-md:text-[calc(var(--cvw)*3)] font-medium tracking-wide text-white/50 uppercase transition-colors duration-300 hover:text-white/80"
+                        className="relative z-1 h-[calc(var(--cvw)*2.6)] max-md:h-[calc(var(--cvw)*9)] shrink-0 px-[calc(var(--cvw)*1.2)] max-md:px-[calc(var(--cvw)*3.5)] font-avenir text-[calc(var(--cvw)*1)] max-md:text-[calc(var(--cvw)*3)] font-medium tracking-wide text-white/50 uppercase transition-colors duration-300 hover:text-white/80"
                     >
                         {category.label}
                     </button>

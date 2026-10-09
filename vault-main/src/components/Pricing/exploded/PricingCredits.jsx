@@ -7,6 +7,7 @@ import { useFadeUp } from "@/components/Animations/gsapAnimations";
 import Button from "@/homepage/components/Button";
 import { useInteraction } from "@/homepage/components/InteractionProvider";
 import { prefersReducedMotion } from "@/lib/motion";
+import CardFluid from "@/homepage/components/CardFluid";
 import CreditTiles from "./CreditTiles";
 import RollNumber from "./RollNumber";
 import RollText from "./RollText";
@@ -228,9 +229,10 @@ export default function PricingCredits() {
         </div>
 
         <div className="fadeup flex items-stretch gap-[1vw] max-md:flex-col max-md:gap-[3vw]">
-          <div className="relative flex w-[30%] flex-col gap-[1.4vw] overflow-hidden bg-background p-[2vw] text-foreground max-md:w-full max-md:gap-[5vw] max-md:p-[6vw]">
-            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(90%_60%_at_0%_0%,color-mix(in_srgb,var(--primary)_30%,transparent),transparent_60%)]" />
-            <p className={`relative text-foreground/50 ${LABEL}`}>Your wallet</p>
+          <div className="relative isolate flex w-[30%] flex-col gap-[1.4vw] overflow-hidden bg-background p-[2vw] text-foreground max-md:w-full max-md:gap-[5vw] max-md:p-[6vw]">
+            {/* Dotted grid + orange mouse fluid; no swish (the section sets data-sound-flow="off") */}
+            <CardFluid />
+            <p className={`relative text-foreground/50 ${LABEL}`}>Your Wallet</p>
 
             <div ref={toggleRef} role="radiogroup" aria-label="Plan for this demo" className="relative isolate flex w-fit border border-foreground/10 bg-foreground/5 p-[0.3vw] max-md:p-[1vw]">
               {PLAN_OPTIONS.map((p) => (
@@ -268,7 +270,7 @@ export default function PricingCredits() {
               <RollText fixed text={note} dir={dir} className="h-full min-w-0 flex-1" />
             </div>
             <div className="relative mt-auto">
-              <Button text="Reset wallet" variant="outline" preventDefault onClick={refill} className="w-fit" />
+              <Button text="Reset Wallet" variant="outline" preventDefault onClick={refill} className="w-fit" />
             </div>
           </div>
 
@@ -291,8 +293,7 @@ export default function PricingCredits() {
                   <div className="flex flex-col gap-[0.3vw] max-md:flex-1 max-md:gap-[1vw]">
                     <p className="type-body tracking-tight">{t.name}</p>
                     <p className={`flex items-center gap-[0.4vw] max-md:gap-[1.4vw] ${LABEL} ${t.full ? "text-background/60" : "text-primary"}`}>
-                      {!t.full && <span aria-hidden="true">✦</span>}
-                      {t.full ? "Full catalogue" : "Selected catalogue"}
+                      {t.full ? "Full Catalogue" : "Selected Catalogue"}
                     </p>
                   </div>
                   <RedeemButton

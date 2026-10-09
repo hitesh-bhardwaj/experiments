@@ -40,7 +40,7 @@ const VIEWS = [
 ];
 const CATALOGUES = [
   { id: "all", label: "All" },
-  { id: "selected", label: "✦ Selected" },
+  { id: "selected", label: "Selected" },
   { id: "full", label: "Pro+ only" },
 ];
 const CARD_LAYOUT_TRANSITION = { layout: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } };
@@ -291,7 +291,7 @@ export function TemplatesListing({ templates = [], description = "", faqItems = 
               Buy any template outright{prices.length > 0 && <> for {formatPrices(prices)}</>}. One payment, and the source is yours.
             </CreditCard>
             <CreditCard title="Pro">
-              1 credit a year on quarterly billing, 3 a year on yearly. Redeem across the selected catalogue <span className="text-primary">✦</span>.
+              1 credit a year on quarterly billing, 3 a year on yearly. Redeem across the selected catalogue.
             </CreditCard>
             <CreditCard title="Pro+" dark>
               1 credit every quarter, or 5 a year on yearly (worth ~<span className={PRICE}>$200</span>). Redeem across the full catalogue.

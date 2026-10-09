@@ -170,12 +170,12 @@ export default function Footer() {
       <canvas
         ref={ribbonCanvasRef}
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 top-0 z-0 left-[3%] block h-svh w-full mask-[linear-gradient(to_top,transparent,#000_40%)]"
+        className="pointer-events-none absolute top-0 left-[3%] z-0 block h-full w-full"
       />
       <div className={`mx-auto max-w-[1536px] w-full max-md:space-y-[calc(var(--cvw)*6)] max-sm:space-y-[calc(var(--cvw)*8)] h-fit relative z-3`}>
         <LineReveal
           as="h2"
-          className="type-h1 pointer-events-auto max-md:w-full max-sm:px-0! w-[60%]"
+          className="text-[calc(var(--cvw)*3.6)] leading-[1.1] max-lg:text-[5vw] max-md:text-[8vw] pointer-events-auto font-aeonik w-[60%] max-md:w-full max-sm:px-0!"
         >
           Build the Interaction Layer Your Website is Missing.
         </LineReveal>
@@ -200,7 +200,7 @@ export default function Footer() {
             <ShimmerText
               baseColor="#d2d2d2"
               shimmerColor="#ffffff"
-              className="max-sm:text-sm font-mono max-sm:leading-[1.2] tracking-tight"
+              className="max-sm:text-sm font-avenir max-sm:leading-[1.2] tracking-tight"
             >
               50+ effects free, forever. No credit card.
             </ShimmerText>
@@ -211,7 +211,7 @@ export default function Footer() {
           (and side padding) as the rest of the footer, so it lines up on wide screens */}
       <div className="absolute inset-x-0 bottom-[calc(var(--cvw)*2)] z-4 px-[calc(var(--cvw)*4.5)] max-md:bottom-[calc(var(--cvw)*4)] max-md:px-[calc(var(--cvw)*5)] max-sm:bottom-[calc(var(--cvw)*10)] max-sm:px-[calc(var(--cvw)*7)]">
         <p className="mx-auto w-full max-w-[1536px] type-small text-light-grey max-md:text-center">
-          © 2026 Hyperiux. All rights reserved. Psst, the first sentence is hiding something .
+          © 2026 Hyperiux. All Rights Reserved.
           {/* <EggHint className="ml-2" /> */}
         </p>
       </div>

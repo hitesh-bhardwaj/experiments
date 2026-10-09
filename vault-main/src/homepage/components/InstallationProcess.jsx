@@ -46,7 +46,7 @@ function TerminalTick({ dataKey }) {
 function Panel({ title, children, className = "" }) {
   return (
     <div
-      className={`overflow-hidden bg-[rgba(20,20,20,.86)] shadow-[inset_0_0_0_1px_rgba(244,244,244,.08)] backdrop-blur-[10px] ${className}`}
+      className={`overflow-hidden bg-black/40 ring-1 ring-inset ring-foreground/8 backdrop-blur-lg ${className}`}
     >
       <div className="flex h-[30px] items-center border-b border-white/6 px-3">
         <p className="text-[11px] text-[#8a8a8a]">

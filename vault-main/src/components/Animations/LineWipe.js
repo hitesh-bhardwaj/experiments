@@ -37,6 +37,10 @@ export default function LineWipe({
   duration = 1.6,
   stagger = 0.1,
   start = "top top+=90%",
+  // scrub: tie the wipe to the scroll between `start` and `end` (forward and back)
+  // instead of playing it once
+  scrub = false,
+  end = "top 35%",
   accent = ACCENT,
   lit = LIT,
   animationKey = "",
@@ -152,7 +156,7 @@ export default function LineWipe({
         stagger,
         ease: "power1.inOut",
         delay,
-        paused: animateOnScroll,
+        paused: animateOnScroll || scrub,
         // The container stays hidden until the tween actually starts. The
         // IntersectionObserver below fires 500px before the element enters the
         // viewport, so revealing it there would show the text long before the
@@ -181,6 +185,18 @@ export default function LineWipe({
           });
         },
       });
+
+      if (scrub) {
+        triggerRef.current = ScrollTrigger.create({
+          trigger: container,
+          start,
+          end,
+          scrub: true,
+          animation: tweenRef.current,
+          invalidateOnRefresh: true,
+        });
+        return;
+      }
 
       if (!animateOnScroll) {
         tweenRef.current.play(0);
@@ -240,7 +256,7 @@ export default function LineWipe({
         gsap.set(container, { clearProps: "visibility,opacity,transform" });
       }
     };
-  }, [animateOnScroll, delay, duration, stagger, start, accent, lit, animationKey, lineStyle]);
+  }, [animateOnScroll, delay, duration, stagger, start, end, scrub, accent, lit, animationKey, lineStyle]);
 
   const child =
     React.Children.count(children) === 1

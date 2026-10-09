@@ -39,7 +39,7 @@ const SAMPLE_CATALOGUE = {
 };
 
 export const catalogueOf = (template) => template.catalogue || SAMPLE_CATALOGUE[template.slug] || "selected";
-export const catalogueLabel = (template) => (catalogueOf(template) === "full" ? "Pro+ only" : "✦ Selected");
+export const catalogueLabel = (template) => (catalogueOf(template) === "full" ? "Pro+ only" : "wSelected");
 export const priceOf = (template) => template.pricing?.standaloneOneTime ?? null;
 
 // Template cards fade up as they scroll into view, matching the site's .fadeup (50px,

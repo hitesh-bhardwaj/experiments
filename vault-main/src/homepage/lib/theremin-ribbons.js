@@ -51,7 +51,7 @@ const POSE = {
   ribbons_m: { rp: [2.5, -5, -2], rr: [-0.28, -0.42, 0.22], rs: 0.95 },
   // Footer: a small cluster in the top-right corner
   // Turned counter-clockwise from the original 0.22 so the open ends close the gap on the right
-  footer: { rp: [10.2, 0.6, 0], rr: [-0.28, -0.42, 0.79], rs: 0.56 },
+  footer: { rp: [7, 2.2, 0], rr: [-0.28, -0.42, 0.79], rs: 0.4 },
   // Phones: on the right edge like desktop, mostly off-screen so a slice shows
   // (the camera sees about ±3.9 units across there). Same rotation as desktop.
   footer_m: { rp: [6.2, 1.5, 0], rr: [-0.28, -0.42, 0.35], rs: 0.5 },
@@ -655,7 +655,8 @@ export function mountThereminRibbons(host, canvas, { pose = "hero", sound = null
       // Scroll speed only nudges the tilt: capped, so a fast flick can't swing the model off its axis
       // The hero model stays put while scrolling: no scroll tilt there (footer keeps it)
       cur.rr.x + mouse.sy * 0.06 + (isHero ? 0 : clamp(scrollV, -MAX_TILT_SCROLL, MAX_TILT_SCROLL) * 0.0008),
-      cur.rr.y + mouse.sx * 0.18,
+      // Left-right turn with the pointer (a touch gentler in the footer)
+      cur.rr.y + mouse.sx * (isHero ? 0.18 : 0.1),
       // The slow turn with page scroll belongs to the hero; at the footer (far
       // down the page) it would add a whole extra radian of twist
       cur.rr.z + Math.sin(time * 0.12) * 0.03 + ch * 0.12,
@@ -670,7 +671,7 @@ export function mountThereminRibbons(host, canvas, { pose = "hero", sound = null
       footerSlide = lerp(footerSlide, footerTop < window.innerHeight * 0.85 ? 0 : FOOTER_SLIDE_FROM, 1 - Math.pow(0.06, dt));
       ribbons.position.x += footerSlide;
       // Drifts left / right with the pointer
-      ribbons.position.x += mouse.sx * 1.6;
+      ribbons.position.x += mouse.sx * 1.3;
       // Settles into its corner as the footer arrives (scaled to the small pose)
       const fr = clamp(host.getBoundingClientRect().top / window.innerHeight, -1, 1);
       ribbons.rotation.z += fr * 0.3;
