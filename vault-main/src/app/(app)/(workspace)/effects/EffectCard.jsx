@@ -63,7 +63,9 @@ export function EffectCard({
   effect,
   small = false,
   dark = false,
+  // Above the fold: load the cover eagerly; `highPriority` also fetches it first (the LCP card)
   priority = false,
+  highPriority = false,
   sizes = "(max-width: 767px) 100vw, (max-width: 1025px) 50vw, 33vw",
   isWishlisted = false,
   canInstall = false,
@@ -119,8 +121,8 @@ export function EffectCard({
             alt={effect.title}
             fill
             sizes={sizes}
-            priority={priority}
-            loading={priority ? undefined : "lazy"}
+            loading={priority ? "eager" : "lazy"}
+            fetchPriority={highPriority ? "high" : undefined}
             onError={() => setImageError(true)}
             className={`object-cover transition-[opacity,scale] duration-700 group-hover:scale-[1.03] ${showVideo ? "opacity-0" : "opacity-100"}`}
           />

@@ -74,6 +74,27 @@ if (typeof document !== "undefined" && !document.__effectPreviewVisibilityBound)
   });
 }
 
+// Preview clips are several MB each. Hold them until the page has loaded and the
+// browser is idle, so they don't compete with the page's own CSS, JS and images on
+// first load, and don't autoplay at all when the visitor asked to save data.
+let pageSettled = null;
+function whenPageSettled() {
+  if (!pageSettled) {
+    pageSettled = new Promise((resolve) => {
+      const idle = () =>
+        window.requestIdleCallback ? window.requestIdleCallback(() => resolve(), { timeout: 2000 }) : setTimeout(resolve, 300);
+      if (document.readyState === "complete") idle();
+      else window.addEventListener("load", idle, { once: true });
+    });
+  }
+  return pageSettled;
+}
+
+function prefersSavingData() {
+  const connection = typeof navigator !== "undefined" ? navigator.connection : null;
+  return Boolean(connection?.saveData || /2g$/.test(connection?.effectiveType || ""));
+}
+
 const STALL_FALLBACK_DELAY = 1500;
 const OBSERVER_ROOT_MARGIN = "200px 0px";
 const OBSERVER_THRESHOLD = 0.1;
@@ -111,11 +132,15 @@ export function useAutoplayPreviewVideo(videoUrl) {
 
   useEffect(() => {
     const card = cardRef.current;
-    if (!card || reducedMotion) return;
+    if (!card || reducedMotion || prefersSavingData()) return;
+    let cancelled = false;
 
     function attemptPlay() {
       if (!isIntersectingRef.current) return;
-      if (claimVideoSlot(cardId, attemptPlay)) setActive(true);
+      whenPageSettled().then(() => {
+        if (cancelled || !isIntersectingRef.current) return;
+        if (claimVideoSlot(cardId, attemptPlay)) setActive(true);
+      });
     }
 
     function release() {
@@ -139,6 +164,7 @@ export function useAutoplayPreviewVideo(videoUrl) {
 
     observer.observe(card);
     return () => {
+      cancelled = true;
       observer.disconnect();
       release();
     };
@@ -149,7 +175,7 @@ export function useAutoplayPreviewVideo(videoUrl) {
   // observer than the one above, since it only ever needs to fire once.
   useEffect(() => {
     const card = cardRef.current;
-    if (!card || !reducedMotion) return;
+    if (!card || (!reducedMotion && !prefersSavingData())) return;
 
     const observer = new IntersectionObserver(
       ([entry]) => {

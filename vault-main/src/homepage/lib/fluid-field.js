@@ -49,6 +49,7 @@ export function createFluidField({ ink, dots, ...options }) {
     pp = new Float32Array(n); dv = new Float32Array(n); dye = new Float32Array(n); dye0 = new Float32Array(n);
     ink.width = C; ink.height = R; img = gi.createImageData(C, R);
     dots.width = W * pr; dots.height = H * pr;
+    dirty = true;
   }
 
   const ix = (x, y) => (y < 0 ? 0 : y >= R ? R - 1 : y) * C + (x < 0 ? 0 : x >= C ? C - 1 : x);
@@ -121,16 +122,37 @@ export function createFluidField({ ink, dots, ...options }) {
   };
 
   let raf = 0, running = false, visible = true, ro = null, io = null;
+  /* calm: no ink, no flow and no input. The last frame is kept and nothing is
+     simulated until the pointer, scroll or an effect (splash / burst / vortex) stirs it */
+  let calm = false, dirty = true, kicked = false, scrolled = false;
+  const onScroll = () => { scrolled = true; };
+  function settled() {
+    if (vortex.a > 0.01) return false;
+    for (let i = 0; i < C * R; i++) if (dye[i] > 0.004 || Math.abs(u[i]) > 0.01 || Math.abs(v[i]) > 0.01) return false;
+    return true;
+  }
+  function stirred() {
+    /* flags only: reading the scroll position every idle frame could force a layout */
+    return kicked || vortex.a > 0.01 || (m.x >= 0 && (m.x !== m.px || m.y !== m.py)) || (o.scrollDrift && scrolled);
+  }
   function loop() {
     raf = requestAnimationFrame(loop);
     if (!visible || document.hidden) return;
+    if (calm) {
+      if (!stirred()) { if (dirty) { draw(); dirty = false; } return; }
+      /* wake without a jump: movement while calm isn't replayed as one big push */
+      calm = kicked = scrolled = false; lastSY = getScroll(); m.px = m.x; m.py = m.y;
+    }
     if (!reduced) step();
     draw();
+    dirty = false;
+    calm = reduced || settled();
   }
   function start() {
     if (running) return api;
     running = true; alloc(); lastSY = getScroll();
     addEventListener('pointermove', onMove, { passive: true });
+    addEventListener('scroll', onScroll, { passive: true });
     if (typeof ResizeObserver !== 'undefined') { ro = new ResizeObserver(alloc); ro.observe(dots); } else addEventListener('resize', alloc);
     if (o.pauseOffscreen && typeof IntersectionObserver !== 'undefined') { io = new IntersectionObserver((es) => { visible = es[0].isIntersecting; }); io.observe(dots); }
     raf = requestAnimationFrame(loop);
@@ -138,7 +160,7 @@ export function createFluidField({ ink, dots, ...options }) {
   }
   function stop() {
     running = false; cancelAnimationFrame(raf);
-    removeEventListener('pointermove', onMove); removeEventListener('resize', alloc);
+    removeEventListener('pointermove', onMove); removeEventListener('scroll', onScroll); removeEventListener('resize', alloc);
     ro && ro.disconnect(); io && io.disconnect(); ro = io = null;
     return api;
   }
@@ -147,11 +169,11 @@ export function createFluidField({ ink, dots, ...options }) {
     start, stop,
     destroy() { stop(); gi.clearRect(0, 0, ink.width, ink.height); gd.clearRect(0, 0, dots.width, dots.height); },
     /** drop a puff of ink at canvas coordinates (px) */
-    splash(x, y) { splat(x, y, 0, 0, 2.4, 0.8); },
+    splash(x, y) { kicked = true; splat(x, y, 0, 0, 2.4, 0.8); },
     /** radial burst of force + ink, e.g. on a big release. power ≈ 0.6–1.8 */
-    burst(x, y, power = 1) { for (let a = 0; a < 28; a++) { const an = (a / 28) * 6.283; splat(x + Math.cos(an) * S * 1.6, y + Math.sin(an) * S * 1.6, Math.cos(an) * power, Math.sin(an) * power, 2.2, 0.55 * Math.min(1, power)); } },
+    burst(x, y, power = 1) { kicked = true; for (let a = 0; a < 28; a++) { const an = (a / 28) * 6.283; splat(x + Math.cos(an) * S * 1.6, y + Math.sin(an) * S * 1.6, Math.cos(an) * power, Math.sin(an) * power, 2.2, 0.55 * Math.min(1, power)); } },
     /** swirl around (x,y) with strength a (0..1); set a=0 to stop */
-    setVortex(x, y, a) { vortex.x = x; vortex.y = y; vortex.a = a; },
+    setVortex(x, y, a) { kicked = a > 0.01; vortex.x = x; vortex.y = y; vortex.a = a; },
   };
   return api;
 }

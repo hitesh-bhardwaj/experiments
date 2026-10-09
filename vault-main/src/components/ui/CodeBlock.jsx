@@ -57,6 +57,7 @@ export function CopyButtonContent({ copied, iconOnly = false }) {
     const copiedLabelRef = useRef(null);
     const mounted = useRef(false);
     const shown = useRef(copied);
+    const animated = useRef(false);
 
     useLayoutEffect(() => {
         const [copyIcon, checkIcon, copyLabel, copiedLabel] = [copyIconRef, checkIconRef, copyLabelRef, copiedLabelRef].map((r) => r.current);
@@ -65,19 +66,27 @@ export function CopyButtonContent({ copied, iconOnly = false }) {
         const labelIn = copied ? copiedLabel : copyLabel;
         const labelOut = copied ? copyLabel : copiedLabel;
 
+        // The resting state (copy icon and label showing) is in the markup, so mounting
+        // does no GSAP work: a page of cards would otherwise force a style
+        // recalculation per icon. GSAP takes the elements over on the first toggle.
         if (!mounted.current) {
             mounted.current = true;
+            return undefined;
+        }
+
+        if (shown.current === copied) return undefined;
+        shown.current = copied;
+
+        if (!animated.current) {
+            animated.current = true;
+            gsap.set([copyIcon, checkIcon, copyLabel, copiedLabel].filter(Boolean), { clearProps: "opacity" });
             gsap.set(copyIcon, { scale: 1, rotation: 0, opacity: 1 });
             gsap.set(checkIcon, { scale: 0, rotation: -90, opacity: 0 });
             if (!iconOnly) {
                 gsap.set(copyLabel, { yPercent: 0, opacity: 1 });
                 gsap.set(copiedLabel, { yPercent: 100, opacity: 0 });
             }
-            return undefined;
         }
-
-        if (shown.current === copied) return undefined;
-        shown.current = copied;
 
         const tl = gsap.timeline({ defaults: { overwrite: "auto" } });
         tl.to(hide, { scale: 0, rotation: copied ? 90 : -90, opacity: 0, duration: 0.25, ease: "power2.in" }, 0)
@@ -96,7 +105,7 @@ export function CopyButtonContent({ copied, iconOnly = false }) {
                     <rect height="12" rx="2" width="12" x="8" y="8" />
                     <path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2" />
                 </svg>
-                <svg ref={checkIconRef} className="absolute inset-0" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
+                <svg ref={checkIconRef} className="absolute inset-0" style={{ opacity: 0 }} fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
                     <path d="M5 12.5l4.5 4.5L19 7.5" />
                 </svg>
             </span>
@@ -104,7 +113,7 @@ export function CopyButtonContent({ copied, iconOnly = false }) {
                 <span className="relative flex h-[1.2em] overflow-hidden leading-[1.2]">
                     <span aria-hidden="true" className="invisible">Copied</span>
                     <span ref={copyLabelRef} className="absolute left-0 top-0">Copy</span>
-                    <span ref={copiedLabelRef} className="absolute left-0 top-0">Copied</span>
+                    <span ref={copiedLabelRef} className="absolute left-0 top-0" style={{ opacity: 0 }}>Copied</span>
                 </span>
             )}
         </>

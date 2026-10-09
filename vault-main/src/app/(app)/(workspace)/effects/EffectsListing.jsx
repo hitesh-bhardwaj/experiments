@@ -449,12 +449,16 @@ export function EffectsListing({
   useGSAP(
     () => {
       const cards = [...(gridRef.current?.children || [])].slice(0, 12).map((wrapper) => wrapper.firstElementChild);
-      if (!cards.length) return;
-      gsap.fromTo(
-        cards,
-        { autoAlpha: 0, y: 24 },
-        { autoAlpha: 1, y: 0, duration: 1, stagger: 0.04, ease: "expo.out", clearProps: "opacity,visibility,transform" },
+      if (!cards.length) return undefined;
+      // Web Animations, not GSAP: GSAP first parses each card's current transform,
+      // which forces a style recalculation per card on mount (slow on phones).
+      const rises = cards.map((card, i) =>
+        card.animate(
+          [{ opacity: 0, transform: "translateY(24px)" }, { opacity: 1, transform: "none" }],
+          { duration: 1000, delay: i * 40, easing: "cubic-bezier(0.16, 1, 0.3, 1)", fill: "backwards" },
+        ),
       );
+      return () => rises.forEach((rise) => rise.cancel());
     },
     { dependencies: [filterKey], scope: rootRef },
   );
@@ -596,9 +600,12 @@ export function EffectsListing({
   );
   const cta = content?.cta;
 
-  const cardProps = (effect, index) => ({
+  // Only the Trending row is on screen at load: its first three covers load eagerly and
+  // the first (the mobile LCP) is fetched first. The grid below lazy-loads.
+  const cardProps = (effect, index, aboveFold = false) => ({
     effect,
-    priority: index < 4,
+    priority: aboveFold && index < 3,
+    highPriority: aboveFold && index === 0,
     onOpen: setDrawerEffect,
     ...cardActions(effect),
   });
@@ -683,7 +690,7 @@ export function EffectsListing({
             className="flex cursor-grab select-none gap-[0.9vw] overflow-x-hidden overflow-y-hidden pb-1 scrollbar-none max-lg:gap-[1.4vw] max-lg:overflow-x-auto max-md:gap-[3.6vw]"
           >
             {trendingEffects.map((effect, index) => (
-              <EffectCard key={effect.name} {...cardProps(effect, index)} small dark className="w-[calc((100%-1.8vw)/3)] shrink-0 max-lg:w-[45%] max-md:w-[82%]" tagClassName="text-foreground border-foreground/30" metaClassName="text-foreground/80" />
+              <EffectCard key={effect.name} {...cardProps(effect, index, true)} small dark className="w-[calc((100%-1.8vw)/3)] shrink-0 max-lg:w-[45%] max-md:w-[82%]" tagClassName="text-foreground border-foreground/30" metaClassName="text-foreground/80" />
             ))}
           </div>
         </section>
