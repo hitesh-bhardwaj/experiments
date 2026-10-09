@@ -29,7 +29,7 @@ export default function CommunityFounding() {
         The First Cohort <span className="gradient-text-animate gradient-text-single">Shapes the Room.</span>
       </LineReveal>
       <div className="flex items-start justify-between gap-[4vw] max-[1025px]:flex-col">
-        <div className="fadeup relative isolate w-[52%] overflow-hidden bg-ink p-[3vw] text-light max-[1025px]:w-full max-md:p-[7vw]">
+        <div className="fadeup relative isolate w-[52%] overflow-hidden bg-ink p-[3vw] text-white max-[1025px]:w-full max-md:p-[7vw]">
           <CardFluid />
           <ul className="relative flex flex-col gap-[2vw] max-[1025px]:gap-[5vw]">
             {PERKS.map((perk) => (
@@ -37,8 +37,8 @@ export default function CommunityFounding() {
                 {/* diamond sits on the title's line */}
                 <i aria-hidden="true" className="relative top-[0.6vw] size-[0.6vw] shrink-0 rotate-45 bg-primary max-md:top-[2.2vw] max-md:size-[2vw]" />
                 <div className="flex min-w-0 flex-col gap-1">
-                  <b className="type-h3 font-medium!">{perk.title}</b>
-                  <span className="type-body text-light/60">{perk.text}</span>
+                  <b className="type-h3 font-avenir font-medium!">{perk.title}</b>
+                  <span className="type-body text-white/60">{perk.text}</span>
                 </div>
               </li>
             ))}
@@ -49,7 +49,7 @@ export default function CommunityFounding() {
             <li key={step.title} className="fadeup flex gap-[0.8vw] border-t border-black/10 py-[1.5vw] last:border-b max-md:gap-[3vw] max-md:py-[5.6vw]" data-fadeup-delay={i * 0.1}>
               <span className="type-label relative top-[0.3vw] w-[3.3vw] shrink-0 text-primary max-md:top-[1vw] max-md:w-[12vw]">{String(i + 1).padStart(2, "0")}</span>
               <div className="flex min-w-0 flex-col gap-1">
-                <b className="type-h3 font-medium!">{step.title}</b>
+                <b className="type-h3 font-avenir font-medium!">{step.title}</b>
                 <p className="type-body text-black/60">{step.text}</p>
               </div>
             </li>

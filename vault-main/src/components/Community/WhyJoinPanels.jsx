@@ -294,7 +294,7 @@ export function VoteCard() {
               className={`flex items-center justify-between gap-[1vw] px-[1.1vw] py-[1vw] ring-1 ring-inset transition-[background-color,box-shadow] duration-700 ease-[cubic-bezier(.16,1,.3,1)] max-md:gap-[3.5vw] max-md:px-[4vw] max-md:py-[3.5vw] ${on ? "bg-primary/10 ring-primary/45" : "bg-black/20 ring-foreground/10 backdrop-blur-lg"}`}
             >
               <div className="flex min-w-0 flex-col gap-0.5">
-                <span className="type-h3 text-foreground">{VOTE_IDEAS[i].title}</span>
+                <span className="type-h3 font-avenir text-foreground">{VOTE_IDEAS[i].title}</span>
                 <span className="type-small text-foreground/50">{VOTE_IDEAS[i].text}</span>
               </div>
               <button
@@ -382,7 +382,7 @@ export function FeaturedCard({ joined }) {
       <CardFluid />
       <div className="relative flex aspect-[4/5] w-[78%] max-w-[29vw] flex-col justify-end gap-[0.7vw] overflow-hidden bg-black/20 p-[1.8vw] ring-1 ring-inset ring-primary/45 backdrop-blur-lg max-md:max-w-none max-md:gap-[2.5vw] max-md:p-[6.6vw] after:absolute after:-top-[30%] after:-right-[30%] after:aspect-square after:w-4/5 after:bg-[radial-gradient(circle,color-mix(in_srgb,var(--primary)_45%,transparent),transparent_65%)] after:content-['']">
         <p className={`${LABEL} relative text-[#FFB27A]`}>Featured on Vault · this week</p>
-        <p className="type-h2 relative text-foreground">Your work<br />could be here.</p>
+        <p className="type-h2 font-avenir relative text-foreground">Your work<br />could be here.</p>
         <p className={`${LABEL} relative text-foreground/60`}>by <span className="text-foreground">{joined ? "you, founding member" : "you"}</span></p>
       </div>
     </div>

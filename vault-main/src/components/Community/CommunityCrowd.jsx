@@ -75,7 +75,7 @@ export default function CommunityCrowd() {
       <div
         role="status"
         aria-live="polite"
-        className="fixed bottom-[calc(24px+env(safe-area-inset-bottom,0px))] left-1/2 z-130 max-w-[calc(100vw-2rem)] bg-[#1f1f1f] px-[18px] py-3 text-sm text-[#F4F4F4] shadow-[inset_0_0_0_1px_rgba(244,244,244,.1),0_20px_40px_-12px_#000]"
+        className="fixed bottom-[calc(24px+env(safe-area-inset-bottom,0px))] left-1/2 z-130 max-w-[calc(100vw-2rem)] bg-[#1f1f1f] px-[18px] py-3 text-sm text-white shadow-[inset_0_0_0_1px_rgba(244,244,244,.1),0_20px_40px_-12px_#000]"
         style={{ transform: `translate(-50%, ${toast.on ? "0" : "240%"})`, transition: "transform 1s cubic-bezier(.16,1,.3,1)" }}
       >
         {toast.msg}

@@ -216,7 +216,7 @@ export default function PricingFinder() {
 
         <div ref={outRef} aria-live="polite" className="flex w-[50%] flex-col gap-[1.2vw] border-l border-foreground/10 p-[2.4vw] max-md:w-full max-md:gap-[4vw] max-md:border-t max-md:border-l-0 max-md:p-[6vw]">
           <p data-pick className={`text-foreground/50 ${LABEL}`}>We’d pick</p>
-          <div className="type-h1 flex items-center gap-[1vw] text-foreground max-md:gap-[3vw]">
+          <div className="type-h1 font-avenir flex items-center gap-[1vw] text-foreground max-md:gap-[3vw]">
             <RollText text={rec.plan.name} dir={rec.key === "plus" ? 1 : -1} className="pb-[0.1em]" />
             <span ref={tagRef} className={`bg-primary/20 px-[0.7vw] py-[0.4vw] text-primary-hover max-md:px-[2vw] max-md:py-[1vw] ${LABEL}`}>
               {rec.period === "y" ? "Yearly" : "Quarterly"}
