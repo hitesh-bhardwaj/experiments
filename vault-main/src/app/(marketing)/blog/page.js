@@ -1,5 +1,5 @@
 import Navbar from "@/homepage/components/Navbar";
-import Footer from "@/homepage/sections/Footer";
+import dynamic from "next/dynamic";
 import LenisSmoothScroll from "@/components/SmoothScroll/LenisScroll";
 import {
   getSanityBlogEntries,
@@ -9,9 +9,12 @@ import {
 import { getSearchIndexEffects } from "@/lib/search-index";
 import { createPageMetadata } from "@/lib/seo-metadata";
 import { WebpageJsonLd } from "@/lib/json-ld";
-import BlogListing from "./BlogListing";
 import BlogHero from "./BlogHero";
 import FeaturedBlog from "./FeaturedBlog";
+
+// Below-the-fold sections load as separate chunks (still server-rendered)
+const Footer = dynamic(() => import("@/homepage/sections/Footer"));
+const BlogListing = dynamic(() => import("./BlogListing"));
 
 const POSTS_PER_PAGE = 9;
 

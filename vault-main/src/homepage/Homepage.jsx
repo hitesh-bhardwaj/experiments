@@ -1,18 +1,21 @@
-import SignalSection from "@/homepage/sections/SignalSection";
 import WhyVault from "@/homepage/sections/WhyVault";
+import dynamic from "next/dynamic";
 import LenisSmoothScroll from "@/components/SmoothScroll/LenisScroll";
-import ExplainVault from "@/homepage/sections/ExplainVault";
-import ExploreTheEffects from "@/homepage/sections/ExploreTheEffects";
-import FAQ from "@/homepage/sections/FAQ";
-import Footer from "@/homepage/sections/Footer";
 import Hero from "@/homepage/sections/Hero";
-import ProblemFixes from "@/homepage/sections/Problem&Fixes";
-import PricingPlansHome from "@/homepage/sections/PricingPlansHome";
 import Navbar from "@/homepage/components/Navbar";
 import Loader from "@/homepage/components/Loader";
 import ScrollTopOnLoad from "@/homepage/components/ScrollTopOnLoad";
 import SectionOverlay from "@/components/Animations/SectionOverlay";
 import Cursor from "@/homepage/components/Cursor";
+
+// Below-the-fold sections load as separate chunks (still server-rendered)
+const ExplainVault = dynamic(() => import("@/homepage/sections/ExplainVault"));
+const ProblemFixes = dynamic(() => import("@/homepage/sections/Problem&Fixes"));
+const SignalSection = dynamic(() => import("@/homepage/sections/SignalSection"));
+const ExploreTheEffects = dynamic(() => import("@/homepage/sections/ExploreTheEffects"));
+const PricingPlansHome = dynamic(() => import("@/homepage/sections/PricingPlansHome"));
+const FAQ = dynamic(() => import("@/homepage/sections/FAQ"));
+const Footer = dynamic(() => import("@/homepage/sections/Footer"));
 
 
 export default function Homepage({ faqItems, effects = [] }) {

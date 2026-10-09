@@ -1,7 +1,6 @@
 import { notFound } from "next/navigation";
+import nextDynamic from "next/dynamic";
 import Navbar from "@/homepage/components/Navbar";
-import Footer from "@/homepage/sections/Footer";
-import FAQ from "@/homepage/sections/FAQ";
 import LenisSmoothScroll from "@/components/SmoothScroll/LenisScroll";
 import {
   getSanityBlogPost,
@@ -17,7 +16,11 @@ import BlogDetailHero from "./BlogDetailHero";
 import BlogBodyRenderer from "@/components/blog/BlogBodyRenderer";
 import BlogArticleBody from "@/components/blog/BlogArticleBody";
 import BlogTags from "@/components/blog/BlogTags";
-import RelatedBlogsSlider from "./RelatedBlogsSlider";
+
+// Below-the-fold sections load as separate chunks (still server-rendered)
+const Footer = nextDynamic(() => import("@/homepage/sections/Footer"));
+const FAQ = nextDynamic(() => import("@/homepage/sections/FAQ"));
+const RelatedBlogsSlider = nextDynamic(() => import("./RelatedBlogsSlider"));
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;

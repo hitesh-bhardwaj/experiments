@@ -1,16 +1,19 @@
 import SectionOverlay from "@/components/Animations/SectionOverlay";
+import dynamic from "next/dynamic";
 import VaultShell from "@/Layouts/VaultShell";
 import { getSearchIndexEffects } from "@/lib/search-index";
 import { FAQJSONLD, WebpageJsonLd } from "@/lib/json-ld";
 import { createPageMetadata } from "@/lib/seo-metadata";
 import CommunityCrowd from "@/components/Community/CommunityCrowd";
 import CommunityHero from "@/components/Community/CommunityHero";
-import CommunityFamiliar from "@/components/Community/CommunityFamiliar";
-import CommunityStack from "@/components/Community/CommunityStack";
-import CommunityFounding from "@/components/Community/CommunityFounding";
-import FAQ from "@/homepage/sections/FAQ";
-import CommunityJoin from "@/components/Community/CommunityJoin";
 import Cursor from "@/homepage/components/Cursor";
+
+// Below-the-fold sections load as separate chunks (still server-rendered)
+const CommunityFamiliar = dynamic(() => import("@/components/Community/CommunityFamiliar"));
+const CommunityStack = dynamic(() => import("@/components/Community/CommunityStack"));
+const CommunityFounding = dynamic(() => import("@/components/Community/CommunityFounding"));
+const FAQ = dynamic(() => import("@/homepage/sections/FAQ"));
+const CommunityJoin = dynamic(() => import("@/components/Community/CommunityJoin"));
 
 // NEEDS PRODUCT CONFIRMATION: the bracketed answers are placeholders from the concept
 const COMMUNITY_FAQ = [

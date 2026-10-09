@@ -1,7 +1,10 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
-import Footer from "@/homepage/sections/Footer";
+
+// Below-the-fold sections load as separate chunks (still server-rendered)
+const Footer = dynamic(() => import("@/homepage/sections/Footer"));
 
 // This layout is shared by docs/templates/effects/legal AND dashboard -
 // dashboard has its own dense, app-like UI (DashboardShell's own nav/tabs)

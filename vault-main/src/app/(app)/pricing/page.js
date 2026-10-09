@@ -1,18 +1,21 @@
 import { headers } from "next/headers";
+import dynamic from "next/dynamic";
 import VaultShell from "@/Layouts/VaultShell";
 import { getSearchIndexEffects } from "@/lib/search-index";
 import PricingHero from "@/components/Pricing/pricing-hero/PricingHero";
 import { FAQJSONLD, WebpageJsonLd } from "@/lib/json-ld";
 import { createPageMetadata } from "@/lib/seo-metadata";
 import Cursor from "@/homepage/components/Cursor";
-import FAQ from "@/homepage/sections/FAQ";
-import Footer from "@/homepage/sections/Footer";
-import PricingFinder from "@/components/Pricing/exploded/PricingFinder";
-import PricingCredits from "@/components/Pricing/exploded/PricingCredits";
-import PricingUseCase from "@/components/Pricing/exploded/PricingUseCase";
-import PricingProCompare from "@/components/Pricing/exploded/PricingProCompare";
 import SectionOverlay from "@/components/Animations/SectionOverlay";
-import PricingPlansHome from "@/homepage/sections/PricingPlansHome";
+
+// Below-the-fold sections load as separate chunks (still server-rendered)
+const FAQ = dynamic(() => import("@/homepage/sections/FAQ"));
+const Footer = dynamic(() => import("@/homepage/sections/Footer"));
+const PricingFinder = dynamic(() => import("@/components/Pricing/exploded/PricingFinder"));
+const PricingCredits = dynamic(() => import("@/components/Pricing/exploded/PricingCredits"));
+const PricingUseCase = dynamic(() => import("@/components/Pricing/exploded/PricingUseCase"));
+const PricingProCompare = dynamic(() => import("@/components/Pricing/exploded/PricingProCompare"));
+const PricingPlansHome = dynamic(() => import("@/homepage/sections/PricingPlansHome"));
 
 export const metadata = createPageMetadata({
   title: "Hyperiux Vault Pricing | Pro React Effects Library",
