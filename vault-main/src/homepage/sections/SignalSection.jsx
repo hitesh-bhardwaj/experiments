@@ -124,7 +124,7 @@ export default function SignalSection() {
                     <canvas ref={canvasRef} className="block size-full" />
                 </div>
             </div>
-            <div className="relative z-[60]! mx-auto h-[80vh]  max-w-[1536px] px-[calc(var(--cvw)*4.5)] py-[7%] max-md:h-fit max-md:px-[calc(var(--cvw)*5)] max-sm:px-[calc(var(--cvw)*7)]">
+            <div className="relative z-[60]! mx-auto h-[80vh]  max-w-[1536px] px-[calc(var(--cvw)*4.5)] py-[7%] max-md:py-[12%] max-md:h-fit max-md:px-[calc(var(--cvw)*5)] max-sm:px-[calc(var(--cvw)*7)]">
                 <div className="grid min-h-[62vh] grid-cols-2 items-start gap-12 max-md:min-h-fit max-md:grid-cols-1">
                     <div>
                         <LineReveal as="h2" className="type-h1 leading-[1.2] max-w-[calc(var(--cvw)*30)] max-lg:max-w-full">

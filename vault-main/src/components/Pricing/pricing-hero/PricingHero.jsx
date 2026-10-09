@@ -91,7 +91,7 @@ export default function PricingHero({ isIndia = false }) {
           <LineReveal as="h1" className="type-display relative w-[58%] text-foreground max-md:w-full">
             Pick a Plan. <span className="gradient-text-animate block">Keep the Code.</span>
           </LineReveal>
-          <div className="flex w-[32%] flex-col gap-[2vw] max-md:w-full max-md:gap-[5vw]">
+          <div className="flex w-[32%] flex-col gap-[2vw] max-md:w-full max-md:gap-[8vw]">
             <SplitLine as="p" start="top 120%" className="type-body-lg w-full text-foreground/80">
               Two plans, Pro and Pro+, billed monthly or yearly. Every component you
               copy lands in your repo and stays yours, even if you cancel.
