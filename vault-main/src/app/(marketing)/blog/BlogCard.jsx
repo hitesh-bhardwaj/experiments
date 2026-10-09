@@ -13,6 +13,17 @@ function formatCardDate(value) {
   return `${month} ${day},${date.getFullYear()}`;
 }
 
+// Card descriptions are cut at a word boundary after about this many characters.
+const SUMMARY_MAX = 80;
+
+function truncateSummary(text = "", max = SUMMARY_MAX) {
+  const clean = text.trim();
+  if (clean.length <= max) return clean;
+  const cut = clean.slice(0, max);
+  const atWord = cut.slice(0, cut.lastIndexOf(" ")) || cut;
+  return `${atWord.replace(/[\s,.;:!?-]+$/, "")}\u2026`;
+}
+
 // `light`: for the white area on the blog detail page (the listing is dark)
 export default function BlogCard({ post, priority = false, light = false }) {
   return (
@@ -36,35 +47,35 @@ export default function BlogCard({ post, priority = false, light = false }) {
         <div className="mt-2 flex items-center justify-between gap-3 pb-3 font-avenir">
           <div className="flex min-w-0 flex-wrap items-center gap-2">
             {post.categories?.length > 0 && (
-              <span className={`${light ? "bg-black/5 text-ink" : "bg-grey text-foreground/90"} px-2 py-0.5  text-[0.9vw] max-lg:px-3 max-lg:py-1.5 max-lg:text-[2vw] max-md:px-3 max-md:py-1 max-md:text-[3vw]!`}>
+              <span className={`${light ? "bg-black/5 text-ink" : "bg-grey text-foreground/90"} px-2 py-0.5 type-small max-lg:px-3 max-lg:py-1.5 max-md:px-3 max-md:py-1`}>
                 {post.categories[0].title}
               </span>
             )}
           </div>
-          <span className={`shrink-0 text18 font-avenir ${light ? "text-black/60" : "text-foreground/70"} max-lg:text-[1.8vw] max-md:text-[3vw]!`}>
+          <span className={`shrink-0 type-small ${light ? "text-black/60" : "text-foreground/70"}`}>
             {formatCardDate(post.publishedAt)}
           </span>
         </div>
 
         <LineWipe lit={light ? "var(--ink)" : undefined}>
-          <h3 className={`shrink-0 text32 font-aeonik font-medium leading-[1.2]! ${light ? "text-ink" : "text-foreground"} max-lg:text-[2.8vw] max-md:text-[3vw] max-sm:text-[4.5vw]`}>
+          <h3 className={`shrink-0 type-h3 ${light ? "text-ink" : "text-foreground"}`}>
             {post.title}
           </h3>
         </LineWipe>
 
         <LineWipe delay={0.15} lit={light ? "var(--ink)" : undefined}>
-          <p className={`grow text20 max-lg:text-[2vw] leading-[1.4] ${light ? "text-black/60" : "text-foreground"} max-md:text-[3.5vw]!`}>
-            {post.summary}
+          <p className={`type-body leading-[1.3] ${light ? "text-black/60" : "text-foreground"}`}>
+            {truncateSummary(post.summary)}
           </p>
         </LineWipe>
 
-        <div className="fadein" data-fadein-delay="0.3">
+        <div className="fadein mt-auto" data-fadein-delay="0.3">
           <LinkButton
             href={`/blog/${post.slug}`}
             text="Read More"
             tilted={false}
             underline={true}
-            className={`relative text20 max-md:text-sm z-10 mt-5 max-md:mt-0! max-md:text34 ${light ? "text-ink!" : ""}`}
+            className={`relative type-body z-10 mt-5 max-md:mt-0! ${light ? "text-ink!" : ""}`}
           />
         </div>
       </div>

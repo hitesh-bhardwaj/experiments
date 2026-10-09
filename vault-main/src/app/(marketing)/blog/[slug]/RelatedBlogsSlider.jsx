@@ -163,7 +163,7 @@ export default function RelatedBlogsSlider({ posts = [] }) {
       <div className="flex items-center justify-between gap-[1.4vw] max-[1025px]:flex-col max-[1025px]:gap-[5vw]">
         <LineWipe lineStyle={RELATED_BLOGS_HEADING_LINE_STYLE} lit="var(--ink)">
           <h2
-            className="text64 text-center font-aeonik font-medium text-background"
+            className="type-h1 text-center text-background"
             style={RELATED_BLOGS_HEADING_LINE_STYLE}
           >
             Related Blogs

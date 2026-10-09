@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 const PILL_CLASS =
-  "bg-[#2B2B2B] px-[0.4vw] py-[0.1vw] text-[0.95vw] font-avenir text-white/90 max-md:px-3 max-md:py-1 max-md:text-[3vw]!";
+  "bg-[#2B2B2B] px-[0.4vw] py-[0.1vw] type-small text-white/90 max-md:px-3 max-md:py-1";
 
 const MOBILE_VISIBLE = 3;
 

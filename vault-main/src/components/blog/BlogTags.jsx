@@ -6,12 +6,12 @@ export default function BlogTags({ tags = [] }) {
       {/* <hr className="blog-divider" /> */}
 
       <div className="flex flex-wrap items-center gap-3 pt-10">
-        <span className="text-[0.9vw] text-black/60 max-[1025px]:text-[2.2vw] max-md:text-[4.4vw]">tags:</span>
+        <span className="type-small text-black/60">tags:</span>
 
         {tags.map((tag) => (
           <span
             key={tag}
-            className="flex items-center justify-center bg-black/5 px-2 py-0.5 font-avenir text-[0.9vw] capitalize tracking-tight text-ink max-[1025px]:text-[2vw] max-md:text-[3.6vw]"
+            className="flex items-center justify-center bg-black/5 px-2 py-0.5 type-small capitalize text-ink"
           >
             {tag}
           </span>

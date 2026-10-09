@@ -18,18 +18,18 @@ export default function BlogDetailHero({ post }) {
 
   return (
     <div ref={heroRef} className="flex flex-col gap-[3.5vw] max-md:gap-[8vw]">
-      <section id="blog-hero" className="mx-auto flex w-full max-w-[1536px] flex-col gap-[1.4vw] px-[4.5vw] max-md:gap-[5vw] max-md:px-[6vw]">
+      <section id="blog-hero" className="mx-auto flex w-full max-w-[1536px] flex-col gap-[2vw] px-[4.5vw] max-md:gap-[5vw] max-md:px-[6vw]">
         <Breadcrumb maxWords={3} />
 
         <LineWipe>
-          <h1 className="text80 w-[80%] font-aeonik font-normal text-foreground max-[1025px]:w-full">
+          <h1 className="type-h1 w-[80%]  leading-[1.2] text-[3.2vw] text-foreground max-[1025px]:w-full">
             {post.title}
           </h1>
         </LineWipe>
 
         {post.summary && (
           <LineWipe delay={0.5}>
-            <p className="text22 w-[60%] leading-[1.6] text-foreground/90 max-[1025px]:w-full">
+            <p className="type-body-lg w-[60%] text-foreground/90 max-[1025px]:w-full">
               {post.summary}
             </p>
           </LineWipe>

@@ -51,9 +51,9 @@ export default function BlogArticleBody({
           <BlogAuthor author={author} />
 
       
-          <div className="flex flex-col gap-[0.8vw] text-[1vw] text-ink max-[1025px]:text-[2.4vw] max-md:text-[3.4vw]">
+          <div className="flex flex-col gap-[0.8vw] type-small text-ink">
             {(publishedAt || readingMinutes) && (
-              <div className="flex items-center gap-[1.2vw] text-[0.9vw] text-black/60">
+              <div className="flex items-center gap-[1.2vw] type-small text-black/60">
                 {publishedAt && (
                   <time dateTime={publishedAt}>Featured: {formatRailDate(publishedAt)}</time>
                 )}
@@ -67,11 +67,11 @@ export default function BlogArticleBody({
             )}
 
             {categories.length > 0 && (
-              <p className="text-[0.9vw] text-black/60">Category: {categories.map((category) => category.title).join(", ")}</p>
+              <p className="type-small text-black/60">Category: {categories.map((category) => category.title).join(", ")}</p>
             )}
           </div>
 
-          <div className="flex items-center gap-[0.6vw] text-[0.9vw] text-black/60 max-[1025px]:text-[2.4vw] max-md:text-[3.4vw]">
+          <div className="flex items-center gap-[0.6vw] type-small text-black/60">
             <span>Share this Article:</span>
             <BlogSharePopover url={shareUrl} title={shareTitle} />
           </div>
@@ -94,7 +94,7 @@ export default function BlogArticleBody({
         <div className="hidden flex-col gap-[3vw] max-[1025px]:flex max-md:gap-[4vw]">
           <BlogAuthor author={author} />
 
-          <div className="flex flex-wrap items-center gap-x-[3vw] gap-y-2 text-black/60 max-[1025px]:text-[2.4vw] max-md:text-[3.4vw]">
+          <div className="flex flex-wrap items-center gap-x-[3vw] gap-y-2 type-small text-black/60">
             {publishedAt && (
               <time dateTime={publishedAt}>Featured: {formatRailDate(publishedAt)}</time>
             )}

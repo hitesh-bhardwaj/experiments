@@ -7,12 +7,9 @@ import BlogCard from "./BlogCard";
 import { useFadeIn, useFadeUp } from "@/components/Animations/gsapAnimations";
 
 // Same chips and text sizes as the effects listing's light catalogue sheet
-const T13 = "text-[0.9vw] max-[1025px]:text-[1.6vw] max-md:text-[3.3vw]";
-const T20 = "text-[1.4vw] max-[1025px]:text-[2.4vw] max-md:text-[5vw]";
-const CHIP = `inline-flex h-8 shrink-0 cursor-pointer items-center gap-[0.5vw] px-3 ${T13} transition-[background-color,color,box-shadow] duration-500 max-md:gap-[2vw]`;
+const CHIP = `inline-flex h-8 shrink-0 cursor-pointer items-center gap-[0.5vw] px-3 type-small transition-[background-color,color,box-shadow] duration-500 max-md:gap-[2vw]`;
 const CHIP_OFF = "text-black/60 ring-1 ring-inset ring-black/10 hover:text-ink hover:ring-primary";
 const CHIP_ON = "bg-primary text-background";
-const T14 = "text-[0.97vw] max-[1025px]:text-[1.7vw] max-md:text-[3.6vw]";
 
 // Same column switch as the effects listing: 2 or 3 cards per row on desktop
 // (tablet is always 2, mobile 1). The choice is remembered.
@@ -72,7 +69,7 @@ function SlidingSegment({ label, items, value, onChange, itemClassName, classNam
             aria-pressed={active}
             aria-label={item.ariaLabel}
             onClick={() => onChange(item.id)}
-            className={`relative z-1 flex h-8 cursor-pointer items-center justify-center ${T14} transition-colors duration-500 ${itemClassName} ${
+            className={`relative z-1 flex h-8 cursor-pointer items-center justify-center type-small transition-colors duration-500 ${itemClassName} ${
               active ? "text-light" : "text-black/60 hover:text-ink"
             }`}
           >
@@ -126,11 +123,11 @@ export default function BlogListing({
 
   return (
     <section ref={sectionRef} id="blog-grid" className="relative flex flex-col">
-      {/* summary + category filters, sticky like the effects listing's controls bar */}
-      <div className="sticky top-[-2%] z-5 h-fit border-b border-black/8 bg-foreground max-[1025px]:static max-[1025px]:border-b-0">
+      {/* summary + category filters; scrolls away with the page */}
+      <div className="h-fit border-b border-black/8 bg-foreground max-[1025px]:border-b-0">
         <div className="mx-auto flex w-full max-w-[1536px] flex-wrap items-end justify-between gap-[1vw] px-[4.5vw] pt-10 pb-4 max-md:gap-[4vw] max-md:px-[6vw] max-md:pt-8">
           <div className="flex flex-wrap items-end gap-x-[2vw] gap-y-[1vw] max-md:gap-[4vw]">
-            <p aria-live="polite" className={`${T20} flex flex-wrap items-baseline gap-x-[0.4vw] font-avenir tracking-tight max-md:gap-x-[1.5vw]`}>
+            <p aria-live="polite" className="type-body-lg flex flex-wrap items-baseline gap-x-[0.4vw] max-md:gap-x-[1.5vw]">
               <span className="font-medium tabular-nums">{total}</span>
               <span className="text-black/60">{total === 1 ? "post" : "posts"}</span>
               {activeTitle && <span className="pl-[0.3vw] text-black/60">· {activeTitle}</span>}
@@ -169,8 +166,8 @@ export default function BlogListing({
       <div className="mx-auto flex w-full max-w-[1536px] flex-col gap-[2.8vw] px-[4.5vw] pt-6 pb-24 max-md:gap-[10vw] max-md:px-[6vw] max-md:pb-16">
         {posts.length === 0 ? (
           <div className="flex flex-col items-center gap-3.5 px-4 py-20 text-center">
-            <b className="text32 font-avenir font-normal tracking-tight">Nothing here, yet.</b>
-            <p className="text22 text-black/60">New posts land in the vault regularly.</p>
+            <b className="type-h3">Nothing here, yet.</b>
+            <p className="type-body-lg text-black/60">New posts land in the vault regularly.</p>
             {activeCategory !== "all" && (
               <Link href={buildHref({ category: "all" })} scroll={false} className={chip(false)}>
                 See all posts

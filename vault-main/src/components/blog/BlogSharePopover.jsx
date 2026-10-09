@@ -162,7 +162,7 @@ export default function BlogSharePopover({ url, title }) {
               type="button"
               role="menuitem"
               onClick={copyLink}
-              className="group relative isolate flex w-full cursor-pointer items-center gap-3 border-b border-foreground/10 px-4 py-3 text-left text-[0.9vw] text-foreground"
+              className="group relative isolate flex w-full cursor-pointer items-center gap-3 border-b border-foreground/10 px-4 py-3 text-left type-small text-foreground"
             >
               <span
                 aria-hidden="true"
@@ -185,7 +185,7 @@ export default function BlogSharePopover({ url, title }) {
                 target="_blank"
                 rel="noreferrer"
                 onClick={() => setOpen(false)}
-                className="group relative isolate flex items-center gap-3 px-4 py-3 text-[0.9vw] text-white"
+                className="group relative isolate flex items-center gap-3 px-4 py-3 type-small text-white"
               >
                 <span
                   aria-hidden="true"
