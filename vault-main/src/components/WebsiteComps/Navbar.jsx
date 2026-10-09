@@ -131,7 +131,7 @@ export default function Navbar({ effects = [] }) {
                         <span className="text-sm text-white/70 max-lg:hidden">Search</span>
                     </div>
 
-                    <kbd className="space-x-2 bg-black/80 px-1 py-0.5 text-sm text-current opacity-50 max-lg:hidden">
+                    <kbd className="font-avenir space-x-2 bg-black/80 px-1 py-0.5 text-sm text-current opacity-50 max-lg:hidden">
                         ⌘K
                     </kbd>
                 </button>
