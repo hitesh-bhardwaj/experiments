@@ -7,6 +7,7 @@ import { useGSAP } from "@gsap/react";
 import { useLenis } from "lenis/react";
 import LineReveal from "@/components/Animations/LineReveal";
 import { useFadeUp } from "@/components/Animations/gsapAnimations";
+import { useSectionOverlay } from "@/components/Animations/useSectionOverlay";
 import { useInteraction } from "@/homepage/components/InteractionProvider";
 import { prefersReducedMotion } from "@/lib/motion";
 import { useCommunity } from "./community-store";
@@ -60,6 +61,7 @@ export default function CommunityFamiliar() {
   const [spy, setSpy] = useState(0);
 
   useFadeUp(rootRef);
+  useSectionOverlay(rootRef);
 
   useGSAP(() => {
     const root = rootRef.current;

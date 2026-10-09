@@ -7,10 +7,10 @@ import { useGSAP } from "@gsap/react";
 import { useLenis } from "lenis/react";
 import LineReveal from "@/components/Animations/LineReveal";
 import { useFadeUp } from "@/components/Animations/gsapAnimations";
+import { useSectionOverlay } from "@/components/Animations/useSectionOverlay";
 import CodeCard from "../components/why-vault/CodeCard";
 import MomentsCard from "../components/why-vault/MomentsCard";
 import TuneCard from "../components/why-vault/TuneCard";
-import { prefersReducedMotion } from "@/lib/motion";
 
 const WHY_VAULT_ITEMS = [
     {
@@ -65,24 +65,8 @@ export default function WhyVault() {
         });
     }, { scope: rootRef });
 
-    // The white layer widens to full as the section scrolls up into view (then the heading
-    // text staggers in, see the LineReveals below), and narrows again on the x axis as it
-    // scrolls away (scrubbed to the scroll)
-    // useGSAP(() => {
-    //     const bg = bgRef.current;
-    //     if (!bg || prefersReducedMotion()) return;
-    //     gsap.fromTo(bg, { scaleX: 0.9 }, {
-    //         scaleX: 1,
-    //         ease: "none",
-    //         scrollTrigger: { trigger: rootRef.current, start: "top bottom", end: "top 40%", scrub: true },
-    //     });
-    //     gsap.fromTo(bg, { scaleX: 1 }, {
-    //         scaleX: 0.9,
-    //         ease: "none",
-    //         immediateRender: false,
-    //         scrollTrigger: { trigger: rootRef.current, start: "bottom 75%", end: "bottom top", scrub: true },
-    //     });
-    // }, { scope: rootRef });
+
+    useSectionOverlay(rootRef);
 
     const goTo = (index) => {
         const panel = rootRef.current.querySelector(`[data-wv-panel="${index}"]`);
@@ -105,17 +89,17 @@ export default function WhyVault() {
             id="why"
             aria-label="Why Vault"
             data-sound-flow="off"
-            className="relative bg-[#F4F4F4] px-[calc(var(--cvw)*4.5)] py-[7%] max-md:py-[12%]  text-[#1D1D1D]  max-md:px-[calc(var(--cvw)*7)]"
+            className="relative isolate px-[calc(var(--cvw)*4.5)] py-[7%] max-md:py-[12%]  text-[#1D1D1D]  max-md:px-[calc(var(--cvw)*7)]"
         >
-            {/* The white layer, scaled on scroll (see above); the content sits on top */}
-            <div ref={bgRef} aria-hidden="true" className="pointer-events-none absolute inset-0 -z-1 origin-center bg-light will-change-transform" />
+            {/* The white layer; the content sits on top */}
+            <div ref={bgRef} aria-hidden="true" className="pointer-events-none absolute inset-0 -z-1 bg-[#F4F4F4]" />
             <div className="mx-auto grid max-w-[1536px] grid-cols-[minmax(0,.8fr)_minmax(0,1.6fr)] max-md:gap-4 gap-[calc(var(--cvw)*2)] max-md:grid-cols-1">
-                {/* Both reveal once the white layer has finished widening (it ends at "top 40%"),
+                {/* Both reveal as the section starts scaling in ("top 85%"),
                     the intro line first, then the heading's lines */}
-                <LineReveal as="p" start="top 40%" className="type-body-lg max-w-[calc(var(--cvw)*15)] max-lg:max-w-[36ch]">
+                <LineReveal as="p" start="top 85%" className="type-body-lg max-w-[calc(var(--cvw)*15)] max-lg:max-w-[36ch]">
                     Production-grade motion, without the production complexity.
                 </LineReveal>
-                <LineReveal as="h2" start="top 40%" delay={0.2} className="type-h1">
+                <LineReveal as="h2" start="top 85%" delay={0.2} className="type-h1">
                     Built for teams where the frontend <span className="gradient-text-animate gradient-text-single">is the brand.</span>
                 </LineReveal>
             </div>

@@ -11,6 +11,7 @@ import PricingFinder from "@/components/Pricing/exploded/PricingFinder";
 import PricingCredits from "@/components/Pricing/exploded/PricingCredits";
 import PricingUseCase from "@/components/Pricing/exploded/PricingUseCase";
 import PricingProCompare from "@/components/Pricing/exploded/PricingProCompare";
+import SectionOverlay from "@/components/Animations/SectionOverlay";
 import PricingPlansHome from "@/homepage/sections/PricingPlansHome";
 
 export const metadata = createPageMetadata({
@@ -39,11 +40,16 @@ export default async function PricingPage() {
           <div id="plans" className="home-type">
             <PricingPlansHome />
             <PricingFinder />
-            <PricingCredits />
-            <PricingProCompare />
           </div>
-          <PricingUseCase useCases={USE_CASES} />
-          <FAQ faqItems={faqItems} translateTop={false} />
+
+          <SectionOverlay>
+            <div className="home-type">
+              <PricingCredits />
+              <PricingProCompare />
+            </div>
+            <PricingUseCase useCases={USE_CASES} />
+            <FAQ faqItems={faqItems} translateTop={false} />
+          </SectionOverlay>
         </main>
         <Footer/>
       </VaultShell>

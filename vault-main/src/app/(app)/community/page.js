@@ -1,3 +1,4 @@
+import SectionOverlay from "@/components/Animations/SectionOverlay";
 import VaultShell from "@/Layouts/VaultShell";
 import { getSearchIndexEffects } from "@/lib/search-index";
 import { FAQJSONLD, WebpageJsonLd } from "@/lib/json-ld";
@@ -53,12 +54,12 @@ export default async function CommunityPage() {
           <CommunityHero />
           <CommunityFamiliar />
           <CommunityStack />
-          <div className="relative z-1 bg-light text-ink" data-zone="sheet" data-sound-flow="off">
+          <SectionOverlay className="relative z-1 bg-light text-ink" data-zone="sheet" data-sound-flow="off">
             <CommunityFounding />
             <div className="[--hx-vw:var(--cvw)]">
               <FAQ faqItems={COMMUNITY_FAQ} />
             </div>
-          </div>
+          </SectionOverlay>
           <CommunityJoin />
         </main>
       </VaultShell>
