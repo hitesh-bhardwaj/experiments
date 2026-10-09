@@ -11,6 +11,7 @@ import PricingPlansHome from "@/homepage/sections/PricingPlansHome";
 import Navbar from "@/homepage/components/Navbar";
 import Loader from "@/homepage/components/Loader";
 import ScrollTopOnLoad from "@/homepage/components/ScrollTopOnLoad";
+import SectionOverlay from "@/components/Animations/SectionOverlay";
 import Cursor from "@/homepage/components/Cursor";
 
 
@@ -31,8 +32,11 @@ export default function Homepage({ faqItems, effects = [] }) {
           <ProblemFixes />
            <SignalSection />
           <ExploreTheEffects />
-          <PricingPlansHome />
-          <FAQ faqItems={faqItems} />
+          {/* Pricing + FAQ are one white sheet: it scales in at pricing and leaves after the FAQ */}
+          <SectionOverlay>
+            <PricingPlansHome />
+            <FAQ faqItems={faqItems} />
+          </SectionOverlay>
           <Footer />
         </div>
       </div>

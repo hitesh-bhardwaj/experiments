@@ -3,7 +3,6 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import LineReveal from "@/components/Animations/LineReveal";
 import { useFadeUp } from "@/components/Animations/gsapAnimations";
-import { useSectionOverlay } from "@/components/Animations/useSectionOverlay";
 import Button from "../components/Button";
 import { RollingPrice } from "../components/PriceDigit";
 import { useInteraction } from "../components/InteractionProvider";
@@ -126,7 +125,6 @@ export default function PricingPlansHome() {
     const dir = period === "y" ? 1 : -1;
 
     useFadeUp(rootRef);
-    useSectionOverlay(rootRef);
 
     useLayoutEffect(() => {
         const bill = billRef.current;
