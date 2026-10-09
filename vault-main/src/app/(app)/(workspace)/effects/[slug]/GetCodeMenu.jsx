@@ -380,7 +380,7 @@ export default function GetCodeMenu({
         aria-expanded={open}
         aria-controls={open ? menuId : undefined}
         onClick={onTriggerClick}
-        className={`relative flex h-full cursor-pointer items-center border bg-foreground/5 backdrop-blur-lg py-2.75 pr-[3vw] pl-[1.2vw] text-left text-[1.1vw] border-foreground/20 tracking-wide text-foreground outline-none transition hover:border-foreground/25 focus-visible:border-foreground/25 max-lg:py-3.75 max-lg:pr-12 max-lg:pl-5 max-lg:text-[2vw] max-md:text-[4vw] ${triggerClassName}`}
+        className={`relative flex h-full cursor-pointer items-center border bg-foreground/5 backdrop-blur-lg py-3.25 pr-[3vw] pl-[1.2vw] text-left text-[1.1vw] border-foreground/20 tracking-wide text-foreground outline-none transition hover:border-foreground/25 focus-visible:border-foreground/25 max-lg:py-3.25 max-lg:pr-12 max-lg:pl-5 max-lg:text-[1.6vw] max-md:text-[3.3vw] ${triggerClassName}`}
       >
         {statusLabel ? (
           <span key={`${copyStatus.key}-${copyStatus.phase}`} className={`flex items-center gap-2 whitespace-nowrap ${fadeIn}`}>
@@ -417,7 +417,9 @@ export default function GetCodeMenu({
           role="menu"
           aria-label={`Get the code for ${title}`}
           onKeyDown={onPanelKeyDown}
-          className={`absolute top-[calc(100%+0.5vw)] z-40 w-[24vw] min-w-72 border border-foreground/10 bg-dark-card p-1.5 shadow-2xl max-lg:w-[55vw] max-md:w-full max-md:min-w-0 ${
+          // Phones: the button starts the row at the page gutter, so the panel opens from
+          // its left edge across the whole content width (87vw, the stage's width) instead of the button's.
+          className={`absolute top-[calc(100%+0.5vw)] z-40 w-[24vw] min-w-72 border border-foreground/10 bg-dark-card p-1.5 shadow-2xl max-lg:w-[55vw] max-md:left-0! max-md:right-auto! max-md:w-[87vw] max-md:min-w-0 ${
             align === "left" ? "left-0" : "right-0"
           }`}
         >

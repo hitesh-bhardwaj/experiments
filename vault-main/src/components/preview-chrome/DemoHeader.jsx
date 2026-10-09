@@ -25,6 +25,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import RemixerPanel from "@/components/remixer-panel/RemixerPanel";
+import { MEDIA } from "@/lib/breakpoints";
 import { ButtonChrome, buttonClassName } from "@/homepage/components/Button";
 import { getEffectRouteSlug } from "@/lib/effect-slugs";
 import { useInteraction } from "@/homepage/components/InteractionProvider";
@@ -108,8 +109,8 @@ const DEVICE_BUTTONS = [
   { id: "phone", label: "Phone", tip: "Phone · 390 × 844", key: "3" },
 ];
 const DEVICE_KEYS = { 1: "full", 2: "tablet", 3: "phone" };
-// Device previews are desktop-only; matches Tailwind's `max-[1024px]:` (width < 1024px).
-const isCompact = () => matchMedia("(max-width: 1023.98px)").matches;
+// Device previews are desktop-only; the same range as Tailwind's `max-lg:`.
+const isCompact = () => matchMedia(MEDIA.tablet).matches;
 
 /* ---------- helpers ---------- */
 const subscribeNever = () => () => {};
@@ -167,6 +168,36 @@ export default function DemoHeader(props) {
   // Pages outside RegistryRemixerDemo still honour `?rm=1` inside the iframe.
   useEffect(() => {
     if (embedded) readEmbed();
+  }, [embedded]);
+
+  // Embedded (the effect page's preview iframe): links must not open inside the iframe,
+  // or a demo's "Effects" / article links would load the whole site in there - and that
+  // page's own preview again, nesting it. Our own pages outside this demo open in the
+  // main window; other sites in a new tab. Window capture phase - ahead of document
+  // listeners such as a demo's page-transition router, which would otherwise take the
+  // click and navigate the iframe client-side - and stopImmediatePropagation, so
+  // nothing else acts on it.
+  useEffect(() => {
+    if (!embedded) return undefined;
+    const demoRoot = location.pathname.split("/").slice(0, 3).join("/"); // /demo/<slug>
+    const onClick = (event) => {
+      if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey) return;
+      const link = event.target.closest?.("a[href]");
+      if (!link || link.target === "_blank" || link.hasAttribute("download")) return;
+      const url = new URL(link.href, location.href);
+      if (url.origin === location.origin && url.pathname.startsWith(demoRoot)) return; // within this demo
+      if (url.origin === location.origin && url.pathname === location.pathname && url.hash) return; // in-page anchor
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      if (url.origin === location.origin) {
+        url.searchParams.delete("embed");
+        (window.top || window).location.assign(url.toString());
+      } else {
+        window.open(url.toString(), "_blank", "noopener,noreferrer");
+      }
+    };
+    window.addEventListener("click", onClick, true);
+    return () => window.removeEventListener("click", onClick, true);
   }, [embedded]);
 
   if (embedded !== false) return null;
@@ -580,7 +611,7 @@ function PreviewBar({ title: titleProp, tier: tierProp, backHref: backHrefProp, 
       <div
         ref={stageRef}
         aria-hidden={dev === "full"}
-        className="invisible fixed inset-0 z-100 grid place-items-center bg-[#0c0c0c] px-6 pt-21 pb-14 opacity-0 max-[1025px]:px-4 max-[1025px]:pt-19 max-[1025px]:pb-12 max-md:px-3 max-md:pt-17.5 max-md:pb-11"
+        className="invisible fixed inset-0 z-100 grid place-items-center bg-[#0c0c0c] px-6 pt-21 pb-14 opacity-0 max-lg:px-4 max-lg:pt-19 max-lg:pb-12 max-md:px-3 max-md:pt-17.5 max-md:pb-11"
       >
         <div
           ref={frameRef}
@@ -601,7 +632,7 @@ function PreviewBar({ title: titleProp, tier: tierProp, backHref: backHrefProp, 
       </div>
 
       {/* bar */}
-      <div className="pointer-events-none fixed inset-x-0 top-4 z-100 flex justify-center max-[1025px]:top-3 max-md:top-2.5">
+      <div className="pointer-events-none fixed inset-x-0 top-4 z-100 flex justify-center max-lg:top-3 max-md:top-2.5">
         <header
           ref={barRef}
           inert={away}
@@ -625,7 +656,7 @@ function PreviewBar({ title: titleProp, tier: tierProp, backHref: backHrefProp, 
 
           <span className={SEP} aria-hidden="true" />
 
-          <div role="radiogroup" aria-label="Preview size" className="flex gap-1 max-[1024px]:hidden">
+          <div role="radiogroup" aria-label="Preview size" className="flex gap-1 max-lg:hidden">
             {DEVICE_BUTTONS.map((d) => (
               <button
                 key={d.id}
@@ -643,7 +674,7 @@ function PreviewBar({ title: titleProp, tier: tierProp, backHref: backHrefProp, 
             ))}
           </div>
 
-          <span className={`${SEP} max-[1024px]:hidden`} aria-hidden="true" />
+          <span className={`${SEP} max-lg:hidden`} aria-hidden="true" />
 
           {onReplay ? (
             <button type="button" aria-label="Replay the animation" data-tip="Replay the animation" data-key="R" onClick={replay} className={BTN}>
@@ -683,7 +714,7 @@ function PreviewBar({ title: titleProp, tier: tierProp, backHref: backHrefProp, 
             data-tip="Keyboard shortcuts"
             data-key="?"
             onClick={() => toggleKeys()}
-            className={`${BTN} max-[1025px]:hidden`}
+            className={`${BTN} max-lg:hidden`}
           >
             <Icon name="keys" />
           </button>
@@ -749,7 +780,7 @@ function PreviewBar({ title: titleProp, tier: tierProp, backHref: backHrefProp, 
                 <path d="M3 15.5l5 5 5-5" />
               </g>
             </svg>
-            <span className="text-[1vw] max-md:text-[3vw] max-[1025px]:text-[1.5vw] leading-none text-white">Controls</span>
+            <span className="text-[1vw] max-md:text-[3vw] max-lg:text-[1.5vw] leading-none text-white">Controls</span>
           </span>
         </span>
       </button>
@@ -763,7 +794,7 @@ function PreviewBar({ title: titleProp, tier: tierProp, backHref: backHrefProp, 
           data-lenis-prevent
           data-lenis-prevent-wheel
           data-lenis-prevent-touch
-          className="fixed top-19.5 right-10 z-9021 max-[1025px]:top-17.5 max-[1025px]:right-6 max-md:top-16 flex h-fit max-h-[calc(100vh-94px)] min-h-80 w-[20vw] max-[1025px]:w-[min(344px,calc(100vw-32px))] flex-col overflow-hidden bg-[#111] shadow-[inset_0_0_0_1px_rgba(244,244,244,.08),0_30px_80px_-20px_#000]"
+          className="fixed top-19.5 right-10 z-9021 max-lg:top-17.5 max-lg:right-6 max-md:top-16 flex h-fit max-h-[calc(100vh-94px)] min-h-80 w-[20vw] max-lg:w-[min(344px,calc(100vw-32px))] flex-col overflow-hidden bg-[#111] shadow-[inset_0_0_0_1px_rgba(244,244,244,.08),0_30px_80px_-20px_#000]"
         >
           <div
             data-tip="Drag to move"
@@ -774,7 +805,7 @@ function PreviewBar({ title: titleProp, tier: tierProp, backHref: backHrefProp, 
             className={`flex touch-none items-center justify-between border-b border-[rgba(244,244,244,.08)] py-2 pr-2 pl-[0.9rem] select-none ${dragging ? "cursor-grabbing" : "cursor-grab"}`}
           >
             {/* Same heading as the effect page's Playground panel. */}
-            <p className="text-[1.1vw] tracking-normal text-white max-[1025px]:text-[1.6vw] max-md:text-[3.3vw]">Tune the real props</p>
+            <p className="text-[1.1vw] tracking-normal text-white max-lg:text-[1.6vw] max-md:text-[3.3vw]">Tune the real props</p>
             <button type="button" aria-label="Close props" onClick={() => setPanel(false)} className={BTN}>
               ✕
             </button>
@@ -800,7 +831,7 @@ function PreviewBar({ title: titleProp, tier: tierProp, backHref: backHrefProp, 
       <div
         ref={keysRef}
         inert={!keysOpen}
-        className="invisible fixed top-19.5 left-1/2 z-9021 max-[1025px]:top-17.5 max-md:top-16 grid min-w-70 gap-3 bg-[rgba(18,18,18,.9)] px-5 py-4.5 opacity-0 shadow-[inset_0_0_0_1px_rgba(244,244,244,.1)] backdrop-blur-[18px]"
+        className="invisible fixed top-19.5 left-1/2 z-9021 max-lg:top-17.5 max-md:top-16 grid min-w-70 gap-3 bg-[rgba(18,18,18,.9)] px-5 py-4.5 opacity-0 shadow-[inset_0_0_0_1px_rgba(244,244,244,.1)] backdrop-blur-[18px]"
       >
         <p className={`${LABEL} text-[#8a8a8a]`}>Shortcuts</p>
         <dl className="m-0 grid gap-2">

@@ -172,14 +172,14 @@ export function TemplatesListing({ templates = [], description = "", faqItems = 
 
         <div className="flex justify-between gap-12 max-lg:flex-col max-lg:items-stretch max-lg:gap-10">
           <HeadAnim rotate={0} animateOnScroll={false} delay={0.2}>
-            <h1 className="type-display w-[35vw] max-lg:w-full -mt-3">
+            <h1 className="type-display w-[40vw] max-lg:w-full -mt-3">
               Whole sites. <span className="gradient-text-animate">Ready to ship.</span>
             </h1>
           </HeadAnim>
 
-          <div className="flex w-[38%] flex-col gap-6 max-lg:w-full">
+          <div className="flex w-[25vw] flex-col gap-6 max-lg:w-full">
             <Copy animateOnScroll={false} delay={0.5}>
-              <p className="type-body-lg w-[90%] text-foreground/80 max-lg:w-[70%] max-md:w-full">
+              <p className="type-body-lg text-foreground/80 max-lg:w-[70%] max-md:w-full">
                 {description} Buy one outright, or redeem a template credit from your plan.
               </p>
             </Copy>

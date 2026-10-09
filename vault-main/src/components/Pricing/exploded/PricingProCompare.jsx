@@ -119,9 +119,9 @@ export default function PricingProCompare() {
   };
 
   return (
-    <section ref={rootRef} id="compare" data-sound-flow="off" className="relative bg-foreground px-[4.5vw] max-md:px-0 py-[7%] max-md:py-[15%] font-avenir text-background">
-      <div className="mx-auto flex w-full max-w-[1536px] flex-col gap-[3vw] max-md:gap-[8vw]">
-        <div className="flex max-md:px-[6vw] items-end justify-between gap-[2vw] max-md:flex-col max-md:items-start max-md:gap-[6vw]">
+    <section ref={rootRef} id="compare" data-sound-flow="off" className="relative bg-foreground px-[4.5vw] max-md:px-0 py-[7%] max-md:py-[12%] font-avenir text-background">
+      <div className="mx-auto flex w-full max-w-[1536px] flex-col gap-[3vw] max-md:gap-[10vw]">
+        <div className="flex max-md:px-[6vw] items-end justify-between gap-[2vw] max-md:flex-col max-md:items-start max-md:gap-[10vw]">
           <LineReveal as="h2" className="type-h1 leading-[1.2]!">
             Pro vs Pro+,<br />
             <span className="gradient-text-animate">Line by Line.</span>

@@ -1,16 +1,12 @@
 "use client";
 
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
-import { createPortal } from "react-dom";
 import { useUser } from "@clerk/nextjs";
-import { X } from "lucide-react";
-import Button from "@/homepage/components/Button";
+import { Modal, SignInRequiredModal } from "@/components/ui/SignInRequiredModal";
 import { useToastQueue, ToastViewport } from "@/components/ui/Toast";
 import { emitWishlistChanged } from "@/lib/wishlistEvents";
 import { installCommand } from "./EffectCard";
 
-const T14 = "text-[0.97vw] max-lg:text-[1.7vw] max-md:text-[3.6vw]";
-const T24 = "text-[1.67vw] max-lg:text-[2.9vw] max-md:text-[6vw]";
 
 const subscribeNever = () => () => {};
 
@@ -165,46 +161,12 @@ export function useEffectCardActions({ userPlan = "free", signInRedirect = "/eff
   const overlays = (
     <>
       <ToastViewport toast={toast} onDismiss={dismissToast} />
-      {mounted &&
-        createPortal(
-          <Modal open={signInPrompt} onClose={() => setSignInPrompt(false)} title="Sign in required">
-            Create a free account or sign in to save effects and pick up right where you left off.
-            <Button text="Sign In" href={`/sign-in?redirect_url=${encodeURIComponent(signInRedirect)}`} />
-          </Modal>,
-          document.body,
-        )}
+      <SignInRequiredModal open={signInPrompt} onClose={() => setSignInPrompt(false)} redirect={signInRedirect} action="save effects" />
     </>
   );
 
   return { isProUser, mounted, canInstall, isWishlisted, copyInstall, toggleWishlist, cardActions, overlays };
 }
 
-export function Modal({ open, onClose, title, children }) {
-  const [text, action] = Array.isArray(children) ? children : [children, null];
-  return (
-    <div
-      onClick={onClose}
-      className={`fixed inset-0 z-991 flex items-center justify-center bg-black/40 p-4 backdrop-blur-sm transition-opacity duration-300 ${open ? "opacity-100" : "pointer-events-none opacity-0"}`}
-    >
-      <div
-        role="dialog"
-        aria-modal="true"
-        aria-label={title}
-        onClick={(event) => event.stopPropagation()}
-        className={`relative flex w-[35vw] flex-col items-center gap-6 border border-white/20 bg-[#0e0e0e] p-10 text-center shadow-2xl transition-transform duration-300 max-lg:w-[70%] max-lg:p-6 max-md:w-full ${open ? "scale-100" : "scale-95"}`}
-      >
-        <button
-          type="button"
-          aria-label="Close"
-          onClick={onClose}
-          className="group absolute top-5 right-5 grid size-10 cursor-pointer place-items-center border border-white/20 bg-white/10 text-white/70 transition-colors duration-500 hover:border-[#ff5f00] hover:bg-[#ff5f00] hover:text-white max-lg:hidden"
-        >
-          <X className="size-4 transition-transform duration-300 ease-out group-hover:rotate-90 motion-reduce:transition-none" aria-hidden="true" />
-        </button>
-        <h2 className={`${T24} font-medium text-white`}>{title}</h2>
-        <p className={`w-[80%] ${T14} text-white/60 max-lg:w-full`}>{text}</p>
-        {action}
-      </div>
-    </div>
-  );
-}
+// Modal lives in components/ui now; re-exported for existing imports (EffectsListing).
+export { Modal };

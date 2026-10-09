@@ -18,7 +18,7 @@ import Button from "@/homepage/components/Button";
 import { useTemplateWishlist } from "../useTemplateWishlist";
 import { useTemplateAccess } from "../useTemplateAccess";
 import { TemplateCard } from "../TemplateCard";
-import { BADGE, GUTTER, LABEL, T13, T14, T16, cardReveal, catalogueOf, priceOf } from "../tokens";
+import { BADGE, GUTTER, LABEL, T13, T14, cardReveal, catalogueOf, priceOf } from "../tokens";
 import { GetTemplateModal } from "./GetTemplateModal";
 
 // three.js only loads when the exploded view is shown.
@@ -267,7 +267,8 @@ export function TemplateDetail({ template, templateAccess = { allowed: false, re
                   <span className={`${LABEL} text-foreground/60`}>one-time or 1 template credit</span>
                 </p>
               )}
-              <div className="flex flex-wrap items-center gap-2">
+              {/* items-stretch: heart, Buy and Demo share one height. */}
+              <div className="flex flex-wrap items-stretch gap-2">
                 <button
                   type="button"
                   onClick={() => toggleWishlist(template)}
@@ -287,7 +288,7 @@ export function TemplateDetail({ template, templateAccess = { allowed: false, re
                           setGetOpen(true);
                         }
                   }
-                  className={`inline-flex h-11 cursor-pointer items-center gap-2 bg-primary px-5 ${T16} text-background transition-colors duration-500 hover:bg-primary-hover`}
+                  className="inline-flex h-11 cursor-pointer items-center gap-2 bg-primary px-5 text-[calc(var(--hx-vw,1vw)*1.15)] text-background transition-colors duration-500 hover:bg-primary-hover max-lg:text-[clamp(13px,calc(var(--hx-vw,1vw)*1.6),15px)] max-md:text-[calc(var(--hx-vw,1vw)*2.2)] max-sm:text-[calc(var(--hx-vw,1vw)*4)]"
                 >
                   {hasAccess ? (
                     <>

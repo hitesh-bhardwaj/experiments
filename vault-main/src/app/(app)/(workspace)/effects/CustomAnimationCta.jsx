@@ -28,12 +28,14 @@ export function CustomAnimationCta({ cta, sectionRef, className = "" }) {
       className={`mx-auto flex w-full items-start justify-between gap-[2vw] bg-ink px-[2.8vw] py-[3.3vw] text-light max-lg:px-[3vw] max-md:flex-col max-md:gap-[6vw] max-md:px-[7vw] max-md:py-[10vw] ${className}`}
     >
       <div className="flex w-[60%] flex-col gap-4 max-md:w-full">
-        {cta.heading && <h2 className="type-h1 font-medium!">{cta.heading}</h2>}
+        {cta.heading && <h2 className="text-[4.2vw] max-lg:text-[5.5vw] max-md:text-[9vw] ">{cta.heading}</h2>}
         {cta.description && <p className="type-body-lg max-w-3xl text-light/80">{cta.description}</p>}
       </div>
       {cta.buttonText && (
         <CustomAnimationFormTrigger>
-          <Button preventDefault={false} text={cta.buttonText} href={cta.buttonLink || "#"} className="w-fit" />
+          {/* Phones: full width with slimmer side padding - Button's phone padding (10vw a
+              side) made the long label overflow the block. */}
+          <Button preventDefault={false} text={cta.buttonText} href={cta.buttonLink || "#"} className="w-fit max-md:w-full max-md:px-[5vw]! mt-5" />
         </CustomAnimationFormTrigger>
       )}
     </motion.section>

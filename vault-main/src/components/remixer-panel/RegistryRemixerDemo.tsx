@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, useCallback, useEffect, useState } from "react";
+import { Fragment, cloneElement, isValidElement, useCallback, useEffect, useState } from "react";
 import { buildRemixerJsx } from "./build-remixer-code";
 import { useRemixerControls } from "./useRemixerControls";
 import { DemoHeaderProvider } from "@/components/preview-chrome/DemoHeader";
@@ -82,7 +82,14 @@ export default function RegistryRemixerDemo({
 
   // The keyed fragment remounts only the effect, so Replay restarts its intro.
   const effectNode = render ? render(values) : Component ? <Component {...values} /> : null;
-  const effect = effectNode ? <Fragment key={replayKey}>{effectNode}</Fragment> : null;
+  // The replay key goes on the effect element itself (not a wrapping Fragment), so a
+  // page that clones `effect` to pass it children (Displacement Navbar) clones the
+  // component - cloning a Fragment replaced the component with those children.
+  const effect = !effectNode
+    ? null
+    : isValidElement(effectNode)
+      ? cloneElement(effectNode, { key: replayKey })
+      : <Fragment key={replayKey}>{effectNode}</Fragment>;
   const buildCode = copyCodeOptions?.buildCode;
 
   const copyCode = () =>

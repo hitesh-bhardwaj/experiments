@@ -50,7 +50,9 @@ function tokenize(line) {
 
 // Copy -> check swap: the outgoing icon scales down and rotates away while the incoming
 // one scales up and rotates in; the label rolls up from "Copy" to "Copied" (and back).
-export function CopyButtonContent({ copied, iconOnly = false }) {
+// labelClassName: extra classes for the "Copy"/"Copied" label, e.g. "max-lg:hidden" to
+// show only the icon on smaller screens.
+export function CopyButtonContent({ copied, iconOnly = false, labelClassName = "" }) {
     const copyIconRef = useRef(null);
     const checkIconRef = useRef(null);
     const copyLabelRef = useRef(null);
@@ -110,7 +112,7 @@ export function CopyButtonContent({ copied, iconOnly = false }) {
                 </svg>
             </span>
             {!iconOnly && (
-                <span className="relative flex h-[1.2em] overflow-hidden leading-[1.2]">
+                <span className={`relative flex h-[1.2em] overflow-hidden leading-[1.2] ${labelClassName}`}>
                     <span aria-hidden="true" className="invisible">Copied</span>
                     <span ref={copyLabelRef} className="absolute left-0 top-0">Copy</span>
                     <span ref={copiedLabelRef} className="absolute left-0 top-0" style={{ opacity: 0 }}>Copied</span>
@@ -334,7 +336,7 @@ export function CodeBlock({
                             aria-label="Copy code"
                             onClick={onCopy}
                             disabled={copyLocked}
-                            className={`inline-flex h-[30px] cursor-pointer items-center gap-[7px] px-[11px] text-[11px] font-medium uppercase tracking-[.14em] transition-colors duration-500 disabled:cursor-not-allowed disabled:opacity-50 ${
+                            className={`inline-flex h-[30px] cursor-pointer items-center gap-[7px] px-[11px] text-[12px] font-medium tracking-normal transition-colors duration-500 disabled:cursor-not-allowed disabled:opacity-50 ${
                                 copied
                                     ? "text-[#63d69a] shadow-[inset_0_0_0_1px_rgba(99,214,154,.45)]"
                                     : "text-[#d8d8d8] shadow-[inset_0_0_0_1px_rgba(244,244,244,.14)] hover:bg-[#f4f4f4]/8 hover:text-white"

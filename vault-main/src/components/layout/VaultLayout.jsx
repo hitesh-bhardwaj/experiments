@@ -6,6 +6,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Sidebar } from "./Sidebar";
+import { MEDIA } from "@/lib/breakpoints";
 import { getEffectCategoryHref } from "@/lib/categories";
 import { RouteLoading, isRouteLoading } from "@/components/ui/RouteLoading";
 
@@ -293,15 +294,13 @@ export function VaultLayout({
   useEffect(() => {
     if (!isSidebarReady) return;
 
-    const mediaQuery = window.matchMedia("(max-width: 767px)");
+    const mediaQuery = window.matchMedia(MEDIA.mobile);
 
+    // The sidebar is never shown on phones or tablets (Sidebar is max-lg:hidden), so
+    // its open state must not pause scrolling there - it used to stop Lenis on phones,
+    // from an old overlay-sidebar design.
     const syncLenis = () => {
-      if (isSidebarOpen && mediaQuery.matches) {
-        lenis?.stop?.();
-      } else {
-        lenis?.start?.();
-      }
-
+      lenis?.start?.();
       refreshScrollTrigger();
     };
 

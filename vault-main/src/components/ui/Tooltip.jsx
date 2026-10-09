@@ -3,6 +3,7 @@
 import { useEffect, useId, useRef, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "motion/react";
+import { usePathname } from "next/navigation";
 
 // Gap between the trigger and the tooltip.
 const GAP = 10;
@@ -37,11 +38,22 @@ function open(next) {
   lastCenter = center;
   setState({ ...next, dir, vertical });
 }
+// Only the trigger whose tooltip is showing may close it. (The timer is shared: a close
+// from any other trigger - e.g. a whole grid of cards unmounting on navigation - used to
+// cancel the pending close and leave the tooltip ghosted on the next page.)
 function close(id) {
+  if (id !== undefined && state?.id !== id) return;
   clearTimeout(closeTimer);
   closeTimer = setTimeout(() => {
     if (state && (id === undefined || state.id === id)) setState(null);
   }, CLOSE_DELAY);
+}
+
+// A trigger leaving the page takes its tooltip with it, straight away.
+function closeNow(id) {
+  if (state?.id !== id) return;
+  clearTimeout(closeTimer);
+  setState(null);
 }
 
 function anchorFor(rect, position) {
@@ -61,7 +73,7 @@ export function Tooltip({ label, children, className = "", position = "top", hid
     if (state?.id === id && state.label !== label) setState({ ...state, label });
   }, [label, id]);
 
-  useEffect(() => () => close(id), [id]);
+  useEffect(() => () => closeNow(id), [id]);
 
   function show() {
     const rect = triggerRef.current?.getBoundingClientRect();
@@ -91,6 +103,13 @@ export function Tooltip({ label, children, className = "", position = "top", hid
 
 export function TooltipHost() {
   const tip = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+  const pathname = usePathname();
+
+  // A page change always clears the tooltip (its trigger belonged to the old page).
+  useEffect(() => {
+    clearTimeout(closeTimer);
+    setState(null);
+  }, [pathname]);
   const mounted = typeof document !== "undefined";
 
   // Dismiss on resize: the stored rect would be stale.

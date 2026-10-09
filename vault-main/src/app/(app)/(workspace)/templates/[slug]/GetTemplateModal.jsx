@@ -142,7 +142,7 @@ export function GetTemplateModal({ template, open, tab = "buy", onTab, onClose, 
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.9 }}
             transition={{ duration: 0.5, ease: EASE }}
-            className="relative flex w-[60vw] items-stretch gap-6.5 bg-background p-6.5 text-light ring-1 ring-inset ring-foreground/10 shadow-[0_3.5vw_7vw_-2vw_black] max-lg:w-[88vw] max-md:max-h-[90svh] max-md:w-full max-md:flex-col max-md:overflow-y-auto"
+            className="relative flex w-[60vw] items-stretch gap-6.5 bg-background p-6.5 text-light ring-1 ring-inset ring-foreground/10 shadow-[0_3.5vw_7vw_-2vw_black] max-lg:w-[88vw] max-md:max-h-[90svh] max-md:w-full max-md:flex-col max-md:overflow-y-auto max-md:pt-16"
           >
             {/* Same close control as the effects preview drawer: the cross turns a quarter on hover. */}
             <button

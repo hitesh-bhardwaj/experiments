@@ -8,7 +8,6 @@ import { useLenis } from "lenis/react";
 import { Heart, Lock } from "lucide-react";
 import { CopyButtonContent } from "@/components/ui/CodeBlock";
 import Button from "@/homepage/components/Button";
-import LinkButton from "@/components/WebsiteComps/LinkButton";
 import { getEffectHref, getEffectPreviewHref, getEffectCategory, resolveEffectCategoryId } from "@/lib/categories";
 import { resolveEffectVideoUrl } from "@/lib/media";
 import {
@@ -23,6 +22,7 @@ import {
 const T11 = "text-[0.76vw] max-lg:text-[1.4vw] max-md:text-[2.8vw]";
 const T14 = "text-[0.97vw] max-lg:text-[1.7vw] max-md:text-[3.6vw]";
 const T16 = "text-[1.1vw] max-lg:text-[1.95vw] max-md:text-[4.1vw]";
+const T18 = "text-[1.2vw] max-lg:text-[2.1vw] max-md:text-[4.4vw]";
 
 // Open/close choreography borrowed from the information-drawer effect: the panel
 // slides in from the right (power2.inOut) while the backdrop fades, and only then
@@ -222,7 +222,7 @@ export function PreviewDrawer({
         data-lenis-prevent
         className="absolute inset-y-0 right-0 w-[53vw] overflow-y-auto overscroll-contain border-l border-foreground/10 bg-background font-avenir text-foreground shadow-[-1.1vw_0_2.8vw_-1.7vw_color-mix(in_srgb,black_60%,transparent)] max-lg:w-full max-lg:border-l-0"
       >
-      <div ref={contentRef} className="flex flex-col gap-10 px-10 pt-7 pb-16 max-lg:px-8 max-md:px-[6vw] *:shrink-0">
+      <div ref={contentRef} className="flex flex-col gap-10 px-10 pt-7 pb-16 max-lg:px-8 max-lg:gap-8 max-md:px-[6vw] *:shrink-0">
         <div className="flex items-center justify-between">
           <span className={`${T16} text-foreground/80`}>{categoryName}</span>
           {/* Same close control as the site's modals: the cross turns a quarter on hover. */}
@@ -279,26 +279,29 @@ export function PreviewDrawer({
             <p className={`w-[80%] ${T16} leading-relaxed text-foreground/80 max-lg:w-full`}>{shown.description}</p>
           )}
           <div className="flex w-full flex-wrap gap-4">
-            <div className="flex flex-wrap items-center gap-2">
+            {/* items-stretch: the heart takes the buttons' height. Buttons keep their own
+                width on every screen (w-fit on phones, where Button would otherwise spread). */}
+            <div className="flex flex-wrap items-stretch gap-2">
               <button
                 type="button"
                 aria-pressed={saved}
                 onClick={() => onToggleWishlist(shown)}
-                className={`flex gap-2 self-center border border-foreground/20 px-3 py-3 leading-[1.2] ${T16} ${saved ? "text-primary! [&_svg]:fill-primary [&_svg]:stroke-primary" : ""}`}
+                className={`flex items-center justify-center gap-2 border border-foreground/20 px-3 leading-[1.2] ${T16} ${saved ? "text-primary! [&_svg]:fill-primary [&_svg]:stroke-primary" : ""}`}
               >
                 <div className="size-4.5">
                   <Heart className="size-full" />
                 </div>
               </button>
-              <Button text="Demo" href={getEffectPreviewHref(shown)} variant="outline" target_blank className="bg-transparent! border-foreground/20" />
-              <Button text="View Article" href={getEffectHref(shown)} className="border border-primary" />
+              <Button text="Demo" href={getEffectPreviewHref(shown)} variant="outline" target_blank className="bg-transparent! border-foreground/20 max-md:w-fit" />
+              <Button text="View Article" href={getEffectHref(shown)} className="border border-primary max-md:w-fit" />
             </div>
           </div>
         </div>
 
         {installable ? (
           <div className="flex items-center gap-3 border border-foreground/10 bg-foreground/3 py-3 pr-2 pl-4">
-            <code className={`${MONO} min-w-0 flex-1 overflow-x-auto whitespace-nowrap ${T14} text-foreground/80`}>
+            {/* Phones: a smaller command (3vw) so it fits on one line. */}
+            <code className={`${MONO} min-w-0 flex-1 overflow-x-auto whitespace-nowrap text-[0.97vw] text-foreground/80 max-lg:text-[1.7vw] max-md:text-[3vw] max-md:break-all max-md:whitespace-normal`}>
               <span className="text-primary">$</span> {installCommand(shown)}
             </code>
             <button
@@ -309,25 +312,28 @@ export function PreviewDrawer({
                 clearTimeout(copiedTimerRef.current);
                 copiedTimerRef.current = setTimeout(() => setCopied(false), 1600);
               }}
+              aria-label={copied ? "Install command copied" : "Copy install command"}
               className={`inline-flex shrink-0 cursor-pointer items-center gap-1.5 px-2 ${T14} transition-colors duration-300 ${copied ? "text-primary" : "text-foreground/70 hover:text-primary"}`}
             >
-              <CopyButtonContent copied={copied} />
+              {/* Tablet / phones: icon only (it flips to a tick once copied). */}
+              <CopyButtonContent copied={copied} labelClassName="max-lg:hidden" />
             </button>
           </div>
         ) : (
-          <div className="flex flex-wrap items-center justify-between gap-4 border border-primary/35 bg-primary/6 px-4.5 py-4">
+          <div className="flex flex-wrap items-center justify-between gap-4 border border-white/20 bg-transparent px-4.5 py-4 backdrop-blur-lg">
+            {/* Pro effect, no Pro: a see-through blurred block with the usual (smaller) Button. */}
             <p className={`flex items-center gap-2 ${T14} text-foreground/70`}>
               <Lock className="size-3.75 shrink-0 text-primary" aria-hidden="true" />
               This is a Pro effect. Pro unlocks it with the rest of the library.
             </p>
-            <LinkButton href="/pricing" text="Unlock with Pro" underline tilted={false} underlineClassName="mt-0" className="text18 text-foreground hover:text-primary transition-colors duration-300" />
+            <Button text="Unlock with Pro" href="/pricing" className="py-1.5! text-[0.9vw]! max-lg:text-[1.6vw]! max-md:text-[3.3vw]!" />
           </div>
         )}
 
         {related.length > 0 && (
-          <div className="flex flex-col gap-4 border-t border-foreground/10 pt-6">
-            <p className={`${T16} text-foreground`}>More in this category</p>
-            <div className="flex flex-wrap gap-[0.9vw] max-md:gap-[3.5vw]">
+          <div className="flex flex-col gap-8 border-t border-foreground/10 pt-10 ">
+            <p className={`${T18} text-foreground`}>More in this category</p>
+            <div className="flex flex-wrap gap-[0.9vw] max-lg:gap-8">
               {related.map((item) => (
                 <EffectCard key={item.name} effect={item} small dark sizes="240px" onOpen={onOpen} className="w-[calc((100%-0.9vw)/2)] max-md:w-full" tagClassName="border-foreground/20" />
               ))}

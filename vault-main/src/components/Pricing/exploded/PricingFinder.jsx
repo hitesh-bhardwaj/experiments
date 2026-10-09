@@ -175,9 +175,9 @@ export default function PricingFinder() {
   }, { dependencies: [key], scope: outRef, revertOnUpdate: true });
 
   return (
-    <section ref={rootRef} id="finder" className="relative px-[4.5vw] py-[7%] max-md:py-[15%] text-foreground max-md:px-[6vw]">
+    <section ref={rootRef} id="finder" className="relative px-[4.5vw] py-[7%] max-md:py-[12%] text-foreground max-md:px-[6vw]">
       <div className="mx-auto flex w-full max-w-[1536px] items-center justify-between gap-[3vw] max-md:flex-col max-md:items-stretch max-md:gap-[10vw]">
-      <div className="flex w-[40%] flex-col gap-[1.8vw] max-md:w-full max-md:gap-[5vw]">
+      <div className="flex w-[40%] flex-col gap-[1.8vw] max-md:w-full max-md:gap-[10vw]">
         <LineReveal as="h2" className={`type-h1 text-foreground w-[80%] max-md:w-[80%]`}>
           Not Sure? <span className="gradient-text-animate">Let’s Size it.</span>
         </LineReveal>
@@ -210,13 +210,13 @@ export default function PricingFinder() {
             preventDefault
             ariaLabel={`I need full page sections, ${sections ? "on" : "off"}`}
             onClick={() => { toggleSections(); sound?.note?.(sections ? 1 : 3); }}
-            className={`w-fit max-md:w-full max-md:justify-center ${sections ? "border border-transparent" : ""}`}
+            className={`w-fit max-md:my-6 max-md:w-full max-md:justify-center ${sections ? "border border-transparent" : ""}`}
           />
         </div>
 
         <div ref={outRef} aria-live="polite" className="flex w-[50%] flex-col gap-[1.2vw] border-l border-foreground/10 p-[2.4vw] max-md:w-full max-md:gap-[4vw] max-md:border-t max-md:border-l-0 max-md:p-[6vw]">
           <p data-pick className={`text-foreground/50 ${LABEL}`}>We’d pick</p>
-          <div className="type-h1 font-avenir flex items-center gap-[1vw] text-foreground max-md:gap-[3vw]">
+          <div className="type-h1 font-avenir max-md:my-2 flex items-center gap-[1vw] text-foreground max-md:gap-[5vw]">
             <RollText text={rec.plan.name} dir={rec.key === "plus" ? 1 : -1} className="pb-[0.1em]" />
             <span ref={tagRef} className={`bg-primary/20 px-[0.7vw] py-[0.4vw] text-primary-hover max-md:px-[2vw] max-md:py-[1vw] ${LABEL}`}>
               {rec.period === "y" ? "Yearly" : "Quarterly"}
@@ -234,7 +234,7 @@ export default function PricingFinder() {
               href="#plans"
               scrollOffset={HEADER_OFFSET}
               ariaLabel={`Start ${rec.label}`}
-              className="max-md:w-full max-md:justify-center"
+              className="max-md:w-full max-md:justify-center max-md:mb-8"
             >
               <RollText text={`Start ${rec.label}`} dir={rec.key === "plus" ? 1 : -1} />
             </Button>

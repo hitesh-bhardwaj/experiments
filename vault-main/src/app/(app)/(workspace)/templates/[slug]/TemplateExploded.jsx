@@ -6,6 +6,7 @@ import gsap from "gsap";
 import { motion } from "motion/react";
 import { RotateCcw } from "lucide-react";
 import { LABEL, T13, T14 } from "../tokens";
+import { BREAKPOINTS } from "@/lib/breakpoints";
 
 /*
  * The template's homepage, exploded into its sections. Each section is a slab
@@ -198,7 +199,7 @@ export default function TemplateExploded({
       // height, perspective included), easing as you move between tall and short
       // sections. View offset + zoom keep the labels and click-picking in step.
       if (n) {
-        const narrow = st.width < 768;
+        const narrow = st.width < BREAKPOINTS.md;
         const panelEl = narrow ? stage.querySelector("aside[data-exploded-ui]") : null;
         const barEl = stage.querySelector("div[data-exploded-ui]");
         const top = panelEl ? panelEl.getBoundingClientRect().bottom - st.top + 12 : 96;

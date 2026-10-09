@@ -105,7 +105,7 @@ export default function WhyVault() {
             id="why"
             aria-label="Why Vault"
             data-sound-flow="off"
-            className="relative bg-[#F4F4F4] px-[calc(var(--cvw)*4.5)] py-[7%] max-md:py-[15%]  text-[#1D1D1D]  max-md:px-[calc(var(--cvw)*7)]"
+            className="relative bg-[#F4F4F4] px-[calc(var(--cvw)*4.5)] py-[7%] max-md:py-[12%]  text-[#1D1D1D]  max-md:px-[calc(var(--cvw)*7)]"
         >
             {/* The white layer, scaled on scroll (see above); the content sits on top */}
             <div ref={bgRef} aria-hidden="true" className="pointer-events-none absolute inset-0 -z-1 origin-center bg-light will-change-transform" />
@@ -129,18 +129,18 @@ export default function WhyVault() {
                             type="button"
                             onClick={() => goTo(i)}
                             aria-current={active === i ? "true" : undefined}
-                            className={`w-fit justify-self-start text-left type-h2 font-aeonik transition-colors duration-[600ms] ease-[cubic-bezier(.16,1,.3,1)] ${active === i ? "text-[#1D1D1D]" : "text-[#B4B4B4] hover:text-[#8a8a8a]"}`}
+                            className={`w-fit justify-self-start text-left type-h2 font-aeonik transition-colors duration-600 ease-[cubic-bezier(.16,1,.3,1)] ${active === i ? "text-[#1D1D1D]" : "text-[#B4B4B4] hover:text-[#8a8a8a]"}`}
                         >
                            <span> {item.nav}</span>
                         </button>
                     ))}
                 </nav>
 
-                <div className="grid grid-cols-[minmax(0,1fr)] gap-[clamp(8rem,22vh,14rem)] max-md:gap-8 ">
+                <div className="grid grid-cols-[minmax(0,1fr)] gap-[clamp(8rem,22vh,14rem)] max-md:gap-12 ">
                     {WHY_VAULT_ITEMS.map((item, i) => (
                         <article key={item.id} data-wv-panel={i}>
                             <div className="fadeup">{renderCard(item.id, i)}</div>
-                            <LineReveal as="h3" className="mt-[calc(var(--cvw)*1.8)] max-md:mt-[calc(var(--cvw)*5)] type-h3">{item.title}</LineReveal>
+                            <LineReveal as="h3" className="mt-[calc(var(--cvw)*1.8)] max-md:mt-[calc(var(--cvw)*12)] max-md:text-[6vw] type-h3">{item.title}</LineReveal>
                             <p data-fadeup-delay="0.15" className="fadeup mt-[calc(var(--cvw)*1)] max-md:mt-[calc(var(--cvw)*3)] max-w-[52ch] type-body text-[#6B6B6B]">{item.body}</p>
                         </article>
                     ))}
