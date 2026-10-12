@@ -1,47 +1,265 @@
 # Hyperiux Vault
 
-> Hyperiux Vault is a curated library of 115 creative interaction effects and UI components for React and Next.js - scroll systems, cursor effects, text reveals, page transitions, WebGL scenes, animated backgrounds, buttons, and loaders. Effects are previewed live on the site and installed into projects via the `hyperiux-components` CLI.
+> Hyperiux Vault is a curated library of 150 creative interaction effects and UI components for React and Next.js - scroll systems, cursor effects, text reveals, page transitions, WebGL scenes, animated backgrounds, buttons, and loaders. Effects are previewed live on the site and installed into projects via the `hyperiux` CLI.
 
-Hyperiux Vault is built by Hyperiux Immersion Labs. Free effects can be installed by anyone with a free account; Pro effects require a Hyperiux Pro subscription. Every effect ships as real source code (React components using GSAP, Motion, Three.js, or CSS) that developers own and customize - not a locked-in package import.
+Hyperiux Vault is built by Hyperiux Immersion Labs Private Limited (Noida, India). Free effects can be installed by anyone with a free account; the full library needs a Pro or Pro+ plan. Every effect ships as real source code (React components using GSAP, Motion, Three.js, or CSS) that developers own and customize - not a locked-in package import.
 
 Key facts:
 - Website: https://vault.hyperiux.com
-- Install CLI: `npx hyperiux-components add <effect-name>`
-- npm package: https://www.npmjs.com/package/hyperiux-components
+- Official information for AI assistants: https://vault.hyperiux.com/llm-info
+- Install CLI: `npx hyperiux init`, then `npx hyperiux add <effect-name>`
+- MCP server for AI coding tools: `npx -y hyperiux-mcp-server`
+- npm package: https://www.npmjs.com/package/hyperiux
 - GitHub: https://github.com/Hyperiux-Immersion-Labs/hyperiux-components
 - Stack: React, Next.js, GSAP, Motion (Framer Motion), Three.js / React Three Fiber
+
+Library size: 150 effects (56 free, 94 Pro). Every effect below links to its page (code, dependencies, install command) and its live demo.
+
+## Main pages
+
+- [Home](https://vault.hyperiux.com/): Hyperiux Vault - React & Next.js interaction effects
+- [Official information about Hyperiux Vault](https://vault.hyperiux.com/llm-info): Structured facts for AI assistants - company, product, install, pricing, licensing
+- [All effects](https://vault.hyperiux.com/effects): Browse and search the full library
+- [Pricing](https://vault.hyperiux.com/pricing): Free plan, plus Pro and Pro+ billed quarterly or yearly
+- [Templates](https://vault.hyperiux.com/templates): Complete interactive website templates, unlocked with template credits on Pro and Pro+
+- [Docs](https://vault.hyperiux.com/docs): Overview of how the Vault and CLI work
+- [Blog](https://vault.hyperiux.com/blog): Notes on building React and Next.js interaction effects
+- [Community](https://vault.hyperiux.com/community): Waitlist for the Vault community - live teardowns, early access, critique
 
 ## Docs
 
 - [Documentation home](https://vault.hyperiux.com/docs): Overview of how the Vault and CLI work
-- [Installation](https://vault.hyperiux.com/docs/installation): How to install effects with the CLI
-- [CLI reference](https://vault.hyperiux.com/docs/cli): Commands, Pro authentication, and tokens
+- [Installation](https://vault.hyperiux.com/docs/installation): Install Hyperiux Vault effects in your project
+- [CLI reference](https://vault.hyperiux.com/docs/cli): CLI commands, Pro authentication, and tokens
+- [MCP server](https://vault.hyperiux.com/docs/mcp): Hyperiux MCP server for AI coding assistants (Claude Code, Cursor, Codex CLI)
 - [Dependencies](https://vault.hyperiux.com/docs/dependencies): Peer dependencies effects rely on (GSAP, Motion, Three.js)
-- [License](https://vault.hyperiux.com/docs/license): Usage terms for free and Pro effects
+- [License](https://vault.hyperiux.com/docs/license): Free Core and Pro usage terms
 
-## Effects by category
+## Effect categories
 
-- [All effects](https://vault.hyperiux.com/effects): Browse and search the full library
-- [Text animations](https://vault.hyperiux.com/effects/text-animations): Scramble, mask, overflow, blur, fill, spotlight, and reveal effects for real HTML text
-- [Scroll effects](https://vault.hyperiux.com/effects/scroll-effects): Scroll-driven animations for product stories, feature tours, and portfolio chapters
-- [Cursor effects](https://vault.hyperiux.com/effects/cursor-effects): Custom cursors, followers, and pointer-reactive interactions
-- [Page transitions](https://vault.hyperiux.com/effects/page-transitions): Route and view transitions for Next.js apps
-- [WebGL effects](https://vault.hyperiux.com/effects/webgl-effects): Three.js and shader-based scenes, galleries, and hero visuals
-- [Backgrounds](https://vault.hyperiux.com/effects/backgrounds): Dotted grids, particle fields, and dithered canvas textures for SaaS and AI heroes
-- [Buttons](https://vault.hyperiux.com/effects/buttons): Accessible CTA microinteractions - staggered labels, arrow fills, scramble links
-- [Navigation](https://vault.hyperiux.com/effects/navigation): Menus, navbars, and navigation interactions
-- [Carousels](https://vault.hyperiux.com/effects/carousels): Clip-path reveals and zoom sliders with swipe and keyboard support
-- [Loaders](https://vault.hyperiux.com/effects/loaders): Page loaders and progress animations
-- [Components](https://vault.hyperiux.com/effects/components): Composite UI components and sections
+- [Text animations](https://vault.hyperiux.com/effects/text-animations): Scramble, mask, overflow, blur, fill, spotlight, and reveal effects for real HTML text (25 effects)
+- [Scroll effects](https://vault.hyperiux.com/effects/scroll-effects): Scroll-driven animations for product stories, feature tours, and portfolio chapters (24 effects)
+- [Creative components](https://vault.hyperiux.com/effects/components): Composite UI components and sections (19 effects)
+- [WebGL & 3D effects](https://vault.hyperiux.com/effects/webgl-effects): Three.js and shader-based scenes, galleries, and hero visuals (17 effects)
+- [Cursor effects](https://vault.hyperiux.com/effects/cursor-effects): Custom cursors, followers, and pointer-reactive interactions (16 effects)
+- [Carousels](https://vault.hyperiux.com/effects/carousels): Clip-path reveals and zoom sliders with swipe and keyboard support (11 effects)
+- [Page transitions](https://vault.hyperiux.com/effects/page-transitions): Route and view transitions for Next.js apps (10 effects)
+- [Buttons](https://vault.hyperiux.com/effects/buttons): Accessible CTA microinteractions - staggered labels, arrow fills, scramble links (10 effects)
+- [Navigation](https://vault.hyperiux.com/effects/navigation): Menus, navbars, and navigation interactions (9 effects)
+- [Backgrounds](https://vault.hyperiux.com/effects/backgrounds): Dotted grids, particle fields, and dithered canvas textures for SaaS and AI heroes (6 effects)
+- [Loaders](https://vault.hyperiux.com/effects/loaders): Page loaders and progress animations (3 effects)
 - [Featured](https://vault.hyperiux.com/effects/featured): Curated picks selected for craft and brand impact
-- [Free effects](https://vault.hyperiux.com/effects/free): Effects available on the free plan
-- [Pro effects](https://vault.hyperiux.com/effects/pro): Premium effects unlocked with a Pro subscription
+- [Free effects](https://vault.hyperiux.com/effects/free): Effects available on the free plan (free account required)
+- [Pro effects](https://vault.hyperiux.com/effects/pro): Effects unlocked with a Pro or Pro+ plan
 
-## Pricing
+## Effects: Text animations
 
-- [Pricing](https://vault.hyperiux.com/pricing): Free plan and Hyperiux Pro subscription (monthly, quarterly, yearly) with full vault and CLI access
+- [Blur Text](https://vault.hyperiux.com/effects/text-animations/blur-text): Pro · [live demo](https://vault.hyperiux.com/demo/blur-text)
+- [Chromatic Text](https://vault.hyperiux.com/effects/text-animations/chromatic-text): Free · [live demo](https://vault.hyperiux.com/demo/chromatic-text)
+- [Circle Text Reveal](https://vault.hyperiux.com/effects/text-animations/circle-text-reveal): Pro · [live demo](https://vault.hyperiux.com/demo/circle-text-reveal)
+- [Depth Flip Text](https://vault.hyperiux.com/effects/text-animations/depth-flip-text): Free · [live demo](https://vault.hyperiux.com/demo/depth-flip-text)
+- [Drop Text](https://vault.hyperiux.com/effects/text-animations/drop-text): Free · [live demo](https://vault.hyperiux.com/demo/drop-text)
+- [Flickering Text](https://vault.hyperiux.com/effects/text-animations/flickering-text): Free · [live demo](https://vault.hyperiux.com/demo/flickering-text)
+- [Focus Text](https://vault.hyperiux.com/effects/text-animations/focus-text): Free · [live demo](https://vault.hyperiux.com/demo/focus-text)
+- [Glitchy Text](https://vault.hyperiux.com/effects/text-animations/glitchy-text): Pro · [live demo](https://vault.hyperiux.com/demo/glitchy-text)
+- [Glowing Text](https://vault.hyperiux.com/effects/text-animations/glowing-text): Free · [live demo](https://vault.hyperiux.com/demo/glowing-text)
+- [Mask Text Reveal](https://vault.hyperiux.com/effects/text-animations/mask-text-reveal): Pro · [live demo](https://vault.hyperiux.com/demo/mask-text-reveal)
+- [Number Counter](https://vault.hyperiux.com/effects/text-animations/number-counter): Free · [live demo](https://vault.hyperiux.com/demo/number-counter)
+- [Overflow Text Reveal](https://vault.hyperiux.com/effects/text-animations/overflow-text-reveal): Pro · [live demo](https://vault.hyperiux.com/demo/overflow-text-reveal)
+- [Perspective Text Reveal](https://vault.hyperiux.com/effects/text-animations/perspective-text-reveal): Pro · [live demo](https://vault.hyperiux.com/demo/perspective-text-reveal)
+- [Pixel Text Fill](https://vault.hyperiux.com/effects/text-animations/pixel-text-fill): Free · [live demo](https://vault.hyperiux.com/demo/pixel-text-fill)
+- [Rectangular Text Reveal](https://vault.hyperiux.com/effects/text-animations/rectangular-text-reveal): Free · [live demo](https://vault.hyperiux.com/demo/rectangular-text-reveal)
+- [Rolling Text](https://vault.hyperiux.com/effects/text-animations/rolling-text): Free · [live demo](https://vault.hyperiux.com/demo/rolling-text)
+- [Scramble Text](https://vault.hyperiux.com/effects/text-animations/scramble-text): Pro · [live demo](https://vault.hyperiux.com/demo/scramble-text)
+- [Slide Text Reveal](https://vault.hyperiux.com/effects/text-animations/slide-text-reveal): Pro · [live demo](https://vault.hyperiux.com/demo/slide-text-reveal)
+- [Spotlight Text](https://vault.hyperiux.com/effects/text-animations/spotlight-text): Pro · [live demo](https://vault.hyperiux.com/demo/spotlight-text)
+- [Text Cloning](https://vault.hyperiux.com/effects/text-animations/text-cloning): Pro · [live demo](https://vault.hyperiux.com/demo/text-cloning)
+- [Text Fill Animation](https://vault.hyperiux.com/effects/text-animations/text-fill-animation): Pro · [live demo](https://vault.hyperiux.com/demo/text-fill-animation)
+- [Text Hover Expand](https://vault.hyperiux.com/effects/text-animations/text-hover): Pro · [live demo](https://vault.hyperiux.com/demo/text-hover)
+- [Text Stream](https://vault.hyperiux.com/effects/text-animations/text-stream): Pro · [live demo](https://vault.hyperiux.com/demo/text-stream)
+- [Typing Text](https://vault.hyperiux.com/effects/text-animations/typing-text): Free · [live demo](https://vault.hyperiux.com/demo/typing-text)
+- [Variable Text Proximity](https://vault.hyperiux.com/effects/text-animations/variable-text-proximity): Free · [live demo](https://vault.hyperiux.com/demo/variable-text-proximity)
+
+## Effects: Scroll effects
+
+- [Cards Runway](https://vault.hyperiux.com/effects/scroll-effects/cards-runway): Pro · [live demo](https://vault.hyperiux.com/demo/cards-runway)
+- [Circular Slider](https://vault.hyperiux.com/effects/scroll-effects/circular-slider): Pro · [live demo](https://vault.hyperiux.com/demo/circular-slider)
+- [Circular Split Roll](https://vault.hyperiux.com/effects/scroll-effects/circular-split-roll): Free · [live demo](https://vault.hyperiux.com/demo/circular-split-roll)
+- [Grid Scale](https://vault.hyperiux.com/effects/scroll-effects/grid-scale): Pro · [live demo](https://vault.hyperiux.com/demo/grid-scale)
+- [Helix Slider](https://vault.hyperiux.com/effects/scroll-effects/helix-slider): Pro · [live demo](https://vault.hyperiux.com/demo/helix-slider)
+- [Horizontal Feature Reveal](https://vault.hyperiux.com/effects/scroll-effects/horizontal-feature-reveal): Free · [live demo](https://vault.hyperiux.com/demo/horizontal-feature-reveal)
+- [Infinite Perspective Slider](https://vault.hyperiux.com/effects/scroll-effects/infinite-perspective-slider): Free · [live demo](https://vault.hyperiux.com/demo/infinite-perspective-slider)
+- [Parallax Footer](https://vault.hyperiux.com/effects/scroll-effects/parallax-footer): Pro · [live demo](https://vault.hyperiux.com/demo/parallax-footer)
+- [Parallax Gallery](https://vault.hyperiux.com/effects/scroll-effects/parallax-gallery): Pro · [live demo](https://vault.hyperiux.com/demo/parallax-gallery)
+- [Parallax Image](https://vault.hyperiux.com/effects/scroll-effects/parallax-image-animation): Pro · [live demo](https://vault.hyperiux.com/demo/parallax-image-animation)
+- [Parallax Slider](https://vault.hyperiux.com/effects/scroll-effects/parallax-slider): Pro · [live demo](https://vault.hyperiux.com/demo/parallax-slider)
+- [Ribbon Drift](https://vault.hyperiux.com/effects/scroll-effects/ribbon-drift): Pro · [live demo](https://vault.hyperiux.com/demo/ribbon-drift)
+- [Rotation Slider](https://vault.hyperiux.com/effects/scroll-effects/rotation-slider): Free · [live demo](https://vault.hyperiux.com/demo/rotation-slider)
+- [Scroll Distortion](https://vault.hyperiux.com/effects/scroll-effects/scroll-distortion): Pro · [live demo](https://vault.hyperiux.com/demo/scroll-distortion)
+- [Scroll Shuffled Cards](https://vault.hyperiux.com/effects/scroll-effects/scroll-shuffled-cards): Pro · [live demo](https://vault.hyperiux.com/demo/scroll-shuffled-cards)
+- [Scroll Stack](https://vault.hyperiux.com/effects/scroll-effects/scroll-stack): Pro · [live demo](https://vault.hyperiux.com/demo/scroll-stack)
+- [Split Canvas](https://vault.hyperiux.com/effects/scroll-effects/split-canvas): Free · [live demo](https://vault.hyperiux.com/demo/split-canvas)
+- [Square Translate](https://vault.hyperiux.com/effects/scroll-effects/square-translate): Pro · [live demo](https://vault.hyperiux.com/demo/square-translate)
+- [Stack Spread](https://vault.hyperiux.com/effects/scroll-effects/stack-spread): Free · [live demo](https://vault.hyperiux.com/demo/stack-spread)
+- [Stacking Cards](https://vault.hyperiux.com/effects/scroll-effects/stacking-cards): Pro · [live demo](https://vault.hyperiux.com/demo/stacking-cards)
+- [Sticky Content Wrapper](https://vault.hyperiux.com/effects/scroll-effects/sticky-content-wrapper): Free · [live demo](https://vault.hyperiux.com/demo/sticky-content-wrapper)
+- [SVG Path Marquee](https://vault.hyperiux.com/effects/scroll-effects/svg-path): Pro · [live demo](https://vault.hyperiux.com/demo/svg-path)
+- [SVG Pixel Reveal](https://vault.hyperiux.com/effects/scroll-effects/svg-pixel-reveal): Pro · [live demo](https://vault.hyperiux.com/demo/svg-pixel-reveal)
+- [Text Convergence](https://vault.hyperiux.com/effects/scroll-effects/text-convergence): Free · [live demo](https://vault.hyperiux.com/demo/text-convergence)
+
+## Effects: Creative components
+
+- [Animated FAQ](https://vault.hyperiux.com/effects/components/animated-faq): Free · [live demo](https://vault.hyperiux.com/demo/animated-faq)
+- [Animated Form](https://vault.hyperiux.com/effects/components/animated-form): Pro · [live demo](https://vault.hyperiux.com/demo/animated-form)
+- [Animated Modal](https://vault.hyperiux.com/effects/components/animated-modal): Pro · [live demo](https://vault.hyperiux.com/demo/animated-modal)
+- [Animated Tabs](https://vault.hyperiux.com/effects/components/animated-tabs): Pro · [live demo](https://vault.hyperiux.com/demo/animated-tabs)
+- [Border Beam](https://vault.hyperiux.com/effects/components/border-beam): Free · [live demo](https://vault.hyperiux.com/demo/border-beam)
+- [Card Drift](https://vault.hyperiux.com/effects/components/card-drift): Pro · [live demo](https://vault.hyperiux.com/demo/card-drift)
+- [Draggable Marquee](https://vault.hyperiux.com/effects/components/draggable-marquee): Pro · [live demo](https://vault.hyperiux.com/demo/draggable-marquee)
+- [Elastic Accordion](https://vault.hyperiux.com/effects/components/elastic-accordion): Pro · [live demo](https://vault.hyperiux.com/demo/elastic-accordion)
+- [Globe](https://vault.hyperiux.com/effects/components/globe): Pro · [live demo](https://vault.hyperiux.com/demo/globe)
+- [Gooey Counter](https://vault.hyperiux.com/effects/components/gooey-counter): Free · [live demo](https://vault.hyperiux.com/demo/gooey-counter)
+- [GSAP Flip Card](https://vault.hyperiux.com/effects/components/gsap-flip-card): Free · [live demo](https://vault.hyperiux.com/demo/gsap-flip-card)
+- [Hover Stack](https://vault.hyperiux.com/effects/components/hover-stack): Free · [live demo](https://vault.hyperiux.com/demo/hover-stack)
+- [Infinite Grid Gallery](https://vault.hyperiux.com/effects/components/infinite-grid-gallery): Pro · [live demo](https://vault.hyperiux.com/demo/infinite-grid-gallery)
+- [Information Drawer](https://vault.hyperiux.com/effects/components/information-drawer): Free · [live demo](https://vault.hyperiux.com/demo/information-drawer)
+- [Interactive List Preview](https://vault.hyperiux.com/effects/components/interactive-list-preview): Free · [live demo](https://vault.hyperiux.com/demo/interactive-list-preview)
+- [Shear Wipe](https://vault.hyperiux.com/effects/components/shear-wipe): Pro · [live demo](https://vault.hyperiux.com/demo/shear-wipe)
+- [Testimonial Swiper](https://vault.hyperiux.com/effects/components/testimonial-swiper): Pro · [live demo](https://vault.hyperiux.com/demo/testimonial-swiper)
+- [Timeline](https://vault.hyperiux.com/effects/components/timeline): Free · [live demo](https://vault.hyperiux.com/demo/timeline)
+- [Video Player](https://vault.hyperiux.com/effects/components/video-player): Pro · [live demo](https://vault.hyperiux.com/demo/video-player)
+
+## Effects: WebGL & 3D effects
+
+- [3D Portfolio Slider](https://vault.hyperiux.com/effects/webgl-effects/3d-portfolio-slider): Pro · [live demo](https://vault.hyperiux.com/demo/3d-portfolio-slider)
+- [Book Flip](https://vault.hyperiux.com/effects/webgl-effects/book-flip): Pro · [live demo](https://vault.hyperiux.com/demo/book-flip)
+- [Colliding Models](https://vault.hyperiux.com/effects/webgl-effects/colliding-models): Pro · [live demo](https://vault.hyperiux.com/demo/colliding-models)
+- [Curved Plane](https://vault.hyperiux.com/effects/webgl-effects/curved-plane): Pro · [live demo](https://vault.hyperiux.com/demo/curved-plane)
+- [Donut Particles](https://vault.hyperiux.com/effects/webgl-effects/donut-particles): Pro · [live demo](https://vault.hyperiux.com/demo/donut-particles)
+- [Draggable Canvas](https://vault.hyperiux.com/effects/webgl-effects/draggable-canvas): Pro · [live demo](https://vault.hyperiux.com/demo/draggable-canvas)
+- [File Encryption](https://vault.hyperiux.com/effects/webgl-effects/file-encryption): Pro · [live demo](https://vault.hyperiux.com/demo/file-encryption)
+- [Fractal Glass](https://vault.hyperiux.com/effects/webgl-effects/fractal-glass): Free · [live demo](https://vault.hyperiux.com/demo/fractal-glass)
+- [Grid Tunnel](https://vault.hyperiux.com/effects/webgl-effects/grid-tunnel): Pro · [live demo](https://vault.hyperiux.com/demo/grid-tunnel)
+- [Hero Banner Animated](https://vault.hyperiux.com/effects/webgl-effects/hero-banner-animated): Pro · [live demo](https://vault.hyperiux.com/demo/hero-banner-animated)
+- [Hover Slider](https://vault.hyperiux.com/effects/webgl-effects/hover-slider): Pro · [live demo](https://vault.hyperiux.com/demo/hover-slider)
+- [Hyperiux Glitter](https://vault.hyperiux.com/effects/webgl-effects/hyperiux-glitter): Pro · [live demo](https://vault.hyperiux.com/demo/hyperiux-glitter)
+- [Interactive Blur Reveal](https://vault.hyperiux.com/effects/webgl-effects/interactive-blur-reveal): Free · [live demo](https://vault.hyperiux.com/demo/interactive-blur-reveal)
+- [Milky Way](https://vault.hyperiux.com/effects/webgl-effects/milky-way): Free · [live demo](https://vault.hyperiux.com/demo/milky-way)
+- [Mouse Pixelation](https://vault.hyperiux.com/effects/webgl-effects/mouse-pixelation): Pro · [live demo](https://vault.hyperiux.com/demo/mouse-pixelation)
+- [Progressive Bloom Valley](https://vault.hyperiux.com/effects/webgl-effects/progressive-bloom-valley): Pro · [live demo](https://vault.hyperiux.com/demo/progressive-bloom-valley)
+- [Strip Slider](https://vault.hyperiux.com/effects/webgl-effects/strip-slider): Pro · [live demo](https://vault.hyperiux.com/demo/strip-slider)
+
+## Effects: Cursor effects
+
+- [Butterfly Trail Cursor](https://vault.hyperiux.com/effects/cursor-effects/butterfly-trail-cursor): Pro · [live demo](https://vault.hyperiux.com/demo/butterfly-trail-cursor)
+- [Character Trail](https://vault.hyperiux.com/effects/cursor-effects/character-trail): Pro · [live demo](https://vault.hyperiux.com/demo/character-trail)
+- [Coffee Bean Cursor](https://vault.hyperiux.com/effects/cursor-effects/coffee-bean-cursor): Pro · [live demo](https://vault.hyperiux.com/demo/coffee-bean-cursor)
+- [Colorful Cursor Aura](https://vault.hyperiux.com/effects/cursor-effects/colorful-cursor-aura): Pro · [live demo](https://vault.hyperiux.com/demo/colorful-cursor-aura)
+- [Cursor Move](https://vault.hyperiux.com/effects/cursor-effects/cursor-move): Pro · [live demo](https://vault.hyperiux.com/demo/cursor-move)
+- [Fish Eye Cursor](https://vault.hyperiux.com/effects/cursor-effects/fish-eye): Pro · [live demo](https://vault.hyperiux.com/demo/fish-eye)
+- [Full Screen Crosshair](https://vault.hyperiux.com/effects/cursor-effects/full-screen-crosshair): Pro · [live demo](https://vault.hyperiux.com/demo/full-screen-crosshair)
+- [Inertia Image](https://vault.hyperiux.com/effects/cursor-effects/inertia-img): Pro · [live demo](https://vault.hyperiux.com/demo/inertia-img)
+- [Interactive Arrows](https://vault.hyperiux.com/effects/cursor-effects/interactive-arrows): Pro · [live demo](https://vault.hyperiux.com/demo/interactive-arrows)
+- [Liquid Glass Cursor](https://vault.hyperiux.com/effects/cursor-effects/liquid-glass-cursor): Free · [live demo](https://vault.hyperiux.com/demo/liquid-glass-cursor)
+- [Magnetic Image Trail](https://vault.hyperiux.com/effects/cursor-effects/magnetic-image-trail): Pro · [live demo](https://vault.hyperiux.com/demo/magnetic-image-trail)
+- [Noise Ripple Cursor](https://vault.hyperiux.com/effects/cursor-effects/noise-ripple-cursor): Pro · [live demo](https://vault.hyperiux.com/demo/noise-ripple-cursor)
+- [Phantom Image Trail](https://vault.hyperiux.com/effects/cursor-effects/phantom-image-trail): Free · [live demo](https://vault.hyperiux.com/demo/phantom-image-trail)
+- [Pixel Bloom Cursor](https://vault.hyperiux.com/effects/cursor-effects/pixel-bloom): Pro · [live demo](https://vault.hyperiux.com/demo/pixel-bloom)
+- [Pixelated Image Effect](https://vault.hyperiux.com/effects/cursor-effects/pixelated-image-effect): Free · [live demo](https://vault.hyperiux.com/demo/pixelated-image-effect)
+- [Rope Cursor](https://vault.hyperiux.com/effects/cursor-effects/rope-cursor): Pro · [live demo](https://vault.hyperiux.com/demo/rope-cursor)
+
+## Effects: Carousels
+
+- [Arc Flow Carousel](https://vault.hyperiux.com/effects/carousels/arc-flow-carousel): Free · [live demo](https://vault.hyperiux.com/demo/arc-flow-carousel)
+- [Clip Path Slider](https://vault.hyperiux.com/effects/carousels/clippath-slider): Pro · [live demo](https://vault.hyperiux.com/demo/clippath-slider)
+- [Depth Card Stack](https://vault.hyperiux.com/effects/carousels/depth-card-stack): Pro · [live demo](https://vault.hyperiux.com/demo/depth-card-stack)
+- [Dimensional Switch Slider](https://vault.hyperiux.com/effects/carousels/dimensional-switch-slider): Free · [live demo](https://vault.hyperiux.com/demo/dimensional-switch-slider)
+- [Ellipse Carousel](https://vault.hyperiux.com/effects/carousels/ellipse-carousel): Free · [live demo](https://vault.hyperiux.com/demo/ellipse-carousel)
+- [Infinite Carousel](https://vault.hyperiux.com/effects/carousels/infinite-carousel): Pro · [live demo](https://vault.hyperiux.com/demo/infinite-carousel)
+- [Orbit Flip Slider](https://vault.hyperiux.com/effects/carousels/orbit-flip-slider): Free · [live demo](https://vault.hyperiux.com/demo/orbit-flip-slider)
+- [Parallax Strip Slider](https://vault.hyperiux.com/effects/carousels/parallax-strip-slider): Free · [live demo](https://vault.hyperiux.com/demo/parallax-strip-slider)
+- [Ring Carousel](https://vault.hyperiux.com/effects/carousels/ring-carousel): Pro · [live demo](https://vault.hyperiux.com/demo/ring-carousel)
+- [WebGL Slider](https://vault.hyperiux.com/effects/carousels/webgl-slider): Pro · [live demo](https://vault.hyperiux.com/demo/webgl-slider)
+- [Zoom Slider](https://vault.hyperiux.com/effects/carousels/zoom-slider): Free · [live demo](https://vault.hyperiux.com/demo/zoom-slider)
+
+## Effects: Page transitions
+
+- [Aperture Transition](https://vault.hyperiux.com/effects/page-transitions/aperture-transition): Pro · [live demo](https://vault.hyperiux.com/demo/aperture-transition)
+- [Ascend Transition](https://vault.hyperiux.com/effects/page-transitions/ascend-transition): Pro · [live demo](https://vault.hyperiux.com/demo/ascend-transition)
+- [Block Transition](https://vault.hyperiux.com/effects/page-transitions/block-transition): Free · [live demo](https://vault.hyperiux.com/demo/block-transition)
+- [Chess Grid Transition](https://vault.hyperiux.com/effects/page-transitions/chess-grid-transition): Free · [live demo](https://vault.hyperiux.com/demo/chess-grid-transition)
+- [Depth Shift Transition](https://vault.hyperiux.com/effects/page-transitions/depth-shift-transition): Pro · [live demo](https://vault.hyperiux.com/demo/depth-shift-transition)
+- [Page Flip Transition](https://vault.hyperiux.com/effects/page-transitions/page-flip-transition): Pro · [live demo](https://vault.hyperiux.com/demo/page-flip-transition)
+- [Pixel Transition](https://vault.hyperiux.com/effects/page-transitions/pixel-transition): Pro · [live demo](https://vault.hyperiux.com/demo/pixel-transition)
+- [Radial Slice Transition](https://vault.hyperiux.com/effects/page-transitions/radial-slice-transition): Pro · [live demo](https://vault.hyperiux.com/demo/radial-slice-transition)
+- [SVG Brush Transition](https://vault.hyperiux.com/effects/page-transitions/svg-brush-transition): Pro · [live demo](https://vault.hyperiux.com/demo/svg-brush-transition)
+- [Sweep Lift Transition](https://vault.hyperiux.com/effects/page-transitions/sweep-lift-transition): Pro · [live demo](https://vault.hyperiux.com/demo/sweep-lift-transition)
+
+## Effects: Buttons
+
+- [Animated Toggle](https://vault.hyperiux.com/effects/buttons/animated-toggle): Pro · [live demo](https://vault.hyperiux.com/demo/animated-toggle)
+- [Arrow Fill Button](https://vault.hyperiux.com/effects/buttons/arrow-fill-button): Free · [live demo](https://vault.hyperiux.com/demo/arrow-fill-button)
+- [Character Stagger Button](https://vault.hyperiux.com/effects/buttons/char-stagger-button): Pro · [live demo](https://vault.hyperiux.com/demo/char-stagger-button)
+- [Character Stagger Primary Button](https://vault.hyperiux.com/effects/buttons/char-stagger-primary-button): Pro · [live demo](https://vault.hyperiux.com/demo/char-stagger-primary-button)
+- [Dot Fill Button](https://vault.hyperiux.com/effects/buttons/dot-fill-button): Pro · [live demo](https://vault.hyperiux.com/demo/dot-fill-button)
+- [Link Button](https://vault.hyperiux.com/effects/buttons/link-button): Free · [live demo](https://vault.hyperiux.com/demo/link-button)
+- [Metallic Button](https://vault.hyperiux.com/effects/buttons/metallic-button): Free · [live demo](https://vault.hyperiux.com/demo/metallic-button)
+- [Scramble Link Button](https://vault.hyperiux.com/effects/buttons/scramble-link-button): Free · [live demo](https://vault.hyperiux.com/demo/scramble-link-button)
+- [Shiny Button](https://vault.hyperiux.com/effects/buttons/shiny-button): Free · [live demo](https://vault.hyperiux.com/demo/shiny-button)
+- [Spotlight Button](https://vault.hyperiux.com/effects/buttons/spotlight-button): Pro · [live demo](https://vault.hyperiux.com/demo/spotlight-button)
+
+## Effects: Navigation
+
+- [Directional Menu](https://vault.hyperiux.com/effects/navigation/directional-menu): Free · [live demo](https://vault.hyperiux.com/demo/directional-menu)
+- [Displacement Navbar](https://vault.hyperiux.com/effects/navigation/displacement-navbar): Pro · [live demo](https://vault.hyperiux.com/demo/displacement-navbar)
+- [Elevate Navbar](https://vault.hyperiux.com/effects/navigation/elevate-navbar): Free · [live demo](https://vault.hyperiux.com/demo/elevate-navbar)
+- [Expanding Navbar](https://vault.hyperiux.com/effects/navigation/expanding-navbar): Pro · [live demo](https://vault.hyperiux.com/demo/expanding-navbar)
+- [Immersive Full-Screen Navigation](https://vault.hyperiux.com/effects/navigation/immersive-full-screen-nav): Free · [live demo](https://vault.hyperiux.com/demo/immersive-full-screen-nav)
+- [Morphing Dock](https://vault.hyperiux.com/effects/navigation/morphing-dock): Pro · [live demo](https://vault.hyperiux.com/demo/morphing-dock)
+- [Perspective Shift Menu](https://vault.hyperiux.com/effects/navigation/perspective-shift-menu): Pro · [live demo](https://vault.hyperiux.com/demo/perspective-shift-menu)
+- [Side Navbar](https://vault.hyperiux.com/effects/navigation/side-navbar): Pro · [live demo](https://vault.hyperiux.com/demo/side-navbar)
+- [Unfold Navbar](https://vault.hyperiux.com/effects/navigation/unfold-navbar): Pro · [live demo](https://vault.hyperiux.com/demo/unfold-navbar)
+
+## Effects: Backgrounds
+
+- [Dither Canvas](https://vault.hyperiux.com/effects/backgrounds/dither-canvas): Pro · [live demo](https://vault.hyperiux.com/demo/dither-canvas)
+- [Dot Transition](https://vault.hyperiux.com/effects/backgrounds/dot-transition): Free · [live demo](https://vault.hyperiux.com/demo/dot-transition)
+- [Dotted Grid Background](https://vault.hyperiux.com/effects/backgrounds/dotted-grid): Free · [live demo](https://vault.hyperiux.com/demo/dotted-grid)
+- [Dotted Trail](https://vault.hyperiux.com/effects/backgrounds/dotted-trail): Free · [live demo](https://vault.hyperiux.com/demo/dotted-trail)
+- [Grid Lift](https://vault.hyperiux.com/effects/backgrounds/grid-lift): Pro · [live demo](https://vault.hyperiux.com/demo/grid-lift)
+- [Spider Particles Background](https://vault.hyperiux.com/effects/backgrounds/spider-particles): Free · [live demo](https://vault.hyperiux.com/demo/spider-particles)
+
+## Effects: Loaders
+
+- [Lines Loader](https://vault.hyperiux.com/effects/loaders/lines-loader): Pro · [live demo](https://vault.hyperiux.com/demo/lines-loader)
+- [Numeric Tunnel Loader](https://vault.hyperiux.com/effects/loaders/numeric-tunnel): Free · [live demo](https://vault.hyperiux.com/demo/numeric-tunnel)
+- [Stack Loader](https://vault.hyperiux.com/effects/loaders/stack-loader): Free · [live demo](https://vault.hyperiux.com/demo/stack-loader)
+
+## Templates
+
+- [All templates](https://vault.hyperiux.com/templates): Interactive React & Next.js website templates, each with source code and a Figma file
+- [Elena Voss](https://vault.hyperiux.com/templates/elenavoss): Portfolio template · [live demo](https://vault.hyperiux.com/template-demo/elenavoss)
+- [Oris Dental](https://vault.hyperiux.com/templates/oris-dental): Healthcare template · [live demo](https://vault.hyperiux.com/template-demo/oris-dental)
+- [Lumera](https://vault.hyperiux.com/templates/lumera): Real estate template · [live demo](https://vault.hyperiux.com/template-demo/lumera)
+- [Kyntra](https://vault.hyperiux.com/templates/kyntra): App template · [live demo](https://vault.hyperiux.com/template-demo/kyntra)
+
+## Blog posts
+
+- [Next.js App Router Page Transitions: The Hidden Complexity](https://vault.hyperiux.com/blog/the-hidden-complexity-of-page-transitions-in-the-next-js-app-router)
+- [Reusable React Animation Components Without Prop Explosion](https://vault.hyperiux.com/blog/how-to-build-reusable-react-animation-components-without-making-every-effect-config-heavy)
+- [CSS Scroll-Driven Animations vs JavaScript: What Still Needs JS?](https://vault.hyperiux.com/blog/native-scroll-timelines-are-here-does-every-scroll-effect-still-need-javascript)
+- [React Scroll Animations Without the Timeline Mess](https://vault.hyperiux.com/blog/how-to-build-scroll-animations-in-react-without-turning-the-page-into-a-timeline-mess)
+- [React Animation Components vs Custom Animations: When to Use Each](https://vault.hyperiux.com/blog/prebuilt-interaction-patterns-vs-hand-built-animations-in-react)
+- [CSS vs React Animation Libraries: When Native CSS Is Enough](https://vault.hyperiux.com/blog/when-css-animation-is-enough-and-when-react-needs-a-library)
+
+## Legal
+
+- [License Agreement](https://vault.hyperiux.com/legal/license-agreement)
+- [Privacy Policy](https://vault.hyperiux.com/legal/privacy-policy)
+- [Refund Policy](https://vault.hyperiux.com/legal/refund-policy)
+- [Terms of Service](https://vault.hyperiux.com/legal/terms-of-service)
 
 ## Optional
 
 - [Sitemap](https://vault.hyperiux.com/sitemap.xml): Full URL index including every individual effect page
-- [Sign up](https://vault.hyperiux.com/sign-up): Create a free account to view free effect source code
+- [Sign up](https://vault.hyperiux.com/sign-up): Create a free account to copy and install free effects

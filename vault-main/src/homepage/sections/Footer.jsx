@@ -51,6 +51,7 @@ const legalLinks = [
   { label: "Terms of Service", href: "/legal/terms-of-service" },
   { label: "Privacy Policy", href: "/legal/privacy-policy" },
   { label: "Refund Policy", href: "/legal/refund-policy" },
+  { label: "Hey AI, learn about us", href: "/llm-info" },
 ];
 
 const socialLinks = [

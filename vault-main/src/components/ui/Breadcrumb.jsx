@@ -3,8 +3,11 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+// Segments whose label isn't just the slug with spaces
+const SEGMENT_LABELS = { "llm-info": "LLM Info" };
+
 function formatSegmentLabel(segment) {
-  return segment.replace(/-/g, " ");
+  return SEGMENT_LABELS[segment] ?? segment.replace(/-/g, " ");
 }
 
 function itemsFromPathname(pathname) {

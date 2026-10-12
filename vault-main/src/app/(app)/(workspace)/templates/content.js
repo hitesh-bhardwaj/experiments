@@ -57,10 +57,10 @@ export const templatesFaqItems = [
   },
   {
     id: "templates-faq-6",
-    question: "Are Vault Templates included with Vault Pro?",
+    question: "Are Vault Templates included with Pro and Pro+?",
     answer: (
       <>
-        Yes. Vault Templates are included with Vault Pro Yearly, so subscribers can access them without purchasing each Template separately.
+        Yes, through template credits: each credit unlocks one Template. Pro includes 3 credits a year on yearly billing (none on quarterly), for the selected catalogue. Pro+ includes 1 credit every quarter or 5 a year on yearly billing, for the full catalogue.
 
       </>
     ),
@@ -71,7 +71,7 @@ export const templatesFaqItems = [
     question: "Can I purchase a Template separately?",
     answer: (
       <>
-Yes. Each Template can also be purchased individually without Vault Pro Yearly. Pricing is shown on its detail page.
+Yes. Each Template can also be purchased individually, without a plan. Pricing is shown on its detail page.
       </>
     ),
     defaultOpen: false,
@@ -81,7 +81,7 @@ Yes. Each Template can also be purchased individually without Vault Pro Yearly. 
     question: "What licence do Vault Templates use?",
     answer: (
       <>
-Vault Templates are licensed under the Mozilla Public License 2.0 (MPL-2.0), the licence used for Vault&apos;s paid and Pro items. Free items use MIT.
+Vault Templates are Pro items, licensed under Hyperiux&apos;s commercial terms in the Vault License Agreement: use them in your projects, but don&apos;t redistribute or resell them. See the License Agreement for the full terms.
       </>
     ),
     defaultOpen: false,

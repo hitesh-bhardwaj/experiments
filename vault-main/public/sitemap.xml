@@ -147,6 +147,12 @@
        <priority>0.8000</priority>
   </url>
 <url>
+       <loc>https://vault.hyperiux.com/llm-info</loc>
+       <lastmod>2026-10-12T00:00:00+00:00</lastmod>
+       <changefreq>monthly</changefreq>
+       <priority>0.8000</priority>
+  </url>
+<url>
        <loc>https://vault.hyperiux.com/legal/refund-policy</loc>
        <lastmod>2026-07-07T00:00:00+00:00</lastmod>
        <changefreq>daily</changefreq>
@@ -1993,5 +1999,77 @@
        <lastmod>2026-10-09T13:48:46+00:00</lastmod>
        <changefreq>daily</changefreq>
        <priority>0.6400</priority>
+  </url>
+<url>
+       <loc>https://vault.hyperiux.com/blog</loc>
+       <lastmod>2026-10-12T00:00:00+00:00</lastmod>
+       <changefreq>weekly</changefreq>
+       <priority>0.8000</priority>
+  </url>
+<url>
+       <loc>https://vault.hyperiux.com/blog/the-hidden-complexity-of-page-transitions-in-the-next-js-app-router</loc>
+       <lastmod>2026-10-12T00:00:00+00:00</lastmod>
+       <changefreq>monthly</changefreq>
+       <priority>0.8000</priority>
+  </url>
+<url>
+       <loc>https://vault.hyperiux.com/blog/how-to-build-reusable-react-animation-components-without-making-every-effect-config-heavy</loc>
+       <lastmod>2026-10-12T00:00:00+00:00</lastmod>
+       <changefreq>monthly</changefreq>
+       <priority>0.8000</priority>
+  </url>
+<url>
+       <loc>https://vault.hyperiux.com/blog/native-scroll-timelines-are-here-does-every-scroll-effect-still-need-javascript</loc>
+       <lastmod>2026-10-12T00:00:00+00:00</lastmod>
+       <changefreq>monthly</changefreq>
+       <priority>0.8000</priority>
+  </url>
+<url>
+       <loc>https://vault.hyperiux.com/blog/how-to-build-scroll-animations-in-react-without-turning-the-page-into-a-timeline-mess</loc>
+       <lastmod>2026-10-12T00:00:00+00:00</lastmod>
+       <changefreq>monthly</changefreq>
+       <priority>0.8000</priority>
+  </url>
+<url>
+       <loc>https://vault.hyperiux.com/blog/prebuilt-interaction-patterns-vs-hand-built-animations-in-react</loc>
+       <lastmod>2026-10-12T00:00:00+00:00</lastmod>
+       <changefreq>monthly</changefreq>
+       <priority>0.8000</priority>
+  </url>
+<url>
+       <loc>https://vault.hyperiux.com/blog/when-css-animation-is-enough-and-when-react-needs-a-library</loc>
+       <lastmod>2026-10-12T00:00:00+00:00</lastmod>
+       <changefreq>monthly</changefreq>
+       <priority>0.8000</priority>
+  </url>
+<url>
+       <loc>https://vault.hyperiux.com/effects/pro</loc>
+       <lastmod>2026-10-12T00:00:00+00:00</lastmod>
+       <changefreq>monthly</changefreq>
+       <priority>0.8000</priority>
+  </url>
+<url>
+       <loc>https://vault.hyperiux.com/template-demo/elenavoss</loc>
+       <lastmod>2026-10-12T00:00:00+00:00</lastmod>
+       <changefreq>monthly</changefreq>
+       <priority>0.8000</priority>
+  </url>
+<url>
+       <loc>https://vault.hyperiux.com/template-demo/oris-dental</loc>
+       <lastmod>2026-10-12T00:00:00+00:00</lastmod>
+       <changefreq>monthly</changefreq>
+       <priority>0.8000</priority>
+  </url>
+<url>
+       <loc>https://vault.hyperiux.com/template-demo/lumera</loc>
+       <lastmod>2026-10-12T00:00:00+00:00</lastmod>
+       <changefreq>monthly</changefreq>
+       <priority>0.8000</priority>
+  </url>
+<url>
+       <loc>https://vault.hyperiux.com/template-demo/kyntra</loc>
+       <lastmod>2026-10-12T00:00:00+00:00</lastmod>
+       <changefreq>monthly</changefreq>
+       <priority>0.8000</priority>
   </url>
 </urlset>

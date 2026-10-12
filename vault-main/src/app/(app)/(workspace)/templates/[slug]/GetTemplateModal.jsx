@@ -237,7 +237,7 @@ export function GetTemplateModal({ template, open, tab = "buy", onTab, onClose, 
                         </p>
                       )}
                       <ul className={`flex flex-col gap-1.5 ${T14} text-foreground/80`}>
-                        {["Every page, section and interaction, as source you own", "The Figma file for the whole site", "Licensed under MPL-2.0"].map((item) => (
+                        {["Every page, section and interaction, as source you own", "The Figma file for the whole site", "Licensed under the Vault License Agreement"].map((item) => (
                           <li key={item} className="relative pl-4.5 before:absolute before:top-[.6em] before:left-0.5 before:size-1.5 before:bg-primary">
                             {item}
                           </li>

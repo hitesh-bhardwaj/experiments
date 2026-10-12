@@ -168,7 +168,7 @@ export function LocalBusiness() {
           "Friday"
         ],
         "opens": "09:30",
-        "closes": "06:30"
+        "closes": "18:30"
       }
     ]
   };

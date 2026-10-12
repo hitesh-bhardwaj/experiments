@@ -83,8 +83,8 @@ const getEffectResult = `{
 
 const listCategoriesResult = `{
   "categories": [
-    { "category": "scroll", "count": 23 },
-    { "category": "webgl", "count": 19 },
+    { "category": "scroll", "count": 24 },
+    { "category": "webgl", "count": 17 },
     { "category": "cursor", "count": 16 }
   ]
 }`;
@@ -120,7 +120,7 @@ export default function DocsMcp() {
       <Heading2 id="overview">Overview</Heading2>
 
       <Para>
-        Hyperiux Vault ships over a hundred production-quality animation and
+        Hyperiux Vault ships 150 production-quality animation and
         interaction effects for Next.js, installed one at a time with the{" "}
         <code>hyperiux</code> CLI (<code>npx hyperiux add &lt;effect&gt;</code>).
         This MCP server sits alongside that CLI as a companion tool built for
@@ -176,9 +176,9 @@ export default function DocsMcp() {
           .)
         </DocsListItem>
         <DocsListItem>
-          No account or subscription required to use it for free effects. A{" "}
-          <DocsLink href="https://vault.hyperiux.com/pricing">Hyperiux Pro</DocsLink>{" "}
-          subscription is only needed to retrieve Pro effect source code.
+          A free Hyperiux account covers free effects. A{" "}
+          <DocsLink href="https://vault.hyperiux.com/pricing">Pro or Pro+</DocsLink>{" "}
+          plan is only needed to retrieve Pro effect source code.
         </DocsListItem>
       </DocsList>
 
@@ -640,7 +640,7 @@ export default function DocsMcp() {
 
       <Para>
         To retrieve source code for a <span className="font-semibold">Pro</span> effect, the server
-        needs a Hyperiux Pro CLI token. It automatically picks one up from
+        needs a Pro or Pro+ CLI token. It automatically picks one up from
         either of these, in order:
       </Para>
 

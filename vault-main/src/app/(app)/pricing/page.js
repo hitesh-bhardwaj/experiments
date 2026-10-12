@@ -87,7 +87,7 @@ const faqItems = [
     id: "faq1",
     question: "Is Pro available now?",
     answer:
-      "Yes. Free Core is available immediately with no account required, and Pro is available today through self-serve checkout - no invite, approval, or waitlist needed.",
+      "Yes. Free Core is available immediately with a free account, and Pro is available today through self-serve checkout - no invite, approval, or waitlist needed.",
   },
   {
     id: "faq3",
@@ -99,7 +99,7 @@ const faqItems = [
     id: "faq4",
     question: "Can I use Free Core without an account?",
     answer:
-      "Yes. Free Core effects should be available to preview and install without creating an account.",
+      "No. Anyone can preview effects on the site, but copying the code or installing it with the CLI needs a free account.",
   },
   {
     id: "faq5",
@@ -127,15 +127,15 @@ const faqItems = [
   },
   {
     id: "faq7",
-    question: "What happens if I cancel Pro?",
+    question: "What happens if I cancel my plan?",
     answer:
-      "Pro access continues until the end of the current billing period, then reverts to the free tier. Effects you've already installed stay in your repository - cancelling stops new Pro installs, it doesn't touch code you've already shipped.",
+      "Your plan's access continues until the end of the current billing period, then reverts to the free tier. Effects you've already installed stay in your repository - cancelling stops new Pro installs, it doesn't touch code you've already shipped.",
   },
   {
     id: "faq8",
     question: "Do you offer refunds?",
     answer:
-      "If Pro isn't right for you, contact us within 7 days of a new subscription and we'll issue a refund. Outside that window, cancel anytime to stop future billing.",
+      "Payments aren't refunded once access has been granted, except for duplicate charges, failure to deliver access, or fraud. If one of those applies, email support@hyperiux.com within 30 days. You can cancel anytime to stop future billing. Full details are in the Refund Policy.",
   },
   {
     id: "faq9",

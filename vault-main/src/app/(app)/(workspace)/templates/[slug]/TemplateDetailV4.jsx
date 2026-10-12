@@ -197,7 +197,7 @@ export function TemplateDetailV4({ template, templateAccess = { allowed: false, 
     ["Stack", stack],
     ["Built with", `${vaultEffects.length} Vault effects`],
     ["Includes", "Source code and Figma file"],
-    ["Licence", "MPL-2.0"],
+    ["Licence", "Vault License Agreement"],
   ];
 
   const toolbar = (
