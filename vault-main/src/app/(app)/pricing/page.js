@@ -36,14 +36,14 @@ export default async function PricingPage() {
         <SquareCursor />
         <main id="main-content">
           <PricingHero />
-          {/* The homepage plans section, reused as is; #plans is the hero's "See the plans" target */}
-          <div id="plans" className="home-type">
-            <PricingPlansHome />
-            <PricingFinder />
-          </div>
-
+          {/* Plans through FAQ are one sheet that scales in after the hero, like the homepage */}
           {/* Above the footer (z-200), whose ribbons reach up behind the FAQ */}
           <SectionOverlay className="relative z-201">
+            {/* The homepage plans section, reused as is; #plans is the hero's "See the plans" target */}
+            <div id="plans" className="home-type">
+              <PricingPlansHome />
+              <PricingFinder />
+            </div>
             <div className="home-type">
               <PricingCredits />
               <PricingProCompare />

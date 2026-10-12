@@ -1093,7 +1093,7 @@ html.lenis.lenis-stopped[data-v4-drawer-open] {
   font-size: calc(var(--cvw) * 6.4);
   line-height: 1.05;
   letter-spacing: -0.035em;
-  @variant max-lg { font-size: 8.5vw; }
+  @variant max-lg { font-size: 8vw; }
   @variant max-md { font-size: min(13vw, 65px); }
 }
 @utility type-h1 {
@@ -1102,7 +1102,7 @@ html.lenis.lenis-stopped[data-v4-drawer-open] {
   font-size: calc(var(--cvw) * 4.6);
   line-height: 1.05;
   letter-spacing: -0.035em;
-  @variant max-lg { font-size: 6vw; }
+  @variant max-lg { font-size: 4vw; }
   @variant max-md { font-size: min(11vw, 46px); }
 }
 @utility type-h2 {
@@ -1111,7 +1111,7 @@ html.lenis.lenis-stopped[data-v4-drawer-open] {
   font-size: calc(var(--cvw) * 2.6);
   line-height: 1.15;
   letter-spacing: -0.03em;
-  @variant max-lg { font-size: 4vw; }
+  @variant max-lg { font-size: 3.4vw; }
   @variant max-md { font-size: min(6.5vw, 31px); }
 }
 @utility type-h3 {
@@ -1120,14 +1120,14 @@ html.lenis.lenis-stopped[data-v4-drawer-open] {
   font-size: calc(var(--cvw) * 1.6);
   line-height: 1.25;
   letter-spacing: -0.02em;
-  @variant max-lg { font-size: 2.6vw; }
+  @variant max-lg { font-size: 2.2vw; }
   @variant max-md { font-size: min(5vw, 20px); }
 }
 @utility type-body-lg {
   font-family: var(--font-avenir), "Avenir Next", system-ui, sans-serif;
   font-size: calc(var(--cvw) * 1.1);
   line-height: 1.6;
-  @variant max-lg { font-size: 2.2vw; }
+  @variant max-lg { font-size: clamp(15px, 2.5vw, 18px); }
   @variant max-md { font-size: clamp(15px, 4.1vw, 17px); }
 }
 @utility type-body {

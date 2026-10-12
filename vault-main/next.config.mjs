@@ -70,6 +70,12 @@ const nextConfig = {
 
   async redirects() {
     return [
+      // /legal has no page of its own: the first legal page (sidebar / footer order)
+      {
+        source: "/legal",
+        destination: "/legal/license-agreement",
+        permanent: false,
+      },
       // The v4 listing preview became /effects itself.
       {
         source: "/effects-v4",

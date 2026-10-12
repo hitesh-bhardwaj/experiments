@@ -370,7 +370,8 @@ export function TableOfContents({
         </ul>
       </div>
 
-      <ul className="flex w-12 flex-col items-end gap-[0.8vw]">
+      {/* Dashes sit flush against the page edge the widget is pinned to (right on docs, left on blog) */}
+      <ul className={`flex w-12 flex-col gap-[0.8vw] ${isLeft ? "items-start" : "items-end"}`}>
         {items.map((item) => (
           <li key={item.id}>
             <Link

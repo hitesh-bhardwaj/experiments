@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
+import { createContext, useContext, useEffect, useId, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import gsap from "gsap";
 import {
     PACKAGE_MANAGERS,
@@ -12,6 +12,7 @@ import {
 import { Lock } from "lucide-react";
 import Link from "next/link";
 import CopyBtn from "@/components/ui/CopyBtn";
+import LinkButton from "@/components/WebsiteComps/LinkButton";
 import { Tooltip } from "@/components/ui/Tooltip";
 import { ToastViewport, useToastQueue } from "@/components/ui/Toast";
 
@@ -265,6 +266,25 @@ export function CodeBlock({
     // Only rename the file when a TS version exists, so JS-only blocks keep their real filename
     const displayFilename = isJsVariant && tsxCode ? getVariantFilename(filename, variant) : filename;
 
+    // Tall code is clipped at the block's height with a "See more" button; clicking it
+    // makes the block scrollable. Short code never gets the button.
+    const [overflows, setOverflows] = useState(false);
+    const [expanded, setExpanded] = useState(false);
+    const seeMoreId = `see-more-${useId().replace(/:/g, "")}`;
+
+    useEffect(() => {
+        const scroller = scrollRef.current;
+        const content = contentRef.current;
+        if (!scroller || !content || typeof ResizeObserver === "undefined") return undefined;
+        const measure = () => setOverflows(content.offsetHeight > scroller.clientHeight + 1);
+        const ro = new ResizeObserver(measure);
+        ro.observe(content);
+        measure();
+        return () => ro.disconnect();
+    }, []);
+
+    const collapsed = overflows && !expanded;
+
     const [copied, setCopied] = useState(false);
     const { toast, showToast, dismissToast } = useToastQueue(2500);
     const codeRef = useRef(null);
@@ -348,7 +368,10 @@ export function CodeBlock({
                 </span>
             </div>
             {/* codeblock: the site's thin code scrollbar (globals.css). */}
-            <div ref={scrollRef} className="codeblock max-h-[420px] overflow-auto">
+            <div
+                ref={scrollRef}
+                className={`codeblock max-h-[420px] ${collapsed ? "overflow-x-auto overflow-y-hidden" : "overflow-auto"}`}
+            >
                 <div ref={contentRef}>
                 <pre
                     onCopy={onNativeCopy}
@@ -367,6 +390,22 @@ export function CodeBlock({
                 </pre>
                 </div>
             </div>
+            {collapsed && (
+                <div className="absolute inset-x-0 bottom-0 z-10 flex h-[120px] items-end justify-center bg-linear-to-t from-[#111] via-[#111]/80 to-transparent pb-4">
+                    {/* The site's underlined link with the shimmer; href="#" so it only expands */}
+                    <LinkButton
+                        id={seeMoreId}
+                        href="#"
+                        text="See more"
+                        shimmer
+                        tilted={false}
+                        showArrow
+                        aria-expanded={false}
+                        onClick={() => setExpanded(true)}
+                        className="type-small text-[#d8d8d8]!"
+                    />
+                </div>
+            )}
             <ToastViewport toast={toast} onDismiss={dismissToast} position="bottom-center" />
         </div>
     );

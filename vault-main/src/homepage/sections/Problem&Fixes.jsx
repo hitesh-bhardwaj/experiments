@@ -202,7 +202,7 @@ export default function ProblemFixes() {
                   >
                     {item.label}
                   </FadeText>
-                  <div className="flex size-[calc(var(--cvw)*3)] shrink-0 items-center justify-center bg-background p-1 max-md:size-8 max-sm:size-9">
+                  <div className="flex size-[calc(var(--cvw)*3)] shrink-0 items-center justify-center bg-background p-1 max-xl:size-10 max-md:size-8 max-sm:size-9">
                     <DrawCross
                       active={index <= activeIndex}
                       armed={armed}
@@ -210,7 +210,7 @@ export default function ProblemFixes() {
                     />
                   </div>
                 </div>
-                <p className="text-light-grey font-mono text18 max-md:w-[90%] max-md:flex-none max-md:px-0 max-md:text-[clamp(0.8rem,calc(var(--cvw)*2.6),1rem)]! max-md:pr-0! min-w-0 flex-1 px-[calc(var(--cvw)*2)] text-left [--scramble-flash:var(--primary)] [--scramble-pre:var(--primary)] max-sm:w-[75%]">
+                <p className="text-light-grey font-mono text18 max-xl:w-[50%] max-xl:flex-none max-md:w-[90%] max-md:flex-none max-md:px-0 max-md:text-[clamp(0.8rem,calc(var(--cvw)*2.6),1rem)]! max-xl:text-sm! max-md:pr-0! min-w-0 flex-1 px-[calc(var(--cvw)*2)] text-left [--scramble-flash:var(--primary)] [--scramble-pre:var(--primary)] max-sm:w-[75%]">
                   <ScrambleText
                     text={item.description}
                     active={index <= activeIndex}
@@ -229,7 +229,7 @@ export default function ProblemFixes() {
                 >
                   {item.title}
                 </FadeText>
-                <div className="flex size-[calc(var(--cvw)*3)] shrink-0 items-center justify-center bg-background p-2.5 max-md:size-8 max-sm:size-9">
+                <div className="flex size-[calc(var(--cvw)*3)] shrink-0 items-center justify-center bg-background p-2.5 max-xl:size-10 max-md:size-8 max-sm:size-9">
                   <DrawCheck
                     active={index <= activeIndex}
                     armed={armed}
