@@ -23,8 +23,8 @@ export const PLANS = {
     // Which templates this tier's credits can redeem
     catalogue: "selected",
     prices: {
-      quarterly: { USD: 27, INR: 1497 },
-      yearly: { USD: 89, INR: 4999 },
+      quarterly: { USD: 27, INR: 1347 },
+      yearly: { USD: 79, INR: 4490 },
     },
     // `amount` credits on the 1st charge and every `everyCharges` after it.
     // Pro only earns credits on yearly billing: 3 a year, none on quarterly.
@@ -70,7 +70,7 @@ export function getPrice(tier, interval, currency = "USD") {
   return PLANS[tier]?.prices[interval]?.[currency] ?? null;
 }
 
-// What one month works out to: $7.42 for yearly Pro. Cents for USD,
+// What one month works out to: $6.58 for yearly Pro. Cents for USD,
 // whole rupees for INR.
 export function getMonthlyEquivalent(tier, interval, currency = "USD") {
   const price = getPrice(tier, interval, currency);
@@ -79,7 +79,7 @@ export function getMonthlyEquivalent(tier, interval, currency = "USD") {
   return currency === "INR" ? Math.round(perMonth) : Math.round(perMonth * 100) / 100;
 }
 
-// Yearly against four quarters: { amount: 19, percent: 18 } for Pro in USD
+// Yearly against four quarters: { amount: 29, percent: 27 } for Pro in USD
 export function getYearlySaving(tier, currency = "USD") {
   const quarterly = getPrice(tier, "quarterly", currency);
   const yearly = getPrice(tier, "yearly", currency);

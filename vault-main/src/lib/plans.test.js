@@ -14,11 +14,11 @@ import {
 describe("plans", () => {
   it("prices match what's sold", () => {
     expect(getPrice("pro", "quarterly", "USD")).toBe(27);
-    expect(getPrice("pro", "yearly", "USD")).toBe(89);
+    expect(getPrice("pro", "yearly", "USD")).toBe(79);
     expect(getPrice("pro_plus", "quarterly", "USD")).toBe(57);
     expect(getPrice("pro_plus", "yearly", "USD")).toBe(179);
-    expect(getPrice("pro", "quarterly", "INR")).toBe(1497);
-    expect(getPrice("pro", "yearly", "INR")).toBe(4999);
+    expect(getPrice("pro", "quarterly", "INR")).toBe(1347);
+    expect(getPrice("pro", "yearly", "INR")).toBe(4490);
     expect(getPrice("pro_plus", "quarterly", "INR")).toBe(2997);
     expect(getPrice("pro_plus", "yearly", "INR")).toBe(8999);
     expect(getPrice("pro", "monthly", "USD")).toBeNull();
@@ -26,11 +26,11 @@ describe("plans", () => {
 
   it("per-month equivalents and yearly savings", () => {
     expect(getMonthlyEquivalent("pro", "quarterly")).toBe(9);
-    expect(getMonthlyEquivalent("pro", "yearly")).toBe(7.42);
+    expect(getMonthlyEquivalent("pro", "yearly")).toBe(6.58);
     expect(getMonthlyEquivalent("pro_plus", "quarterly")).toBe(19);
     expect(getMonthlyEquivalent("pro_plus", "yearly")).toBe(14.92);
-    expect(getMonthlyEquivalent("pro", "quarterly", "INR")).toBe(499);
-    expect(getYearlySaving("pro")).toEqual({ amount: 19, percent: 18 });
+    expect(getMonthlyEquivalent("pro", "quarterly", "INR")).toBe(449);
+    expect(getYearlySaving("pro")).toEqual({ amount: 29, percent: 27 });
     expect(getYearlySaving("pro_plus")).toEqual({ amount: 49, percent: 21 });
   });
 

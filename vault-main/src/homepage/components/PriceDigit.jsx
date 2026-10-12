@@ -71,7 +71,7 @@ export default PriceDigit;
 
 /**
  * A price that rolls digit by digit between values of different shapes
- * (7.42 <-> 9, 14.92 <-> 19): the slots line up on the decimal point and are
+ * (6.58 <-> 9, 14.92 <-> 19): the slots line up on the decimal point and are
  * sized for the longest value in `values`; slots the current value doesn't
  * use collapse to zero width. `plan` changes re-roll even an unchanged digit.
  */

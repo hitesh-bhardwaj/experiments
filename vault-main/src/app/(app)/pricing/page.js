@@ -20,7 +20,7 @@ const PricingPlansHome = dynamic(() => import("@/homepage/sections/PricingPlansH
 export const metadata = createPageMetadata({
   title: "Hyperiux Vault Pricing | Pro React Effects Library",
   description:
-    "Simple Vault pricing: start free, go Pro for every component from $7.42/month, or Pro+ for every component and the full template catalogue with 10 installs a day.",
+    "Simple Vault pricing: start free, go Pro for every component from $6.58/month, or Pro+ for every component and the full template catalogue with 10 installs a day.",
   path: "/pricing",
   image:
     "https://h1r7ltksnzlh2a5c.public.blob.vercel-storage.com/seo/pricing.jpg",
@@ -93,7 +93,7 @@ const faqItems = [
     id: "faq3",
     question: "How much do Pro and Pro+ cost?",
     answer:
-      "Pro is $27 a quarter or $89 a year. Pro+ is $57 a quarter or $179 a year. Visitors from India see INR prices (Pro ₹1,497 a quarter or ₹4,999 a year, Pro+ ₹2,997 a quarter or ₹8,999 a year), with 18% GST added at checkout.",
+      "Pro is $27 a quarter or $79 a year. Pro+ is $57 a quarter or $179 a year. Visitors from India see INR prices (Pro ₹1,347 a quarter or ₹4,490 a year, Pro+ ₹2,997 a quarter or ₹8,999 a year), with 18% GST added at checkout.",
   },
   {
     id: "faq4",
