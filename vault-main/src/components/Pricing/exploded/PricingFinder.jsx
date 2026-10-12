@@ -71,6 +71,12 @@ function recommend({ templates, copies, sections }) {
 }
 
 const LABEL = "type-label";
+// Toggle tag: the effects page's category chip look (EffectsListing CHIP), in
+// dark-section colours, at Button's size (buttonClassName's text, padding and mobile layout)
+const TAG =
+  "flex w-fit shrink-0 cursor-pointer items-center font-avenir text-nowrap tracking-wide px-[calc(var(--hx-vw,1vw)*1.8)] py-2 text-[calc(var(--hx-vw,1vw)*1.15)] transition-[background-color,color,box-shadow] duration-500 max-lg:text-[clamp(13px,calc(var(--hx-vw,1vw)*1.6),15px)] max-md:my-6 max-md:w-full max-md:justify-center max-md:px-[calc(var(--hx-vw,1vw)*10)] max-md:py-3 max-md:text-[calc(var(--hx-vw,1vw)*2.2)] max-sm:text-[calc(var(--hx-vw,1vw)*4)]";
+const TAG_OFF = "text-foreground/60 ring-1 ring-inset ring-foreground/10 hover:text-foreground hover:ring-primary";
+const TAG_ON = "bg-primary text-background";
 // The homepage's tune slider: a thin track that fills with the brand colour up to the thumb
 const RANGE =
   "h-[1.4vw] w-full cursor-pointer appearance-none bg-transparent max-md:h-[6vw] " +
@@ -178,7 +184,7 @@ export default function PricingFinder() {
     <section ref={rootRef} id="finder" className="relative px-[4.5vw] py-[7%] max-md:py-[12%] text-foreground max-md:px-[6vw]">
       <div className="mx-auto flex w-full max-w-[1536px] items-center justify-between gap-[3vw] max-md:flex-col max-md:items-stretch max-md:gap-[10vw]">
       <div className="flex w-[40%] flex-col gap-[1.8vw] max-md:w-full max-md:gap-[10vw]">
-        <LineReveal as="h2" className={`type-h1 text-foreground w-[80%] max-md:w-[80%]`}>
+        <LineReveal as="h2" className={`type-h1 text-foreground w-[70%] max-md:w-[80%]`}>
           Not Sure? <span className="gradient-text-animate">Let’s Size it.</span>
         </LineReveal>
         <p className="fadeup type-body-lg w-[80%] text-foreground/60 max-md:w-full">
@@ -204,14 +210,15 @@ export default function PricingFinder() {
             <input id="fd-copies" type="range" min="1" max="10" step="any" value={pos.copies} {...dragProps("copies")} style={fill(pos.copies, 1, 10)} className={RANGE} />
           </div>
           </div>
-          <Button
-            text="I need full page sections"
-            variant={sections ? "orange" : "outline"}
-            preventDefault
-            ariaLabel={`I need full page sections, ${sections ? "on" : "off"}`}
+          {/* A toggle tag, styled like the effects page's category chips */}
+          <button
+            type="button"
+            aria-pressed={sections}
             onClick={() => { toggleSections(); sound?.note?.(sections ? 1 : 3); }}
-            className={`w-fit max-md:my-6 max-md:w-full max-md:justify-center ${sections ? "border border-transparent" : ""}`}
-          />
+            className={`${TAG} ${sections ? TAG_ON : TAG_OFF}`}
+          >
+            I need full page sections
+          </button>
         </div>
 
         <div ref={outRef} aria-live="polite" className="flex w-[50%] flex-col gap-[1.2vw] border-l border-foreground/10 p-[2.4vw] max-md:w-full max-md:gap-[4vw] max-md:border-t max-md:border-l-0 max-md:p-[6vw]">

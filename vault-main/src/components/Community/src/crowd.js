@@ -26,6 +26,9 @@ const SHEET_W = 34;
 const SHEET_DEPTH = 26;
 const SHEET_BACK = -22;
 const SHEET_Y = -5.4; // low: the sheet lies along the bottom of the section
+
+const SHEET_W_NARROW = 14;
+const SHEET_BACK_NARROW = -16;
 // Blob + sheet animation speed (1 = the first version)
 const SHAPE_SPEED = 2.4;
 // Hero blob: extra turn per pixel scrolled
@@ -40,6 +43,10 @@ const RIBBON_TILT_X = -0.28;
 const RIBBON_TILT_Y = -0.42;
 const RING_RADIUS = 5.8;
 const RING_RADIUS_NARROW = 3.2;
+// A section's formation builds with scroll, from when its top enters the
+// bottom of the screen until it has risen this share of the screen height, so
+// the change is watched happening instead of finishing under a light sheet.
+const ZONE_FORM_SPAN = 0.8;
 
 // Cursor
 const GATHER_RADIUS_SQ = 10;
@@ -166,6 +173,9 @@ export function mountCrowd(canvas, opts = {}) {
   const NEAR_STIR = 3; // particles stirred this frame for the pointer to count as "near"
   const nearState = { v: false };
   let zone = "crowd";
+  // Target weight of each formation, from scroll (readZone); the mixes ease toward these
+  const target = { crowd: 1, crowd2: 0, ring: 0 };
+  const formZones = zones.filter((el) => el.dataset.zone !== "sheet");
   const center = new T.Vector3(3.6, reducedMotion ? 0.9 : -6, 0);
   let ringMix = 0;
   let blobMix = 0;
@@ -225,6 +235,22 @@ export function mountCrowd(canvas, opts = {}) {
     }
     if (found) zone = found;
     state.covered = covered;
+
+    // Scroll-driven blend: the latest section whose top is on screen forms in
+    // step with how far it has risen, out of the formation before it
+    let cur = -1;
+    for (let i = 0; i < formZones.length; i++) if (formZones[i].getBoundingClientRect().top < vh) cur = i;
+    target.crowd = target.crowd2 = target.ring = 0;
+    if (cur < 0) { target[formZones[0]?.dataset.zone ?? "crowd"] = 1; return; }
+    const name = formZones[cur].dataset.zone;
+    let prev = cur - 1;
+    while (prev >= 0 && formZones[prev].dataset.zone === name) prev--;
+    // Short sections (mobile) finish forming within their own height, before the next sheet arrives
+    const cr = formZones[cur].getBoundingClientRect();
+    const span = Math.min(vh * ZONE_FORM_SPAN, cr.height * 0.6);
+    const e = prev < 0 ? 1 : Math.min(1, Math.max(0, (vh - cr.top) / span));
+    target[name] += e;
+    if (prev >= 0) target[formZones[prev].dataset.zone] += 1 - e;
   };
 
   // Simulation step
@@ -257,14 +283,17 @@ export function mountCrowd(canvas, opts = {}) {
 
   const step = (dt, time) => {
     const narrow = camera.aspect < 0.9;
-    const C = (narrow ? CENTER_NARROW : CENTER)[zone] || CENTER.crowd;
-    const k = 1 - Math.pow(0.25, dt);
+    // Centre: the target formations' centres, weighted the same way
+    const CS = narrow ? CENTER_NARROW : CENTER;
+    const C = [0, 1, 2].map((a) => CS.crowd[a] * target.crowd + CS.crowd2[a] * target.crowd2 + CS.ring[a] * target.ring);
+    // Smoothing only: the scroll sets where each mix is heading, this keeps it soft
+    const k = 1 - Math.pow(0.02, dt);
     center.x += (C[0] - center.x) * k;
     center.y += (C[1] - center.y) * k;
     center.z += (C[2] - center.z) * k;
-    ringMix += ((zone === "ring" ? 1 : 0) - ringMix) * k * 1.6;
-    blobMix += ((zone === "crowd" ? 1 : 0) - blobMix) * k * 1.6;
-    sheetMix += ((zone === "crowd2" ? 1 : 0) - sheetMix) * k * 1.4;
+    ringMix += (target.ring - ringMix) * k;
+    blobMix += (target.crowd - blobMix) * k;
+    sheetMix += (target.crowd2 - sheetMix) * k;
     const st = time * SHAPE_SPEED;
     const rcx = Math.cos(RIBBON_TILT_X), rsx = Math.sin(RIBBON_TILT_X), rcy = Math.cos(RIBBON_TILT_Y), rsy = Math.sin(RIBBON_TILT_Y);
     const blobR = narrow ? BLOB_RADIUS_NARROW : BLOB_RADIUS;
@@ -323,8 +352,8 @@ export function mountCrowd(canvas, opts = {}) {
       }
       if (sheetMix > 0.01) {
         // A wide sheet in perspective (back rows far, front rows close), rolling in slow waves
-        const sx = (gu[i] - 0.5) * SHEET_W;
-        const sz = SHEET_BACK + gv[i] * SHEET_DEPTH;
+        const sx = (gu[i] - 0.5) * (narrow ? SHEET_W_NARROW : SHEET_W);
+        const sz = (narrow ? SHEET_BACK_NARROW : SHEET_BACK) + gv[i] * SHEET_DEPTH;
         const sy = SHEET_Y +
           Math.sin(sx * 0.32 + st * 0.8) * Math.cos(sz * 0.25 - st * 0.6) * 1.1 +
           Math.sin((sx + sz) * 0.18 - st) * 0.5;

@@ -79,8 +79,8 @@ export default function PricingHero() {
                 copy lands in your repo and stays yours, even if you cancel.
               </SplitLine>
               <div ref={ctaRef} className="flex w-fit gap-[1vw] opacity-0 max-md:w-full max-md:flex-col max-md:gap-[5vw]">
-                <Button text="See the plans" href="#plans" scrollOffset={HEADER_OFFSET} variant="orange" className="max-md:w-full max-md:justify-center" />
-                <Button text="Help me choose" href="#finder" scrollOffset={HEADER_OFFSET} variant="outline" className="max-md:w-full max-md:justify-center" />
+                <Button text="See the Plans" href="#plans" scrollOffset={HEADER_OFFSET} variant="orange" className="max-md:w-full max-md:justify-center" />
+                <Button text="Help me Choose" href="#finder" scrollOffset={HEADER_OFFSET} variant="outline" className="max-md:w-full max-md:justify-center" />
               </div>
             </div>
           </div>

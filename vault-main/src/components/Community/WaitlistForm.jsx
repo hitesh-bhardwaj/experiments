@@ -56,7 +56,7 @@ export default function WaitlistForm({ className = "" }) {
     markJoined();
   };
 
-  let label = "Join the waitlist";
+  let label = "Join the Waitlist";
   if (sending) label = "Saving your seat…";
   if (joined) label = "You’re in ✓";
 

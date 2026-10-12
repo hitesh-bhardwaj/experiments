@@ -34,14 +34,14 @@ export default function CommunityHero() {
               details you do.
             </p>
             <WaitlistForm />
-            <p className="type-label text-foreground/40">Free to join · invites go out in waves</p>
+            <p className="type-label text-foreground/40">Free to join · Invites go out in Waves</p>
           </div>
         </div>
       </section>
       <div className="relative z-1 mx-auto w-full max-w-[1536px] px-[4.5vw] pt-[2vw] pb-[4vh] max-md:px-[6vw]" data-zone="crowd">
         <p
           aria-hidden="true"
-          className="type-label flex items-center justify-center text-foreground/35"
+          className="type-label flex items-center max-md:justify-start justify-center text-foreground/35"
         >
           Every dot is a seat. Move through the crowd.
         </p>
