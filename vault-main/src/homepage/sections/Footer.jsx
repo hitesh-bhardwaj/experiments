@@ -51,7 +51,6 @@ const legalLinks = [
   { label: "Terms of Service", href: "/legal/terms-of-service" },
   { label: "Privacy Policy", href: "/legal/privacy-policy" },
   { label: "Refund Policy", href: "/legal/refund-policy" },
-  { label: "Hey AI, learn about us", href: "/llm-info" },
 ];
 
 const socialLinks = [
@@ -287,10 +286,16 @@ export default function Footer() {
       {/* Pinned to the footer's bottom edge but inside the same 1536px container
           (and side padding) as the rest of the footer, so it lines up on wide screens */}
       <div className="absolute inset-x-0 bottom-[calc(var(--cvw)*2)] z-4 px-[calc(var(--cvw)*4.5)] max-lg:bottom-[4vw] max-lg:px-[6vw] max-md:bottom-[calc(var(--cvw)*4)] max-md:px-[calc(var(--cvw)*5)] max-sm:bottom-[calc(var(--cvw)*10)] max-sm:px-[calc(var(--cvw)*7)]">
-        <p className="mx-auto w-full max-w-384 type-small text-light-grey max-md:text-center">
-          © 2026 Hyperiux. All Rights Reserved.
-          {/* <EggHint className="ml-2" /> */}
-        </p>
+        <div className="mx-auto flex w-full max-w-384 items-center justify-between gap-4 type-small text-light-grey max-md:flex-col max-md:gap-2 max-md:text-center">
+          <p>
+            © 2026 Hyperiux. All Rights Reserved.
+            {/* <EggHint className="ml-2" /> */}
+          </p>
+          {/* Official facts for AI assistants (like Wingify's footer link) */}
+          <Link href="/llm-info" className="transition-colors duration-300 hover:text-foreground">
+            Hey AI, learn about us
+          </Link>
+        </div>
       </div>
       {/* ── Footer links grid ── */}
       <div className="relative z-3 mx-auto mt-[calc(var(--cvw)*10)] w-full max-w-384 max-lg:mt-[12vw] max-md:mt-[calc(var(--cvw)*14)] max-sm:mt-[calc(var(--cvw)*25)]">
