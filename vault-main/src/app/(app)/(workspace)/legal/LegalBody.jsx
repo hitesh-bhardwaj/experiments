@@ -22,9 +22,8 @@ const LEGAL_TITLES = {
 // Previous/Next order for the page footer
 const LEGAL_PAGES = Object.entries(LEGAL_TITLES).map(([href, label]) => ({ href, label }));
 
-// Legal pages share the effect detail layout: title on the dark top, the full-width
-// text on one white area below. The text is styled by blog.css (light theme), like
-// blog posts, docs and effect content - no overrides here.
+// Legal pages share the docs layout: title on the dark top, then the docs sheet below
+// (text column + sticky TOC). The text is styled by blog.css on the sheet, like docs.
 export default function LegalBody({ children }) {
   const rootRef = useRef(null);
   const contentRef = useRef(null);
@@ -42,23 +41,22 @@ export default function LegalBody({ children }) {
         </LineReveal>
       </section>
 
-      <div data-sound-flow="off" className="bg-foreground text-background">
-        <section id="legal-content" className={`${WRAP} blog-theme-light relative pt-[5.5vw] pb-[7%] max-md:pt-[15vw] max-md:pb-[15%]`}>
-          <div className="fixed right-[1vw] top-1/2 z-30 -translate-y-1/2 max-lg:hidden">
-            <TableOfContents containerRef={contentRef} watchKey={pathname} revealAt={0.2} showBackToTop />
-          </div>
-          <div className="flex w-[70%] flex-col gap-[5vw] max-lg:w-full max-md:gap-[15vw]">
+      {/* Same white sheet as docs (.docs-sheet in globals.css): background, text colours,
+          fonts, content column, footer and TOC are all the docs ones */}
+      <section id="legal-content" data-sound-flow="off" className="docs-sheet py-[4vw]">
+        <div className="mx-auto flex w-full max-w-[1536px] items-start gap-[3vw] px-[4.5vw] max-lg:flex-col max-md:px-[6vw]">
+          <div className="flex min-w-0 flex-1 flex-col gap-[5vw] max-lg:w-full max-md:gap-[15vw]">
             <div ref={contentRef} className="blog-content">
               {children}
             </div>
-            {/* Same page footer as docs (helpful? + Previous/Next). It's built for the docs
-                sheet, where foreground is dark ink, so the same swap is made here. */}
-            <div className="[--foreground:var(--ink)]">
-              <DocsPageFooter pages={LEGAL_PAGES} />
-            </div>
+            <DocsPageFooter pages={LEGAL_PAGES} />
           </div>
-        </section>
-      </div>
+          {/* TOC lives in the sheet's right column, sticky at the vertical centre */}
+          <aside className="sticky top-1/2 flex h-fit w-[22%] shrink-0 -translate-y-1/2 justify-end max-lg:hidden">
+            <TableOfContents containerRef={contentRef} watchKey={pathname} hideNearFooter />
+          </aside>
+        </div>
+      </section>
     </main>
   );
 }

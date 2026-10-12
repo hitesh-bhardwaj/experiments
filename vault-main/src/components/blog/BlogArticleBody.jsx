@@ -45,7 +45,7 @@ export default function BlogArticleBody({
 
           Author, share button and TOC share the one sticky container and all
           stay visible for the article's full height. */}
-      <div className="w-[30%] shrink-0 max-[1025px]:hidden">
+      <div className="w-[30%] shrink-0 max-lg:hidden">
       
         <div className="sticky top-[15vh] flex flex-col gap-[1.6vw]">
           <BlogAuthor author={author} />
@@ -78,7 +78,8 @@ export default function BlogArticleBody({
 
           <hr className="h-0.5 w-[85%] border-0 bg-black/10" />
 
-          <div className="w-fit pt-[5vh]">
+          {/* .docs-sheet gives the TOC the docs colours (dashes, flyout border/text) */}
+          <div className="docs-sheet bg-transparent! w-fit pt-[5vh]">
             <TableOfContents
               containerRef={contentRef}
               stopRef={stopRef}
@@ -90,8 +91,8 @@ export default function BlogArticleBody({
         </div>
       </div>
 
-      <div className="flex w-[66%] min-w-0 flex-col gap-[6vw] max-[1025px]:w-full max-md:gap-[8vw]">
-        <div className="hidden flex-col gap-[3vw] max-[1025px]:flex max-md:gap-[4vw]">
+      <div className="flex w-[66%] min-w-0 flex-col gap-[6vw] max-lg:w-full max-md:gap-[8vw]">
+        <div className="hidden flex-col gap-[3vw] max-lg:flex max-md:gap-[4vw]">
           <BlogAuthor author={author} />
 
           <div className="flex flex-wrap items-center gap-x-[3vw] gap-y-2 type-small text-black/60">

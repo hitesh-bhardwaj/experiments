@@ -1,7 +1,6 @@
 "use client";
 
-import React, { useRef } from "react";
-import gsap from "gsap";
+import React from "react";
 
 function cx(...parts) {
   return parts.filter(Boolean).join(" ");
@@ -46,23 +45,6 @@ export default function DocsTable({
   ...props
 }) {
   const normalizedColumns = normalizeColumns({ columns, headers, rows });
-  const hlRef = useRef(null);
-
-  // One highlight glides between the rows instead of each row lighting up on its own
-  const moveHighlight = (e) => {
-    const bar = hlRef.current;
-    const row = e.currentTarget;
-    if (!bar) return;
-    const vars = { y: row.offsetTop, height: row.offsetHeight };
-    const hidden = Number(gsap.getProperty(bar, "opacity")) < 0.05;
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (hidden || reduce) gsap.set(bar, vars);
-    else gsap.to(bar, { ...vars, duration: 0.6, ease: "expo.out", overwrite: "auto" });
-    gsap.to(bar, { opacity: 1, duration: 0.4, ease: "power2.out", overwrite: "auto" });
-  };
-
-  const hideHighlight = () =>
-    gsap.to(hlRef.current, { opacity: 0, duration: 0.5, ease: "power2.out", overwrite: "auto" });
 
   const variantClassName =
     colorVariant === "orange"
@@ -83,12 +65,7 @@ export default function DocsTable({
   )}
   {...props}
 >
-  <div className="relative w-full min-w-[38rem]" onPointerLeave={hideHighlight}>
-  <div
-    ref={hlRef}
-    aria-hidden="true"
-    className="pointer-events-none absolute left-0 top-0 z-10 h-0 w-full bg-black/5 opacity-0"
-  />
+  <div className="relative w-full min-w-[38rem]">
   <table
     className={cx(
       "w-full border-collapse text-left",
@@ -127,9 +104,8 @@ export default function DocsTable({
       {rows.map((row, rowIdx) => (
         <tr
           key={rowIdx}
-          onPointerEnter={moveHighlight}
           className={cx(
-            "align-top border-b border-(--docs-table-border) hover:bg-transparent!",
+            "align-top border-b border-(--docs-table-border) last:border-b-0 hover:bg-transparent!",
             bodyRowClassName
           )}
         >

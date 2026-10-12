@@ -168,7 +168,7 @@ function BlogBlock({ block, headingId }) {
     if (!columnCount) return null;
 
     return (
-      <div className="fadeup blog-table-wrap" data-variant={block.colorVariant || "vault"}>
+      <div className="fadeup blog-table-wrap mb-[2vw]! max-md:mb-[10vw]!" data-variant={block.colorVariant || "vault"}>
         <table>
           {headers.length > 0 && (
             <thead>

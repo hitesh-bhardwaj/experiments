@@ -192,35 +192,35 @@ export default function Hero() {
                     <HeroRibbons play={playIntro && loaderComplete} />
                 )}
             </div>
-            <div className="pointer-events-none relative z-10 mx-auto flex min-h-dvh w-full max-w-384 flex-col justify-end px-[calc(var(--cvw)*4.5)] max-md: pt-[calc(var(--cvw)*8)] max-md:px-[calc(var(--cvw)*7)]! pb-[calc(var(--cvw)*5)]  max-md:pt-32 max-md:pb-10 max-sm:px-5">
-                <div className="flex items-end justify-between gap-[calc(var(--cvw)*3)] max-md:flex-col max-md:items-stretch max-md:gap-5">
+            <div className="pointer-events-none relative z-10 mx-auto flex min-h-dvh w-full max-w-384 flex-col justify-end px-[calc(var(--cvw)*4.5)] pt-[calc(var(--cvw)*8)] max-xl:px-[calc(var(--cvw)*7)] max-md:px-[calc(var(--cvw)*7)]! pb-[calc(var(--cvw)*5)] max-xl:pt-32 max-xl:pb-[12vw] max-md:pt-32 max-md:pb-10 max-sm:px-5">
+                <div className="flex items-end justify-between gap-[calc(var(--cvw)*3)] max-xl:flex-col max-xl:items-stretch max-xl:gap-[6vw] max-md:items-stretch max-md:gap-5">
                    
-                    <h1 ref={headingRef} className="relative min-w-0 flex-[1.5] type-display leading-[1.15] max-w-[calc(var(--cvw)*53)] max-md:max-w-full text-white">
+                    <h1 ref={headingRef} className="relative min-w-0 flex-[1.5] type-display leading-[1.15] max-w-[calc(var(--cvw)*53)] max-xl:max-w-full max-md:max-w-full text-white">
                         The Interaction Layer Your Website is <span className="gradient-text-animate">Missing</span><EasterEggDot className="pointer-events-auto" />
                     </h1>
 
-                    <div className="flex min-w-0 flex-[0.7] flex-col gap-[calc(var(--cvw)*2)] pb-[calc(var(--cvw)*0.6)] max-md:pb-0 max-md:gap-5">
-                        <p ref={copyRef} style={INTRO_HIDDEN} className="type-body-lg text-white/70 max-w-[calc(var(--cvw)*30)] max-md:max-w-full max-md:w-full max-md:text-left">
+                    <div className="flex min-w-0 flex-[0.7] flex-col gap-[calc(var(--cvw)*2)] pb-[calc(var(--cvw)*0.6)] max-xl:pb-0 max-xl:gap-[3vw] max-md:pb-0 max-md:gap-5">
+                        <p ref={copyRef} style={INTRO_HIDDEN} className="type-body-lg text-white/70 max-w-[calc(var(--cvw)*30)] max-xl:max-w-full max-xl:w-[85%] max-xl:text-left max-md:max-w-full max-md:w-full max-md:text-left">
                             Source-first scroll systems, cursor effects, text reveals, page transitions, loaders, backgrounds, and WebGL scenes for React and Next.js. Installed as real files in your project, not a dependency you rent.
                         </p>
 
                         <div
                             ref={actionsRef}
                             style={INTRO_HIDDEN}
-                            className="pointer-events-auto flex max-sm:pt-4 max-sm:flex-col w-fit max-sm:w-full gap-[calc(var(--cvw)*1)] max-md:w-full max-md:gap-5"
+                            className="pointer-events-auto flex max-sm:pt-4 max-sm:flex-col w-fit max-sm:w-full gap-[calc(var(--cvw)*1)] max-xl:w-full max-xl:flex-col max-xl:gap-5 max-md:w-full max-md:flex-row max-md:gap-5"
                         >
                             <Button
                                 text="Read Docs"
                                 href="/docs"
                                 variant="outline"
-                                className="max-sm:w-full max-sm:justify-center"
+                                className="max-xl:w-[40%] max-xl:py-[2vw] max-xl:justify-center max-md:w-auto max-sm:w-full max-sm:justify-center"
                             />
                             <Button
                                 text="Browse All Effects"
                                 href="/effects"
                                 variant="orange"
                                 scrollOffset={-1000}
-                                className="max-sm:w-full max-sm:justify-center"
+                                className="max-xl:w-[40%] max-xl:py-[2vw] max-xl:justify-center max-md:w-auto max-sm:w-full max-sm:justify-center"
                             />
                         </div>
                     </div>

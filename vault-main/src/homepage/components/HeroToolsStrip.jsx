@@ -99,7 +99,7 @@ export default function HeroToolsStrip() {
             </div>
             {/* Theremin's breathing room under the hero: the ribbons carry on
                 through it before the next section arrives */}
-            <div className="grid h-[38vh] max-md:h-[10vh] place-items-end justify-center pb-[12vh] text-white/40 type-label" aria-hidden="true">
+            <div className="grid h-[38vh] max-xl:h-[10vh] max-md:h-[10vh] place-items-end justify-center pb-[12vh] text-white/40 type-label" aria-hidden="true">
                Psst, the first sentence is hiding something .
             </div>
         </section>

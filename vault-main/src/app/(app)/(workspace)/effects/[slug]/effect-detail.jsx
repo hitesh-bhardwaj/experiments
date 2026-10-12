@@ -270,9 +270,6 @@ export function EffectDetailContent({
     ? safeContent.summary?.trim()
     : safeEffect.description;
 
-  const hasCtaSection = Boolean(
-    safeContent?.ctaBanner?.heading || safeContent?.ctaBanner?.buttonText
-  );
   const addedAtLabel = formatEffectDate(safeContent?.addedAt ?? safeEffect.addedAt);
   const lastUpdatedLabel = formatEffectDate(
     safeContent?.lastUpdated ??
@@ -461,27 +458,24 @@ export function EffectDetailContent({
 
               {/* One white area for everything below the stage: the article, FAQ + custom
                     animation block, and related effects - so no dark gaps show between them. */}
-              <div data-sound-hover="off" data-sound-flow="off" className="bg-foreground text-background">
+              <div data-sound-hover="off" data-sound-flow="off" className="bg-light text-background">
                 {/* blog-theme-light: blog.css prose in its light colours on this white section */}
-                <section id="effect-content" className="blog-theme-light relative mx-auto w-full max-w-[1536px] px-[4.5vw] pt-[5.5vw] pb-6 max-md:px-[6vw] max-md:pt-[15vw]">
-                  <div className="fixed right-[1vw] top-1/2 z-30 block -translate-y-1/2 max-lg:hidden">
-                    <TableOfContents
-                      containerRef={contentRef}
-                      stopRef={hasCtaSection ? ctaSectionRef : relatedEffectsRef}
-                      watchKey={slug}
-                      revealAt={0.2}
-                      showBackToTop
+                <section id="effect-content" className="blog-theme-light relative mx-auto flex w-full max-w-[1536px] items-start gap-[3vw] px-[4.5vw] pt-[5.5vw] pb-6 max-lg:flex-col max-md:px-[6vw] max-md:pt-[15vw]">
+                  <div className="flex min-w-0 flex-1 flex-col max-lg:w-full">
+                    <EffectDynamicContent
+                      ref={contentRef}
+                      content={safeContent}
+                      isLocked={isLocked}
+                      effectProps={effect?.props}
+                      effectRemixerControls={effect?.remixer?.controls}
+                      changelog={safeEffect.changelog}
                     />
                   </div>
 
-                  <EffectDynamicContent
-                    ref={contentRef}
-                    content={safeContent}
-                    isLocked={isLocked}
-                    effectProps={effect?.props}
-                    effectRemixerControls={effect?.remixer?.controls}
-                    changelog={safeEffect.changelog}
-                  />
+                 
+                  <aside className="docs-sheet bg-transparent! sticky top-1/2 flex h-fit w-[22%] shrink-0 -translate-y-1/2 justify-end max-lg:hidden">
+                    <TableOfContents containerRef={contentRef} watchKey={slug} hideNearFooter />
+                  </aside>
                 </section>
 
                 {/* FAQ + custom animation block - the same components as the effects listing */}
@@ -601,7 +595,7 @@ const EffectDynamicContent = forwardRef(function EffectDynamicContent(
   return (
     <div
       ref={ref}
-      className="blog-content space-y-8 w-[70%] max-lg:w-full"
+      className="blog-content space-y-8 w-full"
     >
       <SanityBodyRenderer
         body={content.body}
@@ -768,7 +762,7 @@ function EffectPropsTable({ props = [] }) {
   if (!props.length) return null;
 
   return (
-    <div className="space-y-5! mt-4! fadeup">
+    <div className="space-y-5! mt-4! mb-[4vw]! fadeup max-md:mb-[10vw]!">
       <h3>Props</h3>
 
       <div className="blog-table-wrap blog-props-table" data-variant="vault">

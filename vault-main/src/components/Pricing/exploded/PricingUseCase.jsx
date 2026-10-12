@@ -49,7 +49,7 @@ export default function PricingUseCase({ useCases }) {
           {
             xPercent: 0,
             ease: "power1.out",
-            scrollTrigger: { trigger: box, start: "top 115%", end: "top 35%", scrub: true },
+            scrollTrigger: { trigger: box, start: "top 95%", end: "top 25%", scrub: true },
           },
         );
       });
