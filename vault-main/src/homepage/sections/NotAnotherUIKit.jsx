@@ -102,7 +102,7 @@ export default function NotAnotherUIKit() {
   }, []);
 
   return (
-    <div id="uikit-section" className="w-full h-[250vh] text-foreground max-lg:overflow-hidden max-lg:h-fit max-lg:py-[12%] max-md:overflow-hidden max-md:h-fit max-sm:pb-[25%] max-sm:pt-0 max-md:py-[12%] relative z-20">
+    <div id="uikit-section" className="w-full h-[250vh] text-foreground max-lg:overflow-hidden max-lg:h-fit max-lg:py-[4%] max-md:overflow-hidden max-md:h-fit max-sm:pb-[25%] max-sm:pt-0 max-md:py-[12%] relative z-20">
         {/* <div>
             <LineReveal as="h2" className="t96 w-[calc(var(--cvw)*90)] font-aeonik max-md:text-center max-md:w-full mx-auto text-center">
                Not <span className='gradient-text-animate'>Another UI Kit.</span>  Not a Side Project.
@@ -121,14 +121,14 @@ export default function NotAnotherUIKit() {
               <div className="w-full h-[calc(var(--cvw)*0.5)] bg-[#ff5f00] max-md:h-[calc(var(--cvw)*1)] max-sm:h-[calc(var(--cvw)*1.5)] shrink-0" />
 
               {/* Expanding card content */}
-              <div className="w-full h-[calc(var(--cvw)*37)] border border-grey content-container overflow-hidden max-lg:h-[calc(var(--cvw)*60)] max-md:h-[calc(var(--cvw)*100)]">
+              <div className="w-full h-[calc(var(--cvw)*37)] border border-grey content-container overflow-hidden max-lg:h-[calc(var(--cvw)*55)] max-md:h-[calc(var(--cvw)*100)]">
                 <div className="p-[calc(var(--cvw)*2.5)] flex flex-col justify-between h-full max-md:p-[calc(var(--cvw)*5)]">
                   <div className="space-y-[calc(var(--cvw)*1.5)] max-md:space-y-[calc(var(--cvw)*4)]">
                   {/* The icon's shape masks the same moving gradient the headings use */}
                   {card.icon && (
                     <span
                       aria-hidden="true"
-                      className="gradient-text-animate block size-[calc(var(--cvw)*4.2)] [-webkit-background-clip:border-box]! [background-clip:border-box]! mask-contain mask-center mask-no-repeat max-md:size-[calc(var(--cvw)*18)]"
+                      className="gradient-text-animate block size-[calc(var(--cvw)*4.2)] [-webkit-background-clip:border-box]! [background-clip:border-box]! mask-contain mask-center mask-no-repeat max-lg:size-[calc(var(--cvw)*8)] max-md:size-[calc(var(--cvw)*18)]"
                       style={{ maskImage: `url(${card.icon})`, WebkitMaskImage: `url(${card.icon})` }}
                     />
                   )}

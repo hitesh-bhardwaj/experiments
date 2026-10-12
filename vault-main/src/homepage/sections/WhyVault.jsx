@@ -120,7 +120,7 @@ export default function WhyVault() {
                     ))}
                 </nav>
 
-                <div className="grid grid-cols-[minmax(0,1fr)] gap-[clamp(8rem,22vh,14rem)] max-md:gap-12 ">
+                <div className="grid grid-cols-[minmax(0,1fr)] gap-[clamp(8rem,22vh,14rem)] max-lg:gap-10 max-md:gap-12 ">
                     {WHY_VAULT_ITEMS.map((item, i) => (
                         <article key={item.id} data-wv-panel={i}>
                             <div className="fadeup">{renderCard(item.id, i)}</div>

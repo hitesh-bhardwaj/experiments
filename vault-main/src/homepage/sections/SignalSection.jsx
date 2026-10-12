@@ -3,6 +3,7 @@
 import { useEffect, useRef, useSyncExternalStore } from "react";
 import gsap from "gsap";
 import { isLighthouseOrHeadless, isSoftwareRenderer } from "@/lib/audit";
+import { MEDIA } from "@/lib/breakpoints";
 import { useFadeUp } from "@/components/Animations/gsapAnimations";
 import LineReveal from "@/components/Animations/LineReveal";
 import Button from "../components/Button";
@@ -18,7 +19,7 @@ const FULL_CHARGE = 0.985;
 let webglSupport = null;
 function canUseWebgl() {
     if (webglSupport === null) {
-        webglSupport = !(isLighthouseOrHeadless() || isSoftwareRenderer()) && window.matchMedia("(min-width: 768px)").matches;
+        webglSupport = !(isLighthouseOrHeadless() || isSoftwareRenderer()) && !window.matchMedia(MEDIA.tablet).matches;
     }
     return webglSupport;
 }
@@ -126,15 +127,15 @@ export default function SignalSection() {
     return (
         <section ref={sectionRef} id="signal" data-sound-flow="soft" data-hold-zone data-cursor-label="Hold to explore" className="relative z-20 select-none text-white">
            
-            <div className="pointer-events-none absolute inset-x-0 -top-[100vh] -bottom-[100vh] z-50 max-md:hidden" aria-hidden="true">
+            <div className="pointer-events-none absolute inset-x-0 -top-[100vh] -bottom-[100vh] z-50 max-lg:hidden" aria-hidden="true">
                 <div className="sticky top-0 h-screen">
                     <canvas ref={canvasRef} className="block size-full" />
                 </div>
             </div>
-            <div className="relative z-[60]! mx-auto h-[80vh]  max-w-[1536px] px-[calc(var(--cvw)*4.5)] py-[7%] max-md:py-[12%] max-md:h-fit max-md:px-[calc(var(--cvw)*5)] max-sm:px-[calc(var(--cvw)*7)]">
-                <div className="grid min-h-[62vh] grid-cols-2 items-start gap-12 max-md:min-h-fit max-md:grid-cols-1">
+            <div className="relative z-[60]! mx-auto h-[80vh]  max-w-[1536px] px-[calc(var(--cvw)*4.5)] py-[7%] max-md:py-[12%] max-lg:h-fit max-md:px-[calc(var(--cvw)*5)] max-sm:px-[calc(var(--cvw)*7)]">
+                <div className="grid min-h-[62vh] grid-cols-2 items-start gap-12 max-lg:min-h-fit max-lg:grid-cols-1">
                     <div>
-                        <LineReveal as="h2" className="type-h1 leading-[1.2] max-w-[calc(var(--cvw)*30)] max-lg:max-w-full">
+                        <LineReveal as="h2" className="type-h1 leading-[1.2] max-w-[calc(var(--cvw)*30)] max-lg:max-w-full max-md:max-w-full">
                             Small Motion. <span className="gradient-text-animate gradient-text-single">Big Signal.</span>
                         </LineReveal>
                         <div className="fadeup mt-[calc(var(--cvw)*4)] flex flex-wrap gap-4 max-md:mt-8 max-sm:flex-col max-sm:items-start" data-fadeup-delay="0.16">
@@ -143,7 +144,7 @@ export default function SignalSection() {
                         </div>
                     </div>
                     {/* The line centres on this empty column, beside the heading */}
-                    <div ref={anchorRef} className="min-h-[40vh] self-stretch max-md:hidden" aria-hidden="true" />
+                    <div ref={anchorRef} className="min-h-[40vh] self-stretch max-lg:hidden" aria-hidden="true" />
                 </div>
             </div>
             {/* "Not another UI kit": the principle cards, part of this section */}

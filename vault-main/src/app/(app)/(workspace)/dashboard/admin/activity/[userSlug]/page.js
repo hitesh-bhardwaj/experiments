@@ -97,7 +97,7 @@ function ActivityDetailSkeleton() {
             <div className="mb-4 h-5 w-40 animate-pulse  bg-white/10" />
             <div className="flex gap-6 overflow-hidden">
               {Array.from({ length: 3 }).map((__, j) => (
-                <div key={j} className="min-w-[26vw] max-xl:min-w-[38vw] max-md:min-w-[70vw] shrink-0 space-y-3">
+                <div key={j} className="min-w-[26vw] max-lg:min-w-[38vw] max-md:min-w-[70vw] shrink-0 space-y-3">
                   <div className="aspect-3/2 animate-pulse bg-white/5" />
                   <div className="h-5 w-2/3 animate-pulse bg-white/10" />
                 </div>

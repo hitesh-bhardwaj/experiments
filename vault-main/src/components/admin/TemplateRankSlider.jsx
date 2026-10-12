@@ -137,7 +137,7 @@ export function TemplateRankSlider({ title, templates, height = 260 }) {
             // not vw, for the same reason documented there: DashboardShell's
             // max-md:px-[7vw] inset makes a raw vw width ignore how much
             // space is actually available on a phone-width screen).
-            <div key={template.slug} className="w-[26vw] max-xl:w-[38vw] max-md:w-full shrink-0 snap-start">
+            <div key={template.slug} className="w-[26vw] max-lg:w-[38vw] max-md:w-full shrink-0 snap-start">
               <TemplateCard template={template} sizes={CARD_SIZES} />
             </div>
           ))}
