@@ -604,6 +604,8 @@ export function mountThereminRibbons(host, canvas, { pose = "hero", sound = null
   const io = new IntersectionObserver(([entry]) => { inView = entry.isIntersecting; setRunning(); });
   io.observe(canvas);
 
+  // Footer frame height: the footer's own height, but on phones no more than one screen
+  const footerFrameH = (w, h) => (w <= 760 ? Math.min(h, innerHeight) : h);
   const onResize = () => {
     const w = canvas.clientWidth, h = canvas.clientHeight;
     if (!w || !h) return;
@@ -614,9 +616,11 @@ export function mountThereminRibbons(host, canvas, { pose = "hero", sound = null
     // The footer canvas bleeds above the footer (so the rings aren't cut when the sheet above lifts away).
     // Frame the scene as if the canvas were only the footer's height, then reveal the extra strip on top.
     const bleed = isHero ? 0 : Math.max(0, h - host.clientHeight);
-    camera.aspect = w / (h - bleed);
+ 
+    const frameH = isHero ? h : footerFrameH(w, h - bleed);
+    camera.aspect = w / frameH;
     camera.fov = camera.aspect < 0.8 ? 46 : 32;
-    if (bleed) camera.setViewOffset(w, h - bleed, 0, -bleed, w, h);
+    if (bleed || frameH !== h) camera.setViewOffset(w, frameH, 0, -bleed, w, h);
     else camera.clearViewOffset();
     camera.updateProjectionMatrix();
   };
@@ -629,7 +633,7 @@ export function mountThereminRibbons(host, canvas, { pose = "hero", sound = null
   // so when the loader clears it's simply there (HeroRibbons fades it in)
   const state = { introT: 0 };
   // Start in the pose for this screen shape, so nothing glides across on load
-  const startNarrow = (canvas.clientWidth || innerWidth) / (canvas.clientHeight || innerHeight) < NARROW_ASPECT;
+  const startNarrow = (canvas.clientWidth || innerWidth) / (isHero ? (canvas.clientHeight || innerHeight) : footerFrameH(canvas.clientWidth || innerWidth, host.clientHeight || innerHeight)) < NARROW_ASPECT;
   const basePose = isHero ? (startNarrow ? POSE.ribbons_m : POSE.ribbons) : (startNarrow ? POSE.footer_m : POSE.footer);
   const cur = { rp: new THREE.Vector3().fromArray(basePose.rp), rr: new THREE.Vector3().fromArray(basePose.rr), rs: basePose.rs };
   // Footer only: the cluster's x offset, starting off to the right

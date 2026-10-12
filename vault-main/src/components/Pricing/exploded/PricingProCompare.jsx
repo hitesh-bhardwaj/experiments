@@ -46,7 +46,9 @@ const ROWS = [
 ];
 
 const LABEL = "type-label";
-const CELL = "flex w-[30%] items-center px-[1.6vw] max-md:px-[4vw]";
+const CELL = "flex w-[30%] items-center justify-center text-center px-[1.6vw] max-md:w-[40vw] max-md:px-[3vw]";
+// Pro+ is a solid dark column; its row lines are drawn on the cells so they stay dark too
+const PLUS = "bg-background text-foreground border-foreground/10";
 const TEXT = "type-body h-[1.7em]";
 
 // Same tick as the Pricing Plans cards (orange square, white check); a muted dash when not included
@@ -66,11 +68,11 @@ function Mark({ on }) {
   );
 }
 
-function Cell({ value, period, dir }) {
+function Cell({ value, period, dir, plus }) {
   const v = value !== null && typeof value === "object" ? value[period] : value;
   // Long text wraps to two lines on mobile, so its box is two lines tall
   const long = typeof v === "string" && v.length > 22;
-  return typeof v === "boolean" ? <Mark on={v} /> : <RollText fixed text={v} dir={dir} className={`w-full text-background/60 ${TEXT} ${long ? "max-md:h-[3.3em]!" : ""}`} />;
+  return typeof v === "boolean" ? <Mark on={v} /> : <RollText fixed text={v} dir={dir} className={`w-full text-center ${plus ? "text-foreground" : "text-background/60"} ${TEXT} ${long ? "max-md:h-[3.3em]!" : ""}`} />;
 }
 
 export default function PricingProCompare({ currency: initialCurrency }) {
@@ -80,8 +82,6 @@ export default function PricingProCompare({ currency: initialCurrency }) {
   const toggleRef = useRef(null);
   const clipRef = useRef(null);
   const placed = useRef(false);
-  const bodyRef = useRef(null);
-  const hoverRef = useRef(null);
   const { sound } = useInteraction() ?? {};
   const [period, setPeriod] = useState("q");
   // Going to yearly rolls the values up, back to quarterly rolls them down
@@ -111,18 +111,6 @@ export default function PricingProCompare({ currency: initialCurrency }) {
     return () => ro.disconnect();
   }, [period]);
 
-  // One highlight slides between the rows instead of each row lighting up on its own
-  const hoverRow = (row) => {
-    const bar = hoverRef.current;
-    if (!bar) return;
-    const vars = { y: row.offsetTop, height: row.offsetHeight };
-    const hidden = Number(gsap.getProperty(bar, "opacity")) < 0.05;
-    if (hidden || prefersReducedMotion()) gsap.set(bar, vars);
-    else gsap.to(bar, { ...vars, duration: 0.6, ease: "expo.out", overwrite: "auto" });
-    gsap.to(bar, { opacity: 1, duration: 0.4, ease: "power2.out", overwrite: "auto" });
-  };
-  const leaveRows = () => gsap.to(hoverRef.current, { opacity: 0, duration: 0.5, ease: "power2.out", overwrite: "auto" });
-
   const choose = (id) => {
     if (id === period) return;
     setPeriod(id);
@@ -138,7 +126,7 @@ export default function PricingProCompare({ currency: initialCurrency }) {
             <span className="gradient-text-animate">Line by Line.</span>
           </LineReveal>
 
-          <div ref={toggleRef} role="radiogroup" aria-label="Billing period" data-sound-hover="off" className="fadeup relative  isolate flex w-fit border border-background/10 bg-background/10 p-[0.3vw] max-md:p-[1vw]">
+          <div ref={toggleRef} role="radiogroup" aria-label="Billing period" data-sound-hover="off" className="fadeup relative isolate flex w-fit bg-background p-[0.3vw] max-md:p-[1vw]">
             {PERIODS.map((p) => (
               <button
                 key={p.id}
@@ -146,27 +134,27 @@ export default function PricingProCompare({ currency: initialCurrency }) {
                 role="radio"
                 aria-checked={p.id === period}
                 onClick={() => choose(p.id)}
-                className={`cursor-pointer rounded-none px-[1.4vw] py-[0.8vw] text-background/60 max-md:px-[4.4vw] max-md:py-[2.8vw] ${LABEL}`}
+                className={`cursor-pointer rounded-none px-[1.4vw] py-[0.8vw] text-foreground max-md:px-[4.4vw] max-md:py-[2.8vw] ${LABEL}`}
               >
                 {p.label}
               </button>
             ))}
-            <div ref={clipRef} aria-hidden="true" className="pointer-events-none absolute inset-0 flex bg-background p-[0.3vw] max-md:p-[1vw]">
+            <div ref={clipRef} aria-hidden="true" className="pointer-events-none absolute inset-0 flex bg-foreground p-[0.3vw] max-md:p-[1vw]">
               {PERIODS.map((p) => (
-                <span key={p.id} className={`px-[1.4vw] py-[0.8vw] text-foreground max-md:px-[4.4vw] max-md:py-[2.8vw] ${LABEL}`}>{p.label}</span>
+                <span key={p.id} className={`px-[1.4vw] py-[0.8vw] max-md:px-[4.4vw] max-md:py-[2.8vw] text-background ${LABEL}`}>{p.label}</span>
               ))}
             </div>
           </div>
         </div>
 
-        <div className="fadeup overflow-x-auto px-[3vw] max-md:px-[6vw]">
-          <div role="table" aria-label="Pro and Pro+ compared" className="flex min-w-full  flex-col border border-background/10 bg-foreground max-md:min-w-[170vw]">
-            <div role="row" className="flex border-b border-background/10">
-              <div role="columnheader" className="flex w-[40%] items-center px-[1.6vw] py-[2.2vw] type-body text-background/30 max-md:px-[4vw] max-md:py-[6vw]">Feature</div>
+        <div className="fadeup overflow-x-auto max-md:px-[6vw]">
+          <div role="table" aria-label="Pro and Pro+ compared" className="flex min-w-full flex-col max-md:min-w-[116vw]">
+            <div role="row" className="flex">
+              <div role="columnheader" className="flex w-[40%] max-md:w-[36vw] items-start border-b border-background/10 py-[2.2vw] type-body max-md:px-[4vw] max-md:py-[6vw]">Feature</div>
               {[["pro", "Pro"], ["plus", "Pro+"]].map(([id, name]) => (
-                <div key={id} role="columnheader" className={`${CELL} flex-col items-start justify-center gap-[0.6vw] py-[2.2vw] max-md:gap-[2vw] max-md:py-[6vw] ${id === "plus" ? "bg-primary/10" : ""}`}>
+                <div key={id} role="columnheader" className={`${CELL} flex-col justify-start gap-[0.6vw] border-b py-[2.2vw] max-md:gap-[2vw] max-md:py-[6vw] ${id === "plus" ? PLUS : "border-background/10"}`}>
                   <p className="type-h3 font-avenir">{id === "plus" ? <>Pro<span className="text-primary">+</span></> : name}</p>
-                  <div className={`flex items-center text-background/60 max-md:flex-wrap ${LABEL}`}>
+                  <div className={`flex items-center justify-center max-md:flex-wrap ${id === "plus" ? "text-foreground" : "text-background/60"} ${LABEL}`}>
                     <span className="flex h-[1.2vw] items-center leading-none max-md:h-[4vw]">{CURRENCY_SYMBOLS[currency]}<RollNumber value={prices[id][period]} values={[prices[id].q, prices[id].y]} /></span>
                     <span>/mo</span>
                     <span className="max-md:hidden">&nbsp;·&nbsp;</span>
@@ -176,16 +164,15 @@ export default function PricingProCompare({ currency: initialCurrency }) {
               ))}
             </div>
 
-            <div ref={bodyRef} className="relative" onPointerLeave={leaveRows}>
-              <i ref={hoverRef} aria-hidden="true" className="pointer-events-none absolute top-0 left-0 z-10 h-0 w-full bg-background/5 opacity-0" />
+            <div>
               {ROWS.map((row) => (
-                <div key={row.feature} role="row" className="flex border-b border-background/10 last:border-b-0" onPointerEnter={(e) => hoverRow(e.currentTarget)}>
-                  <div role="rowheader" className="flex w-[40%] items-center px-[1.6vw] py-[1.4vw] type-body max-md:px-[4vw] max-md:py-[4.6vw]">{row.feature}</div>
-                  <div role="cell" className={`${CELL} py-[1.4vw] max-md:py-[4.6vw]`}>
+                <div key={row.feature} role="row" className="flex">
+                  <div role="rowheader" className="flex w-[40%] max-md:w-[36vw] items-center border-b border-background/10 py-[1.4vw] type-body max-md:px-[4vw] max-md:py-[4.6vw]">{row.feature}</div>
+                  <div role="cell" className={`${CELL} border-b border-background/10 py-[1.4vw] max-md:py-[4.6vw]`}>
                     <Cell value={row.pro} period={period} dir={dir} />
                   </div>
-                  <div role="cell" className={`${CELL} bg-primary/10 py-[1.4vw] max-md:py-[4.6vw]`}>
-                    <Cell value={row.plus} period={period} dir={dir} />
+                  <div role="cell" className={`${CELL} ${PLUS} border-b py-[1.4vw] max-md:py-[4.6vw]`}>
+                    <Cell value={row.plus} period={period} dir={dir} plus />
                   </div>
                 </div>
               ))}
