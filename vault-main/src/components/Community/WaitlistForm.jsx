@@ -85,7 +85,7 @@ export default function WaitlistForm({ className = "" }) {
         onChange={(e) => { setEmail(e.target.value); if (error) setError(""); }}
         aria-invalid={!!error}
         aria-describedby={`${inputId}-msg`}
-        className={`type-body h-11 min-w-0 flex-1 border-0 bg-transparent text-foreground outline-none max-md:basis-full max-md:px-2.5 ${joined ? "placeholder:text-[#9fd9b9]" : "placeholder:text-foreground/40"}`}
+        className={`type-body h-11 min-w-0 flex-1 border-0 bg-transparent text-foreground outline-none [--input-autofill-bg:var(--background)] [--input-autofill-text:var(--foreground)] max-md:basis-full max-md:px-2.5 ${joined ? "placeholder:text-[#9fd9b9]" : "placeholder:text-foreground/40"}`}
       />
       <button
         ref={buttonRef}

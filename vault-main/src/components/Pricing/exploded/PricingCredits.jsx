@@ -75,9 +75,9 @@ function RedeemButton({ done, label, disabled, onClick }) {
       type="button"
       disabled={disabled}
       onClick={onClick}
-      className={`flex w-full cursor-pointer items-center justify-center gap-[0.6vw] rounded-none border py-[0.8vw] max-md:px-4 text-background transition-opacity duration-700 disabled:cursor-default max-md:gap-[1vw] max-md:py-[3vw] ${done ? "border-primary bg-primary" : "border-background/15 disabled:opacity-40"} ${LABEL}`}
+      className={`flex w-full cursor-pointer items-center justify-center gap-[0.6vw] rounded-none border py-[0.8vw] max-lg:py-[1.6vw] max-md:px-4 text-background transition-opacity duration-700 disabled:cursor-default max-lg:gap-[1.2vw] max-md:gap-[1vw] max-md:py-[3vw] ${done ? "border-primary bg-primary" : "border-background/15 disabled:opacity-40"} ${LABEL}`}
     >
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="square" aria-hidden="true" className="size-[1vw] max-md:size-[4vw]">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="square" aria-hidden="true" className="size-[1vw] max-lg:size-[2vw] max-md:size-[4vw]">
         {(done ? CHECK : PLUS).map((p, i) => (
           <line key={i} ref={(el) => { lineRefs.current[i] = el; }} {...p} />
         ))}
@@ -217,25 +217,25 @@ export default function PricingCredits() {
   }
 
   return (
-    <section ref={rootRef} id="credits" data-sound-flow="off" className="relative bg-foreground px-[4.5vw] py-[7%] font-avenir text-background max-md:px-[6vw] max-md:py-[12%]">
-      <div className="mx-auto flex w-full max-w-[1536px] flex-col gap-[3vw] max-md:gap-[10vw]">
-        <div className="flex flex-col gap-[1.8vw] max-md:gap-[10vw]">
+    <section ref={rootRef} id="credits" data-sound-flow="off" className="relative bg-foreground px-[4.5vw] py-[7%] font-avenir text-background max-lg:px-[6vw] max-lg:py-[10%] max-md:px-[6vw] max-md:py-[12%]">
+      <div className="mx-auto flex w-full max-w-[1536px] flex-col gap-[3vw] max-lg:gap-[5vw] max-md:gap-[10vw]">
+        <div className="flex flex-col gap-[1.8vw] max-lg:gap-[3vw] max-md:gap-[10vw]">
           <LineReveal as="h2" className="type-h1">
             One Credit.<br />
             <span className="gradient-text-animate">One Whole Site.</span>
           </LineReveal>
-          <p className="fadeup type-body-lg w-[40%] text-background/60 max-md:w-full">
+          <p className="fadeup type-body-lg w-[40%] text-background/60 max-lg:w-[70%] max-md:w-full">
             A credit unlocks one complete template: every page, section and interaction, as source code you own. Try it: spend your credits below.
           </p>
         </div>
 
-        <div className="fadeup flex items-stretch gap-[1vw] max-md:flex-col max-md:gap-[3vw]">
-          <div className="relative isolate flex w-[30%] flex-col gap-[1.4vw] overflow-hidden bg-background p-[2vw] text-foreground max-md:w-full max-md:gap-[5vw] max-md:p-[6vw]">
+        <div className="fadeup flex items-stretch gap-[1vw] max-lg:flex-col max-lg:gap-[3vw] max-md:flex-col max-md:gap-[3vw]">
+          <div className="relative isolate flex w-[30%] flex-col gap-[1.4vw] overflow-hidden bg-background p-[2vw] text-foreground max-lg:w-full max-lg:items-center max-lg:gap-[3vw] max-lg:p-[4vw] max-md:w-full max-md:items-stretch max-md:gap-[5vw] max-md:p-[6vw]">
             {/* Dotted grid + orange mouse fluid; no swish (the section sets data-sound-flow="off") */}
             <CardFluid />
             <p className={`relative text-foreground/50 ${LABEL}`}>Your Wallet</p>
 
-            <div ref={toggleRef} role="radiogroup" aria-label="Plan for this demo" className="relative isolate flex w-fit border border-foreground/10 bg-foreground/5 p-[0.3vw] max-md:p-[1vw]">
+            <div ref={toggleRef} role="radiogroup" aria-label="Plan for this demo" className="relative isolate flex w-fit border border-foreground/10 bg-foreground/5 p-[0.3vw] max-lg:p-[0.6vw] max-md:p-[1vw]">
               {PLAN_OPTIONS.map((p) => (
                 <button
                   key={p.id}
@@ -243,45 +243,45 @@ export default function PricingCredits() {
                   role="radio"
                   aria-checked={p.id === planId}
                   onClick={() => choose(p.id)}
-                  className={`cursor-pointer rounded-none px-[1.2vw] py-[0.7vw] text-foreground/60 max-md:px-[4vw] max-md:py-[2.4vw] ${LABEL}`}
+                  className={`cursor-pointer rounded-none px-[1.2vw] py-[0.7vw] text-foreground/60 max-lg:px-[2.4vw] max-lg:py-[1.4vw] max-md:px-[4vw] max-md:py-[2.4vw] ${LABEL}`}
                 >
                   {p.label}
                 </button>
               ))}
-              <div ref={clipRef} aria-hidden="true" className="pointer-events-none absolute inset-0 flex bg-foreground p-[0.3vw] max-md:p-[1vw]">
+              <div ref={clipRef} aria-hidden="true" className="pointer-events-none absolute inset-0 flex bg-foreground p-[0.3vw] max-lg:p-[0.6vw] max-md:p-[1vw]">
                 {PLAN_OPTIONS.map((p) => (
-                  <span key={p.id} className={`px-[1.2vw] py-[0.7vw] text-background max-md:px-[4vw] max-md:py-[2.4vw] ${LABEL}`}>{p.label}</span>
+                  <span key={p.id} className={`px-[1.2vw] py-[0.7vw] text-background max-lg:px-[2.4vw] max-lg:py-[1.4vw] max-md:px-[4vw] max-md:py-[2.4vw] ${LABEL}`}>{p.label}</span>
                 ))}
               </div>
             </div>
 
-            <div className="relative min-h-[3vw] max-md:min-h-[12vw]">
+            <div className="relative min-h-[3vw] max-lg:flex max-lg:min-h-[6vw] max-lg:justify-center max-md:block max-md:min-h-[12vw]">
               <CreditTiles
                 count={plan.credits}
                 used={left}
-                sizeClass="size-[2.6vw] text-[0.8vw] max-md:size-[10vw] max-md:text-[3.2vw]"
+                sizeClass="size-[2.6vw] text-[0.8vw] max-lg:size-[5.5vw] max-lg:text-[1.8vw] max-md:size-[10vw] max-md:text-[3.2vw]"
                 onTile={(i, el) => { coinRefs.current[i] = el; }}
               />
             </div>
 
-            <div className="relative flex h-[4vw] gap-[0.3vw] type-body text-foreground/60 max-md:h-[16vw] max-md:gap-[1vw]">
+            <div className="relative flex h-[4vw] gap-[0.3vw] type-body text-foreground/60 max-lg:h-[8vw] max-lg:justify-center max-lg:gap-[0.6vw] max-md:h-[16vw] max-md:gap-[1vw]">
               <span className={`flex h-[1.6em] items-center ${left ? "" : "hidden"}`}>
                 <RollNumber value={left} values={[1, 5]} />
               </span>
-              <RollText fixed text={note} dir={dir} className="h-full min-w-0 flex-1" />
+              <RollText fixed text={note} dir={dir} className="h-full min-w-0 flex-1 max-lg:w-[40vw] max-lg:flex-none max-md:w-auto max-md:flex-1" />
             </div>
             <div className="relative mt-auto">
               <Button text="Reset Wallet" variant="outline" preventDefault onClick={refill} className="w-fit" />
             </div>
           </div>
 
-          <ul className="flex w-[70%] flex-wrap content-start gap-[1vw] max-md:w-full max-md:gap-[3vw] max-md:gap-y-[10vw]">
+          <ul className="flex w-[70%] flex-wrap content-start gap-[1vw] max-lg:w-full max-lg:gap-[2vw] max-md:w-full max-md:gap-[3vw] max-md:gap-y-[10vw]">
             {TEMPLATES.map((t, i) => {
               const isOwned = owned.includes(i);
               const locked = t.full && !plan.full;
               const unavailable = !isOwned && (locked || (!left && !pending.includes(i)));
               return (
-                <li key={t.name} className={`flex w-[32%] flex-col gap-[0.8vw] bg-foreground p-[0.8vw] max-md:px-3 transition-shadow duration-700 max-md:w-[48%] max-md:gap-[5vw] max-md:p-[2.4vw] ${isOwned ? "shadow-[inset_0_0_0_0.1vw_var(--primary)]" : "shadow-[inset_0_0_0_0.1vw_color-mix(in_srgb,var(--background)_10%,transparent)]"}`}>
+                <li key={t.name} className={`flex w-[32%] flex-col gap-[0.8vw] bg-foreground p-[0.8vw] max-lg:w-[calc(50%-1vw)] max-lg:gap-[2.4vw] max-lg:p-[2vw] max-md:px-3 transition-shadow duration-700 max-md:w-[48%] max-md:gap-[5vw] max-md:p-[2.4vw] ${isOwned ? "shadow-[inset_0_0_0_0.1vw_var(--primary)]" : "shadow-[inset_0_0_0_0.1vw_color-mix(in_srgb,var(--background)_10%,transparent)]"}`}>
                   <div
                     ref={(el) => { artRefs.current[i] = el; }}
                     aria-hidden="true"
@@ -291,9 +291,9 @@ export default function PricingCredits() {
                     <i className={`absolute top-[36%] left-[8%] h-[8%] w-[34%] transition-colors duration-1000 ${isOwned ? "bg-primary-hover" : "bg-background/15"}`} />
                     <i className={`absolute top-[56%] left-[8%] h-[30%] w-[84%] transition-colors duration-1000 ${isOwned ? "bg-grey" : "bg-background/15"}`} />
                   </div>
-                  <div className="flex flex-col gap-[0.3vw] max-md:flex-1 max-md:gap-[1vw]">
+                  <div className="flex flex-col gap-[0.3vw] max-lg:flex-1 max-lg:gap-[1vw] max-md:flex-1 max-md:gap-[1vw]">
                     <p className="type-body tracking-tight">{t.name}</p>
-                    <p className={`flex items-center gap-[0.4vw] max-md:gap-[1.4vw] ${LABEL} ${t.full ? "text-background/60" : "text-primary"}`}>
+                    <p className={`flex items-center gap-[0.4vw] max-lg:gap-[1vw] max-md:gap-[1.4vw] ${LABEL} ${t.full ? "text-background/60" : "text-primary"}`}>
                       {t.full ? "Full Catalogue" : "Selected Catalogue"}
                     </p>
                   </div>

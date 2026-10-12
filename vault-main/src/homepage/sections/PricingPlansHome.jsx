@@ -201,7 +201,7 @@ export default function PricingPlansHome({ currency: initialCurrency, checkout =
     return (
         <section ref={rootRef} id="pricing" data-sound-flow="off" data-sound-hover="off" className="relative bg-white px-[calc(var(--cvw)*4.5)] space-y-[3vw] py-[7%] max-md:py-[12%] font-avenir text-[#1D1D1D] max-md:px-[calc(var(--cvw)*7)]">
             <div className="mx-auto flex w-full max-w-[1536px] flex-wrap items-end justify-between gap-[calc(var(--cvw)*2)] max-md:gap-[calc(var(--cvw)*10)]">
-                <LineReveal as="h2" className="type-h1 leading-[1.2]! w-[40%] max-lg:w-[80%] max-md:w-full">
+                <LineReveal as="h2" className="type-h1 leading-[1.2]! w-[40%] max-md:w-[80%] max-lg:w-[60%] max-md:w-full">
                     Two plans. <span className="gradient-text-animate">Every Moment Covered.</span>
                 </LineReveal>
 

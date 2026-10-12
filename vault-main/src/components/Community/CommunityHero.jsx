@@ -16,25 +16,27 @@ export default function CommunityHero() {
       <section
         id="hero"
         data-zone="crowd"
-       
-        className="relative z-1 flex h-screen w-full flex-col justify-end max-[1025px]:h-auto max-[1025px]:min-h-svh"
+        className="relative z-1 flex h-screen w-full flex-col justify-end max-lg:h-auto max-lg:min-h-svh"
       >
-        <div className="mx-auto flex w-full max-w-[1536px] items-end justify-between gap-[3vw] px-[4.5vw] pb-[3vw] max-[1025px]:flex-col max-[1025px]:items-stretch max-[1025px]:gap-[5vw] max-[1025px]:pt-36 max-md:px-[6vw] max-md:pt-32">
-          <LineReveal
-            as="h1"
-            delay={0.3}
-            className="type-display w-[58%] wrap-break-word max-[1025px]:w-full"
-          >
-            Find The People Who Notice <span className="gradient-text-animate gradient-text-single">Two Dropped Frames.</span>
-          </LineReveal>
-          <div className="fadeup flex w-[32%] flex-col gap-[2vw] max-[1025px]:w-full max-[1025px]:gap-[5vw]" data-fadeup-delay="0.2">
-            <p className="type-body-lg w-full text-foreground/80 max-[1025px]:w-[70%] max-md:w-full">
-              Vault Community is a home for developers who treat motion as craft. Live teardowns, first
-              access to new effects, honest critique, and a room full of people who care about the same
-              details you do.
-            </p>
-            <WaitlistForm />
-            <p className="type-label text-foreground/40">Free to join · Invites go out in Waves</p>
+        {/* Copy on the left, stacked; the crowd's blob sits on the right */}
+        <div className="mx-auto flex w-full max-w-[1536px] px-[4.5vw] pb-[3vw] max-lg:pt-36 max-lg:pb-[5vw] max-md:px-[6vw] max-md:pt-[48svh]">
+          <div className="flex w-[60%] flex-col gap-[3vw] max-lg:w-[75%] max-lg:gap-[4vw] max-md:w-full max-md:gap-[5vw]">
+            <LineReveal
+              as="h1"
+              delay={0.3}
+              className="type-display w-full wrap-break-word"
+            >
+              Find The People Who Notice <span className="gradient-text-animate gradient-text-single">Two Dropped Frames.</span>
+            </LineReveal>
+            <div className="fadeup flex w-[80%] flex-col gap-[2vw] max-lg:w-[90%] max-lg:gap-[3vw] max-md:w-full max-md:gap-[5vw]" data-fadeup-delay="0.2">
+              <p className="type-body-lg w-full text-foreground/80">
+                Vault Community is a home for developers who treat motion as craft. Live teardowns, first
+                access to new effects, honest critique, and a room full of people who care about the same
+                details you do.
+              </p>
+              <WaitlistForm />
+              <p className="type-label text-foreground/40">Free to join · Invites go out in Waves</p>
+            </div>
           </div>
         </div>
       </section>

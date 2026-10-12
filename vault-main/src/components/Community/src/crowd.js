@@ -10,16 +10,19 @@
 //   const crowd = mountCrowd(canvas, { THREE, zoneRoot, reducedMotion });
 //   crowd.highlight(new Set([0, 3])); crowd.launch(x, y); crowd.destroy();
 
+import { createHover } from "../../Animations/particleHover";
+
 // Particle counts
 const COUNT = 6000;
 const COUNT_SMALL = 2600;
 
 // Formation centres per zone, desktop and narrow screens
-const CENTER = { crowd: [3.9, 0.9, 0], crowd2: [0, -0.3, -2], ring: [0, 0.4, 0] };
-const CENTER_NARROW = { crowd: [0, 2.6, -3], crowd2: [0, 0, -4], ring: [0, 0.2, -2] };
+// The hero blob's x is set from the screen width (placeHeroBlob), right of the copy like the pricing and blog blobs
+const CENTER = { crowd: [4, 0, 0], crowd2: [0, -0.3, -2], ring: [0, 0.4, 0] };
+const CENTER_NARROW = { crowd: [0, 4.6, -3], crowd2: [0, 0, -4], ring: [0, 0.2, -2] };
 // Hero blob: particles spread evenly over a sphere whose surface wobbles and slowly turns
-const BLOB_RADIUS = 3.4;
-const BLOB_RADIUS_NARROW = 2.3;
+const BLOB_RADIUS = 3.2;
+const BLOB_RADIUS_NARROW = 2.5;
 const BLOB_TILT = 0.45; // radians: the blob tips toward the viewer
 // "What do you build with": the blob spreads into a rolling sheet of dots
 const SHEET_W = 34;
@@ -31,8 +34,6 @@ const SHEET_W_NARROW = 14;
 const SHEET_BACK_NARROW = -16;
 // Blob + sheet animation speed (1 = the first version)
 const SHAPE_SPEED = 2.4;
-// Hero blob: extra turn per pixel scrolled
-const SCROLL_SPIN = 0.0016;
 
 // Join: rings as fractions of the ring radius (inner → outer) and their tilt
 const RIBBON_RINGS = 2;
@@ -63,10 +64,11 @@ const MAX_PIXEL_RATIO_SMALL = 1.25;
 
 const VERTEX_SHADER = /* glsl */ `
 attribute float aHot, aR, aRib;
+attribute vec3 aHover;
 uniform float uPR, uTime, uPulse, uRing;
 varying float vHot, vR, vA, vSolid;
 void main() {
-  vec4 mv = modelViewMatrix * vec4(position, 1.);
+  vec4 mv = modelViewMatrix * vec4(position + aHover, 1.);
   gl_Position = projectionMatrix * mv;
   float tw = .75 + .25 * sin(uTime * 1.7 + aR * 40.);
   gl_PointSize = uPR * (2.4 + aR * 3.6 + aHot * 2.6 + uPulse * 1.8) * (24. / -mv.z) * (aHot > 1.5 ? 2.6 : 1.);
@@ -89,6 +91,55 @@ void main() {
 }`;
 
 const lerp = (a, b, t) => a + (b - a) * t;
+
+// 3D simplex noise (-1..1, Gustavson): smooth, round features - what makes the blob lumpy
+const GRAD3 = [[1, 1, 0], [-1, 1, 0], [1, -1, 0], [-1, -1, 0], [1, 0, 1], [-1, 0, 1], [1, 0, -1], [-1, 0, -1], [0, 1, 1], [0, -1, 1], [0, 1, -1], [0, -1, -1]];
+const PERM = (() => {
+  const p = Array.from({ length: 256 }, (_, i) => i);
+  let seed = 7;
+  for (let i = 255; i > 0; i--) {
+    seed = (seed * 16807) % 2147483647;
+    const j = seed % (i + 1);
+    [p[i], p[j]] = [p[j], p[i]];
+  }
+  return Uint8Array.from({ length: 512 }, (_, i) => p[i & 255]);
+})();
+const simplex3 = (x, y, z) => {
+  const F3 = 1 / 3, G3 = 1 / 6;
+  const sk = (x + y + z) * F3;
+  const i = Math.floor(x + sk), j = Math.floor(y + sk), k = Math.floor(z + sk);
+  const t0 = (i + j + k) * G3;
+  const x0 = x - (i - t0), y0 = y - (j - t0), z0 = z - (k - t0);
+  let i1, j1, k1, i2, j2, k2;
+  if (x0 >= y0) {
+    if (y0 >= z0) { i1 = 1; j1 = 0; k1 = 0; i2 = 1; j2 = 1; k2 = 0; }
+    else if (x0 >= z0) { i1 = 1; j1 = 0; k1 = 0; i2 = 1; j2 = 0; k2 = 1; }
+    else { i1 = 0; j1 = 0; k1 = 1; i2 = 1; j2 = 0; k2 = 1; }
+  } else if (y0 < z0) { i1 = 0; j1 = 0; k1 = 1; i2 = 0; j2 = 1; k2 = 1; }
+  else if (x0 < z0) { i1 = 0; j1 = 1; k1 = 0; i2 = 0; j2 = 1; k2 = 1; }
+  else { i1 = 0; j1 = 1; k1 = 0; i2 = 1; j2 = 1; k2 = 0; }
+  const ii = i & 255, jj = j & 255, kk = k & 255;
+  const corner = (dx, dy, dz, gi) => {
+    const t = 0.6 - dx * dx - dy * dy - dz * dz;
+    if (t < 0) return 0;
+    const g = GRAD3[gi % 12];
+    return t * t * t * t * (g[0] * dx + g[1] * dy + g[2] * dz);
+  };
+  return 32 * (
+    corner(x0, y0, z0, PERM[ii + PERM[jj + PERM[kk]]]) +
+    corner(x0 - i1 + G3, y0 - j1 + G3, z0 - k1 + G3, PERM[ii + i1 + PERM[jj + j1 + PERM[kk + k1]]]) +
+    corner(x0 - i2 + 2 * G3, y0 - j2 + 2 * G3, z0 - k2 + 2 * G3, PERM[ii + i2 + PERM[jj + j2 + PERM[kk + k2]]]) +
+    corner(x0 - 1 + 3 * G3, y0 - 1 + 3 * G3, z0 - 1 + 3 * G3, PERM[ii + 1 + PERM[jj + 1 + PERM[kk + 1]]])
+  );
+};
+
+// The blob's radius multiplier at a point on the unit sphere (px, py, pz).
+// Like quantumstretch.com: a slow, broad swell plus big smooth lobes (about eight or nine round the rim)
+// that keep morphing, both from simplex noise drifting through time `t`.
+const blobShape = (la, lo, cl, px, py, pz, t) =>
+  1 +
+  simplex3(px * 0.6 + t * 0.12, py * 0.6 - t * 0.09, pz * 0.6 + t * 0.07) * 0.06 +
+  simplex3(px * 1.4 - t * 0.36, py * 1.4 + t * 0.3, pz * 1.4 + t * 0.24) * 0.2;
 const NOOP_API = { highlight() {}, launch() {}, destroy() {} };
 
 export function mountCrowd(canvas, opts = {}) {
@@ -143,8 +194,25 @@ export function mountCrowd(canvas, opts = {}) {
     const r = Math.floor(i / COLS), c = i % COLS;
     gu[i] = c / (COLS - 1);
     gv[i] = r / (ROWS - 1);
-    lat[i] = -Math.PI / 2 + (Math.PI * (r + 0.5)) / ROWS;
-    lon[i] = (2 * Math.PI * c) / COLS;
+  }
+  // Blob layout: a cube-sphere grid (each cube face's grid pushed out onto the sphere), so the dots
+  // sit in an even grid of curved rows with no crowding at the poles. Any leftovers go at random.
+  const FACE = Math.floor(Math.sqrt(N / 6));
+  for (let i = 0; i < N; i++) {
+    let x, y, z;
+    if (i < FACE * FACE * 6) {
+      const f = Math.floor(i / (FACE * FACE)), k = i % (FACE * FACE);
+      const u = Math.tan(((k % FACE + 0.5) / FACE * 2 - 1) * Math.PI / 4);
+      const v = Math.tan(((Math.floor(k / FACE) + 0.5) / FACE * 2 - 1) * Math.PI / 4);
+      const s = f % 2 ? -1 : 1;
+      if (f < 2) { x = s; y = u; z = v * s; } else if (f < 4) { x = u * s; y = s; z = v; } else { x = u; y = v * s; z = s; }
+    } else {
+      const ph = Math.acos(2 * Math.random() - 1), th = Math.random() * 2 * Math.PI;
+      x = Math.sin(ph) * Math.cos(th); y = Math.cos(ph); z = Math.sin(ph) * Math.sin(th);
+    }
+    const len = Math.hypot(x, y, z);
+    lat[i] = Math.asin(y / len);
+    lon[i] = Math.atan2(z / len, x / len);
   }
   const geo = new T.BufferGeometry();
   geo.setAttribute("position", new T.BufferAttribute(pos, 3));
@@ -154,6 +222,9 @@ export function mountCrowd(canvas, opts = {}) {
   const rib = new Float32Array(N);
   for (let i = 0; i < N; i++) rib[i] = Math.min(RIBBON_RINGS - 1, Math.floor(gv[i] * RIBBON_RINGS)) === 1 ? 1 : 0;
   geo.setAttribute("aRib", new T.BufferAttribute(rib, 1));
+  // The cursor's hover, eased (particleHover.js, shared with the pricing and blog blobs)
+  const hover = createHover(N);
+  geo.setAttribute("aHover", new T.BufferAttribute(hover.offset, 3));
   const uniforms = { uPR: { value: 1 }, uTime: { value: 0 }, uPulse: { value: 0 }, uRing: { value: 0 } };
   const mat = new T.ShaderMaterial({
     transparent: true,
@@ -199,8 +270,22 @@ export function mountCrowd(canvas, opts = {}) {
 
   const state = { pulse: 0, joinIdx: -1, covered: false, running: false, logoMix: 0 };
 
+  // Hero blob on the right, at the same share of the visible width as the pricing and blog blobs (ParticleBlob)
+  // On narrow screens it sits above the copy, its centre 26% down the screen
+  const placeHeroBlob = () => {
+    const aspect = innerWidth / innerHeight;
+    const visH = 2 * camera.position.z * Math.tan((32 * Math.PI) / 360);
+    CENTER.crowd[0] = visH * aspect * 0.22;
+    const narrowFov = aspect < 0.8 ? 46 : 32;
+    const halfH = (camera.position.z - CENTER_NARROW.crowd[2]) * Math.tan((narrowFov * Math.PI) / 360);
+    // ...but low enough that the top of the blob clears the navbar
+    CENTER_NARROW.crowd[1] = Math.min(halfH * 0.48, halfH * 0.85 - BLOB_RADIUS_NARROW * 1.35);
+  };
+  placeHeroBlob();
+
   // Resize
   const onResize = () => {
+    placeHeroBlob();
     const pr = Math.min(devicePixelRatio || 1, small ? MAX_PIXEL_RATIO_SMALL : MAX_PIXEL_RATIO);
     renderer.setPixelRatio(pr);
     uniforms.uPR.value = pr;
@@ -267,11 +352,11 @@ export function mountCrowd(canvas, opts = {}) {
     center.set(C[0], C[1], C[2]);
     blobMix = 1;
     const blobR = narrow ? BLOB_RADIUS_NARROW : BLOB_RADIUS;
-    const spin = window.scrollY * SCROLL_SPIN, tc = Math.cos(BLOB_TILT), ts = Math.sin(BLOB_TILT);
+    const tc = Math.cos(BLOB_TILT), ts = Math.sin(BLOB_TILT);
     for (let i = 0; i < N; i++) {
-      const q = i * 3, la = lat[i], lo = lon[i] + spin, cl = Math.cos(la);
-      const rr = blobR * (1 + Math.sin(6 * lo) * cl * 0.12 + Math.sin(la * 9) * 0.045 + Math.sin(3 * lo - 2 * la) * 0.04);
+      const q = i * 3, la = lat[i], lo = lon[i], cl = Math.cos(la);
       const px = cl * Math.cos(lo), py = Math.sin(la), pz = cl * Math.sin(lo);
+      const rr = blobR * blobShape(la, lo, cl, px, py, pz, 0);
       pos[q] = C[0] + px * rr;
       pos[q + 1] = C[1] + (py * tc - pz * ts) * rr;
       pos[q + 2] = C[2] + (py * ts + pz * tc) * rr;
@@ -297,8 +382,6 @@ export function mountCrowd(canvas, opts = {}) {
     const st = time * SHAPE_SPEED;
     const rcx = Math.cos(RIBBON_TILT_X), rsx = Math.sin(RIBBON_TILT_X), rcy = Math.cos(RIBBON_TILT_Y), rsy = Math.sin(RIBBON_TILT_Y);
     const blobR = narrow ? BLOB_RADIUS_NARROW : BLOB_RADIUS;
-    // Turns on its own, and further as the page scrolls
-    const spin = st * 0.12 + window.scrollY * SCROLL_SPIN;
     // Seen a little from above, so the latitude rings read (as in the reference video)
     const tc = Math.cos(BLOB_TILT), ts = Math.sin(BLOB_TILT);
 
@@ -307,21 +390,22 @@ export function mountCrowd(canvas, opts = {}) {
     mouse.lastY = mouse.cy;
     mouse.speed += (Math.min(MOUSE_SPEED_CAP, moved) - mouse.speed) * 0.2;
     const hasMouse = mouse.on && !state.covered && toWorld(mouse.cx, mouse.cy, hit);
+    const cursorOn = POINTER_INTERACTION && hasMouse && state.logoMix < 0.5;
+    hover.frame(dt, cursorOn, hit.x, hit.y);
     state.pulse *= Math.pow(0.2, dt);
     uniforms.uPulse.value = state.pulse;
     uniforms.uRing.value = ringMix;
 
     const damp = Math.pow(0.955, dt * 60);
     const ringR = narrow ? RING_RADIUS_NARROW : RING_RADIUS;
-    const spd = Math.min(1, mouse.speed / 25);
     // Hold: the charge eases the crowd into the Hyperiux wordmark (prototype)
     const ch = charge.v;
     // The hold-to-logo was removed: the particles never form the wordmark
     state.logoMix = 0;
     const logoMix = state.logoMix;
-    const pull = 1.4 + ringMix * 1.4 + blobMix * 2.2 + sheetMix * 2.2;
+    const pull = 1.4 + ringMix * 1.4 + blobMix * 6 + sheetMix * 2.2;
     // The blob reads as a clean surface: the drifting current is mostly calmed while it forms
-    const drift = 1 - Math.max(blobMix, sheetMix) * 0.85;
+    const drift = 1 - Math.max(blobMix * 0.98, sheetMix * 0.85);
     let stir = 0;
 
     for (let i = 0; i < N; i++) {
@@ -338,13 +422,9 @@ export function mountCrowd(canvas, opts = {}) {
       let hx = center.x + home[q], hy = center.y + home[q + 1], hz = center.z + home[q + 2];
       if (blobMix > 0.01) {
         // Petal-like lobes around the rim that slowly turn, plus ripples travelling down from the top
-        const la = lat[i], lo = lon[i] + spin, cl = Math.cos(la);
-        const wobble =
-          Math.sin(6 * lo + st * 0.5) * cl * 0.12 +
-          Math.sin(la * 9 - st * 1.6) * 0.045 +
-          Math.sin(3 * lo - 2 * la + st * 0.9) * 0.04;
-        const rr = blobR * (1 + wobble);
+        const la = lat[i], lo = lon[i], cl = Math.cos(la);
         const px = cl * Math.cos(lo), py = Math.sin(la), pz = cl * Math.sin(lo);
+        const rr = blobR * blobShape(la, lo, cl, px, py, pz, st);
         const ty = py * tc - pz * ts, tz = py * ts + pz * tc;
         hx = lerp(hx, center.x + px * rr, blobMix);
         hy = lerp(hy, center.y + ty * rr, blobMix);
@@ -383,19 +463,10 @@ export function mountCrowd(canvas, opts = {}) {
       ay += (hy - y) * pull;
       az += (hz - z) * pull;
 
-      // School-of-fish cursor: gather and swirl
-      // The particles don't react to the mouse on the community page
-      if (POINTER_INTERACTION && hasMouse && logoMix < 0.5) {
-        const dx = hit.x - x, dy = hit.y - y, d2 = dx * dx + dy * dy;
-        if (d2 < GATHER_RADIUS_SQ) {
-          stir++;
-          const f = 1 - d2 / GATHER_RADIUS_SQ;
-          const inv = 1 / Math.sqrt(d2 + 0.05);
-          ax += dx * inv * f * (2.2 + spd * 3) - dy * inv * f * (3 + spd * 6);
-          ay += dy * inv * f * (2.2 + spd * 3) + dx * inv * f * (3 + spd * 6);
-          az += (rnd[i] - 0.5) * f * 2;
-          if (d2 < 0.6) { ax -= dx * inv * 4; ay -= dy * inv * 4; }
-        }
+      // Cursor: counts the dots it is among (for the cursor tag); the push itself is the hover layer below
+      if (cursorOn) {
+        const dx = hit.x - x, dy = hit.y - y;
+        if (dx * dx + dy * dy < GATHER_RADIUS_SQ) stir++;
       }
 
       vel[q] = (vel[q] + ax * dt) * damp;
@@ -405,9 +476,11 @@ export function mountCrowd(canvas, opts = {}) {
       pos[q + 1] += vel[q + 1] * dt;
       pos[q + 2] += vel[q + 2] * dt;
       hot[i] += (hotTarget[i] - hot[i]) * Math.min(1, dt * 2.5);
+      hover.step(i, pos[q], pos[q + 1], pos[q + 2]);
     }
     geo.attributes.position.needsUpdate = true;
     geo.attributes.aHot.needsUpdate = true;
+    geo.attributes.aHover.needsUpdate = true;
     // No sparkle jingle while the pointer stirs the particles (hero or any other zone)
     // Tells the page's cursor tag when the pointer is among the particles (enough of them stirred),
     // not just anywhere over the canvas: marks every hold zone (the cursor reads the one it's over)

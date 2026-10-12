@@ -51,17 +51,17 @@ export default function CommunityStack() {
   };
 
   return (
-    <section ref={rootRef} className="relative z-1 px-[4.5vw] py-[18vw] text-center max-md:px-[6vw] max-md:py-[12%]" id="stack" data-zone="crowd2">
-      <div className="mx-auto flex w-full max-w-[1536px] flex-col items-center gap-[3vw] max-md:gap-[10vw]">
+    <section ref={rootRef} className="relative z-1 px-[4.5vw] py-[18vw] text-center max-lg:px-[6vw] max-lg:py-[14vw] max-md:px-[6vw] max-md:py-[12%]" id="stack" data-zone="crowd2">
+      <div className="mx-auto flex w-full max-w-[1536px] flex-col items-center gap-[3vw] max-lg:gap-[4vw] max-md:gap-[10vw]">
         <LineReveal as="h2" className="type-h1">
           What Do You <span className="gradient-text-animate gradient-text-single">Build With?</span>
         </LineReveal>
-        <p className="fadeup type-body-lg w-[45%] text-foreground/60 max-[1025px]:w-[77%] max-md:w-full">
+        <p className="fadeup type-body-lg w-[45%] text-foreground/60 max-lg:w-[77%] max-md:w-full">
           Pick your stack. Watch your corner of the crowd light up. We’ll use it to match you with the
           right channels, teardowns and people.
         </p>
-        <div className="flex w-[58%] flex-col items-center gap-[1.8vw] max-[1025px]:w-full max-md:gap-[10vw]">
-          <div data-chips className="flex flex-wrap justify-center gap-[0.7vw] max-md:gap-[2.5vw]" role="group" aria-label="Your stack">
+        <div className="flex w-[58%] flex-col items-center gap-[1.8vw] max-lg:w-full max-lg:gap-[3vw] max-md:gap-[10vw]">
+          <div data-chips className="flex flex-wrap justify-center gap-[0.7vw] max-lg:gap-[1.5vw] max-md:gap-[2.5vw]" role="group" aria-label="Your stack">
             {STACKS.map((name, i) => (
               <button
                 key={name}

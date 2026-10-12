@@ -72,7 +72,7 @@ function Cell({ value, period, dir, plus }) {
   const v = value !== null && typeof value === "object" ? value[period] : value;
   // Long text wraps to two lines on mobile, so its box is two lines tall
   const long = typeof v === "string" && v.length > 22;
-  return typeof v === "boolean" ? <Mark on={v} /> : <RollText fixed text={v} dir={dir} className={`w-full text-center ${plus ? "text-foreground" : "text-background/60"} ${TEXT} ${long ? "max-md:h-[3.3em]!" : ""}`} />;
+  return typeof v === "boolean" ? <Mark on={v} /> : <RollText fixed text={v} dir={dir} className={`w-full text-center ${plus ? "text-foreground" : "text-background/60"} ${TEXT} ${long ? "max-lg:h-[3.3em]!" : ""}`} />;
 }
 
 export default function PricingProCompare({ currency: initialCurrency }) {
@@ -154,11 +154,11 @@ export default function PricingProCompare({ currency: initialCurrency }) {
               {[["pro", "Pro"], ["plus", "Pro+"]].map(([id, name]) => (
                 <div key={id} role="columnheader" className={`${CELL} flex-col justify-start gap-[0.6vw] border-b py-[2.2vw] max-md:gap-[2vw] max-md:py-[6vw] ${id === "plus" ? PLUS : "border-background/10"}`}>
                   <p className="type-h3 font-avenir">{id === "plus" ? <>Pro<span className="text-primary">+</span></> : name}</p>
-                  <div className={`flex items-center justify-center max-md:flex-wrap ${id === "plus" ? "text-foreground" : "text-background/60"} ${LABEL}`}>
-                    <span className="flex h-[1.2vw] items-center leading-none max-md:h-[4vw]">{CURRENCY_SYMBOLS[currency]}<RollNumber value={prices[id][period]} values={[prices[id].q, prices[id].y]} /></span>
+                  <div className={`flex items-center justify-center max-lg:flex-wrap ${id === "plus" ? "text-foreground" : "text-background/60"} ${LABEL}`}>
+                    <span className="flex h-[1.2vw] items-center leading-none max-lg:h-[2.4vw] max-md:h-[4vw]">{CURRENCY_SYMBOLS[currency]}<RollNumber value={prices[id][period]} values={[prices[id].q, prices[id].y]} /></span>
                     <span>/mo</span>
-                    <span className="max-md:hidden">&nbsp;·&nbsp;</span>
-                    <RollText fixed text={periodInfo.billed} dir={dir} className="h-[1.2vw] w-[10vw] leading-[1.2vw] max-md:h-[4vw] max-md:w-full max-md:leading-[4vw]" />
+                    <span className="max-lg:hidden">&nbsp;·&nbsp;</span>
+                    <RollText fixed text={periodInfo.billed} dir={dir} className="h-[1.2vw] w-[10vw] leading-[1.2vw] max-lg:h-[2.4vw] max-lg:w-full max-lg:leading-[2.4vw] max-md:h-[4vw] max-md:w-full max-md:leading-[4vw]" />
                   </div>
                 </div>
               ))}
