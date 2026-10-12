@@ -15,8 +15,8 @@ const TEXT_IN_ZONE = "h1,h2,h3,h4,p,li,blockquote,figcaption,[data-cursor-text]"
 const LERP = 0.35;
 const RECT_H = 30; // px: the tag's height
 const PAD_X = 12; // px: label padding inside the tag
-const OFFSET_X = 14; // px: tag sits this far right of the pointer...
-const OFFSET_Y = 8; // px: ...and this far above it
+const OFFSET_X = 0; // px: tag sits this far right of the pointer...
+const OFFSET_Y = 4; // px: ...and this far above it
 
 const textRects = new WeakMap();
 const overText = (zone, x, y) => {
@@ -141,11 +141,11 @@ export default function SquareCursor() {
           between labels */}
       <span
         ref={boxRef}
-        className="absolute bottom-0 left-0 flex origin-bottom-left scale-50 items-center justify-center overflow-hidden bg-primary text-background opacity-0 transition-[width,scale,opacity] duration-500 ease-[cubic-bezier(.16,1,.3,1)] group-data-[mode=label]/cursor:scale-100 group-data-[mode=label]/cursor:opacity-100 group-data-pressed/cursor:group-data-[mode=label]/cursor:scale-95"
+        className="absolute bottom-0 left-0 flex origin-bottom-left scale-0 items-center justify-center overflow-hidden bg-primary text-background transition-[width,scale,opacity] duration-500 ease-[cubic-bezier(.16,1,.3,1)] group-data-[mode=label]/cursor:scale-100 group-data-pressed/cursor:group-data-[mode=label]/cursor:scale-95"
         style={{ height: RECT_H, transform: `translate(${OFFSET_X}px, ${-OFFSET_Y}px)` }}
       >
         {/* Hold charge: fills left to right over the same 0.2s + 1.9s as the holds */}
-        <span className="absolute inset-0 origin-left scale-x-0 bg-background/25 transition-transform duration-300 group-data-charging/cursor:scale-x-100 group-data-charging/cursor:delay-200 group-data-charging/cursor:duration-[1900ms] group-data-charging/cursor:ease-[cubic-bezier(.55,.085,.68,.53)]" />
+        <span className="absolute inset-0 origin-left scale-x-0 bg-background/25 transition-transform duration-300 group-data-charging/cursor:scale-x-100 group-data-charging/cursor:delay-200 group-data-charging/cursor:duration-1900 group-data-charging/cursor:ease-[cubic-bezier(.55,.085,.68,.53)]" />
         <span
           ref={labelRef}
           className="type-label relative whitespace-nowrap opacity-0 transition-opacity duration-200 group-data-[mode=label]/cursor:opacity-100 group-data-[mode=label]/cursor:delay-150"

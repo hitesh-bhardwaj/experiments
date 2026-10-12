@@ -226,31 +226,20 @@ export default function Navbar({
           >
             <HoverLink href="/pricing" text="Pricing" />
           </div>
-          {/* <div
+          <div
             className="flex"
             onPointerEnter={closeOnHover}
             onFocusCapture={closeOnHover}
           >
             <HoverLink href="/community" text="Community" />
-          </div> */}
-          {/* <div
+          </div>
+          <div
             className="flex"
             onPointerEnter={closeOnHover}
             onFocusCapture={closeOnHover}
           >
             <HoverLink href="/blog" text="Blog" />
-          </div> */}
-          {/* <div
-            className="flex"
-            onPointerEnter={closeOnHover}
-            onFocusCapture={closeOnHover}
-          >
-            <HoverLink
-              href="https://github.com/hyperiux"
-              target_blank
-              text="Github"
-            />
-          </div> */}
+          </div>
         </div>
         <div
           className={`flex items-center gap-2 transition-opacity duration-500 delay-200 ease-out motion-reduce:transition-none ${introReady ? "opacity-100" : "opacity-0"}`}

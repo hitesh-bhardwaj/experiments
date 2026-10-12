@@ -269,7 +269,7 @@ const Hero = () => {
                 </div>
                 <div ref={imgRevealRef} className='absolute bottom-[-64%] left-1/2 translate-x-[-49.5%] size-[180%] max-[1025px]:w-full max-[1025px]:translate-x-[-40%] max-md:w-[160%] max-md:top-auto max-md:bottom-[-30%] max-md:h-auto max-md:translate-x-[-40%] hero-av-img hero-mask-reveal opacity-0'>
                     <div ref={heroAvImgRef} className='w-full h-full'>
-                        <Image src={elenavossHeroImg} alt='hero-img' className='w-full h-full object-contain select-none pointer-events-none' draggable={false} loading="eager" fetchPriority="high" sizes="(max-width: 768px) 100vw, 1280px" quality={78} />
+                        <Image src={elenavossHeroImg} alt='hero-img' className='w-full h-full object-contain select-none pointer-events-none' draggable={false} loading="eager" fetchPriority="high" sizes="(max-width: 768px) 100vw, 1280px" quality={75} />
                     </div>
                 </div>
 

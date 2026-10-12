@@ -150,15 +150,15 @@ function FooterBlockLink({ href, children }) {
       data-sweep-link
       className="group relative isolate block overflow-hidden"
     >
-      {/* Orange block behind the label: snaps on, fades out over 200ms. The
-          label slides in instantly and eases back over the same 200ms.
+      {/* Orange block behind the label: snaps on, fades out over 300ms. The
+          label slides in instantly and eases back over the same 300ms.
           data-swept (useSweepHover) applies the same state for links a fast
           cursor skips over. */}
       <span
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 -z-10 bg-primary opacity-0 transition-opacity duration-200 ease-out group-hover:opacity-100 group-hover:duration-0 group-data-swept:opacity-100 group-data-swept:duration-0 motion-reduce:transition-none"
+        className="pointer-events-none absolute inset-0 -z-10 bg-primary opacity-0 transition-opacity duration-300 ease-out group-hover:opacity-100 group-hover:duration-0 group-data-swept:opacity-100 group-data-swept:duration-0 motion-reduce:transition-none"
       />
-      <span className="block py-[calc(var(--cvw)*0.15)] max-md:py-1.5 max-md:px-2 type-body text-foreground transition-transform duration-200 ease-out group-hover:translate-x-5 group-hover:duration-0 group-data-swept:translate-x-5 group-data-swept:duration-0 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0 motion-reduce:group-data-swept:translate-x-0">
+      <span className="block py-[calc(var(--cvw)*0.15)] max-md:py-1.5 max-md:px-2 type-body text-foreground transition-transform duration-300 ease-out group-hover:translate-x-5 group-hover:duration-0 group-data-swept:translate-x-5 group-data-swept:duration-0 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0 motion-reduce:group-data-swept:translate-x-0">
         {children}
       </span>
     </Link>
@@ -248,7 +248,7 @@ export default function Footer() {
         aria-hidden="true"
         className="pointer-events-none absolute top-[-12vh] left-[3%] z-0 block h-[calc(100%+12vh)] w-full"
       />
-      <div className={`mx-auto max-w-[1536px] w-full max-md:space-y-[calc(var(--cvw)*6)] max-sm:space-y-[calc(var(--cvw)*8)] h-fit relative z-3`}>
+      <div className={`mx-auto max-w-384 w-full max-md:space-y-[calc(var(--cvw)*6)] max-sm:space-y-[calc(var(--cvw)*8)] h-fit relative z-3`}>
         <LineReveal
           as="h2"
           className="text-[calc(var(--cvw)*3.6)] leading-[1.1] max-lg:text-[5vw] max-md:text-[8vw] pointer-events-auto font-aeonik w-[60%] max-md:w-full max-sm:px-0!"
@@ -269,7 +269,7 @@ export default function Footer() {
             href="/sign-up"
             variant="orange"
           />
-          <p className="shimmer-text w-full  flex items-center gap-[calc(var(--cvw)*0.5)] text-[#939393] leading-none max-md:gap-2 absolute max-sm:bottom-[calc(var(--cvw)*-12)] max-md:bottom-[calc(var(--cvw)*-5)] bottom-[calc(var(--cvw)*-.8)] left-1/2 -translate-x-1/2">
+          <p className="shimmer-text w-full  flex items-center gap-[calc(var(--cvw)*0.5)] text-[#939393] leading-none max-md:gap-2 absolute max-sm:bottom-[calc(var(--cvw)*-12)] max-md:bottom-[calc(var(--cvw)*-5)] bottom-[calc(var(--cvw)*-0.8)] left-1/2 -translate-x-1/2">
             <span className="inline-block size-[calc(var(--cvw)*0.9)] shrink-0 text-[#d2d2d2] max-md:size-3">
               <UnlockIcon className="h-full w-full" />
             </span>
@@ -286,13 +286,13 @@ export default function Footer() {
       {/* Pinned to the footer's bottom edge but inside the same 1536px container
           (and side padding) as the rest of the footer, so it lines up on wide screens */}
       <div className="absolute inset-x-0 bottom-[calc(var(--cvw)*2)] z-4 px-[calc(var(--cvw)*4.5)] max-md:bottom-[calc(var(--cvw)*4)] max-md:px-[calc(var(--cvw)*5)] max-sm:bottom-[calc(var(--cvw)*10)] max-sm:px-[calc(var(--cvw)*7)]">
-        <p className="mx-auto w-full max-w-[1536px] type-small text-light-grey max-md:text-center">
+        <p className="mx-auto w-full max-w-384 type-small text-light-grey max-md:text-center">
           © 2026 Hyperiux. All Rights Reserved.
           {/* <EggHint className="ml-2" /> */}
         </p>
       </div>
       {/* ── Footer links grid ── */}
-      <div className="relative z-3 mx-auto mt-[calc(var(--cvw)*10)] w-full max-w-[1536px] max-md:mt-[calc(var(--cvw)*14)] max-sm:mt-[calc(var(--cvw)*25)]">
+      <div className="relative z-3 mx-auto mt-[calc(var(--cvw)*10)] w-full max-w-384 max-md:mt-[calc(var(--cvw)*14)] max-sm:mt-[calc(var(--cvw)*25)]">
         {/* Platform label */}
         <div className="flex items-center gap-[calc(var(--cvw)*1)] max-md:gap-2 pb-[calc(var(--cvw)*1)] max-md:pb-[calc(var(--cvw)*3)]">
           <span className="size-[calc(var(--cvw)*0.45)] max-md:size-2 bg-[#ff5f00]" />

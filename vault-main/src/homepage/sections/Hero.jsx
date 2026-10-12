@@ -185,14 +185,14 @@ export default function Hero() {
 
     return (
         <main ref={rootRef} id="hero-v3" className="relative w-full overflow-x-clip">
-            <div ref={canvasRef} className="pointer-events-auto sticky top-0 -mb-[100dvh] h-dvh w-full">
+            <div ref={canvasRef} className="pointer-events-auto sticky top-0 mb-[-100dvh] h-dvh w-full">
                 {skipGPU ? (
                     BACKGROUND_FALLBACK
                 ) : (
                     <HeroRibbons play={playIntro && loaderComplete} />
                 )}
             </div>
-            <div className="pointer-events-none relative z-10 mx-auto flex min-h-dvh w-full max-w-[1536px] flex-col justify-end px-[calc(var(--cvw)*4.5)] max-md: pt-[calc(var(--cvw)*8)] max-md:px-[calc(var(--cvw)*7)]! pb-[calc(var(--cvw)*5)]  max-md:pt-32 max-md:pb-10 max-sm:px-5">
+            <div className="pointer-events-none relative z-10 mx-auto flex min-h-dvh w-full max-w-384 flex-col justify-end px-[calc(var(--cvw)*4.5)] max-md: pt-[calc(var(--cvw)*8)] max-md:px-[calc(var(--cvw)*7)]! pb-[calc(var(--cvw)*5)]  max-md:pt-32 max-md:pb-10 max-sm:px-5">
                 <div className="flex items-end justify-between gap-[calc(var(--cvw)*3)] max-md:flex-col max-md:items-stretch max-md:gap-5">
                    
                     <h1 ref={headingRef} className="relative min-w-0 flex-[1.5] type-display leading-[1.15] max-w-[calc(var(--cvw)*53)] max-md:max-w-full text-white">
