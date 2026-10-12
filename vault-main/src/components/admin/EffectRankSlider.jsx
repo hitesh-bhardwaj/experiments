@@ -73,7 +73,7 @@ function RankCard({ effect, valueLabel, renderValue }) {
       // phone screen, throwing card-to-container alignment off in a way
       // that's only visible once that padding is a meaningful fraction of
       // the screen, i.e. on phones, not desktop/tablet's fixed px-14).
-      className="group block w-[26vw] max-xl:w-[38vw] max-md:w-full shrink-0 snap-start"
+      className="group block w-[26vw] max-lg:w-[38vw] max-md:w-full shrink-0 snap-start"
       onMouseEnter={() => setActive(true)}
       onMouseLeave={() => setActive(false)}
     >

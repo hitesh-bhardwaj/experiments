@@ -287,7 +287,7 @@ export default function FAQ({ faqItems, translateTop = true, inline = false, bgC
       </LineReveal>
 
 
-      <div className={`mx-auto max-w-[1536px] max-md:w-full ${inline ? "" : "px-[calc(var(--cvw)*5)] max-md:px-0"}`} ref={container}>
+      <div className={`mx-auto max-w-[1536px] max-md:w-full ${inline ? "" : "px-[calc(var(--cvw)*5)] max-lg:px-0"}`} ref={container}>
         {visibleItems.map((item, index) => (
           <FAQRow
             key={item.id}

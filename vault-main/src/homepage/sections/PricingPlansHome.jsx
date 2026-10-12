@@ -201,7 +201,7 @@ export default function PricingPlansHome({ currency: initialCurrency, checkout =
     return (
         <section ref={rootRef} id="pricing" data-sound-flow="off" data-sound-hover="off" className="relative bg-white px-[calc(var(--cvw)*4.5)] space-y-[3vw] py-[7%] max-md:py-[12%] font-avenir text-[#1D1D1D] max-md:px-[calc(var(--cvw)*7)]">
             <div className="mx-auto flex w-full max-w-[1536px] flex-wrap items-end justify-between gap-[calc(var(--cvw)*2)] max-md:gap-[calc(var(--cvw)*10)]">
-                <LineReveal as="h2" className="type-h1 leading-[1.2]! w-[40%] max-xl:w-[80%] max-md:w-full">
+                <LineReveal as="h2" className="type-h1 leading-[1.2]! w-[40%] max-lg:w-[80%] max-md:w-full">
                     Two plans. <span className="gradient-text-animate">Every Moment Covered.</span>
                 </LineReveal>
 
@@ -234,7 +234,7 @@ export default function PricingPlansHome({ currency: initialCurrency, checkout =
                 </div>
             </div>
 
-            <div className={`mx-auto grid w-full max-w-[1536px] px-10 max-md:px-0 grid-cols-2 gap-[calc(var(--cvw)*1)] pt-[calc(var(--cvw)*3)]  max-md:grid-cols-1 max-md:gap-[calc(var(--cvw)*4)] max-md:pt-[calc(var(--cvw)*8)]`}>
+            <div className={`mx-auto grid w-full max-w-[1536px] px-10 max-lg:px-0 grid-cols-2 gap-[calc(var(--cvw)*1)] pt-[calc(var(--cvw)*3)]  max-md:grid-cols-1 max-md:gap-[calc(var(--cvw)*4)] max-md:pt-[calc(var(--cvw)*8)]`}>
                 {plans.map((plan, planIndex) => {
                     const dark = plan.id === "plus";
                     return (
@@ -307,7 +307,7 @@ export default function PricingPlansHome({ currency: initialCurrency, checkout =
                 })}
             </div>
 
-            <ul className="mx-auto mt-[calc(var(--cvw)*2)] flex w-full max-w-[1536px] flex-wrap justify-center max-md:justify-start max-md:gap-[2.5vw] max-md:mt-[5vh] gap-x-[calc(var(--cvw)*2)] gap-y-[calc(var(--cvw)*0.8)] type-label text-[#6B6B6B]">
+            <ul className="mx-auto mt-[calc(var(--cvw)*2)] flex w-full max-w-[1536px] flex-wrap max-lg:flex-col justify-center max-lg:justify-start max-lg:gap-[2.5vw] max-lg:mt-[4vw] max-md:mt-[5vh] gap-x-[calc(var(--cvw)*2)] gap-y-[calc(var(--cvw)*0.8)] type-label text-[#6B6B6B]">
                 {ASSURANCES.map((a) => (
                     <li key={a} className="flex items-center  gap-2"><Tick />{a}</li>
                 ))}
