@@ -11,6 +11,7 @@ import { createPageMetadata } from "@/lib/seo-metadata";
 import { WebpageJsonLd } from "@/lib/json-ld";
 import BlogHero from "./BlogHero";
 import FeaturedBlog from "./FeaturedBlog";
+import SectionOverlay from "@/components/Animations/SectionOverlay";
 
 // Below-the-fold sections load as separate chunks (still server-rendered)
 const Footer = dynamic(() => import("@/homepage/sections/Footer"));
@@ -51,8 +52,9 @@ export default async function BlogIndexPage({ searchParams }) {
       <Navbar effects={effects} />
       <LenisSmoothScroll />
       <BlogHero />
-      {/* One white sheet below the hero (as on the blog detail page): featured post, filters, grid */}
-      <main data-sound-hover="off" data-sound-flow="off" className="relative z-20 flex flex-col bg-foreground text-ink">
+     
+      <SectionOverlay className="relative z-201">
+      <main data-sound-hover="off" data-sound-flow="off" className="relative flex flex-col bg-foreground text-ink">
         <FeaturedBlog featuredPost={featuredPost} />
         <BlogListing
           posts={gridPosts}
@@ -63,6 +65,7 @@ export default async function BlogIndexPage({ searchParams }) {
           pageCount={pageCount}
         />
       </main>
+      </SectionOverlay>
       <Footer />
     </>
   );

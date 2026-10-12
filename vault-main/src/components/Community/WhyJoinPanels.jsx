@@ -188,11 +188,13 @@ export function TeardownCard() {
         />
         <span className={`${LABEL} min-w-[3.8vw] text-right text-foreground/60 tabular-nums max-md:min-w-[14vw]`}>{(progress * TD_DURATION).toFixed(2)}s</span>
       </div>
-      <pre className="relative m-0 overflow-hidden border-t border-foreground/5 px-[1.4vw] py-[0.9vw] font-mono text-[0.8vw] leading-[1.8] whitespace-pre text-foreground/40 max-md:px-[3.6vw] max-md:py-[3vw] max-md:text-[2.7vw]" aria-hidden="true">
+      <pre className="relative m-0 overflow-hidden border-t border-foreground/5 px-[1.4vw] py-[0.9vw] font-mono text-[0.8vw] leading-[1.8] whitespace-pre text-foreground/40 max-md:px-[3.6vw] max-md:py-[3vw] max-md:text-[2.7vw] max-md:leading-[1.6] max-md:whitespace-pre-wrap" aria-hidden="true">
         {TD_LINES.map((parts, i) => (
-          <span key={i} className={i === Math.min(TD_LINES.length - 1, phase) ? "bg-primary/15 text-foreground shadow-[-1.4vw_0_0_color-mix(in_srgb,var(--primary)_15%,transparent),1.4vw_0_0_color-mix(in_srgb,var(--primary)_15%,transparent)]" : ""}>
+          // Mobile: each line is its own block and wraps, continuing under the call (hanging indent);
+          // it spans the block's padding so the highlight still runs edge to edge
+          <span key={i} className={`max-md:-mx-[3.6vw] max-md:block max-md:pr-[3.6vw] max-md:pl-[calc(3.6vw+4ch)] max-md:-indent-[4ch] ${i === Math.min(TD_LINES.length - 1, phase) ? "bg-primary/15 text-foreground shadow-[-1.4vw_0_0_color-mix(in_srgb,var(--primary)_15%,transparent),1.4vw_0_0_color-mix(in_srgb,var(--primary)_15%,transparent)] max-md:shadow-none" : ""}`}>
             {parts.map((part, j) => (Array.isArray(part) ? <span key={j} className="text-[#FFB27A]">{part[1]}</span> : part))}
-            {i < TD_LINES.length - 1 ? "\n" : ""}
+            {i < TD_LINES.length - 1 && <span className="max-md:hidden">{"\n"}</span>}
           </span>
         ))}
       </pre>
@@ -301,7 +303,7 @@ export function VoteCard() {
                 type="button"
                 aria-pressed={on}
                 onClick={() => toggle(i)}
-                className={`${LABEL} h-[2.4vw] w-[6.6vw] shrink-0 px-[1vw] ring-1 ring-inset transition-[background-color,color,box-shadow] duration-600 ease-[cubic-bezier(.16,1,.3,1)] max-md:h-[9vw] max-md:w-[24vw] max-md:px-[3.5vw] ${on ? "bg-primary text-background ring-primary" : "text-foreground/80 ring-foreground/15 hover:ring-primary/60"}`}
+                className={`${LABEL} h-[2.4vw] w-[7.8vw] shrink-0 px-[1vw] ring-1 ring-inset transition-[background-color,color,box-shadow] duration-600 ease-[cubic-bezier(.16,1,.3,1)] max-md:h-[9vw] max-md:w-[28vw] max-md:px-[3.5vw] ${on ? "bg-primary text-background ring-primary" : "text-foreground/80 ring-foreground/15 hover:ring-primary/60"}`}
               >
                 <VoteLabel on={on} />
               </button>
