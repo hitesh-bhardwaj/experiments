@@ -1,6 +1,7 @@
 export function getBillingLabel(interval) {
   const labels = {
     monthly: "Monthly",
+    quarterly: "Quarterly",
     yearly: "Yearly",
   };
 
@@ -29,6 +30,7 @@ export function formatAmount(amountInSmallestUnit, currency) {
 export function createSubscriptionInvoiceEmail({
   name = "there",
   billingInterval,
+  planLabel,
   amount,
   currency,
   paymentId,
@@ -36,7 +38,7 @@ export function createSubscriptionInvoiceEmail({
   invoiceUrl,
   isFirstPayment,
 }) {
-  const planName = `${getBillingLabel(billingInterval)} Pro`;
+  const planName = planLabel || `${getBillingLabel(billingInterval)} Pro`;
   const amountLabel = formatAmount(amount, currency);
   const renewsLabel = formatEmailDate(periodEnd);
   const heading = isFirstPayment

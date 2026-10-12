@@ -434,7 +434,6 @@ export function TemplateDetail({ template, templateAccess = { allowed: false, re
         }}
         onPurchased={onPurchased}
         autoOpenCheckout={autoOpenCheckout}
-        templateAccess={templateAccess}
       />
 
       <ToastViewport toast={toast} onDismiss={dismissToast} />

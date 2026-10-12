@@ -18,6 +18,7 @@ function makeSupabaseMock() {
 
 let supabaseMock;
 let userPlan;
+let userTier;
 let adminUser;
 
 vi.mock("@/lib/supabase", () => ({
@@ -26,7 +27,10 @@ vi.mock("@/lib/supabase", () => ({
   },
 }));
 vi.mock("@/lib/subscription", () => ({
-  getUserPlan: vi.fn(async () => userPlan),
+  getUserPlanInfo: vi.fn(async () => ({
+    plan: userPlan,
+    tier: userPlan === "pro" ? userTier ?? "pro" : "free",
+  })),
 }));
 vi.mock("@/lib/admin", () => ({
   isAdminUser: vi.fn((user) => Boolean(adminUser) && user === adminUser),
@@ -72,6 +76,7 @@ describe("getInstallLimitDecision", () => {
     insertedEvents = [];
     cliTokenResolution = null;
     userPlan = "free";
+    userTier = undefined;
     adminUser = null;
     rpcImpl = (args) => ({ data: fakeClaimSlot(store)(args), error: null });
     supabaseMock = makeSupabaseMock();
@@ -164,12 +169,39 @@ describe("getInstallLimitDecision", () => {
     });
   });
 
-  it("pro users get the pro limit (10) and plan: 'pro' on both the result and the logged event", async () => {
+  it("Pro users get 5 a day, plan: 'pro' and tier: 'pro'", async () => {
     userPlan = "pro";
+    userTier = "pro";
     const result = await getInstallLimitDecision({ effectSlug: "a", source: "web", clerkUserId: "user_1" });
-    expect(result.limit).toBe(LIMITS.pro);
+    expect(LIMITS.pro).toBe(5);
+    expect(result.limit).toBe(5);
     expect(result.plan).toBe("pro");
+    expect(result.tier).toBe("pro");
     expect(insertedEvents.at(-1).plan).toBe("pro");
+  });
+
+  it("Pro+ users get 10 a day and are logged as pro_plus", async () => {
+    userPlan = "pro";
+    userTier = "pro_plus";
+    const result = await getInstallLimitDecision({ effectSlug: "a", source: "web", clerkUserId: "user_1" });
+    expect(LIMITS.pro_plus).toBe(10);
+    expect(result.limit).toBe(10);
+    expect(result.plan).toBe("pro");
+    expect(result.tier).toBe("pro_plus");
+    expect(insertedEvents.at(-1).plan).toBe("pro_plus");
+  });
+
+  it("a Pro user is denied the 6th unique effect of the day when enforced", async () => {
+    process.env.INSTALL_LIMIT_ENFORCE = "true";
+    userPlan = "pro";
+    userTier = "pro";
+    for (const slug of ["a", "b", "c", "d", "e"]) {
+      const ok = await getInstallLimitDecision({ effectSlug: slug, source: slug === "c" ? "cli" : "web", clerkUserId: "user_1" });
+      expect(ok.allowed).toBe(true);
+    }
+    const sixth = await getInstallLimitDecision({ effectSlug: "f", source: "web", clerkUserId: "user_1" });
+    expect(sixth.allowed).toBe(false);
+    expect(sixth.reason).toBe("limit-reached");
   });
 
   describe("CLI token identity", () => {

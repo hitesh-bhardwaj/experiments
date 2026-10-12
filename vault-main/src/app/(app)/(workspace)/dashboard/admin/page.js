@@ -61,7 +61,7 @@ function displayName(user) {
   return "Unnamed user";
 }
 
-function PlanBadge({ plan }) {
+function PlanBadge({ plan, tier }) {
   return (
     <span
       className={`inline-flex items-center  px-3 py-1 text-xs font-medium ${
@@ -70,7 +70,7 @@ function PlanBadge({ plan }) {
           : "bg-white/8 text-white/60"
       }`}
     >
-      {plan === "pro" ? "Pro" : "Free"}
+      {plan === "pro" ? (tier === "pro" ? "Pro" : "Pro+") : "Free"}
     </span>
   );
 }
@@ -507,7 +507,12 @@ function InviteModal({ onClose }) {
 }
 
 const ROLE_LABELS = { "": "No access", admin: "Admin", super_admin: "Super Admin" };
-const BILLING_LABELS = { monthly: "1 month", yearly: "1 year" };
+const BILLING_LABELS = { monthly: "1 month", quarterly: "3 months", yearly: "1 year" };
+const LEVEL_LABELS = { free: "Free", pro: "Pro", pro_plus: "Pro+" };
+
+// "free" | "pro" | "pro_plus" - the one choice the modal offers; it maps to
+// plan + tier on save (Pro+ is plan "pro", tier "pro_plus")
+const levelOf = (user) => (user.plan === "pro" ? user.tier || "pro_plus" : "free");
 
 function ModalShell({ onClose, children, maxWidth = "max-w-lg" }) {
   return (
@@ -550,7 +555,9 @@ function ModalShell({ onClose, children, maxWidth = "max-w-lg" }) {
 // explicit confirmation step naming exactly what's about to change (no
 // action here fires straight off a click any more).
 function ManageUserModal({ user, isOwnRow, onClose, onSaved }) {
-  const [nextPlan, setNextPlan] = useState(user.plan === "pro" ? "pro" : "free");
+  const currentLevel = levelOf(user);
+  const [nextLevel, setNextLevel] = useState(currentLevel);
+  const nextPlan = nextLevel === "free" ? "free" : "pro";
   // Monthly is the default billing interval when granting/changing Pro,
   // regardless of what the user's own current interval happens to be -
   // yearly is an explicit opt-in, not the fallback.
@@ -563,7 +570,7 @@ function ManageUserModal({ user, isOwnRow, onClose, onSaved }) {
   const [error, setError] = useState(null);
 
   const planChanged =
-    nextPlan !== (user.plan === "pro" ? "pro" : "free") ||
+    nextLevel !== currentLevel ||
     (nextPlan === "pro" && nextInterval !== (user.billingInterval || "monthly"));
   const roleChanged = nextRole !== (user.role || "");
   const hasChanges = planChanged || roleChanged;
@@ -575,8 +582,8 @@ function ManageUserModal({ user, isOwnRow, onClose, onSaved }) {
         text: "Downgrade to Free - this immediately revokes Pro access and any active CLI token.",
         danger: true,
       });
-    } else if (user.plan !== "pro") {
-      changeSummaries.push({ text: `Upgrade to Pro, billed ${BILLING_LABELS[nextInterval]}.` });
+    } else if (nextLevel !== currentLevel) {
+      changeSummaries.push({ text: `Set plan to ${LEVEL_LABELS[nextLevel]}, for ${BILLING_LABELS[nextInterval]}.` });
     } else {
       changeSummaries.push({ text: `Change billing interval to ${BILLING_LABELS[nextInterval]}.` });
     }
@@ -608,12 +615,14 @@ function ManageUserModal({ user, isOwnRow, onClose, onSaved }) {
           body: JSON.stringify({
             clerkUserId: user.id,
             plan: nextPlan,
+            tier: nextPlan === "pro" ? nextLevel : null,
             billingInterval: nextPlan === "pro" ? nextInterval : null,
           }),
         });
         const json = await res.json();
         if (!res.ok) throw new Error(json.error || "Plan update failed");
         patch.plan = nextPlan;
+        patch.tier = json.tier;
         patch.status = json.status;
         patch.billingInterval = json.billingInterval;
         patch.planValidUntil = json.currentPeriodEnd;
@@ -671,17 +680,18 @@ function ManageUserModal({ user, isOwnRow, onClose, onSaved }) {
               Currently{" "}
               <span className="text-white">
                 {user.plan === "pro"
-                  ? `Pro, billed ${BILLING_LABELS[user.billingInterval || "monthly"]}`
+                  ? `${LEVEL_LABELS[currentLevel]}, billed ${BILLING_LABELS[user.billingInterval || "monthly"]}`
                   : "Free"}
               </span>
             </p>
             <div className="flex flex-wrap items-center gap-2">
               <CustomSelect
-                value={nextPlan}
-                onChange={setNextPlan}
+                value={nextLevel}
+                onChange={setNextLevel}
                 options={[
                   { value: "free", label: "Free" },
                   { value: "pro", label: "Pro" },
+                  { value: "pro_plus", label: "Pro+" },
                 ]}
               />
               {nextPlan === "pro" && (
@@ -690,6 +700,7 @@ function ManageUserModal({ user, isOwnRow, onClose, onSaved }) {
                   onChange={setNextInterval}
                   options={[
                     { value: "monthly", label: "1 month" },
+                    { value: "quarterly", label: "3 months" },
                     { value: "yearly", label: "1 year" },
                   ]}
                 />
@@ -702,7 +713,7 @@ function ManageUserModal({ user, isOwnRow, onClose, onSaved }) {
             {nextPlan === "pro" && user.plan === "pro" && (
               <button
                 type="button"
-                onClick={() => setNextPlan("free")}
+                onClick={() => setNextLevel("free")}
                 className="mt-2 text-xs text-red-400 underline underline-offset-2 transition hover:text-red-300"
               >
                 Downgrade to Free
@@ -1128,7 +1139,7 @@ export default function AdminPage() {
                       {formatDate(user.joinedAt)}
                     </td>
                     <td className="px-3 py-2.5 flex justify-center">
-                      <PlanBadge plan={user.plan} />
+                      <PlanBadge plan={user.plan} tier={user.tier} />
                     </td>
                     <td className="px-3 py-2.5 text-center whitespace-nowrap">
                       <span className="text-blue-400">{user.copiesCount ?? 0}</span>

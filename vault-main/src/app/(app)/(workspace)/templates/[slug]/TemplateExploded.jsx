@@ -210,10 +210,8 @@ export default function TemplateExploded({
       const e = clamp(explodeRef.current ?? 0, 0, 1);
       const st = stage.getBoundingClientRect();
 
-      // zoom-in amount of the selected section (0 exploded view .. 1 zoomed)
+      // a section is selected: it zooms up straight and centred (scroll is held meanwhile)
       const zoomed = state.sel >= 0 && state.sel < n;
-      state.zoomIn = (state.zoomIn ?? 0) + ((zoomed ? 1 : 0) - (state.zoomIn ?? 0)) * Math.min(1, dt * 5);
-      const zi = state.zoomIn;
 
       // turn (straightened while a section is zoomed; the view angle comes back after)
       const k = Math.min(1, dt * 5);
@@ -334,8 +332,8 @@ export default function TemplateExploded({
           V.set(x + s.w / 2, y, z).applyMatrix4(G.matrixWorld).project(cam);
           const onScreen = Math.abs(V.y) < 0.92 && V.x < 0.98;
           label.style.transform = `translate(${((V.x + 1) / 2) * st.width + 8}px, ${((1 - V.y) / 2) * st.height - 12}px)`;
-          // Always named (assembled too); hidden only while a section is zoomed.
-          label.style.opacity = onScreen ? (1 - zi) * dim : 0;
+          // Always named (assembled too); simply hidden while a section is selected.
+          label.style.opacity = onScreen && !zoomed ? "1" : "0";
           label.dataset.on = i === state.sel ? "true" : "false";
         }
       });
@@ -464,15 +462,6 @@ export default function TemplateExploded({
   };
   useEffect(() => () => resetTween.current?.kill(), []);
 
-  // Selection lives in the scene's state (read every frame); this mirrors it for the panel.
-  const select = (i) => {
-    const state = sceneRef.current;
-    if (state) {
-      state.sel = i;
-    }
-    setSelected(i);
-  };
-
   const n = sections.length;
   const current = sections[Math.min(panelIndex, n - 1)];
 
@@ -497,7 +486,7 @@ export default function TemplateExploded({
               ref={(el) => {
                 labelRefs.current[i] = el;
               }}
-              className="group/xl absolute top-0 left-0 flex items-center gap-2.5 whitespace-nowrap opacity-0 transition-opacity duration-500"
+              className="group/xl absolute top-0 left-0 flex items-center gap-2.5 whitespace-nowrap opacity-0"
             >
               <i className="block h-px w-10 bg-primary" />
               <span className={`${T13} bg-background/70 px-3 py-2 text-foreground ring-1 ring-inset ring-foreground/10 group-data-[on=true]/xl:bg-primary group-data-[on=true]/xl:text-background`}>
@@ -528,17 +517,6 @@ export default function TemplateExploded({
             >
               <h3 className="type-h3">{current.name}</h3>
               {current.note && <p className={`${T14} text-foreground/70 max-md:line-clamp-2`}>{current.note}</p>}
-              <div className="flex flex-wrap gap-1.5 pt-1">
-                {selected >= 0 && (
-                  <button
-                    type="button"
-                    onClick={() => select(-1)}
-                    className={`inline-flex h-7.5 cursor-pointer items-center px-3 ${T13} text-foreground/50 transition-colors duration-500 hover:text-foreground`}
-                  >
-                    Deselect
-                  </button>
-                )}
-              </div>
             </motion.div>
           </aside>
         )}
@@ -580,7 +558,7 @@ export default function TemplateExploded({
         <p className={`${LABEL} pointer-events-none absolute top-28 right-[4.5vw] text-right text-foreground/60 max-lg:hidden`}>
           Scroll to move down the page
           <br />
-          Drag to turn · click a layer
+          Drag to turn · click a layer for close-up
         </p>
       </div>
     </section>

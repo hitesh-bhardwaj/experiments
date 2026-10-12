@@ -1,4 +1,5 @@
 import { homepage, faviconPath } from './util';
+import { INTERVALS, PLANS, TIERS, getPrice } from "@/lib/plans";
 
 function JsonLdScript({ id, data }) {
   return (
@@ -90,27 +91,15 @@ export function SoftwareApplicationJsonLd() {
       "Documentation and usage examples",
     ],
     offers: [
-      {
-        "@type": "Offer",
-        name: "Hyperiux Vault Monthly",
-        price: "$20",
-        priceCurrency: "$",
-        url: `${homepage}/pricing`,
-      },
-      // {
-      //   "@type": "Offer",
-      //   name: "Hyperiux Vault Quarterly",
-      //   price: "$50",
-      //   priceCurrency: "$",
-      //   url: `${homepage}/pricing`,
-      // },
-      {
-        "@type": "Offer",
-        name: "Hyperiux Vault Yearly",
-        price: "$179",
-        priceCurrency: "$",
-        url: `${homepage}/pricing`,
-      },
+      ...TIERS.flatMap((tier) =>
+        INTERVALS.map((interval) => ({
+          "@type": "Offer",
+          name: `Hyperiux Vault ${PLANS[tier].name} ${interval === "yearly" ? "Yearly" : "Quarterly"}`,
+          price: String(getPrice(tier, interval, "USD")),
+          priceCurrency: "USD",
+          url: `${homepage}/pricing`,
+        }))
+      ),
     ],
     ...(hasAggregateRating && {
       aggregateRating: {
@@ -167,7 +156,7 @@ export function LocalBusiness() {
       "https://www.instagram.com/_hyperiux_/",
       "https://x.com/_hyperiux_",
     ],
-    priceRange: "$20-$50",
+    priceRange: `$${getPrice("pro", "quarterly", "USD")}-$${getPrice("pro_plus", "yearly", "USD")}`,
     "openingHoursSpecification": [
       {
         "@type": "OpeningHoursSpecification",

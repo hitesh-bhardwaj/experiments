@@ -1,4 +1,5 @@
 import dynamic from "next/dynamic";
+import { headers } from "next/headers";
 import VaultShell from "@/Layouts/VaultShell";
 import { getSearchIndexEffects } from "@/lib/search-index";
 import PricingHero from "@/components/Pricing/pricing-hero/PricingHero";
@@ -19,13 +20,16 @@ const PricingPlansHome = dynamic(() => import("@/homepage/sections/PricingPlansH
 export const metadata = createPageMetadata({
   title: "Hyperiux Vault Pricing | Pro React Effects Library",
   description:
-    "Simple Vault pricing: start free with 30+ effects, or go Pro for the full 150+ effect library, WebGL scenes, and cursor effects from $20/month.",
+    "Simple Vault pricing: start free, go Pro for every component from $7.42/month, or Pro+ for every component and the full template catalogue with 10 installs a day.",
   path: "/pricing",
   image:
     "https://h1r7ltksnzlh2a5c.public.blob.vercel-storage.com/seo/pricing.jpg",
 });
 
 export default async function PricingPage() {
+  const headersList = await headers();
+  const isIndia = headersList.get("x-vercel-ip-country") === "IN";
+  const currency = isIndia ? "INR" : "USD";
   const effects = await getSearchIndexEffects();
 
   return (
@@ -38,15 +42,15 @@ export default async function PricingPage() {
           <PricingHero />
           {/* The homepage plans section, reused as is; #plans is the hero's "See the plans" target */}
           <div id="plans" className="home-type">
-            <PricingPlansHome />
-            <PricingFinder />
+            <PricingPlansHome currency={currency} checkout />
+            <PricingFinder currency={currency} />
           </div>
 
           {/* Above the footer (z-200), whose ribbons reach up behind the FAQ */}
           <SectionOverlay className="relative z-201">
             <div className="home-type">
               <PricingCredits />
-              <PricingProCompare />
+              <PricingProCompare currency={currency} />
             </div>
             <PricingUseCase useCases={USE_CASES} />
             <FAQ faqItems={faqItems} translateTop={false} />
@@ -87,9 +91,9 @@ const faqItems = [
   },
   {
     id: "faq3",
-    question: "Will pricing change after launch?",
+    question: "How much do Pro and Pro+ cost?",
     answer:
-      "Pro is $20/month or $179/year, with Indian pricing shown in INR (GST included at checkout) for visitors browsing from India.",
+      "Pro is $27 a quarter or $89 a year. Pro+ is $57 a quarter or $179 a year. Visitors from India see INR prices (Pro ₹1,497 a quarter or ₹4,999 a year, Pro+ ₹2,997 a quarter or ₹8,999 a year), with 18% GST added at checkout.",
   },
   {
     id: "faq4",
@@ -101,13 +105,25 @@ const faqItems = [
     id: "faq5",
     question: "How does billing work?",
     answer:
-      "Pro is billed automatically to the card on file - monthly at $20/month, or annually at $179/year. You'll get a receipt by email each time you're charged, and you can update or remove your payment method at any time.",
+      "Your plan is billed automatically to your saved payment method, every 3 months or once a year. You'll get a receipt by email each time you're charged, and you can update or remove your payment method at any time.",
   },
   {
     id: "faq6",
-    question: "Can I switch between monthly and annual?",
+    question: "Can I switch plans or billing period?",
     answer:
-      "Yes. Switch to annual at any time and the change applies at your next billing date. Switching from annual to monthly takes effect at the end of your current annual term.",
+      "Yes, at the end of your current billing period: let your plan run out, then pick the new one. Templates you've redeemed and code you've installed stay yours.",
+  },
+  {
+    id: "faq-installs",
+    question: "What counts as an install?",
+    answer:
+      "Each new component you copy from the site, add with the Hyperiux CLI or pull in through MCP counts once per day, whichever way you get it. Pro includes 5 a day and Pro+ 10 a day. Getting the same component again that day doesn't count twice.",
+  },
+  {
+    id: "faq-credits",
+    question: "How do template credits work?",
+    answer:
+      "Each credit unlocks one whole template, yours to keep even if you cancel. Pro gets 3 credits a year on yearly billing (quarterly Pro has none) for the selected catalogue. Pro+ gets 5 a year on yearly billing (1 every quarter on quarterly) for the full catalogue. Unused credits roll over while your plan is active.",
   },
   {
     id: "faq7",

@@ -75,7 +75,7 @@ export default function PricingHero() {
             </LineReveal>
             <div className="flex w-[70%] flex-col gap-[2vw] max-md:w-full max-md:gap-[8vw]">
               <SplitLine as="p" start="top 120%" className="type-body-lg w-full text-foreground/80">
-                Two plans, Pro and Pro+, billed monthly or yearly. Every component you
+                Two plans, Pro and Pro+, billed quarterly or yearly. Every component you
                 copy lands in your repo and stays yours, even if you cancel.
               </SplitLine>
               <div ref={ctaRef} className="flex w-fit gap-[1vw] opacity-0 max-md:w-full max-md:flex-col max-md:gap-[5vw]">

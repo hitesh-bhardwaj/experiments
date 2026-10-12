@@ -7,10 +7,11 @@ import { useUser } from "@clerk/nextjs";
 // Razorpay Standard Checkout button. Two modes:
 //   <RazorpayCheckoutButton amount={1} />                        one-time order (testing)
 //   <RazorpayCheckoutButton amount={29} templateSlug="elenavoss" />  one-time template purchase
-//   <RazorpayCheckoutButton plan="monthly" />                    subscription (monthly|yearly|founding)
+//   <RazorpayCheckoutButton tier="pro_plus" interval="yearly" currency="INR" />  subscription
 export default function RazorpayCheckoutButton({
   amount,
-  plan,
+  tier,
+  interval,
   templateSlug,
   currency = "USD",
   className = "",
@@ -30,15 +31,16 @@ export default function RazorpayCheckoutButton({
     setError(null);
 
     try {
-      const endpoint = plan
+      const isSubscription = Boolean(tier);
+      const endpoint = isSubscription
         ? "/api/razorpay/create-subscription"
         : "/api/razorpay/create-order";
       const res = await fetch(endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(
-          plan
-            ? { plan, currency, idempotencyKey: crypto.randomUUID() }
+          isSubscription
+            ? { tier, interval, currency, idempotencyKey: crypto.randomUUID() }
             : { amount, currency, templateSlug }
         ),
       });
@@ -52,7 +54,7 @@ export default function RazorpayCheckoutButton({
 
       const razorpay = new window.Razorpay({
         key: data.keyId,
-        ...(plan
+        ...(isSubscription
           ? { subscription_id: data.subscriptionId }
           : {
               order_id: data.orderId,
@@ -60,7 +62,9 @@ export default function RazorpayCheckoutButton({
               currency: data.currency,
             }),
         name: "Hyperiux Vault",
-        description: plan ? `Vault Pro (${plan})` : "Test payment",
+        description: isSubscription
+          ? `Vault ${tier === "pro_plus" ? "Pro+" : "Pro"} (${interval})`
+          : "Test payment",
         prefill: {
           name: user?.fullName || "",
           email: user?.primaryEmailAddress?.emailAddress || "",

@@ -44,6 +44,9 @@ export async function hasTemplatePurchase(clerkUserId, templateSlug) {
     .select("id")
     .eq("clerk_user_id", clerkUserId)
     .eq("template_slug", templateSlug)
+    // A template can be both bought and redeemed with a credit - any row
+    // means owned, and maybeSingle() would error on two.
+    .limit(1)
     .maybeSingle();
 
   if (error) {

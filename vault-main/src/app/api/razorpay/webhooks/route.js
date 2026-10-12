@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import crypto from "crypto";
 import { markUserProFromSubscription, markUserFree, sendInvoiceEmail, recordInvoice } from "@/lib/pro-access";
 import { releaseFoundingSlot } from "@/lib/founding-slots";
+import { grantCreditsForCharge } from "@/lib/template-credits";
 
 // Razorpay's server calls this - authenticated via X-Razorpay-Signature
 // (HMAC of the raw body with the webhook secret), never via Clerk.
@@ -72,6 +73,9 @@ export async function POST(req) {
       // one charge.
       if (event.event === "subscription.charged" && payment) {
         await recordInvoice({ clerkUserId, subscription, payment });
+        // Throws on a Supabase error so Razorpay retries the delivery -
+        // safe, since a payment ID only ever adds credits once.
+        await grantCreditsForCharge({ clerkUserId, subscription, payment });
         await sendInvoiceEmail({ clerkUserId, subscription, payment });
 
         // Referral/affiliate sale tracking is no longer done from here -

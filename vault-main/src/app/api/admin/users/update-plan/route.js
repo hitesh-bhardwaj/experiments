@@ -8,6 +8,9 @@ import {
   proUnlockedSubject,
   proUnlockedText,
 } from "@/lib/emails/pro-unlocked-email";
+import { getPlanLabel, isValidTier } from "@/lib/plans";
+
+const GRANT_INTERVALS = ["monthly", "quarterly", "yearly"];
 
 // Manually-granted pro (no real Razorpay subscription behind it) has no
 // webhook to ever expire it - it must carry its own period_end so
@@ -18,6 +21,8 @@ function computePeriodEnd(billingInterval) {
 
   if (billingInterval === "monthly") {
     end.setMonth(end.getMonth() + 1);
+  } else if (billingInterval === "quarterly") {
+    end.setMonth(end.getMonth() + 3);
   } else {
     end.setFullYear(end.getFullYear() + 1);
   }
@@ -25,21 +30,13 @@ function computePeriodEnd(billingInterval) {
   return end.toISOString();
 }
 
-// Matches the "Vault Pro Monthly" / "Vault Pro Annual" wording pro-access.js
-// uses for real Razorpay plan_ids - a manual grant has no plan_id to derive
-// this from, so it's built directly from the chosen interval instead.
-const PLAN_LABELS = {
-  monthly: "Vault Pro Monthly",
-  yearly: "Vault Pro Annual",
-};
-
 export async function POST(request) {
   if (!(await assertSuperAdmin())) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
   try {
-    const { clerkUserId, plan, billingInterval } = await request.json();
+    const { clerkUserId, plan, billingInterval, tier } = await request.json();
 
     if (!clerkUserId || !["free", "pro"].includes(plan)) {
       return NextResponse.json(
@@ -48,12 +45,21 @@ export async function POST(request) {
       );
     }
 
-    if (plan === "pro" && !["monthly", "yearly"].includes(billingInterval)) {
+    if (plan === "pro" && !GRANT_INTERVALS.includes(billingInterval)) {
       return NextResponse.json(
-        { error: "billingInterval (monthly|yearly) is required when granting pro." },
+        { error: "billingInterval (monthly|quarterly|yearly) is required when granting pro." },
         { status: 400 }
       );
     }
+
+    if (plan === "pro" && !isValidTier(tier)) {
+      return NextResponse.json(
+        { error: "tier (pro|pro_plus) is required when granting pro." },
+        { status: 400 }
+      );
+    }
+
+    const grantedTier = plan === "pro" ? tier : null;
 
     const newStatus = plan === "pro" ? "active" : "inactive";
     const currentPeriodEnd = plan === "pro" ? computePeriodEnd(billingInterval) : null;
@@ -77,6 +83,7 @@ export async function POST(request) {
         {
           clerk_user_id: clerkUserId,
           plan,
+          tier: grantedTier,
           status: newStatus,
           billing_interval: plan === "pro" ? billingInterval : null,
           current_period_end: currentPeriodEnd,
@@ -98,6 +105,7 @@ export async function POST(request) {
       publicMetadata: {
         plan,
         proAccess: plan === "pro",
+        tier: grantedTier,
         billingInterval: plan === "pro" ? billingInterval : null,
         currentPeriodEnd,
       },
@@ -112,7 +120,7 @@ export async function POST(request) {
         const email = clerkUser?.emailAddresses?.[0]?.emailAddress;
 
         if (email) {
-          const planLabel = PLAN_LABELS[billingInterval] || "Vault Pro";
+          const planLabel = getPlanLabel(tier, billingInterval);
 
           await sendEmail({
             to: email,
@@ -130,6 +138,7 @@ export async function POST(request) {
     return NextResponse.json({
       success: true,
       plan,
+      tier: grantedTier,
       status: newStatus,
       billingInterval: plan === "pro" ? billingInterval : null,
       currentPeriodEnd,

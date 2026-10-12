@@ -4,16 +4,15 @@ import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import gsap from "gsap";
 import { useLenis } from "lenis/react";
 import { AnimatePresence, motion } from "motion/react";
 import { LABEL, T13, T14, T16, catalogueOf, priceOf } from "../tokens";
+import { PLANS, canRedeemCatalogue } from "@/lib/plans";
 
-// Demo wallet, same plans as the pricing page's credit demo.
-const PLANS = [
-  { id: "pro", label: "Pro · yearly", credits: 3 },
-  { id: "plus", label: "Pro+ · yearly", credits: 5 },
-];
+// Most credit coins drawn at once; a bigger balance shows as a number too
+const MAX_COINS = 10;
 const TABS = [
   { id: "buy", label: "Buy" },
   { id: "credit", label: "Use a credit" },
@@ -27,22 +26,16 @@ const EASE = [0.16, 1, 0.3, 1];
 const PANEL_ON = { opacity: 1, x: 0, visibility: "visible", transition: { duration: 0.5, delay: 0.2, ease: EASE } };
 const PANEL_OFF = (id) => ({ opacity: 0, x: id === "credit" ? SLIDE : -SLIDE, transition: { duration: 0.25, ease: EASE }, transitionEnd: { visibility: "hidden" } });
 
-// Content swaps (tab, plan): the old content slides out and fades, the new slides in from the
-// side the chosen option lies on, the way the pricing toggles move their highlight.
+// How far a tab panel slides as it swaps
 const SLIDE = 18;
-const swap = {
-  enter: (dir) => ({ opacity: 0, x: dir * SLIDE }),
-  center: { opacity: 1, x: 0, transition: { duration: 0.5, ease: EASE } },
-  exit: (dir) => ({ opacity: 0, x: dir * -SLIDE, transition: { duration: 0.25, ease: EASE } }),
-};
 
 const subscribeNoop = () => () => {};
 
 /**
  * "Get this template" popup from the v4 design. The Buy tab hands off to the
- * real purchase (onBuy: sign in, then the paywall). Credits aren't live yet,
- * so the credit tab is the v4 demo wallet: redeeming plays the animation and
- * says so, but unlocks nothing and isn't stored.
+ * real purchase (onBuy: sign in, then the paywall). The credit tab shows the
+ * visitor's real template credits (/api/templates/credits) and spends one on
+ * this template (/api/templates/[slug]/redeem), which then downloads.
  *
  * `open` shows it; `tab` ("buy" | "credit") picks the tab and is kept while it
  * animates out, so the content doesn't change mid-close.
@@ -53,10 +46,29 @@ export function GetTemplateModal({ template, open, tab = "buy", onTab, onClose, 
   const closeRef = useRef(null);
   const thumbRef = useRef(null);
   const coinRefs = useRef([]);
-  const [plan, setPlan] = useState("plus");
-  const [left, setLeft] = useState({ pro: 3, plus: 5 });
-  const [redeemed, setRedeemed] = useState(false);
-  const [flying, setFlying] = useState(false);
+  const pathname = usePathname();
+  // { signedIn, plan, tier, balance } once loaded
+  const [wallet, setWallet] = useState(null);
+  // null | "redeemed" | "already-owned" | "error"
+  const [outcome, setOutcome] = useState(null);
+  const [busy, setBusy] = useState(false);
+
+  // Fresh balance each time the popup opens, or a different template is shown
+  useEffect(() => {
+    if (!open || !template) return undefined;
+    let live = true;
+    fetch("/api/templates/credits")
+      .then((res) => (res.ok ? res.json() : null))
+      .catch(() => null)
+      .then((data) => {
+        if (!live) return;
+        setWallet(data);
+        setOutcome(null);
+      });
+    return () => {
+      live = false;
+    };
+  }, [open, template]);
 
   useEffect(() => {
     if (!open) return undefined;
@@ -76,23 +88,44 @@ export function GetTemplateModal({ template, open, tab = "buy", onTab, onClose, 
   const price = priceOf(template);
   const full = catalogueOf(template) === "full";
   const shot = template.screenshots?.[0];
-  const credits = PLANS.find((p) => p.id === plan).credits;
-  const locked = plan === "pro" && full;
-  const remaining = left[plan];
-  const planDir = PLANS.findIndex((p) => p.id === plan) > 0 ? 1 : -1;
+  const subscribed = wallet?.plan === "pro";
+  const remaining = wallet?.balance ?? 0;
+  const locked = subscribed && !canRedeemCatalogue(wallet.tier, catalogueOf(template));
+  const canRedeem = subscribed && !locked && remaining > 0 && !outcome;
+  const coins = Math.min(remaining, MAX_COINS);
+  const downloadHref = `/api/templates/${template.slug}/download`;
 
-  const redeem = () => {
-    if (flying || remaining < 1) return;
-    const coin = coinRefs.current[remaining - 1];
+  // The coin flies into the thumbnail once the server has actually spent it
+  const redeem = async () => {
+    if (busy || !canRedeem) return;
+    setBusy(true);
+    let data = null;
+    let ok = false;
+    try {
+      const res = await fetch(`/api/templates/${template.slug}/redeem`, { method: "POST" });
+      data = await res.json().catch(() => null);
+      ok = res.ok;
+      if (!ok) {
+        setOutcome(data?.reason === "already-owned" ? "already-owned" : "error");
+        if (typeof data?.balance === "number") setWallet((w) => ({ ...w, balance: data.balance }));
+        setBusy(false);
+        return;
+      }
+    } catch {
+      setOutcome("error");
+      setBusy(false);
+      return;
+    }
+
+    const coin = coinRefs.current[coins - 1];
     const thumb = thumbRef.current;
     const finish = () => {
-      setLeft((l) => ({ ...l, [plan]: l[plan] - 1 }));
-      setRedeemed(true);
-      setFlying(false);
+      setWallet((w) => ({ ...w, balance: data.balance }));
+      setOutcome("redeemed");
+      setBusy(false);
       if (thumb) gsap.fromTo(thumb, { scale: 0.96 }, { scale: 1, duration: 1, ease: "elastic.out(1,.5)" });
     };
     if (!coin || !thumb || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return finish();
-    setFlying(true);
     const from = coin.getBoundingClientRect();
     const to = thumb.getBoundingClientRect();
     const token = coin.cloneNode(true);
@@ -113,10 +146,15 @@ export function GetTemplateModal({ template, open, tab = "buy", onTab, onClose, 
   };
 
   let message = "";
-  if (redeemed) message = `Redeemed in this demo. When credits go live, ${template.title} would be yours to keep, even if you cancel. Nothing was charged and nothing was unlocked.`;
+  if (!wallet) message = "Checking your credits…";
+  else if (outcome === "redeemed") message = `${template.title} is yours to keep, even if you cancel.`;
+  else if (outcome === "already-owned") message = `You already own ${template.title}.`;
+  else if (outcome === "error") message = "Couldn't redeem the credit. Please try again.";
+  else if (!wallet.signedIn) message = "Sign in to use a template credit from your plan.";
+  else if (!subscribed) message = "Template credits come with Pro and Pro+: 3 or 5 a year on yearly billing.";
   else if (locked) message = "This template is in the full catalogue. Pro credits cover the selected catalogue; Pro+ credits unlock it.";
-  else if (remaining < 1) message = "That’s your credits for the year. Pro+ quarterly adds one every quarter.";
-  else message = `Spend 1 of your ${remaining} credits on ${template.title}. You keep it forever, even if you cancel.`;
+  else if (remaining < 1) message = "You have no template credits left. New ones arrive with your next billing period.";
+  else message = `Spend 1 of your ${remaining} credit${remaining === 1 ? "" : "s"} on ${template.title}. You keep it forever, even if you cancel.`;
 
   return createPortal(
     <AnimatePresence>
@@ -224,55 +262,57 @@ export function GetTemplateModal({ template, open, tab = "buy", onTab, onClose, 
                   animate={tab === "credit" ? PANEL_ON : PANEL_OFF("credit")}
                 >
                     <div className="flex flex-col gap-3.5">
-                      <SlideToggle
-                        role="radiogroup"
-                        ariaLabel="Your plan (demo)"
-                        items={PLANS}
-                        value={plan}
-                        onChange={(id) => {
-                          setPlan(id);
-                          setRedeemed(false);
-                        }}
-                        activeClassName="bg-light"
-                        itemClassName={`h-7.5 w-28 ${T13}`}
-                        activeTextClassName="text-ink"
-                        inactiveTextClassName="text-foreground/70 hover:text-foreground"
-                        trackClassName="bg-foreground/8"
-                      />
-                      <AnimatePresence mode="wait" initial={false} custom={planDir}>
-                        <motion.div key={plan} custom={planDir} variants={swap} initial="enter" animate="center" exit="exit" className="flex flex-col gap-3.5">
-                      <div className="flex min-h-11 flex-wrap gap-2.5">
-                        {Array.from({ length: credits }, (_, i) => (
-                          <i
-                            key={`${plan}-${i}`}
-                            ref={(el) => {
-                              coinRefs.current[i] = el;
-                            }}
-                            className={`flex size-10 items-center justify-center font-mono not-italic ${T13} ${
-                              i < remaining
-                                ? "bg-primary text-background "
-                                : "bg-foreground/8 text-foreground/40 ring-1 ring-inset ring-foreground/16"
-                            }`}
-                          >
-                            {i + 1}
-                          </i>
-                        ))}
-                      </div>
+                      {subscribed && (
+                        <p className={`${LABEL} text-foreground/50`}>
+                          Your plan: {PLANS[wallet.tier]?.name ?? "Pro"} · {remaining} credit{remaining === 1 ? "" : "s"}
+                        </p>
+                      )}
+                      {coins > 0 && (
+                        <div className="flex min-h-11 flex-wrap gap-2.5">
+                          {Array.from({ length: coins }, (_, i) => (
+                            <i
+                              key={i}
+                              ref={(el) => {
+                                coinRefs.current[i] = el;
+                              }}
+                              className={`flex size-10 items-center justify-center bg-primary font-mono not-italic text-background ${T13}`}
+                            >
+                              {i + 1}
+                            </i>
+                          ))}
+                        </div>
+                      )}
                       <p aria-live="polite" className={`min-h-[3em] ${T14} text-foreground/70`}>
                         {message}
                       </p>
                       <div className="flex flex-wrap gap-2">
-                        {!redeemed && !locked && remaining > 0 && (
+                        {canRedeem && (
                           <button
                             type="button"
                             onClick={redeem}
-                            disabled={flying}
+                            disabled={busy}
                             className={`inline-flex h-11 cursor-pointer items-center bg-primary px-5 ${T16} text-background transition-colors duration-500 hover:bg-primary-hover disabled:opacity-60`}
                           >
                             Redeem 1 credit
                           </button>
                         )}
-                        {(redeemed || locked || remaining < 1) && (
+                        {(outcome === "redeemed" || outcome === "already-owned") && (
+                          <a
+                            href={downloadHref}
+                            className={`inline-flex h-11 items-center bg-primary px-5 ${T16} text-background transition-colors duration-500 hover:bg-primary-hover`}
+                          >
+                            Download source
+                          </a>
+                        )}
+                        {wallet && !wallet.signedIn && (
+                          <Link
+                            href={`/sign-in?redirect_url=${encodeURIComponent(pathname)}`}
+                            className={`inline-flex h-11 items-center bg-primary px-5 ${T16} text-background transition-colors duration-500 hover:bg-primary-hover`}
+                          >
+                            Sign in
+                          </Link>
+                        )}
+                        {wallet && !outcome && (!subscribed || locked || remaining < 1) && (
                           <Link
                             href={COMPARE_HREF}
                             onClick={onClose}
@@ -282,9 +322,6 @@ export function GetTemplateModal({ template, open, tab = "buy", onTab, onClose, 
                           </Link>
                         )}
                       </div>
-                        </motion.div>
-                      </AnimatePresence>
-                      
                     </div>
                 </motion.div>
               </div>

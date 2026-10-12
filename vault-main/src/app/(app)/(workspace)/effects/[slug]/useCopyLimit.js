@@ -27,17 +27,22 @@ export function CopyLimitProvider({ children, onRequireSignIn, onRequireUpgrade,
       const remaining = Math.max(0, data.remaining ?? 0);
       const count = data.count ?? Math.max(0, limit - remaining);
 
+      // Free -> any plan, Pro -> Pro+; Pro+ is the top limit, so no offer
+      const upsell = data.plan !== "pro" ? "See plans" : data.tier === "pro" ? "See Pro+" : null;
+
       showToast({
         title:
           remaining > 0
-            ? `${remaining} of ${limit} daily copies left`
-            : "Daily copy limit reached",
+            ? `${remaining} of ${limit} daily installs left`
+            : "Daily install limit reached",
         description:
           remaining > 0
-            ? `You've copied ${count}/${limit} effects today.`
-            : "Come back tomorrow, or upgrade to Pro for a higher limit.",
-        ctaHref: remaining === 0 && data.plan !== "pro" ? "/pricing" : null,
-        ctaLabel: "Upgrade to Pro",
+            ? `You've used ${count}/${limit} installs today, across copies, CLI and MCP.`
+            : upsell
+              ? `Come back tomorrow, or ${data.tier === "pro" ? "move to Pro+ for 10 a day" : "pick a plan for a higher limit"}.`
+              : "Come back tomorrow for more.",
+        ctaHref: remaining === 0 && upsell ? "/pricing" : null,
+        ctaLabel: upsell,
       });
     },
     [showToast]

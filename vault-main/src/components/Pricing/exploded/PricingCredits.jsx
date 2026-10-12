@@ -11,16 +11,17 @@ import CardFluid from "@/homepage/components/CardFluid";
 import CreditTiles from "./CreditTiles";
 import RollNumber from "./RollNumber";
 import RollText from "./RollText";
+import { getCreditsPerYear } from "@/lib/plans";
 
 const FLY_DURATION = 0.9;
 const FLY_FADE_DELAY = 0.75;
 
 // Demo wallet: spend template credits on example templates and watch each
-// credit fly into the card it unlocks. Display only: credits aren't sold or
-// tracked by the backend yet. Credit counts match the plan cards above.
+// credit fly into the card it unlocks. Display only - it isn't linked to the
+// visitor's account. Credit counts come from lib/plans.js.
 const PLAN_OPTIONS = [
-  { id: "pro", label: "Pro · Yearly", name: "Pro yearly", credits: 3, note: "selected catalogue", full: false },
-  { id: "plus", label: "Pro+ · Yearly", name: "Pro+ yearly", credits: 5, note: "full catalogue · worth ~$200", full: true },
+  { id: "pro", label: "Pro · Yearly", name: "Pro yearly", credits: getCreditsPerYear("pro", "yearly"), note: "selected catalogue", full: false },
+  { id: "plus", label: "Pro+ · Yearly", name: "Pro+ yearly", credits: getCreditsPerYear("pro_plus", "yearly"), note: "full catalogue · worth ~$200", full: true },
 ];
 
 // `full` templates are only in the full catalogue (Pro+)

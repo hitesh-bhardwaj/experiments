@@ -10,7 +10,7 @@ const useIsoLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : use
 // Each reason keeps its slot while its numbers change (they roll in place).
 // A reason that appears grows in and fades up, one that goes fades and
 // collapses, and the ones below slide to follow.
-export const REASON_ORDER = ["sections", "copies", "templates", "saving"];
+export const REASON_ORDER = ["installs", "templates", "saving"];
 
 function Parts({ parts }) {
   return parts.map((p, i) =>

@@ -35,7 +35,7 @@ import GetCodeMenu from "./GetCodeMenu";
 import UpgradeToProModal from "./UpgradeToProModal";
 import { SignInRequiredModal } from "@/components/ui/SignInRequiredModal";
 import Button from "@/homepage/components/Button";
-import { SliderArrowButton } from "@/components/ui/SliderArrowButton";
+import { SliderArrowButton, SliderNav } from "@/components/ui/SliderArrowButton";
 import EffectStage from "./EffectStage";
 
 function formatEffectDate(value) {
@@ -504,42 +504,18 @@ export function EffectDetailContent({
                           Related Effects
                         </h2>
                       </HeadAnim>
-                      {/* The arrows are sized to the Explore button beside them: Button is
-                          1.15vw text x 1.5 line height + 1rem padding + 2px border. */}
-                      <div className="fadeup flex items-center gap-[0.5vw]">
-                        <div className="flex flex-col items-end justify-center max-lg:hidden">
-                          <Button
-                            text="Explore All Effects"
-                            href="/effects"
-                            variant="orange"
-                            className="shrink-0 border border-primary"
-                          />
-                        </div>
-                        <div className="max-lg:hidden">
-                          {showRelatedSliderControls && (
-                            <div className="flex h-full items-center justify-end gap-[0.5vw]">
-                              <SliderArrowButton
-                                direction="prev"
-                                tone="light"
-                                onClick={() => scrollRelatedEffects("previous")}
-                                disabled={!canScrollPrev}
-                                ariaLabel="Show previous related effects"
-                                className="size-[3vw]"
-                              />
-                              <SliderArrowButton
-                                direction="next"
-                                tone="light"
-                                onClick={() => scrollRelatedEffects("next")}
-                                disabled={!canScrollNext}
-                                ariaLabel="Show next related effects"
-                                className="size-[3vw]"
-                              />
-                            </div>
-                          )}
-                        </div>
-                        
-                      </div>
-
+                      <SliderNav
+                        className="fadeup max-lg:hidden"
+                        exploreText="Explore All Effects"
+                        exploreHref="/effects"
+                        showArrows={showRelatedSliderControls}
+                        onPrev={() => scrollRelatedEffects("previous")}
+                        onNext={() => scrollRelatedEffects("next")}
+                        canPrev={canScrollPrev}
+                        canNext={canScrollNext}
+                        prevLabel="Show previous related effects"
+                        nextLabel="Show next related effects"
+                      />
                     </div>
 
 

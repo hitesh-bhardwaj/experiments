@@ -5,39 +5,30 @@ import { sendEmail } from "@/lib/resend";
 import { invalidatePlanCache, ACTIVE_PRO_STATUSES } from "@/lib/subscription";
 import { createSubscriptionInvoiceEmail } from "@/lib/emails/subscription-invoice-email";
 import { confirmFoundingSlot } from "@/lib/founding-slots";
+import { describeRazorpayPlan } from "@/lib/plans.server";
+import { isValidTier } from "@/lib/plans";
 import {
   renderProUnlockedEmail,
   proUnlockedSubject,
   proUnlockedText,
 } from "@/lib/emails/pro-unlocked-email";
 
-const PLAN_INTERVALS = {
-  [process.env.RAZORPAY_PRO_MONTHLY_PLAN_ID]: "monthly",
-  [process.env.RAZORPAY_PRO_YEARLY_PLAN_ID]: "yearly",
-  [process.env.RAZORPAY_PRO_FOUNDING_YEARLY_PLAN_ID]: "yearly",
-  [process.env.RAZORPAY_PRO_MONTHLY_INR_PLAN_ID]: "monthly",
-  [process.env.RAZORPAY_PRO_YEARLY_INR_PLAN_ID]: "yearly",
-  [process.env.RAZORPAY_PRO_FOUNDING_YEARLY_INR_PLAN_ID]: "yearly",
-};
-
-// Separate from PLAN_INTERVALS because founding vs. regular yearly share the
-// same "yearly" billing interval but need different copy in the pro-unlocked
-// email ("Vault Pro Annual" vs. "Vault Pro Founding Annual").
-const PLAN_LABELS = {
-  [process.env.RAZORPAY_PRO_MONTHLY_PLAN_ID]: "Vault Pro Monthly",
-  [process.env.RAZORPAY_PRO_YEARLY_PLAN_ID]: "Vault Pro Annual",
-  [process.env.RAZORPAY_PRO_FOUNDING_YEARLY_PLAN_ID]: "Vault Pro Founding Annual",
-  [process.env.RAZORPAY_PRO_MONTHLY_INR_PLAN_ID]: "Vault Pro Monthly",
-  [process.env.RAZORPAY_PRO_YEARLY_INR_PLAN_ID]: "Vault Pro Annual",
-  [process.env.RAZORPAY_PRO_FOUNDING_YEARLY_INR_PLAN_ID]: "Vault Pro Founding Annual",
-};
-
+// Billing interval, tier and email/invoice label all come from the Razorpay
+// plan ID - see plans.server.js for the mapping, including legacy plans.
 export function getBillingInterval(planId) {
-  return PLAN_INTERVALS[planId] || null;
+  return describeRazorpayPlan(planId)?.interval || null;
 }
 
 export function getPlanLabel(planId) {
-  return PLAN_LABELS[planId] || "Vault Pro";
+  return describeRazorpayPlan(planId)?.label || "Vault Pro";
+}
+
+// Unknown plan IDs fall back to the tier checkout stamped on the
+// subscription's notes, then to Pro+ (what every pre-tier subscriber is).
+function getTier(subscription) {
+  const fromPlan = describeRazorpayPlan(subscription?.plan_id)?.tier;
+  if (fromPlan) return fromPlan;
+  return isValidTier(subscription?.notes?.tier) ? subscription.notes.tier : "pro_plus";
 }
 
 function getPeriodEnd(subscription) {
@@ -65,6 +56,7 @@ export async function markUserProFromSubscription({ clerkUserId, subscription })
   }
 
   const billingInterval = getBillingInterval(subscription.plan_id);
+  const tier = getTier(subscription);
   const currentPeriodEnd = getPeriodEnd(subscription);
   const status = subscription.status || "active";
 
@@ -77,6 +69,7 @@ export async function markUserProFromSubscription({ clerkUserId, subscription })
       razorpay_short_url: subscription.short_url || null,
       billing_interval: billingInterval,
       plan: "pro",
+      tier,
       status,
       current_period_end: currentPeriodEnd,
       updated_at: new Date().toISOString(),
@@ -108,6 +101,7 @@ export async function markUserProFromSubscription({ clerkUserId, subscription })
   await updateClerkPlan(clerkUserId, {
     plan: "pro",
     proAccess: true,
+    tier,
     billingInterval,
     subscriptionStatus: status,
     razorpaySubscriptionId: subscription.id,
@@ -117,7 +111,7 @@ export async function markUserProFromSubscription({ clerkUserId, subscription })
 
   invalidatePlanCache(clerkUserId);
 
-  return { plan: "pro", status, billingInterval, currentPeriodEnd };
+  return { plan: "pro", tier, status, billingInterval, currentPeriodEnd };
 }
 
 export async function markUserFree({ clerkUserId, status = "inactive" }) {
@@ -142,6 +136,7 @@ export async function markUserFree({ clerkUserId, status = "inactive" }) {
   await updateClerkPlan(clerkUserId, {
     plan: "free",
     proAccess: false,
+    tier: null,
     billingInterval: null,
     subscriptionStatus: status,
     razorpaySubscriptionId: null,
@@ -185,6 +180,7 @@ export async function sendInvoiceEmail({ clerkUserId, subscription, payment }) {
     const emailContent = createSubscriptionInvoiceEmail({
       name: user?.firstName || user?.fullName || "there",
       billingInterval: getBillingInterval(subscription.plan_id),
+      planLabel: getPlanLabel(subscription.plan_id),
       amount: payment?.amount,
       currency: payment?.currency,
       paymentId: payment?.id,

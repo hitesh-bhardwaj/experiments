@@ -95,7 +95,7 @@ export default function DashboardPage() {
     );
   }
 
-  const planLabel = data.plan === "pro" ? "Pro" : "Free";
+  const planLabel = data.plan === "pro" ? (data.tier === "pro" ? "Pro" : "Pro+") : "Free";
   const accessLabel = `${data.totalEffectsAccess}`;
 
   const proValidityDetail =
@@ -123,7 +123,11 @@ export default function DashboardPage() {
         <StatCard
           label="Plan"
           value={planLabel}
-          detail={data.plan === "pro" ? "Full vault access" : "Starter access"}
+          detail={
+            data.plan === "pro"
+              ? `${data.dailyInstallLimit ?? "Unlimited"} installs a day · ${data.templateCredits} template credit${data.templateCredits === 1 ? "" : "s"}`
+              : "Starter access"
+          }
         />
 
         <StatCard
@@ -171,8 +175,18 @@ export default function DashboardPage() {
             {data.plan === "pro" ? (
               <div className="mt-6 space-y-4 text-white/50">
                 <p className="text-white">
-                  Your Pro access is active. You have full access to the
+                  Your {planLabel} access is active. You have full access to the
                   Hyperiux Vault.
+                </p>
+                <p>
+                  Daily installs (copies, CLI &amp; MCP):{" "}
+                  <span className="text-white">{data.dailyInstallLimit ?? "Unlimited"}</span>
+                </p>
+                <p>
+                  Template credits:{" "}
+                  <Link href="/templates" className="text-white underline underline-offset-2">
+                    {data.templateCredits}
+                  </Link>
                 </p>
                 <p>
                   Billing cycle:{" "}
@@ -192,6 +206,12 @@ export default function DashboardPage() {
                     {data.subscriptionStatus}
                   </span>
                 </p>
+                {data.tier === "pro" && (
+                  <p>
+                    Need 10 installs a day and the full template catalogue? Move
+                    to Pro+ once this billing period ends.
+                  </p>
+                )}
               </div>
             ) : (
               <p className="text-white/75 mt-2">

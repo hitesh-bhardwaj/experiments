@@ -1,6 +1,6 @@
 "use client";
 
-import { useLayoutEffect, useRef, useState } from "react";
+import { useLayoutEffect, useMemo, useRef, useState } from "react";
 import gsap from "gsap";
 import LineReveal from "@/components/Animations/LineReveal";
 import { useFadeUp } from "@/components/Animations/gsapAnimations";
@@ -8,26 +8,35 @@ import { useInteraction } from "@/homepage/components/InteractionProvider";
 import { prefersReducedMotion } from "@/lib/motion";
 import RollNumber from "./RollNumber";
 import RollText from "./RollText";
+import { useCurrency } from "@/lib/useCurrency";
+import { CURRENCY_SYMBOLS, PLANS, getCreditsPerYear, getMonthlyEquivalent } from "@/lib/plans";
 
-// Pro vs Pro+, line by line. Display only: Pro+, quarterly billing and
-// template credits aren't in checkout yet. Prices match the plan cards above.
+// Pro vs Pro+, line by line. Prices, credits and install limits come from
+// lib/plans.js, like the plan cards above.
 const PERIODS = [
   { id: "q", label: "Quarterly", billed: "Billed quarterly" },
   { id: "y", label: "Yearly", billed: "Billed yearly" },
 ];
 
-const PRICES = {
-  pro: { q: 9, y: 7.42 },
-  plus: { q: 19, y: 14.92 },
+function pricesFor(currency) {
+  const month = (tier) => ({
+    q: getMonthlyEquivalent(tier, "quarterly", currency),
+    y: getMonthlyEquivalent(tier, "yearly", currency),
+  });
+  return { pro: month("pro"), plus: month("pro_plus") };
+}
+
+const credits = (tier, interval) => {
+  const n = getCreditsPerYear(tier, interval);
+  return n ? `${n} per year` : "Yearly billing only";
 };
 
 // A string is shown as text, true / false as a tick / dash, and { q, y } follows the billing period
 const ROWS = [
   { feature: "Components", pro: "All", plus: "All" },
-  { feature: "Page sections", pro: false, plus: true },
   { feature: "Templates", pro: "Selected catalogue, via credits", plus: "Full catalogue, via credits" },
-  { feature: "Template credits", pro: { q: "1 per year", y: "3 per year" }, plus: { q: "1 every quarter", y: "5 per year" } },
-  { feature: "Component copies", pro: { q: "3 a day", y: "5 a day" }, plus: "Unlimited" },
+  { feature: "Template credits", pro: { q: credits("pro", "quarterly"), y: credits("pro", "yearly") }, plus: { q: "1 every quarter", y: credits("pro_plus", "yearly") } },
+  { feature: "Installs a day (copies, CLI & MCP)", pro: `${PLANS.pro.installsPerDay} a day`, plus: `${PLANS.pro_plus.installsPerDay} a day` },
   { feature: "Occasional freebies", pro: false, plus: true },
   { feature: "Priority access to new drops", pro: false, plus: true },
   { feature: "Hyperiux CLI install + auth", pro: true, plus: true },
@@ -64,7 +73,9 @@ function Cell({ value, period, dir }) {
   return typeof v === "boolean" ? <Mark on={v} /> : <RollText fixed text={v} dir={dir} className={`w-full text-background/60 ${TEXT} ${long ? "max-md:h-[3.3em]!" : ""}`} />;
 }
 
-export default function PricingProCompare() {
+export default function PricingProCompare({ currency: initialCurrency }) {
+  const currency = useCurrency(initialCurrency);
+  const prices = useMemo(() => pricesFor(currency), [currency]);
   const rootRef = useRef(null);
   const toggleRef = useRef(null);
   const clipRef = useRef(null);
@@ -156,7 +167,7 @@ export default function PricingProCompare() {
                 <div key={id} role="columnheader" className={`${CELL} flex-col items-start justify-center gap-[0.6vw] py-[2.2vw] max-md:gap-[2vw] max-md:py-[6vw] ${id === "plus" ? "bg-primary/10" : ""}`}>
                   <p className="type-h3 font-avenir">{id === "plus" ? <>Pro<span className="text-primary">+</span></> : name}</p>
                   <div className={`flex items-center text-background/60 max-md:flex-wrap ${LABEL}`}>
-                    <span className="flex h-[1.2vw] items-center leading-none max-md:h-[4vw]">$<RollNumber value={PRICES[id][period]} values={[PRICES[id].q, PRICES[id].y]} /></span>
+                    <span className="flex h-[1.2vw] items-center leading-none max-md:h-[4vw]">{CURRENCY_SYMBOLS[currency]}<RollNumber value={prices[id][period]} values={[prices[id].q, prices[id].y]} /></span>
                     <span>/mo</span>
                     <span className="max-md:hidden">&nbsp;·&nbsp;</span>
                     <RollText fixed text={periodInfo.billed} dir={dir} className="h-[1.2vw] w-[10vw] leading-[1.2vw] max-md:h-[4vw] max-md:w-full max-md:leading-[4vw]" />

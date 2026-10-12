@@ -11,7 +11,7 @@ const DEFAULT_LIMIT = 10;
 const MAX_LIMIT = 500;
 
 const SUBSCRIPTION_COLUMNS =
-  "clerk_user_id, plan, status, billing_interval, current_period_end, razorpay_customer_id, razorpay_subscription_id, created_at";
+  "clerk_user_id, plan, tier, status, billing_interval, current_period_end, razorpay_customer_id, razorpay_subscription_id, created_at";
 
 // "Most Copies"/"Most Installs"/"Most Saves" sort by a count that lives in a
 // different table than `subscriptions`, and role lives only in Clerk
@@ -110,6 +110,8 @@ function shapeUser(clerkUser, sub, viewerIsSuperAdmin, copiesById, installsById,
     ...base,
     status: sub?.status || "inactive",
     billingInterval: sub?.billing_interval || null,
+    // Paid rows from before Pro+ existed have no tier - they count as Pro+
+    tier: sub?.plan === "pro" ? sub?.tier || "pro_plus" : null,
     planValidUntil: sub?.current_period_end || null,
     razorpayCustomerId: sub?.razorpay_customer_id || null,
     razorpaySubscriptionId: sub?.razorpay_subscription_id || null,

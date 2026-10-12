@@ -14,6 +14,8 @@ export const TEMPLATES_OG_IMAGE =
 export const TEMPLATES = [
   {
     slug: "elenavoss",
+    // Credit catalogue: "selected" redeems with any plan's credit, "full" needs Pro+
+    catalogue: "selected",
     title: "Elena Voss",
     category: "Portfolio",
     tier: "pro",
@@ -33,6 +35,7 @@ export const TEMPLATES = [
   },
   {
     slug: "oris-dental",
+    catalogue: "full",
     title: "Oris Dental",
     category: "Healthcare",
     tier: "pro",
@@ -52,6 +55,7 @@ export const TEMPLATES = [
   },
   {
     slug: "lumera",
+    catalogue: "selected",
     title: "Lumera",
     category: "Real Estate",
     tier: "pro",
@@ -71,6 +75,7 @@ export const TEMPLATES = [
   },
   {
     slug: "kyntra",
+    catalogue: "full",
     title: "Kyntra",
     category: "App",
     tier: "pro",

@@ -2,24 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
-import { Check, User, X } from "lucide-react";
+import { Check, X } from "lucide-react";
 import RazorpayCheckoutButton from "@/components/Payments/RazorpayCheckoutButton";
+import PlanCheckoutButton from "@/components/Payments/PlanCheckoutButton";
 import { buttonClassName, ButtonChrome } from "@/homepage/components/Button";
-
-// Same USD figures Pricing.jsx displays for Vault Pro - kept local since
-// that component doesn't export its PRICING map. Templates checkout only
-// ever runs in USD today (RazorpayCheckoutButton's default), same as this
-// modal's one-time-purchase button already assumed before this change.
-const MONTHLY_PRICE = 20;
-const YEARLY_PRICE = 179;
-const YEARLY_MONTHLY_EQUIVALENT = (YEARLY_PRICE / 12).toFixed(2);
-const YEARLY_SAVINGS = MONTHLY_PRICE * 12 - YEARLY_PRICE;
-
-const ANNUAL_FEATURES = [
-  "Full template library",
-  "All Pro features",
-  "Download projects and use in any IDE",
-];
+import { PLANS, canRedeemCatalogue, formatPrice, getCreditsPerYear, getPrice } from "@/lib/plans";
+import { useCurrency } from "@/lib/useCurrency";
 
 // RazorpayCheckoutButton renders a real <button> with its own payment/
 // loading logic (Razorpay script load, order/subscription creation, the
@@ -57,19 +45,18 @@ function RazorpayButtonV3({ variant = "orange", label, className = "", ...razorp
 // Reached from TemplateDetail's "Buy"/"Download" button whenever the
 // signed-in visitor doesn't already have access to this template - see
 // getTemplateAccessDecision() in lib/template-access.js for the reasons.
-// Monthly Pro doesn't include templates (annual-only), so a Pro Monthly
-// subscriber gets an upsell to Annual alongside the one-time purchase; a
-// free/no-subscription visitor gets the same card minus the "you're
-// currently on Pro Monthly" framing, which wouldn't apply to them.
+// Offers the one-time purchase, and the yearly plans whose template credits
+// can redeem it (Pro+ only, for a full-catalogue template). Subscribers
+// redeem a credit from the "Get this template" popup instead.
 export function TemplatePaywallModal({
   template,
   open,
   onClose,
   onPurchased,
   autoOpenCheckout = false,
-  templateAccess = null,
 }) {
   const [mounted, setMounted] = useState(false);
+  const currency = useCurrency();
 
   // SSR-safe mounted flag - gates the createPortal() call below, which
   // needs document.body and so can only run after mount.
@@ -98,7 +85,7 @@ export function TemplatePaywallModal({
   if (!mounted || !open) return null;
 
   const price = template.pricing?.standaloneOneTime;
-  const isMonthlyPro = templateAccess?.reason === "monthly-pro-not-included";
+  const tiers = ["pro", "pro_plus"].filter((tier) => canRedeemCatalogue(tier, template.catalogue));
 
   return createPortal(
     <div
@@ -129,72 +116,51 @@ export function TemplatePaywallModal({
             >
               Unlock {template.title}
             </h3>
-            <p className="text-sm text-white/70">Templates are included with Pro Annual.</p>
-
-            {isMonthlyPro && (
-              <p className="max-w-sm text-sm leading-relaxed text-white/45">
-                You&apos;re currently on Pro Monthly at ${MONTHLY_PRICE}/month. Upgrade to
-                Annual to unlock this template and the entire template library.
-              </p>
-            )}
+            <p className="text-sm text-white/70">
+              Buy it outright, or redeem a template credit from a yearly plan.
+            </p>
           </div>
         </div>
 
-        <div className="mt-7 border border-white/15 px-6 py-6 w-[80%] mx-auto max-lg:w-full max-md:mt-5 max-md:w-full max-md:px-4 max-md:py-5">
-          <p className="text-xs font-medium tracking-wide text-primary">PRO ANNUAL</p>
-
-          <div className="mt-2 flex items-end justify-between gap-4 max-md:flex-col max-md:items-start max-md:gap-1">
-            <div className="flex items-baseline gap-1.5">
-              <span className="text-3xl font-medium text-white max-md:text-2xl">${YEARLY_PRICE}</span>
-              <span className="text-sm text-white/50">/ year</span>
-            </div>
-
-            <div className="text-right max-md:text-left">
-              <p className="text-sm font-medium text-primary">Save ${YEARLY_SAVINGS}/year</p>
-              <p className="text-xs text-white/40">vs Pro Monthly</p>
-            </div>
-          </div>
-          <p className="mt-0.5 text-xs text-white/40">
-            ${YEARLY_MONTHLY_EQUIVALENT} / month
-          </p>
-
-          <div className="mt-5 flex flex-col gap-2.5 border-t border-white/10 pt-5 max-md:mt-4 max-md:pt-4">
-            {ANNUAL_FEATURES.map((feature) => (
-              <div key={feature} className="flex items-center gap-2.5">
-                <Check className="h-4 w-4 shrink-0 text-white/70" />
-                <span className="text-sm text-white/70">{feature}</span>
+        <div className="mt-7 flex flex-col gap-3 w-[80%] mx-auto max-lg:w-full max-md:mt-5 max-md:w-full">
+          {tiers.map((tier) => {
+            const credits = getCreditsPerYear(tier, "yearly");
+            return (
+              <div key={tier} className="border border-white/15 px-6 py-5 max-md:px-4 max-md:py-4">
+                <p className="text-xs tracking-wide text-primary">{PLANS[tier].name} · yearly</p>
+                <div className="mt-2 flex items-baseline gap-1.5">
+                  <span className="text-3xl text-white max-md:text-2xl">
+                    {formatPrice(getPrice(tier, "yearly", currency), currency)}
+                  </span>
+                  <span className="text-sm text-white/50">/ year{currency === "INR" ? " + GST" : ""}</span>
+                </div>
+                <div className="mt-4 flex flex-col gap-2 border-t border-white/10 pt-4">
+                  {[
+                    `${credits} template credits a year · ${PLANS[tier].catalogue === "full" ? "full" : "selected"} catalogue`,
+                    `${PLANS[tier].installsPerDay} component installs a day`,
+                    "Redeemed templates stay yours, even if you cancel",
+                  ].map((feature) => (
+                    <div key={feature} className="flex items-center gap-2.5">
+                      <Check className="h-4 w-4 shrink-0 text-white/70" />
+                      <span className="text-sm text-white/70">{feature}</span>
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-4">
+                  <PlanCheckoutButton
+                    tier={tier}
+                    interval="yearly"
+                    currency={currency}
+                    variant={tier === "pro_plus" ? "orange" : "outline"}
+                    className="w-full justify-center"
+                  />
+                </div>
               </div>
-            ))}
-          </div>
+            );
+          })}
         </div>
 
-        <div className="mt-5 w-[80%] mx-auto max-lg:w-full max-md:mt-4 max-md:w-full">
-          <RazorpayButtonV3
-            variant="orange"
-            label="Upgrade to Pro Annual"
-            plan="yearly"
-            currency="USD"
-            className="w-full justify-center"
-            onSuccess={() => onPurchased?.()}
-          />
-        </div>
-
-        {isMonthlyPro && (
-          <div className="mt-4 flex items-center justify-center gap-2 border-t border-white/10 pt-4 text-xs text-white/50 w-[80%] mx-auto max-lg:w-full max-md:w-full">
-            <User className="h-3.5 w-3.5" />
-            <span>
-              You&apos;re currently on Pro Monthly &middot; ${MONTHLY_PRICE}/month
-            </span>
-          </div>
-        )}
-
-        <div
-          className={
-            isMonthlyPro
-              ? "mt-4 max-md:mt-3 text-center"
-              : "mt-6 border-t border-white/10 pt-5 max-md:mt-5 max-md:pt-4 text-center"
-          }
-        >
+        <div className="mt-6 border-t border-white/10 pt-5 max-md:mt-5 max-md:pt-4 text-center">
           <p className="text-sm text-white/70">Just want this template?</p>
           <div className="mt-3 flex justify-center max-md:mt-2.5">
             <RazorpayButtonV3

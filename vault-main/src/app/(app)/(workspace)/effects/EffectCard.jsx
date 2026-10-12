@@ -18,14 +18,13 @@ export const LABEL = "text-[0.76vw] max-lg:text-[1.4vw] max-md:text-[2.8vw] uppe
 
 const NEW_WINDOW_MS = 1000 * 60 * 60 * 24 * 30;
 // Text sizes in vw: desktop · tablet (max-lg) · mobile (max-md).
-const T10 = "text-[0.73vw] max-lg:text-[1.4vw] max-md:text-[2.9vw]";
 const T11 = "text-[0.76vw] max-lg:text-[1.4vw] max-md:text-[2.9vw]";
 const T12 = "text-[0.87vw] max-lg:text-[1.5vw] max-md:text-[3.2vw]";
 const T14 = "text-[0.97vw] max-lg:text-[1.7vw] max-md:text-[3.6vw]";
 
 // The Free / Pro badge sits on the preview image, with a barely-there shadow so it
 // holds against any cover.
-const BADGE = `inline-flex h-6 items-center gap-1.5 px-2.25 ${T10} uppercase tracking-normal backdrop-blur-lg shadow-[0_0.1vw_0.4vw_color-mix(in_srgb,black_8%,transparent)]`;
+const BADGE = `inline-flex py-1 items-center px-3 ${T12} tracking-normal backdrop-blur-lg shadow-[0_0.1vw_0.4vw_color-mix(in_srgb,black_8%,transparent)]`;
 // The dark action buttons on a card (Save, Copy install, Preview); the drawer reuses it.
 export const ICON_BTN =
   `inline-flex h-8.5 min-w-8.5 cursor-pointer items-center justify-center gap-2 px-2.5 ${T12} text-foreground/90 bg-background/70 ring-1 ring-inset ring-foreground/12 backdrop-blur-lg transition-colors duration-500 hover:bg-grey/90 hover:text-foreground [&_svg]:size-3.5`;

@@ -27,20 +27,10 @@ export const GUTTER = "mx-auto w-full max-w-[1536px] px-[4.5vw] max-md:px-[6vw]"
 // them readable over any screenshot.
 export const BADGE = `inline-flex py-1 items-center gap-1.5 px-2.25 ${T14} backdrop-blur-lg shadow-[0_0.1vw_0.4vw_color-mix(in_srgb,black_8%,transparent)]`;
 
-/*
- * Which credit catalogue a template sits in: "selected" templates can be
- * redeemed with a Pro credit, "full" ones need Pro+ (see the pricing page's
- * credit wallet). Not in lib/mock-templates yet, so this is placeholder data
- * for now; anything missing counts as "selected".
- */
-const SAMPLE_CATALOGUE = {
-  elenavoss: "selected",
-  lumera: "selected",
-  "oris-dental": "full",
-  kyntra: "full",
-};
-
-export const catalogueOf = (template) => template.catalogue || SAMPLE_CATALOGUE[template.slug] || "selected";
+// Which credit catalogue a template sits in (lib/mock-templates): "selected"
+// templates can be redeemed with a Pro credit, "full" ones need Pro+.
+// Anything missing counts as "selected".
+export const catalogueOf = (template) => template.catalogue || "selected";
 export const catalogueLabel = (template) => (catalogueOf(template) === "full" ? "Pro+ only" : "Selected");
 export const priceOf = (template) => template.pricing?.standaloneOneTime ?? null;
 

@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import crypto from "crypto";
 import { razorpay } from "@/lib/razorpay";
 import { markUserProFromSubscription, recordInvoice } from "@/lib/pro-access";
+import { grantCreditsForCharge } from "@/lib/template-credits";
 import { recordTemplatePurchase } from "@/lib/template-purchases";
 
 function isValidSignature(payload, signature) {
@@ -105,6 +106,17 @@ export async function POST(req) {
       try {
         const payment = await razorpay.payments.fetch(razorpay_payment_id);
         await recordInvoice({ clerkUserId: userId, subscription, payment });
+
+        // Same reasoning for template credits: the visitor may open a
+        // template right after paying, before the webhook lands. This is
+        // always the subscription's first charge, even if Razorpay hasn't
+        // bumped paid_count yet; the webhook's later grant for the same
+        // payment is a no-op.
+        await grantCreditsForCharge({
+          clerkUserId: userId,
+          subscription: { ...subscription, paid_count: subscription.paid_count || 1 },
+          payment,
+        });
       } catch (invoiceError) {
         console.error("VERIFY_PAYMENT_RECORD_INVOICE_ERROR:", invoiceError);
       }

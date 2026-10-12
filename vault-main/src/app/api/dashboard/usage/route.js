@@ -1,11 +1,11 @@
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
-import { getUserPlan } from "@/lib/subscription";
+import { getUserPlanInfo } from "@/lib/subscription";
 import { isAdminUser } from "@/lib/admin";
 import { getEffectMetadata } from "@/lib/registry";
 import { getAllSanityEffectEntries, buildEffectsFromSanity } from "@/lib/sanity";
-import { LIMITS } from "@/lib/install-limit";
+import { getLimitForTier } from "@/lib/install-limit";
 
 function todayUTC() {
   return new Date().toISOString().slice(0, 10);
@@ -18,13 +18,13 @@ export async function GET() {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const [user, plan, sanityEntries] = await Promise.all([
+  const [user, { plan, tier }, sanityEntries] = await Promise.all([
     currentUser(),
-    getUserPlan(userId),
+    getUserPlanInfo(userId),
     getAllSanityEffectEntries(),
   ]);
   const isAdmin = isAdminUser(user);
-  const limit = isAdmin ? null : plan === "pro" ? LIMITS.pro : LIMITS.free;
+  const limit = getLimitForTier(tier, { isAdmin });
 
   // Same source the vault listing (and, at save-time, the Saved Effects
   // page) uses for cover/video assets - registry.json has neither field, so
@@ -97,6 +97,7 @@ export async function GET() {
 
   return NextResponse.json({
     plan,
+    tier,
     isAdmin,
     limit,
     count,

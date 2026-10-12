@@ -147,7 +147,7 @@ export default function Navbar({
         // `translate` is listed alongside `transform`: the translate-y utilities
         // set the `translate` property, so leaving it out snaps the slide and
         // only the opacity reads.
-        className={`py-[2vw] flex max-lg:hidden items-center justify-between w-full fixed z-900 top-0 left-0 px-[3vw] transition-[transform,translate,opacity] duration-500 ease-out motion-reduce:transition-none ${!introReady
+        className={`[--nav-h:3.65vw] py-[2vw] flex max-lg:hidden items-center justify-between w-full fixed z-900 top-0 left-0 px-[3vw] transition-[transform,translate,opacity] duration-500 ease-out motion-reduce:transition-none ${!introReady
           ? "translate-y-0 opacity-0 pointer-events-none"
           : reveal
             ? "translate-y-0 opacity-100"
@@ -170,7 +170,7 @@ export default function Navbar({
         {/* Everything that isn't the logo trails it, so the mark reads as
             having been there first and the bar as assembling around it. */}
         <div
-          className={`flex bg-[#121212]/60 text20 px-[1.5vw] py-[1vw] absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 items-center gap-[2.5vw] backdrop-blur-md transition-opacity duration-500 delay-200 ease-out motion-reduce:transition-none ${introReady ? "opacity-100" : "opacity-0"}`}
+          className={`flex h-(--nav-h) bg-[#121212]/60 text20 px-[1.5vw] absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 items-center gap-[2.5vw] backdrop-blur-md transition-opacity duration-500 delay-200 ease-out motion-reduce:transition-none ${introReady ? "opacity-100" : "opacity-0"}`}
         >
           <div
             className="flex"
@@ -242,12 +242,12 @@ export default function Navbar({
           </div>
         </div>
         <div
-          className={`flex items-center gap-2 transition-opacity duration-500 delay-200 ease-out motion-reduce:transition-none ${introReady ? "opacity-100" : "opacity-0"}`}
+          className={`flex h-(--nav-h) items-stretch gap-2 transition-opacity duration-500 delay-200 ease-out motion-reduce:transition-none ${introReady ? "opacity-100" : "opacity-0"}`}
         >
           {SHOW_HEADER_TUTORIAL && (
             <TutorialVideoButton className="self-stretch bg-[#121212]/60 px-3.5 backdrop-blur-md hover:bg-white/10 max-md:hidden" />
           )}
-          <SoundToggle className="self-stretch bg-[#121212]/60! backdrop-blur-md transition-colors duration-300 max-md:hidden" />
+          <SoundToggle fit size={32} className="self-stretch bg-[#121212]/60! backdrop-blur-md transition-colors duration-300 max-md:hidden" />
           {SHOW_HEADER_SEARCH && (
             <button
               type="button"
@@ -280,7 +280,7 @@ export default function Navbar({
             <Link
               href="/dashboard"
               aria-label="Account"
-              className="group flex size-12 items-center justify-center rounded-full border border-primary bg-[#161616] text-white/80 transition-colors hover:bg-[#1f1f1f] hover:text-foreground"
+              className="group flex size-12 items-center justify-center self-center rounded-full border border-primary bg-[#161616] text-white/80 transition-colors hover:bg-[#1f1f1f] hover:text-foreground"
             >
               <User className="size-4" />
             </Link>

@@ -2,7 +2,10 @@ import { auth, currentUser } from "@clerk/nextjs/server";
 import { supabase } from "@/lib/supabase";
 import { NextResponse } from "next/server";
 import { getRegistryIndex, getFreeEffectsCount } from "@/lib/registry";
-import { getUserPlan } from "@/lib/subscription";
+import { getUserPlanInfo } from "@/lib/subscription";
+import { getCreditBalance } from "@/lib/template-credits";
+import { getLimitForTier } from "@/lib/install-limit";
+import { isAdminUser } from "@/lib/admin";
 
 export async function GET() {
   const { userId } = await auth();
@@ -14,10 +17,11 @@ export async function GET() {
     );
   }
 
-  const [user, plan, registry] = await Promise.all([
+  const [user, { plan, tier }, registry, templateCredits] = await Promise.all([
     currentUser(),
-    getUserPlan(userId),
+    getUserPlanInfo(userId),
     Promise.resolve(getRegistryIndex()),
+    getCreditBalance(userId),
   ]);
 
   const [
@@ -107,6 +111,9 @@ export async function GET() {
     installedCount: installedSlugs.size,
     joinedAt: user?.createdAt || null,
     plan,
+    tier,
+    templateCredits,
+    dailyInstallLimit: getLimitForTier(tier, { isAdmin: isAdminUser(user) }),
     totalEffects,
     totalEffectsAccess,
     totalFreeEffects,

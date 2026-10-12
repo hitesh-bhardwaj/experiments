@@ -1,28 +1,43 @@
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import { razorpay } from "@/lib/razorpay";
+import { supabase } from "@/lib/supabase";
+import { ACTIVE_PRO_STATUSES } from "@/lib/subscription";
+import { isValidInterval, isValidTier } from "@/lib/plans";
+import { getRazorpayPlanId } from "@/lib/plans.server";
 
-// Founding Annual (first-100-users discounted yearly plan) is disabled for
-// new checkouts - see the comment below. RAZORPAY_PRO_FOUNDING_YEARLY(_INR)_
-// PLAN_ID stay set in env and PLANS is left off this object deliberately -
-// pro-access.js and api/razorpay/webhooks/route.js still read those env vars
-// directly to correctly label/release *existing* founding subscribers.
-const PLANS = {
-  USD: {
-    monthly: process.env.RAZORPAY_PRO_MONTHLY_PLAN_ID,
-    yearly: process.env.RAZORPAY_PRO_YEARLY_PLAN_ID,
-  },
-  INR: {
-    monthly: process.env.RAZORPAY_PRO_MONTHLY_INR_PLAN_ID,
-    yearly: process.env.RAZORPAY_PRO_YEARLY_INR_PLAN_ID,
-  },
-};
+// Starts a Pro or Pro+ subscription, billed quarterly or yearly, in USD or
+// INR. Plan IDs come from plans.server.js. The old monthly/yearly Pro plans
+// (and Founding Annual) are closed to new checkouts - plans.server.js still
+// maps them so existing subscribers keep working.
 
 // Number of billing cycles Razorpay runs the mandate for (max ~100).
 const TOTAL_COUNTS = {
-  monthly: 100, // ~8 years
+  quarterly: 40, // 10 years
   yearly: 20,
 };
+
+// A second subscription would overwrite the first in our subscriptions row
+// (one row per user) while Razorpay kept charging both - so a subscriber has
+// to let the current one end before starting another. Admin grants (no
+// Razorpay subscription behind them) don't block checkout.
+async function hasActiveSubscription(userId) {
+  const { data, error } = await supabase
+    .from("subscriptions")
+    .select("plan, status, current_period_end, razorpay_subscription_id")
+    .eq("clerk_user_id", userId)
+    .maybeSingle();
+
+  if (error) {
+    console.error("CREATE_SUBSCRIPTION_LOOKUP_ERROR:", error);
+    return false;
+  }
+
+  if (!data?.razorpay_subscription_id) return false;
+  if (data.plan !== "pro" || !ACTIVE_PRO_STATUSES.includes(data.status)) return false;
+  if (!data.current_period_end) return true;
+  return new Date(data.current_period_end).getTime() > Date.now();
+}
 
 export async function POST(req) {
   try {
@@ -33,29 +48,48 @@ export async function POST(req) {
     }
 
     const body = await req.json().catch(() => ({}));
-    const requestedPlan = body?.plan;
+    const tier = body?.tier;
+    const interval = body?.interval;
     const currency = body?.currency === "INR" ? "INR" : "USD";
 
-    if (!["monthly", "yearly"].includes(requestedPlan)) {
+    if (!isValidTier(tier) || !isValidInterval(interval)) {
       return NextResponse.json(
-        { error: "Invalid plan. Use monthly or yearly." },
+        { error: "Invalid plan. Use tier pro or pro_plus, interval quarterly or yearly." },
         { status: 400 }
       );
     }
 
-    const planKey = requestedPlan;
-    const planId = PLANS[currency][planKey];
+    const planId = getRazorpayPlanId(tier, interval, currency);
+
+    if (!planId) {
+      console.error("RAZORPAY_PLAN_NOT_CONFIGURED:", tier, interval, currency);
+      return NextResponse.json(
+        { error: "This plan isn't available right now.", reason: "plan_not_configured" },
+        { status: 503 }
+      );
+    }
+
+    if (await hasActiveSubscription(userId)) {
+      return NextResponse.json(
+        {
+          error: "You already have an active subscription. Switching plans is available once it ends.",
+          reason: "already_subscribed",
+        },
+        { status: 409 }
+      );
+    }
 
     let subscription;
 
     try {
       subscription = await razorpay.subscriptions.create({
         plan_id: planId,
-        total_count: TOTAL_COUNTS[planKey],
+        total_count: TOTAL_COUNTS[interval],
         customer_notify: 1,
         notes: {
           clerk_user_id: userId,
-          plan_key: planKey,
+          tier,
+          plan_key: interval,
           currency,
         },
       });
