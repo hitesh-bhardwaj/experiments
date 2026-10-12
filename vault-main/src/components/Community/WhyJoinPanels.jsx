@@ -365,22 +365,33 @@ export function CritiqueCard() {
             <button
               key={pin.who}
               type="button"
+              aria-label={`${pin.who}: ${pin.text}`}
               style={{ left: `${pin.at * 100}%` }}
               onPointerEnter={() => setHoveredPin(i)}
               onPointerLeave={() => setHoveredPin(-1)}
               onFocus={() => setHoveredPin(i)}
               onBlur={() => setHoveredPin(-1)}
               className={`group/pin absolute -top-[0.6vw] -ml-[0.6vw] size-[1.2vw] border transition-[background-color,border-color,box-shadow] duration-600 ${i < reached ? "border-primary bg-primary" : "border-primary/60 bg-dark-card"} ease-[cubic-bezier(.16,1,.3,1)] hover:ring-[0.5vw] hover:ring-primary/30 focus-visible:ring-[0.5vw] focus-visible:ring-primary/30 max-md:-top-[2.3vw] max-md:-ml-[2.3vw] max-md:size-[4.6vw] ${activePin === i ? "ring-[0.5vw] ring-primary/30" : i < reached ? "ring-[0.3vw] ring-primary/20" : "ring-0"}`}
+            />
+          ))}
+          {/* Comments sit on the timeline, not inside the pins, so on mobile the
+              outer ones can line up with the timeline's ends instead of overrunning the card */}
+          {CRIT_PINS.map((pin, i) => (
+            <span
+              key={pin.who}
+              aria-hidden="true"
+              style={{ "--pin": `${pin.at * 100}%` }}
+              className={`pointer-events-none absolute bottom-[calc(100%+1.4vw)] left-(--pin) w-[17vw] -translate-x-1/2 bg-light px-[1vw] py-[0.8vw] text-left type-small text-ink transition-opacity ease-[cubic-bezier(.16,1,.3,1)] max-md:bottom-[calc(100%+3.1vw)] max-md:w-[52vw] max-md:px-[3.5vw] max-md:py-[3vw] ${i === hoveredPin || i === activePin
+                  ? "opacity-100 duration-500"
+                  // Comments the playhead has left hide at once
+                  : "opacity-0 duration-0"} ${i === 0
+                  ? "max-md:left-0 max-md:translate-x-0"
+                  : i === CRIT_PINS.length - 1
+                    ? "max-md:right-0 max-md:left-auto max-md:translate-x-0"
+                    : ""}`}
             >
-              <span
-                className={`pointer-events-none absolute bottom-[calc(100%+0.8vw)] w-[17vw] bg-light px-[1vw] py-[0.8vw] text-left type-small text-ink transition-opacity ease-[cubic-bezier(.16,1,.3,1)] max-md:w-[52vw] max-md:px-[3.5vw] max-md:py-[3vw] ${i === hoveredPin || i === activePin
-                    ? "opacity-100 duration-500"
-                    // Comments the playhead has left hide at once
-                    : "opacity-0 duration-0"} left-1/2 -translate-x-1/2`}
-              >
-                <b className="block font-bold text-[#B34A00]">{pin.who}</b> {pin.text}
-              </span>
-            </button>
+              <b className="block font-bold text-[#B34A00]">{pin.who}</b> {pin.text}
+            </span>
           ))}
         </div>
       </div>

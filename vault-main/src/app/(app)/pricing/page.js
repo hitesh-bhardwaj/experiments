@@ -1,4 +1,3 @@
-import { headers } from "next/headers";
 import dynamic from "next/dynamic";
 import VaultShell from "@/Layouts/VaultShell";
 import { getSearchIndexEffects } from "@/lib/search-index";
@@ -27,8 +26,6 @@ export const metadata = createPageMetadata({
 });
 
 export default async function PricingPage() {
-  const headersList = await headers();
-  const isIndia = headersList.get("x-vercel-ip-country") === "IN";
   const effects = await getSearchIndexEffects();
 
   return (
@@ -38,14 +35,15 @@ export default async function PricingPage() {
       <VaultShell effects={effects}>
         <SquareCursor />
         <main id="main-content">
-          <PricingHero isIndia={isIndia} />
+          <PricingHero />
           {/* The homepage plans section, reused as is; #plans is the hero's "See the plans" target */}
           <div id="plans" className="home-type">
             <PricingPlansHome />
             <PricingFinder />
           </div>
 
-          <SectionOverlay>
+          {/* Above the footer (z-200), whose ribbons reach up behind the FAQ */}
+          <SectionOverlay className="relative z-201">
             <div className="home-type">
               <PricingCredits />
               <PricingProCompare />
