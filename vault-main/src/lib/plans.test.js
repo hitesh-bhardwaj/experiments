@@ -30,7 +30,9 @@ describe("plans", () => {
     expect(getMonthlyEquivalent("pro_plus", "quarterly")).toBe(19);
     expect(getMonthlyEquivalent("pro_plus", "yearly")).toBe(14.92);
     expect(getMonthlyEquivalent("pro", "quarterly", "INR")).toBe(449);
+    expect(getMonthlyEquivalent("pro", "yearly", "INR")).toBe(374);
     expect(getYearlySaving("pro")).toEqual({ amount: 29, percent: 27 });
+    expect(getYearlySaving("pro", "INR")).toEqual({ amount: 898, percent: 17 });
     expect(getYearlySaving("pro_plus")).toEqual({ amount: 49, percent: 21 });
   });
 

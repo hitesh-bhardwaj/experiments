@@ -18,7 +18,8 @@ import { useTemplateAccess } from "./useTemplateAccess";
 import { TemplateCard } from "./TemplateCard";
 import { TemplatePreviewDrawer } from "./TemplatePreviewDrawer";
 import { useTemplatePurchase } from "./useTemplatePurchase";
-import { DISPLAY, GUTTER, LABEL, PRICE, T16, cardReveal, catalogueOf, priceOf } from "./tokens";
+import { BTN_SIZE, BTN_TEXT, DISPLAY, GUTTER, LABEL, PRICE, T11, T14, T16, cardReveal, catalogueOf, priceOf } from "./tokens";
+import { PLANS, getCreditsPerYear } from "@/lib/plans";
 
 // three.js only loads when the corridor is shown.
 const TemplateCorridor = dynamic(() => import("./TemplateCorridor"), {
@@ -45,7 +46,8 @@ const CATALOGUES = [
 ];
 const CARD_LAYOUT_TRANSITION = { layout: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } };
 
-const CHIP = `inline-flex py-3 shrink-0 cursor-pointer items-center px-3.5 ${T16} backdrop-blur-lg transition-[background-color,color,box-shadow] duration-500`;
+// Standard button size (BTN_SIZE); the ring is inset, so it adds no height
+const CHIP = `inline-flex shrink-0 cursor-pointer items-center px-3.5 ${BTN_SIZE} backdrop-blur-lg transition-[background-color,color,box-shadow] duration-500`;
 const CHIP_OFF = "text-foreground/80 bg-foreground/5 ring-1 ring-inset ring-foreground/15 hover:ring-primary/60";
 const CHIP_ON = "bg-primary text-background";
 
@@ -183,7 +185,7 @@ export function TemplatesListing({ templates = [], description = "", faqItems = 
         {/* view · category · catalogue */}
         <motion.div {...heroFadeUp(1.2)} className="flex flex-wrap items-center justify-between gap-3.5 pt-7 max-md:pt-3">
           <div className="flex flex-wrap items-center gap-3.5">
-            {corridorOk && <DarkSegment label="View" items={VIEWS} value={view} onChange={setChosenView} itemClassName="w-24" />}
+            {corridorOk && <DarkSegment label="View" items={VIEWS} value={view} onChange={setChosenView} itemClassName="w-[6.5vw] max-lg:w-24" />}
             <div role="group" aria-label="Category" className="flex flex-wrap gap-1.5">
               {categories.map((c) => (
                 <button
@@ -264,26 +266,38 @@ export function TemplatesListing({ templates = [], description = "", faqItems = 
           )}
         </section>
 
-        {/* template credits */}
-        <section id="template-credits" className={`${GUTTER} flex flex-col gap-12`}>
-          <HeadAnim rotate={0} by="words">
-            <h2 className={`${DISPLAY} type-h1 font-aeonik`}>
-              One credit. <span className="gradient-text-animate">One whole site.</span>
-            </h2>
-          </HeadAnim>
-          <div className="fadeup flex flex-wrap gap-[0.9vw] max-md:gap-[3.5vw]">
-            <CreditCard title="No plan needed" className="bg-[#fff4ea]">
-              Buy any template outright{prices.length > 0 && <> for {formatPrices(prices)}</>}. One payment, and the source is yours.
-            </CreditCard>
-            <CreditCard title="Pro">
-              3 credits a year on yearly billing (none on quarterly). Redeem across the selected catalogue.
-            </CreditCard>
-            <CreditCard title="Pro+" dark>
-              1 credit every quarter, or 5 a year on yearly (worth ~<span className={PRICE}>$200</span>). Redeem across the full catalogue.
-            </CreditCard>
+        {/* template credits: the pitch on the left, one row per way to get a template on the right */}
+        <section id="template-credits" className={`${GUTTER} flex items-center justify-between gap-[4vw] max-lg:flex-col max-lg:items-stretch max-lg:gap-10`}>
+          <div className="flex w-[30%] flex-col gap-[2vw] max-lg:w-full max-lg:gap-6">
+            <HeadAnim rotate={0} by="words">
+              <h2 className={`${DISPLAY} type-h1 font-aeonik`}>
+                One credit. <span className="gradient-text-animate">One whole site.</span>
+              </h2>
+            </HeadAnim>
+            <p className="fadeup type-body w-[90%] text-black/60 max-lg:w-full">
+              Buy a template outright, or redeem a credit from your plan. Either way the whole source is yours.
+            </p>
+            <div className="fadeup flex">
+              <Button className="tracking-normal!" text="Compare plans" href="/pricing#compare" />
+            </div>
           </div>
-          <div className="fadeup flex">
-            <Button className="tracking-normal!" text="Compare plans" href="/pricing#compare" />
+
+          <div className="fadeup flex w-[62%] flex-col gap-[0.6vw] max-lg:w-full max-md:gap-3">
+            {prices.length > 0 && (
+              <CreditRow
+                figure={<span className={PRICE}>${prices[0]}</span>}
+                caption={prices.length > 1 ? <>or {formatPrices(prices.slice(1))}, per template</> : "per template"}
+                title="No plan needed"
+              >
+                Buy any template outright. One payment, and the source is yours.
+              </CreditRow>
+            )}
+            <CreditRow figure={creditRange("pro")} caption="credits a year" title="Pro">
+              {creditsLine("pro")} Redeem across the selected catalogue.
+            </CreditRow>
+            <CreditRow figure={creditRange("pro_plus")} caption="credits a year" title="Pro+" dark>
+              {creditsLine("pro_plus")} (worth ~<span className={PRICE}>$200</span>). Redeem across the full catalogue.
+            </CreditRow>
           </div>
         </section>
       </div>
@@ -313,11 +327,34 @@ export function TemplatesListing({ templates = [], description = "", faqItems = 
   );
 }
 
-function CreditCard({ title, dark = false, className = "", children }) {
+// Credits a year on quarterly vs yearly billing, from lib/plans: "4–5", or "3" when
+// quarterly earns none (or both are the same).
+function creditRange(tier) {
+  const quarterly = getCreditsPerYear(tier, "quarterly");
+  const yearly = getCreditsPerYear(tier, "yearly");
+  return quarterly && quarterly !== yearly ? `${quarterly}–${yearly}` : String(yearly);
+}
+
+// The billing detail behind creditRange, in words.
+function creditsLine(tier) {
+  const yearly = getCreditsPerYear(tier, "yearly");
+  const rule = PLANS[tier].credits.quarterly;
+  if (!rule) return `${yearly} a year on yearly billing, none on quarterly.`;
+  return `${rule.amount} every quarter, or ${yearly} a year on yearly`;
+}
+
+/** One way to get a template: a big figure with its caption, then the plan and how it works. */
+function CreditRow({ figure, caption, title, dark = false, children }) {
   return (
-    <div className={`flex w-[calc((100%-1.8vw)/3)] flex-col gap-2 p-6 max-lg:w-[calc((100%-0.9vw)/2)] max-md:w-full ${dark ? "bg-ink text-light" : `bg-foreground ring-1 ring-inset ring-black/10 ${className}`}`}>
-      <b className="type-h3 font-medium!">{title}</b>
-      <p className={`type-body ${dark ? "text-light/60" : "text-black/60"}`}>{children}</p>
+    <div className={`flex items-center gap-[2vw] px-[1.6vw] py-[1.8vw] max-lg:gap-6 max-lg:px-6 max-lg:py-6 max-md:gap-4 max-md:px-4 ${dark ? "bg-ink text-light" : "bg-foreground"}`}>
+      <div className="flex w-[8vw] shrink-0 flex-col gap-[0.3vw] max-lg:w-[16vw] max-md:w-[24vw] max-md:gap-1">
+        <span className={`font-aeonik text-[2.4vw] leading-none max-lg:text-[4.4vw] max-md:text-[8vw] ${dark ? "text-primary" : "text-ink"}`}>{figure}</span>
+        <span className={`${T11} ${dark ? "text-light/50" : "text-black/50"}`}>{caption}</span>
+      </div>
+      <div className="flex min-w-0 flex-col gap-[0.4vw] max-lg:gap-1.5">
+        <b className="type-h3 font-normal!">{title}</b>
+        <p className={`${T14} ${dark ? "text-light/60" : "text-black/60"}`}>{children}</p>
+      </div>
     </div>
   );
 }
@@ -341,7 +378,8 @@ function DarkSegment({ label, items, value, onChange, itemClassName }) {
             role="radio"
             aria-checked={active}
             onClick={() => onChange(item.id)}
-            className={`relative z-1 flex cursor-pointer items-center justify-center py-2.5 ${T16} transition-colors duration-500 ${itemClassName} ${
+            // Button height overall: Button's padding minus the 3px (p-0.75) the track adds
+            className={`relative z-1 flex cursor-pointer items-center justify-center py-[calc(0.5rem-3px)] ${BTN_TEXT} transition-colors duration-500 max-md:py-[calc(0.75rem-3px)] ${itemClassName} ${
               active ? "text-background" : "text-foreground/60 hover:text-foreground"
             }`}
           >

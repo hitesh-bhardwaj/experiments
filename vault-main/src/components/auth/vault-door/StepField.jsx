@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { FIELDS, FOCUS_RING_CLASS, INPUT_AUTOFILL_STYLE, LABEL_CLASS } from "./constants";
+import { LoaderCircle } from "lucide-react";
 import { EyeIcon } from "./icons";
 import { passwordStrength } from "./utils";
 
@@ -19,7 +20,9 @@ export function StepField({ id, field, value, message, busy, submitLabel, onChan
   // Effects
   useEffect(() => {
     // Skip on touch so the keyboard doesn't jump up on every step
-    if (window.matchMedia(FINE_POINTER_QUERY).matches) inputRef.current?.focus();
+    // preventScroll: the field mounts mid-slide inside StepTrack's clipped window,
+    // which focusing would otherwise scroll
+    if (window.matchMedia(FINE_POINTER_QUERY).matches) inputRef.current?.focus({ preventScroll: true });
   }, []);
 
   // Render
@@ -31,7 +34,7 @@ export function StepField({ id, field, value, message, busy, submitLabel, onChan
 
   return (
     <div className="grid gap-[0.6vw] max-md:gap-2" data-step>
-      <label htmlFor={id} className={`${LABEL_CLASS} text-white/40`}>
+      <label htmlFor={id} className={`${LABEL_CLASS} text-white/80`}>
         {config.label}
       </label>
 
@@ -63,7 +66,7 @@ export function StepField({ id, field, value, message, busy, submitLabel, onChan
             }}
             aria-label={revealed ? "Hide password" : "Show password"}
             aria-pressed={revealed}
-            className={`grid size-[2.4vw] shrink-0 cursor-pointer place-items-center text-white/40 transition-colors duration-300 hover:text-white aria-pressed:text-white max-lg:size-10 ${FOCUS_RING_CLASS}`}
+            className={`grid size-[2.4vw] shrink-0 cursor-pointer place-items-center text-white/80 transition-colors duration-300 hover:text-white aria-pressed:text-white max-lg:size-10 ${FOCUS_RING_CLASS}`}
           >
             <EyeIcon className="size-[1.2vw] max-lg:size-[18px]" />
           </button>
@@ -77,7 +80,8 @@ export function StepField({ id, field, value, message, busy, submitLabel, onChan
           className={`grid size-[2.5vw] shrink-0 cursor-pointer place-items-center bg-primary text-black transition-colors duration-300 hover:bg-white disabled:pointer-events-none disabled:opacity-60 max-lg:size-10 ${FOCUS_RING_CLASS}`}
         >
           {busy ? (
-            <span className="size-[0.45vw] animate-pulse bg-current max-lg:size-2" aria-hidden="true" />
+            // Signing in / checking: a spinner in place of the arrow
+            <LoaderCircle className="size-[1.1vw] animate-spin motion-reduce:animate-none max-lg:size-4" aria-hidden="true" />
           ) : (
             <span
               aria-hidden="true"

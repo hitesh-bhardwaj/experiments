@@ -5,8 +5,11 @@ import { createPortal } from "react-dom";
 import Image from "next/image";
 import gsap from "gsap";
 import { useLenis } from "lenis/react";
+import { usePathname } from "next/navigation";
+import { useUser } from "@clerk/nextjs";
 import { Heart, Lock } from "lucide-react";
 import { CopyButtonContent } from "@/components/ui/CodeBlock";
+import { SignInRequiredModal } from "@/components/ui/SignInRequiredModal";
 import Button from "@/homepage/components/Button";
 import { getEffectHref, getEffectPreviewHref, getEffectCategory, resolveEffectCategoryId } from "@/lib/categories";
 import { resolveEffectVideoUrl } from "@/lib/media";
@@ -57,6 +60,14 @@ export function PreviewDrawer({
   const closeRef = useRef(null);
   const lenis = useLenis();
   const open = !!effect;
+  const pathname = usePathname();
+  // The install command is for signed-in visitors; Sign In opens the sign-in modal over the drawer.
+  const { isSignedIn } = useUser();
+  const [signInOpen, setSignInOpen] = useState(false);
+  const signInOpenRef = useRef(false);
+  useEffect(() => {
+    signInOpenRef.current = signInOpen;
+  });
 
   // The effect on screen; it outlives `effect` until the close animation ends.
   const [shown, setShown] = useState(null);
@@ -181,6 +192,8 @@ export function PreviewDrawer({
     };
     const SCROLL_KEYS = new Set([" ", "PageUp", "PageDown", "Home", "End", "ArrowUp", "ArrowDown"]);
     const onKey = (event) => {
+      // The sign-in modal on top owns the keyboard (Escape closes it, Space types in it)
+      if (signInOpenRef.current) return;
       if (event.key === "Escape") onClose();
       else if (SCROLL_KEYS.has(event.key) && !insidePanel(document.activeElement)) event.preventDefault();
     };
@@ -298,7 +311,16 @@ export function PreviewDrawer({
           </div>
         </div>
 
-        {installable ? (
+        {!isSignedIn ? (
+          <div className="flex flex-wrap items-center justify-between gap-4 border border-white/20 bg-transparent px-4.5 py-4 backdrop-blur-lg">
+            {/* Signed out: the same locked block as Pro effects, with Sign In (opens the sign-in modal). */}
+            <p className={`flex items-center gap-2 ${T14} text-foreground/70`}>
+              <Lock className="size-3.75 shrink-0 text-primary" aria-hidden="true" />
+              Sign in to see the install command.
+            </p>
+            <Button text="Sign In" preventDefault onClick={() => setSignInOpen(true)} className="py-1.5! text-[0.9vw]! max-lg:text-[1.6vw]! max-md:text-[3.3vw]!" />
+          </div>
+        ) : installable ? (
           <div className="flex items-center gap-3 border border-foreground/10 bg-foreground/3 py-3 pr-2 pl-4">
             {/* Phones: a smaller command (3vw) so it fits on one line. */}
             <code className={`${MONO} min-w-0 flex-1 overflow-x-auto whitespace-nowrap text-[0.97vw] text-foreground/80 max-lg:text-[1.7vw] max-md:text-[3vw] max-md:break-all max-md:whitespace-normal`}>
@@ -342,6 +364,7 @@ export function PreviewDrawer({
         )}
       </div>
       </div>
+      <SignInRequiredModal open={signInOpen} onClose={() => setSignInOpen(false)} redirect={pathname} action="install effects with the CLI" />
     </div>,
     document.body,
   );

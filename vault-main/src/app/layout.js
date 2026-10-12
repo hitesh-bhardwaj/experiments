@@ -25,6 +25,7 @@ import { CookieConsentNudge } from "@/components/WebsiteComps/CookieConsentNudge
 import PageTransition from "@/components/PageTransition/PageTransition";
 import { TooltipHost } from "@/components/ui/Tooltip";
 import SiteInteractions from "@/components/WebsiteComps/SiteInteractions";
+import { PageLoadOverlay } from "@/components/layout/PageLoadOverlay";
 
 // The site's two faces: Aeonik Pro (headings / display) and Avenir Next (text),
 // exposed to Tailwind as font-aeonik and font-avenir (globals.css @theme).
@@ -105,6 +106,8 @@ export default function RootLayout({ children }) {
         {/* <meta name="msvalidate.01" content="96AF31CC0830CC17D577425F2D8CEE36" /> */}
       </head>
       <body className="min-h-dvh text-foreground">
+        {/* Covers the page from first paint until it hydrates (then gsap.set to opacity 0) */}
+        <PageLoadOverlay />
         <noscript>
           <iframe
             src="https://www.googletagmanager.com/ns.html?id=GTM-NCDH9PHF"

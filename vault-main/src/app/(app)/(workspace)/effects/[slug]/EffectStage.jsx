@@ -182,8 +182,8 @@ export default function EffectStage({ effect, title, previewHref, getCode = null
         <div className="flex items-stretch gap-[0.5vw] max-md:gap-[2vw]">
 
           {getCode}
-          {/* T13 text, 13px padding: the toolbar's button size. */}
-          <Button text="Demo" href={previewHref} target_blank variant="orange" className="shrink-0 border border-primary py-3.25! text-[1.1vw]! max-lg:text-[1.6vw]! max-md:text-[3.3vw]! max-md:[--btn-arrow:3.3vw]! max-md:[--btn-square:1.8vw]!" />
+          {/* Standard Button size (Get Code matches it) */}
+          <Button text="Demo" href={previewHref} target_blank variant="orange" className="shrink-0" />
         </div>
       </div>
 

@@ -29,8 +29,11 @@ create table if not exists template_credits (
   created_at timestamptz not null default now()
 );
 
-create unique index if not exists template_credits_payment_id_key
-  on template_credits (razorpay_payment_id) where razorpay_payment_id is not null;
+-- A plain unique constraint, not a partial index: the app's upsert
+-- (on conflict (razorpay_payment_id)) can only target a full one. Postgres
+-- treats NULLs as distinct, so redemption rows (no payment ID) still fit.
+alter table template_credits
+  add constraint template_credits_razorpay_payment_id_key unique (razorpay_payment_id);
 create index if not exists template_credits_clerk_user_id_idx
   on template_credits (clerk_user_id);
 

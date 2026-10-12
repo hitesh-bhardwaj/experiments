@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import gsap from "gsap";
 import { AnimatePresence, motion } from "motion/react";
 import Image from "next/image";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -260,6 +261,14 @@ export function Sidebar({
     window.setTimeout(scrollToTop, 400);
   };
 
+  // Fades in when the sidebar first mounts - a page load or reload (it stays mounted
+  // across client navigation, so moving between pages doesn't replay it).
+  const asideRef = useRef(null);
+  useLayoutEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return undefined;
+    const tween = gsap.fromTo(asideRef.current, { opacity: 0 }, { opacity: 1, duration: 0.9, ease: "power2.out", clearProps: "opacity" });
+    return () => tween.kill();
+  }, []);
   const previousRouteSectionRef = useRef(initialOpenSection);
   const categoryNavigationInProgressRef = useRef(false);
 
@@ -549,6 +558,7 @@ export function Sidebar({
 
   return (
     <aside
+      ref={asideRef}
       data-sound-flow="off"
       className={`sticky bottom-0 left-0 top-0 z-51 h-screen bg-[#111111] text-white max-lg:hidden ${
         disableInitialTransition
@@ -574,7 +584,7 @@ export function Sidebar({
           isExpanded ? "overflow-hidden" : "overflow-visible"
         }`}
       >
-        <div className="mb-10 flex h-16 w-full items-center justify-start overflow-hidden border-b border-white/10 px-3.5">
+        <div className="mb-10 flex h-fit pb-6 pt-4 w-full items-center justify-start overflow-hidden border-b border-white/10 px-3.5">
           <Link
             prefetch={false}
             href="/"

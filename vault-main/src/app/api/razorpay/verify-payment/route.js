@@ -4,6 +4,7 @@ import crypto from "crypto";
 import { razorpay } from "@/lib/razorpay";
 import { markUserProFromSubscription, recordInvoice } from "@/lib/pro-access";
 import { grantCreditsForCharge } from "@/lib/template-credits";
+import { cancelReplacedSubscription } from "@/lib/subscription-events";
 import { recordTemplatePurchase } from "@/lib/template-purchases";
 
 function isValidSignature(payload, signature) {
@@ -93,6 +94,11 @@ export async function POST(req) {
         subscription,
       });
 
+      // A Pro -> Pro+ upgrade: Pro+ is paid, so the old Pro subscription is
+      // cancelled now and never charges again. The webhook tries too, in case
+      // this fails.
+      await cancelReplacedSubscription(subscription);
+
       // Records the invoice here too, not just from the subscription.charged
       // webhook - that webhook is the only place this happened before, so a
       // real paying customer whose webhook delivery is delayed, never
@@ -111,12 +117,17 @@ export async function POST(req) {
         // template right after paying, before the webhook lands. This is
         // always the subscription's first charge, even if Razorpay hasn't
         // bumped paid_count yet; the webhook's later grant for the same
-        // payment is a no-op.
-        await grantCreditsForCharge({
-          clerkUserId: userId,
-          subscription: { ...subscription, paid_count: subscription.paid_count || 1 },
-          payment,
-        });
+        // payment is a no-op. Logged on its own so a failure here isn't
+        // mistaken for an invoice problem.
+        try {
+          await grantCreditsForCharge({
+            clerkUserId: userId,
+            subscription: { ...subscription, paid_count: subscription.paid_count || 1 },
+            payment,
+          });
+        } catch (creditError) {
+          console.error("VERIFY_PAYMENT_GRANT_CREDITS_ERROR:", creditError);
+        }
       } catch (invoiceError) {
         console.error("VERIFY_PAYMENT_RECORD_INVOICE_ERROR:", invoiceError);
       }

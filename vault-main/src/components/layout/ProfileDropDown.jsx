@@ -64,7 +64,7 @@ export default function ProfileDropdown({
     >
       <button
         onClick={() => setOpen(!open)}
-        className="group relative flex items-center justify-center p-0.5 rounded-full cursor-pointer outline-none focus-visible:ring-1 focus-visible:ring-[#ff5f00]"
+        className="group relative flex size-(--vault-ctl-h) shrink-0 items-center justify-center p-0.5 rounded-full cursor-pointer outline-none focus-visible:ring-1 focus-visible:ring-[#ff5f00]"
         aria-label="User menu"
         aria-expanded={open}
       >
@@ -84,10 +84,10 @@ export default function ProfileDropdown({
                 alt={user.fullName || "User"}
                 width={40}
                 height={40}
-                className="size-9.5 object-cover rounded-full block"
+                className="size-[calc(var(--vault-ctl-h)-14px)] object-cover rounded-full block"
               />
             ) : (
-              <div className="size-9.5 flex items-center justify-center rounded-full bg-[#161616] text-white/80 transition-colors group-hover:text-white group-hover:bg-[#1f1f1f]">
+              <div className="size-[calc(var(--vault-ctl-h)-14px)] flex items-center justify-center rounded-full bg-[#161616] text-white/80 transition-colors group-hover:text-white group-hover:bg-[#1f1f1f]">
                 <User className="size-4 text-white/70 group-hover:text-white transition-colors" />
               </div>
             )}

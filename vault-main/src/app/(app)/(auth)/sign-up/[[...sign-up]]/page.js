@@ -14,11 +14,16 @@ export const metadata = createPageMetadata({
 });
 
 // The form itself is rendered by (auth)/layout.js
-export default async function SignUpPage() {
+export default async function SignUpPage({ searchParams }) {
   const { userId } = await auth();
 
+  // Already signed in: go where the link asked (e.g. the homepage plan cards
+  // send /pricing?checkout=<plan>, which opens checkout), or to the effects.
+  // Same-app paths only, so a crafted link can't send the session elsewhere.
   if (userId) {
-    redirect("/effects");
+    const target = (await searchParams)?.redirect_url;
+    const safe = typeof target === "string" && target.startsWith("/") && !target.startsWith("//");
+    redirect(safe ? target : "/effects");
   }
 
   return null;

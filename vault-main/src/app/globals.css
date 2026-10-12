@@ -4,6 +4,9 @@
 @import "../styles/blog.css";
 
 :root {
+  /* Header control size (search, sound, buttons, avatar) in VaultHeader and the homepage
+     Navbar: Button's height (1.15vw text x 1.5 line height + py-2), never under 44px. */
+  --vault-ctl-h: max(44px, calc(var(--hx-vw, 1vw) * 1.725 + 1rem));
   /* "Container vw": 1vw up to the 1536px homepage container, then frozen at
      its 1536px value, so vw-sized content stops growing once its container
      stops (homepage sections use calc(var(--cvw)*N) instead of Nvw) */

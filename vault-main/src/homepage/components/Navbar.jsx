@@ -242,7 +242,7 @@ export default function Navbar({
           </div>
         </div>
         <div
-          className={`flex h-(--nav-h) items-stretch gap-2 transition-opacity duration-500 delay-200 ease-out motion-reduce:transition-none ${introReady ? "opacity-100" : "opacity-0"}`}
+          className={`flex h-(--vault-ctl-h) items-stretch gap-2 transition-opacity duration-500 delay-200 ease-out motion-reduce:transition-none ${introReady ? "opacity-100" : "opacity-0"}`}
         >
           {SHOW_HEADER_TUTORIAL && (
             <TutorialVideoButton className="self-stretch bg-[#121212]/60 px-3.5 backdrop-blur-md hover:bg-white/10 max-md:hidden" />
@@ -280,12 +280,13 @@ export default function Navbar({
             <Link
               href="/dashboard"
               aria-label="Account"
-              className="group flex size-12 items-center justify-center self-center rounded-full border border-primary bg-[#161616] text-white/80 transition-colors hover:bg-[#1f1f1f] hover:text-foreground"
+              className="group flex size-(--vault-ctl-h) items-center justify-center rounded-full border border-primary bg-[#161616] text-white/80 transition-colors hover:bg-[#1f1f1f] hover:text-foreground"
             >
               <User className="size-4" />
             </Link>
           ) : (
-            !hideSignIn && <Button href="/sign-in" text="Sign In" />
+            // leading-normal: the header line height (1.5), so it matches VaultHeader's Sign In
+            !hideSignIn && <Button href="/sign-in" text="Sign In" className="leading-normal" />
           )}
         </div>
 

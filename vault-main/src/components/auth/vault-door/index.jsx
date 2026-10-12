@@ -9,9 +9,9 @@ import { getSafeRedirectUrl } from "@/components/auth/AuthFormPrimitives";
 import { useInteraction } from "@/homepage/components/InteractionProvider";
 import LinkButton from "@/components/WebsiteComps/LinkButton";
 import { CoreHud } from "./CoreHud";
-import { DoneList } from "./DoneList";
 import { GitHubIcon, GoogleIcon } from "./icons";
 import { StepField } from "./StepField";
+import { StepTrack } from "./StepTrack";
 import { UnderlineButton } from "./UnderlineButton";
 import {
   DEFAULT_REDIRECT,
@@ -25,7 +25,7 @@ import {
 } from "./constants";
 import { usePrefersReducedMotion, useResendCooldown, useSiteHeaderHeight, useVaultScene } from "./hooks";
 import { useVaultClerk } from "./useVaultClerk";
-import { getClerkErrorField, getFillEnergy, getStepHint, padStep, validateField } from "./utils";
+import { getClerkErrorField, getFillEnergy, getStepHint, validateField } from "./utils";
 
 gsap.registerPlugin(useGSAP);
 
@@ -67,7 +67,6 @@ export default function VaultDoorAuth({ catalogue }) {
   const formLayerRef = useRef(null);
   const paneRef = useRef(null);
   const valuesRef = useRef(EMPTY_VALUES);
-  const animateStepRef = useRef(false);
   useSiteHeaderHeight(rootRef);
 
   // State
@@ -75,6 +74,8 @@ export default function VaultDoorAuth({ catalogue }) {
   const [syncedRouteMode, setSyncedRouteMode] = useState(routeMode);
   const [steps, setSteps] = useState(PANES[routeMode].steps);
   const [stepIndex, setStepIndex] = useState(0);
+  // 1 forward, -1 back: which way the steps slide (StepTrack)
+  const [direction, setDirection] = useState(1);
   const [values, setValues] = useState(EMPTY_VALUES);
   const [message, setMessage] = useState(null);
   const [busy, setBusy] = useState(false);
@@ -126,16 +127,6 @@ export default function VaultDoorAuth({ catalogue }) {
     { dependencies: [mode], scope: rootRef }
   );
 
-  useGSAP(
-    () => {
-      if (!animateStepRef.current || reducedMotion) return;
-      animateStepRef.current = false;
-      gsap.fromTo("[data-step]", { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 1, ease: "expo.out" });
-      gsap.fromTo("[data-done-item]:last-child", { opacity: 0, y: -8 }, { opacity: 1, y: 0, duration: 0.8, ease: "expo.out" });
-    },
-    { dependencies: [stepIndex, mode], scope: rootRef }
-  );
-
   // Functions
   function resetPane(nextMode) {
     setMode(nextMode);
@@ -161,7 +152,7 @@ export default function VaultDoorAuth({ catalogue }) {
   }
 
   function goToStep(index, nextSteps = steps) {
-    animateStepRef.current = true;
+    setDirection(index < stepIndex ? -1 : 1);
     setSteps(nextSteps);
     setStepIndex(index);
     setMessage(null);
@@ -192,7 +183,7 @@ export default function VaultDoorAuth({ catalogue }) {
     if (message && (message.tone !== "bad" || !validateField(field, value))) setMessage(null);
   }
 
-  // "Change" on an answered step; codes are one-time so they never reopen
+  // Back to an earlier step; codes are one-time so they never reopen
   function handleRevisit(index) {
     if (busy || opening) return;
     const baseSteps = PANES[mode].steps;
@@ -345,33 +336,36 @@ export default function VaultDoorAuth({ catalogue }) {
         <main className={`${FORM_WIDTH_CLASS} mt-[3vw] self-start portrait:mt-0`}>
           {/* minmax(0,1fr): the no-wrap heading may run past the block without widening the field */}
           <form ref={paneRef} key={mode} noValidate onSubmit={handleSubmit} className="grid grid-cols-[minmax(0,1fr)]">
-            <p className={`${LABEL_CLASS} mb-[1.2vw] flex items-baseline gap-[0.8vw] text-white/40 max-lg:mb-4 max-lg:gap-3`}>
-              {pane.eyebrow}
-              {pane.showCount && (
-                <span className="text24 font-aeonik tracking-[-.02em] text-primary" aria-live="polite">
-                  {padStep(stepIndex + 1)} / {padStep(steps.length)}
-                </span>
-              )}
-            </p>
+            <p className={`${LABEL_CLASS} mb-[1.2vw] text-white/80 max-lg:mb-4`}>{pane.eyebrow}</p>
 
             <h1 className="text64 mb-[3.5vw] font-aeonik whitespace-nowrap text-[#F4F4F4] max-lg:mb-10 portrait:mb-9">
               {pane.lead} <span className="gradient-text-animate">{pane.accent}</span>
             </h1>
 
-            <DoneList fields={steps.slice(0, stepIndex)} values={values} onChange={handleRevisit} />
-
             <fieldset disabled={opening} className="m-0 min-w-0 border-0 p-0">
-              <StepField
-                key={inputId}
-                id={inputId}
-                field={field}
-                value={values[field]}
-                message={fieldMessage}
+              <StepTrack
+                stepIndex={stepIndex}
+                total={steps.length}
+                direction={direction}
+                stepKey={inputId}
                 busy={busy}
-                submitLabel={SUBMIT_LABELS[mode]?.[field] ?? "Continue"}
-                onChange={handleChange}
-                onKeyDown={handleKeyDown}
-              />
+                onBack={() => handleRevisit(stepIndex - 1)}
+              >
+                <StepField
+                  id={inputId}
+                  field={field}
+                  value={values[field]}
+                  message={fieldMessage}
+                  busy={busy}
+                  submitLabel={SUBMIT_LABELS[mode]?.[field] ?? "Continue"}
+                  onChange={handleChange}
+                  onKeyDown={handleKeyDown}
+                />
+                {/* Only on the password step, right under the field (it slides with it) */}
+                {mode === "sign-in" && field === "password" && (
+                  <div className="text18 w-fit text-light-grey">{paneLink("reset", "Forgot password?")}</div>
+                )}
+              </StepTrack>
             </fieldset>
 
             {field === "code" && (
@@ -386,7 +380,7 @@ export default function VaultDoorAuth({ catalogue }) {
             )}
 
             {mode === "sign-up" && field === "newPassword" && (
-              <p className={`${LABEL_CLASS} mt-[0.4vw] text-white/40 max-lg:mt-1.5`}>
+              <p className={`${LABEL_CLASS} mt-[0.4vw] text-white/80 max-lg:mt-1.5`}>
                 By continuing you agree to the{" "}
                 <Link href={LEGAL_LINKS.terms} className="text-white/70 underline underline-offset-3 transition-colors duration-300 hover:text-primary">
                   Terms
@@ -404,7 +398,7 @@ export default function VaultDoorAuth({ catalogue }) {
 
             {mode !== "reset" && (
               <div className="mt-[2.4vw] grid gap-[1vw] max-lg:mt-8 max-lg:gap-4">
-                <p className={`${LABEL_CLASS} flex items-center gap-[1vw] text-white/40 after:h-px after:flex-1 after:bg-white/10 after:content-[''] max-lg:gap-3`}>
+                <p className={`${LABEL_CLASS} flex items-center gap-[1vw] text-white/80 after:h-px after:flex-1 after:bg-white/10 after:content-[''] max-lg:gap-3`}>
                   or continue with
                 </p>
                 <div className="grid grid-cols-2 gap-[0.8vw] max-lg:gap-3">
@@ -432,8 +426,6 @@ export default function VaultDoorAuth({ catalogue }) {
               {mode === "sign-in" && (
                 <>
                   New to Vault? {paneLink("sign-up", "Create an account")}
-                  <span className="mx-[0.4vw] text-white/20 max-lg:mx-1" aria-hidden="true">·</span>
-                  {paneLink("reset", "Forgot password")}
                 </>
               )}
               {mode === "sign-up" && (

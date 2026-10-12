@@ -20,6 +20,9 @@ vi.mock("@/lib/supabase", () => ({
   },
 }));
 
+let upgradeQuote = null;
+vi.mock("@/lib/upgrade", () => ({ getUpgradeQuote: vi.fn(async () => upgradeQuote) }));
+
 process.env.RAZORPAY_PLAN_PRO_QUARTERLY_USD = "plan_pro_q_usd";
 process.env.RAZORPAY_PLAN_PRO_YEARLY_INR = "plan_pro_y_inr";
 process.env.RAZORPAY_PLAN_PLUS_YEARLY_USD = "plan_plus_y_usd";
@@ -40,6 +43,7 @@ describe("POST /api/razorpay/create-subscription", () => {
     vi.clearAllMocks();
     auth.mockResolvedValue({ userId: "user_1" });
     subscriptionRow = null;
+    upgradeQuote = null;
   });
 
   it("401s when signed out", async () => {
@@ -96,6 +100,52 @@ describe("POST /api/razorpay/create-subscription", () => {
     const res = await POST(makeRequest({ tier: "pro_plus", interval: "yearly" }));
     expect(res.status).toBe(409);
     expect((await res.json()).reason).toBe("already_subscribed");
+    expect(createMock).not.toHaveBeenCalled();
+  });
+
+  it("upgrades a Pro subscriber to Pro+ with the prorated amount up front and a future start", async () => {
+    createMock.mockResolvedValue({ id: "sub_new" });
+    subscriptionRow = {
+      plan: "pro",
+      tier: "pro",
+      status: "active",
+      current_period_end: new Date(Date.now() + 86_400_000).toISOString(),
+      razorpay_subscription_id: "sub_pro",
+    };
+    upgradeQuote = {
+      eligible: true, currency: "INR", fullPrice: 1061900, credit: 444210, charge: 617690,
+      newPlanId: "plan_plus_y_inr", replacesSubscriptionId: "sub_pro", renewsAt: 1900000000,
+    };
+    const res = await POST(makeRequest({ tier: "pro_plus", interval: "yearly" }));
+    expect(res.status).toBe(200);
+    expect((await res.json()).upgrade).toEqual({ charge: 617690, credit: 444210, currency: "INR", renewsAt: 1900000000 });
+    expect(createMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        plan_id: "plan_plus_y_inr",
+        start_at: 1900000000,
+        addons: [{ item: expect.objectContaining({ amount: 617690, currency: "INR" }) }],
+        notes: expect.objectContaining({ tier: "pro_plus", replaces_subscription_id: "sub_pro", currency: "INR" }),
+      })
+    );
+  });
+
+  it("409s Pro yearly asking for Pro+ quarterly", async () => {
+    subscriptionRow = { plan: "pro", tier: "pro", status: "active", current_period_end: null, razorpay_subscription_id: "sub_pro" };
+    upgradeQuote = { eligible: false, reason: "interval-not-allowed" };
+    const res = await POST(makeRequest({ tier: "pro_plus", interval: "quarterly" }));
+    expect(res.status).toBe(409);
+    expect((await res.json()).reason).toBe("upgrade_interval");
+    expect(createMock).not.toHaveBeenCalled();
+  });
+
+  it("doesn't treat Pro -> Pro, Pro+ -> Pro or a pre-Pro+ subscriber as an upgrade", async () => {
+    const live = { plan: "pro", status: "active", current_period_end: null, razorpay_subscription_id: "sub_x" };
+    subscriptionRow = { ...live, tier: "pro" };
+    expect((await POST(makeRequest({ tier: "pro", interval: "yearly", currency: "INR" }))).status).toBe(409);
+    subscriptionRow = { ...live, tier: "pro_plus" };
+    expect((await POST(makeRequest({ tier: "pro", interval: "quarterly" }))).status).toBe(409);
+    subscriptionRow = { ...live, tier: null };
+    expect((await POST(makeRequest({ tier: "pro_plus", interval: "yearly" }))).status).toBe(409);
     expect(createMock).not.toHaveBeenCalled();
   });
 

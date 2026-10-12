@@ -31,10 +31,15 @@ function getTier(subscription) {
   return isValidTier(subscription?.notes?.tier) ? subscription.notes.tier : "pro_plus";
 }
 
+// End of the paid period. A prorated upgrade (lib/upgrade.js) is paid up
+// front but has no billing cycle until its future start_at, which is when its
+// first full charge falls due - so that's where its paid period ends.
 function getPeriodEnd(subscription) {
-  return subscription?.current_end
-    ? new Date(subscription.current_end * 1000).toISOString()
-    : null;
+  if (subscription?.current_end) return new Date(subscription.current_end * 1000).toISOString();
+  if (subscription?.start_at && subscription.start_at * 1000 > Date.now()) {
+    return new Date(subscription.start_at * 1000).toISOString();
+  }
+  return null;
 }
 
 async function updateClerkPlan(clerkUserId, publicMetadataPatch) {

@@ -10,6 +10,7 @@ import { useLenis } from "lenis/react";
 import { AnimatePresence, motion } from "motion/react";
 import { LABEL, T13, T14, T16, catalogueOf, priceOf } from "../tokens";
 import { PLANS, canRedeemCatalogue } from "@/lib/plans";
+import { SignInRequiredModal } from "@/components/ui/SignInRequiredModal";
 
 // Most credit coins drawn at once; a bigger balance shows as a number too
 const MAX_COINS = 10;
@@ -52,8 +53,15 @@ export function GetTemplateModal({ template, open, tab = "buy", onTab, onClose, 
   // null | "redeemed" | "already-owned" | "error"
   const [outcome, setOutcome] = useState(null);
   const [busy, setBusy] = useState(false);
+  // The sign-in modal over this one; closing it reloads the balance (now signed in)
+  const [signIn, setSignIn] = useState(false);
+  const [walletKey, setWalletKey] = useState(0);
+  const signInRef = useRef(false);
+  useEffect(() => {
+    signInRef.current = signIn;
+  });
 
-  // Fresh balance each time the popup opens, or a different template is shown
+  // Fresh balance each time the popup opens, a different template is shown, or after signing in
   useEffect(() => {
     if (!open || !template) return undefined;
     let live = true;
@@ -68,12 +76,13 @@ export function GetTemplateModal({ template, open, tab = "buy", onTab, onClose, 
     return () => {
       live = false;
     };
-  }, [open, template]);
+  }, [open, template, walletKey]);
 
   useEffect(() => {
     if (!open) return undefined;
     lenis?.stop();
-    const onKey = (e) => e.key === "Escape" && onClose();
+    // Escape closes the sign-in modal on top first, not this one
+    const onKey = (e) => e.key === "Escape" && !signInRef.current && onClose();
     window.addEventListener("keydown", onKey);
     const id = setTimeout(() => closeRef.current?.focus(), 50);
     return () => {
@@ -157,6 +166,7 @@ export function GetTemplateModal({ template, open, tab = "buy", onTab, onClose, 
   else message = `Spend 1 of your ${remaining} credit${remaining === 1 ? "" : "s"} on ${template.title}. You keep it forever, even if you cancel.`;
 
   return createPortal(
+    <>
     <AnimatePresence>
       {open && (
         <motion.div
@@ -305,12 +315,13 @@ export function GetTemplateModal({ template, open, tab = "buy", onTab, onClose, 
                           </a>
                         )}
                         {wallet && !wallet.signedIn && (
-                          <Link
-                            href={`/sign-in?redirect_url=${encodeURIComponent(pathname)}`}
-                            className={`inline-flex h-11 items-center bg-primary px-5 ${T16} text-background transition-colors duration-500 hover:bg-primary-hover`}
+                          <button
+                            type="button"
+                            onClick={() => setSignIn(true)}
+                            className={`inline-flex h-11 cursor-pointer items-center bg-primary px-5 ${T16} text-background transition-colors duration-500 hover:bg-primary-hover`}
                           >
                             Sign in
-                          </Link>
+                          </button>
                         )}
                         {wallet && !outcome && (!subscribed || locked || remaining < 1) && (
                           <Link
@@ -329,7 +340,17 @@ export function GetTemplateModal({ template, open, tab = "buy", onTab, onClose, 
           </motion.div>
         </motion.div>
       )}
-    </AnimatePresence>,
+    </AnimatePresence>
+    <SignInRequiredModal
+      open={signIn}
+      onClose={() => {
+        setSignIn(false);
+        setWalletKey((n) => n + 1);
+      }}
+      redirect={pathname}
+      action="get this template"
+    />
+    </>,
     document.body,
   );
 }

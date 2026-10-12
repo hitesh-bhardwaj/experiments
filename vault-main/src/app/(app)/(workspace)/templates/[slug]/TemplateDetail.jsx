@@ -345,16 +345,18 @@ export function TemplateDetail({ template, templateAccess = { allowed: false, re
 
       {/* ---------- what's inside + more templates ---------- */}
       <div data-sound-hover="off" data-sound-flow="off" className="relative flex flex-col gap-[7vw] bg-light py-[7%] text-ink max-md:gap-[15vw] max-md:py-[15%]">
-        <section id="template-inside" className={`${GUTTER} flex items-start justify-between gap-[4vw] max-lg:flex-col`}>
+        {/* The copy on top; the sections and the effects it's built from below, side by side */}
+        <section id="template-inside" className={`${GUTTER} flex flex-col gap-[3vw] max-lg:gap-10`}>
           {/* Article copy: styled by blog.css. Its light theme applies to a .blog-content
               inside a .blog-theme-light wrapper (as on the effect page), not to both on one
               element; body text is #1d1d1d here rather than the theme's #3a3a3a. */}
-          <div className="fadeup flex w-[32%] flex-col gap-6 max-lg:w-full">
+          <div className="fadeup flex w-[60%] flex-col gap-6 max-lg:w-full">
+            {/* Outside .blog-content, so it's the page's h1 size with no article margin */}
+            <h2 className="type-h1">
+              What’s <span className="gradient-text-animate">inside.</span>
+            </h2>
             <div className="blog-theme-light">
               <div className="blog-content [--blog-text-secondary:#1d1d1d]">
-                <h2>
-                  What’s <span className="gradient-text-animate">inside.</span>
-                </h2>
                 {(template.overview || []).map((paragraph, i) => (
                   <p key={i}>{paragraph}</p>
                 ))}
@@ -363,9 +365,13 @@ export function TemplateDetail({ template, templateAccess = { allowed: false, re
             {published && <p className={`${LABEL} text-black/40`}>Published {published}</p>}
           </div>
 
-          <div className="fadeup flex w-[64%] flex-wrap gap-[0.9vw] max-md:gap-[3.5vw] max-lg:w-full">
-            <InsideCard title="Sections included" className="w-[calc((100%-0.9vw)/2)] max-md:w-full">
-              <ol className="flex flex-col gap-2">
+          <div className="fadeup flex items-stretch gap-[0.9vw] max-md:flex-col max-md:gap-[3.5vw]">
+            <InsideCard title="Sections included" className="flex-1">
+              {/* Two columns (first half, then second half), pushed to the card's edges */}
+              <ol
+                className="grid grid-flow-col justify-between gap-x-[2vw] gap-y-2 max-md:gap-x-6"
+                style={{ gridTemplateRows: `repeat(${Math.max(1, Math.ceil((devices.desktop?.sections || []).length / 2))}, auto)` }}
+              >
                 {(devices.desktop?.sections || []).map((s, i) => (
                   <li key={`${s.name}-${i}`} className="type-body flex items-baseline gap-3">
                     <span className={`font-mono ${T13} text-primary`}>{String(i + 1).padStart(2, "0")}</span>
@@ -374,7 +380,7 @@ export function TemplateDetail({ template, templateAccess = { allowed: false, re
                 ))}
               </ol>
             </InsideCard>
-            <InsideCard title="Built from Vault effects" className="w-[calc((100%-0.9vw)/2)] max-md:w-full">
+            <InsideCard title="Built from Vault effects" className="flex-1">
               <div className="flex flex-wrap gap-1.5">
                 {vaultEffects.map((fx) => (
                   <Link key={fx.name} href={fx.href} className={`inline-flex h-7.5 items-center bg-light px-3 ${T14} transition-colors duration-500 hover:bg-primary hover:text-background`}>
@@ -383,23 +389,11 @@ export function TemplateDetail({ template, templateAccess = { allowed: false, re
                 ))}
               </div>
             </InsideCard>
-            <InsideCard title="Stack" className="w-full">
-              <div className="flex flex-wrap gap-1.5">
-                {stack.map((s) => (
-                  <span key={s} className={`inline-flex h-7.5 items-center bg-light px-3 ${T14}`}>
-                    {s}
-                  </span>
-                ))}
-              </div>
-              <p className={`${T14} text-black/60`}>
-                Built from Vault effects, so every section ships with the same dependency notes, reduced-motion handling and mobile behaviour as the effects themselves.
-              </p>
-            </InsideCard>
           </div>
         </section>
 
         {related.length > 0 && (
-          <section id="related-templates" className={`${GUTTER} flex flex-col gap-8`}>
+          <section id="related-templates" className={`${GUTTER} flex flex-col gap-12`}>
             <div className="flex flex-wrap items-end justify-between gap-4">
               <HeadAnim rotate={0} by="words">
                 <h2 className="type-h1">

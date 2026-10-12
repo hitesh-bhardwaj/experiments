@@ -175,6 +175,16 @@ export default function PricingPlansHome({ currency: initialCurrency, checkout =
 
     useFadeUp(rootRef);
 
+    // Arriving with ?checkout=<tier>.<interval> (the homepage cards, via sign-in):
+    // show that billing period, so its card's button is the one that opens checkout
+    useEffect(() => {
+        if (!checkout) return;
+        const interval = new URLSearchParams(window.location.search).get("checkout")?.split(".")[1];
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        if (interval === "quarterly") setPeriod("q");
+        else if (interval === "yearly") setPeriod("y");
+    }, [checkout]);
+
     useLayoutEffect(() => {
         const bill = billRef.current;
         const place = () => {
@@ -287,11 +297,15 @@ export default function PricingPlansHome({ currency: initialCurrency, checkout =
                                         currency={currency}
                                         text={plan.cta.text}
                                         variant={plan.cta.variant}
+                                        successHref={`/effects?upgraded=${plan.tier}.${period === "y" ? "yearly" : "quarterly"}`}
+                                        resumeCheckout
                                         className={`w-fit justify-center ${plan.cta.variant === "outline" ? LIGHT_OUTLINE : ""}`}
                                     />
                                 ) : (
+                                    // Homepage: through sign-in (which passes straight through when
+                                    // already signed in) to the pricing page, which opens checkout
                                     <Button
-                                        href="/pricing#plans"
+                                        href={`/sign-in?redirect_url=${encodeURIComponent(`/pricing?checkout=${plan.tier}.${period === "y" ? "yearly" : "quarterly"}#plans`)}`}
                                         text={plan.cta.text}
                                         variant={plan.cta.variant}
                                         className={`w-fit justify-center ${plan.cta.variant === "outline" ? LIGHT_OUTLINE : ""}`}

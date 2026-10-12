@@ -67,7 +67,7 @@ export const CLERK_PARAM_FIELDS = {
 export const LEGAL_LINKS = { terms: "/legal/terms-of-service", privacy: "/legal/privacy-policy" };
 
 // Shared styles, following the homepage (src/homepage) conventions
-export const LABEL_CLASS = "font-avenir text-[11px] font-medium uppercase tracking-[.14em]";
+export const LABEL_CLASS = "font-avenir text-[1vw] font-medium ";
 export const FOCUS_RING_CLASS = "focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-primary";
-// Feeds the dark autofill rule in globals.css, as the footer newsletter does
-export const INPUT_AUTOFILL_STYLE = { "--input-autofill-bg": "#111210", "--input-autofill-text": "#ffffff" };
+// Feeds the autofill rule in globals.css: no fill (the field shows through), white text
+export const INPUT_AUTOFILL_STYLE = { "--input-autofill-bg": "transparent", "--input-autofill-text": "#ffffff" };

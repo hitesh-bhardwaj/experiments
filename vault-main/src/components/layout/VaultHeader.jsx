@@ -454,12 +454,13 @@ export function VaultHeader({
       {/* Desktop header - untouched, >1025px only (or never, when mobileOnly). */}
       <header
         ref={desktopHeaderRef}
-        className={`fixed left-0 right-0 top-(--announcement-offset) transition-[top] duration-300 ease-out z-50 px-[2vw] py-3.5 ${mobileOnly ? "hidden" : "max-lg:hidden"} ${isScrolled ? "bg-black/20 backdrop-blur-sm" : ""
+        className={`fixed left-0 right-0 top-(--announcement-offset) transition-[top] duration-300 ease-out z-50 px-[2vw] py-4.5 ${mobileOnly ? "hidden" : "max-lg:hidden"} ${isScrolled ? "bg-black/20 backdrop-blur-sm" : ""
           }`}
       >
         <div className="flex h-full items-center justify-end gap-3">
-          {/* items-stretch: search, sound and the buttons all share the buttons' height */}
-          <div className="flex items-stretch gap-3">
+          {/* One fixed height (--vault-ctl-h) for search, sound, the buttons and the avatar,
+              signed in or out - the avatar used to make the row taller once signed in. */}
+          <div className="flex h-(--vault-ctl-h) items-stretch gap-3">
             {showSearch && (
               <button
                 type="button"
@@ -489,7 +490,7 @@ export function VaultHeader({
             )}
 
             {/* fit: same height as the search button (both stretch to the row). */}
-            <SoundToggle fit className="self-stretch bg-[#161616]! transition-colors duration-300 hover:bg-white/10!" />
+            <SoundToggle fit size={32} className="self-stretch bg-[#161616]! transition-colors duration-300 hover:bg-white/10!" />
 
             {isLoaded && user?.publicMetadata?.plan !== "pro" && (
               <div className="flex max-lg:hidden">

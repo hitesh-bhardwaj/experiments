@@ -111,7 +111,7 @@ const faqItems = [
     id: "faq6",
     question: "Can I switch plans or billing period?",
     answer:
-      "Yes, at the end of your current billing period: let your plan run out, then pick the new one. Templates you've redeemed and code you've installed stay yours.",
+      "Pro subscribers can upgrade to Pro+ at any time: click Upgrade to Pro+, pay, and Pro+ starts right away while your Pro plan is cancelled so it doesn't renew. Other changes happen at the end of your billing period: let your plan run out, then pick the new one. Templates you've redeemed, unused credits and code you've installed stay yours.",
   },
   {
     id: "faq-installs",

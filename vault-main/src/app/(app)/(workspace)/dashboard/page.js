@@ -208,8 +208,10 @@ export default function DashboardPage() {
                 </p>
                 {data.tier === "pro" && (
                   <p>
-                    Need 10 installs a day and the full template catalogue? Move
-                    to Pro+ once this billing period ends.
+                    Need 10 installs a day and the full template catalogue?{" "}
+                    <Link href="/pricing#plans" className="text-white underline underline-offset-2">
+                      Upgrade to Pro+
+                    </Link>
                   </p>
                 )}
               </div>
