@@ -241,6 +241,12 @@
   color: var(--blog-text-color);
 }
 
+/* Props table: prop names and defaults stay in the code font but without the grey chip */
+.blog-content .blog-props-table code {
+  padding: 0;
+  background-color: transparent;
+}
+
 .blog-content pre:not(:where(.codeblock-root, .codeblock) *) {
   margin: 2rem 0;
   padding: 1.5rem;
@@ -1079,38 +1085,38 @@
   border-color: rgba(29, 29, 29, 0.12);
 }
 
-/* Blog posts: header row like the legal/docs tables (DocsTable) - dark fill, white
+/* Blog posts and effect pages: header row like the legal/docs tables (DocsTable) - dark fill, white
    text, weight 500. Only the default ("vault") variant; orange/muted/outline keep theirs. */
-#blog-content.blog-theme-light .blog-content .blog-table-wrap:not([data-variant="orange"], [data-variant="muted"], [data-variant="outline"]) {
+:is(#blog-content, #effect-content).blog-theme-light .blog-content .blog-table-wrap:not([data-variant="orange"], [data-variant="muted"], [data-variant="outline"]) {
   --table-header-bg: rgb(0 0 0 / 0.8);
   --table-header-color: #ffffff;
 }
 
-#blog-content.blog-theme-light .blog-content .blog-table-wrap th {
+:is(#blog-content, #effect-content).blog-theme-light .blog-content .blog-table-wrap th {
   font-weight: 500;
 }
 
 /* Single border like DocsTable: the wrapper draws the outer edge, cells only draw the
    lines between them (each cell's own outer border doubled up with the wrapper's) */
-#blog-content.blog-theme-light .blog-content .blog-table-wrap {
+:is(#blog-content, #effect-content).blog-theme-light .blog-content .blog-table-wrap {
   border-color: var(--table-border);
 }
 
-#blog-content.blog-theme-light .blog-content .blog-table-wrap:not([data-variant="orange"], [data-variant="muted"], [data-variant="outline"]) {
+:is(#blog-content, #effect-content).blog-theme-light .blog-content .blog-table-wrap:not([data-variant="orange"], [data-variant="muted"], [data-variant="outline"]) {
   --table-border: rgba(29, 29, 29, 0.14);
 }
 
-#blog-content.blog-theme-light .blog-content .blog-table-wrap :is(th, td) {
+:is(#blog-content, #effect-content).blog-theme-light .blog-content .blog-table-wrap :is(th, td) {
   border: 0;
   border-right: 1px solid var(--table-border);
   border-bottom: 1px solid var(--table-border);
 }
 
-#blog-content.blog-theme-light .blog-content .blog-table-wrap :is(th, td):last-child {
+:is(#blog-content, #effect-content).blog-theme-light .blog-content .blog-table-wrap :is(th, td):last-child {
   border-right: 0;
 }
 
-#blog-content.blog-theme-light .blog-content .blog-table-wrap tbody tr:last-child td {
+:is(#blog-content, #effect-content).blog-theme-light .blog-content .blog-table-wrap tbody tr:last-child td {
   border-bottom: 0;
 }
 
@@ -1139,10 +1145,18 @@
   background: rgba(29, 29, 29, 0.15);
 }
 
+/* Square markers like the site's buttons (■); the latest version is filled orange.
+   The ring matches the light sheet so the timeline line stops short of each marker. */
 .blog-theme-light .blog-changelog-dot {
-  border-color: rgba(29, 29, 29, 0.6);
-  background: #ffffff;
-  box-shadow: 0 0 0 0.25rem #ffffff;
+  border-color: rgba(29, 29, 29, 0.4);
+  border-radius: 0;
+  background: var(--light);
+  box-shadow: 0 0 0 0.25rem var(--light);
+}
+
+.blog-theme-light .blog-changelog-item:first-child .blog-changelog-dot {
+  border-color: var(--primary);
+  background: var(--primary);
 }
 
 .blog-theme-light .blog-changelog-date {

@@ -480,7 +480,7 @@ export function EffectDetailContent({
 
                 {/* FAQ + custom animation block - the same components as the effects listing */}
                 <div className="flex h-full w-full flex-col gap-[2vw]">
-                  {faqItems.length > 0 && <FAQ faqItems={faqItems} translateTop={false} />}
+                  {faqItems.length > 0 && <FAQ faqItems={faqItems} translateTop={false} bgClassName="bg-light" />}
                   <div className="mx-auto w-full max-w-[1536px] px-[4.5vw] max-md:px-[6vw]">
                     <CustomAnimationCta cta={safeContent?.ctaBanner} sectionRef={ctaSectionRef} />
                   </div>
@@ -653,7 +653,7 @@ function EffectChangelogSection({ changelog = [] }) {
                   iconStrokeWidth={1.8}
                 >
                   <FAQTitle
-                    className="blog-changelog-trigger"
+                    className="blog-changelog-trigger w-fit! justify-start! gap-[0.8vw]!"
                     iconPosition="right"
                   >
                     <div className="blog-changelog-row">
