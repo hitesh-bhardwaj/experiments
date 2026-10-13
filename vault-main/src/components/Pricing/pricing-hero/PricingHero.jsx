@@ -74,7 +74,7 @@ export default function PricingHero() {
         {/* Tablet and mobile: a looping video instead of the WebGL blob */}
         {isDesktop === false && (
           <video
-            src="/assets/hero-videos/pricing-hero.mp4"
+            src="/assets/hero-videos/pricing.mp4"
             autoPlay
             muted
             loop

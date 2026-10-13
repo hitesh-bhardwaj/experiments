@@ -36,7 +36,7 @@ export default function CommunityHero() {
         <div className="pointer-events-none absolute inset-x-0 top-0 -z-1 hidden h-svh max-lg:block" aria-hidden="true">
           {isDesktop === false && (
             <video
-              src="/assets/hero-videos/community-hero.mp4"
+              src="/assets/hero-videos/community.mp4"
               autoPlay
               muted
               loop

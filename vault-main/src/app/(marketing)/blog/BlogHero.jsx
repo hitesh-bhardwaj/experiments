@@ -35,7 +35,7 @@ export default function BlogHero() {
         {/* Tablet and mobile: a looping video instead of the WebGL blob */}
         {isDesktop === false && (
           <video
-            src="/assets/hero-videos/blog-hero.mp4"
+            src="/assets/hero-videos/blog.mp4"
             autoPlay
             muted
             loop
