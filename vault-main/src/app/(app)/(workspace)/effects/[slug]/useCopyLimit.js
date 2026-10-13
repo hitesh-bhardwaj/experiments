@@ -3,6 +3,8 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import { useToastQueue, ToastViewport } from "@/components/ui/Toast";
+import { getLimitNudge } from "@/lib/limitNudge";
+import { mergeCopyUsage, publishCopyUsage, subscribeCopyUsage } from "@/lib/copyUsageEvents";
 
 const CopyLimitContext = createContext(null);
 
@@ -16,6 +18,12 @@ export function CopyLimitProvider({ children, onRequireSignIn, onRequireUpgrade,
   const [usage, setUsage] = useState(null);
   const { toast, showToast, dismissToast } = useToastQueue();
 
+  // Kept in step with the effect cards / preview drawer on this page
+  useEffect(
+    () => subscribeCopyUsage((next) => setUsage((previous) => mergeCopyUsage(previous, next))),
+    []
+  );
+
   // Surfaces the "X of Y copies left today" nudge after every copy attempt
   // that actually touches the daily limit - skipped for admins (unlimited)
   // since there's nothing worth reporting.
@@ -27,22 +35,14 @@ export function CopyLimitProvider({ children, onRequireSignIn, onRequireUpgrade,
       const remaining = Math.max(0, data.remaining ?? 0);
       const count = data.count ?? Math.max(0, limit - remaining);
 
-      // Free -> any plan, Pro -> Pro+; Pro+ is the top limit, so no offer
-      const upsell = data.plan !== "pro" ? "See plans" : data.tier === "pro" ? "See Pro+" : null;
+      if (remaining === 0) {
+        showToast(getLimitNudge(data));
+        return;
+      }
 
       showToast({
-        title:
-          remaining > 0
-            ? `${remaining} of ${limit} daily installs left`
-            : "Daily install limit reached",
-        description:
-          remaining > 0
-            ? `You've used ${count}/${limit} installs today, across copies, CLI and MCP.`
-            : upsell
-              ? `Come back tomorrow, or ${data.tier === "pro" ? "move to Pro+ for 10 a day" : "pick a plan for a higher limit"}.`
-              : "Come back tomorrow for more.",
-        ctaHref: remaining === 0 && upsell ? "/pricing" : null,
-        ctaLabel: upsell,
+        title: `${remaining} of ${limit} daily installs left`,
+        description: `You've used ${count}/${limit} installs today, across copies, CLI and MCP.`,
       });
     },
     [showToast]
@@ -109,6 +109,7 @@ export function CopyLimitProvider({ children, onRequireSignIn, onRequireUpgrade,
         const data = await res.json();
 
         setUsage(data);
+        publishCopyUsage(data);
         notifyUsage(data);
 
         return Boolean(data.allowed);
@@ -144,12 +145,15 @@ export function CopyLimitProvider({ children, onRequireSignIn, onRequireUpgrade,
   // server-side and returns the same usage shape as copy-usage's POST -
   // this keeps the shared count (and the "X of Y left" toast) in sync
   // without a second round-trip.
+  // Get code menu responses (counts, no effect list) - merged, and shared
   const applyUsage = useCallback(
     (data) => {
-      setUsage(data);
+      const merged = mergeCopyUsage(usage, data, effectSlug);
+      setUsage(merged);
+      publishCopyUsage(merged);
       notifyUsage(data);
     },
-    [notifyUsage]
+    [notifyUsage, usage, effectSlug]
   );
 
   const requireSignIn = useCallback(() => onRequireSignIn?.(), [onRequireSignIn]);
@@ -172,7 +176,9 @@ export function CopyLimitProvider({ children, onRequireSignIn, onRequireUpgrade,
     showToast,
     isLocked,
     selectable,
-    lockedCtaHref: usage?.plan === "pro" || usage?.isAdmin ? null : "/pricing",
+    // Free -> Upgrade to Pro, Pro -> Upgrade to Pro+, Pro+ -> none (lib/limitNudge.js)
+    lockedCtaHref: getLimitNudge(usage).ctaHref,
+    lockedCtaLabel: getLimitNudge(usage).ctaLabel,
   };
 
   return (

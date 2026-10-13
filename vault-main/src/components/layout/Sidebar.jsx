@@ -182,6 +182,8 @@ export function Sidebar({
   topLinks = DEFAULT_DOCS_TOP_LINKS,
   legalLinks = DEFAULT_LEGAL_LINKS,
   disableInitialTransition = false,
+  // Called once the sidebar has hydrated (VaultLayout applies the stored state after it)
+  onMounted,
   onOverviewNavigate,
   onCategoryNavigate,
   onDocumentationNavigate,
@@ -241,7 +243,7 @@ export function Sidebar({
   const [fetchedEffects, setFetchedEffects] = useState([]);
   const [openSection, setOpenSection] = useState(initialOpenSection);
   const [hoveredSidebarKey, setHoveredSidebarKey] = useState("");
-  const { startNavigation, scrollToTop } = useVaultLayout();
+  const { startNavigation, scrollToTop, isSidebarReady } = useVaultLayout();
 
   // A single scrollToTop() call at click time can lose the race against
   // layout recalculation that happens shortly after the route actually
@@ -261,14 +263,21 @@ export function Sidebar({
     window.setTimeout(scrollToTop, 400);
   };
 
-  // Fades in when the sidebar first mounts - a page load or reload (it stays mounted
-  // across client navigation, so moving between pages doesn't replay it).
+  // Rendered at opacity 0 (server HTML included) and faded in once the page is ready -
+  // after VaultLayout has applied the stored open / closed state (isSidebarReady), so a
+  // reload never shows it open and then snapping shut. It stays mounted across client
+  // navigation, so moving between pages doesn't replay it.
   const asideRef = useRef(null);
+  const onMountedRef = useRef(onMounted);
   useLayoutEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return undefined;
-    const tween = gsap.fromTo(asideRef.current, { opacity: 0 }, { opacity: 1, duration: 0.9, ease: "power2.out", clearProps: "opacity" });
-    return () => tween.kill();
+    onMountedRef.current?.();
   }, []);
+  useLayoutEffect(() => {
+    if (!isSidebarReady) return undefined;
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const tween = gsap.to(asideRef.current, { opacity: 1, duration: reduced ? 0 : 0.9, ease: "power2.out" });
+    return () => tween.kill();
+  }, [isSidebarReady]);
   const previousRouteSectionRef = useRef(initialOpenSection);
   const categoryNavigationInProgressRef = useRef(false);
 
@@ -559,20 +568,21 @@ export function Sidebar({
   return (
     <aside
       ref={asideRef}
+      data-vault-sidebar
+      // Width (and the toggle's spot) come from <html data-sidebar> in globals.css, set
+      // before the first paint from the stored state - so it's right from the first frame
+      // however late this hydrates; the slide is only on once the page is ready.
+      data-sidebar-width
       data-sound-flow="off"
-      className={`sticky bottom-0 left-0 top-0 z-51 h-screen bg-[#111111] text-white max-lg:hidden ${
-        disableInitialTransition
-          ? "transition-none"
-          : "transition-[width] duration-300 ease-out"
-      } ${isExpanded ? "w-[20vw]" : "w-[5.5vw]"}`}
+      className="sticky bottom-0 left-0 top-0 z-51 h-screen opacity-0 bg-[#111111] text-white max-lg:hidden"
     >
       <button
         type="button"
         aria-label={isExpanded ? "Collapse sidebar" : "Expand sidebar"}
         onClick={toggle}
-        className={`absolute top-6  z-50 bg-[#1C1C1C] hidden size-10 cursor-pointer items-center justify-center  text-white transition-all duration-300 ease-out hover:bg-stone-700 hover:text-white sm:flex ${
-          isExpanded ? "left-[20.4vw]" : "left-[6vw]"
-        }`}
+        // Its spot follows the sidebar's width (globals.css, html[data-sidebar])
+        data-vault-sidebar-toggle
+        className="absolute top-6  z-50 bg-[#1C1C1C] hidden size-10 cursor-pointer items-center justify-center  text-white hover:bg-stone-700 hover:text-white sm:flex"
       >
         <div className={isExpanded ? "" : "-scale-x-100"}>
           <PanelLeft className="h-4 w-4" />

@@ -20,9 +20,10 @@ import {
 import { BreadcrumbsJSONLD, FAQJSONLD, WebpageJsonLd } from "@/lib/json-ld";
 import { getEffectInstallCounts } from "@/lib/cli-install-stats";
 
+// Shown while the listing loads: the page colour (#111111), not black, so there's no dark flash
 function VaultFallback() {
   return (
-    <div className="min-h-[300vh] w-screen bg-black">
+    <div className="min-h-[300vh] w-full bg-background">
     </div>
   );
 }

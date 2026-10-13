@@ -45,9 +45,11 @@ export function ToastViewport({ toast, onDismiss, position = "top-right" }) {
   if (!mounted) return null;
 
   return createPortal(
+    // z-100000: above everything on the page, modals (z-9999) included, and
+    // just below the page transition (z-100001)
     <div
       aria-live="polite"
-      className={`fixed z-9999 w-[min(22rem,calc(100vw-2rem))] transition-all duration-300 ${
+      className={`fixed z-100000 w-[min(22rem,calc(100vw-2rem))] transition-all duration-300 ${
         position === "bottom-center"
           ? "bottom-6 left-1/2 -translate-x-1/2"
           : "top-6 right-6"

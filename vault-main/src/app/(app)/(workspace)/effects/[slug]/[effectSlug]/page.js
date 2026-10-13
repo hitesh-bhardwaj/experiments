@@ -14,6 +14,7 @@ import {
   buildEffectsFromSanity,
   getEffectsByCategoryFromSanity,
 } from "@/lib/sanity";
+import { getUnlockedEffectSlugsToday, resolveSignedInIdentity } from "@/lib/install-limit";
 import { getEffectAccessDecision } from "@/lib/effect-access";
 import { getEffectCategoryBySlug } from "@/lib/categories";
 import { EffectDetailContent } from "../effect-detail";
@@ -46,8 +47,14 @@ function redactLockedBody(body, isLocked) {
   if (!isLocked || !Array.isArray(body)) return body;
 
   return body.map((block) => {
+    // Blocks nested in others (a callout's content) are stripped the same way
+    if (Array.isArray(block?.content)) {
+      block = { ...block, content: redactLockedBody(block.content, isLocked) };
+    }
+
     if (block?._type === "effectCodeBlock") {
-      const { code, ...rest } = block;
+      // Both versions of the source: tsxCode is the TypeScript one
+      const { code, tsxCode, ...rest } = block;
       return rest;
     }
 
@@ -265,6 +272,27 @@ export default async function EffectPage({ params }) {
   const access = await getEffectAccessDecision({ effectTier, clerkUserId: userId });
   const isLocked = !access.allowed;
 
+  // Why this page's code is withheld, if it is - decided here, never in the
+  // browser, so the real source only ever reaches people allowed to copy it:
+  //   "sign-in" - signed out
+  //   "pro"     - a Pro effect without Pro
+  //   "limit"   - today's install limit is used up and this effect isn't one
+  //               of today's (effects copied today stay open)
+  let codeLock = null;
+  let lockTier = null;
+  if (!userId) {
+    codeLock = "sign-in";
+  } else if (isLocked) {
+    codeLock = "pro";
+  } else {
+    const identity = await resolveSignedInIdentity(userId);
+    lockTier = identity.tier;
+    if (!identity.isAdmin && identity.limit != null) {
+      const unlockedToday = await getUnlockedEffectSlugsToday({ clerkUserId: userId });
+      if (!unlockedToday.includes(effectSlug) && unlockedToday.length >= identity.limit) codeLock = "limit";
+    }
+  }
+
   // Only attach Pro source content once the requester is confirmed authorized.
   const effect = isLocked ? effectMeta : getEffectSource(effectSlug);
 
@@ -315,7 +343,12 @@ export default async function EffectPage({ params }) {
 
   // Only the object actually sent to the client needs redaction - FAQ/SEO
   // extraction above already ran against the full `content`.
-  const clientContent = { ...content, body: redactLockedBody(content.body, isLocked) };
+  // jsxCode / tsxCode are the effect's full source (the Sanity query takes
+  // every field). The page never needs them - the "Get code" menu fetches
+  // source from /api/effects/[slug]/copy, which checks access and the daily
+  // limit - so they're dropped for everyone.
+  const { jsxCode: _jsx, tsxCode: _tsx, ...publicContent } = content;
+  const clientContent = { ...publicContent, body: redactLockedBody(content.body, Boolean(codeLock)) };
 
   return (
     <>
@@ -332,6 +365,8 @@ export default async function EffectPage({ params }) {
         effectCounts={effectCounts}
         totalEffects={sanityEntries.length}
         isLocked={isLocked}
+        codeLock={codeLock}
+        lockTier={lockTier}
         searchEffects={globalSearchEffects}
       />
     </>

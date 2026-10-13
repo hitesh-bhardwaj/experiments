@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { createContext, useContext, Suspense, useCallback, useEffect, useMemo, useRef, useState, useLayoutEffect } from "react";
 import { useLenis } from "lenis/react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import gsap from "gsap";
@@ -82,12 +82,11 @@ function RouteChangeWatcher({ isSidebarReady, onRouteChange }) {
 function SidebarFallback({ isExpanded }) {
   return (
     <aside
-      className={`sticky bottom-0 left-0 top-0 h-screen border-r border-white/10 bg-[#060606] text-foreground max-lg:hidden ${
-        isExpanded ? "w-[288px]" : "w-22"
-      }`}
+      data-sidebar-width
+      className="sticky bottom-0 left-0 top-0 h-screen border-r border-white/10 bg-[#111111] text-foreground max-lg:hidden"
     >
       <div className="flex h-full items-start justify-center px-2 py-3">
-        <div className="h-29.5 w-full border-b border-white/10 bg-[#080808]" />
+        <div className="h-29.5 w-full border-b border-white/10 bg-[#111111]" />
       </div>
     </aside>
   );
@@ -112,6 +111,19 @@ export function VaultLayout({
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isSidebarReady, setIsSidebarReady] = useState(false);
   const [allowSidebarTransition, setAllowSidebarTransition] = useState(false);
+  // The Sidebar sits in its own Suspense boundary, so it can hydrate after this layout.
+  // The stored open / closed state is applied only once it has (sidebarMounted):
+  // applied earlier, React would hydrate the server's open markup against the closed
+  // state, leave the open DOM in place, and catch up later with the transition on -
+  // the sidebar visibly sliding shut on a reload.
+  const [sidebarMounted, setSidebarMounted] = useState(false);
+  const markSidebarMounted = useCallback(() => setSidebarMounted(true), []);
+  useEffect(() => {
+    // Fallback, only for a sidebar that never mounts (it always should). Long on purpose:
+    // firing before a slow hydration finishes would bring the sliding back.
+    const timer = setTimeout(() => setSidebarMounted(true), 10000);
+    return () => clearTimeout(timer);
+  }, []);
   const [isNavigating, setIsNavigating] = useState(false);
 
   useEffect(() => {
@@ -251,6 +263,7 @@ export function VaultLayout({
   }, [forceStartLenis, refreshScrollTrigger, scrollToTop]);
 
   useEffect(() => {
+    if (!sidebarMounted) return undefined;
     let frameTwo;
     let frameThree;
 
@@ -271,13 +284,38 @@ export function VaultLayout({
       cancelAnimationFrame(frameTwo);
       cancelAnimationFrame(frameThree);
     };
-  }, [refreshScrollTrigger]);
+  }, [refreshScrollTrigger, sidebarMounted]);
 
   useEffect(() => {
     return () => {
       clearRefreshTimeouts();
     };
   }, [clearRefreshTimeouts]);
+
+  // <html data-sidebar> drives the sidebar's width (globals.css). The head script sets it
+  // from storage before the first paint; from here on it follows the state. The slide
+  // transition is switched on (data-sidebar-animate) only once the page is ready.
+  useLayoutEffect(() => {
+    if (!isSidebarReady) return;
+    document.documentElement.dataset.sidebar = isSidebarOpen ? "expanded" : "collapsed";
+  }, [isSidebarOpen, isSidebarReady]);
+  useLayoutEffect(() => {
+    if (!allowSidebarTransition) return undefined;
+    const html = document.documentElement;
+    html.setAttribute("data-sidebar-animate", "");
+    return () => html.removeAttribute("data-sidebar-animate");
+  }, [allowSidebarTransition]);
+
+  // The stored sidebar state is now rendered: let the page-load overlay lift
+  // (PageLoadOverlay waits for this on vault pages, so the layout never shifts in view).
+  useEffect(() => {
+    if (!isSidebarReady) return undefined;
+    const frame = requestAnimationFrame(() => {
+      window.__vaultSidebarReady = true;
+      window.dispatchEvent(new Event("vault:sidebar-ready"));
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [isSidebarReady]);
 
   useEffect(() => {
     if (!isSidebarReady) return;
@@ -500,6 +538,7 @@ export function VaultLayout({
               onCategoryNavigate={handleCategoryNavigate}
               onDocumentationNavigate={handleDocumentationNavigate}
               disableInitialTransition={!allowSidebarTransition}
+              onMounted={markSidebarMounted}
             />
           </Suspense>
 

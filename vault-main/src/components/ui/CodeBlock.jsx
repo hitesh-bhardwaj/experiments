@@ -174,7 +174,7 @@ function getVariantFilename(filename, variant) {
     return `${filename}.jsx`;
 }
 
-function CopyLimitOverlay({ message, ctaHref }) {
+function CopyLimitOverlay({ message, ctaHref, ctaLabel = "Upgrade to Pro" }) {
     return (
         <div className="absolute inset-0 z-20 flex flex-col items-center justify-center gap-3 bg-white/10 px-6 py-6 text-center backdrop-blur-md">
             <Lock className="h-8 w-8 text-white/70" strokeWidth={1.5} />
@@ -186,7 +186,7 @@ function CopyLimitOverlay({ message, ctaHref }) {
                     href={ctaHref}
                     className="bg-[#ff5f00] px-4 py-2 text-xs font-medium text-white! transition hover:bg-[#e05500]"
                 >
-                    Upgrade to Pro
+                    {ctaLabel}
                 </Link>
             )}
         </div>
@@ -240,8 +240,9 @@ export function CodeBlock({
     copyLocked = false,
     selectable = true,
     onBeforeCopy,
-    lockedMessage = "You've reached today's effect copy limit. Effects you've already copied from stay unlocked.",
+    lockedMessage = "You've reached today's install limit. Effects you've already copied today stay unlocked.",
     lockedCtaHref = null,
+    lockedCtaLabel,
     showLanguageToggle = true,
     showCopyButton = true,
 }) {
@@ -330,7 +331,7 @@ export function CodeBlock({
 
     return (
         <div data-sound-hover="off" className={`codeblock-root fadeup relative my-6 overflow-hidden bg-[#111] shadow-[0_30px_60px_-40px_rgba(0,0,0,.6)] ${className}`}>
-            {copyLocked && <CopyLimitOverlay message={lockedMessage} ctaHref={lockedCtaHref} />}
+            {copyLocked && <CopyLimitOverlay message={lockedMessage} ctaHref={lockedCtaHref} ctaLabel={lockedCtaLabel} />}
             <div className="flex h-12 items-center justify-between border-b border-[#f4f4f4]/6 bg-[#1a1a1a] pr-2.5 pl-4">
                 <span className="flex min-w-0 items-center gap-[7px] font-mono text-[13px] text-[#d8d8d8]">
                     <i className="size-[9px] shrink-0 rounded-full bg-[#3a3a3a]" />
@@ -416,7 +417,7 @@ export function InstallCommand({
     copyLocked = false,
     selectable = true,
     onBeforeCopy,
-    lockedMessage = "You've reached today's effect copy limit. Effects you've already copied from stay unlocked.",
+    lockedMessage = "You've reached today's install limit. Effects you've already copied today stay unlocked.",
 }) {
     const [copied, setCopied] = useState(false);
     const command = `npx hyperiux add ${effect}`;

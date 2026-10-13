@@ -271,7 +271,7 @@ export default function UsagePage() {
           value={<span className="capitalize">{plan}</span>}
           detail={
             !isUnlimited && plan !== "pro" ? (
-              <Link href="/pricing" className="text-[#ff5f00] hover:text-[#ff7a29]">
+              <Link href="/pricing#plans" className="text-[#ff5f00] hover:text-[#ff7a29]">
                 Upgrade for a higher limit
               </Link>
             ) : null

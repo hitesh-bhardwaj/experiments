@@ -1,4 +1,5 @@
 import { ClerkProvider } from "@clerk/nextjs";
+import PendingCheckoutResume from "@/components/Payments/PendingCheckoutResume";
 
 const clerkLocalization = {
   signUp: {
@@ -37,6 +38,7 @@ export default function AppLayout({ children }) {
         },
       }}
     >
+      <PendingCheckoutResume />
       {children}
     </ClerkProvider>
   );

@@ -2,19 +2,20 @@ import "server-only";
 import { supabase } from "@/lib/supabase";
 import { razorpay } from "@/lib/razorpay";
 import { ACTIVE_PRO_STATUSES } from "@/lib/subscription";
-import { isValidTier } from "@/lib/plans";
+import { getUpgradeKind, isValidTier } from "@/lib/plans";
 import { describeRazorpayPlan, getRazorpayPlanId } from "@/lib/plans.server";
 
-// Pro -> Pro+ upgrades, prorated. The unused part of the current Pro period
-// is credited against Pro+:
+// Upgrades, prorated: Pro -> Pro+, or quarterly -> yearly on the same plan
+// (getUpgradeKind in plans.js). The unused part of the current period is
+// credited against the new plan:
 //
-//   credit    = Pro price x (days left in the Pro period / days in it)
-//   pay today = Pro+ price - credit
+//   credit    = current price x (days left in the period / days in it)
+//   pay today = new price - credit
 //
-// Pro+ starts today and runs a full quarter or year from today: the new
-// Razorpay subscription is created with start_at one period from now (its
+// The new plan starts today and runs a full quarter or year from today: the
+// new Razorpay subscription is created with start_at one period from now (its
 // first full charge) and "pay today" as an upfront addon, which Razorpay
-// collects with the authorisation payment. The old Pro subscription is then
+// collects with the authorisation payment. The old subscription is then
 // cancelled (see subscription-events.js). All amounts are in the currency's
 // smallest unit (cents / paise), as Razorpay stores them.
 
@@ -41,15 +42,12 @@ export function computeUpgradeCharge({ oldAmount, periodStart, periodEnd, newAmo
   };
 }
 
-// Which upgrades are offered: Pro -> Pro+ only, and never to a shorter
-// billing period (Pro yearly -> Pro+ quarterly would leave Pro credit unused)
-export function isUpgradeAllowed({ fromTier, fromInterval, toTier, toInterval }) {
-  if (fromTier !== "pro" || toTier !== "pro_plus") return false;
-  return !(fromInterval === "yearly" && toInterval === "quarterly");
+export function isUpgradeAllowed(change) {
+  return Boolean(getUpgradeKind(change));
 }
 
 /**
- * Everything needed to price and start a Pro -> Pro+ upgrade for this user,
+ * Everything needed to price and start an upgrade for this user,
  * or { eligible: false, reason } when there's nothing to upgrade.
  * The currency is always the current subscription's: Razorpay can't apply a
  * credit across currencies.
@@ -73,8 +71,10 @@ export async function getUpgradeQuote({ clerkUserId, tier, interval, now = Math.
   const fromTier = isValidTier(row.tier) ? row.tier : "pro_plus";
   const oldPlan = describeRazorpayPlan(row.razorpay_plan_id);
   const fromInterval = oldPlan?.interval || row.billing_interval;
-  if (!isUpgradeAllowed({ fromTier, fromInterval, toTier: tier, toInterval: interval })) {
-    return { eligible: false, reason: fromTier === "pro" ? "interval-not-allowed" : "not-an-upgrade" };
+  const kind = getUpgradeKind({ fromTier, fromInterval, toTier: tier, toInterval: interval });
+  if (!kind) {
+    const shorter = fromInterval === "yearly" && interval === "quarterly" && tier !== fromTier;
+    return { eligible: false, reason: shorter ? "interval-not-allowed" : "not-an-upgrade" };
   }
 
   const currency = oldPlan?.currency || "USD";
@@ -104,6 +104,7 @@ export async function getUpgradeQuote({ clerkUserId, tier, interval, now = Math.
 
   return {
     eligible: true,
+    kind,
     currency,
     fullPrice,
     credit,

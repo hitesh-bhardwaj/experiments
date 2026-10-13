@@ -9,6 +9,7 @@ import {
   proUnlockedText,
 } from "@/lib/emails/pro-unlocked-email";
 import { getPlanLabel, isValidTier } from "@/lib/plans";
+import { expireCredits } from "@/lib/template-credits";
 
 const GRANT_INTERVALS = ["monthly", "quarterly", "yearly"];
 
@@ -97,6 +98,9 @@ export async function POST(request) {
       console.error("ADMIN_UPDATE_PLAN_SUPABASE_ERROR:", supabaseError);
       return NextResponse.json({ error: supabaseError.message }, { status: 500 });
     }
+
+    // Moving someone to Free ends their plan, and its template credits with it
+    if (plan === "free") await expireCredits(clerkUserId);
 
     // Update Clerk publicMetadata - mirrors the shape markUserProFromSubscription
     // writes for real subscriptions, so both grant paths look the same downstream.

@@ -226,7 +226,7 @@ export default function PricingFinder({ currency: initialCurrency }) {
               interval={rec.period === "y" ? "yearly" : "quarterly"}
               currency={currency}
               text={`Start ${rec.label}`}
-              className="max-md:w-full max-md:justify-center max-md:mb-8"
+              className="max-w-full max-md:w-full max-md:justify-center max-md:mb-8"
             />
           </div>
         </div>

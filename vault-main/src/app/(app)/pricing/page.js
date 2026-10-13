@@ -116,7 +116,7 @@ const faqItems = [
     id: "faq-installs",
     question: "What counts as an install?",
     answer:
-      "Each new component you copy from the site, add with the Hyperiux CLI or pull in through MCP counts once per day, whichever way you get it. Pro includes 5 a day and Pro+ 10 a day. Getting the same component again that day doesn't count twice.",
+      "Each new component you copy from the site, add with the Hyperiux CLI or pull in through MCP counts once per day, whichever way you get it. Pro includes 5 a day and Pro+ 10 a day. Getting the same component again that day doesn't count twice, and components you've already got that day stay available even once the limit is reached.",
   },
   {
     id: "faq-credits",

@@ -190,9 +190,10 @@ export function EffectCard({
                 <button
                   type="button"
                   aria-label={`Copy install command for ${effect.title}`}
-                  onClick={(event) => {
+                  onClick={async (event) => {
                     stop(event);
-                    onCopyInstall?.(effect);
+                    // Counts as an install (daily limit); "Copied" only once it went through
+                    if (!(await onCopyInstall?.(effect))) return;
                     setCopied(true);
                     clearTimeout(copiedTimerRef.current);
                     copiedTimerRef.current = setTimeout(() => setCopied(false), 1600);
@@ -204,7 +205,7 @@ export function EffectCard({
               </Tooltip>
             ) : (
               <Tooltip label="Unlock with Pro" className={`${ACTION_SLIDE} delay-40`}>
-                <Link href="/pricing" aria-label="Unlock with Pro" onClick={(event) => event.stopPropagation()} className={CARD_BTN}>
+                <Link href="/pricing#plans" aria-label="Unlock with Pro" onClick={(event) => event.stopPropagation()} className={CARD_BTN}>
                   <Lock />
                 </Link>
               </Tooltip>

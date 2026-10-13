@@ -10,6 +10,8 @@ import {
   useCallback,
   Suspense,
   forwardRef,
+  createContext,
+  useContext,
 } from "react";
 import Image from "next/image";
 import { useRouter, usePathname } from "next/navigation";
@@ -39,6 +41,11 @@ import { SignInRequiredModal } from "@/components/ui/SignInRequiredModal";
 import Button from "@/homepage/components/Button";
 import { SliderArrowButton, SliderNav } from "@/components/ui/SliderArrowButton";
 import EffectStage from "./EffectStage";
+import { PLANS } from "@/lib/plans";
+
+// Why the code on this page is withheld ({ reason, tier } from the server, see
+// [effectSlug]/page.js) - read by LockedCodePlaceholder for its wording and button
+const CodeLockContext = createContext({ reason: null, tier: null });
 
 function formatEffectDate(value) {
   if (!value) return null;
@@ -165,6 +172,9 @@ export function EffectDetailContent({
   effectCounts,
   totalEffects,
   isLocked = false,
+  // Server-decided: "sign-in" | "pro" | "limit" | null (code shown)
+  codeLock = null,
+  lockTier = null,
   searchEffects: baseSearchEffects = [],
 }) {
   // Install counts arrive as a promise (Supabase): related cards show a skeleton until it lands.
@@ -468,7 +478,7 @@ export function EffectDetailContent({
                   effect={effect}
                   title={pageTitle}
                   previewHref={previewHref}
-                  getCode={<GetCodeMenu effectSlug={slug} effectTitle={pageTitle || safeEffect.title} isLocked={isLocked} />}
+                  getCode={<GetCodeMenu effectSlug={slug} effectTitle={pageTitle || safeEffect.title} isLocked={isLocked} serverLimitReached={codeLock === "limit"} lockTier={lockTier} />}
                 />
               </section>
               </div>
@@ -479,14 +489,16 @@ export function EffectDetailContent({
                 {/* blog-theme-light: blog.css prose in its light colours on this white section */}
                 <section id="effect-content" className="blog-theme-light relative mx-auto flex w-full max-w-[1536px] items-start gap-[3vw] px-[4.5vw] pt-[5.5vw] pb-6 max-lg:flex-col max-md:px-[6vw] max-md:pt-[15vw]">
                   <div className="flex min-w-0 flex-1 flex-col max-lg:w-full">
+                    <CodeLockContext.Provider value={{ reason: codeLock, tier: lockTier }}>
                     <EffectDynamicContent
                       ref={contentRef}
                       content={safeContent}
-                      isLocked={isLocked}
+                      isLocked={Boolean(codeLock) || isLocked}
                       effectProps={effect?.props}
                       effectRemixerControls={effect?.remixer?.controls}
                       changelog={safeEffect.changelog}
                     />
+                    </CodeLockContext.Provider>
                   </div>
 
                  
@@ -813,12 +825,16 @@ function EffectPropsTable({ props = [] }) {
   );
 }
 
-function SanityBodyBlock({ block, isLocked = false }) {
+function SanityBodyBlock({ block, isLocked: lockedProp = false }) {
+  // The server's lock reaches every block, however deeply nested (callouts too)
+  const serverLock = useContext(CodeLockContext).reason;
+  const isLocked = lockedProp || Boolean(serverLock);
   const {
     isLocked: copyLimitLocked,
     selectable: copySelectable,
     requestCopy,
     lockedCtaHref,
+    lockedCtaLabel,
   } = useCopyLimit();
 
   if (!block) return null;
@@ -887,7 +903,8 @@ function SanityBodyBlock({ block, isLocked = false }) {
           copyLocked={copyLimitLocked}
           selectable={copySelectable}
           onBeforeCopy={requestCopy}
-          lockedCtaHref={block.language === "bash" ? null : lockedCtaHref}
+          lockedCtaHref={lockedCtaHref}
+          lockedCtaLabel={lockedCtaLabel}
         />
       </div>
     );
@@ -1001,7 +1018,49 @@ function CalloutCardGrid({ body = [] }) {
   );
 }
 
-function LockedCodePlaceholder({ filename }) {
+// Wording and button for each reason the code is withheld
+function lockCopy(reason, tier, pathname) {
+  if (reason === "sign-in") {
+    return {
+      title: "Sign in to see the code.",
+      subtitle: "Free effects need a free account; Pro effects need a plan.",
+      cta: { text: "Sign in", href: `/sign-in?redirect_url=${encodeURIComponent(pathname)}` },
+    };
+  }
+  if (reason === "limit") {
+    if (tier === "pro") {
+      return {
+        title: "You've used today's installs.",
+        subtitle: `Pro includes ${PLANS.pro.installsPerDay} a day. Pro+ gives you ${PLANS.pro_plus.installsPerDay}, or come back tomorrow.`,
+        cta: { text: "Upgrade to Pro+", href: "/pricing#plans" },
+      };
+    }
+    if (tier === "pro_plus") {
+      return {
+        title: "You've used today's installs.",
+        subtitle: `Pro+ includes ${PLANS.pro_plus.installsPerDay} a day. Your installs reset tomorrow.`,
+        cta: null,
+      };
+    }
+    return {
+      title: "You've used today's installs.",
+      subtitle: `Pro gives you ${PLANS.pro.installsPerDay} a day and Pro+ ${PLANS.pro_plus.installsPerDay}, or come back tomorrow.`,
+      cta: { text: "Upgrade to Pro", href: "/pricing#plans" },
+    };
+  }
+  return {
+    title: "This is a Pro Effect.",
+    subtitle: "You can preview it now. Upgrade to Pro for instant install access.",
+    cta: { text: "Upgrade to Pro", href: "/pricing#plans" },
+  };
+}
+
+// Sample code under a lock: the real source never reaches the browser when
+// this shows (the server strips it), so there's nothing to uncover in inspect.
+function LockedCodePlaceholder() {
+  const pathname = usePathname();
+  const { reason, tier } = useContext(CodeLockContext);
+  const copy = lockCopy(reason || "pro", tier, pathname);
   const teaserLines = [
     "const premiumSnippet = unlock({ technique: 'inspect-element-jutsu' });",
     "if (devtools.open) throw new Error('nice try, detective');",
@@ -1009,9 +1068,6 @@ function LockedCodePlaceholder({ filename }) {
     "const fallbackPlan = subscribe({ reason: 'time saved > ego' });",
     "return 'blurred until your Pro arc begins';",
   ];
-
-  const subtitle =
-    "You can preview it now. Upgrade to Pro for instant install access.";
 
   // Stays a dark code panel (like the code blocks) on the white article.
   return (
@@ -1048,22 +1104,24 @@ function LockedCodePlaceholder({ filename }) {
 
         <div className="flex flex-col items-center gap-0">
           <h3 className="type-h2 text-foreground">
-            This is a Pro Effect.
+            {copy.title}
           </h3>
 
           <p className="type-small max-w-xs text-foreground/80">
-            {subtitle}
+            {copy.subtitle}
           </p>
         </div>
 
-        <div className="flex flex-wrap items-center pt-3 max-lg:pt-6 justify-center gap-3">
-          <Button
-            text="Upgrade to Pro"
-            variant="orange"
-            href="/pricing"
-            className="shrink-0 text-black!"
-          />
-        </div>
+        {copy.cta && (
+          <div className="flex flex-wrap items-center pt-3 max-lg:pt-6 justify-center gap-3">
+            <Button
+              text={copy.cta.text}
+              variant="orange"
+              href={copy.cta.href}
+              className="shrink-0 text-black!"
+            />
+          </div>
+        )}
 
 
       </div>
@@ -1071,22 +1129,24 @@ function LockedCodePlaceholder({ filename }) {
   );
 }
 
-function PortableTextBlock({ block, isLocked = false }) {
+function PortableTextBlock({ block, isLocked: lockedProp = false }) {
+  const serverLock = useContext(CodeLockContext).reason;
+  const isLocked = lockedProp || Boolean(serverLock);
   const {
     isLocked: copyLimitLocked,
     selectable: copySelectable,
     requestCopy,
     lockedCtaHref,
+    lockedCtaLabel,
   } = useCopyLimit();
 
   if (isCodeOnlyBlock(block)) {
+    // Locked first: the server blanks locked code, so it would read as empty
+    if (isLocked) return <LockedCodePlaceholder />;
+
     const code = normalizeCodeString(getBlockText(block));
 
     if (!code.trim()) return null;
-
-    if (isLocked) {
-      return <LockedCodePlaceholder language={inferCodeLanguage(code)} />;
-    }
 
     return (
       <div className="fadeup">
@@ -1096,7 +1156,8 @@ function PortableTextBlock({ block, isLocked = false }) {
           copyLocked={copyLimitLocked}
           selectable={copySelectable}
           onBeforeCopy={requestCopy}
-          lockedCtaHref={inferCodeLanguage(code) === "bash" ? null : lockedCtaHref}
+          lockedCtaHref={lockedCtaHref}
+          lockedCtaLabel={lockedCtaLabel}
         />
       </div>
     );

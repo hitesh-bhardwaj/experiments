@@ -28,7 +28,7 @@ const INTERVAL_OPTIONS = [
   { id: "yearly", label: "Yearly" },
 ];
 
-function PlanColumn({ tier, interval, currency }) {
+function PlanColumn({ tier, interval, currency, onSwitchToYearly }) {
   const plan = PLANS[tier];
   const credits = getCreditsPerYear(tier, interval);
   const billed = formatPrice(getPrice(tier, interval, currency), currency);
@@ -65,6 +65,7 @@ function PlanColumn({ tier, interval, currency }) {
         interval={interval}
         currency={currency}
         variant={dark ? "orange" : "outline"}
+        onSwitchToYearly={onSwitchToYearly}
         className="w-fit max-md:w-full max-md:justify-center"
       />
     </div>
@@ -152,8 +153,8 @@ export default function UpgradeToProModal({ open, onClose, reason = "pro-effect"
 
         {/* Always rendered - unmounting it on close shrank the modal mid-fade. */}
         <div className="flex gap-4 max-md:flex-col">
-          <PlanColumn tier="pro" interval={interval} currency={currency} />
-          <PlanColumn tier="pro_plus" interval={interval} currency={currency} />
+          <PlanColumn tier="pro" interval={interval} currency={currency} onSwitchToYearly={() => setBillingInterval("yearly")} />
+          <PlanColumn tier="pro_plus" interval={interval} currency={currency} onSwitchToYearly={() => setBillingInterval("yearly")} />
         </div>
 
         <p className="type-small text-light-grey">

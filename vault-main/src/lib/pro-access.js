@@ -7,6 +7,7 @@ import { createSubscriptionInvoiceEmail } from "@/lib/emails/subscription-invoic
 import { confirmFoundingSlot } from "@/lib/founding-slots";
 import { describeRazorpayPlan } from "@/lib/plans.server";
 import { isValidTier } from "@/lib/plans";
+import { expireCredits } from "@/lib/template-credits";
 import {
   renderProUnlockedEmail,
   proUnlockedSubject,
@@ -148,6 +149,9 @@ export async function markUserFree({ clerkUserId, status = "inactive" }) {
     razorpayPlanId: null,
     currentPeriodEnd: null,
   });
+
+  // Credits only last while a plan is active
+  await expireCredits(clerkUserId);
 
   invalidatePlanCache(clerkUserId);
 }

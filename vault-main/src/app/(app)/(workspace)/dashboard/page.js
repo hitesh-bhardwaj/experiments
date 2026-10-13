@@ -1,11 +1,14 @@
 "use client";
 
 import { Skeleton } from "@/components/ui/Skeleton";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { ArrowUpRight } from "lucide-react";
 import CliTokenManager from "@/components/Dashboard/CliTokenManager";
+import Button from "@/homepage/components/Button";
 import { markScrollToPricingCards } from "@/lib/pricingScrollIntent";
+import { getDashboardPreview, sampleDashboard } from "@/lib/dev/dashboardPreview";
 
 function formatDate(value) {
   if (!value) return "Unknown";
@@ -27,36 +30,71 @@ function getBillingLabel(value) {
   return labels[value] || "Not available";
 }
 
-function StatCard({ label, value, detail, href }) {
-  const content = (
-    <div className="h-full flex flex-col justify-between  p-6 bg-[#272727] backdrop-blur-lg transition duration-300 hover:border-[#ff5f00]">
-      <p className="text-white mb-3">{label}</p>
+// The dashboard's card surface
+const CARD = "flex flex-col bg-foreground text-ink ring-1 ring-inset ring-black/10";
 
-      <p className="text-2xl font-medium font-avenir leading-none">{value}</p>
-
-      {detail && <p className="text-[#838383] mt-4">{detail}</p>}
-    </div>
+// One figure: label, value, detail. With `href` the whole card links there (an arrow
+// shows it, and the ring warms to orange on hover).
+function StatCard({ label, value, detail, href, className = "" }) {
+  const body = (
+    <>
+      <div className="flex items-start justify-between gap-3">
+        <p className="type-small text-black/60">{label}</p>
+        {href && (
+          <ArrowUpRight
+            aria-hidden="true"
+            className="size-4 shrink-0 text-black/40 transition-[color,translate] duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-primary"
+          />
+        )}
+      </div>
+      <p className="type-h3 font-aeonik">{value}</p>
+      {detail && <p className="type-small text-black/50">{detail}</p>}
+    </>
   );
-
-  if (!href) return content;
-
-  return <Link href={href}>{content}</Link>;
+  const cls = `${CARD} gap-[1vw] p-[1.6vw] max-lg:gap-3 max-lg:p-6 ${className}`;
+  if (!href) return <div className={cls}>{body}</div>;
+  return (
+    <Link href={href} className={`group ${cls} transition-shadow duration-300 hover:ring-primary`}>
+      {body}
+    </Link>
+  );
 }
+
+// Card widths for a row of four and a row of three (two up on tablet, one on phones)
+const QUARTER = "w-[calc((100%-1.8vw)/4)] max-lg:w-[calc((100%-0.75rem)/2)] max-md:w-full";
+const THIRD = "w-[calc((100%-1.2vw)/3)] max-lg:w-[calc((100%-0.75rem)/2)] max-md:w-full";
 
 export default function DashboardPage() {
   const searchParams = useSearchParams();
   const justUpgraded = searchParams.get("upgraded") === "true";
 
   const [data, setData] = useState(null);
+  const [failed, setFailed] = useState(false);
+  const [attempt, setAttempt] = useState(0);
+  const retry = useCallback(() => {
+    setFailed(false);
+    setAttempt((n) => n + 1);
+  }, []);
 
   useEffect(() => {
     let active = true;
 
     async function load() {
-      const res = await fetch("/api/dashboard");
-      const json = await res.json();
-
-      if (active) setData(json);
+      // Development preview (lib/dev/dashboardPreview): sample data, no session needed
+      const preview = getDashboardPreview();
+      if (preview) {
+        if (active) setData(sampleDashboard(preview));
+        return;
+      }
+      try {
+        const res = await fetch("/api/dashboard");
+        if (!res.ok) throw new Error(`dashboard ${res.status}`);
+        const json = await res.json();
+        if (active) setData(json);
+      } catch (error) {
+        console.error(error);
+        if (active) setFailed(true);
+      }
     }
 
     const frame = requestAnimationFrame(() => {
@@ -67,7 +105,7 @@ export default function DashboardPage() {
       active = false;
       cancelAnimationFrame(frame);
     };
-  }, []);
+  }, [attempt]);
 
   const [now, setNow] = useState(null);
 
@@ -88,198 +126,132 @@ export default function DashboardPage() {
     return Math.max(0, Math.ceil((end - now) / (1000 * 60 * 60 * 24)));
   }, [data, now]);
 
+  if (failed) {
+    return (
+      <div className={`${CARD} items-start gap-4 p-[1.6vw] max-lg:p-6`}>
+        <p className="type-h3">We couldn’t load your dashboard.</p>
+        <p className="type-body text-black/60">Check your connection and try again.</p>
+        <Button text="Try again" preventDefault onClick={retry} />
+      </div>
+    );
+  }
+
   // The layout renders straight away; values show skeletons until /api/dashboard answers.
   if (!data) {
     return (
-      <div className="space-y-4" aria-busy="true">
-        <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-4">
-          {["Joined", "Plan", "Effects Access", "Plan Validity"].map((label) => (
-            <StatCard key={label} label={label} value={<Skeleton className="h-6 w-24" />} detail={<Skeleton className="h-[1em] w-36" />} />
+      <div aria-busy="true" aria-label="Loading your dashboard" className="flex flex-col gap-[0.6vw] max-lg:gap-3">
+        <div className="flex flex-wrap gap-[0.6vw] max-lg:gap-3">
+          {["Joined", "Plan", "Effects access", "Plan validity"].map((label) => (
+            <StatCard key={label} className={QUARTER} label={label} value={<Skeleton className="h-[1em] w-[60%]" />} detail={<Skeleton className="h-[1em] w-[80%]" />} />
           ))}
         </div>
-        <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-4">
-          <StatCard label="Saved Effects" value={<Skeleton className="h-6 w-10" />} detail="Effects in your wishlist" href="/dashboard/saved" />
-          <StatCard label="Copied Effects" value={<Skeleton className="h-6 w-10" />} detail="Effects copied from the website" href="/dashboard/usage" />
-          <StatCard label="Installed Effects" value={<Skeleton className="h-6 w-10" />} detail="Effects installed via web, CLI & MCP" href="/dashboard/usage" />
+        <div className="flex flex-wrap gap-[0.6vw] max-lg:gap-3">
+          <StatCard className={THIRD} label="Saved effects" value={<Skeleton className="h-[1em] w-[15%]" />} detail="Effects in your wishlist" href="/dashboard/saved" />
+          <StatCard className={THIRD} label="Copied effects" value={<Skeleton className="h-[1em] w-[15%]" />} detail="Effects copied from the website" href="/dashboard/usage" />
+          <StatCard className={THIRD} label="Installed effects" value={<Skeleton className="h-[1em] w-[15%]" />} detail="Effects installed via web, CLI & MCP" href="/dashboard/usage" />
         </div>
-        <div className="p-6 bg-[#272727]">
-          <h2 className="text-2xl font-semibold">Vault access</h2>
-          <div className="mt-6 flex flex-col gap-3 text-white">
-            <Skeleton className="h-[1em] w-2/3" />
-            <Skeleton className="h-[1em] w-1/3" />
-            <Skeleton className="h-[1em] w-1/4" />
-          </div>
-        </div>
+        <section className={`${CARD} gap-[0.8vw] p-[1.6vw] max-lg:gap-3 max-lg:p-6`}>
+          <h2 className="type-h2 font-aeonik">Vault access</h2>
+          <Skeleton className="h-[1em] w-2/3" />
+          <Skeleton className="h-[1em] w-1/3" />
+          <Skeleton className="h-[1em] w-1/4" />
+        </section>
       </div>
     );
   }
 
   const planLabel = data.plan === "pro" ? (data.tier === "pro" ? "Pro" : "Pro+") : "Free";
-  const accessLabel = `${data.totalEffectsAccess}`;
+  const isPro = data.plan === "pro";
+  const credits = `${data.templateCredits} template credit${data.templateCredits === 1 ? "" : "s"}`;
+  const proValidityDetail = isPro ? (data.planValidUntil ? `${daysRemaining} days remaining` : "Active subscription") : "Upgrade to unlock validity";
 
-  const proValidityDetail =
-    data.plan === "pro"
-      ? data.planValidUntil
-        ? `${daysRemaining} days remaining`
-        : "Active subscription"
-      : "Upgrade to unlock validity";
+  // The plan's details, one row each
+  const planRows = isPro
+    ? [
+        ["Daily installs (copies, CLI & MCP)", data.dailyInstallLimit ?? "Unlimited"],
+        ["Template credits", <Link key="c" href="/templates" className="underline underline-offset-3 transition-colors duration-300 hover:text-primary">{data.templateCredits}</Link>],
+        ["Billing cycle", getBillingLabel(data.billingInterval)],
+        ["Valid until / renews on", formatDate(data.planValidUntil)],
+        ["Status", <span key="s" className="capitalize">{data.subscriptionStatus}</span>],
+      ]
+    : [];
 
   return (
-    <div className="space-y-4">
+    <div className="flex flex-col gap-[0.6vw] max-lg:gap-3">
       {justUpgraded && (
-        <div className="border border-green-500/30  px-6 py-4 bg-green-500/10 text-green-400">
-          🎉 Welcome to Pro! Your account has been upgraded.
-        </div>
+        <p role="status" className="type-body flex items-center gap-3 bg-primary/10 px-[1.6vw] py-[1vw] text-ink ring-1 ring-inset ring-primary/30 max-lg:px-6 max-lg:py-4">
+          <span aria-hidden="true" className="size-2 shrink-0 bg-primary" />
+          Welcome to {planLabel}. Your account has been upgraded.
+        </p>
       )}
 
-      <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-4">
+      {/* account */}
+      <div className="flex flex-wrap gap-[0.6vw] max-lg:gap-3">
+        <StatCard className={QUARTER} label="Joined" value={formatDate(data.joinedAt)} detail="Account creation date" />
         <StatCard
-          label="Joined"
-          value={formatDate(data.joinedAt)}
-          detail="Account creation date"
-        />
-
-        <StatCard
+          className={QUARTER}
           label="Plan"
           value={planLabel}
-          detail={
-            data.plan === "pro"
-              ? `${data.dailyInstallLimit ?? "Unlimited"} installs a day · ${data.templateCredits} template credit${data.templateCredits === 1 ? "" : "s"}`
-              : "Starter access"
-          }
+          detail={isPro ? `${data.dailyInstallLimit ?? "Unlimited"} installs a day · ${credits}` : "Starter access"}
         />
-
-        <StatCard
-          label="Effects Access"
-          value={accessLabel}
-          detail={`${data.totalEffectsAccess} of ${data.totalEffects} effects available`}
-        />
-
-        <StatCard
-          label={data.plan === "pro" ? "Valid Until" : "Plan Validity"}
-          value={data.plan === "pro" ? formatDate(data.planValidUntil) : "Free"}
-          detail={proValidityDetail}
-        />
+        <StatCard className={QUARTER} label="Effects access" value={data.totalEffectsAccess} detail={`${data.totalEffectsAccess} of ${data.totalEffects} effects available`} />
+        <StatCard className={QUARTER} label={isPro ? "Valid until" : "Plan validity"} value={isPro ? formatDate(data.planValidUntil) : "Free"} detail={proValidityDetail} />
       </div>
 
-      <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-4">
-        <StatCard
-          label="Saved Effects"
-          value={data.savedCount}
-          detail="Effects in your wishlist"
-          href="/dashboard/saved"
-        />
-
-        <StatCard
-          label="Copied Effects"
-          value={data.copiedCount}
-          detail="Effects copied from the website"
-          href="/dashboard/usage"
-        />
-
-        <StatCard
-          label="Installed Effects"
-          value={data.installedCount}
-          detail="Effects installed via web, CLI & MCP"
-          href="/dashboard/usage"
-        />
+      {/* activity: each links to its tab */}
+      <div className="flex flex-wrap gap-[0.6vw] max-lg:gap-3">
+        <StatCard className={THIRD} label="Saved effects" value={data.savedCount} detail="Effects in your wishlist" href="/dashboard/saved" />
+        <StatCard className={THIRD} label="Copied effects" value={data.copiedCount} detail="Effects copied from the website" href="/dashboard/usage" />
+        <StatCard className={THIRD} label="Installed effects" value={data.installedCount} detail="Effects installed via web, CLI & MCP" href="/dashboard/usage" />
       </div>
 
-      <div className="  p-6 bg-[#272727]">
-        <div className="flex items-start justify-between gap-6 max-lg:flex-col max-lg:items-start">
-          <div>
-
-            <h2 className="text-2xl font-semibold">Vault access</h2>
-
-            {data.plan === "pro" ? (
-              <div className="mt-6 space-y-4 text-white/50">
-                <p className="text-white">
-                  Your {planLabel} access is active. You have full access to the
-                  Hyperiux Vault.
-                </p>
-                <p>
-                  Daily installs (copies, CLI &amp; MCP):{" "}
-                  <span className="text-white">{data.dailyInstallLimit ?? "Unlimited"}</span>
-                </p>
-                <p>
-                  Template credits:{" "}
-                  <Link href="/templates" className="text-white underline underline-offset-2">
-                    {data.templateCredits}
-                  </Link>
-                </p>
-                <p>
-                  Billing cycle:{" "}
-                  <span className="text-white">
-                    {getBillingLabel(data.billingInterval)}
-                  </span>
-                </p>
-                <p>
-                  Valid until / renews on:{" "}
-                  <span className="text-white">
-                    {formatDate(data.planValidUntil)}
-                  </span>
-                </p>
-                <p>
-                  Status:{" "}
-                  <span className="text-white capitalize">
-                    {data.subscriptionStatus}
-                  </span>
-                </p>
-                {data.tier === "pro" && (
-                  <p>
-                    Need 10 installs a day and the full template catalogue?{" "}
-                    <Link href="/pricing#plans" className="text-white underline underline-offset-2">
-                      Upgrade to Pro+
-                    </Link>
-                  </p>
+      {/* plan */}
+      <section aria-labelledby="vault-access" className={`${CARD} gap-[2vw] p-[1.6vw] max-lg:gap-6 max-lg:p-6`}>
+        <div className="flex items-start justify-between gap-[3vw] max-lg:flex-col max-lg:gap-6">
+          <div className="flex flex-col gap-[0.6vw] max-lg:gap-2">
+            <h2 id="vault-access" className="type-h2 font-aeonik">Vault access</h2>
+            <p className="type-body text-black/60">
+              {isPro
+                ? `Your ${planLabel} access is active, with the full Hyperiux Vault.`
+                : `Free accounts include ${data.totalFreeEffects} effects. Upgrade to unlock the full vault.`}
+            </p>
+          </div>
+          {/* phones: stacked, full width */}
+          <div className="flex shrink-0 flex-wrap gap-[0.6vw] max-lg:gap-3 max-md:w-full max-md:flex-col">
+            {isPro ? (
+              <>
+                {data.manageSubscriptionUrl && (
+                  <Button text="Manage subscription" href={data.manageSubscriptionUrl} target_blank variant="outline" className="max-md:w-full" />
                 )}
-              </div>
+                <Button text="Explore Pro effects" href="/effects/pro" className="max-md:w-full" />
+              </>
             ) : (
-              <p className="text-white/75 mt-2">
-                Free accounts include {data.totalFreeEffects} effects. Upgrade
-                to unlock the full vault.
-              </p>
+              <Button text="Upgrade to Pro" href="/pricing#plans" onClick={markScrollToPricingCards} className="max-md:w-full" />
             )}
           </div>
-          {data.plan === "free" && (
-            <>
-              <Link
-                href="/pricing#pricing-cards"
-                onClick={markScrollToPricingCards}
-                className="inline-flex px-5 py-3  bg-white text-black transition duration-300 hover:bg-[#ff5f00] hover:text-black"
-              >
-                Upgrade to Pro
-              </Link>
-
-            </>
-          )}
-
-          {data.plan === "pro" && (
-            <div className="flex flex-col items-end gap-2">
-              <div className="flex gap-3 max-md:flex-col">
-                {data.manageSubscriptionUrl && (
-                  <a
-                    href={data.manageSubscriptionUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex px-7 py-3  border border-white/20 text-white transition duration-300 hover:bg-white"
-                  >
-                    Manage Subscription
-                  </a>
-                )}
-                <Link
-                  href="/effects/pro"
-                  className="inline-flex px-7 py-3  bg-white text-black transition duration-300 hover:bg-[#ff5f00] hover:text-white"
-                >
-                  Explore Pro Effects
-                </Link>
-              </div>
-            </div>
-          )}
-
-
         </div>
-      </div>
+
+        {planRows.length > 0 && (
+          <dl className="flex flex-col">
+            {planRows.map(([term, value]) => (
+              <div key={term} className="flex items-baseline justify-between gap-4 border-t border-black/10 py-[0.9vw] max-lg:py-3">
+                <dt className="type-small text-black/60">{term}</dt>
+                <dd className="type-body text-right">{value}</dd>
+              </div>
+            ))}
+          </dl>
+        )}
+
+        {data.tier === "pro" && (
+          <p className="type-small text-black/60">
+            Need 10 installs a day and the full template catalogue?{" "}
+            <Link href="/pricing#plans" className="text-ink underline underline-offset-3 transition-colors duration-300 hover:text-primary">
+              Upgrade to Pro+
+            </Link>
+          </p>
+        )}
+      </section>
+
       <CliTokenManager plan={data.plan} />
     </div>
   );

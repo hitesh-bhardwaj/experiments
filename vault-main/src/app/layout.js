@@ -85,9 +85,22 @@ export default function RootLayout({ children }) {
   return (
     <html
       lang="en"
+      // The head script adds data-sidebar before React hydrates
+      suppressHydrationWarning
       className={`${aeonikPro.variable} ${avenirNext.variable} ${plexMono.variable} antialiased`}
     >
       <head>
+        {/* The page colour from the very first paint - before the stylesheet arrives
+            (later in dev), the browser would otherwise paint its own default dark. */}
+        <meta name="color-scheme" content="dark" />
+        <style>{"html{background:#111111}"}</style>
+        {/* The workspace sidebar's stored open / closed state, on <html> before the first
+            paint (globals.css sizes the sidebar from it) - see VaultLayout. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{document.documentElement.dataset.sidebar=localStorage.getItem("hyperiux-sidebar-expanded")==="false"?"collapsed":"expanded"}catch(e){}`,
+          }}
+        />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
         <link rel="dns-prefetch" href="https://www.google-analytics.com" />
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />

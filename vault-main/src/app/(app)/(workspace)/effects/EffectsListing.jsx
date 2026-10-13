@@ -565,7 +565,7 @@ export function EffectsListing({
       <AppVaultHeader showSearch totalEffects={effects.length} effects={effects} />
 
       {/* ---------- hero ---------- */}
-      <section id="effects-hero" className={`${WRAP} flex flex-col gap-7 pt-36 pb-20 max-lg:pt-32 max-lg:pb-14 max-md:pt-28`}>
+      <section id="effects-hero" className={`${WRAP} flex flex-col gap-7 pt-32 pb-20 max-lg:pt-32 max-lg:pb-14 max-md:pt-28`}>
         <div data-v4-fade>
           <Breadcrumb />
         </div>

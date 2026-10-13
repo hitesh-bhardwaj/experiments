@@ -32,6 +32,8 @@
   --announcement-offset: var(--announcement-h);
 }
 
+/* No background on <body>: <html> paints the page colour, and the site background
+   (SiteBackground, fixed at z-index -1) sits between the two - an opaque body hides it. */
 body {
   padding-top: var(--announcement-h);
 }
@@ -1195,3 +1197,15 @@ html.lenis.lenis-stopped[data-v4-drawer-open] {
 @media (prefers-reduced-motion: reduce) {
   .border-beam::before { animation: none; }
 }
+
+/* Workspace sidebar width and its toggle's spot (Sidebar.jsx, VaultLayout.jsx). Driven by
+   <html data-sidebar>, which an inline <head> script sets from the stored open / closed
+   state before the first paint (app/layout.js) and VaultLayout keeps in step after - so
+   a reload shows the right width from the first frame, whenever React hydrates. The
+   slide only runs once the page is ready (data-sidebar-animate). */
+[data-sidebar-width] { width: 20vw; }
+html[data-sidebar="collapsed"] [data-sidebar-width] { width: 5.5vw; }
+[data-vault-sidebar-toggle] { left: 20.4vw; }
+html[data-sidebar="collapsed"] [data-vault-sidebar-toggle] { left: 6vw; }
+html[data-sidebar-animate] [data-sidebar-width] { transition: width 0.3s ease-out; }
+html[data-sidebar-animate] [data-vault-sidebar-toggle] { transition: left 0.3s ease-out, background-color 0.3s ease-out; }

@@ -136,7 +136,20 @@ describe("getInstallLimitDecision", () => {
       expect(fourth.limit).toBe(LIMITS.free); // a denied response must still report which cap it hit
     });
 
-    it("re-installing an already-unlocked effect is always free, even past the cap", async () => {
+    it("re-installing an already-unlocked effect is free while under the cap", async () => {
+      process.env.INSTALL_LIMIT_ENFORCE = "true";
+
+      for (const slug of ["a", "b"]) {
+        await getInstallLimitDecision({ effectSlug: slug, source: "web", clerkUserId: "user_1" });
+      }
+
+      const reinstall = await getInstallLimitDecision({ effectSlug: "a", source: "cli", clerkUserId: "user_1" });
+      expect(reinstall.allowed).toBe(true);
+      expect(reinstall.reason).toBe("already-unlocked");
+      expect(reinstall.count).toBe(2);
+    });
+
+    it("re-installing an already-unlocked effect stays free even once the cap is used up", async () => {
       process.env.INSTALL_LIMIT_ENFORCE = "true";
 
       for (const slug of ["a", "b", "c"]) {
@@ -146,6 +159,10 @@ describe("getInstallLimitDecision", () => {
       const reinstall = await getInstallLimitDecision({ effectSlug: "a", source: "cli", clerkUserId: "user_1" });
       expect(reinstall.allowed).toBe(true);
       expect(reinstall.reason).toBe("already-unlocked");
+
+      const newOne = await getInstallLimitDecision({ effectSlug: "d", source: "web", clerkUserId: "user_1" });
+      expect(newOne.allowed).toBe(false);
+      expect(newOne.reason).toBe("limit-reached");
     });
 
     it("shadow mode (default): still allowed past the cap, but would_have_denied is logged true", async () => {

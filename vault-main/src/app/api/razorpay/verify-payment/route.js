@@ -124,6 +124,8 @@ export async function POST(req) {
             clerkUserId: userId,
             subscription: { ...subscription, paid_count: subscription.paid_count || 1 },
             payment,
+            // Checkout's payment for an upgrade is its prorated upfront amount
+            isUpgradePayment: Boolean(subscription.notes?.replaces_subscription_id),
           });
         } catch (creditError) {
           console.error("VERIFY_PAYMENT_GRANT_CREDITS_ERROR:", creditError);

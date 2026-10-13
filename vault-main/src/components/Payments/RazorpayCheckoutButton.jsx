@@ -110,6 +110,12 @@ export default function RazorpayCheckoutButton({
     }
   }
 
+  // Another button on the page may have loaded the script already
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (window.Razorpay) setScriptReady(true);
+  }, []);
+
   // Resumes a purchase that started while the visitor was signed out - once
   // sign-in redirects them back here with autoOpen set, this opens the
   // Razorpay checkout itself instead of waiting for a second click on the
@@ -126,7 +132,9 @@ export default function RazorpayCheckoutButton({
     <>
       <Script
         src="https://checkout.razorpay.com/v1/checkout.js"
-        strategy="lazyOnload"
+        // Straight away when checkout opens by itself; lazyOnload waits for
+        // the browser to go idle, which an animated page may not do for a while
+        strategy={autoOpen ? "afterInteractive" : "lazyOnload"}
         onReady={() => setScriptReady(true)}
         onLoad={() => setScriptReady(true)}
       />

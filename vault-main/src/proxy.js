@@ -24,8 +24,15 @@ const isMarketingRoute = createRouteMatcher([
   "/demo(.*)",
 ]);
 
+// `next dev` only: the dashboard preview cookie (lib/dev/dashboardPreview.js) lets
+// /dashboard pages render without a session, with sample data. Never in production.
+const isDevDashboardPreview = (request) =>
+  process.env.NODE_ENV === "development" &&
+  request.nextUrl.pathname.startsWith("/dashboard") &&
+  Boolean(request.cookies.get("vault-dev-preview")?.value);
+
 const withClerk = clerkMiddleware(async (auth, request) => {
-  if (isProtectedRoute(request)) {
+  if (isProtectedRoute(request) && !isDevDashboardPreview(request)) {
     await auth.protect();
   }
 });

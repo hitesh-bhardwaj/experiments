@@ -323,13 +323,15 @@ export function PreviewDrawer({
         ) : installable ? (
           <div className="flex items-center gap-3 border border-foreground/10 bg-foreground/3 py-3 pr-2 pl-4">
             {/* Phones: a smaller command (3vw) so it fits on one line. */}
-            <code className={`${MONO} min-w-0 flex-1 overflow-x-auto whitespace-nowrap text-[0.97vw] text-foreground/80 max-lg:text-[1.7vw] max-md:text-[3vw] max-md:break-all max-md:whitespace-normal`}>
+            {/* select-none: copying goes through Copy, which counts the install */}
+            <code className={`${MONO} min-w-0 flex-1 select-none overflow-x-auto whitespace-nowrap text-[0.97vw] text-foreground/80 max-lg:text-[1.7vw] max-md:text-[3vw] max-md:break-all max-md:whitespace-normal`}>
               <span className="text-primary">$</span> {installCommand(shown)}
             </code>
             <button
               type="button"
-              onClick={() => {
-                onCopyInstall(shown);
+              onClick={async () => {
+                // Counts as an install (daily limit); "Copied" only once it went through
+                if (!(await onCopyInstall(shown))) return;
                 setCopied(true);
                 clearTimeout(copiedTimerRef.current);
                 copiedTimerRef.current = setTimeout(() => setCopied(false), 1600);
@@ -348,7 +350,7 @@ export function PreviewDrawer({
               <Lock className="size-3.75 shrink-0 text-primary" aria-hidden="true" />
               This is a Pro effect. Pro unlocks it with the rest of the library.
             </p>
-            <Button text="Unlock with Pro" href="/pricing" className="py-1.5! text-[0.9vw]! max-lg:text-[1.6vw]! max-md:text-[3.3vw]!" />
+            <Button text="Unlock with Pro" href="/pricing#plans" className="py-1.5! text-[0.9vw]! max-lg:text-[1.6vw]! max-md:text-[3.3vw]!" />
           </div>
         )}
 

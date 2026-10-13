@@ -294,7 +294,7 @@ export default function InvoicingPage() {
             ) : isPro ? (
               "This Pro access was granted directly - no card on file."
             ) : (
-              <a href="/pricing" className="text-[#ff5f00] hover:text-[#ff7a29]">
+              <a href="/pricing#plans" className="text-[#ff5f00] hover:text-[#ff7a29]">
                 View plans
               </a>
             )

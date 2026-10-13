@@ -16,11 +16,8 @@ export const T10 = "text-[0.66vw] max-lg:text-[1.2vw] max-md:text-[2.5vw]";
 export const T24 = "text-[1.7vw] max-lg:text-[3.4vw] max-md:text-[6vw]";
 export const T40 = "text-[3.5vw] max-lg:text-[4.6vw] max-md:text-[8vw]";
 
-// The standard button size - Button's (homepage/components/Button, buttonClassName) text
-// size and vertical padding - for chips and toggles that sit beside / stand in for buttons.
-export const BTN_TEXT =
-  "text-[calc(var(--hx-vw,1vw)*1.15)] max-lg:text-[clamp(13px,calc(var(--hx-vw,1vw)*1.6),15px)] max-md:text-[calc(var(--hx-vw,1vw)*2.2)] max-sm:text-[calc(var(--hx-vw,1vw)*4)]";
-export const BTN_SIZE = `py-2 max-md:py-3 ${BTN_TEXT}`;
+// The standard button size (Button's text size and vertical padding), for chips and toggles
+export { BUTTON_TEXT as BTN_TEXT, BUTTON_SIZE as BTN_SIZE } from "@/homepage/components/Button";
 
 // Prices ($39 and the like) are always set in Aeonik Pro.
 export const PRICE = "font-aeonik";

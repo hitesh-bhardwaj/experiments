@@ -266,9 +266,9 @@ export default function PageTransition() {
   }, [])
 
   // Cover current page: dither wave sweeps DOWN from top to bottom
-  const coverScreenAndNavigate = useCallback((targetPath) => {
+  const coverScreenAndNavigate = useCallback((targetUrl) => {
     if (!containerRef.current) {
-      router.push(targetPath)
+      router.push(targetUrl)
       isTransitioningRef.current = false
       return
     }
@@ -309,7 +309,7 @@ export default function PageTransition() {
 
     tl.call(() => {
       // Execute route change while screen is flooded with dithered orange & pixel squares
-      router.push(targetPath)
+      router.push(targetUrl)
     })
   }, [draw, router, sound])
 
@@ -388,9 +388,15 @@ export default function PageTransition() {
       }
 
       const currentPath = window.location.pathname
+      // The path decides whether to animate; the navigation keeps the whole
+      // URL - dropping ?query and #hash lost sign-in's redirect_url and
+      // anchors like /pricing#plans
       let targetPath = href
+      let targetUrl = href
       try {
-        targetPath = new URL(href, window.location.origin).pathname
+        const url = new URL(href, window.location.origin)
+        targetPath = url.pathname
+        targetUrl = `${url.pathname}${url.search}${url.hash}`
       } catch (err) {
         return
       }
@@ -410,7 +416,7 @@ export default function PageTransition() {
 
       e.preventDefault()
 
-      coverScreenAndNavigate(targetPath)
+      coverScreenAndNavigate(targetUrl)
     }
 
     document.addEventListener('click', handleAnchorClick, { capture: true })
@@ -472,7 +478,8 @@ export default function PageTransition() {
       ref={containerRef}
       tabIndex={-1}
       aria-hidden="true"
-      className="fixed inset-0 z-999 hidden pointer-events-none overflow-hidden select-none"
+      // Above every page layer, modals (z-9999) and toasts (z-100000) included
+      className="fixed inset-0 z-100001 hidden pointer-events-none overflow-hidden select-none"
     >
       {/* 2D Bayer Dither Canvas Overlay */}
       <canvas

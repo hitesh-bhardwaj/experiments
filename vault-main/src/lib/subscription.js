@@ -2,6 +2,7 @@ import "server-only";
 import { currentUser, clerkClient } from "@clerk/nextjs/server";
 import { supabase } from "@/lib/supabase";
 import { isValidTier } from "@/lib/plans";
+import { expireCredits } from "@/lib/template-credits";
 
 // The one canonical list of subscription statuses that count as "currently
 // has Pro" - shared by every place that gates on plan/status, so a status
@@ -128,6 +129,9 @@ export async function getUserPlanInfo(userId) {
       .from("subscriptions")
       .update({ plan: "free", status: "expired", updated_at: new Date().toISOString() })
       .eq("clerk_user_id", userId);
+
+    // The plan has ended, and its unused template credits with it
+    await expireCredits(userId);
 
     try {
       const clerk = await clerkClient();

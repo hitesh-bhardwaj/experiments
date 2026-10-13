@@ -1,24 +1,27 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import Button from "@/homepage/components/Button";
 import RazorpayButtonV3 from "./RazorpayButtonV3";
-import { PLANS, formatPrice } from "@/lib/plans";
+import { PLANS, formatPrice, getUpgradeKind } from "@/lib/plans";
+import { savePendingCheckout } from "@/lib/pendingCheckout";
 
 // The one "buy a plan" button: Pro or Pro+, quarterly or yearly, used by the
 // pricing cards, the plan finder and the upgrade modal.
-//   - Signed out: signs in, then comes back here with ?checkout=<tier>.<interval>,
-//     which the pricing page cards (resumeCheckout) pick up to open checkout.
-//   - Already subscribed: Pro subscribers looking at Pro+ get "Upgrade to
-//     Pro+ · <amount> today", prorated (lib/upgrade.js): the unused part of Pro
-//     is taken off, and the server cancels the Pro subscription once Pro+ is
-//     paid. Pro yearly can only move to Pro+ yearly. Anything else points at
-//     the dashboard - a second subscription can't be started while one is live.
+//   - Signed out: signs in, then lands on /checkout/<plan>, which opens Razorpay
+//     (the plan is also remembered, for sign-up routes that drop redirect_url).
+//   - Subscribed, and this plan is an upgrade (getUpgradeKind): Pro -> Pro+ on
+//     the same billing period, quarterly -> yearly on the same plan, or Pro
+//     quarterly -> Pro+ yearly. "Upgrade for <amount>" or "Go yearly for
+//     <amount>", prorated (lib/upgrade.js) - unused time is
+//     credited, and the old subscription is cancelled once this one is paid.
+//     Nothing goes down a plan or from yearly to quarterly.
+//   - Subscribed, anything else, labelled for what it is and disabled:
+//     "You're on Pro" (or "… yearly" on the quarterly card) and "Included in
+//     Pro+" on a lower plan. "Upgrade on Yearly" (Pro yearly on the Pro+
+//     quarterly card) stays clickable: it flips the toggle (onSwitchToYearly).
 //   - Otherwise: Razorpay checkout, then `successHref`.
-const RESUME_PARAM = "checkout";
-
 export default function PlanCheckoutButton({
   tier,
   interval,
@@ -28,35 +31,25 @@ export default function PlanCheckoutButton({
   className = "",
   // Where a successful payment lands
   successHref = "/dashboard",
-  // Open checkout by itself when the URL carries ?checkout=<this plan>
-  resumeCheckout = false,
+  // Open checkout straight away (the pricing page resuming a plan picked before sign-in)
+  autoOpen = false,
+  // Shows the yearly version of the plans (the card's or modal's toggle)
+  onSwitchToYearly,
 }) {
-  const pathname = usePathname();
   const { isLoaded, isSignedIn, user } = useUser();
-  const [autoOpen, setAutoOpen] = useState(false);
-  const planKey = `${tier}.${interval}`;
 
-  // Read once on mount (not useSearchParams, which would need a Suspense
-  // boundary around every page this sits on)
-  useEffect(() => {
-    if (!resumeCheckout) return;
-    const params = new URLSearchParams(window.location.search);
-    if (params.get(RESUME_PARAM) !== planKey) return;
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setAutoOpen(true);
-    params.delete(RESUME_PARAM);
-    const query = params.toString();
-    window.history.replaceState(null, "", `${window.location.pathname}${query ? `?${query}` : ""}${window.location.hash}`);
-  }, [planKey, resumeCheckout]);
-
-  const label = text || `Get ${PLANS[tier]?.name || "Pro"}`;
-
-  // What the upgrade costs today, after crediting unused Pro
   const meta = user?.publicMetadata || {};
-  const canQuote = isSignedIn && meta.plan === "pro" && meta.tier === "pro" && tier === "pro_plus";
+  // Subscribers from before Pro+ have no tier and count as Pro+
+  const currentTier = isSignedIn && meta.plan === "pro" ? meta.tier || "pro_plus" : null;
+  const currentInterval = meta.billingInterval || null;
+  const upgradeKind = currentTier
+    ? getUpgradeKind({ fromTier: currentTier, fromInterval: currentInterval, toTier: tier, toInterval: interval })
+    : null;
+
+  // What the upgrade costs today, after crediting unused time
   const [quote, setQuote] = useState(null);
   useEffect(() => {
-    if (!canQuote) return undefined;
+    if (!upgradeKind) return undefined;
     let live = true;
     fetch(`/api/razorpay/upgrade-quote?tier=${tier}&interval=${interval}`)
       .then((res) => (res.ok ? res.json() : null))
@@ -65,56 +58,64 @@ export default function PlanCheckoutButton({
     return () => {
       live = false;
     };
-  }, [canQuote, tier, interval]);
-  const upgradeLabel = quote
-    ? `Upgrade to ${PLANS[tier].name} · ${formatPrice(quote.charge / 100, quote.currency)} today`
-    : `Upgrade to ${PLANS[tier].name}`;
+  }, [upgradeKind, tier, interval]);
+
+  const label = text || `Get ${PLANS[tier]?.name || "Pro"}`;
 
   if (!isLoaded || !isSignedIn) {
-    const back = `${pathname}?${RESUME_PARAM}=${planKey}`;
+    const planKey = `${tier}.${interval}`;
     return (
       <Button
         variant={variant}
-        href={`/sign-in?redirect_url=${encodeURIComponent(back)}`}
+        href={`/sign-in?redirect_url=${encodeURIComponent(`/checkout/${planKey}`)}`}
+        onClick={() => savePendingCheckout(planKey)}
         text={label}
         className={className}
       />
     );
   }
 
-  // Subscribers from before Pro+ have no tier and count as Pro+
-  const currentTier = meta.plan === "pro" ? meta.tier || "pro_plus" : null;
-  const upgradesTier = currentTier === "pro" && tier === "pro_plus";
-  // Pro yearly -> Pro+ quarterly isn't offered: it would leave Pro credit unused
-  const needsYearly = upgradesTier && meta.billingInterval === "yearly" && interval === "quarterly";
-  const isUpgrade = upgradesTier && !needsYearly;
+  if (currentTier && !upgradeKind) {
+    // Pro yearly looking at Pro+ quarterly: the upgrade exists, on yearly
+    const yearlyUpgrade =
+      currentInterval === "yearly" && interval === "quarterly" &&
+      getUpgradeKind({ fromTier: currentTier, fromInterval: "yearly", toTier: tier, toInterval: "yearly" });
+    if (yearlyUpgrade) {
+      return (
+        <Button
+          variant={variant}
+          href="/pricing#plans"
+          preventDefault={Boolean(onSwitchToYearly)}
+          onClick={onSwitchToYearly}
+          text="Upgrade on Yearly"
+          className={className}
+        />
+      );
+    }
 
-  if (needsYearly) {
-    return (
-      <Button
-        variant={variant}
-        href={`/pricing?${RESUME_PARAM}=${tier}.yearly#plans`}
-        text={`Upgrade to ${PLANS[tier].name} yearly`}
-        className={className}
-      />
-    );
+    let status = `Included in ${PLANS[currentTier]?.name || "your plan"}`;
+    if (currentTier === tier) {
+      status = currentInterval === "yearly" && interval === "quarterly"
+        ? `You're on ${PLANS[tier].name} yearly`
+        : `You're on ${PLANS[tier].name}`;
+    }
+    // A status, not an action: shown disabled
+    return <Button variant={variant} href="/dashboard" text={status} disabled className={className} />;
   }
 
-  if (currentTier && !isUpgrade) {
-    return (
-      <Button
-        variant={variant}
-        href="/dashboard"
-        text={currentTier === tier ? `You're on ${PLANS[tier].name}` : "Manage your plan"}
-        className={className}
-      />
-    );
+  let buttonLabel = label;
+  if (upgradeKind) {
+    // Short, so it fits every card and phones: "Upgrade for $100.22" /
+    // "Go yearly for $52.10" (the plan it's for is on the card around it)
+    const amount = quote ? formatPrice(quote.charge / 100, quote.currency) : null;
+    const verb = upgradeKind === "interval" ? "Go yearly" : "Upgrade";
+    buttonLabel = amount ? `${verb} for ${amount}` : upgradeKind === "interval" ? "Go yearly" : `Upgrade to ${PLANS[tier].name}`;
   }
 
   return (
     <RazorpayButtonV3
       variant={variant}
-      label={isUpgrade ? upgradeLabel : label}
+      label={buttonLabel}
       tier={tier}
       interval={interval}
       currency={currency}

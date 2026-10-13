@@ -5,6 +5,11 @@ import Link from "next/link";
 import { Check, ChevronDown, FileCode2, LoaderCircle, LockKeyhole } from "lucide-react";
 import { buttonClassName, ButtonChrome } from "@/homepage/components/Button";
 import { useCopyLimit } from "./useCopyLimit";
+import { getLimitNudge } from "@/lib/limitNudge";
+import { AnimatePresence, motion } from "motion/react";
+
+// The trigger's text rolls like the code block's Copy -> Copied label
+const ROLL_EASE = [0.65, 0, 0.35, 1];
 
 // "Get code" dropdown beside Live Preview - the only way to take an effect's
 // source from its page. JSX/TSX and the AI prompt are fetched from
@@ -167,6 +172,11 @@ export default function GetCodeMenu({
   effectSlug,
   effectTitle,
   isLocked = false,
+  // The server already found today's limit used up (and this effect not one
+  // of today's) - true before the browser's own usage check has loaded
+  serverLimitReached = false,
+  // The visitor's plan as the server saw it, for the limit message until usage loads
+  lockTier = null,
   align = "right",
   className = "",
   triggerClassName = "",
@@ -180,13 +190,13 @@ export default function GetCodeMenu({
     requireUpgrade,
     showToast,
     lockedCtaHref,
+    lockedCtaLabel,
+    usage,
   } = useCopyLimit();
   const [open, setOpen] = useState(false);
   const [view, setView] = useState("menu"); // "menu" | "mcp"
   // null | { key, phase: "copying" | "copied" } - drives the trigger label.
   const [copyStatus, setCopyStatus] = useState(null);
-  // Set after the first copy, so "Get Code" only fades back in after one.
-  const [hasCopied, setHasCopied] = useState(false);
   const rootRef = useRef(null);
   const panelRef = useRef(null);
   const triggerRef = useRef(null);
@@ -212,7 +222,6 @@ export default function GetCodeMenu({
       close();
       triggerRef.current?.focus();
       setCopyStatus({ key, phase: "copying" });
-      setHasCopied(true);
     },
     [close]
   );
@@ -327,9 +336,7 @@ export default function GetCodeMenu({
     } else if (data.status === 403) {
       requireUpgrade("pro-effect");
     } else if (data.status === 429) {
-      // Free accounts out of copies get the upgrade offer; Pro accounts
-      // already saw the "limit reached" toast from applyUsage.
-      if (data.plan !== "pro") requireUpgrade("limit");
+      // The limit message already showed, from applyUsage
     } else {
       showToast({ title: "Couldn't copy", description: data.error || "Something went wrong. Please try again." });
     }
@@ -357,6 +364,17 @@ export default function GetCodeMenu({
       requireSignIn();
       return;
     }
+    // Today's limit is used up (and this effect isn't one of today's): no
+    // menu, just the limit message for the visitor's plan
+    if ((isLimitReached || serverLimitReached) && !isLocked) {
+      const knownUsage = usage ?? {
+        plan: lockTier === "pro" || lockTier === "pro_plus" ? "pro" : "free",
+        tier: lockTier,
+        isAdmin: lockTier === "admin",
+      };
+      showToast(getLimitNudge(knownUsage));
+      return;
+    }
     window.clearTimeout(statusTimerRef.current);
     setCopyStatus(null);
     setOpen(true);
@@ -368,8 +386,6 @@ export default function GetCodeMenu({
   const codeLimited = !isLocked && isLimitReached;
   const busy = copyStatus?.phase === "copying";
   const statusLabel = copyStatus ? TRIGGER_LABELS[copyStatus.key]?.[copyStatus.phase] : null;
-  // Each trigger state fades in as it mounts (`starting:` = @starting-style).
-  const fadeIn = "transition-opacity duration-300 ease-out starting:opacity-0 motion-reduce:transition-none";
 
   return (
     <div ref={rootRef} className={`relative flex shrink-0 self-stretch ${className}`}>
@@ -384,29 +400,47 @@ export default function GetCodeMenu({
         // button size; an inset ring rather than a border, which would add 2px of height
         className={`relative flex h-full cursor-pointer items-center ring-1 ring-inset bg-foreground/5 backdrop-blur-lg py-2 pr-[3vw] pl-[1.2vw] text-left text-[calc(var(--hx-vw,1vw)*1.15)] ring-foreground/20 tracking-wide text-foreground outline-none transition hover:ring-foreground/25 focus-visible:ring-foreground/25 max-lg:pr-12 max-lg:pl-5 max-lg:text-[clamp(13px,calc(var(--hx-vw,1vw)*1.6),15px)] max-md:py-3 max-md:text-[calc(var(--hx-vw,1vw)*2.2)] max-sm:text-[calc(var(--hx-vw,1vw)*4)] ${triggerClassName}`}
       >
-        {statusLabel ? (
-          <span key={`${copyStatus.key}-${copyStatus.phase}`} className={`flex items-center gap-2 whitespace-nowrap ${fadeIn}`}>
-            {copyStatus.phase === "copying" ? (
-              <LoaderCircle
-                aria-hidden="true"
-                className="size-[1.1vw] shrink-0 animate-spin text-foreground/60 max-lg:size-4 motion-reduce:animate-none"
-              />
-            ) : (
-              <Check aria-hidden="true" className="size-[1.1vw] shrink-0 text-primary max-lg:size-4" />
-            )}
-            {statusLabel}
-          </span>
-        ) : (
-          <span key="idle" className={hasCopied ? fadeIn : ""}>
-            Get Code
-          </span>
-        )}
-        <ChevronDown
+        {/* The label rolls up out of a clipped line, like the code block's copy button */}
+        <span className="relative block overflow-hidden whitespace-nowrap">
+          <AnimatePresence mode="popLayout" initial={false}>
+            <motion.span
+              key={statusLabel ?? "Get Code"}
+              initial={{ y: "100%", opacity: 0 }}
+              animate={{ y: "0%", opacity: 1 }}
+              exit={{ y: "-100%", opacity: 0 }}
+              transition={{ duration: 0.4, ease: ROLL_EASE }}
+              className="block"
+            >
+              {statusLabel ?? "Get Code"}
+            </motion.span>
+          </AnimatePresence>
+        </span>
+        {/* Chevron, spinner and check share the right-hand slot */}
+        <span
           aria-hidden="true"
-          className={`pointer-events-none absolute top-1/2 right-[1vw] size-[1.1vw] -translate-y-1/2 text-foreground/40 transition-[transform,opacity] duration-300 max-lg:right-4 max-lg:size-4 motion-reduce:transition-none ${
-            open ? "rotate-180" : ""
-          } ${statusLabel ? "opacity-0" : "opacity-100"}`}
-        />
+          className="pointer-events-none absolute top-1/2 right-[1vw] grid size-[1.1vw] -translate-y-1/2 place-items-center max-lg:right-4 max-lg:size-4"
+        >
+          <AnimatePresence initial={false}>
+            <motion.span
+              key={copyStatus?.phase ?? "idle"}
+              initial={{ scale: 0, rotate: -90, opacity: 0 }}
+              animate={{ scale: 1, rotate: 0, opacity: 1 }}
+              exit={{ scale: 0, rotate: 90, opacity: 0 }}
+              transition={{ duration: 0.3, ease: ROLL_EASE }}
+              className="absolute inset-0 grid place-items-center"
+            >
+              {copyStatus?.phase === "copying" ? (
+                <LoaderCircle className="size-full animate-spin text-foreground/60 motion-reduce:animate-none" />
+              ) : copyStatus?.phase === "copied" ? (
+                <Check className="size-full text-primary" />
+              ) : (
+                <ChevronDown
+                  className={`size-full text-foreground/40 transition-transform duration-300 motion-reduce:transition-none ${open ? "rotate-180" : ""}`}
+                />
+              )}
+            </motion.span>
+          </AnimatePresence>
+        </span>
       </button>
       <span role="status" aria-live="polite" className="sr-only">
         {statusLabel ?? ""}
@@ -507,11 +541,11 @@ export default function GetCodeMenu({
                       role="menuitem"
                       onClick={() => {
                         close();
-                        requireUpgrade("limit");
+                        requireUpgrade(usage?.tier === "pro" ? "limit-pro" : "limit");
                       }}
                       className="shrink-0 cursor-pointer text-primary underline underline-offset-2 outline-none focus-visible:text-foreground"
                     >
-                      Upgrade to Pro
+                      {lockedCtaLabel}
                     </button>
                   )}
                 </div>

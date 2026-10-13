@@ -64,12 +64,18 @@ describe("addPeriod / isUpgradeAllowed", () => {
     expect(new Date(addPeriod(at("2026-10-12T10:00:00Z"), "yearly") * 1000).toISOString()).toBe("2027-10-12T10:00:00.000Z");
   });
 
-  it("allows Pro -> Pro+ only, never yearly -> quarterly", () => {
-    expect(isUpgradeAllowed({ fromTier: "pro", fromInterval: "quarterly", toTier: "pro_plus", toInterval: "quarterly" })).toBe(true);
-    expect(isUpgradeAllowed({ fromTier: "pro", fromInterval: "quarterly", toTier: "pro_plus", toInterval: "yearly" })).toBe(true);
-    expect(isUpgradeAllowed({ fromTier: "pro", fromInterval: "yearly", toTier: "pro_plus", toInterval: "yearly" })).toBe(true);
-    expect(isUpgradeAllowed({ fromTier: "pro", fromInterval: "yearly", toTier: "pro_plus", toInterval: "quarterly" })).toBe(false);
-    expect(isUpgradeAllowed({ fromTier: "pro_plus", fromInterval: "quarterly", toTier: "pro_plus", toInterval: "yearly" })).toBe(false);
+  it("allows Pro -> Pro+ and quarterly -> yearly, never yearly -> quarterly or a downgrade", () => {
+    const ok = (fromTier, fromInterval, toTier, toInterval) => isUpgradeAllowed({ fromTier, fromInterval, toTier, toInterval });
+    expect(ok("pro", "quarterly", "pro_plus", "quarterly")).toBe(true);
+    expect(ok("pro", "quarterly", "pro_plus", "yearly")).toBe(true);
+    expect(ok("pro", "yearly", "pro_plus", "yearly")).toBe(true);
+    expect(ok("pro", "quarterly", "pro", "yearly")).toBe(true);
+    expect(ok("pro_plus", "quarterly", "pro_plus", "yearly")).toBe(true);
+    expect(ok("pro", "yearly", "pro_plus", "quarterly")).toBe(false);
+    expect(ok("pro", "yearly", "pro", "quarterly")).toBe(false);
+    expect(ok("pro_plus", "quarterly", "pro", "yearly")).toBe(false);
+    expect(ok("pro", "quarterly", "pro", "quarterly")).toBe(false);
+    expect(ok("pro_plus", "monthly", "pro_plus", "yearly")).toBe(false);
   });
 });
 
@@ -91,10 +97,21 @@ describe("getUpgradeQuote", () => {
     expect(new Date(q.renewsAt * 1000).toISOString()).toBe("2027-03-01T00:00:00.000Z");
   });
 
-  it("refuses yearly -> quarterly, non-Pro and no subscription", async () => {
+  it("prices Pro quarterly -> Pro yearly as an interval switch", async () => {
+    subscriptionEntity = { current_start: at("2026-02-01T00:00:00Z"), current_end: at("2026-05-01T00:00:00Z") };
+    row = { plan: "pro", tier: "pro", status: "active", billing_interval: "quarterly", current_period_end: "2026-05-01T00:00:00Z", razorpay_subscription_id: "sub_q", razorpay_plan_id: "p_pro_q" };
+    const q = await getUpgradeQuote({ clerkUserId: "u", tier: "pro", interval: "yearly", now });
+    expect(q.eligible).toBe(true);
+    expect(q.kind).toBe("interval");
+    expect(q.newPlanId).toBe("p_pro_y");
+    expect(q.credit).toBe(Math.floor((2700 * 61) / 89)); // 61 of 89 days left
+    expect(q.charge).toBe(7900 - q.credit);
+  });
+
+  it("refuses yearly -> quarterly, a Pro+ yearly user on Pro+ yearly, and no subscription", async () => {
     row = { plan: "pro", tier: "pro", status: "active", razorpay_subscription_id: "s", razorpay_plan_id: "p_pro_y" };
     expect((await getUpgradeQuote({ clerkUserId: "u", tier: "pro_plus", interval: "quarterly", now })).reason).toBe("interval-not-allowed");
-    row = { ...row, tier: "pro_plus" };
+    row = { ...row, tier: "pro_plus", razorpay_plan_id: "p_plus_y" };
     expect((await getUpgradeQuote({ clerkUserId: "u", tier: "pro_plus", interval: "yearly", now })).reason).toBe("not-an-upgrade");
     row = null;
     expect((await getUpgradeQuote({ clerkUserId: "u", tier: "pro_plus", interval: "yearly", now })).reason).toBe("no-subscription");

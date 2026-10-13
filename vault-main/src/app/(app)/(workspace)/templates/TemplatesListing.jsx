@@ -173,7 +173,7 @@ export function TemplatesListing({ templates: baseTemplates = [], description = 
   return (
     <div ref={rootRef} className="relative text-light">
       {/* ---------- hero ---------- */}
-      <section id="templates-hero" className={`${GUTTER} flex flex-col gap-7 pt-36 pb-12 max-lg:pt-32 max-md:pt-28`}>
+      <section id="templates-hero" className={`${GUTTER} flex flex-col gap-7 pt-32 pb-12 max-lg:pt-32 max-md:pt-28`}>
         <motion.div {...heroFadeUp(1)}>
           <Breadcrumb />
         </motion.div>
@@ -317,7 +317,7 @@ export function TemplatesListing({ templates: baseTemplates = [], description = 
 
       {/* ---------- FAQ (from /templates) ---------- */}
       {faqItems.length > 0 && (
-        <div className="w-full bg-foreground pb-[5vw]">
+        <div className="w-full">
           <FAQ faqItems={faqItems} translateTop={false} />
         </div>
       )}

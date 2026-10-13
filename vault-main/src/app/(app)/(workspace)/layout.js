@@ -12,8 +12,8 @@ import WorkspaceFooter from "./WorkspaceFooter";
 function VaultLayoutFallback() {
   return (
     <div className="flex">
-      <aside className="sticky bottom-0 left-0 top-0 h-screen border-r border-white/10 bg-[#060606] w-22" />
-      <div className="flex-1 bg-background" />
+      <aside className="sticky bottom-0 left-0 top-0 h-screen border-r border-white/10 bg-[#111111] w-22" />
+      <div className="flex-1 bg-[#111111]" />
     </div>
   );
 }

@@ -2,12 +2,28 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Button from "@/homepage/components/Button";
+import { CopyButtonContent } from "@/components/ui/CodeBlock";
 import { markScrollToPricingCards } from "@/lib/pricingScrollIntent";
+
+// A dark well for a token or a command
+const WELL = "flex items-center gap-3 bg-light px-[1.2vw] py-[0.9vw] ring-1 ring-inset ring-black/10 max-lg:px-4 max-lg:py-3";
 
 export default function CliTokenManager({ plan }) {
   const [token, setToken] = useState("");
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  // The new token is shown once, so it gets its own Copy
+  const [copied, setCopied] = useState(false);
+  async function copyToken() {
+    try {
+      await navigator.clipboard.writeText(token);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1600);
+    } catch {
+      // Clipboard blocked: the token stays on screen to select by hand
+    }
+  }
 
   const isPro = plan === "pro";
 
@@ -71,89 +87,72 @@ export default function CliTokenManager({ plan }) {
   }
 
   return (
-    <div className=" bg-[#272727] p-6 backdrop-blur-lg">
-      <div className="flex items-start justify-between gap-6 max-lg:flex-col">
-        <div>
-          <h2 className="text-2xl font-semibold text-white">
-            CLI Token
-          </h2>
-
-          <p className="mt-6 max-w-2xl">
-            Generate a private token to identify yourself to the Hyperiux CLI
-            and MCP - logging in like this is now required to have your daily
-            install limit tracked correctly, instead of falling back to a
-            stricter anonymous limit. Keep it secret: anyone with this token
-            can install under your account, including Pro downloads if you
-            have a subscription.
+    <section aria-labelledby="cli-token" className="flex flex-col gap-[2vw] bg-foreground p-[1.6vw] text-ink ring-1 ring-inset ring-black/10 max-lg:gap-6 max-lg:p-6">
+      <div className="flex items-start justify-between gap-[3vw] max-lg:flex-col max-lg:gap-6">
+        <div className="flex w-[70%] flex-col gap-[0.6vw] max-lg:w-full max-lg:gap-2">
+          <h2 id="cli-token" className="type-h2 font-aeonik">CLI token</h2>
+          <p className="type-body text-black/60">
+            A private token that identifies you to the Hyperiux CLI and MCP, so installs count against your
+            account&apos;s daily limit instead of the stricter anonymous one. Keep it secret: anyone with it can
+            install under your account, including Pro downloads on a subscription.
           </p>
-
-          <p className="mt-4 text-sm text-white/50">
-            {isPro
-              ? "As a Pro subscriber, this token also unlocks Pro effect source and a 10/day install limit."
-              : (
-                <>
-                  On the Free plan this raises your daily install limit from 1
-                  (anonymous) to 3.{" "}
-                  <Link
-                    href="/pricing#pricing-cards"
-                    onClick={markScrollToPricingCards}
-                    className="text-[#ff5f00] hover:underline"
-                  >
-                    Upgrade to Pro
-                  </Link>{" "}
-                  for 10/day and Pro effect downloads.
-                </>
-              )}
+          <p className="type-small text-black/50">
+            {isPro ? (
+              "As a Pro subscriber, it also unlocks Pro effect source and a 10/day install limit."
+            ) : (
+              <>
+                On the Free plan it raises your daily installs from 1 (anonymous) to 3.{" "}
+                <Link
+                  href="/pricing#plans"
+                  onClick={markScrollToPricingCards}
+                  className="text-primary underline-offset-3 hover:underline"
+                >
+                  Upgrade to Pro
+                </Link>{" "}
+                for 10/day and Pro effect downloads.
+              </>
+            )}
           </p>
         </div>
 
-        <div className="flex shrink-0 gap-3">
-          <button
-            type="button"
-            onClick={revokeToken}
-            disabled={isLoading}
-            className=" border border-white/20 px-7 py-3 text-sm font-semibold text-white transition hover:bg-white hover:text-black disabled:cursor-not-allowed disabled:opacity-40 duration-300"
-          >
-            Revoke
-          </button>
-          <button
-            type="button"
-            onClick={generateToken}
-            disabled={isLoading}
-            className=" bg-white px-7 py-3 text-sm font-semibold text-black transition hover:bg-[#ff5f00]  disabled:cursor-not-allowed disabled:opacity-40 duration-300"
-          >
-            {isLoading ? "Working..." : "Generate Token"}
-          </button>
+        {/* phones: stacked, full width */}
+        <div className="flex shrink-0 gap-[0.6vw] max-lg:gap-3 max-md:w-full max-md:flex-col">
+          <Button text="Revoke" variant="outline" preventDefault disabled={isLoading} onClick={revokeToken} className="max-md:w-full" />
+          <Button text={isLoading ? "Working…" : "Generate token"} preventDefault disabled={isLoading} onClick={generateToken} className="max-md:w-full" />
         </div>
       </div>
 
       {token && (
-        <div className="mt-6  bg-[#0E0E0E] p-4">
-          <p className="mb-2 text-sm text-white/50">
-            Copy this token now. It will not be shown again.
-          </p>
-
-          <code className="block overflow-x-auto whitespace-nowrap px-4 py-3 text-sm text-[#ff5f00]">
-            {token}
-          </code>
+        <div className="flex flex-col gap-2">
+          <p className="type-small text-black/60">Copy this token now. It won&apos;t be shown again.</p>
+          <div className={WELL}>
+            <code className="type-small min-w-0 flex-1 overflow-x-auto whitespace-nowrap font-code text-primary">{token}</code>
+            <button
+              type="button"
+              onClick={copyToken}
+              aria-label={copied ? "Token copied" : "Copy token"}
+              className={`type-small inline-flex shrink-0 cursor-pointer items-center gap-1.5 transition-colors duration-300 ${copied ? "text-primary" : "text-black/60 hover:text-primary"}`}
+            >
+              <CopyButtonContent copied={copied} />
+            </button>
+          </div>
         </div>
       )}
 
       {message && (
-        <p className="mt-4 text-sm text-white/60">
+        <p role="status" className="type-small text-black/60">
           {message}
         </p>
       )}
 
-      <div className="mt-6  bg-[#0E0E0E] p-4">
-        <p className="mb-4 text-sm text-white/50">
-          Use it like this:
-        </p>
-
-        <code className="block overflow-x-auto whitespace-nowrap text-sm text-white">
-          HYPERIUX_TOKEN=hpx_your_token npx hyperiux add helix-slider
-        </code>
+      <div className="flex flex-col gap-2">
+        <p className="type-small text-black/60">Use it like this:</p>
+        <div className={WELL}>
+          <code className="type-small min-w-0 flex-1 overflow-x-auto whitespace-nowrap font-code text-ink">
+            HYPERIUX_TOKEN=hpx_your_token npx hyperiux add helix-slider
+          </code>
+        </div>
       </div>
-    </div>
+    </section>
   );
 }

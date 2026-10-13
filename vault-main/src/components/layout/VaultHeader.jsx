@@ -497,7 +497,7 @@ export function VaultHeader({
                 <Button
                   text="Upgrade to Pro"
                   id={"upgrade-to-pro-navbar"}
-                  href="/pricing#pricing-cards"
+                  href="/pricing#plans"
                   onClick={markScrollToPricingCards}
                   className="border-white/50!"
                   variant="outline"
@@ -739,7 +739,7 @@ export function VaultHeader({
               {user?.publicMetadata?.plan !== "pro" && (
                 <Button
                   text="Upgrade to Pro"
-                  href="/pricing#pricing-cards"
+                  href="/pricing#plans"
                   onClick={() => {
                     close();
                     markScrollToPricingCards();

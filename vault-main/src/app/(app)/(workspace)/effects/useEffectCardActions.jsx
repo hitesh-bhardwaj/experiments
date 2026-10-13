@@ -6,6 +6,8 @@ import { Modal, SignInRequiredModal } from "@/components/ui/SignInRequiredModal"
 import { useToastQueue, ToastViewport } from "@/components/ui/Toast";
 import { emitWishlistChanged } from "@/lib/wishlistEvents";
 import { installCommand } from "./EffectCard";
+import { getLimitNudge } from "@/lib/limitNudge";
+import { mergeCopyUsage, publishCopyUsage, subscribeCopyUsage } from "@/lib/copyUsageEvents";
 
 
 const subscribeNever = () => () => {};
@@ -47,6 +49,7 @@ export function useEffectCardActions({ userPlan = "free", signInRedirect = "/eff
   const isProUser = userPlan === "pro";
   const { toast, showToast, dismissToast } = useToastQueue();
   const [wishlist, setWishlist] = useState([]);
+  // false, or the reason to show ("save effects", "install effects with the CLI")
   const [signInPrompt, setSignInPrompt] = useState(false);
   // Portals need <body>; false on the server and during hydration.
   const mounted = useSyncExternalStore(subscribeNever, () => true, () => false);
@@ -84,17 +87,126 @@ export function useEffectCardActions({ userPlan = "free", signInRedirect = "/eff
 
   const wishlistSet = useMemo(() => new Set(wishlist), [wishlist]);
 
+  // Copying an install command counts as an install, against the same daily limit as
+  // the effect page's code copies, the CLI and MCP (POST /api/copy-usage claims one;
+  // copying the same effect again that day is free). `usage` is the last known count.
+  const [usage, setUsage] = useState(null);
+  // Kept in step with the effect page's code blocks and Get code menu
+  useEffect(
+    () => subscribeCopyUsage((next) => setUsage((previous) => mergeCopyUsage(previous, next))),
+    []
+  );
+  useEffect(() => {
+    if (!isSignedIn || !userId) return undefined;
+    let cancelled = false;
+    fetch("/api/copy-usage")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (!cancelled && data) setUsage(data);
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, [isSignedIn, userId]);
+
+  // One request per effect at a time (fast double clicks share it)
+  const pendingClaims = useRef(new Map());
+  const claimInstall = useCallback(
+    (slug) => {
+      // Copied earlier today: free, even at the limit
+      if (usage?.isAdmin || usage?.effectSlugs?.includes(slug)) return Promise.resolve({ allowed: true, data: usage });
+      // Limit used up: the same message as everywhere else, no request
+      if (usage && typeof usage.remaining === "number" && usage.remaining <= 0) {
+        return Promise.resolve({ allowed: false, data: usage });
+      }
+      if (pendingClaims.current.has(slug)) return pendingClaims.current.get(slug);
+      const request = (async () => {
+        try {
+          const res = await fetch("/api/copy-usage", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ effectSlug: slug }),
+          });
+          const data = await res.json();
+          setUsage(data);
+          publishCopyUsage(data);
+          return { allowed: Boolean(data.allowed), data };
+        } catch {
+          return { allowed: false, data: null, failed: true };
+        } finally {
+          pendingClaims.current.delete(slug);
+        }
+      })();
+      pendingClaims.current.set(slug, request);
+      return request;
+    },
+    [usage],
+  );
+
+  // Resolves true once the command is on the clipboard (the card and drawer show
+  // "Copied" only then). Signed out: the sign-in prompt instead.
   const copyInstall = useCallback(
     async (effect) => {
-      const command = installCommand(effect);
-      try {
-        await navigator.clipboard.writeText(command);
-        showToast({ title: "Install command copied", description: command });
-      } catch {
-        showToast({ title: "Copy this command", description: command });
+      if (!isSignedIn) {
+        setSignInPrompt("install effects with the CLI");
+        return false;
       }
+      const command = installCommand(effect);
+
+      // Start the clipboard write now, inside the click: Safari refuses one that only
+      // begins after the network wait below. It's filled in (or dropped) once the
+      // install is claimed.
+      let fill;
+      let drop;
+      const text = new Promise((resolve, reject) => {
+        fill = resolve;
+        drop = reject;
+      });
+      let write = null;
+      if (typeof ClipboardItem !== "undefined" && navigator.clipboard?.write) {
+        write = navigator.clipboard.write([new ClipboardItem({ "text/plain": text.then((t) => new Blob([t], { type: "text/plain" })) })]);
+        write.catch(() => {});
+      }
+
+      const { allowed, data, failed } = await claimInstall(effect.name);
+      if (!allowed) {
+        drop(new Error("not allowed"));
+        if (failed || !data) {
+          showToast({ title: "Couldn't copy the command", description: "Please try again in a moment." });
+        } else {
+          showToast(getLimitNudge(data));
+        }
+        return false;
+      }
+
+      fill(command);
+      let copied = false;
+      try {
+        if (write) await write;
+        else await navigator.clipboard.writeText(command);
+        copied = true;
+      } catch {
+        try {
+          await navigator.clipboard.writeText(command);
+          copied = true;
+        } catch {
+          copied = false;
+        }
+      }
+
+      const left =
+        data && !data.isAdmin && typeof data.limit === "number"
+          ? `${Math.max(0, data.remaining ?? 0)} of ${data.limit} daily installs left (copies, CLI & MCP).`
+          : null;
+      showToast(
+        copied
+          ? { title: "Install command copied", description: left ?? command }
+          : { title: "Copy this command", description: command },
+      );
+      return copied;
     },
-    [showToast],
+    [isSignedIn, claimInstall, showToast],
   );
 
   // Optimistic: the heart, toast and dashboard count update on click; the request
@@ -113,7 +225,7 @@ export function useEffectCardActions({ userPlan = "free", signInRedirect = "/eff
   const toggleWishlist = useCallback(
     async (effect) => {
       if (!isSignedIn) {
-        setSignInPrompt(true);
+        setSignInPrompt("save effects");
         return;
       }
       const willSave = !wishlistRef.current.includes(effect.name);
@@ -161,7 +273,7 @@ export function useEffectCardActions({ userPlan = "free", signInRedirect = "/eff
   const overlays = (
     <>
       <ToastViewport toast={toast} onDismiss={dismissToast} />
-      <SignInRequiredModal open={signInPrompt} onClose={() => setSignInPrompt(false)} redirect={signInRedirect} action="save effects" />
+      <SignInRequiredModal open={Boolean(signInPrompt)} onClose={() => setSignInPrompt(false)} redirect={signInRedirect} action={signInPrompt || "save effects"} />
     </>
   );
 

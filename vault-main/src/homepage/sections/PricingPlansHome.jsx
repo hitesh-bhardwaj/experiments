@@ -11,9 +11,12 @@ import dynamic from "next/dynamic";
 import Button from "../components/Button";
 import { useCurrencyState } from "@/lib/useCurrency";
 import { Skeleton } from "@/components/ui/Skeleton";
+import { useLenis } from "lenis/react";
+import { clearScrollToPricingCardsIntent, hasScrollToPricingCardsIntent } from "@/lib/pricingScrollIntent";
 import {
     CURRENCY_SYMBOLS,
     PLANS,
+    isPlanKey,
     formatPrice,
     getCreditsPerYear,
     getMonthlyEquivalent,
@@ -176,14 +179,40 @@ export default function PricingPlansHome({ currency: initialCurrency, checkout =
 
     useFadeUp(rootRef);
 
-    // Arriving with ?checkout=<tier>.<interval> (the homepage cards, via sign-in):
-    // show that billing period, so its card's button is the one that opens checkout
+    // The plan to open checkout for on arrival: ?checkout=<tier>.<interval>
+    const [resumeKey, setResumeKey] = useState(null);
+    const lenis = useLenis();
+    const lenisRef = useRef(lenis);
     useEffect(() => {
-        if (!checkout) return;
-        const interval = new URLSearchParams(window.location.search).get("checkout")?.split(".")[1];
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        if (interval === "quarterly") setPeriod("q");
-        else if (interval === "yearly") setPeriod("y");
+        lenisRef.current = lenis;
+    }, [lenis]);
+    useEffect(() => {
+        if (!checkout) return undefined;
+        const params = new URLSearchParams(window.location.search);
+        const fromUrl = params.get("checkout");
+        const plan = isPlanKey(fromUrl) ? fromUrl : null;
+        if (fromUrl) {
+            params.delete("checkout");
+            const query = params.toString();
+            window.history.replaceState(null, "", `${window.location.pathname}${query ? `?${query}` : ""}${window.location.hash}`);
+        }
+        if (plan) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
+            setPeriod(plan.endsWith(".quarterly") ? "q" : "y");
+            setResumeKey(plan);
+        }
+
+        // Upgrade links across the site land here: bring the cards into view
+        const wantsCards = plan || window.location.hash === "#plans" || hasScrollToPricingCardsIntent();
+        clearScrollToPricingCardsIntent();
+        if (!wantsCards) return undefined;
+        const timer = setTimeout(() => {
+            const target = document.getElementById("plans");
+            if (!target) return;
+            if (lenisRef.current) lenisRef.current.scrollTo(target, { offset: -96 });
+            else window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - 96, behavior: "smooth" });
+        }, 500);
+        return () => clearTimeout(timer);
     }, [checkout]);
 
     useLayoutEffect(() => {
@@ -310,14 +339,15 @@ export default function PricingPlansHome({ currency: initialCurrency, checkout =
                                         text={plan.cta.text}
                                         variant={plan.cta.variant}
                                         successHref={`/effects?upgraded=${plan.tier}.${period === "y" ? "yearly" : "quarterly"}`}
-                                        resumeCheckout
+                                        autoOpen={resumeKey === `${plan.tier}.${period === "y" ? "yearly" : "quarterly"}`}
+                                        onSwitchToYearly={() => choose("y")}
                                         className={`w-fit justify-center ${plan.cta.variant === "outline" ? LIGHT_OUTLINE : ""}`}
                                     />
                                 ) : (
-                                    // Homepage: through sign-in (which passes straight through when
-                                    // already signed in) to the pricing page, which opens checkout
+                                    // Homepage: the checkout page, which opens Razorpay when signed
+                                    // in, or signs in first and comes back
                                     <Button
-                                        href={`/sign-in?redirect_url=${encodeURIComponent(`/pricing?checkout=${plan.tier}.${period === "y" ? "yearly" : "quarterly"}#plans`)}`}
+                                        href={`/checkout/${plan.tier}.${period === "y" ? "yearly" : "quarterly"}`}
                                         text={plan.cta.text}
                                         variant={plan.cta.variant}
                                         className={`w-fit justify-center ${plan.cta.variant === "outline" ? LIGHT_OUTLINE : ""}`}

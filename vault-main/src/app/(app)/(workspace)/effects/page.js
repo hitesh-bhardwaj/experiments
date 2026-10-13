@@ -10,8 +10,9 @@ import { EffectsListing } from "./EffectsListing";
 export const metadata = getEffectCategoryMetadata("all");
 const pageContent = getEffectCategoryContent("all");
 
+// Shown while the listing loads: the page colour (#111111), not black, so there's no dark flash
 function VaultFallback() {
-  return <div className="min-h-[300vh] w-screen bg-black"></div>;
+  return <div className="min-h-[300vh] w-full bg-background"></div>;
 }
 
 // ISR: the listing is cached and rebuilt in the background at most once a

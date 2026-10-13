@@ -100,6 +100,7 @@ export async function POST(req) {
           clerkUserId,
           subscription: isUpgradeStart ? { ...subscription, paid_count: subscription.paid_count || 1 } : subscription,
           payment,
+          isUpgradePayment: isUpgradeStart,
         });
         await sendInvoiceEmail({ clerkUserId, subscription, payment });
 

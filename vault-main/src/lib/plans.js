@@ -130,3 +130,34 @@ export function getPlanLabel(tier, interval) {
   if (interval === "monthly") return `Vault ${name} Monthly`;
   return `Vault ${name}`;
 }
+
+const TIER_RANK = { pro: 1, pro_plus: 2 };
+
+// Which mid-period switches are upgrades (prorated, lib/upgrade.js). Only
+// ever up a plan and/or from quarterly to yearly:
+//   "tier"     - Pro -> Pro+: quarterly -> quarterly, yearly -> yearly, or
+//                quarterly -> yearly
+//   "interval" - same plan, quarterly -> yearly
+//   null       - anything else: same plan and period, a downgrade, or
+//                yearly -> quarterly
+export function getUpgradeKind({ fromTier, fromInterval, toTier, toInterval }) {
+  if (!TIER_RANK[fromTier] || !TIER_RANK[toTier] || !isValidInterval(toInterval)) return null;
+  if (fromInterval === "yearly" && toInterval === "quarterly") return null;
+  if (TIER_RANK[toTier] > TIER_RANK[fromTier]) return "tier";
+  if (toTier === fromTier && fromInterval === "quarterly" && toInterval === "yearly") return "interval";
+  return null;
+}
+
+// "<tier>.<interval>", e.g. "pro_plus.yearly" - how a plan travels in URLs
+// (/checkout/<plan>) and in the pending-checkout store
+export function isPlanKey(value) {
+  if (typeof value !== "string") return false;
+  const [tier, interval] = value.split(".");
+  return isValidTier(tier) && isValidInterval(interval) && value === `${tier}.${interval}`;
+}
+
+export function parsePlanKey(value) {
+  if (!isPlanKey(value)) return null;
+  const [tier, interval] = value.split(".");
+  return { tier, interval };
+}
