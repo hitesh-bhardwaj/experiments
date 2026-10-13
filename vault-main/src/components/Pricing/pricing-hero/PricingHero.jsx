@@ -1,11 +1,13 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
+import Image from "next/image";
 import gsap from "gsap";
 import SplitLine from "@/components/WebsiteComps/SplitLine";
 import LineReveal from "@/components/Animations/LineReveal";
 import Button from "@/homepage/components/Button";
+import { MEDIA } from "@/lib/breakpoints";
 
 // The Slinky blob is WebGL-only and decorative, so it loads client-side after the hero content
 const ParticleBlob = dynamic(() => import("@/components/Animations/ParticleBlob"), { ssr: false });
@@ -14,6 +16,17 @@ const HEADER_OFFSET = 96; // keeps the target section's title clear of the fixed
 
 export default function PricingHero() {
   const ctaRef = useRef(null);
+  // null until measured, so neither background starts loading on the wrong device
+  const [isDesktop, setIsDesktop] = useState(null);
+  const [videoPlaying, setVideoPlaying] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia(MEDIA.tablet);
+    const sync = () => setIsDesktop(!mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
 
   // Plays on load (no scroll trigger) with the same timing as the paragraph's SplitLine, so the
   // buttons rise together with the heading and text instead of trailing them.
@@ -56,8 +69,33 @@ export default function PricingHero() {
       aria-label="Pricing"
       className="home-type relative isolate flex min-h-[115vh] w-full flex-col justify-end overflow-hidden bg-transparent text-foreground select-none [touch-action:pan-y] pb-30"
     >
-      <div className="absolute inset-0 z-0" aria-hidden="true">
-        <ParticleBlob preset="slinky" phoneTop={0.35} />
+      <div className="absolute inset-0 z-0 max-lg:bottom-auto max-lg:h-svh" aria-hidden="true">
+        {isDesktop && <ParticleBlob preset="slinky" phoneTop={0.35} />}
+        {/* Tablet and mobile: a looping video instead of the WebGL blob */}
+        {isDesktop === false && (
+          <video
+            src="/assets/hero-videos/pricing.mp4"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+            onPlaying={() => setVideoPlaying(true)}
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+        )}
+        {/* Poster: in the server HTML below desktop, so it shows from the first
+            paint and stays until the video is actually playing */}
+        {!videoPlaying && (
+          <Image
+            src="/assets/hero-videos/posters/pricing-hero.webp"
+            alt=""
+            fill
+            sizes="100vw"
+            quality={90}
+            className="hidden object-cover max-lg:block"
+          />
+        )}
       </div>
       <div className="pointer-events-none relative z-2 mx-auto flex w-full max-w-[1536px] flex-col px-[4.5vw] pt-[8vw] pb-[8vw] max-lg:px-[6vw] max-lg:pt-[12vw] max-md:px-[6vw] max-md:pt-[48svh] max-md:pb-10 [&_a]:pointer-events-auto [&_button]:pointer-events-auto">
         <div className="flex w-full justify-start max-md:flex-col max-md:items-stretch">

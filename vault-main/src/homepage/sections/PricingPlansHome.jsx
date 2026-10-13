@@ -233,11 +233,11 @@ export default function PricingPlansHome({ currency: initialCurrency, checkout =
                                 role="radio"
                                 aria-checked={on}
                                 onClick={() => choose(b.id)}
-                                className={`relative z-1 inline-flex h-10 items-center gap-2.5 px-[2vw] text-[11px] whitespace-nowrap max-md:h-[12vw] max-md:grow max-md:justify-center max-md:gap-[2vw] max-md:px-[3vw] max-md:text-[2.8vw] font-medium tracking-[.14em] uppercase transition-colors duration-700 ${on ? "text-white" : "text-[#6B6B6B]"}`}
+                                className={`relative z-1 inline-flex h-10 items-center gap-2.5 px-[2vw] type-sm whitespace-nowrap max-md:h-[12vw] max-md:grow max-md:justify-center max-md:gap-[2vw] max-md:px-[3vw] max-md:text-[2.8vw] font-medium   transition-colors duration-700 ${on ? "text-white" : "text-[#6B6B6B]"}`}
                             >
                                 {b.label}
                                 {b.save && (
-                                    <span className={`px-[7px] py-[3px] max-md:px-[2vw] max-md:py-[1vw] transition-colors duration-700 ${on ? "bg-primary text-[#141414]" : "bg-primary/20 text-primary/70"}`}>{b.save}</span>
+                                    <span className={`px-[7px] py-[3px] max-md:px-[2vw] max-md:py-[1vw] transition-colors duration-700 ${on ? "bg-primary text-black" : "bg-primary/40 text-primary"}`}>{b.save}</span>
                                 )}
                             </button>
                         );

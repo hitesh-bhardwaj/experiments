@@ -55,7 +55,20 @@ const POSE = {
   // Phones: on the right edge like desktop, mostly off-screen so a slice shows
   // (the camera sees about ±3.9 units across there). Same rotation as desktop.
   footer_m: { rp: [6.2, 1.5, 0], rr: [-0.28, -0.42, 0.35], rs: 0.5 },
+  // Loader: small, centred and facing the camera, so the rings read as a
+  // spinner in the middle of the screen. Phones get a smaller ring for the narrow frame.
+  loader: { rp: [0, 0, 0], rr: [-0.12, 0.1, 0], rs: 0.34 },
+  loader_m: { rp: [0, 0, 0], rr: [-0.12, 0.1, 0], rs: 0.24 },
 };
+
+// Entrance (hero only, driven by the loader through `entrance`)
+const TAU = Math.PI * 2;
+// Each ring ripples out from the centre as the loader's progress passes it
+const RING_REVEAL_EASE = 0.08; // per 60fps frame
+// While waiting, inner rings spin fastest; neighbours turn opposite ways
+const RING_SPIN = 0.9; // rad/s, innermost ring
+const RING_SPIN_STEP = 0.08; // slower per ring outward
+const settleEase = gsap.parseEase("power3.inOut");
 
 const RIBBON_VERT_PARS = /* glsl */ `
   uniform float uScrollV;
@@ -205,7 +218,11 @@ function buildRibbonGeometry(pathAt, a0, a1, segments, width, thickness) {
   return g;
 }
 
-export function mountThereminRibbons(host, canvas, { pose = "hero", sound = null, onUnlock = null } = {}) {
+export function mountThereminRibbons(
+  host,
+  canvas,
+  { pose = "hero", sound = null, onUnlock = null, entrance = null, onReady = null } = {}
+) {
   const isHero = pose === "hero";
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const finePointer = matchMedia("(hover: hover) and (pointer: fine)").matches;
@@ -623,14 +640,18 @@ export function mountThereminRibbons(host, canvas, { pose = "hero", sound = null
     if (bleed || frameH !== h) camera.setViewOffset(w, frameH, 0, -bleed, w, h);
     else camera.clearViewOffset();
     camera.updateProjectionMatrix();
+    // Resizing clears the canvas, and this runs after the frame has drawn: redraw
+    // now, or the rings blink out for a frame (e.g. when the scrollbar returns
+    // as the loader releases the page)
+    if (raf) renderer.render(scene, camera);
   };
   const ro = new ResizeObserver(onResize);
   ro.observe(canvas);
   onResize();
 
   // Animation loop
-  // No rise-in: the hero model already sits in its final place under the loader,
-  // so when the loader clears it's simply there (HeroRibbons fades it in)
+  // No rise-in: the hero model is already on screen as the loader (see
+  // updateEntrance), and travels from there into its final place
   const state = { introT: 0 };
   // Start in the pose for this screen shape, so nothing glides across on load
   const startNarrow = (canvas.clientWidth || innerWidth) / (isHero ? (canvas.clientHeight || innerHeight) : footerFrameH(canvas.clientWidth || innerWidth, host.clientHeight || innerHeight)) < NARROW_ASPECT;
@@ -639,6 +660,19 @@ export function mountThereminRibbons(host, canvas, { pose = "hero", sound = null
   // Footer only: the cluster's x offset, starting off to the right
   let footerSlide = FOOTER_SLIDE_FROM;
   let scrollV = 0, lastScroll = window.scrollY, scrollWave = 0, lastScrollStreak = 0, hoverAmp = 0, lastMx = -1, lastMy = -1, idleT = 3;
+  // Entrance: per ring, how far it has rippled in and how far it has spun.
+  // `from` / `to` are where the spin unwinds from and to once released.
+  let entering = isHero && !!entrance && entrance.settle < 1;
+  let released = false;
+  let drawn = false;
+  const rings = subs.map((_, j) => ({
+    reveal: 0,
+    spin: 0,
+    from: 0,
+    to: 0,
+    speed: (RING_SPIN - j * RING_SPIN_STEP) * (j % 2 ? -1 : 1),
+  }));
+  if (entering) subs.forEach((sb) => { sb.visible = false; });
   // The loop pauses off-screen, so on resume the scroll it missed must not
   // land as one giant jump (that throws the layers apart and tilts them)
   function resetScrollState() {
@@ -655,9 +689,18 @@ export function mountThereminRibbons(host, canvas, { pose = "hero", sound = null
     const narrow = camera.aspect < NARROW_ASPECT;
     const P = isHero ? (narrow ? POSE.ribbons_m : POSE.ribbons) : (narrow ? POSE.footer_m : POSE.footer);
     const k = 1 - Math.pow(0.12, dt);
-    cur.rp.lerp(tmpV.fromArray(P.rp), k);
-    cur.rr.lerp(tmpV.fromArray(P.rr), k);
-    cur.rs = lerp(cur.rs, P.rs, k);
+    if (entering) {
+      // Placed outright from the loader's scalar, so GSAP owns the timing
+      const L = narrow ? POSE.loader_m : POSE.loader;
+      const e = settleEase(Math.min(entrance.settle, 1));
+      cur.rp.fromArray(L.rp).lerp(tmpV.fromArray(P.rp), e);
+      cur.rr.fromArray(L.rr).lerp(tmpV.fromArray(P.rr), e);
+      cur.rs = lerp(L.rs, P.rs, e);
+    } else {
+      cur.rp.lerp(tmpV.fromArray(P.rp), k);
+      cur.rr.lerp(tmpV.fromArray(P.rr), k);
+      cur.rs = lerp(cur.rs, P.rs, k);
+    }
     const sy = window.scrollY;
     // Capped per frame, so a fast flick (or a dropped frame) can't spike it
     scrollV = lerp(scrollV, clamp(sy - lastScroll, -MAX_SCROLL_STEP, MAX_SCROLL_STEP), 0.08);
@@ -667,6 +710,8 @@ export function mountThereminRibbons(host, canvas, { pose = "hero", sound = null
     mouse.sy = damp(mouse.sy, mouse.y, MOUSE_TILT_EASE, dt);
     const ch = charge.v;
 
+    // No pointer tilt while the rings are the loader; it eases in as they settle
+    const tilt = entering ? settleEase(Math.min(entrance.settle, 1)) : 1;
     ribbons.position.copy(cur.rp);
     ribbons.position.y -= state.introT * INTRO_DROP;
     ribbons.position.x += Math.sin(time * 40) * ch * ch * 0.04;
@@ -674,9 +719,9 @@ export function mountThereminRibbons(host, canvas, { pose = "hero", sound = null
     ribbons.rotation.set(
       // Scroll speed only nudges the tilt: capped, so a fast flick can't swing the model off its axis
       // The hero model stays put while scrolling: no scroll tilt there (footer keeps it)
-      cur.rr.x + mouse.sy * 0.06 + (isHero ? 0 : clamp(scrollV, -MAX_TILT_SCROLL, MAX_TILT_SCROLL) * 0.0008),
+      cur.rr.x + mouse.sy * 0.06 * tilt + (isHero ? 0 : clamp(scrollV, -MAX_TILT_SCROLL, MAX_TILT_SCROLL) * 0.0008),
       // Left-right turn with the pointer (a touch gentler in the footer)
-      cur.rr.y + mouse.sx * (isHero ? 0.18 : 0.1),
+      cur.rr.y + mouse.sx * (isHero ? 0.18 : 0.1) * tilt,
       // The slow turn with page scroll belongs to the hero; at the footer (far
       // down the page) it would add a whole extra radian of twist
       cur.rr.z + Math.sin(time * 0.12) * 0.03 + ch * 0.12,
@@ -699,6 +744,7 @@ export function mountThereminRibbons(host, canvas, { pose = "hero", sound = null
     }
     // Rings fan apart with scroll speed - not in the hero, where the model holds still
     subs.forEach((sb, j) => { sb.position.z = isHero ? 0 : (j - (subs.length - 1) / 2) * Math.abs(scrollWave) * 0.3; });
+    if (entering) updateEntrance(dt);
     RU.uScrollV.value = scrollWave;
     if (!reduced && Math.abs(scrollV) > 20 && time - lastScrollStreak > 0.3 && !SH.mode) {
       lastScrollStreak = time;
@@ -756,6 +802,50 @@ export function mountThereminRibbons(host, canvas, { pose = "hero", sound = null
     });
 
     renderer.render(scene, camera);
+    if (!drawn) {
+      drawn = true;
+      onReady?.();
+    }
+  }
+
+  // Loading: rings ripple out from the centre one by one, each announced by a
+  // streak, and spin as a spinner. Released: they unwind to rest and travel
+  // to the hero's pose with their layering unchanged.
+  function updateEntrance(dt) {
+    const settle = Math.min(entrance.settle, 1);
+    const e = settleEase(settle);
+
+    if (settle > 0 && !released) {
+      released = true;
+      rings.forEach((ring, j) => {
+        ring.from = ring.spin;
+        ring.to = Math.round(ring.spin / TAU) * TAU;
+        fireStreak(j, j * 70, 0.55);
+      });
+    }
+
+    subs.forEach((sb, j) => {
+      const ring = rings[j];
+      const target = clamp(entrance.progress * subs.length - j, 0, 1);
+      if (target > 0 && ring.reveal === 0) fireStreak(j, 0, 0.5);
+      ring.reveal = target >= 1 && ring.reveal > 0.999 ? 1 : damp(ring.reveal, target, RING_REVEAL_EASE, dt);
+
+      const grow = 1 - Math.pow(1 - ring.reveal, 3);
+      sb.visible = ring.reveal > 0.002;
+      sb.scale.setScalar(Math.max(grow, 0.001));
+
+      if (!released && !reduced) ring.spin += ring.speed * dt;
+      sb.rotation.z = released ? lerp(ring.from, ring.to, e) : ring.spin;
+    });
+
+    if (settle >= 1) {
+      entering = false;
+      subs.forEach((sb) => {
+        sb.visible = true;
+        sb.scale.setScalar(1);
+        sb.rotation.z = 0;
+      });
+    }
   }
 
   addEventListener("pointermove", onPointerMove, { passive: true });

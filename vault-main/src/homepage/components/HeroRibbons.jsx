@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { mountThereminRibbons } from "../lib/theremin-ribbons";
 import { useInteraction } from "./InteractionProvider";
+import { loaderScene, markSceneReady } from "./loader-scene";
 
 const UNLOCK_TITLE = "Effect unlocked · Liquid shatter";
 const UNLOCK_BODY =
@@ -62,9 +63,10 @@ function UnlockNotice({ onClose }) {
 }
 
 // Homepage hero ribbons (WebGL, Theremin model). Transparent, so the
-// site-wide grid (SiteBackground) shows through. The ribbons rise in on
-// `play` (loader finished) and the layer fades up with them, so nothing is
-// seen before the loader clears.
+// site-wide grid (SiteBackground) shows through. They are the loader too:
+// visible from their first frame, centred on screen while the page loads, and
+// swung into the hero's pose by `loaderScene.settle`. `play` (loader finished)
+// only switches on their hover / hold interactions.
 export default function HeroRibbons({ play = false }) {
     const hostRef = useRef(null);
     const canvasRef = useRef(null);
@@ -72,6 +74,7 @@ export default function HeroRibbons({ play = false }) {
     const playRef = useRef(play);
     const { sound } = useInteraction();
     const [unlocked, setUnlocked] = useState(false);
+    const [drawn, setDrawn] = useState(false);
 
     // The module reads this once at mount; keep the latest value reachable
     useEffect(() => {
@@ -85,6 +88,11 @@ export default function HeroRibbons({ play = false }) {
                 pose: "hero",
                 sound,
                 onUnlock: () => setUnlocked(true),
+                entrance: loaderScene,
+                onReady: () => {
+                    setDrawn(true);
+                    markSceneReady();
+                },
             });
         } catch (err) {
             console.warn("[HeroRibbons] WebGL unavailable, ribbons disabled.", err);
@@ -108,8 +116,8 @@ export default function HeroRibbons({ play = false }) {
     return (
         <div
             ref={hostRef}
-            className="absolute inset-0 transition-opacity duration-1200 ease-out"
-            style={{ opacity: play ? 1 : 0 }}
+            className="absolute inset-0 transition-opacity duration-700 ease-out"
+            style={{ opacity: drawn ? 1 : 0 }}
         >
             <canvas ref={canvasRef} className="block h-full w-full" aria-hidden="true" />
             {unlocked && <UnlockNotice onClose={closeNotice} />}

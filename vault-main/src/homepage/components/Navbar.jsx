@@ -79,9 +79,8 @@ export default function Navbar({
   }, []);
   const loaderComplete = useLoaderComplete();
   const loaderHandoff = useLoaderHandoff();
-  // The handoff is the real cue: the loader's mark has come to rest on the logo
-  // and the bar fades up around it, in place. It must not slide in on this -
-  // the logo is already where it belongs and moving it would undo the merge.
+  // The handoff is the real cue: the loader's spring has kicked open and the
+  // hero's heading is rising, so the bar fades up in place alongside it.
   const introReady = introTimedOut || loaderHandoff;
 
   useEffect(() => {

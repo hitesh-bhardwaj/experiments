@@ -18,22 +18,24 @@ export default function BlogDetailHero({ post }) {
 
   return (
     <div ref={heroRef} className="flex flex-col gap-[3.5vw] max-md:gap-0">
-      <section id="blog-hero" className="mx-auto flex w-full max-w-[1536px] flex-col gap-[2vw] px-[4.5vw] max-md:gap-[10vw] max-md:px-[6vw] max-md:py-[12%]">
+      <section id="blog-hero" className="mx-auto flex w-full max-w-[1536px] flex-col gap-10 px-[4.5vw] max-md:px-[6vw] max-md:pb-[12%]">
         <Breadcrumb maxWords={3} />
 
-        <LineWipe>
-          <h1 className="type-h1 w-[80%]  leading-[1.2] text-[3.2vw] max-md:text-[8vw] text-foreground max-[1025px]:w-full">
-            {post.title}
-          </h1>
-        </LineWipe>
-
-        {post.summary && (
-          <LineWipe delay={0.5}>
-            <p className="type-body-lg w-[60%] text-foreground/90 max-[1025px]:w-full">
-              {post.summary}
-            </p>
+        <div className="flex flex-col gap-6">
+          <LineWipe>
+            <h1 className="type-h1 w-[80%]  leading-[1.2] text-[3.2vw] max-md:text-[8vw] text-foreground max-lg:w-full">
+              {post.title}
+            </h1>
           </LineWipe>
-        )}
+
+          {post.summary && (
+            <LineWipe delay={0.5}>
+              <p className="type-body-lg w-[60%] text-foreground/90 max-lg:w-full">
+                {post.summary}
+              </p>
+            </LineWipe>
+          )}
+        </div>
       </section>
 
       {post.coverImage?.url && (
