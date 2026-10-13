@@ -16,7 +16,7 @@ import { SignInRequiredModal } from "@/components/ui/SignInRequiredModal";
 const MAX_COINS = 10;
 const TABS = [
   { id: "buy", label: "Buy" },
-  { id: "credit", label: "Use a credit" },
+  { id: "credit", label: "Use a Credit" },
 ];
 // The pricing page's plan comparison (components/Pricing/exploded/PricingProCompare.jsx).
 const COMPARE_HREF = "/pricing#compare";
@@ -258,7 +258,7 @@ export function GetTemplateModal({ template, open, tab = "buy", onTab, onClose, 
                         onClick={onBuy}
                         className={`inline-flex h-12 w-fit cursor-pointer items-center bg-primary px-5 ${T16} text-background transition-colors duration-500 hover:bg-primary-hover`}
                       >
-                        Continue to payment
+                        Continue to Payment
                       </button>
                      
                     </div>
@@ -320,7 +320,7 @@ export function GetTemplateModal({ template, open, tab = "buy", onTab, onClose, 
                             onClick={() => setSignIn(true)}
                             className={`inline-flex h-11 cursor-pointer items-center bg-primary px-5 ${T16} text-background transition-colors duration-500 hover:bg-primary-hover`}
                           >
-                            Sign in
+                            Sign In
                           </button>
                         )}
                         {wallet && !outcome && (!subscribed || locked || remaining < 1) && (
@@ -329,7 +329,7 @@ export function GetTemplateModal({ template, open, tab = "buy", onTab, onClose, 
                             onClick={onClose}
                             className={`inline-flex h-11 items-center px-5 ${T16} text-light ring-1 ring-inset ring-foreground/14 transition-shadow duration-500 hover:ring-primary/70`}
                           >
-                            {locked ? "See Pro+" : "Compare plans"}
+                            {locked ? "See Pro+" : "Compare Plans"}
                           </Link>
                         )}
                       </div>

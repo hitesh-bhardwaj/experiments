@@ -278,7 +278,7 @@ export function TemplatesListing({ templates = [], description = "", faqItems = 
               Buy a template outright, or redeem a credit from your plan. Either way the whole source is yours.
             </p>
             <div className="fadeup flex">
-              <Button className="tracking-normal!" text="Compare plans" href="/pricing#compare" />
+              <Button className="tracking-normal!" text="Compare Plans" href="/pricing#compare" />
             </div>
           </div>
 

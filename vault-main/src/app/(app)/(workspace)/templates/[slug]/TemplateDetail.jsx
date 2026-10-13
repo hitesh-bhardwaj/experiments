@@ -296,7 +296,7 @@ export function TemplateDetail({ template, templateAccess = { allowed: false, re
                       <Download className="size-4" aria-hidden="true" /> Download source
                     </>
                   ) : (
-                    "Buy template"
+                    "Buy Template"
                   )}
                 </button>
                 {/* The live template, in a new tab */}
@@ -353,7 +353,7 @@ export function TemplateDetail({ template, templateAccess = { allowed: false, re
           <div className="fadeup flex w-[60%] flex-col gap-6 max-lg:w-full">
             {/* Outside .blog-content, so it's the page's h1 size with no article margin */}
             <h2 className="type-h1">
-              What’s <span className="gradient-text-animate">inside.</span>
+              What’s <span className="gradient-text-animate">Inside</span>
             </h2>
             <div className="blog-theme-light">
               <div className="blog-content [--blog-text-secondary:#1d1d1d]">
@@ -397,11 +397,11 @@ export function TemplateDetail({ template, templateAccess = { allowed: false, re
             <div className="flex flex-wrap items-end justify-between gap-4">
               <HeadAnim rotate={0} by="words">
                 <h2 className="type-h1">
-                  More <span className="gradient-text-animate">templates.</span>
+                  More <span className="gradient-text-animate">Templates</span>
                 </h2>
               </HeadAnim>
               <div className="fadeup">
-                <Button className="tracking-normal!" text="All templates" href="/templates" />
+                <Button className="tracking-normal!" text="All Templates" href="/templates" />
               </div>
             </div>
             <div className="flex flex-wrap gap-x-[1.4vw] gap-y-14">
