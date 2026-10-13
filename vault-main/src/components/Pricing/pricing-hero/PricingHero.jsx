@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
-import Image from "next/image";
+import Image, { getImageProps } from "next/image";
 import gsap from "gsap";
 import SplitLine from "@/components/WebsiteComps/SplitLine";
 import LineReveal from "@/components/Animations/LineReveal";
@@ -14,6 +14,10 @@ import { isLighthouseOrHeadless, isSoftwareRenderer } from "@/lib/audit";
 const ParticleBlob = dynamic(() => import("@/components/Animations/ParticleBlob"), { ssr: false });
 
 const HEADER_OFFSET = 96; // keeps the target section's title clear of the fixed header
+
+const POSTER = { src: "/assets/hero-videos/posters/pricing-hero.webp", alt: "", fill: true, sizes: "100vw", quality: 90 };
+
+const posterImg = getImageProps(POSTER).props;
 
 export default function PricingHero() {
   const ctaRef = useRef(null);
@@ -92,22 +96,23 @@ export default function PricingHero() {
         )}
         {/* Poster: in the server HTML below desktop, so it shows from the first
             paint and stays until the video is actually playing */}
-        {!videoPlaying && (
-          <Image
-            src="/assets/hero-videos/posters/pricing-hero.webp"
-            alt=""
-            fill
-            sizes="100vw"
-            quality={90}
-            className="hidden object-cover max-lg:block"
-          />
-        )}
+        <link
+          rel="preload"
+          as="image"
+          href={posterImg.src}
+          imageSrcSet={posterImg.srcSet}
+          imageSizes={posterImg.sizes}
+          media={MEDIA.tablet}
+          fetchPriority="high"
+        />
+        {!videoPlaying && <Image {...POSTER} className="hidden object-cover max-lg:block" />}
       </div>
       <div className="pointer-events-none relative z-2 mx-auto flex w-full max-w-[1536px] flex-col px-[4.5vw] pt-[8vw] pb-[8vw] max-lg:px-[6vw] max-lg:pt-[12vw] max-md:px-[6vw] max-md:pt-[48svh] max-md:pb-10 [&_a]:pointer-events-auto [&_button]:pointer-events-auto">
         <div className="flex w-full justify-start max-md:flex-col max-md:items-stretch">
           <div className="flex w-[46%] flex-col gap-[3vw] max-lg:w-[75%] max-lg:gap-[4vw] max-md:w-full max-md:gap-[5vw]">
+        
             <LineReveal as="h1" className="type-display relative w-full text-foreground">
-              Pick a Plan. <span className="gradient-text-animate block">Keep the Code.</span>
+              Pick a Plan.<br /><span className="gradient-text-animate">Keep the Code.</span>
             </LineReveal>
             <div className="flex w-[70%] flex-col gap-[2vw] max-lg:w-[90%] max-lg:gap-[3vw] max-md:w-full max-md:gap-[8vw]">
               <SplitLine as="p" start="top 120%" className="type-body-lg w-full text-foreground/80">

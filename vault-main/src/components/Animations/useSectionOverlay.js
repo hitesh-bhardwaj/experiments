@@ -69,7 +69,13 @@ export function useSectionOverlay(ref, { scale = 0.88 } = {}) {
         ScrollTrigger.addEventListener("scrollEnd", onScrollEnd);
 
         let timer = null;
+ 
+        let initialSize = true;
         const ro = new ResizeObserver(() => {
+            if (initialSize) {
+                initialSize = false;
+                return;
+            }
             clearTimeout(timer);
             timer = setTimeout(() => ScrollTrigger.refresh(), 150);
         });

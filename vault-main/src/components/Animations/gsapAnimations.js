@@ -13,11 +13,15 @@ if (typeof window !== "undefined") {
 const useIsomorphicLayoutEffect =
   typeof window !== "undefined" ? useLayoutEffect : () => {};
 
-function refreshScrollTrigger() {
-  if (typeof window === "undefined") return;
+let refreshPending = false;
 
+function refreshScrollTrigger() {
+  if (typeof window === "undefined" || refreshPending) return;
+
+  refreshPending = true;
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
+      refreshPending = false;
       ScrollTrigger?.refresh?.();
     });
   });

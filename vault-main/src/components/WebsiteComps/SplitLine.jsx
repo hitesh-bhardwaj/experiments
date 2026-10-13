@@ -17,6 +17,9 @@ const REDUCED_MOTION_EASE = "power1.out";
 function hasLoaderRun() {
   if (typeof window === "undefined") return false;
 
+
+  if (window.location.pathname !== "/") return true;
+
   // Loader.jsx writes sessionStorage (not localStorage) and sets the window
   // flag when it completes or is skipped.
   return (
