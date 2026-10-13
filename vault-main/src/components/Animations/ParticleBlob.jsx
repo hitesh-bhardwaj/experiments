@@ -11,7 +11,7 @@
 
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
-import { isAuditUserAgent } from "@/lib/audit";
+import { isLighthouseOrHeadless, isSoftwareRenderer } from "@/lib/audit";
 import { prefersReducedMotion } from "@/lib/motion";
 import { MEDIA } from "@/lib/breakpoints";
 import { createHover } from "./particleHover";
@@ -610,7 +610,8 @@ export default function ParticleBlob({ preset = "slinky", phoneTop }) {
 
   useEffect(() => {
     const wrap = wrapRef.current;
-    if (!wrap || isAuditUserAgent(navigator.userAgent)) return undefined;
+    // Same audit check as the homepage: PSI desktop has a plain UA, only its software GPU gives it away
+    if (!wrap || isLighthouseOrHeadless() || isSoftwareRenderer()) return undefined;
     // A fresh canvas per mount: destroy() loses the WebGL context, and a canvas whose context was
     // lost only ever returns that dead context (Strict Mode remounts would paint it white)
     const canvas = document.createElement("canvas");

@@ -8,7 +8,7 @@ import { useGSAP } from "@gsap/react";
 import { isLighthouseOrHeadless, isSoftwareRenderer } from "@/lib/audit";
 import { prefersReducedMotion } from "@/lib/motion";
 import {
-  // hasLoaderPlayed, // see shouldSkipLoader()
+  hasLoaderPlayed,
   markLoaderComplete,
   markLoaderHandoff,
   markLoaderPlayed,
@@ -77,9 +77,7 @@ const cellOf = (char) => (char === "0" ? CELLS.length - 1 : Number(char));
 function shouldSkipLoader() {
   if (typeof window === "undefined") return false;
   return (
-    // Once-per-session gate (sessionStorage) disabled for now so the loader
-    // plays on every load. Restore this line to bring the gate back.
-    // hasLoaderPlayed() ||
+    hasLoaderPlayed() ||
     prefersReducedMotion() ||
     isLighthouseOrHeadless() ||
     isSoftwareRenderer()
@@ -114,16 +112,20 @@ export default function Loader() {
   const counterRef = useRef(null);
   const imageRef = useRef(null);
   const imageLoadedRef = useRef(false);
+  // Decided once per mount: Strict Mode re-runs the effect below, and by then
+  // markLoaderPlayed() has already written the session flag, so a fresh check
+  // would skip the loader every time in dev
+  const skipRef = useRef(null);
 
   useScrollLockLenis();
 
   useLayoutEffect(() => {
-    if (shouldSkipLoader()) {
+    if (skipRef.current === null) skipRef.current = shouldSkipLoader();
+    if (skipRef.current) {
       skipLoaderNow();
       // shouldSkipLoader() reads matchMedia/UA signals that only exist
       // client-side - can't be a lazy useState initializer without risking a
       // hydration mismatch.
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setDone(true);
       return;
     }
@@ -133,6 +135,7 @@ export default function Loader() {
     // Header / hero fallback timers hold while the loader is still up
     setLoaderWaiting(true);
     if (window.matchMedia(MEDIA.tablet).matches) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setMobile(true);
     } else {
       resetLoaderScene();

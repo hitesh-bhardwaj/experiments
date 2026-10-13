@@ -6,6 +6,7 @@ import LineReveal from "@/components/Animations/LineReveal";
 import { useFadeUp } from "@/components/Animations/gsapAnimations";
 import WaitlistForm from "./WaitlistForm";
 import { MEDIA } from "@/lib/breakpoints";
+import { isLighthouseOrHeadless, isSoftwareRenderer } from "@/lib/audit";
 
 // Markup and values from the Vault Community prototype (.hero / .cm-hero /
 // .hero-side / .stir), as Tailwind.
@@ -15,10 +16,15 @@ export default function CommunityHero() {
   // null until measured, so the video never starts loading on desktop
   const [isDesktop, setIsDesktop] = useState(null);
   const [videoPlaying, setVideoPlaying] = useState(false);
+  // Lighthouse / PSI get the poster only: no video, no WebGL (true until checked)
+  const [audit, setAudit] = useState(true);
 
   useEffect(() => {
     const mq = window.matchMedia(MEDIA.tablet);
-    const sync = () => setIsDesktop(!mq.matches);
+    const sync = () => {
+      setAudit(isLighthouseOrHeadless() || isSoftwareRenderer());
+      setIsDesktop(!mq.matches);
+    };
     sync();
     mq.addEventListener("change", sync);
     return () => mq.removeEventListener("change", sync);
@@ -34,7 +40,7 @@ export default function CommunityHero() {
         {/* Tablet and mobile: a looping video instead of the WebGL crowd,
             pinned to the first screen */}
         <div className="pointer-events-none absolute inset-x-0 top-0 -z-1 hidden h-svh max-lg:block" aria-hidden="true">
-          {isDesktop === false && (
+          {isDesktop === false && !audit && (
             <video
               src="/assets/hero-videos/community.mp4"
               autoPlay

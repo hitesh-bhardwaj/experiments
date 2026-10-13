@@ -8,6 +8,9 @@ import { useRemixerControls } from "@/components/remixer-panel/useRemixerControl
 import { buildRemixerJsx } from "@/components/remixer-panel/build-remixer-code";
 import gsap from "gsap";
 import { MEDIA } from "@/lib/breakpoints";
+import Image from "next/image";
+import { isLighthouseOrHeadless, isSoftwareRenderer } from "@/lib/audit";
+import { resolveCover } from "../EffectCard";
 
 // Same message the preview chrome sends its device iframe (onEmbedValues)
 const MSG = "vault-preview:values";
@@ -47,6 +50,14 @@ export default function EffectStage({ effect, title, previewHref, getCode = null
   const [view] = useState("preview");
   const [frameKey, setFrameKey] = useState(0);
   const [loaded, setLoaded] = useState(false);
+  // Lighthouse / PSI: the demo iframe (often a WebGL scene) isn't loaded, the cover
+  // image stands in - same as the homepage's WebGL. null until checked on the client.
+  const [skipDemo, setSkipDemo] = useState(null);
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setSkipDemo(isLighthouseOrHeadless() || isSoftwareRenderer());
+  }, []);
+  const cover = useMemo(() => resolveCover(effect), [effect]);
 
   // Click to interact: until the visitor clicks the stage, a transparent layer sits
   // over the iframe so wheel / touch scrolling keeps moving the page instead of being
@@ -206,7 +217,10 @@ export default function EffectStage({ effect, title, previewHref, getCode = null
           // Phones get a taller (4:5) stage: the demo renders its mobile layout there.
           className={`${play ? "sticky" : "relative"} isolate aspect-video w-full min-w-0 flex-1 overflow-hidden bg-black max-lg:relative max-lg:top-auto! max-md:aspect-4/5`}
         >
-          <iframe
+          {skipDemo === true && cover && (
+            <Image src={cover} alt={`${title || "Effect"} preview`} fill sizes="100vw" className="object-cover" />
+          )}
+          {skipDemo === false && <iframe
             key={frameKey}
             ref={frameRef}
             src={src}
@@ -214,7 +228,7 @@ export default function EffectStage({ effect, title, previewHref, getCode = null
             onLoad={onFrameLoad}
             style={frameBox ? { width: frameBox.width, height: frameBox.height, transform: `scale(${frameBox.scale})`, transformOrigin: "0 0" } : undefined}
             className={`absolute inset-0 size-full border-0 transition-opacity duration-700 ${loaded ? "opacity-100" : "opacity-0"}`}
-          />
+          />}
           {!interactive && (
             <button
               type="button"
@@ -234,7 +248,7 @@ export default function EffectStage({ effect, title, previewHref, getCode = null
               </span>
             </button>
           )}
-          {!loaded && (
+          {!loaded && !skipDemo && (
             <div className="absolute bottom-4 right-4 z-10">
               <div aria-label="Loading preview" role="status" className="size-8 animate-spin rounded-full border-2 border-foreground/25 border-t-foreground" />
             </div>

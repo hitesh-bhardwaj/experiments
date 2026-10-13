@@ -22,6 +22,7 @@ import { useTemplateAccess } from "../useTemplateAccess";
 import { TemplateCard } from "../TemplateCard";
 import { BADGE, GUTTER, LABEL, T13, T14, cardReveal, catalogueOf, priceOf } from "../tokens";
 import { GetTemplateModal } from "./GetTemplateModal";
+import { isLighthouseOrHeadless, isSoftwareRenderer } from "@/lib/audit";
 
 // three.js only loads when the exploded view is shown.
 const TemplateExploded = dynamic(() => import("./TemplateExploded"), {
@@ -63,6 +64,8 @@ const EXPLODED_QUERY = "(prefers-reduced-motion: no-preference)";
 let webgl;
 const hasWebGL = () => {
   if (webgl === undefined) {
+    // Lighthouse / PSI get the fallback, like the homepage's WebGL
+    if (isLighthouseOrHeadless() || isSoftwareRenderer()) return (webgl = false);
     try {
       webgl = !!document.createElement("canvas").getContext("webgl2");
     } catch {

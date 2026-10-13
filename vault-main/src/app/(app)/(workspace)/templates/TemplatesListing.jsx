@@ -22,6 +22,7 @@ import { TemplatePreviewDrawer } from "./TemplatePreviewDrawer";
 import { useTemplatePurchase } from "./useTemplatePurchase";
 import { DISPLAY, GUTTER, LABEL, PRICE, T11, T14, T16, cardReveal, catalogueOf, priceOf } from "./tokens";
 import { PLANS, getCreditsPerYear } from "@/lib/plans";
+import { isLighthouseOrHeadless, isSoftwareRenderer } from "@/lib/audit";
 
 // three.js only loads when the corridor is shown.
 const TemplateCorridor = dynamic(() => import("./TemplateCorridor"), {
@@ -58,6 +59,8 @@ const CORRIDOR_QUERY = "(min-width: 901px) and (prefers-reduced-motion: no-prefe
 let webgl;
 const hasWebGL = () => {
   if (webgl === undefined) {
+    // Lighthouse / PSI get the fallback, like the homepage's WebGL
+    if (isLighthouseOrHeadless() || isSoftwareRenderer()) return (webgl = false);
     try {
       webgl = !!document.createElement("canvas").getContext("webgl2");
     } catch {

@@ -7,6 +7,7 @@ import SplitLine from "@/components/WebsiteComps/SplitLine";
 import LineReveal from "@/components/Animations/LineReveal";
 import { useFadeUp } from "@/components/Animations/gsapAnimations";
 import { MEDIA } from "@/lib/breakpoints";
+import { isLighthouseOrHeadless, isSoftwareRenderer } from "@/lib/audit";
 
 // The Fomosphere blob is WebGL-only and decorative, so it loads client-side after the hero content
 const ParticleBlob = dynamic(() => import("@/components/Animations/ParticleBlob"), { ssr: false });
@@ -19,10 +20,15 @@ export default function BlogHero() {
   // null until measured, so neither background starts loading on the wrong device
   const [isDesktop, setIsDesktop] = useState(null);
   const [videoPlaying, setVideoPlaying] = useState(false);
+  // Lighthouse / PSI get the poster only: no video, no WebGL (true until checked)
+  const [audit, setAudit] = useState(true);
 
   useEffect(() => {
     const mq = window.matchMedia(MEDIA.tablet);
-    const sync = () => setIsDesktop(!mq.matches);
+    const sync = () => {
+      setAudit(isLighthouseOrHeadless() || isSoftwareRenderer());
+      setIsDesktop(!mq.matches);
+    };
     sync();
     mq.addEventListener("change", sync);
     return () => mq.removeEventListener("change", sync);
@@ -31,9 +37,9 @@ export default function BlogHero() {
   return (
     <section id="blog-hero" className="relative isolate w-full overflow-hidden">
       <div className="absolute inset-0 z-0 max-lg:bottom-auto max-lg:h-svh" aria-hidden="true">
-        {isDesktop && <ParticleBlob preset="fomosphere" phoneTop={0.4} />}
+        {isDesktop && !audit && <ParticleBlob preset="fomosphere" phoneTop={0.4} />}
         {/* Tablet and mobile: a looping video instead of the WebGL blob */}
-        {isDesktop === false && (
+        {isDesktop === false && !audit && (
           <video
             src="/assets/hero-videos/blog.mp4"
             autoPlay

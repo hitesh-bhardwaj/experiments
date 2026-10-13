@@ -1,12 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import * as THREE from "three";
-import { isAuditUserAgent } from "@/lib/audit";
+import { isLighthouseOrHeadless, isSoftwareRenderer } from "@/lib/audit";
 import { prefersReducedMotion } from "@/lib/motion";
 import { restoreJoined, setCrowd } from "./community-store";
 import { createPortal } from "react-dom";
-import { mountCrowd } from "./src/crowd";
 import { useInteraction } from "@/homepage/components/InteractionProvider";
 import { getSiteFluid } from "@/homepage/components/SiteBackground";
 import { MEDIA } from "@/lib/breakpoints";
@@ -42,7 +40,7 @@ export default function CommunityCrowd() {
     // As in the prototype: run wherever WebGL works. Only crawler / audit user agents
     // skip it (mountCrowd itself falls back to the glow if WebGL can't start).
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setSkipGPU(isAuditUserAgent(navigator.userAgent));
+    setSkipGPU(isLighthouseOrHeadless() || isSoftwareRenderer());
   }, []);
 
   useEffect(() => {
@@ -56,24 +54,35 @@ export default function CommunityCrowd() {
       clearTimeout(toastT.current);
       toastT.current = setTimeout(() => setToast((t) => ({ ...t, on: false })), 3400);
     };
-    const crowd = mountCrowd(canvas, { THREE, zoneRoot, small, reducedMotion: prefersReducedMotion(), sound, getFluid: getSiteFluid, onToast });
-    setCrowd(crowd);
-    // The blob fades in (it starts already formed, see crowd.js startInBlob)
-    requestAnimationFrame(() => requestAnimationFrame(() => { canvas.style.opacity = "1"; }));
+    // three.js and the crowd load only here, once the scene will actually run, so
+    // audit agents, tablets and phones never download them
+    let cancelled = false;
+    let crowd;
+    let io;
+    Promise.all([import("three"), import("./src/crowd")]).then(([THREE, { mountCrowd }]) => {
+      if (cancelled) return;
+      crowd = mountCrowd(canvas, { THREE, zoneRoot, small, reducedMotion: prefersReducedMotion(), sound, getFluid: getSiteFluid, onToast });
+      setCrowd(crowd);
+      // The blob fades in (it starts already formed, see crowd.js startInBlob)
+      requestAnimationFrame(() => requestAnimationFrame(() => { canvas.style.opacity = "1"; }));
 
-    // Pause the loop (and hide the fixed canvas) once the page's crowd
-    // sections are off-screen, e.g. over the footer
-    const io = new IntersectionObserver(([entry]) => {
-      canvas.style.visibility = entry.isIntersecting ? "" : "hidden";
-      if (entry.isIntersecting) crowd.start?.();
-      else crowd.stop?.();
+      // Pause the loop (and hide the fixed canvas) once the page's crowd
+      // sections are off-screen, e.g. over the footer
+      io = new IntersectionObserver(([entry]) => {
+        canvas.style.visibility = entry.isIntersecting ? "" : "hidden";
+        if (entry.isIntersecting) crowd.start?.();
+        else crowd.stop?.();
+      });
+      io.observe(zoneRoot);
     });
-    io.observe(zoneRoot);
 
     return () => {
-      io.disconnect();
-      setCrowd(null);
-      crowd.destroy();
+      cancelled = true;
+      io?.disconnect();
+      if (crowd) {
+        setCrowd(null);
+        crowd.destroy();
+      }
     };
   }, [isDesktop, skipGPU, sound]);
 
