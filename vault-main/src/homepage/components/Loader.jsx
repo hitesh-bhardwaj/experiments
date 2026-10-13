@@ -1,6 +1,7 @@
 "use client";
 
 import { useLayoutEffect, useRef, useState } from "react";
+import Image from "next/image";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 
@@ -55,11 +56,22 @@ const STAGGER = 0.2;
 // The counter leaves a beat after it lands on 100, as the rings are released
 const COUNTER_LEAVE_AT = 0.3;
 
+// ── Tablet / mobile: no rings - the counter rolls on the dark backdrop, and the
+// hero's still fades in behind it as the counter is about to leave
+const MOBILE_IMAGE = "/assets/img/hero-mobile.webp";
+const MOBILE_ROLL = 1.2;
+const MOBILE_STAGGER = 0.1;
+// The still starts fading in at this share of the count, a beat after
+const MOBILE_IMAGE_AT = 0.85;
+const MOBILE_IMAGE_DELAY = 0.15;
+const MOBILE_IMAGE_FADE = 0.8;
+// Never hold a phone longer than this, loaded or not
+const MOBILE_MAX_MS = 2500;
+
 // digit → cell index; a 0 lands on the trailing 0 so it rolls the whole column
 const cellOf = (char) => (char === "0" ? CELLS.length - 1 : Number(char));
 
 // Lighthouse/PSI, software WebGL (PSI desktop), and reduced motion - plus the
-// tablet/mobile (no rings are rendered there), and the
 // session gate, since a loader that has already played this session has
 // nothing left to introduce. Don't hold the page for any of them.
 function shouldSkipLoader() {
@@ -70,8 +82,7 @@ function shouldSkipLoader() {
     // hasLoaderPlayed() ||
     prefersReducedMotion() ||
     isLighthouseOrHeadless() ||
-    isSoftwareRenderer() ||
-    window.matchMedia(MEDIA.tablet).matches
+    isSoftwareRenderer()
   );
 }
 
@@ -95,10 +106,14 @@ function skipLoaderNow() {
 export default function Loader() {
   const [done, setDone] = useState(false);
   const [run, setRun] = useState(false);
+  // Below desktop the hero has no rings, so the loader fades in its still instead
+  const [mobile, setMobile] = useState(false);
 
   const rootRef = useRef(null);
   const backdropRef = useRef(null);
   const counterRef = useRef(null);
+  const imageRef = useRef(null);
+  const imageLoadedRef = useRef(false);
 
   useScrollLockLenis();
 
@@ -115,15 +130,110 @@ export default function Loader() {
     // Written before the loader starts, not after it finishes: a visitor who
     // navigates away mid-loader has already seen the intro.
     markLoaderPlayed();
-    resetLoaderScene();
-    // Header / hero fallback timers hold while the rings are still building
+    // Header / hero fallback timers hold while the loader is still up
     setLoaderWaiting(true);
+    if (window.matchMedia(MEDIA.tablet).matches) {
+      setMobile(true);
+    } else {
+      resetLoaderScene();
+    }
     setRun(true);
   }, []);
 
+  // ── Tablet / mobile ──
   useGSAP(
     () => {
-      if (!run) return;
+      if (!run || !mobile) return;
+
+      let cancelled = false;
+      lockScroll();
+      settleLoaderScene();
+
+      const counterTl = gsap.timeline();
+      counterTl.to(".count-digit", {
+        yPercent: (_, el) => -(100 / CELLS.length) * cellOf(el.dataset.digit),
+        duration: MOBILE_ROLL,
+        ease: "power2.inOut",
+        stagger: MOBILE_STAGGER,
+      });
+
+      // The counter follows real loading: the page, the fonts and the still itself
+      const milestones = {
+        dom: document.readyState !== "loading",
+        fonts: false,
+        load: document.readyState === "complete",
+      };
+      const onDom = () => { milestones.dom = true; };
+      const onLoad = () => { milestones.load = true; };
+      if (!milestones.dom) document.addEventListener("DOMContentLoaded", onDom, { once: true });
+      if (!milestones.load) window.addEventListener("load", onLoad, { once: true });
+      (document.fonts?.ready ?? Promise.resolve()).then(() => { milestones.fonts = true; });
+
+      const pageFraction = () => {
+        if (milestones.load && imageLoadedRef.current) return 1;
+        return Math.min(
+          0.9,
+          0.1 + (milestones.dom ? 0.2 : 0) + (milestones.fonts ? 0.2 : 0) + (imageLoadedRef.current ? 0.4 : 0)
+        );
+      };
+
+      const started = performance.now();
+      let exitTl = null;
+      let imageTween = null;
+      const fadeInImage = () => {
+        imageTween ??= gsap.to(imageRef.current, {
+          opacity: 1,
+          duration: MOBILE_IMAGE_FADE,
+          delay: MOBILE_IMAGE_DELAY,
+          ease: "power2.out",
+        });
+        return imageTween;
+      };
+
+      const exit = () => {
+        resetScrollTop();
+        setLoaderWaiting(false);
+        // Gone once the counter is out and the still is fully in
+        exitTl = gsap.timeline({ onComplete: () => fadeInImage().then(() => setDone(true)) });
+        exitTl.to(counterRef.current, { autoAlpha: 0, scale: 0.9, duration: 0.4, ease: "power2.in" }, 0);
+        // The still matches the hero's own, so once it is in the loader just goes.
+        // The hero's copy starts its intro here; its heading lands after the
+        // loader has gone (Hero's NAV_LEAD + AT_HEADING)
+        exitTl.call(markLoaderComplete, undefined, 0);
+        exitTl.call(markLoaderHandoff, undefined, 0.3);
+      };
+
+      const tick = () => {
+        if (cancelled) return;
+        const timedOut = performance.now() - started >= MOBILE_MAX_MS;
+        // Holds where it is while the page is behind it, unless it has waited long enough
+        counterTl.timeScale(!timedOut && counterTl.progress() >= pageFraction() ? 0 : 1);
+        if (counterTl.progress() >= MOBILE_IMAGE_AT) fadeInImage();
+        if (counterTl.progress() === 1) {
+          gsap.ticker.remove(tick);
+          exit();
+        }
+      };
+      gsap.ticker.add(tick);
+
+      return () => {
+        cancelled = true;
+        gsap.ticker.remove(tick);
+        counterTl.kill();
+        exitTl?.kill();
+        imageTween?.kill();
+        document.removeEventListener("DOMContentLoaded", onDom);
+        window.removeEventListener("load", onLoad);
+        setLoaderWaiting(false);
+      };
+    },
+    { scope: rootRef, dependencies: [run, mobile] }
+  );
+
+  // ── Desktop: the rings ──
+  useGSAP(
+    () => {
+      if (!run || mobile) return;
 
       let cancelled = false;
       // Held from here until the hero's intro has landed - this component is
@@ -246,7 +356,7 @@ export default function Loader() {
         setLoaderWaiting(false);
       };
     },
-    { scope: rootRef, dependencies: [run] }
+    { scope: rootRef, dependencies: [run, mobile] }
   );
 
   if (done || !run) return null;
@@ -255,6 +365,21 @@ export default function Loader() {
     <div ref={rootRef} data-cursor-off className="fixed inset-0 z-1000 overflow-hidden">
       <style>{"html{overflow:hidden}"}</style>
       <div ref={backdropRef} className="absolute inset-0 bg-background" />
+      {mobile && (
+        // The hero's own still (same file, so it is one download), faded in as the counter leaves
+        <div ref={imageRef} aria-hidden="true" className="absolute inset-0 opacity-0">
+          <Image
+            src={MOBILE_IMAGE}
+            alt=""
+            fill
+            priority
+            unoptimized
+            sizes="100vw"
+            onLoad={() => { imageLoadedRef.current = true; }}
+            className="object-cover"
+          />
+        </div>
+      )}
       <div
         ref={counterRef}
         role="status"
