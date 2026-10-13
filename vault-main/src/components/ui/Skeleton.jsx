@@ -7,7 +7,7 @@ export function Skeleton({ className = "h-[1em] w-8", ...props }) {
   return (
     <span
       aria-hidden="true"
-      className={`inline-block animate-pulse bg-current align-middle opacity-15 motion-reduce:animate-none ${className}`}
+      className={`inline-block animate-pulse bg-current/10 align-middle motion-reduce:animate-none ${className}`}
       {...props}
     />
   );

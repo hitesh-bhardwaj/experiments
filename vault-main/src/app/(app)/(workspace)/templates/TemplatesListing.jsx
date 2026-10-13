@@ -215,7 +215,9 @@ export function TemplatesListing({ templates: baseTemplates = [], description = 
             <div className="max-md:hidden">
               <FilterMenu
                 alignRight
-                triggerClassName={`px-3 py-1.5 max-md:py-3 ${T14} ring-1 ring-inset ring-foreground/15 before:invisible before:inline-block before:w-0 before:-mr-2 before:content-['.']`}
+                // Same resting look as the category chips beside it
+                idleClassName={`${CHIP_OFF} backdrop-blur-lg`}
+                triggerClassName={`px-3 py-1.5 max-md:py-3 ${T14} before:invisible before:inline-block before:w-0 before:-mr-2 before:content-['.']`}
                 panelClassName="left-auto! right-0"
                 options={CATALOGUES.map((c) => c.id)}
                 activeFilter={catalogue === "all" ? null : catalogue}

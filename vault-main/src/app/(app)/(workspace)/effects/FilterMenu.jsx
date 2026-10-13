@@ -28,6 +28,8 @@ export function FilterMenu({
   tone = "dark",
   // Dark tone only: replaces the trigger's default padding / text size (e.g. to match nearby chips).
   triggerClassName,
+  // Dark tone only: replaces the trigger's resting (no filter chosen) colours.
+  idleClassName = "bg-black/20 backdrop-blur-lg text-foreground hover:text-background hover:bg-primary",
 }) {
   const light = tone === "light";
   const [open, setOpen] = useState(false);
@@ -220,7 +222,7 @@ export function FilterMenu({
           cursor-pointer transition-colors duration-300
           ${activeFilter
               ? "bg-primary text-background hover:bg-primary"
-              : "bg-black/20 backdrop-blur-lg text-foreground hover:text-background hover:bg-primary"
+              : idleClassName
             }
         `}
       >
