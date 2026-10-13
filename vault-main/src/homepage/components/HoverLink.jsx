@@ -1,5 +1,6 @@
 "use client";
 
+import { prefetchFor } from "@/lib/prefetch";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
@@ -190,7 +191,7 @@ export default function HoverLink({
 
   return (
     <Link
-      prefetch={false}
+      prefetch={prefetchFor(href)}
       href={href}
       onClick={onClick}
       onPointerEnter={start}
@@ -205,7 +206,7 @@ export default function HoverLink({
       target={target_blank ? "_blank" : undefined}
       rel={target_blank ? "noopener noreferrer" : undefined}
       aria-label={ariaLabel}
-      className={`group flex items-center gap-[0.8vw] text-nowrap transition-colors duration-300 motion-reduce:transition-none [--link-flash:var(--primary)] [--link-pre:var(--primary)] ${className}`}
+      className={`group flex items-center font-medium gap-[0.8vw] text-nowrap transition-colors duration-300 motion-reduce:transition-none [--link-flash:var(--primary)] [--link-pre:var(--primary)] ${className}`}
     >
       {leading}
       <ScrambleText text={text} run={run} />

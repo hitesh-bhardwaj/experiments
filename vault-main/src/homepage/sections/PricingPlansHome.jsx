@@ -9,7 +9,8 @@ import RollText from "@/components/Pricing/exploded/RollText";
 import CardFluid from "../components/CardFluid";
 import dynamic from "next/dynamic";
 import Button from "../components/Button";
-import { useCurrency } from "@/lib/useCurrency";
+import { useCurrencyState } from "@/lib/useCurrency";
+import { Skeleton } from "@/components/ui/Skeleton";
 import {
     CURRENCY_SYMBOLS,
     PLANS,
@@ -161,7 +162,7 @@ function Tick({ tone = "primary" }) {
 
 
 export default function PricingPlansHome({ currency: initialCurrency, checkout = false }) {
-    const currency = useCurrency(initialCurrency);
+    const { currency, ready: currencyReady } = useCurrencyState(initialCurrency);
     const plans = useMemo(() => buildPlans(currency), [currency]);
     const periodCopy = useMemo(() => buildPeriodCopy(plans), [plans]);
     const billing = useMemo(() => billingOptions(currency), [currency]);
@@ -209,10 +210,10 @@ export default function PricingPlansHome({ currency: initialCurrency, checkout =
     };
 
     return (
-        <section ref={rootRef} id="pricing" data-sound-flow="off" data-sound-hover="off" className="relative bg-white px-[calc(var(--cvw)*4.5)] space-y-[3vw] py-[7%] max-md:py-[12%] font-avenir text-[#1D1D1D] max-md:px-[calc(var(--cvw)*7)]">
+        <section ref={rootRef} id="pricing" data-sound-flow="off" data-sound-hover="off" className="relative bg-light px-[calc(var(--cvw)*4.5)] space-y-[3vw] py-[7%] max-md:py-[12%] font-avenir text-[#1D1D1D] max-md:px-[calc(var(--cvw)*7)]">
             <div className="mx-auto flex w-full max-w-[1536px] flex-wrap items-end justify-between gap-[calc(var(--cvw)*2)] max-md:gap-[calc(var(--cvw)*10)]">
                 <LineReveal as="h2" className="type-h1 leading-[1.2]! w-[40%] max-md:w-[80%] max-lg:w-[60%] max-md:w-full">
-                    Two plans. <span className="gradient-text-animate">Every Moment Covered.</span>
+                    Two Plans. <span className="gradient-text-animate">Every Moment Covered.</span>
                 </LineReveal>
 
                 <div ref={billRef} role="radiogroup" aria-label="Billing period" className="fadeup  relative isolate inline-flex border border-[#1D1D1D]/15 bg-[#ececec] p-1 max-md:flex max-md:w-full">
@@ -267,17 +268,28 @@ export default function PricingPlansHome({ currency: initialCurrency, checkout =
                             </div>
 
                             <div className="relative mt-2 flex items-baseline leading-none tracking-[-.05em]">
-                                <span className="mt-[.35em] mr-1 self-start text-[calc(var(--cvw)*2.6)] max-md:text-[calc(var(--cvw)*6.6)]">{CURRENCY_SYMBOLS[currency]}</span>
-                                {/* Each digit rolls on its own reel when the period changes */}
-                                <span className="inline-flex text-[calc(var(--cvw)*6.4)] leading-none max-md:text-[calc(var(--cvw)*16)] tabular-nums">
-                                    <RollingPrice value={plan.amount[period]} values={[plan.amount.q, plan.amount.y]} plan={period} />
-                                </span>
+                                {/* Skeleton until the visitor's currency (INR / USD) is known */}
+                                {currencyReady ? (
+                                    <>
+                                        <span className="mt-[.35em] mr-1 self-start text-[calc(var(--cvw)*2.6)] max-md:text-[calc(var(--cvw)*6.6)]">{CURRENCY_SYMBOLS[currency]}</span>
+                                        {/* Each digit rolls on its own reel when the period changes */}
+                                        <span className="inline-flex text-[calc(var(--cvw)*6.4)] leading-none max-md:text-[calc(var(--cvw)*16)] tabular-nums">
+                                            <RollingPrice value={plan.amount[period]} values={[plan.amount.q, plan.amount.y]} plan={period} />
+                                        </span>
+                                    </>
+                                ) : (
+                                    <Skeleton className="h-[calc(var(--cvw)*6.4)] w-[calc(var(--cvw)*12)] max-md:h-[calc(var(--cvw)*16)] max-md:w-[calc(var(--cvw)*30)]" />
+                                )}
                                 <span className={`ml-2 text-[calc(var(--cvw)*1.1)] max-md:text-[calc(var(--cvw)*4.1)] tracking-normal ${dark ? "text-[#a9a9a9]" : "text-[#6B6B6B]"}`}>/mo</span>
                             </div>
 
                             {/* Billing + savings, closed off by a thin rule */}
                             <div className={`relative grid gap-1 border-b pb-[calc(var(--cvw)*1.4)] type-body ${dark ? "border-[#F4F4F4]/12" : "border-[#1D1D1D]/12"}`}>
-                                <FadeSwap swapKey={`${currency}.${period}`}>{periodCopy[plan.id][period]}</FadeSwap>
+                                {currencyReady ? (
+                                    <FadeSwap swapKey={`${currency}.${period}`}>{periodCopy[plan.id][period]}</FadeSwap>
+                                ) : (
+                                    <Skeleton className="h-[1em] w-3/4" />
+                                )}
                             </div>
 
                             <ul className={`relative mt-[calc(var(--cvw)*0.4)] grid flex-1 content-start gap-[calc(var(--cvw)*1.2)] max-md:gap-[calc(var(--cvw)*4)] type-body`}>

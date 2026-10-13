@@ -134,8 +134,11 @@ function EmailPreviewModal({ emailId, onClose }) {
         {/* Email HTML preview */}
         <div className="flex-1 overflow-hidden">
           {loading ? (
-            <div className="flex items-center justify-center h-64 text-white/40 text-sm">
-              Loading…
+            <div className="flex flex-col gap-3 p-6 h-64" aria-busy="true">
+              <div className="h-6 w-1/2 bg-white/8 animate-pulse" />
+              <div className="h-4 w-full bg-white/8 animate-pulse" />
+              <div className="h-4 w-5/6 bg-white/8 animate-pulse" />
+              <div className="h-32 w-full bg-white/8 animate-pulse" />
             </div>
           ) : email?.html_content ? (
             <iframe

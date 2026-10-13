@@ -1,8 +1,10 @@
 "use client";
 
+import { Skeleton } from "@/components/ui/Skeleton";
 import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { ArrowUpRight, Download, Eye, Heart, Lock } from "lucide-react";
 import { getEffectHref, getEffectPreviewHref, getQuickCategoryLabel, resolveEffectCategoryId } from "@/lib/categories";
 import { Tooltip } from "@/components/ui/Tooltip";
@@ -102,6 +104,8 @@ export function EffectCard({
   const category = effectCategoryLabel(effect);
   const deps = (effect.tags || []).slice(0, 3);
 
+  const router = useRouter();
+
   const stop = (event) => {
     event.preventDefault();
     event.stopPropagation();
@@ -155,10 +159,12 @@ export function EffectCard({
         )}
         <span aria-hidden="true" className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-foreground/7" />
 
-        {/* Only the tier sits on the preview; the category already shows under the title. */}
-        <div className="pointer-events-none absolute top-3 right-3">
-          <TierBadge tier={effect.tier} />
-        </div>
+        {/* Pro effects keep the tier marker; free cards stay unbadged. */}
+        {effect.tier === "pro" && (
+          <div className="pointer-events-none absolute top-3 right-3">
+            <TierBadge tier={effect.tier} />
+          </div>
+        )}
 
         {!small && (
           // Each action slides up from below the preview's (clipped) frame on hover, one after
@@ -207,6 +213,8 @@ export function EffectCard({
             <Tooltip label="Live demo" className={`${ACTION_SLIDE} delay-80`}>
               <Link
                 href={getEffectPreviewHref(effect)}
+                // Opens in a new tab, so a prefetch would never be used.
+                prefetch={false}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={`Open the live demo of ${effect.title}`}
@@ -219,6 +227,10 @@ export function EffectCard({
             <Tooltip label="View Article" className={`${ACTION_SLIDE} delay-120`}>
               <Link
                 href={getEffectHref(effect)}
+                // The effect page renders per request (access check), so it's only
+                // prefetched once this button is hovered, not for every card on screen.
+                prefetch={false}
+                onPointerEnter={() => router.prefetch(getEffectHref(effect))}
                 aria-label={`Open the ${effect.title} page`}
                 onClick={(event) => event.stopPropagation()}
                 className={`${ICON_BTN}  bg-primary! text-background! ring-0! hover:bg-primary-hover!`}
@@ -237,11 +249,15 @@ export function EffectCard({
           </h4>
           <p className={twMerge(`flex items-center gap-[0.8vw] ${T14} max-md:gap-[3vw] ${dark ? "text-foreground/50" : "text-black/60"}`, metaClassName)}>
             <span>{category}</span>
-            {effect.installCount > 0 && (
-              <span className="inline-flex items-center gap-1" title="CLI installs">
-                <Download className="size-3" aria-hidden="true" />
-                {effect.installCount}
-              </span>
+            {effect.installCountPending ? (
+              <Skeleton className="h-[1em] w-10" />
+            ) : (
+              effect.installCount > 0 && (
+                <span className="inline-flex items-center gap-1" title="CLI installs">
+                  <Download className="size-3" aria-hidden="true" />
+                  {effect.installCount}
+                </span>
+              )
             )}
           </p>
         </div>

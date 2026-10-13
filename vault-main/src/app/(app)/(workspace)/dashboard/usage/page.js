@@ -1,5 +1,6 @@
 "use client";
 
+import { DashboardSkeleton } from "@/components/ui/DashboardSkeleton";
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useUser } from "@clerk/nextjs";
@@ -218,11 +219,7 @@ export default function UsagePage() {
   }, [copiedEffects, dateFilter, customFrom, customTo, categoryFilter, sourceFilter, featuredEffects]);
 
   if (!isLoaded || loading || !data) {
-    return (
-      <div className="flex items-center justify-center py-20">
-        <p className="text-zinc-400">Loading usage...</p>
-      </div>
-    );
+    return <DashboardSkeleton stats={3} rows={6} />;
   }
 
   const isUnlimited = data.isAdmin;

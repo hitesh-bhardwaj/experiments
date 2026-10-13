@@ -230,7 +230,7 @@ export default function EffectStage({ effect, title, previewHref, getCode = null
                 aria-hidden="true"
                 className="pointer-events-none absolute top-1/2 left-1/2 opacity-0 transition-opacity duration-300 group-hover/interact:opacity-100 [@media(hover:none)]:opacity-100 -translate-x-1/2 -translate-y-[calc(100%+0.8vw)] bg-background/80 px-3 py-1.5 text-[0.9vw] whitespace-nowrap text-foreground ring-1 ring-inset ring-foreground/15 backdrop-blur-lg max-lg:text-[1.6vw] max-md:-translate-y-1/2 max-md:text-[3.3vw]"
               >
-                Click to interact
+                Click to Interact
               </span>
             </button>
           )}

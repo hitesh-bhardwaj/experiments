@@ -124,7 +124,7 @@ export default function BlogListing({
   return (
     <section ref={sectionRef} id="blog-grid" className="relative flex flex-col">
       {/* summary + category filters; scrolls away with the page */}
-      <div className="h-fit border-b border-black/8 bg-foreground max-[1025px]:border-b-0">
+      <div className="h-fit border-b border-black/8 bg-light max-[1025px]:border-b-0">
         <div className="mx-auto flex w-full max-w-[1536px] flex-wrap items-end justify-between gap-[1vw] px-[4.5vw] pt-10 pb-4 max-md:gap-[4vw] max-md:px-[6vw] max-md:pt-8">
           <div className="flex flex-wrap items-end gap-x-[2vw] gap-y-[1vw] max-md:gap-[4vw]">
             <p aria-live="polite" className="type-body-lg flex flex-wrap items-baseline gap-x-[0.4vw] max-md:gap-x-[1.5vw]">

@@ -26,6 +26,8 @@ export function FilterMenu({
   alignRight = false,
   // "light" restyles the trigger and panel for light surfaces (the v4 listing sheet).
   tone = "dark",
+  // Dark tone only: replaces the trigger's default padding / text size (e.g. to match nearby chips).
+  triggerClassName,
 }) {
   const light = tone === "light";
   const [open, setOpen] = useState(false);
@@ -157,6 +159,7 @@ export function FilterMenu({
         const isSelected = (categoryFilter ?? activeFilter) === cat;
         const highlighted = hoveredCat ? hoveredCat === cat : isSelected;
         const showDivider =
+          index > 0 &&
           EFFECT_SORT_OPTIONS.includes(cat) &&
           !EFFECT_SORT_OPTIONS.includes(options[index - 1]);
 
@@ -212,9 +215,9 @@ export function FilterMenu({
               : "bg-foreground text-ink ring-1 ring-inset ring-black/10 transition-shadow hover:ring-primary"
             }`
             : `
-          px-6 py-3  relative max-md:px-7 max-md:py-3
-          backdrop-blur-lg flex items-center gap-2 justify-center
-          cursor-pointer transition-colors duration-300 text-[1vw] max-md:text-[4vw] max-lg:text-[2.5vw]
+          ${triggerClassName ?? "px-6 py-3 max-md:px-7 max-md:py-3 text-[1vw] max-md:text-[4vw] max-lg:text-[2.5vw]"}
+          relative backdrop-blur-lg flex items-center gap-2 justify-center
+          cursor-pointer transition-colors duration-300
           ${activeFilter
               ? "bg-primary text-background hover:bg-primary"
               : "bg-black/20 backdrop-blur-lg text-foreground hover:text-background hover:bg-primary"
@@ -231,7 +234,7 @@ export function FilterMenu({
           </>
         ) : (
           <>
-            <svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg" className={light ? "h-3 w-4" : "max-md:h-[4vw] h-[1vw] max-lg:h-[2.5vw]"}>
+            <svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg" className={light ? "h-3 w-4" : triggerClassName ? "h-[0.8vw] w-auto max-lg:h-[1.4vw] max-md:h-[3vw]" : "max-md:h-[4vw] h-[1vw] max-lg:h-[2.5vw]"}>
               <g clipPath="url(#clip0_491_803)">
                 <rect width="16" height="2" rx="1" fill="currentColor" />
                 <rect x="3" y="5" width="10" height="2" rx="1" fill="currentColor" />

@@ -38,7 +38,7 @@ function FeaturedBlogContent({ featuredPost }) {
         </LineWipe>
       </div>
 
-      <div className="flex items-center gap-[4vw] bg-light px-[2vw] py-[3.5vw] max-[1025px]:flex-col max-[1025px]:items-start max-md:gap-[6vw] max-md:px-[4vw] max-md:py-[8vw]">
+      <div className="flex items-center gap-[4vw] bg-white px-[2vw] py-[3.5vw] max-[1025px]:flex-col max-[1025px]:items-start max-md:gap-[6vw] max-md:px-[4vw] max-md:py-[8vw]">
         {featuredPost.coverImage?.url && (
           <Link
             href={`/blog/${featuredPost.slug}`}

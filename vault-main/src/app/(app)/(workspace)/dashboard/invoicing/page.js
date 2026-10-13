@@ -1,5 +1,6 @@
 "use client";
 
+import { DashboardSkeleton } from "@/components/ui/DashboardSkeleton";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
@@ -220,11 +221,7 @@ export default function InvoicingPage() {
   }, [isLoaded, isAdmin]);
 
   if (!isLoaded || isAdmin || loading) {
-    return (
-      <div className="flex items-center justify-center py-20">
-        <p className="text-zinc-400">Loading invoicing...</p>
-      </div>
-    );
+    return <DashboardSkeleton stats={2} rows={4} />;
   }
 
   // Falls back to Clerk's client-side plan metadata (same field VaultHeader

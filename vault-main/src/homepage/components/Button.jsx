@@ -1,5 +1,6 @@
 "use client";
 
+import { prefetchFor } from "@/lib/prefetch";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useLenis } from "lenis/react";
@@ -288,7 +289,7 @@ export default function Button({
 
   return (
     <Link
-      prefetch={false}
+      prefetch={prefetchFor(href)}
       href={href}
       id={id}
       onClick={handleClick}

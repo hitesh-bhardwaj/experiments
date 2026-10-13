@@ -1,5 +1,6 @@
 "use client";
 
+import { DashboardSkeleton } from "@/components/ui/DashboardSkeleton";
 import { useEffect, useMemo, useState } from "react";
 import { EffectCard } from "@/components/ui/EffectCardNew";
 import {
@@ -137,13 +138,7 @@ export default function SavedPage() {
   }, [categoryFilter, savedEffects, featuredEffects]);
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center py-20">
-        <p className="text-zinc-400">
-          Loading saved effects...
-        </p>
-      </div>
-    );
+    return <DashboardSkeleton cards={6} />;
   }
 
   return (

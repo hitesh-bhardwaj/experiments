@@ -6,8 +6,6 @@ import {
   getEffectCategoryMetadata,
 } from "@/lib/categories";
 import { EffectsListing } from "../EffectsListing";
-import { getUserPlan } from "@/lib/subscription";
-import { auth } from "@clerk/nextjs/server";
 import { sortEffects } from "@/lib/effect-sort";
 import {
   getAllSanityEffectEntries,
@@ -20,7 +18,7 @@ import {
   getOverviewFeaturedEffects,
 } from "@/lib/featured-effects";
 import { BreadcrumbsJSONLD, FAQJSONLD, WebpageJsonLd } from "@/lib/json-ld";
-import { attachInstallCounts, getEffectInstallCounts } from "@/lib/cli-install-stats";
+import { getEffectInstallCounts } from "@/lib/cli-install-stats";
 
 function VaultFallback() {
   return (
@@ -60,12 +58,18 @@ export async function generateMetadata({ params }) {
   });
 }
 
+// ISR: the listing is cached and rebuilt in the background at most once a
+// minute - matching the install-count cache (lib/cli-install-stats), the
+// shortest-lived data on the page. Effect content itself is cached for an hour
+// and cleared on publish via /api/revalidate. The visitor's plan is fetched on
+// the client (useUserPlan), so the cached page is the same for everyone.
+export const revalidate = 60;
+
 // Category listing (/effects/text, /effects/free, /effects/pro, /effects/featured, ...):
 // the v4 listing scoped to this category, with the category's own hero copy, FAQ
 // and CTA. Every effect is passed so the tier/featured/tag filters and the category
 // chips' counts work; the chips link between category pages.
 export default async function EffectsCategoryPage({ params }) {
-  const { userId } = await auth();
   const { slug } = await params;
   const isFreeListing = slug === "free";
   const isFeaturedListing = slug === "featured";
@@ -80,11 +84,10 @@ export default async function EffectsCategoryPage({ params }) {
   }
 
   const scope = isFreeListing ? "free" : isFeaturedListing ? "featured" : isProListing ? "pro" : category.id;
-  const userPlan = await getUserPlan(userId);
 
-  const allEffects = sortEffects(buildEffectsFromSanity(sanityEntries));
-  const installCounts = await getEffectInstallCounts(allEffects);
-  const effects = attachInstallCounts(allEffects, installCounts);
+  const effects = sortEffects(buildEffectsFromSanity(sanityEntries));
+  // Install counts (Supabase) are baked into each ISR build of the page.
+  const installCountsPromise = getEffectInstallCounts(effects).catch(() => ({}));
   const featuredNames = getFeaturedEffects(effects).map((effect) => effect.name);
   const trendingEffects =
     category?.id && !isFreeListing && !isFeaturedListing && !isProListing
@@ -104,7 +107,7 @@ export default async function EffectsCategoryPage({ params }) {
           effects={effects}
           trendingEffects={trendingEffects}
           featuredNames={featuredNames}
-          userPlan={userPlan}
+          installCounts={installCountsPromise}
           scope={scope}
           content={pageContent}
         />

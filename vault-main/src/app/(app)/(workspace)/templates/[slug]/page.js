@@ -2,12 +2,9 @@ import { Suspense } from "react";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { notFound } from "next/navigation";
-import { auth } from "@clerk/nextjs/server";
 import { TEMPLATES, TEMPLATES_OG_IMAGE, getTemplateBySlug } from "@/lib/mock-templates";
 import { BreadcrumbsJSONLD, WebpageJsonLd } from "@/lib/json-ld";
 import { createPageMetadata } from "@/lib/seo-metadata";
-import { getTemplateAccessDecision } from "@/lib/template-access";
-import { getTemplateViewCounts } from "@/lib/template-views";
 import { getRegistryIndex } from "@/lib/registry";
 import { getEffectHref } from "@/lib/categories";
 import { catalogueOf } from "../tokens";
@@ -29,9 +26,9 @@ export async function generateStaticParams() {
   return TEMPLATES.map((template) => ({ slug: template.slug }));
 }
 
-// Already dynamic through auth() below; stated so the related-template view
-// counts stay live even if that call is removed.
-export const dynamic = "force-dynamic";
+// Static: each template page is prebuilt from local files. The visitor's access
+// (/api/templates/[slug]/access) and the related cards' view counts
+// (/api/templates/views) load in the browser.
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
@@ -76,12 +73,6 @@ export default async function TemplateDetailPage({ params }) {
   const template = getTemplateBySlug(slug);
   if (!template) notFound();
 
-  const { userId } = await auth();
-  const templateAccess = await getTemplateAccessDecision({
-    clerkUserId: userId,
-    templateSlug: slug,
-    includedInAnnualPro: template.pricing?.includedInAnnualPro ?? false,
-  });
 
   // Vault effects used by this template, linked when they're in the registry.
   const registry = getRegistryIndex()?.items || [];
@@ -128,7 +119,6 @@ export default async function TemplateDetailPage({ params }) {
   const related = TEMPLATES.filter((t) => t.slug !== slug)
     .sort((a, b) => (catalogueOf(b) === catalogueOf(template)) - (catalogueOf(a) === catalogueOf(template)))
     .slice(0, 2);
-  const viewCounts = await getTemplateViewCounts(related.map((t) => t.slug));
 
   const pageMetadata = getTemplatePageMetadata(template, slug);
 
@@ -140,14 +130,12 @@ export default async function TemplateDetailPage({ params }) {
       <Suspense fallback={null}>
       <TemplateDetail
         template={template}
-        templateAccess={templateAccess}
         devices={devices}
         effects={Object.values(effectsByName)}
         stack={TEMPLATE_SECTIONS[slug]?.stack || template.tags || []}
         related={await Promise.all(
           related.map(async (t) => ({
             ...t,
-            viewCount: viewCounts[t.slug] || 0,
             fullShot: (await readCapture(t.slug))?.full || null,
           })),
         )}

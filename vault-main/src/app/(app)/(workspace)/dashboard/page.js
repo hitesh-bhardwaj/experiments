@@ -1,5 +1,6 @@
 "use client";
 
+import { Skeleton } from "@/components/ui/Skeleton";
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
@@ -87,10 +88,28 @@ export default function DashboardPage() {
     return Math.max(0, Math.ceil((end - now) / (1000 * 60 * 60 * 24)));
   }, [data, now]);
 
+  // The layout renders straight away; values show skeletons until /api/dashboard answers.
   if (!data) {
     return (
-      <div className="flex items-center justify-center py-20">
-        <p className="text-zinc-400">Loading dashboard data...</p>
+      <div className="space-y-4" aria-busy="true">
+        <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-4">
+          {["Joined", "Plan", "Effects Access", "Plan Validity"].map((label) => (
+            <StatCard key={label} label={label} value={<Skeleton className="h-6 w-24" />} detail={<Skeleton className="h-[1em] w-36" />} />
+          ))}
+        </div>
+        <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-4">
+          <StatCard label="Saved Effects" value={<Skeleton className="h-6 w-10" />} detail="Effects in your wishlist" href="/dashboard/saved" />
+          <StatCard label="Copied Effects" value={<Skeleton className="h-6 w-10" />} detail="Effects copied from the website" href="/dashboard/usage" />
+          <StatCard label="Installed Effects" value={<Skeleton className="h-6 w-10" />} detail="Effects installed via web, CLI & MCP" href="/dashboard/usage" />
+        </div>
+        <div className="p-6 bg-[#272727]">
+          <h2 className="text-2xl font-semibold">Vault access</h2>
+          <div className="mt-6 flex flex-col gap-3 text-white">
+            <Skeleton className="h-[1em] w-2/3" />
+            <Skeleton className="h-[1em] w-1/3" />
+            <Skeleton className="h-[1em] w-1/4" />
+          </div>
+        </div>
       </div>
     );
   }

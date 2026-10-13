@@ -1,5 +1,6 @@
 "use client";
 
+import { prefetchFor } from "@/lib/prefetch";
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { UnlockIcon } from "@/components/WebsiteComps/Icons";
@@ -144,7 +145,7 @@ function FooterBlockLink({ href, children }) {
   return (
     <Link
       href={href}
-      prefetch={false}
+      prefetch={prefetchFor(href)}
       target={isExternal ? "_blank" : "_self"}
       rel={isExternal ? "noopener noreferrer" : undefined}
       data-sweep-link

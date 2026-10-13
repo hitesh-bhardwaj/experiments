@@ -165,7 +165,7 @@ export default function ProblemFixes() {
       className="relative z-200  max-md:mt-[calc(var(--cvw)*-8)] w-full overflow-hidden px-[calc(var(--cvw)*4.5)] py-[7%] max-md:py-[12%] text-foreground max-md:px-[calc(var(--cvw)*7)] "
     >
       <div className="mx-auto relative z-200 flex w-full max-w-[1536px] flex-col items-center">
-        <div className=" text-center w-[70%] max-lg:w-[85%] max-md:w-full">
+        <div className=" text-center w-[55%] max-lg:w-[85%] max-md:w-full">
           <LineReveal as='h2' className="type-h1 w-full">
             Good Motion is{' '}
             <span className="gradient-text-animate">Harder</span> Than it Looks

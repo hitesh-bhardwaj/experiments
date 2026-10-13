@@ -22,7 +22,7 @@ import CustomAnimationFormModal, {
 import WorkWithHyperiuxModal from "@/components/WebsiteComps/modals/WorkWithHyperiuxModal";
 import { ExitIntentInviteModal } from "@/components/WebsiteComps/modals/ExitIntentInviteModal";
 import { CookieConsentNudge } from "@/components/WebsiteComps/CookieConsentNudge";
-import PageTransition from "@/components/PageTransition/PageTransition";
+import PixelPageTransition from "@/components/PageTransition/PixelPageTransition";
 import { TooltipHost } from "@/components/ui/Tooltip";
 import SiteInteractions from "@/components/WebsiteComps/SiteInteractions";
 import { PageLoadOverlay } from "@/components/layout/PageLoadOverlay";
@@ -130,9 +130,9 @@ export default function RootLayout({ children }) {
         <SoftwareApplicationJsonLd />
         {/* One sound engine + liquid cursor, the full-page dotted grid and
             fluid, and the sound toggle - mounted here so they survive client
-            navigation. Wraps PageTransition so it can play the route whoosh. */}
+            navigation. Wraps PixelPageTransition so it can play the route whoosh. */}
         <SiteInteractions>
-          <PageTransition />
+          <PixelPageTransition />
           <CookieConsentNudge />
           {/* CustomAnimationFormProvider adds no DOM of its own (just a
               Context.Provider) - it wraps children so any page's

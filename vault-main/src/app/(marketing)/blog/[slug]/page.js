@@ -22,8 +22,11 @@ const Footer = nextDynamic(() => import("@/homepage/sections/Footer"));
 const FAQ = nextDynamic(() => import("@/homepage/sections/FAQ"));
 const RelatedBlogsSlider = nextDynamic(() => import("./RelatedBlogsSlider"));
 
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+// ISR: every post is prerendered at build (generateStaticParams) and served from
+// cache until something is published - Sanity's webhook (/api/revalidate) then
+// rebuilds it on the next visit. The daily timer is only a safety net. New posts
+// published after a build are rendered on first visit, then cached the same way.
+export const revalidate = 86400;
 
 export async function generateStaticParams() {
   const entries = await getAllSanityBlogSlugs();

@@ -1,12 +1,10 @@
 import { Suspense } from "react";
-import { getUserPlan } from "@/lib/subscription";
-import { auth } from "@clerk/nextjs/server";
 import { getAllSanityEffectEntries, buildEffectsFromSanity } from "@/lib/sanity";
 import { getFeaturedEffects, getOverviewFeaturedEffects } from "@/lib/featured-effects";
 import { sortEffects } from "@/lib/effect-sort";
 import { getEffectCategoryContent, getEffectCategoryMetadata } from "@/lib/categories";
 import { BreadcrumbsJSONLD, FAQJSONLD, WebpageJsonLd } from "@/lib/json-ld";
-import { attachInstallCounts, getEffectInstallCounts } from "@/lib/cli-install-stats";
+import { getEffectInstallCounts } from "@/lib/cli-install-stats";
 import { EffectsListing } from "./EffectsListing";
 
 export const metadata = getEffectCategoryMetadata("all");
@@ -16,18 +14,23 @@ function VaultFallback() {
   return <div className="min-h-[300vh] w-screen bg-black"></div>;
 }
 
+// ISR: the listing is cached and rebuilt in the background at most once a
+// minute - matching the install-count cache (lib/cli-install-stats), the
+// shortest-lived data on the page. Effect content itself is cached for an hour
+// and cleared on publish via /api/revalidate. The visitor's plan is fetched on
+// the client (useUserPlan), so the cached page is the same for everyone.
+export const revalidate = 60;
+
 // The full effects listing (v4). Category chips link to /effects/[slug], which
 // renders the same listing scoped to that category.
 export default async function EffectsPage() {
   const sanityEntries = await getAllSanityEffectEntries();
-  const allEffects = sortEffects(buildEffectsFromSanity(sanityEntries));
-  const installCounts = await getEffectInstallCounts(allEffects);
-  const effects = attachInstallCounts(allEffects, installCounts);
+  const effects = sortEffects(buildEffectsFromSanity(sanityEntries));
+  // Install counts (Supabase) are baked into each ISR build of the page.
+  const installCountsPromise = getEffectInstallCounts(effects).catch(() => ({}));
   const featuredNames = getFeaturedEffects(effects).map((effect) => effect.name);
   const trendingEffects = getOverviewFeaturedEffects(effects);
 
-  const { userId } = await auth();
-  const userPlan = await getUserPlan(userId);
 
   return (
     <>
@@ -39,7 +42,7 @@ export default async function EffectsPage() {
           effects={effects}
           trendingEffects={trendingEffects}
           featuredNames={featuredNames}
-          userPlan={userPlan}
+          installCounts={installCountsPromise}
           content={pageContent}
         />
       </Suspense>

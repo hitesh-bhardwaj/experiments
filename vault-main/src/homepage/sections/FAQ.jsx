@@ -214,7 +214,7 @@ export function FAQRow({ item, isOpen, onToggle, index }) {
 
 
 // bgClassName: the full-width section's background (white by default; light-grey pages pass bg-light)
-export default function FAQ({ faqItems, translateTop = true, inline = false, bgClassName = "bg-foreground" }) {
+export default function FAQ({ faqItems, translateTop = true, inline = false, bgClassName = "bg-light" }) {
   const container = useRef(null);
   const [isExpanded, setIsExpanded] = useState(false);
   const [openId, setOpenId] = useState(faqItems[0].id);

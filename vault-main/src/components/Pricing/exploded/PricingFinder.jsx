@@ -11,7 +11,8 @@ import ReasonList from "./ReasonList";
 import RollNumber from "./RollNumber";
 import RollText from "./RollText";
 import PlanCheckoutButton from "@/components/Payments/PlanCheckoutButton";
-import { useCurrency } from "@/lib/useCurrency";
+import { useCurrencyState } from "@/lib/useCurrency";
+import { Skeleton } from "@/components/ui/Skeleton";
 import {
   CURRENCY_SYMBOLS,
   PLANS as PLANS_TABLE,
@@ -58,7 +59,7 @@ function recommend(plans, currency, { templates, installs }) {
   // Light use can start quarterly; anyone launching templates gets more credits yearly
   const period = !needsPlus && templates === 0 ? "q" : "y";
   const plan = plans[key], tier = plan[period];
-  const label = `${plan.name} ${period === "y" ? "yearly" : "quarterly"}`;
+  const label = `${plan.name} ${period === "y" ? "Yearly" : "Quarterly"}`;
   const savings = [plans.pro.yearlySaving, plans.plus.yearlySaving];
 
   const why = [];
@@ -100,7 +101,7 @@ const RANGE =
 const fill = (v, min, max) => ({ "--fill": `${((v - min) / (max - min)) * 100}%` });
 
 export default function PricingFinder({ currency: initialCurrency }) {
-  const currency = useCurrency(initialCurrency);
+  const { currency, ready: currencyReady } = useCurrencyState(initialCurrency);
   const plans = useMemo(() => buildPlans(currency), [currency]);
   const rootRef = useRef(null);
   const outRef = useRef(null);
@@ -207,11 +208,18 @@ export default function PricingFinder({ currency: initialCurrency }) {
             </span>
           </div>
           <p className="type-body-lg flex items-baseline text-foreground">
-            <span className="flex items-baseline">{CURRENCY_SYMBOLS[currency]}<span className="relative top-[0.1em]"><RollNumber value={rec.tier.month} values={[plans.pro.y.month, plans.pro.q.month, plans.plus.y.month, plans.plus.q.month]} /></span></span>
-            <span data-pick className="text-foreground/50">/mo · {rec.tier.billed}</span>
+            {currencyReady ? (
+              <>
+                <span className="flex items-baseline">{CURRENCY_SYMBOLS[currency]}<span className="relative top-[0.1em]"><RollNumber value={rec.tier.month} values={[plans.pro.y.month, plans.pro.q.month, plans.plus.y.month, plans.plus.q.month]} /></span></span>
+                <span data-pick className="text-foreground/50">/mo · {rec.tier.billed}</span>
+              </>
+            ) : (
+              <Skeleton className="h-[1em] w-48" />
+            )}
           </p>
           <CreditTiles count={rec.tier.credits} used={templates} sizeClass="size-[1.8vw] text-[0.7vw] max-lg:size-[4vw] max-lg:text-[1.6vw] max-md:size-[7vw] max-md:text-[2.8vw]" />
-          <ReasonList items={rec.why} />
+          {/* The reasons quote yearly savings in the visitor's currency */}
+          {currencyReady ? <ReasonList items={rec.why} /> : <Skeleton className="h-16 w-full" />}
           <div>
             <PlanCheckoutButton
               tier={rec.plan.tier}

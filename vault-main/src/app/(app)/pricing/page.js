@@ -1,5 +1,4 @@
 import dynamic from "next/dynamic";
-import { headers } from "next/headers";
 import VaultShell from "@/Layouts/VaultShell";
 import { getSearchIndexEffects } from "@/lib/search-index";
 import PricingHero from "@/components/Pricing/pricing-hero/PricingHero";
@@ -26,10 +25,10 @@ export const metadata = createPageMetadata({
     "https://h1r7ltksnzlh2a5c.public.blob.vercel-storage.com/seo/pricing.jpg",
 });
 
+// Static: plans are defined in code and the page is the same for everyone. Its
+// only fetch is the navbar's effect search list (Sanity), so it rebuilds only
+// when an effect is published. INR / USD is chosen in the browser (useCurrency).
 export default async function PricingPage() {
-  const headersList = await headers();
-  const isIndia = headersList.get("x-vercel-ip-country") === "IN";
-  const currency = isIndia ? "INR" : "USD";
   const effects = await getSearchIndexEffects();
 
   return (
@@ -45,12 +44,12 @@ export default async function PricingPage() {
           <SectionOverlay className="relative z-201">
             {/* The homepage plans section, reused as is; #plans is the hero's "See the plans" target */}
             <div id="plans" className="home-type">
-              <PricingPlansHome currency={currency} checkout />
-              <PricingFinder currency={currency} />
+              <PricingPlansHome checkout />
+              <PricingFinder />
             </div>
             <div className="home-type">
               <PricingCredits />
-              <PricingProCompare currency={currency} />
+              <PricingProCompare />
             </div>
             <PricingUseCase useCases={USE_CASES} />
             <FAQ faqItems={faqItems} translateTop={false} />

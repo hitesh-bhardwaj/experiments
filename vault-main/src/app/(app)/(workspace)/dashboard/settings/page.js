@@ -1,5 +1,6 @@
 "use client";
 
+import { DashboardSkeleton } from "@/components/ui/DashboardSkeleton";
 import { useRef, useState } from "react";
 import Image from "next/image";
 import { Camera, Eye, EyeOff, Loader2, Trash2, User } from "lucide-react";
@@ -274,11 +275,7 @@ export default function SettingsPage() {
   }
 
   if (!isLoaded) {
-    return (
-      <div className="text-white p-10">
-        Loading settings...
-      </div>
-    );
+    return <DashboardSkeleton rows={5} />;
   }
 
   if (!user) {

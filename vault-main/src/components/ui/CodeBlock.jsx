@@ -396,7 +396,7 @@ export function CodeBlock({
                     <LinkButton
                         id={seeMoreId}
                         href="#"
-                        text="See more"
+                        text="See More"
                         shimmer
                         tilted={false}
                         showArrow

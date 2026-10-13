@@ -39,6 +39,15 @@ function getSanityClient() {
   })
 }
 
+// Sanity content is cached until something is published: Sanity's publish
+// webhook calls /api/revalidate, which clears the effects / blog tag so every
+// page using it rebuilds on its next visit. SANITY_REVALIDATE is only a
+// safety net (a day) in case a webhook delivery is missed.
+export const SANITY_REVALIDATE = 86400
+export const SANITY_EFFECTS_TAG = 'sanity-effects'
+export const SANITY_BLOG_TAG = 'sanity-blog'
+const SANITY_EFFECT_FETCH_OPTIONS = {next: {revalidate: SANITY_REVALIDATE, tags: [SANITY_EFFECTS_TAG]}}
+
 function normalizeEffectEntries(entries = []) {
   return entries.map((entry) => {
     const category = getEffectCategoryBySlug(entry.categorySlug)
@@ -185,7 +194,8 @@ export async function getSanityEffectContent(categorySlug, effectSlug) {
         lastUpdated,
         _updatedAt
       }`,
-      {categorySlugs, effectSlugs}
+      {categorySlugs, effectSlugs},
+      SANITY_EFFECT_FETCH_OPTIONS
     )
 
     return content || null
@@ -214,7 +224,8 @@ export async function getSanityEffectSource(effectSlug) {
       jsxCode,
       tsxCode
     }`,
-    {effectSlugs}
+    {effectSlugs},
+    SANITY_EFFECT_FETCH_OPTIONS
   )
 }
 
@@ -245,7 +256,9 @@ export async function getAllSanityEffectEntries() {
         coverImage,
         videoUrl,
         previewUrl
-      }`
+      }`,
+      {},
+      SANITY_EFFECT_FETCH_OPTIONS
     )
 
     return normalizeEffectEntries(entries)
@@ -264,7 +277,7 @@ export async function getAllSanityEffectEntries() {
 // never throws, falls back to null/[] with a console.warn so a Sanity outage
 // degrades the blog rather than breaking the build/page.
 
-const SANITY_BLOG_FETCH_OPTIONS = {cache: 'no-store'}
+const SANITY_BLOG_FETCH_OPTIONS = {next: {revalidate: SANITY_REVALIDATE, tags: [SANITY_BLOG_TAG]}}
 
 async function hydrateBlogAuthors(client, posts = []) {
   const authorIds = [

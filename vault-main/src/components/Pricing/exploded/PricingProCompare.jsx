@@ -8,7 +8,8 @@ import { useInteraction } from "@/homepage/components/InteractionProvider";
 import { prefersReducedMotion } from "@/lib/motion";
 import RollNumber from "./RollNumber";
 import RollText from "./RollText";
-import { useCurrency } from "@/lib/useCurrency";
+import { useCurrencyState } from "@/lib/useCurrency";
+import { Skeleton } from "@/components/ui/Skeleton";
 import { CURRENCY_SYMBOLS, PLANS, getCreditsPerYear, getMonthlyEquivalent } from "@/lib/plans";
 
 // Pro vs Pro+, line by line. Prices, credits and install limits come from
@@ -76,7 +77,7 @@ function Cell({ value, period, dir, plus }) {
 }
 
 export default function PricingProCompare({ currency: initialCurrency }) {
-  const currency = useCurrency(initialCurrency);
+  const { currency, ready: currencyReady } = useCurrencyState(initialCurrency);
   const prices = useMemo(() => pricesFor(currency), [currency]);
   const rootRef = useRef(null);
   const toggleRef = useRef(null);
@@ -118,7 +119,7 @@ export default function PricingProCompare({ currency: initialCurrency }) {
   };
 
   return (
-    <section ref={rootRef} id="compare" data-sound-flow="off" className="relative bg-foreground px-[4.5vw] max-md:px-0 py-[7%] max-md:py-[12%] font-avenir text-background">
+    <section ref={rootRef} id="compare" data-sound-flow="off" className="relative bg-light px-[4.5vw] max-md:px-0 py-[7%] max-md:py-[12%] font-avenir text-background">
       <div className="mx-auto flex w-full max-w-[1536px] flex-col gap-[3vw] max-md:gap-[10vw]">
         <div className="flex max-md:px-[6vw] items-end justify-between gap-[2vw] max-md:flex-col max-md:items-start max-md:gap-[10vw]">
           <LineReveal as="h2" className="type-h1 leading-[1.2]!">
@@ -155,10 +156,12 @@ export default function PricingProCompare({ currency: initialCurrency }) {
                 <div key={id} role="columnheader" className={`${CELL} flex-col justify-start gap-[0.6vw] border-b py-[2.2vw] max-md:gap-[2vw] max-md:py-[6vw] ${id === "plus" ? PLUS : "border-background/10"}`}>
                   <p className="type-h3 font-avenir">{id === "plus" ? <>Pro<span className="text-primary">+</span></> : name}</p>
                   <div className={`flex items-center justify-center max-lg:flex-wrap ${id === "plus" ? "text-foreground" : "text-background/60"} ${LABEL}`}>
-                    <span className="flex h-[1.2vw] items-center leading-none max-lg:h-[2.4vw] max-md:h-[4vw]">{CURRENCY_SYMBOLS[currency]}<RollNumber value={prices[id][period]} values={[prices[id].q, prices[id].y]} /></span>
+                    <span className="flex h-[1.2vw] items-center leading-none max-lg:h-[2.4vw] max-md:h-[4vw]">
+                      {currencyReady ? <>{CURRENCY_SYMBOLS[currency]}<RollNumber value={prices[id][period]} values={[prices[id].q, prices[id].y]} /></> : <Skeleton className="h-[1em] w-10" />}
+                    </span>
                     <span>/mo</span>
                     <span className="max-lg:hidden">&nbsp;·&nbsp;</span>
-                    <RollText fixed text={periodInfo.billed} dir={dir} className="h-[1.2vw] w-[10vw] leading-[1.2vw] max-lg:h-[2.4vw] max-lg:w-full max-lg:leading-[2.4vw] max-md:h-[4vw] max-md:w-full max-md:leading-[4vw]" />
+                    {currencyReady ? <RollText fixed text={periodInfo.billed} dir={dir} className="h-[1.2vw] w-[10vw] leading-[1.2vw] max-lg:h-[2.4vw] max-lg:w-full max-lg:leading-[2.4vw] max-md:h-[4vw] max-md:w-full max-md:leading-[4vw]" /> : <Skeleton className="h-[1em] w-[8vw] max-lg:w-24" />}
                   </div>
                 </div>
               ))}

@@ -63,7 +63,7 @@ export function SignInRequiredModal({ open, onClose, redirect = "/", action = "c
     showToast(
       isNewAccount
         ? { title: "Account created", description: "You’re signed in. Welcome to Vault." }
-        : { title: "You’re signed in", description: "Welcome back - pick up right where you left off." },
+        : { title: "You’re signed in", description: "Welcome Back - pick up right where you left off." },
     );
   };
   // A fresh form every time it opens; it stays as it was while fading out.

@@ -1,7 +1,9 @@
 "use client";
 
+import { usePromiseValue } from "@/lib/usePromiseValue";
 import {
   Fragment,
+  useMemo,
   useRef,
   useState,
   useEffect,
@@ -158,13 +160,28 @@ export function EffectDetailContent({
   categorySlug,
   effect,
   content,
-  relatedEffects = [],
+  relatedEffects: baseRelatedEffects = [],
+  installCounts: installCountsSource = null,
   effectCounts,
   totalEffects,
   isLocked = false,
-  userPlan = "free",
-  searchEffects = [],
+  searchEffects: baseSearchEffects = [],
 }) {
+  // Install counts arrive as a promise (Supabase): related cards show a skeleton until it lands.
+  const installCounts = usePromiseValue(installCountsSource, { pending: null, fallback: {} });
+  const relatedEffects = useMemo(
+    () =>
+      installCountsSource
+        ? baseRelatedEffects.map((e) =>
+            installCounts ? { ...e, installCount: installCounts[e.name || e.effectSlug || e.slug] ?? 0 } : { ...e, installCountPending: true },
+          )
+        : baseRelatedEffects,
+    [baseRelatedEffects, installCounts, installCountsSource],
+  );
+  const searchEffects = useMemo(
+    () => (installCounts ? baseSearchEffects.map((e) => ({ ...e, installCount: installCounts[e.name || e.effectSlug || e.slug] ?? 0 })) : baseSearchEffects),
+    [baseSearchEffects, installCounts],
+  );
   useFadeUp();
   useLineAnim();
 

@@ -2,17 +2,12 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { createPageMetadata } from "@/lib/seo-metadata";
 import { TEMPLATES, TEMPLATES_OG_IMAGE } from "@/lib/mock-templates";
-import { getTemplateViewCounts } from "@/lib/template-views";
 import { BreadcrumbsJSONLD, FAQJSONLD, WebpageJsonLd } from "@/lib/json-ld";
 import { TEMPLATES_DESCRIPTION, templatesFaqItems } from "./content";
 import { TemplatesListing } from "./TemplatesListing";
 
-// No dynamic API (auth/cookies/headers) is called on this page, so Next
-// would otherwise statically prerender it once at build/deploy time - the
-// view counts baked into that HTML would then be frozen forever, never
-// reflecting real views recorded afterward via recordTemplateView(). Forces
-// a fresh getTemplateViewCounts() read on every request instead.
-export const dynamic = "force-dynamic";
+// Static: the catalogue is a local file. View counts load in the browser
+// (/api/templates/views), so the page itself never needs rebuilding.
 
 export const metadata = createPageMetadata({
   title: "Interactive React & Next.js Website Templates | Hyperiux Vault",
@@ -33,13 +28,8 @@ async function readFullShot(slug) {
 }
 
 export default async function TemplatesPage() {
-  const viewCounts = await getTemplateViewCounts(TEMPLATES.map((template) => template.slug));
   const fullShots = await Promise.all(TEMPLATES.map((template) => readFullShot(template.slug)));
-  const templates = TEMPLATES.map((template, i) => ({
-    ...template,
-    fullShot: fullShots[i],
-    viewCount: viewCounts[template.slug] || 0,
-  }));
+  const templates = TEMPLATES.map((template, i) => ({ ...template, fullShot: fullShots[i] }));
 
   return (
     <>

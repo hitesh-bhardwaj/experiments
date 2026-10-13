@@ -1,5 +1,6 @@
 "use client";
 
+import { DashboardSkeleton } from "@/components/ui/DashboardSkeleton";
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
@@ -168,11 +169,7 @@ export default function AdminInvoicingPage() {
   }, [isSuperAdmin, fetchInvoices]);
 
   if (roleLoading || !isSuperAdmin) {
-    return (
-      <div className="flex items-center justify-center py-20">
-        <p className="text-white/40">Loading…</p>
-      </div>
-    );
+    return <DashboardSkeleton rows={8} />;
   }
 
   const totalPages = Math.max(1, Math.ceil(total / EVENTS_PER_PAGE));

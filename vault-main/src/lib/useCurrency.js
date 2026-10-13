@@ -21,19 +21,28 @@ function fetchCurrency() {
   return pending;
 }
 
-export function useCurrency(initial) {
-  const [currency, setCurrency] = useState(initial || resolved || "USD");
+// { currency, ready }: `ready` is false until the visitor's currency is known,
+// so prices can show a skeleton instead of flashing USD before switching to INR.
+export function useCurrencyState(initial) {
+  const [state, setState] = useState(() => ({
+    currency: initial || resolved || "USD",
+    ready: Boolean(initial || resolved),
+  }));
 
   useEffect(() => {
     if (initial) return undefined;
     let live = true;
     fetchCurrency().then((value) => {
-      if (live) setCurrency(value);
+      if (live) setState({ currency: value, ready: true });
     });
     return () => {
       live = false;
     };
   }, [initial]);
 
-  return currency;
+  return state;
+}
+
+export function useCurrency(initial) {
+  return useCurrencyState(initial).currency;
 }

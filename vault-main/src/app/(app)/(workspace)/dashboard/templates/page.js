@@ -1,5 +1,6 @@
 "use client";
 
+import { DashboardSkeleton } from "@/components/ui/DashboardSkeleton";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
@@ -159,11 +160,7 @@ export default function DashboardTemplatesPage() {
   }, []);
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center py-20">
-        <p className="text-zinc-400">Loading your templates...</p>
-      </div>
-    );
+    return <DashboardSkeleton cards={4} />;
   }
 
   return (

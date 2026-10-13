@@ -24,7 +24,7 @@ function UseCaseBox({ item }) {
 
       <div className="flex flex-col justify-between gap-[4vw] px-[2vw] py-[2.5vw] max-md:gap-[10vw] max-md:px-[6vw] max-md:py-[7vw]">
         <p className="type-body w-[80%] max-md:w-full">{item.text}</p>
-        <LinkButton href={item.link} text={item.cta} prefetch={false} tilted={false} className="text-background!" />
+        <LinkButton href={item.link} text={item.cta} tilted={false} className="text-background!" />
       </div>
     </article>
   );
@@ -58,7 +58,7 @@ export default function PricingUseCase({ useCases }) {
   );
 
   return (
-    <section ref={container} id="use-cases" data-sound-flow="off" className="overflow-x-clip bg-foreground px-[4.5vw] py-[7%] text-background max-md:px-[6vw] max-md:py-[15%]">
+    <section ref={container} id="use-cases" data-sound-flow="off" className="overflow-x-clip bg-light px-[4.5vw] py-[7%] text-background max-md:px-[6vw] max-md:py-[15%]">
       <div className="mx-auto flex h-fit w-full max-w-[1536px] items-start justify-between max-md:flex-col max-md:gap-[10vw]">
         <div className="sticky top-[20vh] w-[45%] max-md:static max-md:w-full">
           {/* The blog card's line wipe, scrubbed with the scroll like the cards beside it */}

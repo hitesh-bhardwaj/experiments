@@ -70,7 +70,7 @@ export default function SquareCursor() {
         const near = zone.hasAttribute("data-near") || zone.classList.contains("pt-hover");
         if (!near && !holding && !ready) { delete root.dataset.charging; return show("dot"); }
         if (holding || ready) root.dataset.charging = ""; else delete root.dataset.charging;
-        return show("label", ready ? "Release" : holding ? "Holding" : zone.dataset.cursorLabel || "Hold to explore");
+        return show("label", ready ? "Release" : holding ? "Holding" : zone.dataset.cursorLabel || "Hold to Explore");
       }
       delete root.dataset.charging;
       // Links and buttons keep just the normal pointer: the tag is only for the interactive scenes

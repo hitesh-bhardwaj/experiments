@@ -26,6 +26,9 @@ export const metadata = createPageMetadata({
   path: "/blog",
 });
 
+// The listing reads ?category / ?page, so it renders per request - but its Sanity
+// data is cached until a publish clears it (see SANITY_REVALIDATE in lib/sanity),
+// so it doesn't wait on Sanity each time.
 export default async function BlogIndexPage({ searchParams }) {
   const params = await searchParams;
   const category = typeof params?.category === "string" ? params.category : undefined;
@@ -56,7 +59,7 @@ export default async function BlogIndexPage({ searchParams }) {
       <BlogHero />
      
       <SectionOverlay className="relative z-201">
-      <main data-sound-hover="off" data-sound-flow="off" className="relative flex flex-col bg-foreground text-ink">
+      <main data-sound-hover="off" data-sound-flow="off" className="relative flex flex-col bg-light text-ink">
         <FeaturedBlog featuredPost={featuredPost} />
         <BlogListing
           posts={gridPosts}

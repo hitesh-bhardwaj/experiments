@@ -134,6 +134,24 @@ export const proEffectsContent = {
     "The Pro tier is where Hyperiux Vault goes deeper - more complex interactions, more refined motion, and effects that take real effort to build from scratch.",
     "Preview available now. Upgrade to Pro for instant install access.",
   ],
+  faqs: [
+    {
+      question: "What's the difference between Free and Pro?",
+      answer: "Free includes 50+ effects, mostly text, buttons, and core scroll interactions, plus a few from every other category. Pro and Pro+ unlock the full 150+ effect library, including most cursor effects, WebGL scenes, and advanced page transitions."
+    },
+    {
+      question: "Do I own the code?",
+      answer: "The effect source is installed inside your project and can be inspected and modified locally. Usage rights follow the Free Core or Pro license attached to the effect."
+    },
+    {
+      question: "How do I upgrade from free to Pro effects?",
+      answer: "Subscribe to Pro or Pro+ on the Pricing page. Once subscribed, you get a CLI token to install Pro effects directly from our registry."
+    },
+    {
+      question: "What do I keep if I cancel Pro?",
+      answer: "Code already installed in your project stays there. Access to new Pro downloads, updates, and future Pro releases follows the current subscription and license terms."
+    }
+  ],
 };
 
 export const effectCategories = [

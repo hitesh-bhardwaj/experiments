@@ -1,5 +1,6 @@
 "use client";
 
+import { prefetchFor } from "@/lib/prefetch";
 import React, { useRef, useEffect } from "react";
 import Link from "next/link";
 import gsap from "gsap";
@@ -130,7 +131,7 @@ export default function LinkButton({
       {...props}
       id={id ?? autoId}
       href={href}
-      prefetch={false}
+      prefetch={props.prefetch ?? prefetchFor(href)}
       target={resolvedTarget}
       rel={isExternal ? "noopener noreferrer" : undefined}
       className={`relative text-white group w-fit inline-block pb-1 ${className}`}

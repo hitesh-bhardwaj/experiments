@@ -136,7 +136,7 @@ export default function RelatedBlogsSlider({ posts = [] }) {
 
         <SliderNav
           className="max-lg:hidden"
-          exploreText="Explore all blogs"
+          exploreText="Explore All Blogs"
           exploreHref="/blog"
           showArrows={showControls}
           onPrev={() => scrollRelatedBlogs("previous")}

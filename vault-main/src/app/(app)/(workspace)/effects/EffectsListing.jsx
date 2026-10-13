@@ -26,6 +26,8 @@ import { sortEffects } from "@/lib/effect-sort";
 import FAQ from "@/homepage/sections/FAQ";
 import Button from "@/homepage/components/Button";
 import { FilterMenu } from "./FilterMenu";
+import { usePromiseValue } from "@/lib/usePromiseValue";
+import { useUserPlan } from "@/lib/useUserPlan";
 import { DISPLAY, EffectCard, LABEL } from "./EffectCard";
 import { Modal, useEffectCardActions } from "./useEffectCardActions";
 import { PreviewDrawer } from "./PreviewDrawer";
@@ -46,7 +48,7 @@ const COLS_KEY = "hyperiux-effects-v4-cols";
 // "trend" is the default (server) order; the rest live in the filter dropdown.
 const SORTS = {
   trend: "Trending",
-  "free-first": "Free first",
+  "free-first": "Free First",
   recent: "Newest",
   az: "A to Z",
   za: "Z to A",
@@ -111,7 +113,7 @@ const CHIP_ON = "bg-primary text-background";
 // Active filter chips: scale + fade in/out, the rest slide into place
 const FILTER_SPRING = { type: "spring", stiffness: 500, damping: 35, mass: 0.8 };
 
-const countWord = (n) => (n === 1 ? "effect" : "effects");
+const countWord = (n) => (n === 1 ? "Effect" : "Effects");
 
 function readStoredCols() {
   try {
@@ -132,14 +134,32 @@ const TIER_SCOPES = ["free", "pro"];
  * Category chips then switch between these pages client-side (selectCategory).
  */
 export function EffectsListing({
-  effects = [],
+  effects: baseEffects = [],
   trendingEffects: initialTrending = [],
   featuredNames = [],
-  userPlan = "free",
+  installCounts: installCountsSource = null,
   scope: initialScope = null,
   content: initialContent = effectsOverviewContent,
 }) {
   const searchParams = useSearchParams();
+
+  // The page is cached (ISR), so the plan is fetched on the client - it works straight
+  // away as a free user. Install counts may arrive as a promise; cards show a skeleton until then.
+  const { plan: userPlan } = useUserPlan();
+  const installCounts = usePromiseValue(installCountsSource, { pending: null, fallback: {} });
+  const withCounts = useCallback(
+    (list) =>
+      installCountsSource
+        ? list.map((effect) =>
+            installCounts
+              ? { ...effect, installCount: installCounts[effect.name || effect.effectSlug || effect.slug] ?? 0 }
+              : { ...effect, installCountPending: true },
+          )
+        : list,
+    [installCounts, installCountsSource],
+  );
+  const effects = useMemo(() => withCounts(baseEffects), [withCounts, baseEffects]);
+  const initialTrendingWithCounts = useMemo(() => withCounts(initialTrending), [withCounts, initialTrending]);
 
   /* ---------- the page being shown ---------- */
   // Category chips switch the page in place - hero copy, stats, trending, cards, FAQ
@@ -154,11 +174,11 @@ export function EffectsListing({
   const trendingEffects = useMemo(
     () =>
       scope === initialScope
-        ? initialTrending
+        ? initialTrendingWithCounts
         : scopeCategory
           ? getFeaturedEffectsByCategory(effects, scopeCategory)
           : getOverviewFeaturedEffects(effects),
-    [scope, initialScope, initialTrending, scopeCategory, effects],
+    [scope, initialScope, initialTrendingWithCounts, scopeCategory, effects],
   );
   // Save / copy install / Pro lock for every card and the drawer (shared with the effect page).
   const { isProUser, mounted, canInstall, isWishlisted, copyInstall, toggleWishlist, cardActions, overlays } =
@@ -182,7 +202,9 @@ export function EffectsListing({
   // ?category= is the old in-place filter link - still honoured on /effects.
   const [category, setCategory] = useState(() => scopeCategory || (initialScope ? null : searchParams.get("category")) || null);
   const [query, setQuery] = useState(() => searchParams.get("q") || "");
-  const [sort, setSort] = useState(() => (SORTS[searchParams.get("sort")] ? searchParams.get("sort") : "trend"));
+  const [chosenSort, setSort] = useState(() => (SORTS[searchParams.get("sort")] ? searchParams.get("sort") : "trend"));
+  // "Free first" only means something across both tiers - it falls back to the default once a single tier is picked.
+  const sort = tier !== "all" && chosenSort === "free-first" ? "trend" : chosenSort;
   const [cols, setCols] = useState(3);
   const [shown, setShown] = useState(PAGE);
   const [drawerEffect, setDrawerEffect] = useState(null);
@@ -223,7 +245,7 @@ export function EffectsListing({
       }
       return true;
     });
-    if (sort === "free-first") return [...list].sort((a, b) => (a.tier === "pro") - (b.tier === "pro"));
+    if (sort === "free-first" && tier === "all") return [...list].sort((a, b) => (a.tier === "pro") - (b.tier === "pro"));
     return sort === "trend" ? list : sortEffects(list, sort);
   }, [effects, tier, featured, featuredSet, category, query, sort]);
 
@@ -582,7 +604,7 @@ export function EffectsListing({
         <section id="trending" data-v4-fade aria-labelledby="v4-trending" className={`${WRAP} flex flex-col gap-[2.5vw] pb-28 pt-4 max-lg:pb-20 max-lg:pt-16 max-lg:gap-8`}>
           <div className="flex items-end justify-between">
             <h2 id="v4-trending" className={`${DISPLAY} font-aeonik text-[2.2vw] max-lg:text-[4vw] max-md:text-[7vw]`}>
-              Trending this week
+              Trending this Week
             </h2>
             {/* Desktop / tablet: arrows beside the heading (phones: below the slider). */}
             <div className="flex gap-[0.4vw] max-md:hidden">
@@ -618,14 +640,8 @@ export function EffectsListing({
         </section>
       )}
 
-      {/* ---------- catalogue sheet ---------- */}
-      {/* Hover and mouse-swish sounds are muted on the light catalogue sheet (see wireSoundUI in homepage/lib/sound.js). */}
-      {/* data-vault-header-scroll-away: the desktop header slides away as the sheet (and so the
-          sticky controls at its top) reaches 10% from the top - see VaultHeader. The sheet is the
-          marker rather than the sticky bar, because a stuck element reports the wrong position. */}
       <div ref={sheetRef} id="v4-grid" data-v4-fade data-sound-hover="off" data-sound-flow="off" data-vault-header-scroll-away className="relative scroll-mt-4 bg-light text-ink">
-        {/* summary + view controls (sticky on desktop; tablet/mobile have a fixed header).
-            Full-width bar so its background covers the sheet edge to edge while stuck. */}
+       
         <div className="sticky top-[-2%] z-5 h-fit border-b border-black/8 bg-light max-lg:static max-lg:border-b-0">
           <div className={`${WRAP} flex flex-wrap items-end justify-between gap-[1vw] pt-10 pb-4 max-md:gap-[8vw] max-md:pt-8`}>
             {/* A div, not a p: RollText renders a div, which a <p> can't contain. */}
@@ -638,9 +654,9 @@ export function EffectsListing({
                 <span className="text-black/60">{countWord(filtered.length)}</span>
               </span>
               {/* The dot stays put, only the name rolls */}
-              <span className="flex shrink-0 items-baseline gap-x-[0.3vw] pl-[0.3vw] max-md:gap-x-[1vw]">
-                <span aria-hidden="true" className={`${T15} text-black/60 transition-opacity duration-300 ${context ? "" : "opacity-0"}`}>·</span>
-                <RollText text={contextTail} block className="w-[14vw] shrink-0 overflow-x-visible! overflow-y-clip! whitespace-nowrap max-lg:w-[24vw] max-md:w-[48vw]" />
+              <span className="flex shrink-0 items-baseline  pl-[0.3vw] max-md:gap-x-[1vw]">
+                <span aria-hidden="true" className={`${T15} text-black/60 transition-opacity mx-1 duration-300 ${context ? "" : "opacity-0"}`}>•</span>
+                <RollText text={contextTail} block className="w-[14vw] shrink-0 capitalize overflow-x-visible! overflow-y-clip! whitespace-nowrap max-lg:w-[24vw] max-md:w-[48vw]" />
               </span>
             </div>
 
@@ -663,7 +679,7 @@ export function EffectsListing({
                 // below lg alignRight keeps the fixed panel under it, 16px inside the screen.
                 alignRight
                 panelClassName="left-auto! right-0"
-                options={SORT_OPTIONS}
+                options={tier === "all" ? SORT_OPTIONS : SORT_OPTIONS.filter((o) => o !== "free-first")}
                 activeFilter={sort === "trend" ? null : sort}
                 getLabel={sortLabel}
                 onSelect={setSort}
@@ -807,10 +823,10 @@ export function EffectsListing({
             <div className="relative flex items-start justify-between gap-6 overflow-hidden bg-ink px-10 py-12 text-light max-lg:flex-col max-lg:p-10 max-md:p-7">
               <div className="relative flex w-[70%] flex-col gap-6 max-lg:w-full">
                 <h2 className="text-[4.2vw] max-lg:text-[5.5vw] max-md:text-[9vw]">
-                  Everything in the vault.{" "}
+                  Everything in the Vault.{" "}
                   <br/>
                   <span className="gradient-text-animate">
-                    One plan.
+                    One Plan.
                   </span>
                 </h2>
                 <p className="type-body-lg  text-light/80 w-[85%] max-md:w-full">
@@ -826,7 +842,7 @@ export function EffectsListing({
       </div>
 
       {/* ---------- FAQ + custom work CTA (from the current listing) ---------- */}
-      <div data-v4-fade className="flex h-full w-full flex-col gap-[2vw] bg-foreground pb-[5vw] max-lg:pb-14">
+      <div data-v4-fade className="flex h-full w-full flex-col gap-[2vw] bg-light pb-[5vw] max-lg:pb-14">
         {faqItems.length > 0 && <FAQ faqItems={faqItems} translateTop={false} />}
         <div className={WRAP}>
           <CustomAnimationCta cta={cta} />

@@ -1,6 +1,8 @@
 "use client";
 
-import { useCallback, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from "react";
+import { Skeleton } from "@/components/ui/Skeleton";
+import { useTemplateViewCounts } from "../useTemplateViewCounts";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { preload } from "react-dom";
 import dynamic from "next/dynamic";
 import Link from "next/link";
@@ -84,14 +86,35 @@ function formatDate(value) {
 }
 
 
-export function TemplateDetail({ template, templateAccess = { allowed: false, reason: "anonymous" }, devices = {}, effects = [], stack = [], related = [] }) {
+export function TemplateDetail({ template, devices = {}, effects = [], stack = [], related: baseRelated = [] }) {
   const rootRef = useRef(null);
   const stageTopRef = useRef(null);
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const [hasAccess, setHasAccess] = useState(templateAccess.allowed);
+  // The page is cached (ISR), so access is fetched in the browser: the page works
+  // straight away, and the Buy / Download button shows a skeleton until it's known.
+  // The download route re-checks access on the server, so nothing is unlocked early.
+  const [templateAccess, setTemplateAccess] = useState(null);
+  useEffect(() => {
+    let active = true;
+    fetch(`/api/templates/${template.slug}/access`)
+      .then((res) => (res.ok ? res.json() : { allowed: false, reason: "error" }))
+      .catch(() => ({ allowed: false, reason: "error" }))
+      .then((access) => active && setTemplateAccess(access));
+    return () => {
+      active = false;
+    };
+  }, [template.slug]);
+  const [purchased, setPurchased] = useState(false);
+  const accessPending = templateAccess === null && !purchased;
+  const hasAccess = purchased || !!templateAccess?.allowed;
+  const viewCounts = useTemplateViewCounts(baseRelated.map((t) => t.slug));
+  const related = useMemo(
+    () => baseRelated.map((t) => (viewCounts ? { ...t, viewCount: viewCounts[t.slug] || 0 } : { ...t, viewCountPending: true })),
+    [baseRelated, viewCounts],
+  );
   const [paywallOpen, setPaywallOpen] = useState(false);
   const [autoOpenCheckout, setAutoOpenCheckout] = useState(false);
   const [getOpen, setGetOpen] = useState(false);
@@ -126,8 +149,12 @@ export function TemplateDetail({ template, templateAccess = { allowed: false, re
     fetch(`/api/templates/${template.slug}/view`, { method: "POST" }).catch(() => {});
   }, [template.slug]);
 
-  // Resume a purchase after the sign-in bounce (?buy=1), like the live detail page.
+  // Resume a purchase after the sign-in bounce (?buy=1), like the live detail page -
+  // once, as soon as access is known.
+  const resumedRef = useRef(false);
   useEffect(() => {
+    if (accessPending || resumedRef.current) return;
+    resumedRef.current = true;
     if (searchParams.get(RESUME_PURCHASE_PARAM) !== "1") return;
     if (hasAccess || templateAccess.reason === "anonymous") return;
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -135,7 +162,7 @@ export function TemplateDetail({ template, templateAccess = { allowed: false, re
     setAutoOpenCheckout(true);
     router.replace(pathname, { scroll: false });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [accessPending]);
 
   const closeGet = useCallback(() => setGetOpen(false), []);
 
@@ -147,6 +174,7 @@ export function TemplateDetail({ template, templateAccess = { allowed: false, re
   // The real purchase: owned downloads, signed-out signs in and resumes here, signed-in opens the paywall.
   const buy = () => {
     setGetOpen(false);
+    if (accessPending) return;
     if (hasAccess) return download();
     if (templateAccess.reason === "anonymous") {
       router.push(`/sign-in?redirect_url=${encodeURIComponent(`${pathname}?${RESUME_PURCHASE_PARAM}=1`)}`);
@@ -156,7 +184,7 @@ export function TemplateDetail({ template, templateAccess = { allowed: false, re
   };
 
   const onPurchased = () => {
-    setHasAccess(true);
+    setPurchased(true);
     setPaywallOpen(false);
     setAutoOpenCheckout(false);
     window.location.href = downloadHref;
@@ -237,7 +265,7 @@ export function TemplateDetail({ template, templateAccess = { allowed: false, re
             <motion.div {...HERO_FADE} className="flex flex-wrap gap-1.5 pt-4">
               <span className={`${BADGE} bg-foreground/5 text-foreground/80`}>{template.category}</span>
               <span className={`${BADGE} ${full ? "bg-foreground text-background ring-1 ring-inset ring-[rgba(255,178,122,.3)]" : "bg-primary text-background"}`}>
-                {full ? "Pro+ only" : "Selected catalogue"}
+                {full ? "Pro+ Only" : "Selected Catalogue"}
               </span>
               {hasAccess && <span className={`${BADGE} bg-foreground/5 text-foreground backdrop-blur-lg`}>Yours <span className="text-primary">✓</span></span>}
             </motion.div>
@@ -281,6 +309,8 @@ export function TemplateDetail({ template, templateAccess = { allowed: false, re
                 </button>
                 <button
                   type="button"
+                  disabled={accessPending}
+                  aria-busy={accessPending}
                   onClick={
                     hasAccess
                       ? download
@@ -291,7 +321,9 @@ export function TemplateDetail({ template, templateAccess = { allowed: false, re
                   }
                   className="inline-flex h-11 cursor-pointer items-center gap-2 bg-primary px-5 text-[calc(var(--hx-vw,1vw)*1.15)] text-background transition-colors duration-500 hover:bg-primary-hover max-lg:text-[clamp(13px,calc(var(--hx-vw,1vw)*1.6),15px)] max-md:text-[calc(var(--hx-vw,1vw)*2.2)] max-sm:text-[calc(var(--hx-vw,1vw)*4)]"
                 >
-                  {hasAccess ? (
+                  {accessPending ? (
+                    <Skeleton className="h-[1em] w-28" />
+                  ) : hasAccess ? (
                     <>
                       <Download className="size-4" aria-hidden="true" /> Download source
                     </>

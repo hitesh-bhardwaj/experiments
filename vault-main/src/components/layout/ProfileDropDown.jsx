@@ -109,6 +109,7 @@ export default function ProfileDropdown({
 
           <div className="p-2">
             <Link
+              prefetch={false}
               href="/dashboard"
               className="group relative isolate block px-4 py-3 transition"
             >
@@ -120,6 +121,7 @@ export default function ProfileDropdown({
             </Link>
 
             <Link
+              prefetch={false}
               href="/dashboard/saved"
               className="group relative isolate flex items-center justify-between px-4 py-3 transition"
             >
@@ -136,6 +138,7 @@ export default function ProfileDropdown({
 
             {!isAdmin && (
               <Link
+                prefetch={false}
                 href="/dashboard/usage"
                 className="group relative isolate flex items-center justify-between px-4 py-3 transition"
               >
@@ -156,6 +159,7 @@ export default function ProfileDropdown({
                 <div className="my-2 border-t border-white/10 w-[110%] translate-x-[-5%]" />
 
                 <Link
+                  prefetch={false}
                   href="/dashboard/admin/activity"
                   className="group relative isolate block px-4 py-3 transition"
                 >
@@ -167,6 +171,7 @@ export default function ProfileDropdown({
                 </Link>
 
                 <Link
+                  prefetch={false}
                   href="/dashboard/admin"
                   className="group relative isolate block px-4 py-3 transition"
                 >
@@ -178,6 +183,7 @@ export default function ProfileDropdown({
                 </Link>
 
                 <Link
+                  prefetch={false}
                   href="/dashboard/admin/invoicing"
                   className="group relative isolate block px-4 py-3 transition"
                 >
@@ -191,6 +197,7 @@ export default function ProfileDropdown({
             )}
 
             <Link
+              prefetch={false}
               href="/dashboard/settings"
               className="group relative isolate block px-4 py-3 transition"
             >

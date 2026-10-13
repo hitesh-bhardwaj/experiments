@@ -36,7 +36,7 @@ export default function Homepage({ faqItems, effects = [] }) {
           <ExploreTheEffects />
           {/* Pricing + FAQ are one white sheet: it scales in at pricing and leaves after the FAQ */}
           {/* Above the footer (z-200), whose ribbons reach up behind the FAQ */}
-          <SectionOverlay className="relative z-201">
+          <SectionOverlay className="relative z-201 bg-light">
             <PricingPlansHome />
             <FAQ faqItems={faqItems} />
           </SectionOverlay>

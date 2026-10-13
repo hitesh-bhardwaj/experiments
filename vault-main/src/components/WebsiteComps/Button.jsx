@@ -1,5 +1,6 @@
 "use client";
 
+import { prefetchFor } from "@/lib/prefetch";
 import Link from "next/link";
 import { useLenis } from "lenis/react";
 import { BtnArrow } from "../WebsiteComps/Icons";
@@ -144,7 +145,7 @@ export default function Button({
   return (
     <Link
       id={id ?? autoId}
-      prefetch={false}
+      prefetch={prefetchFor(href)}
       href={href}
       onClick={handleClick}
       target={target_blank ? "_blank" : undefined}

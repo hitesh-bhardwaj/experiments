@@ -1,5 +1,6 @@
 "use client";
 
+import { Skeleton } from "@/components/ui/Skeleton";
 import { useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -157,11 +158,15 @@ export function TemplateCard({ template, priority = false, isWishlisted = false,
             </h3>
             <p className={`flex items-center gap-2.5 ${T13} text-black/50`}>
               {template.category}
-              {views > 0 && (
-                <span className="inline-flex items-center gap-1">
-                  <Eye className="size-3.5" aria-hidden="true" />
-                  {formatViews(views)}
-                </span>
+              {template.viewCountPending ? (
+                <Skeleton className="h-[1em] w-10" />
+              ) : (
+                views > 0 && (
+                  <span className="inline-flex items-center gap-1">
+                    <Eye className="size-3.5" aria-hidden="true" />
+                    {formatViews(views)}
+                  </span>
+                )
               )}
             </p>
           </div>

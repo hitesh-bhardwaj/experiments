@@ -16,9 +16,11 @@ import Button from "@/homepage/components/Button";
 import { useTemplateWishlist } from "./useTemplateWishlist";
 import { useTemplateAccess } from "./useTemplateAccess";
 import { TemplateCard } from "./TemplateCard";
+import { FilterMenu } from "../effects/FilterMenu";
+import { useTemplateViewCounts } from "./useTemplateViewCounts";
 import { TemplatePreviewDrawer } from "./TemplatePreviewDrawer";
 import { useTemplatePurchase } from "./useTemplatePurchase";
-import { BTN_SIZE, BTN_TEXT, DISPLAY, GUTTER, LABEL, PRICE, T11, T14, T16, cardReveal, catalogueOf, priceOf } from "./tokens";
+import { DISPLAY, GUTTER, LABEL, PRICE, T11, T14, T16, cardReveal, catalogueOf, priceOf } from "./tokens";
 import { PLANS, getCreditsPerYear } from "@/lib/plans";
 
 // three.js only loads when the corridor is shown.
@@ -42,12 +44,12 @@ const VIEWS = [
 const CATALOGUES = [
   { id: "all", label: "All" },
   { id: "selected", label: "Selected" },
-  { id: "full", label: "Pro+ only" },
+  { id: "full", label: "Pro+ Only" },
 ];
 const CARD_LAYOUT_TRANSITION = { layout: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } };
 
-// Standard button size (BTN_SIZE); the ring is inset, so it adds no height
-const CHIP = `inline-flex shrink-0 cursor-pointer items-center px-3.5 ${BTN_SIZE} backdrop-blur-lg transition-[background-color,color,box-shadow] duration-500`;
+// Compact filter chips (T14 text); the ring is inset, so it adds no height
+const CHIP = `inline-flex shrink-0 cursor-pointer items-center px-3 py-1.5 max-md:py-3 ${T14} backdrop-blur-lg transition-[background-color,color,box-shadow] duration-500`;
 const CHIP_OFF = "text-foreground/80 bg-foreground/5 ring-1 ring-inset ring-foreground/15 hover:ring-primary/60";
 const CHIP_ON = "bg-primary text-background";
 
@@ -89,7 +91,14 @@ const formatPrices = (prices) =>
  * section. From /templates: the real catalogue, approved description and FAQ,
  * view counts, Save (wishlist), and the Buy / Download flow with its paywall.
  */
-export function TemplatesListing({ templates = [], description = "", faqItems = [] }) {
+export function TemplatesListing({ templates: baseTemplates = [], description = "", faqItems = [] }) {
+  // The page is static; view counts (Supabase) load in the browser and the cards
+  // show a skeleton until they land.
+  const viewCounts = useTemplateViewCounts(baseTemplates.map((t) => t.slug));
+  const templates = useMemo(
+    () => baseTemplates.map((t) => (viewCounts ? { ...t, viewCount: viewCounts[t.slug] || 0 } : { ...t, viewCountPending: true })),
+    [baseTemplates, viewCounts],
+  );
   const rootRef = useRef(null);
   const [category, setCategory] = useState("All");
   const [catalogue, setCatalogue] = useState("all");
@@ -169,7 +178,7 @@ export function TemplatesListing({ templates = [], description = "", faqItems = 
         <div className="flex justify-between gap-12 max-lg:flex-col max-lg:items-stretch max-lg:gap-10">
           <HeadAnim rotate={0} animateOnScroll={false} delay={0.2}>
             <h1 className="type-display w-[40vw] max-lg:w-full -mt-3">
-              Whole sites. <span className="gradient-text-animate">Ready to ship.</span>
+              Whole Sites. <span className="gradient-text-animate">Ready to Ship.</span>
             </h1>
           </HeadAnim>
 
@@ -182,10 +191,10 @@ export function TemplatesListing({ templates = [], description = "", faqItems = 
           </div>
         </div>
 
-        {/* view · category · catalogue */}
+        {/* view on the left · category + catalogue on the right */}
         <motion.div {...heroFadeUp(1.2)} className="flex flex-wrap items-center justify-between gap-3.5 pt-7 max-md:pt-3">
-          <div className="flex flex-wrap items-center gap-3.5">
-            {corridorOk && <DarkSegment label="View" items={VIEWS} value={view} onChange={setChosenView} itemClassName="w-[6.5vw] max-lg:w-24" />}
+          {corridorOk && <DarkSegment label="View" items={VIEWS} value={view} onChange={setChosenView} itemClassName="w-[5.5vw] max-lg:w-20" />}
+          <div className="ml-auto flex flex-wrap items-center gap-3.5 max-md:ml-0">
             <div role="group" aria-label="Category" className="flex flex-wrap gap-1.5">
               {categories.map((c) => (
                 <button
@@ -199,20 +208,19 @@ export function TemplatesListing({ templates = [], description = "", faqItems = 
                 </button>
               ))}
             </div>
-          </div>
-          {/* Phones: just the category chips - the All / Selected / Pro+ filter is hidden. */}
-          <div role="group" aria-label="Catalogue" className="flex flex-wrap gap-1.5 max-md:hidden">
-            {CATALOGUES.map((c) => (
-              <button
-                key={c.id}
-                type="button"
-                aria-pressed={catalogue === c.id}
-                onClick={() => setCatalogue(c.id)}
-                className={`${CHIP} ${catalogue === c.id ? CHIP_ON : CHIP_OFF}`}
-              >
-                {c.label}
-              </button>
-            ))}
+            {/* Phones: just the category chips - the All / Selected / Pro+ filter is hidden. */}
+            <div className="max-md:hidden">
+              <FilterMenu
+                alignRight
+                triggerClassName={`px-3 py-1.5 max-md:py-3 ${T14} ring-1 ring-inset ring-foreground/15 before:invisible before:inline-block before:w-0 before:-mr-2 before:content-['.']`}
+                panelClassName="left-auto! right-0"
+                options={CATALOGUES.map((c) => c.id)}
+                activeFilter={catalogue === "all" ? null : catalogue}
+                getLabel={(id) => CATALOGUES.find((c) => c.id === id)?.label}
+                onSelect={setCatalogue}
+                onClear={() => setCatalogue("all")}
+              />
+            </div>
           </div>
         </motion.div>
       </section>
@@ -224,9 +232,9 @@ export function TemplatesListing({ templates = [], description = "", faqItems = 
       <div data-sound-hover="off" data-sound-flow="off" className="relative flex flex-col gap-[8vw] bg-light py-[7%] text-ink max-md:gap-[15vw] max-md:py-[15%]">
         <section id="templates-grid" className={`${GUTTER} flex flex-col gap-12`}>
           <div className="flex items-end justify-between gap-4">
-            <HeadAnim rotate={0} by="words">
+            <HeadAnim key={category} rotate={0} by="words">
               <h2 className="type-h1">
-                All <span className="gradient-text-animate">templates.</span>
+                {category === "All" ? "All" : category} <span className="gradient-text-animate">Templates.</span>
               </h2>
             </HeadAnim>
             <p aria-live="polite" className={`fadeup ${LABEL} text-black/60`}>
@@ -268,10 +276,10 @@ export function TemplatesListing({ templates = [], description = "", faqItems = 
 
         {/* template credits: the pitch on the left, one row per way to get a template on the right */}
         <section id="template-credits" className={`${GUTTER} flex items-center justify-between gap-[4vw] max-lg:flex-col max-lg:items-stretch max-lg:gap-10`}>
-          <div className="flex w-[30%] flex-col gap-[2vw] max-lg:w-full max-lg:gap-6">
+          <div className="flex w-[38%] flex-col gap-[2vw] max-lg:w-full max-lg:gap-6">
             <HeadAnim rotate={0} by="words">
               <h2 className={`${DISPLAY} type-h1 font-aeonik`}>
-                One credit. <span className="gradient-text-animate">One whole site.</span>
+                One Credit.<br/> <span className="gradient-text-animate">One Whole Site.</span>
               </h2>
             </HeadAnim>
             <p className="fadeup type-body w-[90%] text-black/60 max-lg:w-full">
@@ -332,7 +340,7 @@ export function TemplatesListing({ templates = [], description = "", faqItems = 
 function creditRange(tier) {
   const quarterly = getCreditsPerYear(tier, "quarterly");
   const yearly = getCreditsPerYear(tier, "yearly");
-  return quarterly && quarterly !== yearly ? `${quarterly}–${yearly}` : String(yearly);
+  return quarterly && quarterly !== yearly ? `${quarterly}-${yearly}` : String(yearly);
 }
 
 // The billing detail behind creditRange, in words.
@@ -379,7 +387,7 @@ function DarkSegment({ label, items, value, onChange, itemClassName }) {
             aria-checked={active}
             onClick={() => onChange(item.id)}
             // Button height overall: Button's padding minus the 3px (p-0.75) the track adds
-            className={`relative z-1 flex cursor-pointer items-center justify-center py-[calc(0.5rem-3px)] ${BTN_TEXT} transition-colors duration-500 max-md:py-[calc(0.75rem-3px)] ${itemClassName} ${
+            className={`relative z-1 flex cursor-pointer items-center justify-center py-[calc(0.375rem-3px)] ${T14} transition-colors duration-500 max-md:py-[calc(0.75rem-3px)] ${itemClassName} ${
               active ? "text-background" : "text-foreground/60 hover:text-foreground"
             }`}
           >

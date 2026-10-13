@@ -480,7 +480,7 @@ export default function TemplateCorridor({ templates, onUnsupported }) {
               <span>{pad2(n)}</span>
             </div>
             <p className={`${LABEL} text-primary`}>
-              {current.category} · {catalogueOf(current) === "full" ? "Pro+ only" : "Selected catalogue"}
+              {current.category} · {catalogueOf(current) === "full" ? "Pro+ Only" : "Selected Catalogue"}
             </p>
             <motion.div
               key={current.slug}
@@ -509,7 +509,7 @@ export default function TemplateCorridor({ templates, onUnsupported }) {
         )}
 
         <p className={`${LABEL} pointer-events-none absolute bottom-6 left-1/2 -translate-x-1/2 whitespace-nowrap text-white/60 max-md:hidden`}>
-          Scroll to walk the corridor · hover a frame · click to step inside
+          Scroll to walk the corridor · Hover a frame · Click to step inside
         </p>
       </div>
     </section>

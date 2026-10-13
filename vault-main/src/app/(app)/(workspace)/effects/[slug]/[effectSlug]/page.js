@@ -14,14 +14,13 @@ import {
   buildEffectsFromSanity,
   getEffectsByCategoryFromSanity,
 } from "@/lib/sanity";
-import { getUserPlan } from "@/lib/subscription";
 import { getEffectAccessDecision } from "@/lib/effect-access";
 import { getEffectCategoryBySlug } from "@/lib/categories";
 import { EffectDetailContent } from "../effect-detail";
 import { BreadcrumbsJSONLD, FAQJSONLD, WebpageJsonLd } from "@/lib/json-ld";
 import { createPageMetadata } from "@/lib/seo-metadata";
 import { resolveOgImageUrl } from "@/lib/media";
-import { attachInstallCounts, getEffectInstallCounts } from "@/lib/cli-install-stats";
+import { getEffectInstallCounts } from "@/lib/cli-install-stats";
 
 // Mirrors effect-detail.jsx's isCodeOnlyBlock - a Sanity portable-text block
 // whose only content is a single "code"-marked span (used for freeform code
@@ -255,22 +254,21 @@ export default async function EffectPage({ params }) {
     }
   }
 
+  // Started now so the Sanity list loads alongside the access check below.
+  const sanityEntriesPromise = getAllSanityEffectEntries();
   const { userId } = await auth();
   const effectTier = content.tier ?? effectMeta?.tier ?? "pro";
 
-  // userPlan drives general "are you Pro" UI (upgrade CTAs etc.) independent
-  // of this specific effect; access is the actual per-effect gating decision,
-  // shared with the CLI and legacy web API routes - see docs/effect-access.md.
-  const [userPlan, access] = await Promise.all([
-    getUserPlan(userId),
-    getEffectAccessDecision({ effectTier, clerkUserId: userId }),
-  ]);
+  // access is the per-effect gating decision, shared with the CLI and legacy
+  // web API routes - see docs/effect-access.md. It decides whether the Pro
+  // source is sent at all, so it is the one value this page waits for.
+  const access = await getEffectAccessDecision({ effectTier, clerkUserId: userId });
   const isLocked = !access.allowed;
 
   // Only attach Pro source content once the requester is confirmed authorized.
   const effect = isLocked ? effectMeta : getEffectSource(effectSlug);
 
-  const sanityEntries = await getAllSanityEffectEntries();
+  const sanityEntries = await sanityEntriesPromise;
   const allEffects = buildEffectsFromSanity(sanityEntries);
   const categoriesMap = getEffectsByCategoryFromSanity(sanityEntries);
 
@@ -305,18 +303,12 @@ export default async function EffectPage({ params }) {
       .slice(0, 5);
   }
 
-  const installCounts = await getEffectInstallCounts([
+  // Install counts come from Supabase - not awaited; the related cards show a
+  // skeleton until they stream in.
+  const installCountsPromise = getEffectInstallCounts([
     ...globalSearchEffects,
     ...relatedEffects,
-  ]);
-  const relatedEffectsWithInstallCounts = attachInstallCounts(
-    relatedEffects,
-    installCounts
-  );
-  const searchEffectsWithInstallCounts = attachInstallCounts(
-    globalSearchEffects,
-    installCounts
-  );
+  ]).catch(() => ({}));
 
   const pageMetadata = getEffectPageMetadata(effect, content, slug, effectSlug);
   const faqItems = getSanityFaqs(content);
@@ -335,12 +327,12 @@ export default async function EffectPage({ params }) {
         categorySlug={slug}
         effect={stripFileContent(effect)}
         content={clientContent}
-        relatedEffects={relatedEffectsWithInstallCounts}
+        relatedEffects={relatedEffects}
+        installCounts={installCountsPromise}
         effectCounts={effectCounts}
         totalEffects={sanityEntries.length}
         isLocked={isLocked}
-        userPlan={userPlan}
-        searchEffects={searchEffectsWithInstallCounts}
+        searchEffects={globalSearchEffects}
       />
     </>
   );

@@ -72,7 +72,12 @@ function FeedbackMessage({ vote }) {
   }, [outgoing]);
 
   return (
-    <p aria-live="polite" className={`relative m-0! overflow-hidden ${label} text-foreground`}>
+    <p aria-live="polite" className={`relative m-0! max-w-full overflow-hidden ${label} text-foreground`}>
+      {/* Invisible copy of the longest message: the box always takes its width, so both
+          messages sit beside the buttons, or both wrap below them (e.g. with the sidebar open). */}
+      {vote && (
+        <span aria-hidden="true" className="invisible block h-0 overflow-hidden whitespace-nowrap">{feedbackMessage("no")}</span>
+      )}
       <span ref={currentRef} className="block">{feedbackMessage(vote)}</span>
       {outgoing && (
         <span ref={outgoingRef} aria-hidden="true" className="absolute left-0 top-0 block w-full">{feedbackMessage(outgoing)}</span>
@@ -126,7 +131,7 @@ export default function DocsPageFooter({ pages = DOCS_PAGES }) {
         <p className="type-body m-0! text-foreground">Was this page helpful?</p>
         <div className="flex gap-[0.5vw] max-md:gap-[2vw]">
           <FeedbackButton active={vote === "yes"} onClick={() => setVote("yes")}>Yes</FeedbackButton>
-          <FeedbackButton active={vote === "no"} onClick={() => setVote("no")}>Not quite</FeedbackButton>
+          <FeedbackButton active={vote === "no"} onClick={() => setVote("no")}>Not Quite</FeedbackButton>
         </div>
         <FeedbackMessage vote={vote} />
       </div>

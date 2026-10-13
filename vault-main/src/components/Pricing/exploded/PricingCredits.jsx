@@ -217,7 +217,7 @@ export default function PricingCredits() {
   }
 
   return (
-    <section ref={rootRef} id="credits" data-sound-flow="off" className="relative bg-foreground px-[4.5vw] py-[7%] font-avenir text-background max-lg:px-[6vw] max-lg:py-[10%] max-md:px-[6vw] max-md:py-[12%]">
+    <section ref={rootRef} id="credits" data-sound-flow="off" className="relative bg-light px-[4.5vw] py-[7%] font-avenir text-background max-lg:px-[6vw] max-lg:py-[10%] max-md:px-[6vw] max-md:py-[12%]">
       <div className="mx-auto flex w-full max-w-[1536px] flex-col gap-[3vw] max-lg:gap-[5vw] max-md:gap-[10vw]">
         <div className="flex flex-col gap-[1.8vw] max-lg:gap-[3vw] max-md:gap-[10vw]">
           <LineReveal as="h2" className="type-h1">
@@ -299,7 +299,7 @@ export default function PricingCredits() {
                   </div>
                   <RedeemButton
                     done={isOwned || pending.includes(i)}
-                    label={isOwned || pending.includes(i) ? "Yours" : locked ? "Pro+ only" : "Redeem"}
+                    label={isOwned || pending.includes(i) ? "Yours" : locked ? "Pro+ Only" : "Redeem"}
                     disabled={isOwned || unavailable || pending.includes(i)}
                     onClick={() => redeem(i)}
                   />

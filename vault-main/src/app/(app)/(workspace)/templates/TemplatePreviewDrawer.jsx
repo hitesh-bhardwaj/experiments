@@ -255,7 +255,7 @@ export function TemplatePreviewDrawer({ template, templates = [], isWishlisted, 
                 </span>
               </button>
               <Button text="Demo" href={shown.previewHref || href}  variant="outline" className="tracking-normal! bg-transparent! border-foreground/20 max-md:w-fit" />
-              <Button text="View template" href={href} target_blank className="tracking-normal! border border-primary max-md:w-fit" />
+              <Button text="View Template" href={href} target_blank className="tracking-normal! border border-primary max-md:w-fit" />
                 {/* Buy opens the "Get this template" popup; once it's yours it downloads. */}
                 <button
                   type="button"
@@ -264,14 +264,14 @@ export function TemplatePreviewDrawer({ template, templates = [], isWishlisted, 
                   className="inline-flex cursor-pointer items-center gap-2 bg-primary px-4 max-md:min-h-11 font-avenir text-[calc(var(--hx-vw,1vw)*1.15)] max-lg:text-[clamp(13px,calc(var(--hx-vw,1vw)*1.6),15px)] text-background transition-colors duration-500 hover:bg-primary-hover max-md:text-[calc(var(--hx-vw,1vw)*2.2)] max-sm:text-[calc(var(--hx-vw,1vw)*4)]"
                 >
                   <Download className="size-4" aria-hidden="true" />
-                  {owned ? "Download" : "Buy template"}
+                  {owned ? "Download" : "Buy Template"}
                 </button>
             </div>
           </div>
 
           {others.length > 0 && (
             <div className="flex flex-col gap-4 border-t border-foreground/10 pt-6">
-              <p className={`${T16} text-foreground`}>More templates</p>
+              <p className={`${T16} text-foreground`}>More Templates</p>
               <div className="grid grid-cols-2 gap-[0.9vw] max-md:grid-cols-1 max-md:gap-[3.5vw]">
                 {/* Same look as the effect drawer's small cards. */}
                 {others.map((t) => (
