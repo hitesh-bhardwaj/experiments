@@ -1,7 +1,8 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
 import HeroToolsStrip from "../components/HeroToolsStrip";
@@ -14,6 +15,7 @@ import { isLighthouseOrHeadless, isSoftwareRenderer, shouldSkipRealtimeGPU } fro
 import { unlockScroll, useScrollLockLenis } from "../components/scroll-lock";
 import { useFadeUp } from "@/components/Animations/gsapAnimations";
 import { EasterEggDot } from "../components/easter-egg/EasterEgg";
+import { MEDIA } from "@/lib/breakpoints";
 
 if (typeof window !== "undefined") {
     gsap.registerPlugin(ScrollTrigger, SplitText);
@@ -64,6 +66,15 @@ export default function Hero() {
     const loaderComplete = useLoaderComplete();
     const [playIntro, setPlayIntro] = useState(false);
     const [skipGPU, setSkipGPU] = useState(true);
+    const [isDesktop, setIsDesktop] = useState(false);
+
+    useEffect(() => {
+        const mq = window.matchMedia(MEDIA.tablet);
+        const sync = () => setIsDesktop(!mq.matches);
+        sync();
+        mq.addEventListener("change", sync);
+        return () => mq.removeEventListener("change", sync);
+    }, []);
 
     useScrollLockLenis();
 
@@ -189,10 +200,22 @@ export default function Hero() {
     return (
         <main ref={rootRef} id="hero-v3" className="relative w-full overflow-x-clip">
             <div ref={canvasRef} className="pointer-events-auto sticky top-0 mb-[-100dvh] h-dvh w-full">
-                {skipGPU ? (
-                    BACKGROUND_FALLBACK
+                {isDesktop ? (
+                    skipGPU ? (
+                        BACKGROUND_FALLBACK
+                    ) : (
+                        <HeroRibbons play={playIntro && loaderComplete} />
+                    )
                 ) : (
-                    <HeroRibbons play={playIntro && loaderComplete} />
+                    <Image
+                        src="/assets/img/hero-mobile.webp"
+                        alt=""
+                        fill
+                        priority
+                        sizes="100vw"
+                        unoptimized
+                        className="object-cover"
+                    />
                 )}
             </div>
             <div className="pointer-events-none relative z-10 mx-auto flex min-h-dvh w-full max-w-384 flex-col justify-end px-[calc(var(--cvw)*4.5)] pt-[calc(var(--cvw)*8)] max-lg:px-[calc(var(--cvw)*7)] max-md:px-[calc(var(--cvw)*7)]! pb-[calc(var(--cvw)*5)] max-lg:pt-32 max-lg:pb-[12vw] max-md:pt-32 max-md:pb-10 max-sm:px-5">

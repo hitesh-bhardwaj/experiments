@@ -94,7 +94,7 @@ export default async function BlogPostPage({ params }) {
       <Navbar effects={effects} />
       <LenisSmoothScroll allowNestedScroll />
 
-      <main className="relative flex w-full flex-col gap-[5.5vw] pt-25 max-md:gap-[15vw] ">
+      <main className="relative flex w-full flex-col gap-[5.5vw] pt-25 max-lg:pt-32 max-md:gap-[15vw] max-md:pt-28">
         <BlogDetailHero post={postWithAuthor} />
 
         {/* One light area (docs sheet grey) for everything below the cover image, as on the effect page */}

@@ -2,12 +2,14 @@
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { UnlockIcon } from "@/components/WebsiteComps/Icons";
 import ShimmerText from "@/components/WebsiteComps/ShimmerText";
 import Input from "@/components/animated-form/Input";
 import LineReveal from "@/components/Animations/LineReveal";
 import { useFadeUp } from "@/components/Animations/gsapAnimations";
 import { isLighthouseOrHeadless, isSoftwareRenderer } from "@/lib/audit";
+import { MEDIA } from "@/lib/breakpoints";
 import { useInteraction } from "../components/InteractionProvider";
 import Button from "../components/Button";
 
@@ -172,15 +174,24 @@ export default function Footer() {
   const [errorMessage, setErrorMessage] = useState("");
   const ribbonCanvasRef = useRef(null);
   const { sound } = useInteraction();
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia(MEDIA.tablet);
+    const sync = () => setIsDesktop(!mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
 
   useFadeUp(footerRef);
   useSweepHover(footerRef);
 
   // Hero ribbons, mirrored (footer pose). Loaded on demand so three.js stays
   // out of the footer's chunk; they only render while the footer is near.
-  // Audits and software GPUs get no WebGL context at all.
+  // Audits, software GPUs, tablet and mobile get no WebGL context at all.
   useEffect(() => {
-    if (isLighthouseOrHeadless() || isSoftwareRenderer()) return undefined;
+    if (!isDesktop || isLighthouseOrHeadless() || isSoftwareRenderer()) return undefined;
 
     let ribbons = null;
     let cancelled = false;
@@ -202,7 +213,7 @@ export default function Footer() {
       cancelled = true;
       ribbons?.destroy();
     };
-  }, [sound]); // sound is stable (created once by the provider)
+  }, [sound, isDesktop]); // sound is stable (created once by the provider)
 
   const handleSubscribe = async (event) => {
     event.preventDefault();
@@ -243,11 +254,26 @@ export default function Footer() {
       id="footer"
       className="relative z-200 py-[calc(var(--cvw)*7)] max-lg:py-[10vw] w-full overflow-x-clip max-md:px-[calc(var(--cvw)*5)] max-md:py-[calc(var(--cvw)*10)] max-sm:mt-16 px-[calc(var(--cvw)*4.5)] max-lg:px-[6vw] max-sm:px-[calc(var(--cvw)*7)] max-sm:py-[calc(var(--cvw)*15)] max-md:bg-[#111110]"
     >
-      <canvas
-        ref={ribbonCanvasRef}
-        aria-hidden="true"
-        className="pointer-events-none absolute top-[-12vh] left-[3%] z-0 block h-[calc(100%+12vh)] w-full"
-      />
+      {isDesktop ? (
+        <canvas
+          ref={ribbonCanvasRef}
+          aria-hidden="true"
+          className="pointer-events-none absolute top-[-12vh] left-[3%] z-0 block h-[calc(100%+12vh)] w-full"
+        />
+      ) : (
+        // Tablet/mobile: a still of the ribbons instead of the WebGL scene.
+        // Covers the first screen of the footer only; the rest stays blank.
+        <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 z-0 h-svh">
+          <Image
+            src="/assets/img/footer-mobile.webp"
+            alt=""
+            fill
+            sizes="100vw"
+            unoptimized
+            className="object-cover"
+          />
+        </div>
+      )}
       <div className={`mx-auto max-w-384 w-full max-md:space-y-[calc(var(--cvw)*6)] max-sm:space-y-[calc(var(--cvw)*8)] h-fit relative z-3`}>
         <LineReveal
           as="h2"

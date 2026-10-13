@@ -20,6 +20,7 @@ import {
   settleLoaderScene,
 } from "./loader-scene";
 import { lockScroll, resetScrollTop, useScrollLockLenis } from "./scroll-lock";
+import { MEDIA } from "@/lib/breakpoints";
 
 // ── Build: the rings follow real loading ─────────────────────────────────────
 // The pace is the counter's roll (ROLL / STAGGER below), so the rings never
@@ -58,6 +59,7 @@ const COUNTER_LEAVE_AT = 0.3;
 const cellOf = (char) => (char === "0" ? CELLS.length - 1 : Number(char));
 
 // Lighthouse/PSI, software WebGL (PSI desktop), and reduced motion - plus the
+// tablet/mobile (no rings are rendered there), and the
 // session gate, since a loader that has already played this session has
 // nothing left to introduce. Don't hold the page for any of them.
 function shouldSkipLoader() {
@@ -68,7 +70,8 @@ function shouldSkipLoader() {
     // hasLoaderPlayed() ||
     prefersReducedMotion() ||
     isLighthouseOrHeadless() ||
-    isSoftwareRenderer()
+    isSoftwareRenderer() ||
+    window.matchMedia(MEDIA.tablet).matches
   );
 }
 
