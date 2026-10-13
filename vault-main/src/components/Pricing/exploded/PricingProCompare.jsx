@@ -48,7 +48,7 @@ const ROWS = [
 const LABEL = "type-label";
 const CELL = "flex w-[30%] items-center justify-center text-center px-[1.6vw] max-md:w-[40vw] max-md:px-[3vw]";
 // Pro+ is a solid dark column; its row lines are drawn on the cells so they stay dark too
-const PLUS = "bg-background text-foreground border-foreground/10";
+const PLUS = "bg-[#1D1D1D] text-foreground border-foreground/10";
 const TEXT = "type-body h-[1.7em]";
 
 // Same tick as the Pricing Plans cards (orange square, white check); a muted dash when not included
@@ -126,7 +126,7 @@ export default function PricingProCompare({ currency: initialCurrency }) {
             <span className="gradient-text-animate">Line by Line.</span>
           </LineReveal>
 
-          <div ref={toggleRef} role="radiogroup" aria-label="Billing period" data-sound-hover="off" className="fadeup relative isolate flex w-fit bg-background p-[0.3vw] max-md:p-[1vw]">
+          <div ref={toggleRef} role="radiogroup" aria-label="Billing period" data-sound-hover="off" className="fadeup relative isolate flex w-fit bg-[#1D1D1D] p-[0.3vw] max-lg:p-[0.6vw] max-md:p-[1vw]">
             {PERIODS.map((p) => (
               <button
                 key={p.id}
@@ -134,14 +134,14 @@ export default function PricingProCompare({ currency: initialCurrency }) {
                 role="radio"
                 aria-checked={p.id === period}
                 onClick={() => choose(p.id)}
-                className={`cursor-pointer rounded-none px-[1.4vw] py-[0.8vw] text-foreground max-md:px-[4.4vw] max-md:py-[2.8vw] ${LABEL}`}
+                className={`cursor-pointer rounded-none px-[1.2vw] py-[0.7vw] text-foreground max-lg:px-[2.4vw] max-lg:py-[1.4vw] max-md:px-[4vw] max-md:py-[2.4vw] ${LABEL}`}
               >
                 {p.label}
               </button>
             ))}
-            <div ref={clipRef} aria-hidden="true" className="pointer-events-none absolute inset-0 flex bg-foreground p-[0.3vw] max-md:p-[1vw]">
+            <div ref={clipRef} aria-hidden="true" className="pointer-events-none absolute inset-0 flex bg-foreground p-[0.3vw] max-lg:p-[0.6vw] max-md:p-[1vw]">
               {PERIODS.map((p) => (
-                <span key={p.id} className={`px-[1.4vw] py-[0.8vw] max-md:px-[4.4vw] max-md:py-[2.8vw] text-background ${LABEL}`}>{p.label}</span>
+                <span key={p.id} className={`px-[1.2vw] py-[0.7vw] text-background max-lg:px-[2.4vw] max-lg:py-[1.4vw] max-md:px-[4vw] max-md:py-[2.4vw] ${LABEL}`}>{p.label}</span>
               ))}
             </div>
           </div>
