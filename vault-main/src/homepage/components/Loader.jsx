@@ -130,6 +130,15 @@ export default function Loader() {
       // gone well before that, so the release lives in Hero.
       lockScroll();
 
+      // ── Counter: rolls once, starting when the rings are drawing ──
+      const counterTl = gsap.timeline({ paused: true });
+      counterTl.to(".count-digit", {
+        yPercent: (_, el) => -(100 / CELLS.length) * cellOf(el.dataset.digit),
+        duration: ROLL,
+        ease: "power2.inOut",
+        stagger: STAGGER,
+      });
+
       // ── Backdrop: gone as soon as the rings are drawing ──
       let backdropGone = false;
       let sceneAt = 0;
@@ -142,15 +151,6 @@ export default function Loader() {
       };
       if (loaderScene.ready) dropBackdrop();
       else window.addEventListener(SCENE_READY_EVENT, dropBackdrop, { once: true });
-
-      // ── Counter: rolls once, starting when the rings are drawing ──
-      const counterTl = gsap.timeline({ paused: true });
-      counterTl.to(".count-digit", {
-        yPercent: (_, el) => -(100 / CELLS.length) * cellOf(el.dataset.digit),
-        duration: ROLL,
-        ease: "power2.inOut",
-        stagger: STAGGER,
-      });
 
       // ── Build: the rings follow the real loading ──
       const milestones = {
