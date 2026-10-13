@@ -57,7 +57,7 @@ export default function PricingHero() {
       className="home-type relative isolate flex min-h-[115vh] w-full flex-col justify-end overflow-hidden bg-transparent text-foreground select-none [touch-action:pan-y] pb-30"
     >
       <div className="absolute inset-0 z-0" aria-hidden="true">
-        <ParticleBlob preset="slinky" />
+        <ParticleBlob preset="slinky" phoneTop={0.35} />
       </div>
       <div className="pointer-events-none relative z-2 mx-auto flex w-full max-w-[1536px] flex-col px-[4.5vw] pt-[8vw] pb-[8vw] max-lg:px-[6vw] max-lg:pt-[12vw] max-md:px-[6vw] max-md:pt-[48svh] max-md:pb-10 [&_a]:pointer-events-auto [&_button]:pointer-events-auto">
         <div className="flex w-full justify-start max-md:flex-col max-md:items-stretch">

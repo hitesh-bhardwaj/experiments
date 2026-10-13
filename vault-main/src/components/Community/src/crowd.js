@@ -1,6 +1,6 @@
 // The Crowd: thousands of particles drifting in a curl-like current behind the
 // community page's dark sections. The cursor gathers them like a school of
-// fish, a click scatters them, the stack chips light up their share of the
+// fish, press and hold explodes them like the homepage hero, the stack chips light up their share of the
 // swarm, and joining the waitlist launches one bright particle into it.
 //
 // Framework-free. The formation eases between poses per `data-zone` section
@@ -10,7 +10,9 @@
 //   const crowd = mountCrowd(canvas, { THREE, zoneRoot, reducedMotion });
 //   crowd.highlight(new Set([0, 3])); crowd.launch(x, y); crowd.destroy();
 
+import { MEDIA } from "@/lib/breakpoints";
 import { createHover } from "../../Animations/particleHover";
+import { createShatter, screenBounds, shockwave } from "../../Animations/particleShatter";
 
 // Particle counts
 const COUNT = 6000;
@@ -54,6 +56,8 @@ const GATHER_RADIUS_SQ = 10;
 // Cursor gathers / swirls the particles (off: they ignore the mouse)
 const POINTER_INTERACTION = true;
 const MOUSE_SPEED_CAP = 60;
+// The homepage hero's inner ribbon radius: the hold's shatter is scaled from it to the blob
+const RIBBON_RADIUS = 6.2;
 
 // Highlight groups: every particle belongs to one of these, matching one chip each
 export const CROWD_GROUPS = 10;
@@ -143,7 +147,7 @@ const blobShape = (la, lo, cl, px, py, pz, t) =>
 const NOOP_API = { highlight() {}, launch() {}, destroy() {} };
 
 export function mountCrowd(canvas, opts = {}) {
-  const { THREE: T, zoneRoot = document, reducedMotion = false, small = false, sound = null, getFluid = () => null, onToast = null } = opts;
+  const { THREE: T, zoneRoot = document, reducedMotion = false, small = false, sound = null } = opts;
   if (!T) throw new Error("mountCrowd: pass { THREE }");
 
   // Renderer and scene
@@ -224,7 +228,15 @@ export function mountCrowd(canvas, opts = {}) {
   geo.setAttribute("aRib", new T.BufferAttribute(rib, 1));
   // The cursor's hover, eased (particleHover.js, shared with the pricing and blog blobs)
   const hover = createHover(N);
-  geo.setAttribute("aHover", new T.BufferAttribute(hover.offset, 3));
+  // Press and hold explodes the particles like the homepage hero (particleShatter.js); its offset
+  // is drawn on top of the hover's
+  const shatter = createShatter(N, BLOB_RADIUS / RIBBON_RADIUS, {
+    onHoldStart: () => sound?.holdStart?.(),
+    onReady: () => sound?.ready?.(),
+    onReform: () => sound?.reform?.(),
+  });
+  const drawnOff = new Float32Array(N * 3);
+  geo.setAttribute("aHover", new T.BufferAttribute(drawnOff, 3));
   const uniforms = { uPR: { value: 1 }, uTime: { value: 0 }, uPulse: { value: 0 }, uRing: { value: 0 } };
   const mat = new T.ShaderMaterial({
     transparent: true,
@@ -263,15 +275,19 @@ export function mountCrowd(canvas, opts = {}) {
     ray.setFromCamera(ndc, camera);
     return ray.ray.intersectPlane(plane, out);
   };
-  const onPointerMove = (e) => { mouse.cx = e.clientX; mouse.cy = e.clientY; mouse.on = true; };
+  // Touch does nothing here: the crowd answers a mouse or trackpad only
+  const onPointerMove = (e) => {
+    if (e.pointerType === "touch") return;
+    mouse.cx = e.clientX; mouse.cy = e.clientY; mouse.on = true;
+  };
   const onPointerLeave = () => { mouse.on = false; };
   window.addEventListener("pointermove", onPointerMove, { passive: true });
   document.addEventListener("pointerleave", onPointerLeave);
 
-  const state = { pulse: 0, joinIdx: -1, covered: false, running: false, logoMix: 0 };
+  const state = { pulse: 0, joinIdx: -1, covered: false, running: false, logoMix: 0, motionT: 0 };
 
   // Hero blob on the right, at the same share of the visible width as the pricing and blog blobs (ParticleBlob)
-  // On narrow screens it sits above the copy, its centre 26% down the screen
+  // On narrow screens it sits above the copy, its centre 26% down the screen (32% on phones, as pricing and blog)
   const placeHeroBlob = () => {
     const aspect = innerWidth / innerHeight;
     const visH = 2 * camera.position.z * Math.tan((32 * Math.PI) / 360);
@@ -279,7 +295,8 @@ export function mountCrowd(canvas, opts = {}) {
     const narrowFov = aspect < 0.8 ? 46 : 32;
     const halfH = (camera.position.z - CENTER_NARROW.crowd[2]) * Math.tan((narrowFov * Math.PI) / 360);
     // ...but low enough that the top of the blob clears the navbar
-    CENTER_NARROW.crowd[1] = Math.min(halfH * 0.48, halfH * 0.85 - BLOB_RADIUS_NARROW * 1.35);
+    const down = window.matchMedia(MEDIA.mobile).matches ? 0.32 : 0.26;
+    CENTER_NARROW.crowd[1] = Math.min(halfH * (1 - 2 * down), halfH * 0.85 - BLOB_RADIUS_NARROW * 1.35);
   };
   placeHeroBlob();
 
@@ -293,6 +310,9 @@ export function mountCrowd(canvas, opts = {}) {
     camera.aspect = innerWidth / innerHeight;
     camera.fov = camera.aspect < 0.8 ? 46 : 32;
     camera.updateProjectionMatrix();
+    // The hold's burst spreads the particles over the whole screen (the camera rests at z = 20)
+    const visH = 2 * 20 * Math.tan((camera.fov * Math.PI) / 360);
+    shatter.setBounds(screenBounds(visH * camera.aspect, visH));
     if (reducedMotion) render();
   };
 
@@ -391,15 +411,23 @@ export function mountCrowd(canvas, opts = {}) {
     mouse.speed += (Math.min(MOUSE_SPEED_CAP, moved) - mouse.speed) * 0.2;
     const hasMouse = mouse.on && !state.covered && toWorld(mouse.cx, mouse.cy, hit);
     const cursorOn = POINTER_INTERACTION && hasMouse && state.logoMix < 0.5;
-    hover.frame(dt, cursorOn, hit.x, hit.y);
+    // In pieces, the cursor stirs the shards instead of the hover
+    hover.frame(dt, cursorOn && !shatter.active, hit.x, hit.y);
+    // Covered by a light sheet mid-hold: let go quietly, no shatter
+    if (state.covered && shatter.holding && shatter.cancel()) sound?.holdEnd?.(false);
+    shatter.setScale(blobR / RIBBON_RADIUS);
+    shatter.frame(dt, time, cursorOn, hit.x, hit.y, Math.min(40, moved), camera.position.z);
+    announceShattered(shatter.active);
     state.pulse *= Math.pow(0.2, dt);
     uniforms.uPulse.value = state.pulse;
     uniforms.uRing.value = ringMix;
 
     const damp = Math.pow(0.955, dt * 60);
     const ringR = narrow ? RING_RADIUS_NARROW : RING_RADIUS;
-    // Hold: the charge eases the crowd into the Hyperiux wordmark (prototype)
-    const ch = charge.v;
+    // The hold charge, as the homepage hero: the formation shrinks and shakes, the camera pushes in
+    const ch = shatter.charge.v;
+    const shrink = 1 - ch * 0.09, shake = Math.sin(time * 40) * ch * ch * 0.04;
+    camera.position.z += (20 - ch * 1.8 - camera.position.z) * 0.06;
     // The hold-to-logo was removed: the particles never form the wordmark
     state.logoMix = 0;
     const logoMix = state.logoMix;
@@ -459,6 +487,11 @@ export function mountCrowd(canvas, opts = {}) {
         hy = lerp(hy, center.y + logo[q + 1], logoMix);
         hz = lerp(hz, center.z + logo[q + 2], logoMix);
       }
+      if (ch > 0) {
+        hx = center.x + (hx - center.x) * shrink + shake;
+        hy = center.y + (hy - center.y) * shrink;
+        hz = center.z + (hz - center.z) * shrink;
+      }
       ax += (hx - x) * pull;
       ay += (hy - y) * pull;
       az += (hz - z) * pull;
@@ -477,6 +510,10 @@ export function mountCrowd(canvas, opts = {}) {
       pos[q + 2] += vel[q + 2] * dt;
       hot[i] += (hotTarget[i] - hot[i]) * Math.min(1, dt * 2.5);
       hover.step(i, pos[q], pos[q + 1], pos[q + 2]);
+      shatter.step(i, pos[q], pos[q + 1], pos[q + 2]);
+      drawnOff[q] = hover.offset[q] + shatter.offset[q];
+      drawnOff[q + 1] = hover.offset[q + 1] + shatter.offset[q + 1];
+      drawnOff[q + 2] = hover.offset[q + 2] + shatter.offset[q + 2];
     }
     geo.attributes.position.needsUpdate = true;
     geo.attributes.aHot.needsUpdate = true;
@@ -500,7 +537,9 @@ export function mountCrowd(canvas, opts = {}) {
   const frame = () => {
     raf = requestAnimationFrame(frame);
     const dt = Math.min(clock.getDelta(), MAX_DT);
-    const time = (uniforms.uTime.value += dt);
+    uniforms.uTime.value += dt;
+    // The crowd's own motion runs in slow motion while the hold's shatter is in pieces (pace)
+    const time = (state.motionT += dt * shatter.pace);
     readZone();
     step(dt, time);
     if (!state.covered) render();
@@ -548,90 +587,45 @@ export function mountCrowd(canvas, opts = {}) {
     img.src = "/hyperiux-wordmark.svg";
   })();
 
-  // Click scatters; press and hold charges the crowd into the wordmark, and a
-  // full charge explodes it on release (prototype). Dark sections only, never on controls.
-  const HOLD_DELAY = 0.2, HOLD_DURATION = 1.9, FULL_CHARGE = 0.985;
-  const charge = { v: 0 };
-  let press = null, chargeRaf = 0;
-  const scatter = (x, y) => {
-    for (let i = 0; i < N; i++) {
-      const k = i * 3;
-      const dx = pos[k] - x, dy = pos[k + 1] - y, dz = pos[k + 2];
-      const f = 5 / (dx * dx + dy * dy + dz * dz + 0.4);
-      vel[k] += dx * f;
-      vel[k + 1] += dy * f;
-      vel[k + 2] += dz * f * 0.5;
-    }
-    state.pulse = 0.6;
-  };
-  const explode = () => {
-    for (let i = 0; i < N; i++) {
-      const k = i * 3, a = rnd[i] * 6.283;
-      vel[k] += Math.cos(a) * (4 + rnd[i] * 6);
-      vel[k + 1] += Math.sin(a) * (4 + rnd[i] * 6);
-      vel[k + 2] += (rnd[i] - 0.5) * 6;
-    }
-    state.pulse = 1.4;
-    state.logoMix = 0;
-  };
-  const chargeTick = () => {
-    if (!press) return;
-    // power2.in after a short delay, like the homepage hold
-    const t = Math.min(1, Math.max(0, (performance.now() - press.t) / 1000 - HOLD_DELAY) / HOLD_DURATION);
-    charge.v = t * t;
-    // Prototype: the hold sound starts with the charge; the fluid swirls under the pointer
-    if (!press.sounding && (performance.now() - press.t) / 1000 >= HOLD_DELAY) { press.sounding = true; sound?.holdStart?.(); }
-    getFluid()?.setVortex?.(mouse.cx, mouse.cy, charge.v * 0.6);
-    chargeRaf = requestAnimationFrame(chargeTick);
-  };
-  // Prototype: gsap.to(charge, { v: 0, duration: 1.4, ease: "expo.out" })
-  const easeChargeOut = () => {
-    const from = charge.v, t0 = performance.now();
-    const tick = () => {
-      if (press) return;
-      const t = Math.min(1, (performance.now() - t0) / 1400);
-      charge.v = from * (1 - (t >= 1 ? 1 : 1 - Math.pow(2, -10 * t)));
-      if (t < 1) requestAnimationFrame(tick);
-    };
-    requestAnimationFrame(tick);
-  };
+  // Press and hold (fine pointers) charges the particles and a full charge explodes them on
+  // release, as the homepage hero. Dark sections only, never on controls or copy.
+  const finePointer = matchMedia("(hover: hover) and (pointer: fine)").matches;
+  // The dark sections are hold zones for the page's cursor tag (SquareCursor), as the homepage hero
+  const holdZones = finePointer && !reducedMotion ? formZones : [];
+  holdZones.forEach((z) => { z.dataset.holdZone = ""; });
+  // Lets the page's cursor know the particles are in pieces, as the homepage ribbons do
+  let shattered = false;
+  function announceShattered(next) {
+    if (next === shattered) return;
+    shattered = next;
+    // Back in one piece: the shards' sparkle stops, as the homepage hero
+    if (!next) sound?.sparkle?.(0, 0.5);
+    zoneRoot.querySelectorAll("[data-hold-zone]").forEach((z) => { if (next) z.dataset.ribbonsShattered = ""; else delete z.dataset.ribbonsShattered; });
+    dispatchEvent(new CustomEvent("hx-ribbons-state", { detail: { shattered: next } }));
+  }
   const onPointerDown = (e) => {
-    if (reducedMotion || state.covered || e.button !== 0) return;
+    if (!finePointer || e.pointerType === "touch" || reducedMotion || state.covered || e.button !== 0) return;
     // Same exclusions as the prototype's ring cursor (EX)
     if (e.target.closest?.("a,button,input,label,form,h1,h2,h3,p,[data-zone='sheet'],.sheet,header,nav")) return;
     if (!toWorld(e.clientX, e.clientY, hit)) return;
-    press = { t: performance.now(), x: hit.x, y: hit.y, sounding: false };
-    cancelAnimationFrame(chargeRaf);
-    chargeRaf = requestAnimationFrame(chargeTick);
+    e.preventDefault(); // no text selection while holding
+    shatter.press();
   };
   const onPointerUp = (e) => {
-    if (!press) return;
-    const p = press;
-    press = null;
-    cancelAnimationFrame(chargeRaf);
-    const fluid = getFluid();
-    const quick = performance.now() - p.t < 220, full = charge.v > FULL_CHARGE;
+    const r = shatter.release();
+    if (!r) return;
+    if (r.started) sound?.holdEnd?.(r.full);
+    if (r.kind !== "full") return;
     const ex = e?.clientX ?? mouse.cx, ey = e?.clientY ?? mouse.cy;
-    if (p.sounding) sound?.holdEnd?.(full);
-    fluid?.setVortex?.(ex, ey, 0);
-    if (quick) {
-      // Prototype: World.tap + Field.splash + Sound.tap
-      scatter(p.x, p.y);
-      fluid?.splash?.(ex, ey);
-      sound?.crowdTap?.();
-    } else {
-      fluid?.burst?.(ex, ey, full ? 1.6 : 0.6 + charge.v);
-      if (full) {
-        explode();
-        sound?.release?.("shatter");
-        onToast?.("That\u2019s what a crowd can build.");
-      } else scatter(p.x, p.y);
-    }
-    easeChargeOut();
+    if (!toWorld(ex, ey, hit)) hit.copy(center);
+    shatter.burst((i, a) => pos[i * 3 + a], center.x, center.y, center.z, hit.x, hit.y);
+    shockwave(null, ex, ey);
+    state.pulse = 1.4;
+    sound?.release?.("shatter");
   };
+  addEventListener("pointerdown", onPointerDown);
   addEventListener("pointerup", onPointerUp);
   addEventListener("pointercancel", onPointerUp);
-  // (No press-and-hold on the particles any more)
 
   window.addEventListener("resize", onResize);
   onResize();
@@ -681,9 +675,10 @@ export function mountCrowd(canvas, opts = {}) {
       window.removeEventListener("pointermove", onPointerMove);
       document.removeEventListener("pointerleave", onPointerLeave);
       window.removeEventListener("resize", onResize);
+      removeEventListener("pointerdown", onPointerDown);
+      holdZones.forEach((z) => { delete z.dataset.holdZone; delete z.dataset.near; delete z.dataset.ribbonsShattered; });
       removeEventListener("pointerup", onPointerUp);
       removeEventListener("pointercancel", onPointerUp);
-      cancelAnimationFrame(chargeRaf);
       geo.dispose();
       mat.dispose();
       renderer.dispose();

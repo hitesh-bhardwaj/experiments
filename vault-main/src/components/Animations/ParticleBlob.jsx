@@ -4,6 +4,7 @@
 // Blobmixer) drawn as the community page's particles: the surface motion is the
 // same vertex displacement with the same preset values, and the dots and their
 // grid are crowd.js's, and the cursor is particleHover.js, shared with crowd.js.
+// Press and hold explodes it like the homepage hero (particleShatter.js).
 //
 //   <ParticleBlob preset="slinky" />  (pricing hero)
 //   <ParticleBlob preset="fomosphere" />  (blog hero)
@@ -14,6 +15,8 @@ import { isAuditUserAgent } from "@/lib/audit";
 import { prefersReducedMotion } from "@/lib/motion";
 import { MEDIA } from "@/lib/breakpoints";
 import { createHover } from "./particleHover";
+import { createShatter, screenBounds, shockwave } from "./particleShatter";
+import { useInteraction } from "@/homepage/components/InteractionProvider";
 
 // Blobify's presets (utils/blobSetting.js): the displacement values only
 const PRESETS = {
@@ -241,10 +244,12 @@ const smoothstep = (e0, e1, x) => {
 };
 
 // crowd.js physics: the blob's pull, damping and drift (the cursor is particleHover.js, shared with crowd.js)
+// The homepage hero's inner ribbon radius: the shatter is scaled from it to the blob
+const RIBBON_RADIUS = 6.2;
 const PULL = 1.4 + 6; // crowd.js pull with the blob fully formed
 const DRIFT = 0.02; // crowd.js: the drifting current is 98% calmed on the blob
 
-function mountBlob(canvas, { preset, small, reducedMotion }) {
+function mountBlob(canvas, { preset, phoneTop = 0.29, sound = null, small, reducedMotion }) {
   let renderer;
   try {
     renderer = new THREE.WebGLRenderer({ canvas, antialias: false, alpha: true, powerPreference: "high-performance" });
@@ -285,6 +290,12 @@ function mountBlob(canvas, { preset, small, reducedMotion }) {
   const vel = new Float32Array(N * 3);
   const drawn = new Float32Array(N * 3);
   const hover = createHover(N);
+  // The homepage hero's sounds: the hold's hum, ready, the reform chime
+  const shatter = createShatter(N, 1, {
+    onHoldStart: () => sound?.holdStart?.(),
+    onReady: () => sound?.ready?.(),
+    onReform: () => sound?.reform?.(),
+  });
   const geo = new THREE.BufferGeometry();
   geo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
   geo.setAttribute("aR", new THREE.BufferAttribute(rnd, 1));
@@ -319,7 +330,7 @@ function mountBlob(canvas, { preset, small, reducedMotion }) {
 
   // The hero is taller than the screen: the blob sits in the first screenful, right of the copy
   // (above it on narrow screens)
-  const view = { w: 1, h: 1 };
+  const view = { w: 1, h: 1, x: 0, y: 0, s: 1 };
   const layout = () => {
     const w = canvas.clientWidth || 1, h = canvas.clientHeight || 1;
     const pr = Math.min(devicePixelRatio || 1, small ? MAX_PIXEL_RATIO_SMALL : MAX_PIXEL_RATIO);
@@ -338,7 +349,7 @@ function mountBlob(canvas, { preset, small, reducedMotion }) {
     if (narrow) {
       // Phones get a larger blob, a little lower (still above the copy, which starts at 48svh)
       const phone = window.matchMedia(MEDIA.mobile).matches;
-      points.position.set(0, h / 2 * unit - Math.min(innerHeight, h) * (phone ? 0.29 : 0.26) * unit, 0);
+      points.position.set(0, h / 2 * unit - Math.min(innerHeight, h) * (phone ? phoneTop : 0.26) * unit, 0);
       points.scale.setScalar(visW * (phone ? 0.33 : 0.27));
     } else {
       points.position.set(visW * 0.22, screenMid, 0);
@@ -346,10 +357,17 @@ function mountBlob(canvas, { preset, small, reducedMotion }) {
     }
     view.w = visW;
     view.h = visH;
+    // Where the blob rests: the hold charge shrinks and shakes it from here
+    view.x = points.position.x;
+    view.y = points.position.y;
+    view.s = points.scale.x;
+    shatter.setScale(view.s / RIBBON_RADIUS);
+    // The burst spreads over the hero's first screenful
+    shatter.setBounds(screenBounds(visW, Math.min(innerHeight, h) * unit, screenMid));
   };
 
   // Pointer, projected onto the z = 0 plane (the camera looks straight down -z from x = y = 0), as crowd.js
-  const mouse = { cx: -1, cy: -1, x: 0, y: 0, on: false };
+  const mouse = { cx: -1, cy: -1, x: 0, y: 0, on: false, lastX: -1, lastY: -1 };
   const toWorld = (cx, cy) => {
     const r = canvas.getBoundingClientRect();
     if (cx < r.left || cx > r.right || cy < r.top || cy > r.bottom) return false;
@@ -357,8 +375,34 @@ function mountBlob(canvas, { preset, small, reducedMotion }) {
     mouse.y = -((cy - r.top) / r.height - 0.5) * view.h;
     return true;
   };
-  const onPointerMove = (e) => { mouse.cx = e.clientX; mouse.cy = e.clientY; mouse.on = true; };
+  // Touch does nothing here: the blob answers a mouse or trackpad only
+  const onPointerMove = (e) => {
+    if (e.pointerType === "touch") return;
+    mouse.cx = e.clientX; mouse.cy = e.clientY; mouse.on = true;
+  };
   const onPointerLeave = () => { mouse.on = false; };
+
+  // The hero is a hold zone for the page's cursor tag (SquareCursor), as the homepage hero:
+  // marked data-near while the pointer is over the blob, data-ribbons-shattered while in pieces
+  const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+  const zone = finePointer && !reducedMotion ? canvas.closest("section") : null;
+  if (zone) zone.dataset.holdZone = "";
+  const marks = { near: false, shattered: false };
+  const markZone = (near, shattered) => {
+    if (!zone) return;
+    if (near !== marks.near) {
+      marks.near = near;
+      if (near) zone.dataset.near = ""; else delete zone.dataset.near;
+      dispatchEvent(new Event("hx-near"));
+    }
+    if (shattered !== marks.shattered) {
+      marks.shattered = shattered;
+      // Back in one piece: the shards' sparkle stops, as the homepage hero
+      if (!shattered) sound?.sparkle?.(0, 0.5);
+      if (shattered) zone.dataset.ribbonsShattered = ""; else delete zone.dataset.ribbonsShattered;
+      dispatchEvent(new CustomEvent("hx-ribbons-state", { detail: { shattered } }));
+    }
+  };
 
   // Each dot's home this frame: the displaced surface point in world space
   const P = preset;
@@ -393,8 +437,23 @@ function mountBlob(canvas, { preset, small, reducedMotion }) {
   // crowd.js step(), with the blob as the only formation
   const state = { pulse: 0 };
   const step = (dt, time) => {
+    // The hold charge, as the homepage hero: the blob shrinks, shakes and turns, the camera pushes in
+    const ch = shatter.charge.v;
+    points.scale.setScalar(view.s * (1 - ch * 0.09));
+    points.position.x = view.x + Math.sin(time * 40) * ch * ch * 0.04;
+    points.position.y = view.y;
+    points.rotation.z = ch * 0.12;
+    camera.position.z += (20 - ch * 1.8 - camera.position.z) * 0.06;
     computeHomes();
-    hover.frame(dt, mouse.on && toWorld(mouse.cx, mouse.cy), mouse.x, mouse.y);
+    const pointerOn = mouse.on && toWorld(mouse.cx, mouse.cy);
+    const moved = mouse.lastX < 0 ? 0 : Math.min(40, Math.hypot(mouse.cx - mouse.lastX, mouse.cy - mouse.lastY));
+    mouse.lastX = mouse.cx;
+    mouse.lastY = mouse.cy;
+    // In pieces, the cursor stirs the shards instead of the hover
+    hover.frame(dt, pointerOn && !shatter.active, mouse.x, mouse.y);
+    // The page's cursor tag (SquareCursor): "Hold to explore" near the blob, nothing once in pieces
+    markZone(pointerOn && Math.hypot(mouse.x - view.x, mouse.y - view.y) < view.s * 1.3, shatter.active);
+    shatter.frame(dt, time, pointerOn, mouse.x, mouse.y, moved, camera.position.z);
     state.pulse *= Math.pow(0.2, dt);
     uniforms.uPulse.value = state.pulse;
     const damp = Math.pow(0.955, dt * 60);
@@ -415,16 +474,18 @@ function mountBlob(canvas, { preset, small, reducedMotion }) {
       off[q] += vel[q] * dt;
       off[q + 1] += vel[q + 1] * dt;
       off[q + 2] += vel[q + 2] * dt;
-      // The cursor's hover, eased (particleHover.js)
+      // The cursor's hover, eased (particleHover.js), and the hold's shatter (particleShatter.js)
       hover.step(i, x, y, z);
-      drawn[q] = off[q] + hover.offset[q];
-      drawn[q + 1] = off[q + 1] + hover.offset[q + 1];
-      drawn[q + 2] = off[q + 2] + hover.offset[q + 2];
+      shatter.step(i, x, y, z);
+      drawn[q] = off[q] + hover.offset[q] + shatter.offset[q];
+      drawn[q + 1] = off[q + 1] + hover.offset[q + 1] + shatter.offset[q + 1];
+      drawn[q + 2] = off[q + 2] + hover.offset[q + 2] + shatter.offset[q + 2];
     }
     geo.attributes.aOffset.needsUpdate = true;
   };
 
-  // A quick click scatters the dots (crowd.js scatter), never on controls or copy
+  // A quick click scatters the dots (crowd.js scatter); press and hold (fine pointers) charges the
+  // blob and a full charge explodes it on release, as the homepage hero. Never on controls or copy.
   const scatter = (sx, sy) => {
     for (let i = 0; i < N; i++) {
       const q = i * 3;
@@ -438,13 +499,37 @@ function mountBlob(canvas, { preset, small, reducedMotion }) {
   };
   let press = null;
   const onPointerDown = (e) => {
-    if (e.button !== 0 || e.target.closest?.("a,button,input,label,form,h1,h2,h3,p,header,nav")) return;
+    if (e.pointerType === "touch" || e.button !== 0 || e.target.closest?.("a,button,input,label,form,h1,h2,h3,p,header,nav")) return;
     if (!toWorld(e.clientX, e.clientY)) return;
     press = { t: performance.now(), x: mouse.x, y: mouse.y };
+    if (finePointer) {
+      e.preventDefault(); // no text selection while holding
+      shatter.press();
+    }
   };
-  const onPointerUp = () => {
-    if (press && performance.now() - press.t < 220) scatter(press.x, press.y);
+  const onPointerUp = (e) => {
+    if (!press) return;
+    const r = finePointer ? shatter.release() : null;
+    if (r?.started) sound?.holdEnd?.(r.full);
+    if (performance.now() - press.t < 220) {
+      scatter(press.x, press.y);
+      sound?.tap?.();
+    } else if (r?.kind === "full") {
+      const ex = e?.clientX ?? mouse.cx, ey = e?.clientY ?? mouse.cy;
+      if (!toWorld(ex, ey)) { mouse.x = points.position.x; mouse.y = points.position.y; }
+      shatter.burst((i, a) => home[i * 3 + a] + off[i * 3 + a], points.position.x, points.position.y, points.position.z, mouse.x, mouse.y);
+      shockwave(canvas.parentElement, ex, ey);
+      state.pulse = 1.4;
+      sound?.release?.("shatter");
+    }
     press = null;
+  };
+  // Scrolled the blob away mid-hold: let go quietly, no shatter
+  const onScroll = () => {
+    if (press && mouse.cx >= 0 && !toWorld(mouse.cx, mouse.cy)) {
+      press = null;
+      if (shatter.cancel()) sound?.holdEnd?.(false);
+    }
   };
   if (!reducedMotion) {
     window.addEventListener("pointermove", onPointerMove, { passive: true });
@@ -452,6 +537,7 @@ function mountBlob(canvas, { preset, small, reducedMotion }) {
     window.addEventListener("pointerdown", onPointerDown);
     window.addEventListener("pointerup", onPointerUp);
     window.addEventListener("pointercancel", onPointerUp);
+    window.addEventListener("scroll", onScroll, { passive: true });
   }
 
   const render = () => renderer.render(scene, camera);
@@ -463,8 +549,11 @@ function mountBlob(canvas, { preset, small, reducedMotion }) {
   const frame = () => {
     raf = requestAnimationFrame(frame);
     const dt = Math.min(clock.getDelta(), MAX_DT);
-    uniforms.time.value += dt * (preset.speed / 3);
-    uniforms.surfaceTime.value += dt * (preset.surfaceSpeed / 3);
+    // The surface slows to slow motion while the dots are in pieces (particleShatter.js), and eases
+    // back to full speed once they have reformed
+    const pace = shatter.pace;
+    uniforms.time.value += dt * pace * (preset.speed / 3);
+    uniforms.surfaceTime.value += dt * pace * (preset.surfaceSpeed / 3);
     const time = (uniforms.uTwinkle.value += dt);
     step(dt, time);
     render();
@@ -493,12 +582,19 @@ function mountBlob(canvas, { preset, small, reducedMotion }) {
     stop,
     destroy() {
       stop();
+      if (press && shatter.cancel()) sound?.holdEnd?.(false);
       window.removeEventListener("resize", onResize);
       window.removeEventListener("pointermove", onPointerMove);
       document.removeEventListener("pointerleave", onPointerLeave);
       window.removeEventListener("pointerdown", onPointerDown);
       window.removeEventListener("pointerup", onPointerUp);
       window.removeEventListener("pointercancel", onPointerUp);
+      window.removeEventListener("scroll", onScroll);
+      if (zone) {
+        delete zone.dataset.holdZone;
+        delete zone.dataset.near;
+        delete zone.dataset.ribbonsShattered;
+      }
       geo.dispose();
       mat.dispose();
       renderer.dispose();
@@ -507,8 +603,10 @@ function mountBlob(canvas, { preset, small, reducedMotion }) {
   };
 }
 
-export default function ParticleBlob({ preset = "slinky" }) {
+// phoneTop: how far down the screen the blob's centre sits on phones (share of the screen height)
+export default function ParticleBlob({ preset = "slinky", phoneTop }) {
   const wrapRef = useRef(null);
+  const { sound } = useInteraction() ?? {};
 
   useEffect(() => {
     const wrap = wrapRef.current;
@@ -519,7 +617,7 @@ export default function ParticleBlob({ preset = "slinky" }) {
     canvas.className = "pointer-events-none block size-full opacity-0 transition-opacity duration-1000 ease-out";
     wrap.appendChild(canvas);
     const small = window.matchMedia(MEDIA.mobile).matches || (navigator.hardwareConcurrency || 8) <= 4;
-    const blob = mountBlob(canvas, { preset: PRESETS[preset] ?? PRESETS.slinky, small, reducedMotion: prefersReducedMotion() });
+    const blob = mountBlob(canvas, { preset: PRESETS[preset] ?? PRESETS.slinky, phoneTop, sound, small, reducedMotion: prefersReducedMotion() });
     if (!blob) {
       canvas.remove();
       return undefined;
@@ -538,7 +636,7 @@ export default function ParticleBlob({ preset = "slinky" }) {
       blob.destroy();
       canvas.remove();
     };
-  }, [preset]);
+  }, [preset, phoneTop, sound]);
 
   return <div ref={wrapRef} aria-hidden="true" className="pointer-events-none size-full" />;
 }

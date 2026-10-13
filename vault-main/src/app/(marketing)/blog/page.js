@@ -12,6 +12,7 @@ import { WebpageJsonLd } from "@/lib/json-ld";
 import BlogHero from "./BlogHero";
 import FeaturedBlog from "./FeaturedBlog";
 import SectionOverlay from "@/components/Animations/SectionOverlay";
+import SquareCursor from "@/homepage/components/SquareCursor";
 
 // Below-the-fold sections load as separate chunks (still server-rendered)
 const Footer = dynamic(() => import("@/homepage/sections/Footer"));
@@ -51,6 +52,7 @@ export default async function BlogIndexPage({ searchParams }) {
       <WebpageJsonLd metadata={metadata} />
       <Navbar effects={effects} />
       <LenisSmoothScroll />
+      <SquareCursor />
       <BlogHero />
      
       <SectionOverlay className="relative z-201">
