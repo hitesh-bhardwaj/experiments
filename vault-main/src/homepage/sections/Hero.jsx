@@ -42,6 +42,9 @@ const BACKGROUND_FALLBACK = (
     <div className="absolute inset-0" aria-hidden />
 );
 
+// The loader's rings: on screen from the first frame, centred on the
+// screen while the page loads, then swung into place here as the hero's
+// background - the hero's copy lands on top of them rather than after them.
 const HeroRibbons = dynamic(
     () => import("../components/HeroRibbons"),
     { ssr: false, loading: () => BACKGROUND_FALLBACK },
