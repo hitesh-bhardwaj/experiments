@@ -9,6 +9,7 @@ import { createPortal } from "react-dom";
 import { mountCrowd } from "./src/crowd";
 import { useInteraction } from "@/homepage/components/InteractionProvider";
 import { getSiteFluid } from "@/homepage/components/SiteBackground";
+import { MEDIA } from "@/lib/breakpoints";
 
 const SMALL_SCREEN = "(max-width: 760px)";
 const LOW_CORE_COUNT = 4;
@@ -24,6 +25,16 @@ export default function CommunityCrowd() {
   const [toast, setToast] = useState({ msg: "", on: false });
   const toastT = useRef(0);
   const [skipGPU, setSkipGPU] = useState(true);
+  // Tablet and mobile never mount the crowd - the hero plays a video instead
+  const [isDesktop, setIsDesktop] = useState(null);
+
+  useEffect(() => {
+    const mq = window.matchMedia(MEDIA.tablet);
+    const sync = () => setIsDesktop(!mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
 
   useEffect(() => {
     restoreJoined();
@@ -36,7 +47,7 @@ export default function CommunityCrowd() {
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (skipGPU || !canvas) return undefined;
+    if (!isDesktop || skipGPU || !canvas) return undefined;
     const zoneRoot = document.querySelector(".cm-x");
     const small = window.matchMedia(SMALL_SCREEN).matches || (navigator.hardwareConcurrency || 8) <= LOW_CORE_COUNT;
     // Prototype: showToast, 3.4s
@@ -64,15 +75,15 @@ export default function CommunityCrowd() {
       setCrowd(null);
       crowd.destroy();
     };
-  }, [skipGPU, sound]);
+  }, [isDesktop, skipGPU, sound]);
 
   return (
     <>
-      {skipGPU && <div
+      {isDesktop && skipGPU && <div
         aria-hidden="true"
         className="pointer-events-none fixed inset-0 z-0 size-full bg-[radial-gradient(50%_45%_at_72%_42%,rgba(255,107,0,.16),transparent_70%),radial-gradient(35%_30%_at_70%_45%,rgba(244,244,244,.05),transparent_70%)]"
       />}
-      {!skipGPU && createPortal(<canvas ref={canvasRef} className="pointer-events-none fixed inset-0 -z-2 size-full opacity-0 transition-opacity duration-[1400ms] ease-out" aria-hidden="true" />, document.body)}
+      {isDesktop && !skipGPU && createPortal(<canvas ref={canvasRef} className="pointer-events-none fixed inset-0 -z-2 size-full opacity-0 transition-opacity duration-[1400ms] ease-out" aria-hidden="true" />, document.body)}
       {/* The prototype's toast (a full hold explodes the wordmark) */}
       <div
         role="status"
