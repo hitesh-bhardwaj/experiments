@@ -27,7 +27,7 @@ const T32 = "text-[2.2vw] max-lg:text-[4vw] max-md:text-[7.5vw]";
  * Once signed in, the session is activated on the current page (`redirectUrl`) and
  * `onDone` closes the modal.
  */
-export function AuthModalForm({ redirectUrl = "/", initialMode = "sign-in", intro, onDone, active = true }) {
+export function AuthModalForm({ redirectUrl = "/", initialMode = "sign-in", intro, onDone, onModeChange, active = true }) {
   const router = useRouter();
   const clerk = useVaultClerk({ redirectUrl });
 
@@ -66,6 +66,7 @@ export function AuthModalForm({ redirectUrl = "/", initialMode = "sign-in", intr
   function switchMode(nextMode) {
     if (busy || nextMode === mode) return;
     setMode(nextMode);
+    onModeChange?.(nextMode);
     setSteps(PANES[nextMode].steps);
     setStepIndex(0);
     setMessage(null);

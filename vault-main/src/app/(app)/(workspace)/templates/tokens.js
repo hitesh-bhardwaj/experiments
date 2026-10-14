@@ -33,7 +33,7 @@ export const BADGE = `inline-flex py-1 items-center gap-1.5 px-2.25 ${T14} backd
 // templates can be redeemed with a Pro credit, "full" ones need Pro+.
 // Anything missing counts as "selected".
 export const catalogueOf = (template) => template.catalogue || "selected";
-export const catalogueLabel = (template) => (catalogueOf(template) === "full" ? "Pro+ only" : "Selected");
+export const catalogueLabel = (template) => (catalogueOf(template) === "full" ? "Pro+ Only" : "Selected");
 export const priceOf = (template) => template.pricing?.standaloneOneTime ?? null;
 
 // Template cards fade up as they scroll into view, matching the site's .fadeup (50px,

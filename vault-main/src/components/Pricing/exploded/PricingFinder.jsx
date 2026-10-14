@@ -124,13 +124,14 @@ export default function PricingFinder({ currency: initialCurrency }) {
     });
   };
   // Dragging follows the pointer freely, then settles on the nearest step on release
-  const dragProps = (name) => ({
-    onChange: (e) => {
-      tweens.current[name]?.kill(); setPos((p) => ({ ...p, [name]: +e.target.value }));
-    },
-    onPointerUp: () => glideTo(name, Math.round(posRef.current[name]), 0.3),
-    onKeyUp: () => glideTo(name, Math.round(posRef.current[name]), 0.3),
-  });
+  // (each slider names its own position with data-name)
+  const onDrag = (e) => {
+    const { name } = e.currentTarget.dataset;
+    const v = +e.currentTarget.value;
+    tweens.current[name]?.kill(); setPos((p) => ({ ...p, [name]: v }));
+  };
+  const onDragEnd = (e) => glideTo(e.currentTarget.dataset.name, Math.round(+e.currentTarget.value), 0.3);
+  const dragProps = { onChange: onDrag, onPointerUp: onDragEnd, onKeyUp: onDragEnd };
   const rec = recommend(plans, currency, { templates, installs });
   const key = rec.key + rec.period;
 
@@ -187,14 +188,14 @@ export default function PricingFinder({ currency: initialCurrency }) {
                   <span>Templates you’ll launch this year</span>
                   <output htmlFor="fd-templates" className="flex shrink-0 justify-end text-foreground"><RollNumber value={templates} values={[0, 6]} /></output>
                 </label>
-                <input id="fd-templates" type="range" min="0" max="6" step="any" value={pos.templates} {...dragProps("templates")} style={fill(pos.templates, 0, 6)} className={RANGE} />
+                <input id="fd-templates" type="range" min="0" max="6" step="any" value={pos.templates} data-name="templates" {...dragProps} style={fill(pos.templates, 0, 6)} className={RANGE} />
               </div>
               <div className="flex flex-col gap-[calc(var(--cvw)*0.6)] max-lg:gap-[1.5vw] max-md:gap-[2vw]">
                 <label htmlFor="fd-installs" className={`flex items-center justify-between gap-[calc(var(--cvw)*1)] text-foreground/60 ${LABEL}`}>
                   <span>Components you install on a busy day</span>
                   <output htmlFor="fd-installs" className="flex shrink-0 justify-end text-foreground"><RollNumber value={installs} values={[1, 10]} /></output>
                 </label>
-                <input id="fd-installs" type="range" min="1" max="10" step="any" value={pos.installs} {...dragProps("installs")} style={fill(pos.installs, 1, 10)} className={RANGE} />
+                <input id="fd-installs" type="range" min="1" max="10" step="any" value={pos.installs} data-name="installs" {...dragProps} style={fill(pos.installs, 1, 10)} className={RANGE} />
               </div>
             </div>
           </div>

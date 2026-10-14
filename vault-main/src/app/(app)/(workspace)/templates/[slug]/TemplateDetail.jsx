@@ -14,6 +14,7 @@ import HeadAnim from "@/components/Animations/HeadAnim";
 import Copy from "@/components/Animations/Copy";
 import { useFadeUp } from "@/components/Animations/gsapAnimations";
 import { TemplatePaywallModal } from "@/components/ui/TemplatePaywallModal";
+import { SignInRequiredModal } from "@/components/ui/SignInRequiredModal";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import { useToastQueue, ToastViewport } from "@/components/ui/Toast";
 import Button from "@/homepage/components/Button";
@@ -127,6 +128,8 @@ export function TemplateDetail({ template, devices = {}, effects = [], stack = [
     [baseRelated, viewCounts],
   );
   const [paywallOpen, setPaywallOpen] = useState(false);
+  // Signed out: the sign-in modal; signing in lands back here with ?buy=1, which resumes the purchase
+  const [buySignInOpen, setBuySignInOpen] = useState(false);
   const [autoOpenCheckout, setAutoOpenCheckout] = useState(false);
   const [getOpen, setGetOpen] = useState(false);
   const [getTab, setGetTab] = useState("buy");
@@ -139,7 +142,9 @@ export function TemplateDetail({ template, devices = {}, effects = [], stack = [
   const [device, setDevice] = useState("desktop");
   // Start the live preview on the visitor's own device: phone view on phones,
   // tablet view on tablets (same widths as max-md / max-lg).
+  // Intentional: the screen width only exists client-side, so it can't be the initial state without a hydration mismatch
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (window.matchMedia(MEDIA.mobile).matches) setDevice("phone");
     else if (window.matchMedia(MEDIA.tablet).matches) setDevice("tablet");
   }, []);
@@ -199,7 +204,7 @@ export function TemplateDetail({ template, devices = {}, effects = [], stack = [
     }
     if (hasAccess) return download();
     if (templateAccess.reason === "anonymous") {
-      router.push(`/sign-in?redirect_url=${encodeURIComponent(`${pathname}?${RESUME_PURCHASE_PARAM}=1`)}`);
+      setBuySignInOpen(true);
       return;
     }
     setPaywallOpen(true);
@@ -483,6 +488,12 @@ export function TemplateDetail({ template, devices = {}, effects = [], stack = [
       </div>
 
       {signInModal}
+      <SignInRequiredModal
+        open={buySignInOpen}
+        onClose={() => setBuySignInOpen(false)}
+        redirect={`${pathname}?${RESUME_PURCHASE_PARAM}=1`}
+        action="buy this template"
+      />
       <GetTemplateModal template={template} open={getOpen} tab={getTab} onTab={setGetTab} onClose={closeGet} onBuy={buy} />
 
       <TemplatePaywallModal

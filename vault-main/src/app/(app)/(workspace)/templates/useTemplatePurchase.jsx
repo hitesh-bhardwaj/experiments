@@ -1,9 +1,10 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import { TemplatePaywallModal } from "@/components/ui/TemplatePaywallModal";
+import { SignInRequiredModal } from "@/components/ui/SignInRequiredModal";
 import { useToastQueue, ToastViewport } from "@/components/ui/Toast";
 import { GetTemplateModal } from "./[slug]/GetTemplateModal";
 import { markTemplateOwned } from "./useTemplateAccess";
@@ -20,13 +21,14 @@ import { markTemplateOwned } from "./useTemplateAccess";
  *   {modals}
  */
 export function useTemplatePurchase() {
-  const router = useRouter();
   const pathname = usePathname();
   const { isLoaded, isSignedIn } = useUser();
   const [template, setTemplate] = useState(null); // kept after closing so the popups can animate out
   const [getOpen, setGetOpen] = useState(false);
   const [getTab, setGetTab] = useState("buy");
   const [paywallOpen, setPaywallOpen] = useState(false);
+  // Signed out: the sign-in modal, then back to the "Get this template" popup
+  const [signInOpen, setSignInOpen] = useState(false);
   const { toast, showToast, dismissToast } = useToastQueue();
 
   const buy = useCallback((t, owned = false) => {
@@ -45,7 +47,7 @@ export function useTemplatePurchase() {
     setGetOpen(false);
     if (!isLoaded || !template) return;
     if (!isSignedIn) {
-      router.push(`/sign-in?redirect_url=${encodeURIComponent(pathname)}`);
+      setSignInOpen(true);
       return;
     }
     setPaywallOpen(true);
@@ -54,6 +56,13 @@ export function useTemplatePurchase() {
   const modals = template ? (
     <>
       <GetTemplateModal template={template} open={getOpen} tab={getTab} onTab={setGetTab} onClose={closeGet} onBuy={continueToPayment} />
+      <SignInRequiredModal
+        open={signInOpen}
+        onClose={() => setSignInOpen(false)}
+        onSignedIn={() => setGetOpen(true)}
+        redirect={pathname}
+        action="buy this template"
+      />
       <TemplatePaywallModal
         template={template}
         open={paywallOpen}

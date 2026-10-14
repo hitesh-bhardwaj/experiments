@@ -304,15 +304,17 @@ export default function PixelPageTransition() {
 
   return (
     <>
+      {/* Above every page layer - the cookie nudge (z-9000), modals (z-9999) and toasts
+          (z-100000) included - so nothing shows through the transition. */}
       <canvas
         ref={canvasRef}
         aria-hidden="true"
-        className="pointer-events-none fixed top-0 left-0 z-999 h-screen w-screen opacity-0"
+        className="pointer-events-none fixed top-0 left-0 z-100001 h-screen w-screen opacity-0"
       />
       <div
         ref={loaderRef}
         aria-hidden="true"
-        className="pointer-events-none fixed inset-0 z-[1000] flex items-center justify-center opacity-0"
+        className="pointer-events-none fixed inset-0 z-100002 flex items-center justify-center opacity-0"
       >
         <GridDots size={56} squareSize={8} color="#111111" />
       </div>

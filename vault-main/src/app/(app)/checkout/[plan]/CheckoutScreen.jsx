@@ -45,7 +45,7 @@ export default function CheckoutScreen({ tier, interval, currency }) {
           >
             <span
               aria-hidden="true"
-              className="size-[1vw] -scale-x-100 bg-current transition-transform duration-300 [mask-image:url(/svgs/pixelated-arrow.svg)] mask-contain mask-center mask-no-repeat group-hover:-translate-x-1 max-lg:size-4"
+              className="size-[1vw] -scale-x-100 bg-current transition-transform duration-300 [mask-image:url(/icons/arrow-icon-final.svg)] mask-contain mask-center mask-no-repeat group-hover:-translate-x-1 max-lg:size-4"
             />
           </Link>
           <p className="type-label text-foreground/50">Checkout</p>

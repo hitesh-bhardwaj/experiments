@@ -147,7 +147,7 @@ function EffectDetailMainSkeleton() {
             <div className="flex gap-[calc(var(--cvw)*1.5)] overflow-hidden max-lg:gap-[2vw] max-md:gap-[4vw]">
               {Array.from({ length: 3 }).map((_, index) => (
                 <div key={`related-effect-skeleton-${index}`} className="flex w-[32%] shrink-0 flex-col gap-5 max-lg:w-[60%] max-md:w-full">
-                  <div className="flex aspect-[1/1] w-full items-center justify-center bg-background/10 p-[calc(var(--cvw)*2)] max-md:p-5">
+                  <div className="flex aspect-square w-full items-center justify-center bg-background/10 p-[calc(var(--cvw)*2)] max-md:p-5">
                     <SkeletonBlock className="aspect-[1.8/1] w-[88%] bg-background/20" />
                   </div>
                   <div className="flex flex-col gap-2 px-3">
@@ -559,7 +559,9 @@ export function EffectDetailContent({
                           <div
                             key={relatedEffect.name}
                             onClickCapture={blockClickAfterDrag}
-                            className="w-[32%] shrink-0 cursor-pointer snap-start max-lg:w-[60%] max-md:w-full"
+                            // Three fill the row exactly, gaps included (32% each overshot by a
+                            // couple of px, enough to show a scrollbar with only three cards)
+                            className="w-[calc((100%-var(--cvw)*3)/3)] shrink-0 cursor-pointer snap-start max-lg:w-[60%] max-md:w-full"
                           >
                             <EffectCard
                               effect={relatedEffect}
@@ -792,8 +794,11 @@ function EffectPropsTable({ props = [] }) {
   if (!props.length) return null;
 
   return (
-    <div className="space-y-5! mt-4! mb-[4vw]! fadeup max-md:mb-[10vw]!">
-      <h3>Props</h3>
+    <>
+    {/* Same divider as the body's horizontal rules (.blog-divider) */}
+    <hr className="fadeup blog-divider" />
+    <div className="space-y-5! mb-[4vw]! fadeup max-md:mb-[10vw]!">
+      <h2>API Reference</h2>
 
       <div className="blog-table-wrap blog-props-table" data-variant="vault">
         <table>
@@ -823,6 +828,7 @@ function EffectPropsTable({ props = [] }) {
         </table>
       </div>
     </div>
+    </>
   );
 }
 
@@ -1025,7 +1031,7 @@ function lockCopy(reason, tier, pathname) {
     return {
       title: "Sign in to see the code.",
       subtitle: "Free effects need a free account; Pro effects need a plan.",
-      cta: { text: "Sign in", href: `/sign-in?redirect_url=${encodeURIComponent(pathname)}` },
+      cta: { text: "Sign In", href: `/sign-in?redirect_url=${encodeURIComponent(pathname)}` },
     };
   }
   if (reason === "limit") {

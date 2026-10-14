@@ -22,6 +22,7 @@ import {
 } from "./loader-scene";
 import { lockScroll, resetScrollTop, useScrollLockLenis } from "./scroll-lock";
 import { MEDIA } from "@/lib/breakpoints";
+import { ButtonChrome, buttonClassName } from "@/homepage/components/Button";
 
 // ── Build: the rings follow real loading ─────────────────────────────────────
 // The pace is the counter's roll (ROLL / STAGGER below), so the rings never
@@ -55,6 +56,10 @@ const ROLL = 2.4;
 const STAGGER = 0.2;
 // The counter leaves a beat after it lands on 100, as the rings are released
 const COUNTER_LEAVE_AT = 0.3;
+
+// ── Enter: an "Enter the Vault" button shows as the counter nears 100; the
+// loader holds on 100 until it is clicked, then carries on as before ──
+const ENTER_AT = 0.85;
 
 // ── Tablet / mobile: no rings - the counter rolls on the dark backdrop, and the
 // hero's still fades in behind it as the counter is about to leave
@@ -112,12 +117,33 @@ export default function Loader() {
   const counterRef = useRef(null);
   const imageRef = useRef(null);
   const imageLoadedRef = useRef(false);
+  const enterRef = useRef(null);
+  const enterBtnRef = useRef(null);
+  const [enterHovered, setEnterHovered] = useState(false);
   // Decided once per mount: Strict Mode re-runs the effect below, and by then
   // markLoaderPlayed() has already written the session flag, so a fresh check
   // would skip the loader every time in dev
   const skipRef = useRef(null);
 
   useScrollLockLenis();
+
+  // One gate per run: shows the button (once), resolves when it is clicked
+  const makeEnterGate = () => {
+    let open;
+    const entered = new Promise((resolve) => { open = resolve; });
+    let shown = false;
+    const show = () => {
+      if (shown) return;
+      shown = true;
+      gsap.fromTo(enterBtnRef.current, { xPercent: -50, y: 10 }, { autoAlpha: 1, xPercent: -50, y: 0, duration: 0.6, ease: "power2.out" });
+      enterBtnRef.current?.querySelector("button")?.focus({ preventScroll: true });
+    };
+    enterRef.current = () => {
+      gsap.to(enterBtnRef.current, { autoAlpha: 0, xPercent: -50, y: 10, duration: 0.4, ease: "power2.in" });
+      open();
+    };
+    return { entered, show };
+  };
 
   useLayoutEffect(() => {
     if (skipRef.current === null) skipRef.current = shouldSkipLoader();
@@ -129,18 +155,26 @@ export default function Loader() {
       setDone(true);
       return;
     }
-    // Written before the loader starts, not after it finishes: a visitor who
-    // navigates away mid-loader has already seen the intro.
-    markLoaderPlayed();
     // Header / hero fallback timers hold while the loader is still up
     setLoaderWaiting(true);
-    if (window.matchMedia(MEDIA.tablet).matches) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setMobile(true);
-    } else {
-      resetLoaderScene();
+    const start = () => {
+      // Written before the loader starts, not after it finishes: a visitor who
+      // navigates away mid-loader has already seen the intro.
+      markLoaderPlayed();
+      if (window.matchMedia(MEDIA.tablet).matches) {
+        setMobile(true);
+      } else {
+        resetLoaderScene();
+      }
+      setRun(true);
+    };
+    // Chrome prerenders a URL typed in the address bar: wait until the page is
+    // actually shown, or the loader plays out unseen in the background
+    if (document.prerendering) {
+      document.addEventListener("prerenderingchange", start, { once: true });
+      return () => document.removeEventListener("prerenderingchange", start);
     }
-    setRun(true);
+    start();
   }, []);
 
   // ── Tablet / mobile ──
@@ -151,6 +185,7 @@ export default function Loader() {
       let cancelled = false;
       lockScroll();
       settleLoaderScene();
+      const gate = makeEnterGate();
 
       const counterTl = gsap.timeline();
       counterTl.to(".count-digit", {
@@ -212,9 +247,10 @@ export default function Loader() {
         // Holds where it is while the page is behind it, unless it has waited long enough
         counterTl.timeScale(!timedOut && counterTl.progress() >= pageFraction() ? 0 : 1);
         if (counterTl.progress() >= MOBILE_IMAGE_AT) fadeInImage();
+        if (counterTl.progress() >= ENTER_AT) gate.show();
         if (counterTl.progress() === 1) {
           gsap.ticker.remove(tick);
-          exit();
+          gate.entered.then(() => { if (!cancelled) exit(); });
         }
       };
       gsap.ticker.add(tick);
@@ -242,6 +278,7 @@ export default function Loader() {
       // Held from here until the hero's intro has landed - this component is
       // gone well before that, so the release lives in Hero.
       lockScroll();
+      const gate = makeEnterGate();
 
       // ── Counter: rolls once, starting when the rings are drawing ──
       const counterTl = gsap.timeline({ paused: true });
@@ -298,6 +335,7 @@ export default function Loader() {
           counterTl.timeScale(counterTl.progress() >= pageFraction() ? 0 : 1);
           if (timedOut) counterTl.progress(1);
           const built = counterTl.progress();
+          if (built >= ENTER_AT) gate.show();
           const target = timedOut ? 1 : Math.min(pageFraction(), built);
 
           // Eases toward the real figure, never backwards, and resolves at 1
@@ -315,7 +353,7 @@ export default function Loader() {
       });
 
       // ── Release: the rings swing into the hero, the hero lands on them ──
-      loaded.then(() => {
+      loaded.then(() => gate.entered).then(() => {
         if (cancelled) return;
         gsap.set(rootRef.current, { pointerEvents: "none" });
         // Whatever was scrolled while the loader was up, enter on the hero.
@@ -366,7 +404,6 @@ export default function Loader() {
 
   return (
     <div ref={rootRef} data-cursor-off className="fixed inset-0 z-1000 overflow-hidden">
-      <style>{"html{overflow:hidden}"}</style>
       <div ref={backdropRef} className="absolute inset-0 bg-background" />
       {mobile && (
         // The hero's own still (same file, so it is one download), faded in as the counter leaves
@@ -378,31 +415,49 @@ export default function Loader() {
             priority
             unoptimized
             sizes="100vw"
+            draggable={false}
             onLoad={() => { imageLoadedRef.current = true; }}
-            className="object-cover"
+            className="pointer-events-none object-cover select-none"
           />
         </div>
       )}
       <div
         ref={counterRef}
-        role="status"
-        aria-label="Loading"
         className="absolute inset-0 flex items-center justify-center"
       >
-        <div
-          aria-hidden="true"
-          className="type-h1 h-[1em] overflow-hidden leading-none text-foreground"
-        >
-          <div className="flex">
-            {TARGET.split("").map((digit, i) => (
-              <div key={i} data-digit={digit} className="count-digit flex flex-col will-change-transform">
-                {CELLS.map((n, k) => (
-                  <span key={k} className="flex h-[1em] items-center justify-center tabular-nums">
-                    {n}
-                  </span>
-                ))}
-              </div>
-            ))}
+        <div className="relative">
+          <div
+            role="status"
+            aria-label="Loading"
+            className="type-h1 h-[1em] overflow-hidden leading-none text-foreground"
+          >
+            <div aria-hidden="true" className="flex">
+              {TARGET.split("").map((digit, i) => (
+                <div key={i} data-digit={digit} className="count-digit flex flex-col will-change-transform">
+                  {CELLS.map((n, k) => (
+                    <span key={k} className="flex h-[1em] items-center justify-center tabular-nums">
+                      {n}
+                    </span>
+                  ))}
+                </div>
+              ))}
+            </div>
+          </div>
+          {/* Sits just under the counter, so the counter itself stays centred */}
+          <div
+            ref={enterBtnRef}
+            className="invisible absolute top-full left-1/2 flex w-max -translate-x-1/2 translate-y-2.5 pt-[2.5vw] opacity-0 max-lg:pt-[5vw] max-md:pt-[8vw]"
+          >
+            <button
+              type="button"
+              onClick={() => enterRef.current?.()}
+              onPointerEnter={() => setEnterHovered(true)}
+              onPointerLeave={() => setEnterHovered(false)}
+              data-sound-kind="primary"
+              className={buttonClassName()}
+            >
+              <ButtonChrome label="Enter the Vault" hovered={enterHovered} />
+            </button>
           </div>
         </div>
       </div>

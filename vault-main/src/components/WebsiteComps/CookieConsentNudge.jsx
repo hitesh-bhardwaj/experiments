@@ -11,6 +11,8 @@ export function CookieConsentNudge() {
   const isExcludedRoute =
     pathname.startsWith("/demo") || pathname.startsWith("/template-demo");
 
+  // Intentional: localStorage only exists client-side, so this can't be the initial state without a hydration mismatch
+  /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     if (isExcludedRoute) return;
     try {
@@ -22,6 +24,7 @@ export function CookieConsentNudge() {
       setVisible(true);
     }
   }, [isExcludedRoute]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   const dismiss = () => {
     setVisible(false);

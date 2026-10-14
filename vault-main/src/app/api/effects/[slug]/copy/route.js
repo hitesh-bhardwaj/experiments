@@ -9,11 +9,12 @@ import { buildEffectAiPrompt } from "@/lib/effect-ai-prompt";
 // Effect page "Get code" dropdown. The page itself never carries source -
 // every option that returns code goes through here, after sign-in + Pro
 // access checks:
-//   jsx / tsx - Sanity jsxCode/tsxCode, and consumes a daily copy slot
-//               (same shared bucket as copy-usage, `hyperiux add` and MCP)
-//   prompt    - AI prompt built from the registry source; not metered, it
-//               only counts once the agent actually installs the effect
-// "Copy CLI" and "MCP" contain no source, so the client builds those itself.
+//   jsx / tsx - Sanity jsxCode/tsxCode
+//   prompt    - AI prompt built from the registry source
+// Every option consumes the effect's daily copy slot (same shared bucket as
+// copy-usage, `hyperiux add` and MCP; an effect already taken today is free).
+// "Copy CLI" and "MCP" contain no source, so the client builds those itself -
+// after claiming the same slot through /api/copy-usage.
 
 const OPTIONS = new Set(["jsx", "tsx", "prompt"]);
 
@@ -85,10 +86,6 @@ export async function POST(request, { params }) {
       { allowed: false, error: "This code isn't available yet. Please try again later." },
       { status: 404 }
     );
-  }
-
-  if (option === "prompt") {
-    return NextResponse.json({ allowed: true, content });
   }
 
   const result = await getInstallLimitDecision({

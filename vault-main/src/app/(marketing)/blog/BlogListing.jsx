@@ -105,7 +105,9 @@ export default function BlogListing({
   const sectionRef = useRef(null);
   const [cols, setCols] = useState(3);
 
+  // Intentional: localStorage only exists client-side, so the stored choice can't be the initial state without a hydration mismatch
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setCols(readStoredCols());
   }, []);
 

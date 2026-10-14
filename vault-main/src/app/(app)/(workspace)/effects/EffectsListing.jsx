@@ -410,7 +410,7 @@ export function EffectsListing({
   // The page name rolls when it changes (a stable element, so it only rolls on change)
   const contextTail = useMemo(
     () => (context ? <span className={`${T15} text-black/60`}>{context}</span> : <span aria-hidden="true">&nbsp;</span>),
-    [context], // eslint-disable-line react-hooks/exhaustive-deps
+    [context],
   );
 
   // A filter, column or "show more" change resizes the grid, which moves everything
