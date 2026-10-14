@@ -11,14 +11,14 @@ import { MEDIA } from "@/lib/breakpoints";
 import Image from "next/image";
 import { isLighthouseOrHeadless, isSoftwareRenderer } from "@/lib/audit";
 import { resolveCover } from "../EffectCard";
+import { T16 } from "../../templates/tokens";
+import { prefersReducedMotion } from "@/lib/motion";
 
 // Same message the preview chrome sends its device iframe (onEmbedValues)
 const MSG = "vault-preview:values";
 const EASE = "cubic-bezier(.16,1,.3,1)";
-// 13px-equivalent text in vw: desktop · tablet (max-lg) · mobile (max-md).
 const DESKTOP_FRAME = { width: 1920, height: 1080 };
 
-const T13 = "text-[1.1vw] max-lg:text-[1.6vw] max-md:text-[3.3vw]";
 
 // JSON-safe copy, so the values can cross postMessage into the iframe
 function cloneable(values) {
@@ -159,7 +159,7 @@ export default function EffectStage({ effect, title, previewHref, getCode = null
   const panelContentRef = useRef(null);
   useEffect(() => {
     const root = panelContentRef.current;
-    if (!play || !root || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return undefined;
+    if (!play || !root || prefersReducedMotion()) return undefined;
     const rows = root.querySelectorAll(':scope > p, aside section, aside [class*="codeBlock"]');
     const tween = gsap.fromTo(
       rows,
@@ -186,11 +186,11 @@ export default function EffectStage({ effect, title, previewHref, getCode = null
   );
 
   return (
-    <section aria-label="Interactive preview" className="flex w-full flex-col gap-[1vw] max-md:gap-[3.5vw]">
+    <section aria-label="Interactive preview" className="flex w-full flex-col gap-[calc(var(--cvw)*1)] max-md:gap-[3.5vw]">
       {/* Get Code + Demo (the Preview / Playground tabs and Replay were removed). */}
-      <div className="mb-6 flex flex-wrap items-center justify-end gap-[1vw] max-md:justify-start max-md:gap-[3vw]">
+      <div className="flex flex-wrap items-center justify-end gap-[calc(var(--cvw)*1)] max-md:justify-start max-md:gap-[3vw]">
         {/* items-stretch: Get Code takes Demo's height. */}
-        <div className="flex items-stretch gap-[0.5vw] max-md:gap-[2vw]">
+        <div className="flex items-stretch gap-[calc(var(--cvw)*0.5)] max-md:gap-[2vw]">
 
           {getCode}
           {/* Standard Button size (Get Code matches it) */}
@@ -205,7 +205,7 @@ export default function EffectStage({ effect, title, previewHref, getCode = null
           shrank to half the screen with a sticky gap above it). */}
       <div
         ref={gridRef}
-        className="flex items-start [--pg-w:17.65vw] max-lg:flex-col max-lg:gap-y-[2vw] max-md:gap-y-[3.5vw] "
+        className="flex items-start [--pg-w:calc(var(--cvw)*17.65)] max-lg:flex-col max-lg:gap-y-[2vw] max-md:gap-y-[3.5vw] "
         style={{ columnGap: play ? "1vw" : "0vw", transition: `column-gap .8s ${EASE}` }}
       >
         {/* Only in Playground: sticks centred on screen while the long panel scrolls past
@@ -242,7 +242,7 @@ export default function EffectStage({ effect, title, previewHref, getCode = null
               <span
                 ref={tipRef}
                 aria-hidden="true"
-                className="pointer-events-none absolute top-1/2 left-1/2 opacity-0 transition-opacity duration-300 group-hover/interact:opacity-100 [@media(hover:none)]:opacity-100 -translate-x-1/2 -translate-y-[calc(100%+0.8vw)] bg-background/80 px-3 py-1.5 text-[0.9vw] whitespace-nowrap text-foreground ring-1 ring-inset ring-foreground/15 backdrop-blur-lg max-lg:text-[1.6vw] max-md:-translate-y-1/2 max-md:text-[3.3vw]"
+                className="pointer-events-none absolute top-1/2 left-1/2 opacity-0 transition-opacity duration-300 group-hover/interact:opacity-100 [@media(hover:none)]:opacity-100 -translate-x-1/2 -translate-y-[calc(100%+var(--cvw)*0.8)] bg-background/80 px-3 py-1.5 text-[calc(var(--cvw)*0.9)] whitespace-nowrap text-foreground ring-1 ring-inset ring-foreground/15 backdrop-blur-lg max-lg:text-[1.6vw] max-md:-translate-y-1/2 max-md:text-[3.3vw]"
               >
                 Click to Interact
               </span>
@@ -266,7 +266,7 @@ export default function EffectStage({ effect, title, previewHref, getCode = null
             {/* Fixed width: the column grows from 0 to --pg-w around it, so the controls
                 never re-wrap mid-animation. */}
             <div ref={panelContentRef} className="flex w-(--pg-w) shrink-0 flex-col max-lg:w-full">
-              <p className={`bg-background px-4 py-2 ${T13} tracking-normal text-foreground`}>Tune the real props</p>
+              <p className={`bg-background px-4 py-2 ${T16} text-foreground`}>Tune the real props</p>
               <div className="min-h-0 flex-1 [&>aside]:h-full">
                 <RemixerPanel
                   compact

@@ -398,7 +398,7 @@ export default function GetCodeMenu({
         onClick={onTriggerClick}
         // Text size and vertical padding are Button's (buttonClassName), so it sits at the standard
         // button size; an inset ring rather than a border, which would add 2px of height
-        className={`relative flex h-full cursor-pointer items-center ring-1 ring-inset bg-foreground/5 backdrop-blur-lg py-2 pr-[3vw] pl-[1.2vw] text-left text-[calc(var(--hx-vw,1vw)*1.15)] ring-foreground/20 tracking-wide text-foreground outline-none transition hover:ring-foreground/25 focus-visible:ring-foreground/25 max-lg:pr-12 max-lg:pl-5 max-lg:text-[clamp(13px,calc(var(--hx-vw,1vw)*1.6),15px)] max-md:py-3 max-md:text-[calc(var(--hx-vw,1vw)*2.2)] max-sm:text-[calc(var(--hx-vw,1vw)*4)] ${triggerClassName}`}
+        className={`relative flex h-full cursor-pointer items-center ring-1 ring-inset bg-foreground/5 backdrop-blur-lg py-2 pr-[calc(var(--cvw)*3)] pl-[calc(var(--cvw)*1.2)] text-left text-[calc(var(--hx-vw,calc(var(--cvw)*1))*1.15)] ring-foreground/20 tracking-wide text-foreground outline-none transition hover:ring-foreground/25 focus-visible:ring-foreground/25 max-lg:pr-12 max-lg:pl-5 max-lg:text-[clamp(13px,calc(var(--hx-vw,1vw)*1.6),15px)] max-md:py-3 max-md:text-[calc(var(--hx-vw,1vw)*2.2)] max-sm:text-[calc(var(--hx-vw,1vw)*4)] ${triggerClassName}`}
       >
         {/* The label rolls up out of a clipped line, like the code block's copy button */}
         <span className="relative block overflow-hidden whitespace-nowrap">
@@ -418,7 +418,7 @@ export default function GetCodeMenu({
         {/* Chevron, spinner and check share the right-hand slot */}
         <span
           aria-hidden="true"
-          className="pointer-events-none absolute top-1/2 right-[1vw] grid size-[1.1vw] -translate-y-1/2 place-items-center max-lg:right-4 max-lg:size-4"
+          className="pointer-events-none absolute top-1/2 right-[calc(var(--cvw)*1)] grid size-[calc(var(--cvw)*1.1)] -translate-y-1/2 place-items-center max-lg:right-4 max-lg:size-4"
         >
           <AnimatePresence initial={false}>
             <motion.span
@@ -454,8 +454,8 @@ export default function GetCodeMenu({
           aria-label={`Get the code for ${title}`}
           onKeyDown={onPanelKeyDown}
           // Phones: the button starts the row at the page gutter, so the panel opens from
-          // its left edge across the whole content width (87vw, the stage's width) instead of the button's.
-          className={`absolute top-[calc(100%+0.5vw)] z-40 w-[24vw] min-w-72 border border-foreground/10 bg-dark-card p-1.5 shadow-2xl max-lg:w-[55vw] max-md:left-0! max-md:right-auto! max-md:w-[87vw] max-md:min-w-0 ${
+          // its left edge across the whole content width (86vw, the stage's width) instead of the button's.
+          className={`absolute top-[calc(100%+var(--cvw)*0.5)] z-40 w-[calc(var(--cvw)*24)] min-w-72 border border-foreground/10 bg-dark-card p-1.5 shadow-2xl max-lg:w-[55vw] max-md:left-0! max-md:right-auto! max-md:w-[86vw] max-md:min-w-0 ${
             align === "left" ? "left-0" : "right-0"
           }`}
         >
@@ -469,7 +469,7 @@ export default function GetCodeMenu({
           )}
           {view === "menu" ? (
             <div className="space-y-1" aria-hidden={codeLocked || undefined}>
-              <div className="flex items-center gap-2 px-3 pt-2 pb-1 type-small text-foreground">
+              <div className="flex items-center gap-2 px-3 py-2 type-small text-foreground">
                 Copy Code
                 {codeLocked && (
                   <span className="inline-flex items-center gap-1 normal-case tracking-normal text-primary">
@@ -487,7 +487,7 @@ export default function GetCodeMenu({
                   className="pl-6"
                   trailing={<LockTrail locked={codeLocked || codeLimited} />}
                 >
-                  <span className="flex items-center gap-2 font-mono text-[0.92em]">
+                  <span className="flex items-center gap-2 font-mono">
                     <FileCode2 className="size-4 shrink-0 opacity-60" aria-hidden="true" />
                     {effectSlug}.{option}
                   </span>
@@ -503,7 +503,7 @@ export default function GetCodeMenu({
                 trailing={<LockTrail locked={codeLocked} />}
               >
                 Copy CLI command
-                <span className="text-[0.8em] text-foreground/50 group-enabled:group-hover:text-background/70">
+                <span className="type-small text-foreground/50 group-enabled:group-hover:text-background/70">
                   Install it in the terminal of your preferred IDE
                 </span>
               </MenuItem>
@@ -515,7 +515,7 @@ export default function GetCodeMenu({
                 trailing={<LockTrail locked={codeLocked} />}
               >
                 Copy MCP prompt
-                <span className="text-[0.8em] text-foreground/50 group-enabled:group-hover:text-background/70">
+                <span className="type-small text-foreground/50 group-enabled:group-hover:text-background/70">
                   For agents with the Hyperiux MCP installed
                 </span>
               </MenuItem>
@@ -527,13 +527,13 @@ export default function GetCodeMenu({
                 trailing={<LockTrail locked={codeLocked} />}
               >
                 Copy AI prompt
-                <span className="text-[0.8em] text-foreground/50 group-enabled:group-hover:text-background/70">
+                <span className="type-small text-foreground/50 group-enabled:group-hover:text-background/70">
                   Full source + setup steps for any coding agent
                 </span>
               </MenuItem>
 
               {codeLimited && (
-                <div className="flex items-center justify-between gap-3 border-t border-foreground/10 px-3 pt-3 pb-1.5 text-[0.9vw] text-foreground/60 max-lg:text-[1.7vw] max-md:text-[3.4vw]">
+                <div className="flex items-center justify-between gap-3 border-t border-foreground/10 px-3 py-2 type-small text-foreground/60">
                   <span>You&apos;ve reached today&apos;s copy limit.</span>
                   {lockedCtaHref && (
                     <button

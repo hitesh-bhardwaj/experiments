@@ -969,21 +969,10 @@
 }
 
 @media (max-width: 767px) {
-  /* Props table: scroll sideways with readable columns, bleed past the
-     page gutter and fade out so it reads as "continues off-screen" */
-  .blog-content .blog-props-table {
-    margin-right: -7vw;
-    -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 12vw), transparent 100%);
-    mask-image: linear-gradient(to right, #000 calc(100% - 12vw), transparent 100%);
-  }
-
+  /* Props table: same as the docs tables on phones - a 38rem table scrolling
+     sideways inside the page gutter, no fade */
   .blog-content .blog-props-table table {
-    min-width: max(50rem, calc(100vw + 6vw));
-  }
-
-  .blog-content .blog-props-table th,
-  .blog-content .blog-props-table td {
-    min-width: 12.5rem;
+    min-width: 38rem;
   }
 }
 

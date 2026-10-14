@@ -79,10 +79,10 @@ function SkeletonBlock({ className = "" }) {
 function EffectDetailMainSkeleton() {
   return (
     <main className="relative w-full pt-25 max-md:pt-36">
-      <div className="flex flex-col gap-[5.5vw] max-md:gap-[15vw]">
+      <div className="flex flex-col gap-[calc(var(--cvw)*5.5)] max-md:gap-[15vw]">
         <div className="flex flex-col gap-7">
-          <section className="mx-auto w-full max-w-[1536px] px-[4.5vw] max-md:px-[6vw] flex flex-col gap-[1.4vw] max-md:gap-[5vw]">
-            <div className="flex w-fit max-w-full flex-wrap items-center gap-[0.5vw] max-md:gap-[2vw]">
+          <section className="site-container section-x flex flex-col gap-[calc(var(--cvw)*1.4)] max-md:gap-[5vw]">
+            <div className="flex w-fit max-w-full flex-wrap items-center gap-[calc(var(--cvw)*0.5)] max-md:gap-[2vw]">
               <SkeletonBlock className="h-4 w-12" />
               <span className="text-foreground/25">/</span>
               <SkeletonBlock className="h-4 w-16" />
@@ -91,24 +91,24 @@ function EffectDetailMainSkeleton() {
               <span className="text-foreground/25">/</span>
               <SkeletonBlock className="h-4 w-40" />
             </div>
-            <SkeletonBlock className="h-[5.2vw] w-[62%] max-lg:h-14 max-lg:w-[82%] max-md:h-12" />
+            <SkeletonBlock className="h-[calc(var(--cvw)*5.2)] w-[62%] max-lg:h-14 max-lg:w-[82%] max-md:h-12" />
             <div className="flex flex-col gap-3">
               <SkeletonBlock className="h-5 w-[72%]" />
               <SkeletonBlock className="h-5 w-[54%]" />
             </div>
-            <div className="flex flex-wrap items-center gap-[0.8vw] max-md:gap-[3vw]">
+            <div className="flex flex-wrap items-center gap-[calc(var(--cvw)*0.8)] max-md:gap-[3vw]">
               <SkeletonBlock className="h-10 w-20" />
               <SkeletonBlock className="h-10 w-24" />
               <SkeletonBlock className="h-10 w-18" />
             </div>
           </section>
-          <section className="mx-auto w-full max-w-[1536px] px-[4.5vw] max-md:px-[6vw] h-[46vw]">
+          <section className="site-container section-x h-[calc(var(--cvw)*46)]">
             <SkeletonBlock className="h-full w-full" />
           </section>
         </div>
 
-        <div className="flex flex-col gap-[5vw] bg-foreground py-[5.5vw] max-md:gap-[10vw] max-md:py-[15vw]">
-          <section className="mx-auto w-full max-w-[1536px] px-[4.5vw] max-md:px-[6vw]">
+        <div className="flex flex-col gap-[calc(var(--cvw)*5)] bg-foreground py-[calc(var(--cvw)*5.5)] max-md:gap-[10vw] max-md:py-[15vw]">
+          <section className="site-container section-x">
             <div className="flex w-[70%] flex-col gap-8 max-lg:w-full">
               <SkeletonBlock className="h-10 w-[58%] bg-background/10" />
               <div className="flex flex-col gap-3">
@@ -122,12 +122,12 @@ function EffectDetailMainSkeleton() {
                 <SkeletonBlock className="h-5 w-[88%] bg-background/10" />
                 <SkeletonBlock className="h-5 w-[64%] bg-background/10" />
               </div>
-              <SkeletonBlock className="h-[18vw] w-full bg-background/10 max-lg:h-64" />
+              <SkeletonBlock className="h-[calc(var(--cvw)*18)] w-full bg-background/10 max-lg:h-64" />
             </div>
           </section>
 
-          <section className="mx-auto w-full max-w-[1536px] px-[4.5vw] max-md:px-[6vw]">
-            <div className="flex flex-col gap-5 bg-ink px-[2.8vw] py-[3.3vw] max-md:px-[7vw] max-md:py-[10vw]">
+          <section className="site-container section-x">
+            <div className="flex flex-col gap-5 bg-ink px-[calc(var(--cvw)*2.8)] py-[calc(var(--cvw)*3.3)] max-md:px-[7vw] max-md:py-[10vw]">
               <SkeletonBlock className="h-10 w-[52%] bg-light/15 max-md:h-8 max-md:w-[84%]" />
               <div className="flex flex-col gap-3">
                 <SkeletonBlock className="h-5 w-[78%] bg-light/15" />
@@ -137,15 +137,15 @@ function EffectDetailMainSkeleton() {
             </div>
           </section>
 
-          <section className="mx-auto w-full max-w-[1536px] px-[4.5vw] max-md:px-[6vw] flex flex-col gap-[2.8vw] max-md:gap-[10vw]">
-            <div className="flex items-center justify-between gap-[1.4vw] max-lg:flex-col">
+          <section className="site-container section-x flex flex-col gap-[calc(var(--cvw)*2.8)] max-md:gap-[10vw]">
+            <div className="flex items-center justify-between gap-[calc(var(--cvw)*1.4)] max-lg:flex-col">
               <SkeletonBlock className="h-12 w-[30%] bg-background/10 max-lg:w-[60%] max-md:w-[80%]" />
               <SkeletonBlock className="h-12 w-44 bg-primary/45 max-lg:hidden" />
             </div>
-            <div className="flex gap-[1.5vw] overflow-hidden max-lg:gap-[2vw] max-md:gap-[4vw]">
+            <div className="flex gap-[calc(var(--cvw)*1.5)] overflow-hidden max-lg:gap-[2vw] max-md:gap-[4vw]">
               {Array.from({ length: 3 }).map((_, index) => (
                 <div key={`related-effect-skeleton-${index}`} className="flex w-[32%] shrink-0 flex-col gap-5 max-lg:w-[60%] max-md:w-full">
-                  <div className="flex aspect-[1/1] w-full items-center justify-center bg-background/10 p-[2vw] max-md:p-5">
+                  <div className="flex aspect-[1/1] w-full items-center justify-center bg-background/10 p-[calc(var(--cvw)*2)] max-md:p-5">
                     <SkeletonBlock className="aspect-[1.8/1] w-[88%] bg-background/20" />
                   </div>
                   <div className="flex flex-col gap-2 px-3">
@@ -437,9 +437,9 @@ export function EffectDetailContent({
           <EffectDetailMainSkeleton />
         ) : (
           <main className="relative w-full pt-25 max-md:pt-36">
-            <div className="flex flex-col gap-[5.5vw] max-md:gap-[15vw]">
+            <div className="flex flex-col gap-[calc(var(--cvw)*5.5)] max-md:gap-[15vw]">
               <div className="flex flex-col gap-7">
-              <section id="effect-hero" className="mx-auto flex w-full max-w-[1536px] flex-col gap-[1.4vw] px-[4.5vw] max-md:gap-[5vw] max-md:px-[6vw]">
+              <section id="effect-hero" className="site-container section-x flex flex-col gap-[calc(var(--cvw)*1.4)] max-md:gap-[5vw]">
                 <Breadcrumb />
 
                 {pageTitle && (
@@ -452,18 +452,18 @@ export function EffectDetailContent({
 
                 {pageSummary && (
                   <Copy delay={0.5}>
-                    <p className="type-body-lg w-[70%] text-foreground/90 max-lg:w-[90%]">
+                    <p className="type-body-lg w-[70%] text-foreground/80 max-lg:w-[90%]">
                       {pageSummary}
                     </p>
                   </Copy>
                 )}
 
                 {(dependencies.length > 0 || (content?.tier ?? safeEffect.tier) === "pro") && (
-                  <div className="fadeup flex flex-wrap items-center gap-[0.8vw] max-md:gap-[3vw]">
+                  <div className="fadeup flex flex-wrap items-center gap-[calc(var(--cvw)*0.8)] max-md:gap-[3vw]">
                     {dependencies.map((dep) => (
                       <span
                         key={dep}
-                        className="type-body text-[0.8vw] max-md:text-[3vw] max-lg:text-[2vw] border border-foreground/20 bg-foreground/6 backdrop-blur-lg px-[0.6vw] py-[0.3vw] capitalize text-foreground max-md:px-[6vw] max-md:py-[1vw] max-md:text-muted"
+                        className="type-small border border-foreground/20 bg-foreground/6 backdrop-blur-lg px-[calc(var(--cvw)*0.6)] py-[calc(var(--cvw)*0.3)] capitalize text-foreground max-md:px-3 max-md:py-1"
                       >
                         {dep}
                       </span>
@@ -472,7 +472,7 @@ export function EffectDetailContent({
                 )}
               </section>
 
-              <section id="effect-stage" data-sound-flow="off" className="fadeup mx-auto w-full max-w-[1536px] px-[4.5vw] max-md:px-[6vw]">
+              <section id="effect-stage" data-sound-flow="off" className="site-container section-x fadeup">
                 {/* Live stage + Playground (remixer), in place of the preview video */}
                 <EffectStage
                   effect={effect}
@@ -485,9 +485,9 @@ export function EffectDetailContent({
 
               {/* One white area for everything below the stage: the article, FAQ + custom
                     animation block, and related effects - so no dark gaps show between them. */}
-              <div data-sound-hover="off" data-sound-flow="off" className="bg-light text-background">
+              <div data-sound-hover="off" data-sound-flow="off" className="bg-light text-ink">
                 {/* blog-theme-light: blog.css prose in its light colours on this white section */}
-                <section id="effect-content" className="blog-theme-light relative mx-auto flex w-full max-w-[1536px] items-start gap-[3vw] px-[4.5vw] pt-[5.5vw] pb-6 max-lg:flex-col max-md:px-[6vw] max-md:pt-[15vw]">
+                <section id="effect-content" className="site-container section-x blog-theme-light relative flex items-start gap-[calc(var(--cvw)*3)] pt-[calc(var(--cvw)*5.5)] pb-6 max-lg:flex-col max-md:pt-[15vw]">
                   <div className="flex min-w-0 flex-1 flex-col max-lg:w-full">
                     <CodeLockContext.Provider value={{ reason: codeLock, tier: lockTier }}>
                     <EffectDynamicContent
@@ -501,16 +501,15 @@ export function EffectDetailContent({
                     </CodeLockContext.Provider>
                   </div>
 
-                 
                   <aside className="docs-sheet bg-transparent! sticky top-1/2 flex h-fit w-[22%] shrink-0 -translate-y-1/2 justify-end max-lg:hidden">
                     <TableOfContents containerRef={contentRef} watchKey={slug} hideNearFooter />
                   </aside>
                 </section>
 
                 {/* FAQ + custom animation block - the same components as the effects listing */}
-                <div className="flex h-full w-full flex-col gap-[2vw]">
+                <div className="flex h-full w-full flex-col gap-[calc(var(--cvw)*2)]">
                   {faqItems.length > 0 && <FAQ faqItems={faqItems} translateTop={false} bgClassName="bg-light" />}
-                  <div className="mx-auto w-full max-w-[1536px] px-[4.5vw] max-md:px-[6vw]">
+                  <div className="site-container section-x">
                     <CustomAnimationCta cta={safeContent?.ctaBanner} sectionRef={ctaSectionRef} />
                   </div>
                 </div>
@@ -519,11 +518,11 @@ export function EffectDetailContent({
                   <section
                     ref={relatedEffectsRef}
                     id="related-effects"
-                    className="relative mx-auto flex w-full max-w-[1536px] flex-col gap-[2.8vw] px-[4.5vw] py-[7%] max-md:gap-[10vw] max-md:px-[6vw] max-lg:pt-20"
+                    className="site-container section-x relative flex flex-col gap-[calc(var(--cvw)*2.8)] py-[7%] max-md:gap-[10vw] max-lg:pt-20"
                   >
-                    <div className="flex items-center justify-between gap-[1.4vw] max-lg:flex-col max-lg:gap-[5vw]">
+                    <div className="flex items-center justify-between gap-[calc(var(--cvw)*1.4)] max-lg:flex-col max-lg:gap-[5vw]">
                       <HeadAnim rotate={0}>
-                        <h2 className="type-h1 text-center text-background">
+                        <h2 className="type-h1 text-center text-ink">
                           Related Effects
                         </h2>
                       </HeadAnim>
@@ -543,7 +542,7 @@ export function EffectDetailContent({
 
 
 
-                    <div className=" fadeup">
+                    <div className="fadeup">
                       <div
                         ref={relatedSliderRef}
                         onPointerDown={handleRelatedPointerDown}
@@ -552,7 +551,7 @@ export function EffectDetailContent({
                         onPointerLeave={handleRelatedPointerEnd}
                         onPointerCancel={handleRelatedPointerEnd}
                         onDragStart={(event) => event.preventDefault()}
-                        className="flex cursor-grab snap-x snap-mandatory select-none gap-[1.5vw] overflow-x-auto scroll-smooth pb-4 active:cursor-grabbing max-lg:gap-[2vw] max-md:gap-[4vw]"
+                        className="flex cursor-grab snap-x snap-mandatory select-none gap-[calc(var(--cvw)*1.5)] overflow-x-auto scroll-smooth pb-4 active:cursor-grabbing max-lg:gap-[2vw] max-md:gap-[4vw]"
                       >
                         {safeRelatedEffects.map((relatedEffect) => (
                           <div
@@ -566,7 +565,7 @@ export function EffectDetailContent({
                               small
                               onOpen={(item) => router.push(getEffectHref(item))}
                               tagClassName="border-black/20"
-                              sizes="(max-width: 639px) 100vw, (max-width: 767px) 55vw, (max-width: 1023px) 44vw, 31vw"
+                              sizes="(max-width: 767px) 100vw, (max-width: 1024px) 60vw, 32vw"
                             />
                           </div>
                         ))}
@@ -575,7 +574,7 @@ export function EffectDetailContent({
 
                     <div className="hidden max-lg:block">
                       {showRelatedSliderControls && (
-                        <div className="flex items-center justify-center gap-[2vw]">
+                        <div className="flex items-center justify-center gap-[calc(var(--cvw)*2)]">
                           <SliderArrowButton
                             direction="prev"
                             tone="light"
@@ -871,7 +870,7 @@ function SanityBodyBlock({ block, isLocked: lockedProp = false }) {
             alt={block.alt || ""}
             width={1600}
             height={900}
-            sizes="(max-width: 768px) 100vw, 800px"
+            sizes="(max-width: 1024px) 100vw, 70vw"
             className="blog-image"
           />
         </div>
@@ -1099,7 +1098,7 @@ function LockedCodePlaceholder() {
         </div>
       </div>
 
-      <div className="relative z-10 min-h-[40vh] max-md:min-h-[40vh] max-lg:min-h-[30vh] flex   flex-col items-center justify-center gap-2  bg-white/5 px-8 py-6 text-center  max-md:px-6">
+      <div className="relative z-10 min-h-[40vh] max-md:min-h-[40vh] max-lg:min-h-[30vh] flex   flex-col items-center justify-center gap-2  bg-white/5 px-8 py-10 text-center  max-md:px-6">
         <LockKeyhole className="size-12 text-white" strokeWidth={1.2} />
 
         <div className="flex flex-col items-center gap-0">
