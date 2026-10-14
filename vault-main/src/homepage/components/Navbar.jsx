@@ -159,7 +159,7 @@ export default function Navbar({
         {/* Everything that isn't the logo trails it, so the mark reads as
             having been there first and the bar as assembling around it. */}
         <div
-          className={`flex h-(--nav-h) bg-dark-card/60 type-body px-[1.5vw] absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 items-center gap-[2.5vw] backdrop-blur-md transition-opacity duration-500 delay-200 ease-out motion-reduce:transition-none ${introReady ? "opacity-100" : "opacity-0"}`}
+          className={`flex h-(--nav-h) bg-[#121212]/60 text20 px-[1.5vw] absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 items-center gap-[2.5vw] backdrop-blur-md transition-opacity duration-500 delay-200 ease-out motion-reduce:transition-none ${introReady ? "opacity-100" : "opacity-0"}`}
         >
           <div
             className="flex"
@@ -234,14 +234,14 @@ export default function Navbar({
           className={`flex h-(--vault-ctl-h) items-stretch gap-2 transition-opacity duration-500 delay-200 ease-out motion-reduce:transition-none ${introReady ? "opacity-100" : "opacity-0"}`}
         >
           {SHOW_HEADER_TUTORIAL && (
-            <TutorialVideoButton className="self-stretch bg-dark-card/60 px-3.5 backdrop-blur-md hover:bg-white/10 max-md:hidden" />
+            <TutorialVideoButton className="self-stretch bg-[#121212]/60 px-3.5 backdrop-blur-md hover:bg-white/10 max-md:hidden" />
           )}
-          <SoundToggle fit size={32} className="self-stretch bg-dark-card/60! backdrop-blur-md transition-colors duration-300 max-md:hidden" />
+          <SoundToggle fit size={32} className="self-stretch bg-[#121212]/60! backdrop-blur-md transition-colors duration-300 max-md:hidden" />
           {SHOW_HEADER_SEARCH && (
             <button
               type="button"
               onClick={openSearch}
-              className="group flex cursor-pointer items-center gap-4 bg-dark-card/60 px-3 py-[.86vw] text-xs text-foreground backdrop-blur-md transition-colors duration-300 hover:bg-white/10 hover:text-forground max-md:hidden max-md:gap-3"
+              className="group flex cursor-pointer items-center gap-4 bg-[#121212]/60 px-3 py-[.86vw] text-xs text-foreground backdrop-blur-md transition-colors duration-300 hover:bg-white/10 hover:text-forground max-md:hidden max-md:gap-3"
               aria-label="Search effects"
             >
               <div className="flex items-center gap-2">
@@ -269,7 +269,7 @@ export default function Navbar({
             <Link
               href="/dashboard"
               aria-label="Account"
-              className="group flex size-(--vault-ctl-h) items-center justify-center rounded-full border border-primary bg-dark-card text-white/80 transition-colors hover:bg-grey hover:text-foreground"
+              className="group flex size-(--vault-ctl-h) items-center justify-center rounded-full border border-primary bg-[#161616] text-white/80 transition-colors hover:bg-[#1f1f1f] hover:text-foreground"
             >
               <User className="size-4" />
             </Link>

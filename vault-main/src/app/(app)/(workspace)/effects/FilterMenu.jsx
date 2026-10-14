@@ -7,6 +7,7 @@ import { createPortal } from "react-dom";
 import { ChevronDown, X } from "lucide-react";
 import { EFFECT_SORT_OPTIONS, FILTER_OPTIONS } from "@/lib/effect-sort";
 import { BREAKPOINTS } from "@/lib/breakpoints";
+import { T14 } from "../templates/tokens";
 
 export { FILTER_OPTIONS };
 
@@ -148,9 +149,9 @@ export function FilterMenu({
       }
       className={[
         light
-          ? "space-y-1.5 min-w-44 border border-black/10 bg-foreground p-1.5 shadow-[0_1.4vw_2.8vw_-1.4vw_color-mix(in_srgb,black_35%,transparent)]"
+          ? "space-y-1.5 min-w-44 border border-black/10 bg-foreground p-1.5 shadow-[0_calc(var(--cvw)*1.4)_calc(var(--cvw)*2.8)_calc(var(--cvw)*-1.4)_color-mix(in_srgb,black_35%,transparent)]"
           : "space-y-1.5 min-w-44 border border-white/10 bg-black/20  p-1.5",
-        menuPos ? "fixed z-9999" : "absolute left-0 top-[calc(100%+0.5vw)] z-30",
+        menuPos ? "fixed z-9999" : "absolute left-0 top-[calc(100%+calc(var(--cvw)*0.5))] z-30",
         panelClassName,
       ]
         .filter(Boolean)
@@ -181,7 +182,7 @@ export function FilterMenu({
                 onSelect(cat);
                 setOpen(false);
               }}
-              className={`group relative isolate flex w-full items-center  px-4 py-2.5 text-left cursor-pointer ${light ? "text-sm" : "max-md:text-[4vw] text-[1vw]"}`}
+              className={`group relative isolate flex w-full items-center px-4 py-2.5 text-left cursor-pointer ${T14}`}
             >
               <span
                 aria-hidden="true"
@@ -212,12 +213,12 @@ export function FilterMenu({
         aria-label="Filter effects"
         className={
           light
-            ? `relative flex h-9.5 cursor-pointer items-center justify-center gap-2 px-4 text-sm transition-colors duration-300 ${activeFilter
+            ? `relative flex h-9.5 cursor-pointer items-center justify-center gap-2 px-4 ${T14} transition-colors duration-300 ${activeFilter
               ? "bg-primary text-background"
               : "bg-foreground text-ink ring-1 ring-inset ring-black/10 transition-shadow hover:ring-primary"
             }`
             : `
-          ${triggerClassName ?? "px-6 py-3 max-md:px-7 max-md:py-3 text-[1vw] max-md:text-[4vw] max-lg:text-[2.5vw]"}
+          ${triggerClassName ?? `px-6 py-3 max-md:px-7 ${T14}`}
           relative backdrop-blur-lg flex items-center gap-2 justify-center
           cursor-pointer transition-colors duration-300
           ${activeFilter
@@ -236,7 +237,7 @@ export function FilterMenu({
           </>
         ) : (
           <>
-            <svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg" className={light ? "h-3 w-4" : triggerClassName ? "h-[0.8vw] w-auto max-lg:h-[1.4vw] max-md:h-[3vw]" : "max-md:h-[4vw] h-[1vw] max-lg:h-[2.5vw]"}>
+            <svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg" className={light ? "h-3 w-4" : triggerClassName ? "h-[calc(var(--cvw)*0.8)] w-auto max-lg:h-[1.4vw] max-md:h-[3vw]" : "max-md:h-[4vw] h-[calc(var(--cvw)*1)] max-lg:h-[2.5vw]"}>
               <g clipPath="url(#clip0_491_803)">
                 <rect width="16" height="2" rx="1" fill="currentColor" />
                 <rect x="3" y="5" width="10" height="2" rx="1" fill="currentColor" />

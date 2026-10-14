@@ -4,7 +4,6 @@ import { motion } from "motion/react";
 import Button from "@/homepage/components/Button";
 import { CustomAnimationFormTrigger } from "@/components/WebsiteComps/modals/CustomAnimationFormModal";
 
-
 /**
  * "Request a custom animation" block - one component for the effects listing and the
  * effect detail page, so both render exactly the same thing. `cta` is the page content's
@@ -25,17 +24,18 @@ export function CustomAnimationCta({ cta, sectionRef, className = "" }) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "0px 0px -10% 0px" }}
       transition={{ duration: 1.2, ease: [0.165, 0.84, 0.44, 1] }}
-      className={`mx-auto flex w-full items-start justify-between gap-[2vw] bg-ink px-[2.8vw] py-[3.3vw] text-light max-lg:px-[3vw] max-md:flex-col max-md:gap-[6vw] max-md:px-[7vw] max-md:py-[10vw] ${className}`}
+      className={`mx-auto flex w-full items-start justify-between gap-[calc(var(--cvw)*2)] bg-ink px-[calc(var(--cvw)*2.8)] py-[calc(var(--cvw)*3.3)] text-light max-lg:px-[3vw] max-md:flex-col max-md:gap-[6vw] max-md:px-[7vw] max-md:py-[10vw] ${className}`}
     >
       <div className="flex w-[60%] flex-col gap-4 max-md:w-full">
-        {cta.heading && <h2 className="text-[4.2vw] max-lg:text-[5.5vw] max-md:text-[9vw] ">{cta.heading}</h2>}
-        {cta.description && <p className="type-body-lg max-w-3xl text-light/80">{cta.description}</p>}
+        {cta.heading && <h2 className="type-h1">{cta.heading}</h2>}
+        {cta.description && <p className="type-body-lg max-w-3xl text-foreground/80">{cta.description}</p>}
       </div>
       {cta.buttonText && (
         <CustomAnimationFormTrigger>
-          {/* Phones: full width with slimmer side padding - Button's phone padding (10vw a
-              side) made the long label overflow the block. */}
-          <Button preventDefault={false} text={cta.buttonText} href={cta.buttonLink || "#"} className="w-fit max-md:w-full max-md:px-[5vw]! mt-5" />
+        
+          <div className="pt-5 max-md:w-full max-md:[&_a]:px-[5vw]">
+            <Button preventDefault={false} text={cta.buttonText} href={cta.buttonLink || "#"} className="w-fit max-md:w-full" />
+          </div>
         </CustomAnimationFormTrigger>
       )}
     </motion.section>

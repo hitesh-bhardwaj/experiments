@@ -32,7 +32,7 @@ export const FIELD_FILL_LENGTH = { email: 18, password: 12, newPassword: 12, def
 
 // Panes
 export const PANES = {
-  "sign-in": { eyebrow: "Sign in", lead: "Welcome", accent: "back.", title: "Sign in", steps: ["email", "password"] },
+  "sign-in": { eyebrow: "Sign in", lead: "Welcome", accent: "Back.", title: "Sign in", steps: ["email", "password"] },
   "sign-up": {
     eyebrow: "Create account",
     lead: "Cut your",

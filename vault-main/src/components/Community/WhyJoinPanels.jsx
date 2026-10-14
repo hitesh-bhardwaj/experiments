@@ -192,7 +192,7 @@ export function TeardownCard() {
         {TD_LINES.map((parts, i) => (
           // Mobile: each line is its own block and wraps, continuing under the call (hanging indent);
           // it spans the block's padding so the highlight still runs edge to edge
-          <span key={i} className={`font-mono max-md:-mx-[3.6vw] max-md:block max-md:pr-[3.6vw] max-md:pl-[calc(3.6vw+4ch)] max-md:-indent-[4ch] ${i === Math.min(TD_LINES.length - 1, phase) ? "bg-primary/15 text-foreground shadow-[-calc(var(--cvw)*1.4)_0_0_color-mix(in_srgb,var(--primary)_15%,transparent),calc(var(--cvw)*1.4)_0_0_color-mix(in_srgb,var(--primary)_15%,transparent)] max-md:shadow-none" : ""}`}>
+          <span key={i} className={`font-mono max-md:-mx-[3.6vw] max-md:block max-md:pr-[3.6vw] max-md:pl-[calc(3.6vw+4ch)] max-md:-indent-[4ch] ${i === Math.min(TD_LINES.length - 1, phase) ? "bg-primary/15 text-foreground shadow-[calc(var(--cvw)*-1.4)_0_0_color-mix(in_srgb,var(--primary)_15%,transparent),calc(var(--cvw)*1.4)_0_0_color-mix(in_srgb,var(--primary)_15%,transparent)] max-md:shadow-none" : ""}`}>
             {parts.map((part, j) => (Array.isArray(part) ? <span key={j} className="text-primary-hover">{part[1]}</span> : part))}
             {i < TD_LINES.length - 1 && <span className="max-md:hidden">{"\n"}</span>}
           </span>

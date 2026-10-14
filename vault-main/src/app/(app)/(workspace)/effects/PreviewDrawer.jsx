@@ -20,12 +20,7 @@ import {
   installCommand,
   resolveCover,
 } from "./EffectCard";
-
-// Text sizes in vw: desktop · tablet (max-lg) · mobile (max-md).
-const T11 = "text-[0.76vw] max-lg:text-[1.4vw] max-md:text-[2.8vw]";
-const T14 = "text-[0.97vw] max-lg:text-[1.7vw] max-md:text-[3.6vw]";
-const T16 = "text-[1.1vw] max-lg:text-[1.95vw] max-md:text-[4.1vw]";
-const T18 = "text-[1.2vw] max-lg:text-[2.1vw] max-md:text-[4.4vw]";
+import { T11, T14, T16, T18 } from "../templates/tokens";
 
 // Phones: a Button that shares the drawer's action row - grows to fill it, text from the
 // left, no arrow (it would crowd the label at that width).
@@ -243,7 +238,7 @@ export function PreviewDrawer({
       <div
         ref={panelRef}
         data-lenis-prevent
-        className="absolute inset-y-0 right-0 w-[53vw] overflow-y-auto overscroll-contain border-l border-foreground/10 bg-background font-avenir text-foreground shadow-[-1.1vw_0_2.8vw_-1.7vw_color-mix(in_srgb,black_60%,transparent)] max-lg:w-full max-lg:border-l-0"
+        className="absolute inset-y-0 right-0 w-[calc(var(--cvw)*53)] overflow-y-auto overscroll-contain border-l border-foreground/10 bg-background font-avenir text-foreground shadow-[calc(var(--cvw)*-1.1)_0_calc(var(--cvw)*2.8)_calc(var(--cvw)*-1.7)_color-mix(in_srgb,black_60%,transparent)] max-lg:w-full max-lg:border-l-0"
       >
       <div ref={contentRef} className="flex flex-col gap-10 px-10 pt-7 pb-16 max-lg:px-8 max-lg:gap-8 max-md:px-[6vw] max-md:pb-0 *:shrink-0">
         <div className="flex items-center justify-between">
@@ -310,7 +305,7 @@ export function PreviewDrawer({
                 aria-pressed={saved}
                 onClick={() => onToggleWishlist(shown)}
                 aria-label={saved ? `Remove ${shown.title} from saved` : `Save ${shown.title}`}
-                className={`flex items-center justify-center gap-2 border border-foreground/20 px-3 leading-[1.2] ${T16} max-md:order-3 max-md:w-12 max-md:shrink-0 max-md:px-0 ${saved ? "text-primary! [&_svg]:fill-primary [&_svg]:stroke-primary" : ""}`}
+                className={`flex items-center justify-center gap-2 border border-foreground/20 px-3 ${T16} max-md:order-3 max-md:w-12 max-md:shrink-0 max-md:px-0 ${saved ? "text-primary! [&_svg]:fill-primary [&_svg]:stroke-primary" : ""}`}
               >
                 <div className="size-4.5">
                   <Heart className="size-full" />
@@ -335,7 +330,7 @@ export function PreviewDrawer({
           <div className="flex items-center gap-3 border border-foreground/10 bg-foreground/3 py-3 pr-2 pl-4 max-md:items-stretch max-md:gap-2 max-md:border-0 max-md:bg-transparent max-md:p-0">
             {/* Phones: its own bordered box beside an orange square copy button. */}
             {/* select-none: copying goes through Copy, which counts the install */}
-            <code className={`${MONO} min-w-0 flex-1 select-none overflow-x-auto whitespace-nowrap text-[0.97vw] text-foreground/80 max-lg:text-[1.7vw] max-md:flex max-md:items-center max-md:border max-md:border-foreground/10 max-md:bg-foreground/3 max-md:px-3 max-md:py-3 max-md:text-[3vw]`}>
+            <code className={`${MONO} min-w-0 flex-1 select-none overflow-x-auto whitespace-nowrap ${T14} text-foreground/80 max-md:flex max-md:items-center max-md:border max-md:border-foreground/10 max-md:bg-foreground/3 max-md:px-3 max-md:py-3`}>
               <span className="text-primary">$</span> {installCommand(shown)}
             </code>
             <button
@@ -365,9 +360,9 @@ export function PreviewDrawer({
         {related.length > 0 && (
           <div className="flex flex-col gap-8 border-t border-foreground/10 pt-10 ">
             <p className={`${T18} text-foreground`}>More in this category</p>
-            <div className="flex flex-wrap gap-[0.9vw] max-lg:gap-8">
+            <div className="flex flex-wrap gap-[calc(var(--cvw)*0.9)] max-lg:gap-8">
               {related.map((item) => (
-                <EffectCard key={item.name} effect={item} small dark sizes="240px" onOpen={onOpen} className="w-[calc((100%-0.9vw)/2)] max-md:w-full" tagClassName="border-foreground/20" />
+                <EffectCard key={item.name} effect={item} small dark sizes="240px" onOpen={onOpen} className="w-[calc((100%-var(--cvw)*0.9)/2)] max-md:w-full" tagClassName="border-foreground/20" />
               ))}
             </div>
           </div>

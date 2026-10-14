@@ -12,21 +12,18 @@ import { CopyButtonContent } from "@/components/ui/CodeBlock";
 import { resolveEffectVideoUrl, resolveMediaUrl, resizeR2ImageUrl } from "@/lib/media";
 import { useAutoplayPreviewVideo } from "@/hooks/useAutoplayPreviewVideo";
 import { twMerge } from "tailwind-merge";
+import { T11, T12, T14, T18 } from "../templates/tokens";
 
-// Site fonts: body is Neue Haas, h1–h4 get Aeonik from globals.css, code is Geist Mono.
+// Site fonts: body is Avenir, h1–h4 get Aeonik from globals.css, code is IBM Plex Mono.
 export const DISPLAY = "font-normal tracking-tight";
 export const MONO = "font-mono";
-export const LABEL = "text-[0.76vw] max-lg:text-[1.4vw] max-md:text-[2.8vw] uppercase tracking-normal";
+export const LABEL = `${T11} uppercase tracking-normal`;
 
 const NEW_WINDOW_MS = 1000 * 60 * 60 * 24 * 30;
-// Text sizes in vw: desktop · tablet (max-lg) · mobile (max-md).
-const T11 = "text-[0.76vw] max-lg:text-[1.4vw] max-md:text-[2.9vw]";
-const T12 = "text-[0.87vw] max-lg:text-[1.5vw] max-md:text-[3.2vw]";
-const T14 = "text-[0.97vw] max-lg:text-[1.7vw] max-md:text-[3.6vw]";
 
 // The Free / Pro badge sits on the preview image, with a barely-there shadow so it
 // holds against any cover.
-const BADGE = `inline-flex py-1 items-center px-3 ${T12} tracking-normal backdrop-blur-lg shadow-[0_0.1vw_0.4vw_color-mix(in_srgb,black_8%,transparent)]`;
+const BADGE = `inline-flex py-1 items-center px-3 ${T12} tracking-normal backdrop-blur-lg shadow-[0_calc(var(--cvw)*0.1)_calc(var(--cvw)*0.4)_color-mix(in_srgb,black_8%,transparent)]`;
 // The dark action buttons on a card (Save, Copy install, Preview); the drawer reuses it.
 export const ICON_BTN =
   `inline-flex h-8.5 min-w-8.5 cursor-pointer items-center justify-center gap-2 px-2.5 ${T12} text-foreground/90 bg-background/70 ring-1 ring-inset ring-foreground/12 backdrop-blur-lg transition-colors duration-500 hover:bg-grey/90 hover:text-foreground [&_svg]:size-3.5`;
@@ -131,12 +128,12 @@ export function EffectCard({
           onOpen?.(effect);
         }
       }}
-      className={`group relative flex flex-col gap-[1vw] outline-none max-md:gap-[3.5vw] ${className}`}
+      className={`group relative flex flex-col gap-[calc(var(--cvw)*1)] outline-none max-md:gap-[3.5vw] ${className}`}
     >
       {/* Hover - over this preview block only (group/preview), not the title or tags: it
           comes a touch towards the viewer (translateZ in perspective) with a soft shadow
           behind it, and the action buttons slide up into it. */}
-      <div data-card-preview className="group/preview relative aspect-[16/8.6] cursor-pointer overflow-hidden bg-dark-card duration-500 transition-all transform-[perspective(1200px)_translateZ(0)] hover:transform-[perspective(1200px)_translateZ(1vw)] hover:shadow-[0_1.2vw_2.4vw_-1.2vw_color-mix(in_srgb,black_35%,transparent)] group-focus-visible:ring-2 group-focus-visible:ring-primary">
+      <div data-card-preview className="group/preview relative aspect-[16/8.6] cursor-pointer overflow-hidden bg-dark-card duration-500 transition-all transform-[perspective(1200px)_translateZ(0)] hover:transform-[perspective(1200px)_translateZ(calc(var(--cvw)*1))] hover:shadow-[0_calc(var(--cvw)*1.2)_calc(var(--cvw)*2.4)_calc(var(--cvw)*-1.2)_color-mix(in_srgb,black_35%,transparent)] group-focus-visible:ring-2 group-focus-visible:ring-primary">
         {cover && !imageError ? (
           <Image
             src={cover}
@@ -243,12 +240,12 @@ export function EffectCard({
         )}
       </div>
 
-      <div className="flex items-start justify-between gap-[0.8vw] max-md:gap-[3vw]">
+      <div className="flex items-start justify-between gap-[calc(var(--cvw)*0.8)] max-md:gap-[3vw]">
         <div className="flex min-w-0 flex-1 flex-col gap-1">
-          <h4 className={twMerge(`text-[1.25vw] max-md:text-[4vw] max-lg:text-[2.2vw] truncate`, titleClassName)}>
+          <h4 className={twMerge(`${T18} truncate`, titleClassName)}>
             {effect.title}
           </h4>
-          <p className={twMerge(`flex items-center gap-[0.8vw] ${T14} max-md:gap-[3vw] ${dark ? "text-foreground/50" : "text-black/60"}`, metaClassName)}>
+          <p className={twMerge(`flex items-center gap-[calc(var(--cvw)*0.8)] ${T14} max-md:gap-[3vw] ${dark ? "text-foreground/50" : "text-black/60"}`, metaClassName)}>
             <span>{category}</span>
             {effect.installCountPending ? (
               <Skeleton className="h-[1em] w-10" />

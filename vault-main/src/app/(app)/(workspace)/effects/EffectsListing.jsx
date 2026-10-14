@@ -29,6 +29,7 @@ import { FilterMenu } from "./FilterMenu";
 import { usePromiseValue } from "@/lib/usePromiseValue";
 import { useUserPlan } from "@/lib/useUserPlan";
 import { DISPLAY, EffectCard, LABEL } from "./EffectCard";
+import { GUTTER, T11, T13, T14, T15, T16, T20 } from "../templates/tokens";
 import { Modal, useEffectCardActions } from "./useEffectCardActions";
 import { PreviewDrawer } from "./PreviewDrawer";
 import { CustomAnimationCta } from "./CustomAnimationCta";
@@ -61,8 +62,7 @@ const TIERS = [
   { id: "pro", label: "Pro" },
 ];
 // Card widths for the catalogue (flex-wrap, gap-x 1.4vw): 2 or 3 per row on desktop
-// Card widths for 2 / 3 per row, net of the grid's 2.5vw gaps (one gap per row for 2, two for 3)
-const GRID_COLS = { 2: "w-[calc((100%-2.5vw)/2)]", 3: "w-[calc((100%-5vw)/3)]" };
+const GRID_COLS = { 2: "w-[calc((100%-1.4vw)/2)]", 3: "w-[calc((100%-2.8vw)/3)]" };
 // Two- and three-pane window icons for the column switch.
 const COLUMN_ICONS = {
   2: (
@@ -91,22 +91,12 @@ const COLUMN_ITEMS = [2, 3].map((n) => ({
 // Same card layout animation as the /effects grid.
 const CARD_LAYOUT_TRANSITION = { layout: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } };
 
-/* ---------- text sizes (vw: desktop · tablet · mobile) ---------- */
-const T11 = "text-[0.76vw] max-lg:text-[1.4vw] max-md:text-[2.9vw]";
-const T13 = "text-[0.9vw] max-lg:text-[1.6vw] max-md:text-[3.3vw]";
-const T14 = "text-[0.97vw] max-lg:text-[1.7vw] max-md:text-[3.6vw]";
-const T15 = "text-[1.04vw] max-lg:text-[1.8vw] max-md:text-[3.8vw]";
-const T16 = "text-[1.1vw] max-lg:text-[1.95vw] max-md:text-[4.1vw]";
-const T18 = "text-[1.25vw] max-lg:text-[2.2vw] max-md:text-[4.4vw]";
-const T20 = "text-[1.4vw] max-lg:text-[2.4vw] max-md:text-[5vw]";
-const T28 = "text-[1.95vw] max-lg:text-[3.4vw] max-md:text-[7vw]";
-
 /* ---------- class tokens ---------- */
-// The standard section wrapper: capped width + page gutter
-const WRAP = "mx-auto w-full max-w-[1536px] px-[4.5vw] max-md:px-[6vw]";
+// The standard section wrapper: capped width + page gutter (GUTTER, shared with templates)
+const WRAP = GUTTER;
 
 const CHIP =
-  `inline-flex h-8 shrink-0 cursor-pointer items-center gap-[0.5vw] px-3 ${T13} transition-[background-color,color,box-shadow] duration-500 max-md:gap-[2vw]`;
+  `inline-flex h-8 shrink-0 cursor-pointer items-center gap-[calc(var(--cvw)*0.5)] px-3 ${T13} transition-[background-color,color,box-shadow] duration-500 max-md:gap-[2vw]`;
 const CHIP_OFF = "text-black/60 ring-1 ring-inset ring-black/10 hover:text-ink hover:ring-primary";
 const CHIP_ON = "bg-primary text-background";
 
@@ -571,12 +561,12 @@ export function EffectsListing({
           <Breadcrumb />
         </div>
 
-        <div data-v4-hero className="flex justify-between gap-[3vw] max-lg:flex-col max-lg:items-stretch max-lg:gap-[5vw]">
+        <div data-v4-hero className="flex justify-between gap-[calc(var(--cvw)*3)] max-lg:flex-col max-lg:items-stretch max-lg:gap-[5vw]">
           {/* Same entrances as the effect page: chars for the title, lines for the copy. */}
           {/* Keyed by page: SplitText owns the heading's text nodes, so a new page gets a
               fresh heading (and runs its entrance again) instead of a stale update. */}
           <HeadAnim key={scope || "all"} rotate={0} animateOnScroll={false}>
-            <h1 className="type-display w-[58%] max-lg:w-full -mt-3">
+            <h1 className="type-display -mt-3 w-[58%] max-lg:w-full">
               {scope ? (
                 <HeroTitle name={content?.name} />
               ) : (
@@ -587,7 +577,7 @@ export function EffectsListing({
             </h1>
           </HeadAnim>
 
-          <div className="flex w-[25vw] flex-col gap-[1.6vw] max-lg:w-full max-md:gap-[6vw]">
+          <div className="flex w-[calc(var(--cvw)*25)] flex-col gap-[calc(var(--cvw)*1.6)] max-lg:w-full max-md:gap-[6vw]">
             {(scope
               ? [].concat(content?.description || [])
               : ["Production-ready interaction effects for React and Next.js. Preview any of them live, then copy or install with one command."]
@@ -602,13 +592,13 @@ export function EffectsListing({
 
       {/* ---------- trending ---------- */}
       {trendingEffects.length > 0 && (
-        <section id="trending" data-v4-fade aria-labelledby="v4-trending" className={`${WRAP} flex flex-col gap-[2.5vw] pb-28 pt-4 max-lg:pb-20 max-lg:pt-16 max-lg:gap-8`}>
+        <section id="trending" data-v4-fade aria-labelledby="v4-trending" className={` flex flex-col gap-[2vw] pb-28 pt-4 max-lg:gap-8 max-lg:pb-20`}>
           <div className="flex items-end justify-between">
-            <h2 id="v4-trending" className={`${DISPLAY} font-aeonik text-[2.2vw] max-lg:text-[4vw] max-md:text-[7vw]`}>
+            <h2 id="v4-trending" className={`${DISPLAY} max-md:px-[7vw] max-lg:px-[5vw] text-[calc(var(--cvw)*2.2)] max-lg:text-[4vw] max-md:text-[7vw]`}>
               Trending this Week
             </h2>
             {/* Desktop / tablet: arrows beside the heading (phones: below the slider). */}
-            <div className="flex gap-[0.4vw] max-md:hidden">
+            <div className="flex gap-[calc(var(--cvw)*0.4)] max-md:hidden max-lg:px-[5vw] max-lg:gap-3">
               <SliderArrowButton direction="prev" ariaLabel="Previous" disabled={trendEdges.start} onClick={() => scrollTrending(-1)} />
               <SliderArrowButton direction="next" ariaLabel="Next" disabled={trendEdges.end} onClick={() => scrollTrending(1)} />
             </div>
@@ -627,41 +617,40 @@ export function EffectsListing({
             // -m/p 1vw: room inside the clipped row for a card's hover lift (translateZ),
             // which the row's overflow would otherwise cut off; the negative margin keeps
             // the cards exactly where they were.
-            className="mx-[-1vw] my-[-1vw] flex cursor-grab select-none gap-[1.3vw] overflow-x-hidden overflow-y-hidden px-[1vw] py-[1vw] scrollbar-none max-lg:gap-[1.4vw] max-lg:overflow-x-auto max-md:gap-[3.6vw]"
+            className="mx-[calc(var(--cvw)*-1)] my-[calc(var(--cvw)*-1)] flex cursor-grab select-none gap-[calc(var(--cvw)*1.3)] overflow-x-hidden overflow-y-hidden px-[calc(var(--cvw)*1)] py-[calc(var(--cvw)*1)] max-lg:px-[5vw] scrollbar-none max-md:px-8! max-lg:gap-[1.4vw] max-lg:overflow-x-auto max-md:mr-0 max-md:gap-[3.6vw] max-md:pr-[8vw]"
           >
             {trendingEffects.map((effect, index) => (
-              <EffectCard key={effect.name} {...cardProps(effect, index, true)} small dark className="w-[calc((100%-1.8vw)/3)] shrink-0 max-lg:w-[45%] max-md:w-[82%]" tagClassName="text-foreground border-foreground/30" metaClassName="text-foreground/80" />
+              <EffectCard key={effect.name} {...cardProps(effect, index, true)} small dark className="w-[calc((100%-var(--cvw)*1.8)/3)] shrink-0 max-lg:w-[45%] max-md:w-[82%]" tagClassName="text-foreground border-foreground/30" metaClassName="text-foreground/80" />
             ))}
           </div>
           {/* Phones: arrows below the slider, on the left. */}
-          <div className="hidden gap-[2vw] max-md:flex">
+          <div className="hidden gap-[calc(var(--cvw)*2)] max-md:flex max-md:px-[7vw] ">
             <SliderArrowButton direction="prev" ariaLabel="Previous" disabled={trendEdges.start} onClick={() => scrollTrending(-1)} />
             <SliderArrowButton direction="next" ariaLabel="Next" disabled={trendEdges.end} onClick={() => scrollTrending(1)} />
           </div>
         </section>
       )}
 
-      <div ref={sheetRef} id="v4-grid" data-v4-fade data-sound-hover="off" data-sound-flow="off" data-vault-header-scroll-away className="relative scroll-mt-4 bg-light text-ink">
-       
+      <div ref={sheetRef} id="v4-grid" data-v4-fade data-sound-hover="off" data-sound-flow="off" data-vault-header-scroll-away className="relative scroll-mt-4 bg-light  text-ink">
         <div className="sticky top-[-2%] z-5 h-fit border-b border-black/8 bg-light max-lg:static max-lg:border-b-0">
-          <div className={`${WRAP} flex flex-wrap items-end justify-between gap-[1vw] pt-10 pb-4 max-md:gap-[8vw] max-md:pt-8`}>
+          <div className={` flex flex-wrap items-end justify-between gap-[calc(var(--cvw)*1)] pt-10 pb-4 max-md:gap-[8vw] max-md:pt-8`}>
             {/* A div, not a p: RollText renders a div, which a <p> can't contain. */}
-            <div aria-live="polite" className={`${DISPLAY} ${T20} flex flex-wrap items-baseline font-aeonik tracking-tight`}>
+            <div aria-live="polite" className={`${DISPLAY} ${T20} flex max-md:px-[7vw] max-lg:px-[5vw] flex-wrap items-baseline font-aeonik tracking-tight`}>
               {/* Fixed-width slots, so nothing beside them moves when the count or page name changes */}
-              <span className="flex w-[6vw] shrink-0 items-baseline gap-x-[0.4vw] max-lg:w-[14vw] max-md:w-[32vw] max-md:gap-x-[1.5vw]">
-                <span className="relative -top-[0.05em] font-medium tabular-nums">
+              <span className="flex w-[calc(var(--cvw)*6)] shrink-0 items-baseline gap-x-[calc(var(--cvw)*0.4)] max-lg:w-[14vw] max-md:w-[32vw] max-md:gap-x-[1.5vw]">
+                <span className="relative -top-[0.05em] tabular-nums">
                   <RollNumber value={filtered.length} values={[0, effects.length]} />
                 </span>
                 <span className="text-black/60">{countWord(filtered.length)}</span>
               </span>
               {/* The dot stays put, only the name rolls */}
-              <span className="flex shrink-0 items-baseline  pl-[0.3vw] max-md:gap-x-[1vw]">
-                <span aria-hidden="true" className={`${T15} text-black/60 transition-opacity mx-1 duration-300 ${context ? "" : "opacity-0"}`}>•</span>
-                <RollText text={contextTail} block className="w-[14vw] shrink-0 capitalize overflow-x-visible! overflow-y-clip! whitespace-nowrap max-lg:w-[24vw] max-md:w-[48vw]" />
+              <span className="flex shrink-0 items-baseline gap-x-1 pl-2 max-md:gap-x-2">
+                <span aria-hidden="true" className={`${T15} text-black/60 transition-opacity duration-300 ${context ? "" : "opacity-0"}`}>•</span>
+                <RollText text={contextTail} block className="w-[calc(var(--cvw)*14)] shrink-0 capitalize overflow-x-visible! overflow-y-clip! whitespace-nowrap max-lg:w-[24vw] max-md:w-[48vw]" />
               </span>
             </div>
 
-            <div className="flex flex-wrap items-center gap-[0.7vw] max-md:gap-[2.5vw]">
+            <div className="flex flex-wrap max-md:px-[7vw] max-lg:px-[5vw] items-center gap-[calc(var(--cvw)*0.7)] max-md:gap-[2.5vw]">
               {/* The Free / Pro pages are already one tier, so the All · Free · Pro toggle is left out there. */}
               {!TIER_SCOPES.includes(scope) && <SlidingSegment label="Tier" items={TIERS} value={tier} onChange={setTier} itemClassName="w-14" />}
               <button
@@ -698,17 +687,17 @@ export function EffectsListing({
           </div>
         </div>
 
-        <div className={`${WRAP} flex flex-col gap-[2.8vw] pt-6 pb-24 max-md:gap-[10vw] max-md:pb-16`}>
-          <div className="flex flex-col gap-[0.8vw] max-md:gap-[3vw]">
+        <div className={`${WRAP} flex flex-col gap-[calc(var(--cvw)*2.8)] pt-6 pb-24 max-md:gap-[10vw] max-md:pb-16`}>
+          <div className="flex flex-col gap-[calc(var(--cvw)*0.8)] max-md:gap-[3vw]">
             {/* categories: each chip shows its category's page in place (see selectCategory) */}
-            <div className="flex flex-wrap gap-[0.4vw] max-md:gap-[1.5vw]">
+            <div className="flex flex-wrap gap-[calc(var(--cvw)*0.4)] max-md:gap-[1.5vw]">
               {[{ id: null, label: "All" }, ...categoryOptions.map((c) => ({ id: c.id, label: getQuickCategoryLabel(c.id), count: c.count }))].map((c) => {
                 const active = c.id ? category === c.id : !category;
                 const inner = (
                   <>
                     {c.label}
                     {c.count != null && (
-                      <span className={`relative font-mono ${T11} tabular-nums ${active ? "text-background" : "text-black/50"}`}>{c.count}</span>
+                      <span className={`relative font-mono ${T11} tabular-nums ${active ? "text-background" : "text-black/60"}`}>{c.count}</span>
                     )}
                   </>
                 );
@@ -733,7 +722,7 @@ export function EffectsListing({
                   key="active-filters"
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.2 }}
-                  className="flex flex-wrap items-center gap-[0.4vw] max-md:gap-[1.5vw]"
+                  className="flex flex-wrap items-center gap-[calc(var(--cvw)*0.4)] max-md:gap-[1.5vw]"
                 >
                   <AnimatePresence initial={false} mode="popLayout">
                     {actives.map((a) => (
@@ -748,7 +737,7 @@ export function EffectsListing({
                         type="button"
                         onClick={a.clear}
                         aria-label={`Remove filter ${a.label}`}
-                        className={`group inline-flex h-7.5 cursor-pointer items-center gap-[0.5vw] bg-ink px-2.5 ${T13} text-light max-md:gap-[2vw] ${a.roll ? "w-[10vw] shrink-0 justify-between max-lg:w-[18vw] max-md:w-[34vw]" : ""}`}
+                        className={`group inline-flex h-7.5 cursor-pointer items-center gap-[calc(var(--cvw)*0.5)] bg-ink px-2.5 ${T13} text-light max-md:gap-[2vw] ${a.roll ? "w-[calc(var(--cvw)*10)] shrink-0 justify-between max-lg:w-[18vw] max-md:w-[34vw]" : ""}`}
                       >
                         {a.roll ? <RollText text={a.label} block className="min-w-0 flex-1 overflow-clip! whitespace-nowrap text-left" /> : a.label}
                         <X className="size-3 transition-transform duration-300 ease-in-out group-hover:rotate-90 motion-reduce:transition-none" aria-hidden="true" />
@@ -800,8 +789,8 @@ export function EffectsListing({
           )}
 
           {hasMore && (
-            <div className="flex flex-col items-center gap-3">
-              <p aria-live="polite" className="text-black/60">
+            <div className="flex flex-col items-center gap-6">
+              <p aria-live="polite" className="type-body text-black/60">
                 Showing {visible.length} of {filtered.length}
               </p>
               <div className="h-0.5 w-55 overflow-hidden bg-black/10">
@@ -810,7 +799,7 @@ export function EffectsListing({
               <button
                 type="button"
                 onClick={() => setShown((n) => n + PAGE)}
-                className="h-11 cursor-pointer border border-black/10 bg-black/2 px-5 text-ink transition-colors duration-500 hover:border-primary"
+                className="type-body h-11 cursor-pointer border border-black/10 bg-black/2 px-5 text-ink transition-colors duration-500 hover:border-primary"
               >
                 Show More Effects
               </button>
@@ -822,19 +811,18 @@ export function EffectsListing({
         {!isProUser && (
           <section id="upgrade" className={`${WRAP} pb-24 max-md:pb-16`}>
             <div className="relative flex items-start justify-between gap-6 overflow-hidden bg-ink px-10 py-12 text-light max-lg:flex-col max-lg:p-10 max-md:p-7">
-              <div className="relative flex w-[70%] flex-col gap-6 max-lg:w-full">
-                <h2 className="text-[4.2vw] max-lg:text-[5.5vw] max-md:text-[9vw]">
+              <div className="relative flex w-[65%] flex-col gap-6 max-lg:w-full">
+                <h2 className="type-h1 w-[90%]">
                   Everything in the Vault.{" "}
-                  <br/>
                   <span className="gradient-text-animate">
                     One Plan.
                   </span>
                 </h2>
-                <p className="type-body-lg  text-light/80 w-[85%] max-md:w-full">
+                <p className="type-body-lg w-[85%] text-foreground/80 max-md:w-full">
                   Pro unlocks every component, section and template, with template credits and new drops as they land. Everything you copy stays in your repo.
                 </p>
               </div>
-              <div className="relative flex h-fit flex-wrap gap-2 mt-5">
+              <div className="relative flex h-fit flex-wrap gap-2 pt-5">
                 <Button text="See Plans" href="/pricing" />
               </div>
             </div>
@@ -843,7 +831,7 @@ export function EffectsListing({
       </div>
 
       {/* ---------- FAQ + custom work CTA (from the current listing) ---------- */}
-      <div data-v4-fade className="flex h-full w-full flex-col gap-[2vw] bg-light pb-[5vw] max-lg:pb-14">
+      <div data-v4-fade className="flex h-full w-full flex-col gap-[calc(var(--cvw)*2)] bg-light pb-[calc(var(--cvw)*5)] max-lg:pb-14">
         {faqItems.length > 0 && <FAQ faqItems={faqItems} translateTop={false} />}
         <div className={WRAP}>
           <CustomAnimationCta cta={cta} />
@@ -885,7 +873,7 @@ export function EffectsListing({
 function SlidingSegment({ label, items, value, onChange, itemClassName, className = "" }) {
   const index = Math.max(0, items.findIndex((item) => item.id === value));
   return (
-    <div role="group" aria-label={label} className={`relative flex gap-0.5 bg-white p-0.75 ring-1 ring-inset ring-black/10  ${className}`}>
+    <div role="group" aria-label={label} className={`relative flex gap-0.5 bg-foreground p-0.75 ring-1 ring-inset ring-black/10 ${className}`}>
       <span
         aria-hidden="true"
         className={`pointer-events-none absolute top-0.75 bottom-0.75 left-0.75 bg-ink transition-transform duration-500 ease-[cubic-bezier(.16,1,.3,1)] ${itemClassName}`}
