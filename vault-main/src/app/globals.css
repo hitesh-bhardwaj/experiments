@@ -25,6 +25,9 @@
   /* Light sections: background and text */
   --light: #F4F4F4;
   --ink: #1D1D1D;
+  /* Form states (community waitlist, toasts) */
+  --success: #63D69A;
+  --danger: #FF8A78;
   /* Dim text: black/20 on light surfaces, white/20 on dark ones */
   --black-20: rgb(0 0 0 / 0.2);
   --white-20: rgb(255 255 255 / 0.2);
@@ -51,6 +54,8 @@ body {
   --color-light-grey: var(--light-grey);
   --color-light: var(--light);
   --color-ink: var(--ink);
+  --color-success: var(--success);
+  --color-danger: var(--danger);
   --color-black-20: var(--black-20);
   --color-white-20: var(--white-20);
   /* The site's two faces: font-avenir (text) and font-aeonik (headings / display) */

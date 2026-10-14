@@ -9,7 +9,6 @@ import { useInteraction } from "@/homepage/components/InteractionProvider";
 import { getSiteFluid } from "@/homepage/components/SiteBackground";
 import { MEDIA } from "@/lib/breakpoints";
 
-const SMALL_SCREEN = "(max-width: 760px)";
 const LOW_CORE_COUNT = 4;
 
 // One fixed canvas behind the whole page: the crowd drifts between the dark
@@ -47,7 +46,7 @@ export default function CommunityCrowd() {
     const canvas = canvasRef.current;
     if (!isDesktop || skipGPU || !canvas) return undefined;
     const zoneRoot = document.querySelector(".cm-x");
-    const small = window.matchMedia(SMALL_SCREEN).matches || (navigator.hardwareConcurrency || 8) <= LOW_CORE_COUNT;
+    const small = window.matchMedia(MEDIA.mobile).matches || (navigator.hardwareConcurrency || 8) <= LOW_CORE_COUNT;
     // Prototype: showToast, 3.4s
     const onToast = (msg) => {
       setToast({ msg, on: true });
@@ -90,15 +89,14 @@ export default function CommunityCrowd() {
     <>
       {isDesktop && skipGPU && <div
         aria-hidden="true"
-        className="pointer-events-none fixed inset-0 z-0 size-full bg-[radial-gradient(50%_45%_at_72%_42%,rgba(255,107,0,.16),transparent_70%),radial-gradient(35%_30%_at_70%_45%,rgba(244,244,244,.05),transparent_70%)]"
+        className="pointer-events-none fixed inset-0 z-0 size-full bg-[radial-gradient(50%_45%_at_72%_42%,color-mix(in_srgb,var(--primary)_16%,transparent),transparent_70%),radial-gradient(35%_30%_at_70%_45%,color-mix(in_srgb,var(--light)_5%,transparent),transparent_70%)]"
       />}
       {isDesktop && !skipGPU && createPortal(<canvas ref={canvasRef} className="pointer-events-none fixed inset-0 -z-2 size-full opacity-0 transition-opacity duration-[1400ms] ease-out" aria-hidden="true" />, document.body)}
       {/* The prototype's toast (a full hold explodes the wordmark) */}
       <div
         role="status"
         aria-live="polite"
-        className="fixed bottom-[calc(24px+env(safe-area-inset-bottom,0px))] left-1/2 z-130 max-w-[calc(100vw-2rem)] bg-[#1f1f1f] px-[18px] py-3 text-sm text-white shadow-[inset_0_0_0_1px_rgba(244,244,244,.1),0_20px_40px_-12px_#000]"
-        style={{ transform: `translate(-50%, ${toast.on ? "0" : "240%"})`, transition: "transform 1s cubic-bezier(.16,1,.3,1)" }}
+        className={`type-small fixed bottom-[calc(var(--spacing)*6+env(safe-area-inset-bottom,0px))] left-1/2 z-130 max-w-[calc(100vw-var(--spacing)*8)] -translate-x-1/2 bg-grey px-4 py-3 text-foreground shadow-2xl ring-1 ring-inset ring-foreground/10 transition-transform duration-1000 ease-[cubic-bezier(.16,1,.3,1)] ${toast.on ? "translate-y-0" : "translate-y-[240%]"}`}
       >
         {toast.msg}
       </div>

@@ -16,7 +16,7 @@ const TD_LINES = [
   ["  .from(card, { y: 80, opacity: 0, ", ["k", "ease"], ': "expo.out" })'],
   ["  .from(words, { yPercent: 110, ", ["k", "stagger"], ": 0.06 }, 0.18)"],
   ["  .from(glow, { scale: 0.6, opacity: 0 }, 0.42)"],
-  ['  .to(card, { boxShadow: "0 30px 60px -20px #FF6B00" }, 0.7)'],
+  ['  .to(card, { boxShadow: "0 30px 60px -20px #FF5F00" }, 0.7)'],
 ];
 const SCRUB_MAX = 1000;
 const MANUAL_HOLD_MS = 1500;
@@ -165,12 +165,12 @@ export function TeardownCard() {
         <div ref={boxRef} className="absolute border border-transparent bg-black/20 backdrop-blur-lg" aria-hidden="true" />
         <canvas ref={canvasRef} className="absolute inset-0 size-full font-aeonik" aria-hidden="true" />
       </div>
-      <div className="relative flex items-center gap-[1vw] border-t border-foreground/10 px-[1.4vw] py-[0.8vw] max-md:gap-[3.5vw] max-md:px-[5vw] max-md:py-[3vw]">
-        <div className="absolute top-1/2 right-[5.8vw] left-[1.4vw] h-0 max-md:right-[21vw] max-md:left-[5vw]" aria-hidden="true">
+      <div className="relative flex items-center gap-[calc(var(--cvw)*1)] border-t border-foreground/10 px-[calc(var(--cvw)*1.4)] py-[calc(var(--cvw)*0.8)] max-md:gap-[3.5vw] max-md:px-[5vw] max-md:py-[3vw]">
+        <div className="absolute top-1/2 right-[calc(var(--cvw)*5.8)] left-[calc(var(--cvw)*1.4)] h-0 max-md:right-[21vw] max-md:left-[5vw]" aria-hidden="true">
           {TD_KEYS.map((k) => (
             <i
               key={k}
-              className={`absolute -top-[0.35vw] -ml-[0.35vw] size-[0.7vw] rotate-45 ring-1 ring-inset ring-primary/60 max-md:-top-[1.3vw] max-md:-ml-[1.3vw] max-md:size-[2.6vw] ${progress >= k - 0.001 ? "bg-primary" : "bg-foreground/10"}`}
+              className={`absolute -top-[calc(var(--cvw)*0.35)] -ml-[calc(var(--cvw)*0.35)] size-[calc(var(--cvw)*0.7)] rotate-45 ring-1 ring-inset ring-primary/60 max-md:-top-[1.3vw] max-md:-ml-[1.3vw] max-md:size-[2.6vw] ${progress >= k - 0.001 ? "bg-primary" : "bg-foreground/10"}`}
               style={{ left: `${k * 100}%` }}
             />
           ))}
@@ -186,14 +186,14 @@ export function TeardownCard() {
           onPointerUp={() => { manualUntilRef.current = performance.now() + MANUAL_HOLD_MS; }}
           aria-label="Scrub the teardown timeline"
         />
-        <span className={`${LABEL} min-w-[3.8vw] text-right text-foreground/60 tabular-nums max-md:min-w-[14vw]`}>{(progress * TD_DURATION).toFixed(2)}s</span>
+        <span className={`${LABEL} min-w-[calc(var(--cvw)*3.8)] text-right text-foreground/80 tabular-nums max-md:min-w-[14vw]`}>{(progress * TD_DURATION).toFixed(2)}s</span>
       </div>
-      <pre className="relative m-0 overflow-hidden border-t border-foreground/5 px-[1.4vw] py-[0.9vw] font-mono text-[0.8vw] leading-[1.8] whitespace-pre text-foreground/40 max-md:px-[3.6vw] max-md:py-[3vw] max-md:text-[2.7vw] max-md:leading-[1.6] max-md:whitespace-pre-wrap" aria-hidden="true">
+      <pre className="relative m-0 overflow-hidden border-t border-foreground/5 px-[calc(var(--cvw)*1.4)] py-[calc(var(--cvw)*0.9)] type-small whitespace-pre text-foreground/80 max-md:px-[3.6vw] max-md:py-[3vw] max-md:whitespace-pre-wrap" aria-hidden="true">
         {TD_LINES.map((parts, i) => (
           // Mobile: each line is its own block and wraps, continuing under the call (hanging indent);
           // it spans the block's padding so the highlight still runs edge to edge
-          <span key={i} className={`max-md:-mx-[3.6vw] max-md:block max-md:pr-[3.6vw] max-md:pl-[calc(3.6vw+4ch)] max-md:-indent-[4ch] ${i === Math.min(TD_LINES.length - 1, phase) ? "bg-primary/15 text-foreground shadow-[-1.4vw_0_0_color-mix(in_srgb,var(--primary)_15%,transparent),1.4vw_0_0_color-mix(in_srgb,var(--primary)_15%,transparent)] max-md:shadow-none" : ""}`}>
-            {parts.map((part, j) => (Array.isArray(part) ? <span key={j} className="text-[#FFB27A]">{part[1]}</span> : part))}
+          <span key={i} className={`font-mono max-md:-mx-[3.6vw] max-md:block max-md:pr-[3.6vw] max-md:pl-[calc(3.6vw+4ch)] max-md:-indent-[4ch] ${i === Math.min(TD_LINES.length - 1, phase) ? "bg-primary/15 text-foreground shadow-[-calc(var(--cvw)*1.4)_0_0_color-mix(in_srgb,var(--primary)_15%,transparent),calc(var(--cvw)*1.4)_0_0_color-mix(in_srgb,var(--primary)_15%,transparent)] max-md:shadow-none" : ""}`}>
+            {parts.map((part, j) => (Array.isArray(part) ? <span key={j} className="text-primary-hover">{part[1]}</span> : part))}
             {i < TD_LINES.length - 1 && <span className="max-md:hidden">{"\n"}</span>}
           </span>
         ))}
@@ -283,27 +283,27 @@ export function VoteCard() {
   };
 
   return (
-    <div className={`${CARD} gap-[1vw] p-[2vw] max-md:aspect-auto! max-md:gap-[5vw] max-md:p-[5vw] max-md:py-[8vw]`}>
+    <div className={`${CARD} gap-[calc(var(--cvw)*1)] p-[calc(var(--cvw)*2)] max-md:aspect-auto! max-md:gap-[5vw] max-md:p-[5vw] max-md:py-[8vw]`}>
       <CardFluid />
-      <p className={`${LABEL} relative text-foreground/60`}>Up next in the vault · you decide</p>
-      <ul ref={listRef} className="relative flex flex-col gap-[0.6vw] max-md:gap-[2vw]">
+      <p className={`${LABEL} relative text-foreground/80`}>Up next in the vault · you decide</p>
+      <ul ref={listRef} className="relative flex flex-col gap-[calc(var(--cvw)*0.6)] max-md:gap-[2vw]">
         {order.map((i) => {
           const on = voted.includes(i);
           return (
             <li
               key={i}
               data-idea={i}
-              className={`flex items-center justify-between gap-[1vw] px-[1.1vw] py-[1vw] ring-1 ring-inset transition-[background-color,box-shadow] duration-700 ease-[cubic-bezier(.16,1,.3,1)] max-md:gap-[3.5vw] max-md:px-[4vw] max-md:py-[3.5vw] ${on ? "bg-primary/10 ring-primary/45" : "bg-black/20 ring-foreground/10 backdrop-blur-lg"}`}
+              className={`flex items-center justify-between gap-[calc(var(--cvw)*1)] px-[calc(var(--cvw)*1.1)] py-[calc(var(--cvw)*1)] ring-1 ring-inset transition-[background-color,box-shadow] duration-700 ease-[cubic-bezier(.16,1,.3,1)] max-md:gap-[3.5vw] max-md:px-[4vw] max-md:py-[3.5vw] ${on ? "bg-primary/10 ring-primary/45" : "bg-black/20 ring-foreground/10 backdrop-blur-lg"}`}
             >
               <div className="flex min-w-0 flex-col gap-0.5">
-                <span className="type-h3 font-avenir text-foreground">{VOTE_IDEAS[i].title}</span>
-                <span className="type-small text-foreground/50">{VOTE_IDEAS[i].text}</span>
+                <span className="type-h3 text-foreground">{VOTE_IDEAS[i].title}</span>
+                <span className="type-small text-foreground/80">{VOTE_IDEAS[i].text}</span>
               </div>
               <button
                 type="button"
                 aria-pressed={on}
                 onClick={() => toggle(i)}
-                className={`${LABEL} h-[2.4vw] w-[7.8vw] shrink-0 px-[1vw] ring-1 ring-inset transition-[background-color,color,box-shadow] duration-600 ease-[cubic-bezier(.16,1,.3,1)] max-md:h-[9vw] max-md:w-[28vw] max-md:px-[3.5vw] ${on ? "bg-primary text-background ring-primary" : "text-foreground/80 ring-foreground/15 hover:ring-primary/60"}`}
+                className={`${LABEL} h-[calc(var(--cvw)*2.4)] w-[calc(var(--cvw)*7.8)] shrink-0 px-[calc(var(--cvw)*1)] ring-1 ring-inset transition-[background-color,color,box-shadow] duration-600 ease-[cubic-bezier(.16,1,.3,1)] max-md:h-[9vw] max-md:w-[28vw] max-md:px-[3.5vw] ${on ? "bg-primary text-background ring-primary" : "text-foreground/80 ring-foreground/15 hover:ring-primary/60"}`}
               >
                 <VoteLabel on={on} />
               </button>
@@ -358,10 +358,10 @@ export function CritiqueCard() {
       <CardFluid />
       <div className="relative flex-1">
         <canvas ref={canvasRef} className="absolute inset-0 size-full" aria-hidden="true" />
-        <span className={`${LABEL} absolute top-[1.2vw] left-[1.4vw] text-foreground/50 max-md:top-[4.5vw] max-md:left-[5vw]`}>Example thread · work in progress</span>
+        <span className={`${LABEL} absolute top-[calc(var(--cvw)*1.2)] left-[calc(var(--cvw)*1.4)] text-foreground/80 max-md:top-[4.5vw] max-md:left-[5vw]`}>Example thread · work in progress</span>
       </div>
-      <div className="relative px-[1.7vw] pb-[1.5vw] max-md:px-[6vw] max-md:pb-[5.6vw]">
-        <div className="relative h-[4.4vw] border-t border-foreground/10 max-md:h-[16vw]">
+      <div className="relative px-[calc(var(--cvw)*1.7)] pb-[calc(var(--cvw)*1.5)] max-md:px-[6vw] max-md:pb-[5.6vw]">
+        <div className="relative h-[calc(var(--cvw)*4.4)] border-t border-foreground/10 max-md:h-[16vw]">
           <i ref={playRef} className="absolute -top-px left-0 h-px w-0 bg-primary" />
           {CRIT_PINS.map((pin, i) => (
             <button
@@ -373,7 +373,7 @@ export function CritiqueCard() {
               onPointerLeave={() => setHoveredPin(-1)}
               onFocus={() => setHoveredPin(i)}
               onBlur={() => setHoveredPin(-1)}
-              className={`group/pin absolute -top-[0.6vw] -ml-[0.6vw] size-[1.2vw] border transition-[background-color,border-color,box-shadow] duration-600 ${i < reached ? "border-primary bg-primary" : "border-primary/60 bg-dark-card"} ease-[cubic-bezier(.16,1,.3,1)] hover:ring-[0.5vw] hover:ring-primary/30 focus-visible:ring-[0.5vw] focus-visible:ring-primary/30 max-md:-top-[2.3vw] max-md:-ml-[2.3vw] max-md:size-[4.6vw] ${activePin === i ? "ring-[0.5vw] ring-primary/30" : i < reached ? "ring-[0.3vw] ring-primary/20" : "ring-0"}`}
+              className={`group/pin absolute -top-[calc(var(--cvw)*0.6)] -ml-[calc(var(--cvw)*0.6)] size-[calc(var(--cvw)*1.2)] border transition-[background-color,border-color,box-shadow] duration-600 ${i < reached ? "border-primary bg-primary" : "border-primary/60 bg-dark-card"} ease-[cubic-bezier(.16,1,.3,1)] hover:ring-[calc(var(--cvw)*0.5)] hover:ring-primary/30 focus-visible:ring-[calc(var(--cvw)*0.5)] focus-visible:ring-primary/30 max-md:-top-[2.3vw] max-md:-ml-[2.3vw] max-md:size-[4.6vw] ${activePin === i ? "ring-[calc(var(--cvw)*0.5)] ring-primary/30" : i < reached ? "ring-[calc(var(--cvw)*0.3)] ring-primary/20" : "ring-0"}`}
             />
           ))}
           {/* Comments sit on the timeline, not inside the pins, so on mobile the
@@ -383,7 +383,7 @@ export function CritiqueCard() {
               key={pin.who}
               aria-hidden="true"
               style={{ "--pin": `${pin.at * 100}%` }}
-              className={`pointer-events-none absolute bottom-[calc(100%+1.4vw)] left-(--pin) w-[17vw] -translate-x-1/2 bg-light px-[1vw] py-[0.8vw] text-left type-small text-ink transition-opacity ease-[cubic-bezier(.16,1,.3,1)] max-md:bottom-[calc(100%+3.1vw)] max-md:w-[52vw] max-md:px-[3.5vw] max-md:py-[3vw] ${i === hoveredPin || i === activePin
+              className={`pointer-events-none absolute bottom-[calc(100%+calc(var(--cvw)*1.4))] left-(--pin) w-[calc(var(--cvw)*17)] -translate-x-1/2 bg-light px-[calc(var(--cvw)*1)] py-[calc(var(--cvw)*0.8)] text-left type-small text-ink transition-opacity ease-[cubic-bezier(.16,1,.3,1)] max-md:bottom-[calc(100%+3.1vw)] max-md:w-[52vw] max-md:px-[3.5vw] max-md:py-[3vw] ${i === hoveredPin || i === activePin
                   ? "opacity-100 duration-500"
                   // Comments the playhead has left hide at once
                   : "opacity-0 duration-0"} ${i === 0
@@ -392,7 +392,7 @@ export function CritiqueCard() {
                     ? "max-md:right-0 max-md:left-auto max-md:translate-x-0"
                     : ""}`}
             >
-              <b className="block font-bold text-[#B34A00]">{pin.who}</b> {pin.text}
+              <b className="block font-normal text-primary">{pin.who}</b> {pin.text}
             </span>
           ))}
         </div>
@@ -404,12 +404,12 @@ export function CritiqueCard() {
 // 04 featured: the spotlight card, addressed to the visitor once they join
 export function FeaturedCard({ joined }) {
   return (
-    <div className={`${CARD} items-center justify-center p-[2.8vw] max-md:p-[6vw]`}>
+    <div className={`${CARD} items-center justify-center p-[calc(var(--cvw)*2.8)] max-md:p-[6vw]`}>
       <CardFluid />
-      <div className="relative flex aspect-[4/5] w-[78%] max-w-[29vw] flex-col justify-end gap-[0.7vw] overflow-hidden bg-black/20 p-[1.8vw] border-beam backdrop-blur-lg max-md:max-w-none max-md:gap-[2.5vw] max-md:p-[6.6vw] after:absolute after:-top-[30%] after:-right-[30%] after:aspect-square after:w-4/5 after:bg-[radial-gradient(circle,color-mix(in_srgb,var(--primary)_45%,transparent),transparent_65%)] after:content-['']">
-        <p className={`${LABEL} relative text-[#FFB27A]`}>Featured on Vault · this week</p>
-        <p className="type-h2 font-avenir relative text-foreground">Your work<br />could be here.</p>
-        <p className={`${LABEL} relative text-foreground/60`}>by <span className="text-foreground">{joined ? "you, founding member" : "you"}</span></p>
+      <div className="relative flex aspect-[4/5] w-[78%] max-w-[29vw] flex-col justify-end gap-[calc(var(--cvw)*0.7)] overflow-hidden bg-black/20 p-[calc(var(--cvw)*1.8)] border-beam backdrop-blur-lg max-md:max-w-none max-md:gap-[2.5vw] max-md:p-[6.6vw] after:absolute after:-top-[30%] after:-right-[30%] after:aspect-square after:w-4/5 after:bg-[radial-gradient(circle,color-mix(in_srgb,var(--primary)_45%,transparent),transparent_65%)] after:content-['']">
+        <p className={`${LABEL} relative text-primary-hover`}>Featured on Vault · this week</p>
+        <p className="type-h2 relative text-foreground">Your work<br />could be here.</p>
+        <p className={`${LABEL} relative text-foreground/80`}>by <span className="text-foreground">{joined ? "you, founding member" : "you"}</span></p>
       </div>
     </div>
   );

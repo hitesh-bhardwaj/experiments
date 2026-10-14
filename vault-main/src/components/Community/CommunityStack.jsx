@@ -51,17 +51,17 @@ export default function CommunityStack() {
   };
 
   return (
-    <section ref={rootRef} className="relative z-1 px-[4.5vw] py-[18vw] text-center max-lg:px-[6vw] max-lg:py-[14vw] max-md:px-[6vw] max-md:py-[12%]" id="stack" data-zone="crowd2">
-      <div className="mx-auto flex w-full max-w-[1536px] flex-col items-center gap-[3vw] max-lg:gap-[4vw] max-md:gap-[10vw]">
+    <section ref={rootRef} id="stack" className="section-x relative z-1 py-[calc(var(--cvw)*18)] text-center max-lg:py-[14vw] max-md:py-[12%]" data-zone="crowd2">
+      <div className="site-container flex flex-col items-center gap-[calc(var(--cvw)*3)] max-lg:gap-[4vw] max-md:gap-[10vw]">
         <LineReveal as="h2" className="type-h1">
           What Do You <span className="gradient-text-animate gradient-text-single">Build With?</span>
         </LineReveal>
-        <p className="fadeup type-body-lg w-[45%] text-foreground/60 max-lg:w-[77%] max-md:w-full">
+        <p className="fadeup type-body-lg w-[45%] text-foreground/80 max-lg:w-[77%] max-md:w-full">
           Pick your stack. Watch your corner of the crowd light up. We’ll use it to match you with the
           right channels, teardowns and people.
         </p>
-        <div className="flex w-[58%] flex-col items-center gap-[1.8vw] max-lg:w-full max-lg:gap-[3vw] max-md:gap-[10vw]">
-          <div data-chips className="flex flex-wrap justify-center gap-[0.7vw] max-lg:gap-[1.5vw] max-md:gap-[2.5vw]" role="group" aria-label="Your stack">
+        <div className="flex w-[58%] flex-col items-center gap-[calc(var(--cvw)*1.8)] max-lg:w-full max-lg:gap-[3vw] max-md:gap-[10vw]">
+          <div data-chips className="flex flex-wrap justify-center gap-[calc(var(--cvw)*0.7)] max-lg:gap-[1.5vw] max-md:gap-[2.5vw]" role="group" aria-label="Your stack">
             {STACKS.map((name, i) => (
               <button
                 key={name}
@@ -69,13 +69,13 @@ export default function CommunityStack() {
                 data-chip
                 aria-pressed={stack.includes(name)}
                 onClick={() => toggle(name, i)}
-                className={`type-label h-11 px-5 backdrop-blur-lg transition-[background-color,color,box-shadow] duration-700 ease-[cubic-bezier(.16,1,.3,1)] ${stack.includes(name) ? "bg-primary text-background shadow-[0_0.7vw_2vw_-0.7vw_color-mix(in_srgb,var(--primary)_70%,transparent)]" : "bg-background/50 text-foreground/80 ring-1 ring-inset ring-foreground/15 hover:ring-primary/60"}`}
+                className={`type-label h-11 px-5 backdrop-blur-lg transition-[background-color,color,box-shadow] duration-700 ease-[cubic-bezier(.16,1,.3,1)] ${stack.includes(name) ? "bg-primary text-background shadow-lg shadow-primary/40" : "bg-background/50 text-foreground/80 ring-1 ring-inset ring-foreground/15 hover:ring-primary/60"}`}
               >
                 {name}
               </button>
             ))}
           </div>
-          <p className="type-label text-foreground/60" aria-live="polite">{readout(stack)}</p>
+          <p className="type-label text-foreground/80" aria-live="polite">{readout(stack)}</p>
         </div>
       </div>
     </section>

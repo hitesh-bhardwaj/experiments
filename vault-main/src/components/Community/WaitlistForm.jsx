@@ -64,12 +64,12 @@ export default function WaitlistForm({ className = "" }) {
     <form
       onSubmit={onSubmit}
       noValidate
-      className={`relative flex w-full items-center gap-1.5 bg-background/60 py-1.5 pr-1.5 pl-[1.2vw] backdrop-blur-lg transition-shadow duration-700 ease-[cubic-bezier(.16,1,.3,1)] max-md:flex-wrap max-md:p-2 ${
+      className={`relative flex w-full items-center gap-1.5 bg-background/60 px-1.5 py-1.5 ring-1 ring-inset backdrop-blur-lg transition-shadow duration-700 ease-[cubic-bezier(.16,1,.3,1)] max-md:flex-wrap max-md:p-2 ${
         joined
-          ? "shadow-[inset_0_0_0_1px_rgba(99,214,154,.55)]"
+          ? "ring-success/60"
           : error
-            ? "shadow-[inset_0_0_0_1px_rgba(255,138,120,.6)]"
-            : "shadow-[inset_0_0_0_1px_rgba(244,244,244,.12),0_20px_50px_-24px_rgba(0,0,0,.8)] focus-within:shadow-[inset_0_0_0_1px_rgba(255,107,0,.6),0_24px_60px_-20px_rgba(255,107,0,.45)]"
+            ? "ring-danger/60"
+            : "shadow-2xl ring-foreground/10 focus-within:ring-primary/60"
       } ${className}`}
     >
       <label className="sr-only" htmlFor={inputId}>Work email</label>
@@ -85,7 +85,7 @@ export default function WaitlistForm({ className = "" }) {
         onChange={(e) => { setEmail(e.target.value); if (error) setError(""); }}
         aria-invalid={!!error}
         aria-describedby={`${inputId}-msg`}
-        className={`type-body h-11 min-w-0 flex-1 border-0 bg-transparent text-foreground outline-none [--input-autofill-bg:var(--background)] [--input-autofill-text:var(--foreground)] max-md:basis-full max-md:px-2.5 ${joined ? "placeholder:text-[#9fd9b9]" : "placeholder:text-foreground/40"}`}
+        className={`type-body h-11 min-w-0 flex-1 border-0 bg-transparent px-[calc(var(--cvw)*1.2)] text-foreground outline-none [--input-autofill-bg:var(--background)] [--input-autofill-text:var(--foreground)] max-md:basis-full max-md:px-2.5 ${joined ? "placeholder:text-success" : "placeholder:text-foreground/60"}`}
       />
       <button
         ref={buttonRef}
@@ -98,7 +98,7 @@ export default function WaitlistForm({ className = "" }) {
       >
         <ButtonChrome label={label} hovered={hovered} />
       </button>
-      <p id={`${inputId}-msg`} className={`type-label absolute top-[calc(100%+0.7vw)] left-[1.2vw] min-h-[1em] text-left text-[#ff8a78] max-md:static max-md:basis-full max-md:px-2.5 max-md:py-1`} aria-live="polite">{error}</p>
+      <p id={`${inputId}-msg`} className={`type-label absolute top-[calc(100%+var(--cvw)*0.7)] left-[calc(var(--cvw)*1.2)] min-h-[1em] text-left text-danger max-md:static max-md:basis-full max-md:px-2.5 max-md:py-1`} aria-live="polite">{error}</p>
     </form>
   );
 }
