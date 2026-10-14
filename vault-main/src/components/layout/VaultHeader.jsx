@@ -607,16 +607,16 @@ export function VaultHeader({
                     alt={user.fullName || "User"}
                     width={40}
                     height={40}
-                    className="size-[9vw] shrink-0 rounded-full object-cover max-lg:size-[4.6vw] max-md:size-[9vw]"
+                    className="size-[9vw] shrink-0 rounded-full object-cover max-lg:size-[3.6vw] max-md:size-[9vw]"
                   />
                 ) : (
-                  <div className="flex size-[9vw] shrink-0 items-center justify-center rounded-full bg-[#1f1f1f] text-white/70 max-lg:size-[4.6vw] max-md:size-[9vw]">
+                  <div className="flex size-[9vw] shrink-0 items-center justify-center rounded-full bg-[#1f1f1f] text-white/70 max-lg:size-[3.6vw] max-md:size-[9vw]">
                     <UserIcon className="size-[4.5vw] max-lg:size-[2.2vw] max-md:size-[4.5vw]" />
                   </div>
                 )}
 
                 <div className="min-w-0">
-                  <p className="truncate max-md:text-[4vw] text-white/90 max-lg:text-[2.75vw]">
+                  <p className="truncate max-md:text-[4vw] text-white/90 max-lg:text-[2vw]">
                     {user.fullName || user.username || "Account"}
                   </p>
                   <p className="truncate text-[3.2vw] text-white/50 max-lg:text-[1.7vw] max-md:text-[3.2vw]">
@@ -634,7 +634,7 @@ export function VaultHeader({
               data-mobile-row
               href="/effects"
               onClick={close}
-              className="flex border-t border-white/10 py-[4.5vw] max-md:text-[4.75vw] max-lg:text-[3.75vw] text-white/90 max-md:py-[4.5vw] max-lg:py-[3vw] "
+              className="flex border-t border-white/10 py-[4.5vw] max-md:text-[4.75vw] max-lg:text-[2.6vw] text-white/90 max-md:py-[4.5vw] max-lg:py-[2.4vw] "
             >
               All Effects
             </Link>
@@ -647,14 +647,14 @@ export function VaultHeader({
                 onClick={() => toggleSection("categories")}
                 aria-label={`${section === "categories" ? "Collapse" : "Expand"} Categories`}
                 aria-expanded={section === "categories"}
-                className="flex w-full items-center justify-between py-[4.5vw] text-left max-md:text-[4.75vw] max-lg:text-[3.75vw] text-white/90 max-md:py-[4.5vw] max-lg:py-[3vw] "
+                className="flex w-full items-center justify-between py-[4.5vw] text-left max-md:text-[4.75vw] max-lg:text-[2.6vw] text-white/90 max-md:py-[4.5vw] max-lg:py-[2.4vw] "
               >
                 <span>Effect Categories</span>
-                <div className="relative flex size-[8vw] shrink-0 items-center justify-center bg-[#161616] text-primary max-lg:size-[4.6vw] max-md:size-[8vw]">
-                  <span aria-hidden="true" className="absolute h-px w-[3.5vw] bg-current max-lg:w-[2vw] max-md:w-[3.5vw]" />
+                <div className="relative flex size-[8vw] shrink-0 items-center justify-center bg-[#161616] text-primary max-lg:size-[3.6vw] max-md:size-[8vw]">
+                  <span aria-hidden="true" className="absolute h-px w-[3.5vw] bg-current max-lg:w-[1.6vw] max-md:w-[3.5vw]" />
                   <span
                     aria-hidden="true"
-                    className={`absolute h-px w-[3.5vw] bg-current max-lg:w-[2vw] max-md:w-[3.5vw] transition-transform duration-300 ease-out motion-reduce:transition-none ${section === "categories" ? "rotate-180" : "rotate-90"
+                    className={`absolute h-px w-[3.5vw] bg-current max-lg:w-[1.6vw] max-md:w-[3.5vw] transition-transform duration-300 ease-out motion-reduce:transition-none ${section === "categories" ? "rotate-180" : "rotate-90"
                       }`}
                   />
                 </div>
@@ -667,7 +667,7 @@ export function VaultHeader({
                       key={category.id}
                       href={getEffectCategoryHref(category.id)}
                       onClick={close}
-                      className="flex items-center max-md:py-[1.5vw] max-md:text-[4vw] w-fit text-white/75 active:text-primary max-lg:py-[1.5vw] max-lg:text-[2.75vw]"
+                      className="flex items-center max-md:py-[1.5vw] max-md:text-[4vw] w-fit text-white/75 active:text-primary max-lg:py-[1.2vw] max-lg:text-[2vw]"
                     >
                       {categoryLabel(category)}
                     </Link>
@@ -679,7 +679,7 @@ export function VaultHeader({
               data-mobile-row
               href="/templates"
               onClick={close}
-              className="flex border-t border-white/10 py-[4.5vw] max-md:text-[4.75vw] max-lg:text-[3.75vw] text-white/90 max-md:py-[4.5vw] max-lg:py-[3vw] "
+              className="flex border-t border-white/10 py-[4.5vw] max-md:text-[4.75vw] max-lg:text-[2.6vw] text-white/90 max-md:py-[4.5vw] max-lg:py-[2.4vw] "
             >
               Templates
             </Link>
@@ -690,14 +690,14 @@ export function VaultHeader({
                 onClick={() => toggleSection("documentation")}
                 aria-label={`${section === "documentation" ? "Collapse" : "Expand"} Documentation`}
                 aria-expanded={section === "documentation"}
-                className="flex w-full items-center justify-between py-[4.5vw] text-left max-md:text-[4.75vw] max-lg:text-[3.75vw] text-white/90 max-md:py-[4.5vw] max-lg:py-[3vw]"
+                className="flex w-full items-center justify-between py-[4.5vw] text-left max-md:text-[4.75vw] max-lg:text-[2.6vw] text-white/90 max-md:py-[4.5vw] max-lg:py-[2.4vw]"
               >
                 <span>Documentation</span>
-                <div className="relative flex size-[8vw] shrink-0 items-center justify-center bg-[#161616] text-primary max-lg:size-[4.6vw] max-md:size-[8vw]">
-                  <span aria-hidden="true" className="absolute h-px w-[3.5vw] bg-current max-lg:w-[2vw] max-md:w-[3.5vw]" />
+                <div className="relative flex size-[8vw] shrink-0 items-center justify-center bg-[#161616] text-primary max-lg:size-[3.6vw] max-md:size-[8vw]">
+                  <span aria-hidden="true" className="absolute h-px w-[3.5vw] bg-current max-lg:w-[1.6vw] max-md:w-[3.5vw]" />
                   <span
                     aria-hidden="true"
-                    className={`absolute h-px w-[3.5vw] bg-current max-lg:w-[2vw] max-md:w-[3.5vw] transition-transform duration-300 ease-out motion-reduce:transition-none ${section === "documentation" ? "rotate-180" : "rotate-90"
+                    className={`absolute h-px w-[3.5vw] bg-current max-lg:w-[1.6vw] max-md:w-[3.5vw] transition-transform duration-300 ease-out motion-reduce:transition-none ${section === "documentation" ? "rotate-180" : "rotate-90"
                       }`}
                   />
                 </div>
@@ -710,7 +710,7 @@ export function VaultHeader({
                       key={link.href}
                       href={link.href}
                       onClick={close}
-                      className="flex items-center max-md:py-[1.5vw] max-md:text-[4vw] w-fit text-white/75 active:text-primary max-lg:py-[1.5vw] max-lg:text-[2.75vw]"
+                      className="flex items-center max-md:py-[1.5vw] max-md:text-[4vw] w-fit text-white/75 active:text-primary max-lg:py-[1.2vw] max-lg:text-[2vw]"
                     >
                       {link.label}
                     </Link>
@@ -727,7 +727,7 @@ export function VaultHeader({
                 target={link.external ? "_blank" : undefined}
                 rel={link.external ? "noopener noreferrer" : undefined}
                 onClick={close}
-                className="flex border-t border-white/10 py-[4.5vw]  max-md:text-[4.75vw] text-white/90 max-md:py-[4.5vw] max-lg:py-[3vw] max-lg:text-[3.75vw]"
+                className="flex border-t border-white/10 py-[4.5vw]  max-md:text-[4.75vw] text-white/90 max-md:py-[4.5vw] max-lg:py-[2.4vw] max-lg:text-[2.6vw]"
               >
                 {link.label}
               </Link>
@@ -735,7 +735,9 @@ export function VaultHeader({
           </div>
 
           {isLoaded && (
-            <div data-mobile-row className="mt-[8vw] flex flex-col gap-[3vw] max-lg:mt-[4.6vw] max-md:mt-[8vw] max-lg:gap-[1.5vw] max-md:gap-[3vw]">
+            <div data-mobile-row className="mt-[8vw] flex flex-col gap-[3vw] max-lg:mt-[4.6vw] max-lg:flex-row max-lg:flex-wrap max-md:mt-[8vw] max-lg:gap-[1.5vw] max-md:flex-col max-md:gap-[3vw]">
+              {/* Tablet: side by side, sharing the row, touch-sized (15-17px text, 48px tall);
+                  phones: stacked, full width, at their own size */}
               {user?.publicMetadata?.plan !== "pro" && (
                 <Button
                   text="Upgrade to Pro"
@@ -745,7 +747,7 @@ export function VaultHeader({
                     markScrollToPricingCards();
                   }}
                   variant="outline"
-                  className="w-full border-white/50! max-lg:py-[1.5vw] max-lg:text-[2vw] max-lg:[--btn-pad:2.4vw] max-lg:[--btn-gap:1vw] max-lg:[--btn-square:1.4vw] max-lg:[--btn-arrow:2vw]"
+                  className="w-full border-white/50! max-lg:w-auto max-lg:flex-1 max-md:w-full max-lg:py-3 max-lg:text-[clamp(15px,1.8vw,17px)]"
                 />
               )}
 
@@ -754,7 +756,7 @@ export function VaultHeader({
                   text="Sign In"
                   href="/sign-in"
                   onClick={close}
-                  className="w-fit max-md:w-full max-lg:w-[22vw] max-lg:py-[1.5vw] max-lg:text-[2vw] max-lg:[--btn-pad:2.4vw] max-lg:[--btn-gap:1vw] max-lg:[--btn-square:1.4vw] max-lg:[--btn-arrow:2vw]"
+                  className="w-fit max-lg:flex-1 max-md:w-full max-lg:py-3 max-lg:text-[clamp(15px,1.8vw,17px)]"
                 />
               )}
             </div>

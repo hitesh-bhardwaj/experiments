@@ -283,7 +283,7 @@ export default function Footer() {
           Build the Interaction Layer Your Website is Missing.
         </LineReveal>
 
-        <div className="flex max-sm:flex-col mt-[calc(var(--cvw)*3)] max-lg:mt-[5vw] max-md:mt-[calc(var(--cvw)*3)] max-sm:gap-[calc(var(--cvw)*4)] pb-[calc(var(--cvw)*2)] mb-[calc(var(--cvw)*4.5)] max-lg:mb-[8vw] max-lg:gap-[3vw] max-md:gap-[calc(var(--cvw)*3)] max-md:mb-[calc(var(--cvw)*15)] relative max-sm:mb-[calc(var(--cvw)*10)] gap-[calc(var(--cvw)*2)] fadeup">
+        <div className="flex max-sm:flex-col mt-[calc(var(--cvw)*3)] max-lg:mt-[5vw] max-md:mt-[calc(var(--cvw)*3)] max-sm:gap-[calc(var(--cvw)*4)] pb-[calc(var(--cvw)*2)] mb-[calc(var(--cvw)*4.5)] max-lg:mb-[8vw] max-lg:gap-[3vw] max-md:gap-[calc(var(--cvw)*3)] max-md:mb-[calc(var(--cvw)*15)] relative max-sm:mb-[calc(var(--cvw)*10)] gap-(--cvw) fadeup">
           <Button
             variant="outline"
             text="Browse the Effects"

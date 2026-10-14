@@ -45,7 +45,9 @@ import { PLANS } from "@/lib/plans";
 
 // Why the code on this page is withheld ({ reason, tier } from the server, see
 // [effectSlug]/page.js) - read by LockedCodePlaceholder for its wording and button
-const CodeLockContext = createContext({ reason: null, tier: null });
+// reason / tier: why the code is withheld (server-decided). onSignIn opens the page's
+// sign-in modal, so a locked block's "Sign in" doesn't leave the page.
+const CodeLockContext = createContext({ reason: null, tier: null, onSignIn: null });
 
 function formatEffectDate(value) {
   if (!value) return null;
@@ -489,7 +491,7 @@ export function EffectDetailContent({
                 {/* blog-theme-light: blog.css prose in its light colours on this white section */}
                 <section id="effect-content" className="site-container section-x blog-theme-light relative flex items-start gap-[calc(var(--cvw)*3)] pt-[calc(var(--cvw)*5.5)] pb-6 max-lg:flex-col max-md:pt-[15vw]">
                   <div className="flex min-w-0 flex-1 flex-col max-lg:w-full">
-                    <CodeLockContext.Provider value={{ reason: codeLock, tier: lockTier }}>
+                    <CodeLockContext.Provider value={{ reason: codeLock, tier: lockTier, onSignIn: () => setShowSignInToCopyModal(true) }}>
                     <EffectDynamicContent
                       ref={contentRef}
                       content={safeContent}
@@ -1058,8 +1060,10 @@ function lockCopy(reason, tier, pathname) {
 // this shows (the server strips it), so there's nothing to uncover in inspect.
 function LockedCodePlaceholder() {
   const pathname = usePathname();
-  const { reason, tier } = useContext(CodeLockContext);
+  const { reason, tier, onSignIn } = useContext(CodeLockContext);
   const copy = lockCopy(reason || "pro", tier, pathname);
+  // Signed out: "Sign in" opens the sign-in modal (the page link stays as the fallback)
+  const signInHere = reason === "sign-in" && onSignIn;
   const teaserLines = [
     "const premiumSnippet = unlock({ technique: 'inspect-element-jutsu' });",
     "if (devtools.open) throw new Error('nice try, detective');",
@@ -1117,6 +1121,8 @@ function LockedCodePlaceholder() {
               text={copy.cta.text}
               variant="orange"
               href={copy.cta.href}
+              preventDefault={Boolean(signInHere)}
+              onClick={signInHere ? onSignIn : undefined}
               className="shrink-0 text-black!"
             />
           </div>

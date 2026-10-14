@@ -371,7 +371,7 @@ export default function NavbarMobile({
                     onClick={close}
                     target={external ? "_blank" : undefined}
                     rel={external ? "noopener noreferrer" : undefined}
-                    className="flex border-t border-white/10 max-lg:py-[3vw] max-md:text-[4.75vw] text-white/90 max-md:py-[4.5vw] max-lg:text-[3.75vw]"
+                    className="flex border-t border-white/10 max-lg:py-[2.4vw] max-md:text-[4.75vw] text-white/90 max-md:py-[4.5vw] max-lg:text-[2.6vw]"
                   >
                     {row.label}
                   </Link>
@@ -395,17 +395,17 @@ export default function NavbarMobile({
                       }
                       aria-label={`${expanded ? "Collapse" : "Expand"} ${label}`}
                       aria-expanded={expanded}
-                      className="flex w-full items-center justify-between py-[4.5vw] text-left  text-white/90 max-md:py-[4.5vw] max-lg:py-[3vw] max-lg:text-[3.75vw] max-md:text-[4.75vw]"
+                      className="flex w-full items-center justify-between py-[4.5vw] text-left  text-white/90 max-md:py-[4.5vw] max-lg:py-[2.4vw] max-lg:text-[2.6vw] max-md:text-[4.75vw]"
                     >
                       <span>{label}</span>
-                      <div className="relative flex size-[8vw] shrink-0 items-center justify-center bg-grey text-primary md:size-[4.6vw]">
+                      <div className="relative flex size-[8vw] shrink-0 items-center justify-center bg-grey text-primary md:size-[3.6vw]">
                         <span
                           aria-hidden="true"
-                          className="absolute h-px w-[3.5vw] bg-current md:w-[2vw]"
+                          className="absolute h-px w-[3.5vw] bg-current md:w-[1.6vw]"
                         />
                         <span
                           aria-hidden="true"
-                          className={`absolute h-px w-[3.5vw] bg-current md:w-[2vw] transition-transform duration-300 ease-out motion-reduce:transition-none ${expanded ? "rotate-180" : "rotate-90"
+                          className={`absolute h-px w-[3.5vw] bg-current md:w-[1.6vw] transition-transform duration-300 ease-out motion-reduce:transition-none ${expanded ? "rotate-180" : "rotate-90"
                             }`}
                         />
                       </div>
@@ -426,11 +426,11 @@ export default function NavbarMobile({
                               prefetch={false}
                               href={item.href}
                               onClick={close}
-                              className="flex items-center gap-[3vw] py-[2.6vw] text-[4vw] text-white/75 active:text-primary md:gap-[1.8vw] md:py-[1.5vw] md:text-[2.2vw]"
+                              className="flex items-center gap-[3vw] py-[2.6vw] text-[4vw] text-white/75 active:text-primary md:gap-[1.4vw] md:py-[1.2vw] md:text-[2vw]"
                             >
                               <NavMenuIcon
                                 src={item.icon}
-                                className="size-[4.5vw] text-light-grey md:size-[2.6vw]"
+                                className="size-[4.5vw] text-light-grey md:size-[2vw]"
                               />
                               {item.label}
                             </Link>
@@ -446,19 +446,18 @@ export default function NavbarMobile({
 
           {!(hideSignIn && !isSignedIn) && (
           <div data-mobile-row className="mt-[8vw] flex md:mt-[4.6vw]">
+            {/* Across the menu; tablet: touch-sized (15-17px text, 48px tall), as VaultHeader */}
             {isSignedIn ? (
               <Button
                 text="Go to Dashboard"
                 href="/dashboard"
-                className="w-full max-md:py-[1.5vw] max-lg:py-[3vw] max-md:text-[4vw] max-lg:text-[3vw] md:[--btn-pad:2.4vw] md:[--btn-gap:1vw] md:[--btn-square:1.4vw] md:[--btn-arrow:2vw]"
+                className="w-full max-lg:py-3 max-lg:text-[clamp(15px,1.8vw,17px)] max-md:py-[1.5vw] max-md:text-[4vw]"
               />
             ) : (
               <Button
                 text="Sign In"
-                // The button's own ramp jumps to desktop sizing above `md`; inside
-                // the tablet sheet it needs to stay touch-sized.
                 href="/sign-in"
-                className="w-full md:py-[1.5vw] md:text-[2vw] md:[--btn-pad:2.4vw] md:[--btn-gap:1vw] md:[--btn-square:1.4vw] md:[--btn-arrow:2vw]"
+                className="w-full max-lg:py-3 max-lg:text-[clamp(15px,1.8vw,17px)]"
               />
             )}
           </div>

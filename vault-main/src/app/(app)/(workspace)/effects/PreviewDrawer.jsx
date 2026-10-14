@@ -360,9 +360,10 @@ export function PreviewDrawer({
         {related.length > 0 && (
           <div className="flex flex-col gap-8 border-t border-foreground/10 pt-10 ">
             <p className={`${T18} text-foreground`}>More in this category</p>
-            <div className="flex flex-wrap gap-[calc(var(--cvw)*0.9)] max-lg:gap-8">
+            {/* Two per row: the card widths are net of the same gap at each size (tablet: 2vw) */}
+            <div className="flex flex-wrap gap-[calc(var(--cvw)*0.9)] max-lg:gap-x-[2vw] max-lg:gap-y-8">
               {related.map((item) => (
-                <EffectCard key={item.name} effect={item} small dark sizes="240px" onOpen={onOpen} className="w-[calc((100%-var(--cvw)*0.9)/2)] max-md:w-full" tagClassName="border-foreground/20" />
+                <EffectCard key={item.name} effect={item} small dark sizes="240px" onOpen={onOpen} className="w-[calc((100%-var(--cvw)*0.9)/2)] max-lg:w-[calc((100%-2vw)/2)] max-md:w-full" tagClassName="border-foreground/20" />
               ))}
             </div>
           </div>

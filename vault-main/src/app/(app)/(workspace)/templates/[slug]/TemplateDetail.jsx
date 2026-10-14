@@ -455,25 +455,29 @@ export function TemplateDetail({ template, devices = {}, effects = [], stack = [
         </section>
 
         {related.length > 0 && (
-          <section id="related-templates" className={`${GUTTER} flex flex-col gap-12`}>
+          <section id="related-templates" className={`${GUTTER} flex flex-col gap-12 max-md:gap-10`}>
             <div className="flex flex-wrap items-end justify-between gap-4">
               <HeadAnim rotate={0} by="words">
                 <h2 className="type-h1">
                   More <span className="gradient-text-animate">Templates</span>
                 </h2>
               </HeadAnim>
-              <div className="fadeup">
+              <div className="fadeup max-md:hidden">
                 <Button className="tracking-normal!" text="All Templates" href="/templates" />
               </div>
             </div>
-            <div className="flex flex-wrap gap-x-[1.4vw] gap-y-14">
+            {/* Same spacing and card width as the /templates grid (TemplatesListing) */}
+            <div className="flex flex-wrap gap-[2.5vw] max-md:gap-y-[12vw]">
               {/* Same fade-up as the /templates grid (cardReveal). */}
               {related.map((t, index) => (
-                <motion.div key={t.slug} {...cardReveal(index)} className="w-[calc((100%-1.4vw)/2)] max-md:w-full">
+                <motion.div key={t.slug} {...cardReveal(index)} className="w-[calc((100%-2.5vw)/2)] max-md:w-full">
                   <TemplateCard small template={t} hasAccess={relatedAccess.includes(t.slug)} />
                 </motion.div>
               ))}
             </div>
+             <div className="fadeup hidden max-md:block">
+                <Button className="tracking-normal!" text="All Templates" href="/templates" />
+              </div>
           </section>
         )}
       </div>
