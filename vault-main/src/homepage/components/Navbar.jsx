@@ -8,7 +8,7 @@ import HoverLink from "./HoverLink";
 import { PlusIcon, User } from "lucide-react";
 import { useLenis } from "lenis/react";
 import { GlobalSearch } from "@/components/layout/SearchBar";
-import { hasCachedClerkSession } from "@/lib/clerkSessionCache";
+import { useCachedClerkSession } from "@/lib/clerkSessionCache";
 import { useLoaderComplete, useLoaderHandoff } from "./loader-state";
 import NavDropdown from "./NavDropdown";
 import NavbarMobile from "./NavbarMobile";
@@ -42,7 +42,8 @@ export default function Navbar({
   // it lands back on the homepage/pricing/etc. This is a client-only cache
   // check (Clerk's __client_uat cookie) that swaps the prompt for the same
   // generic account icon pointing at /dashboard.
-  const [cachedSignedIn, setCachedSignedIn] = useState(false);
+  // Skipped once a real ClerkProvider reports isSignedIn - the live value wins.
+  const cachedSignedIn = useCachedClerkSession({ skip: isSignedIn });
   const [reveal, setReveal] = useState(true);
   const [introTimedOut, setIntroTimedOut] = useState(!introOnLoader);
   const [openTrigger, setOpenTrigger] = useState(0);
@@ -89,17 +90,6 @@ export default function Navbar({
     const timer = window.setTimeout(() => setIntroTimedOut(true), INTRO_DELAY_MS);
     return () => window.clearTimeout(timer);
   }, [introTimedOut, loaderComplete]);
-
-  // Runs once on mount, client-only - reads the cookie as soon as this
-  // component hydrates rather than waiting on any network round-trip.
-  // Skipped entirely once a real ClerkProvider is already reporting
-  // isSignedIn, since the live value is always more current than the cache.
-  useEffect(() => {
-    if (isSignedIn) return;
-    // Reads document.cookie, a real external system, not derivable during render.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setCachedSignedIn(hasCachedClerkSession());
-  }, [isSignedIn]);
 
   useEffect(() => {
     if (!openPanel) return;

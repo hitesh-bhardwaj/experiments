@@ -1,6 +1,6 @@
 "use client";
 
-import { Skeleton } from "@/components/ui/Skeleton";
+import { useUser } from "@clerk/nextjs";
 import { useTemplateViewCounts } from "../useTemplateViewCounts";
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { preload } from "react-dom";
@@ -23,6 +23,7 @@ import { TemplateCard } from "../TemplateCard";
 import { BADGE, GUTTER, LABEL, T13, T14, cardReveal, catalogueOf, priceOf } from "../tokens";
 import { GetTemplateModal } from "./GetTemplateModal";
 import { MEDIA } from "@/lib/breakpoints";
+import { markTemplateOwned } from "../useTemplateAccess";
 import { isLighthouseOrHeadless, isSoftwareRenderer } from "@/lib/audit";
 
 // three.js only loads when the exploded view is shown.
@@ -101,9 +102,14 @@ export function TemplateDetail({ template, devices = {}, effects = [], stack = [
   // The page is cached (ISR), so access is fetched in the browser: the page works
   // straight away, and the Buy / Download button shows a skeleton until it's known.
   // The download route re-checks access on the server, so nothing is unlocked early.
+  // Fetched again when the visitor signs in without leaving the page (the sign-in modal).
+  const { isLoaded, isSignedIn } = useUser();
   const [templateAccess, setTemplateAccess] = useState(null);
   useEffect(() => {
+    if (!isLoaded) return undefined;
     let active = true;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setTemplateAccess(null);
     fetch(`/api/templates/${template.slug}/access`)
       .then((res) => (res.ok ? res.json() : { allowed: false, reason: "error" }))
       .catch(() => ({ allowed: false, reason: "error" }))
@@ -111,7 +117,7 @@ export function TemplateDetail({ template, devices = {}, effects = [], stack = [
     return () => {
       active = false;
     };
-  }, [template.slug]);
+  }, [template.slug, isLoaded, isSignedIn]);
   const [purchased, setPurchased] = useState(false);
   const accessPending = templateAccess === null && !purchased;
   const hasAccess = purchased || !!templateAccess?.allowed;
@@ -183,9 +189,14 @@ export function TemplateDetail({ template, devices = {}, effects = [], stack = [
   };
 
   // The real purchase: owned downloads, signed-out signs in and resumes here, signed-in opens the paywall.
+  // Asked while access is still loading (just signed in from the popup), it runs once access is known.
+  const pendingBuyRef = useRef(false);
   const buy = () => {
     setGetOpen(false);
-    if (accessPending) return;
+    if (accessPending) {
+      pendingBuyRef.current = true;
+      return;
+    }
     if (hasAccess) return download();
     if (templateAccess.reason === "anonymous") {
       router.push(`/sign-in?redirect_url=${encodeURIComponent(`${pathname}?${RESUME_PURCHASE_PARAM}=1`)}`);
@@ -194,8 +205,16 @@ export function TemplateDetail({ template, devices = {}, effects = [], stack = [
     setPaywallOpen(true);
   };
 
+  useEffect(() => {
+    if (accessPending || !pendingBuyRef.current) return;
+    pendingBuyRef.current = false;
+    buy();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [accessPending]);
+
   const onPurchased = () => {
     setPurchased(true);
+    markTemplateOwned(template.slug);
     setPaywallOpen(false);
     setAutoOpenCheckout(false);
     window.location.href = downloadHref;
@@ -258,7 +277,7 @@ export function TemplateDetail({ template, devices = {}, effects = [], stack = [
       className="relative text-light"
     >
       {/* ---------- hero ---------- */}
-      <section id="template-hero" className={`${GUTTER} flex flex-col gap-10 pt-25 pb-16 max-lg:pt-32 max-md:pt-28`}>
+      <section id="template-hero" className={`${GUTTER} flex flex-col gap-10 pt-32 pb-16 max-lg:pt-32 max-md:pt-28`}>
         <motion.div {...HERO_FADE}>
           <Breadcrumb />
         </motion.div>
@@ -332,11 +351,11 @@ export function TemplateDetail({ template, devices = {}, effects = [], stack = [
                   }
                   className="inline-flex h-11 cursor-pointer items-center gap-2 bg-primary px-5 text-[calc(var(--hx-vw,1vw)*1.15)] text-background transition-colors duration-500 hover:bg-primary-hover max-lg:text-[clamp(13px,calc(var(--hx-vw,1vw)*1.6),15px)] max-md:text-[calc(var(--hx-vw,1vw)*2.2)] max-sm:text-[calc(var(--hx-vw,1vw)*4)]"
                 >
-                  {accessPending ? (
-                    <Skeleton className="h-[1em] w-28" />
-                  ) : hasAccess ? (
+                  {/* "Buy Template" while ownership is still being checked (disabled for that
+                      moment), then "Download" if it's already yours - no skeleton */}
+                  {hasAccess && !accessPending ? (
                     <>
-                      <Download className="size-4" aria-hidden="true" /> Download source
+                      <Download className="size-4" aria-hidden="true" /> Download
                     </>
                   ) : (
                     "Buy Template"

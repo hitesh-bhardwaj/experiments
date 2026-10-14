@@ -15,16 +15,28 @@ A single-page website template for dental clinics, orthodontists, and cosmetic d
 
 No CMS, no backend - content lives directly in the section files as plain data.
 
-## Folder structure
+## What's in this download
 
 ```
 oris-dental/
+├── Code/          # this Next.js project - see "Running it locally" below
+├── Figma File/    # the source .fig design file
+└── LICENSE.md     # your license terms
+```
+
+## Folder structure
+
+Inside `Code/`:
+
+```
+app/
 ├── page.tsx                    # Composes every section, in order
-├── Header.tsx                   # Fixed nav, scroll-aware hide/show
-├── Hero.tsx                     # 3D interactive tooth visualizer & intro copy
-├── AboutOris.tsx                # Practice overview + 4-column animated slot counters
+├── Header.tsx                  # Fixed nav, scroll-aware hide/show
+├── Hero.tsx                    # 3D interactive tooth visualizer & intro copy
+├── AboutOris.tsx                # Practice overview + animated slot counters
 ├── DentalTreatments.tsx         # Scroll-pinned stacked card deck of treatments
 ├── WhyOris.tsx                  # Why choose us feature card with animated metrics
+├── CareComfort.tsx              # Care & comfort feature section
 ├── ParallaxSectionBreak.tsx     # Full-bleed parallax statement break
 ├── Reviews.tsx                  # Ribbon review strips + section break
 ├── PassionMeetPurpose.tsx       # Grid gallery showcasing clinic & doctors
@@ -32,52 +44,42 @@ oris-dental/
 ├── Footer.tsx                   # Interactive dot canvas footer with brand wordmark
 ├── Loader.tsx                   # Watermark fill progress loading screen
 ├── OrisWrapper.tsx              # Lenis smooth scroll root wrapper
+├── LenisSmoothScroll.tsx        # Lenis provider
+├── ScrollTopOnLoad.tsx          # Resets scroll position on route load
 ├── oris-dental.css              # Custom font faces and scoped typographic tokens
-├── README.md                    # Template overview and usage guide
-├── assets/                      # Self-contained template assets
-│   ├── teeth.glb                # 3D tooth implant model
+├── assets/                      # Images, self-hosted fonts, review cards
 │   ├── OrisDental.svg           # Brand logo watermark
-│   ├── animated-form-bg.png     # Form section background image
-│   ├── hc1.png - hc4.png        # Clinic & doctors gallery images
-│   ├── oris-whyus.png           # Why Choose Us banner image
-│   ├── parallax.png             # Parallax full-bleed background
 │   ├── fonts/                   # Self-hosted AeonikPro font files (woff2)
-│   │   ├── AeonikPro-Light.woff2
-│   │   ├── AeonikPro-Regular.woff2
-│   │   ├── AeonikPro-Medium.woff2
-│   │   └── AeonikPro-Bold.woff2
-│   └── reviews/                 # Review ribbon cards (1.png - 9.png)
+│   └── reviews/                 # Review ribbon cards
+├── teeth-3d/                    # 3D tooth visualizer (Three.js + drei)
+│   ├── TeethCanvas.tsx
+│   ├── ToothShield.tsx
+│   ├── DotsCanvas.tsx
+│   └── MouseTilt.tsx
 └── effects/                     # Extracted self-contained effects
     ├── dot-fill-button/
-    │   └── DotFillButton.tsx
-    ├── teeth-3d/
-    │   ├── TeethCanvas.tsx
-    │   ├── TeethParticleNet.tsx
-    │   ├── DotsCanvas.tsx
-    │   └── MouseTilt.tsx
+    ├── circular-button/
     ├── slot-counter/
-    │   └── SlotCounter.tsx
     ├── text-fill/
-    │   └── TextFill.tsx
     ├── split-text-lines/
-    │   └── SplitTextLines.tsx
     ├── patient-card/
-    │   └── PatientCard.tsx
-    └── contact-form/
-        └── ContactForm.tsx
+    ├── contact-form/
+    └── smooth-carousel/
 ```
+
+The 3D tooth model itself ships as a static asset at `Code/public/teeth-compressed.glb`
+(referenced by URL from `teeth-3d/TeethCanvas.tsx`, not bundled).
 
 ## Running it locally
 
-This template lives inside the Hyperiux monorepo, at `vault-main/src/app/(marketing)/templates/oris-dental/`.
+This is a standalone Next.js project - no monorepo, no workspace setup.
 
 ```bash
-cd vault-main
 npm install
 npm run dev
 ```
 
-Then open **http://localhost:3000/templates/oris-dental**.
+Then open **http://localhost:3000**.
 
 ## Customizing
 

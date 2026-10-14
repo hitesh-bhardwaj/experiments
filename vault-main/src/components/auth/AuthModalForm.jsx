@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useInteraction } from "@/homepage/components/InteractionProvider";
@@ -27,9 +27,26 @@ const T32 = "text-[2.2vw] max-lg:text-[4vw] max-md:text-[7.5vw]";
  * Once signed in, the session is activated on the current page (`redirectUrl`) and
  * `onDone` closes the modal.
  */
-export function AuthModalForm({ redirectUrl = "/", initialMode = "sign-in", intro, onDone }) {
+export function AuthModalForm({ redirectUrl = "/", initialMode = "sign-in", intro, onDone, active = true }) {
   const router = useRouter();
   const clerk = useVaultClerk({ redirectUrl });
+
+  // Opened while this browser is already signed in: say so and close, rather
+  // than take a password Clerk would never check. Only for a session that was
+  // there when the form opened - not the one this form creates.
+  const sawSignedOutRef = useRef(false);
+  useEffect(() => {
+    if (!active || !clerk.isLoaded) return;
+    if (!clerk.isSignedIn) {
+      sawSignedOutRef.current = true;
+      return;
+    }
+    if (!sawSignedOutRef.current) {
+      router.refresh();
+      onDone?.({ alreadySignedIn: true });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [active, clerk.isLoaded, clerk.isSignedIn]);
   const { sound } = useInteraction();
   const [resendSeconds, startResendCooldown] = useResendCooldown();
 
@@ -97,7 +114,7 @@ export function AuthModalForm({ redirectUrl = "/", initialMode = "sign-in", intr
     if (outcome.type === "complete") return finish(outcome.sessionId);
     if (outcome.type === "session-exists") {
       router.refresh();
-      return onDone?.();
+      return onDone?.({ alreadySignedIn: true });
     }
     if (outcome.type === "error") {
       const target = steps.indexOf(getClerkErrorField(outcome.error, steps, field));
@@ -137,7 +154,7 @@ export function AuthModalForm({ redirectUrl = "/", initialMode = "sign-in", intr
     const outcome = await clerk.startOAuth(mode, strategy);
     if (outcome.type === "session-exists") {
       router.refresh();
-      return onDone?.();
+      return onDone?.({ alreadySignedIn: true });
     }
     if (outcome.type === "error") {
       setBusy(false);

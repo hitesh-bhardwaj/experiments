@@ -8,9 +8,15 @@ import { ArrowUpRight, Eye, Heart } from "lucide-react";
 import Button from "@/homepage/components/Button";
 import { Tooltip } from "@/components/ui/Tooltip";
 // Same hover-action slide and button style as the effect cards.
-import { ACTION_SLIDE, CARD_BTN } from "../effects/EffectCard";
+import { CARD_BTN } from "../effects/EffectCard";
 import { useTemplatePurchase } from "./useTemplatePurchase";
 import { BADGE, DISPLAY, PRICE, T11, T13, T14, T20, catalogueLabel, catalogueOf, priceOf } from "./tokens";
+
+// The effect cards' action slide (EffectCard ACTION_SLIDE), but triggered by the whole
+// card (group/card) rather than just the shot. A named group, so the Buy Button - which
+// animates on any plain .group:hover around it - stays still until hovered itself.
+const CARD_SLIDE =
+  "translate-y-[calc(100%+0.75rem)] will-change-transform transition-transform duration-350 ease-[cubic-bezier(.55,0,1,.45)] group-hover/card:translate-y-0 group-hover/card:ease-[cubic-bezier(.22,1,.36,1)] group-focus-within/card:translate-y-0 group-focus-within/card:ease-[cubic-bezier(.22,1,.36,1)] max-lg:translate-y-0 motion-reduce:transition-none";
 
 const formatViews = (n) => (n >= 1000 ? new Intl.NumberFormat("en", { notation: "compact", maximumFractionDigits: 1 }).format(n) : String(n));
 
@@ -46,15 +52,26 @@ export function TemplateCard({ template, priority = false, isWishlisted = false,
 
   // The page eases back to the top slowly when the cursor leaves, so the further it had
   // panned, the longer the return (a fixed 1.6s made long pans snap back). Read from
-  // where the pan has got to right now: the first half returns at 0.8x the pan's pace,
-  // anything past 50% a bit faster (0.45x), so long pans don't drag. At least 1s.
+  // where the pan has got to right now: the first half returns at 0.64x the pan's pace,
+  // anything past 50% a bit faster (0.36x), so long pans don't drag. At least 1.1s.
   const imageRef = useRef(null);
   const setResetDuration = () => {
     const img = imageRef.current;
     if (!img) return;
     const panned = (parseFloat(getComputedStyle(img).objectPosition.split(" ")[1]) || 0) / 100;
-    const seconds = (Math.min(panned, 0.5) * 0.8 + Math.max(0, panned - 0.5) * 0.45) * panSeconds;
-    img.style.setProperty("--reset", `${Math.max(1, seconds).toFixed(2)}s`);
+    const seconds = (Math.min(panned, 0.5) * 0.64 + Math.max(0, panned - 0.5) * 0.36) * panSeconds;
+    img.style.setProperty("--reset", `${Math.max(1.1, seconds).toFixed(2)}s`);
+
+    // Start the return as a fresh transition from where the pan is now. Left to CSS it
+    // would be the reverse of the running pan, which browsers automatically shorten in
+    // proportion to how far the pan got - squeezing --reset to a fraction of a second.
+    // Pin the current spot with no transition, then let go.
+    const here = getComputedStyle(img).objectPosition;
+    img.style.transition = "none";
+    img.style.objectPosition = here;
+    void img.offsetHeight; // apply the pinned spot before letting go
+    img.style.transition = "";
+    img.style.objectPosition = "";
   };
 
   return (
@@ -64,7 +81,7 @@ export function TemplateCard({ template, priority = false, isWishlisted = false,
     // The whole card comes a touch towards the viewer with a soft shadow on hover. No
     // `group` here: Buy (Button) animates on any `.group:hover` above it, so it would
     // play whenever the card was hovered - it should only react to its own hover.
-    <article className="flex flex-col gap-[1.1vw] bg-foreground p-[1.1vw] transition-[transform,box-shadow] duration-500 transform-[perspective(1200px)_translateZ(0)] hover:transform-[perspective(1200px)_translateZ(1vw)] hover:shadow-[0_1.2vw_2.4vw_-1.2vw_color-mix(in_srgb,black_35%,transparent)] max-lg:gap-4 max-lg:p-4 max-md:p-3.5">
+    <article className="group/card flex flex-col gap-[1.1vw] bg-foreground p-[1.1vw] transition-[transform,box-shadow] duration-500 transform-[perspective(1200px)_translateZ(0)] hover:transform-[perspective(1200px)_translateZ(1vw)] hover:shadow-[0_1.2vw_2.4vw_-1.2vw_color-mix(in_srgb,black_35%,transparent)] max-lg:gap-4 max-lg:p-4 max-md:p-3.5">
       {/* Over the shot only (group/preview): the page inside pans down and the action
           buttons slide up into it. */}
       <div onPointerLeave={setResetDuration} className="group/preview relative aspect-16/10 overflow-hidden bg-black/10">
@@ -83,7 +100,10 @@ export function TemplateCard({ template, priority = false, isWishlisted = false,
                 ref={imageRef}
                 onError={() => setImageError(true)}
                 style={{ "--pan": `${panSeconds}s` }}
-                className="object-cover object-top transition-[object-position] duration-[var(--reset,1.6s)] ease-in-out group-hover/preview:object-bottom group-hover/preview:duration-(--pan) group-hover/preview:ease-in-out group-focus-within/preview:object-bottom group-focus-within/preview:duration-(--pan)"
+                // Hover: the pan starts after 0.5s (delay-500, on the way in only) and runs
+                // ease-in-out. Leaving: it eases back gently - a soft start and a long, slow finish - over
+                // --reset, which grows with how far it had panned.
+                className="object-cover object-top transition-[object-position] duration-[var(--reset,1.6s)] ease-[cubic-bezier(0.45,0,0.15,1)] group-hover/preview:object-bottom group-hover/preview:delay-500 group-hover/preview:duration-(--pan) group-hover/preview:ease-in-out group-focus-within/preview:object-bottom group-focus-within/preview:delay-500 group-focus-within/preview:duration-(--pan)"
               />
             )}
           </span>
@@ -110,7 +130,7 @@ export function TemplateCard({ template, priority = false, isWishlisted = false,
         {/* hover actions, bottom right: slide up one after another (always shown on touch layouts) */}
         {!small && (
         <div className="absolute right-3 bottom-3 z-2 flex gap-1.5">
-          <Tooltip label={isWishlisted ? "Saved" : "Save"} className={`${ACTION_SLIDE} delay-0`}>
+          <Tooltip label={isWishlisted ? "Saved" : "Save"} className={`${CARD_SLIDE} delay-0`}>
             <button
               type="button"
               onClick={() => onToggleWishlist?.(template)}
@@ -121,7 +141,7 @@ export function TemplateCard({ template, priority = false, isWishlisted = false,
               <Heart aria-hidden="true" />
             </button>
           </Tooltip>
-          <Tooltip label="Live demo" className={`${ACTION_SLIDE} delay-40`}>
+          <Tooltip label="Live demo" className={`${CARD_SLIDE} delay-40`}>
             <a
               href={previewHref}
               target="_blank"
@@ -132,7 +152,7 @@ export function TemplateCard({ template, priority = false, isWishlisted = false,
               <Eye aria-hidden="true" />
             </a>
           </Tooltip>
-          <Tooltip label="View Article" className={`${ACTION_SLIDE} delay-80`}>
+          <Tooltip label="View Article" className={`${CARD_SLIDE} delay-80`}>
             <Link href={href} prefetch={false} aria-label={`Open the ${template.title} page`} className={`${CARD_BTN} bg-primary! text-background! ring-0! hover:bg-primary-hover!`}>
               <ArrowUpRight aria-hidden="true" />
             </Link>

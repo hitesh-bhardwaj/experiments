@@ -4,6 +4,8 @@ import { markUserProFromSubscription, markUserFree, sendInvoiceEmail, recordInvo
 import { releaseFoundingSlot } from "@/lib/founding-slots";
 import { grantCreditsForCharge } from "@/lib/template-credits";
 import { cancelReplacedSubscription, shouldApplySubscriptionEvent } from "@/lib/subscription-events";
+import { recordTemplatePurchase, markTemplatePurchaseRefunded } from "@/lib/template-purchases";
+import { razorpay } from "@/lib/razorpay";
 
 // Razorpay's server calls this - authenticated via X-Razorpay-Signature
 // (HMAC of the raw body with the webhook secret), never via Clerk.
@@ -58,6 +60,71 @@ export async function POST(req) {
   const subscription = event?.payload?.subscription?.entity;
   const payment = event?.payload?.payment?.entity;
   const clerkUserId = subscription?.notes?.clerk_user_id;
+
+  // Safety net for template purchases: verify-payment records them, but only
+  // if the buyer's browser is still there after Razorpay's checkout. If the
+  // tab closes or the network drops in between, the money is taken but no
+  // purchase is recorded. Razorpay's server reports the captured payment
+  // here regardless; the order's notes (stamped by create-order) say whose
+  // and which template. Same as the reference repo.
+  if (event.event === "payment.captured" && payment?.order_id && !subscription) {
+    try {
+      const order = await razorpay.orders.fetch(payment.order_id);
+
+      if (order?.notes?.clerk_user_id && order?.notes?.template_slug) {
+        await recordTemplatePurchase({
+          clerkUserId: order.notes.clerk_user_id,
+          templateSlug: order.notes.template_slug,
+          razorpayPaymentId: payment.id,
+          razorpayOrderId: payment.order_id,
+          amount: typeof payment.amount === "number" ? payment.amount / 100 : null,
+          currency: payment.currency || order.currency || "USD",
+        });
+      }
+    } catch (error) {
+      console.error("RAZORPAY_WEBHOOK_TEMPLATE_PURCHASE_ERROR:", error);
+      return NextResponse.json({ error: "Handler failed" }, { status: 500 });
+    }
+
+    return NextResponse.json({ received: true });
+  }
+
+  // Full refunds ("refund.created" / "refund.processed" - Razorpay has no
+  // "payment.refunded" event). Partial refunds keep access.
+  //   - a subscription charge (the payment has an invoice_id): the plan ends
+  //     now - unless that subscription was already replaced by an upgrade
+  //   - a template purchase: the purchase is marked refunded, which stops
+  //     its download (hasTemplatePurchase only counts paid rows)
+  // Both handlers are idempotent, so the two events for one refund are safe.
+  if (
+    (event.event === "refund.created" || event.event === "refund.processed") &&
+    payment?.id &&
+    payment?.refund_status === "full"
+  ) {
+    try {
+      if (payment.invoice_id) {
+        const invoice = await razorpay.invoices.fetch(payment.invoice_id);
+        const refundedSubscription = invoice?.subscription_id
+          ? await razorpay.subscriptions.fetch(invoice.subscription_id)
+          : null;
+        const refundClerkUserId = refundedSubscription?.notes?.clerk_user_id;
+
+        if (
+          refundClerkUserId &&
+          (await shouldApplySubscriptionEvent({ clerkUserId: refundClerkUserId, subscription: refundedSubscription, kind: "end" }))
+        ) {
+          await markUserFree({ clerkUserId: refundClerkUserId, status: "refunded" });
+        }
+      } else {
+        await markTemplatePurchaseRefunded(payment.id);
+      }
+    } catch (error) {
+      console.error("RAZORPAY_WEBHOOK_REFUND_ERROR:", error);
+      return NextResponse.json({ error: "Handler failed" }, { status: 500 });
+    }
+
+    return NextResponse.json({ received: true });
+  }
 
   if (!subscription || !clerkUserId) {
     // Not a subscription event we track (e.g. payment.captured) - ack and move on.

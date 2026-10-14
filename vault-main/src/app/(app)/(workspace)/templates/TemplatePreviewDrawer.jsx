@@ -24,6 +24,16 @@ const CONTENT_DURATION = 0.25;
  * `template` drives it: set it to open (or swap), clear it to close. `onBuy`
  * gets the template; the listing closes the drawer and runs the purchase.
  */
+// Phones: a Button that shares the drawer's action row - grows to fill it, text from the
+// left, no arrow (it would crowd the label at that width). Same as the effect drawer.
+const MOBILE_ROW_BTN = "max-md:w-auto! max-md:flex-1 max-md:justify-start! max-md:px-3! max-md:[--btn-arrow:0px]!";
+// Phones: a Button sized to its label (Demo), so the longer View button gets the rest of
+// the row instead of an equal, too-narrow share.
+const MOBILE_FIT_BTN = "max-md:w-fit! max-md:shrink-0 max-md:justify-start! max-md:px-3! max-md:[--btn-arrow:0px]!";
+// Phones: the orange View button turns outline (like Demo) - orange is kept for the
+// pinned bar's action (copy / Buy).
+const MOBILE_OUTLINE = "max-md:border-foreground/20! max-md:bg-transparent! max-md:text-foreground!";
+
 export function TemplatePreviewDrawer({ template, templates = [], isWishlisted, hasAccess, onToggleWishlist, onClose, onOpen, onBuy }) {
   const overlayRef = useRef(null);
   const panelRef = useRef(null);
@@ -171,7 +181,7 @@ export function TemplatePreviewDrawer({ template, templates = [], isWishlisted, 
         data-lenis-prevent
         className="absolute inset-y-0 right-0 w-[53vw] overflow-y-auto overscroll-contain border-l border-foreground/10 bg-background font-avenir text-foreground shadow-[-1.1vw_0_2.8vw_-1.7vw_color-mix(in_srgb,black_60%,transparent)] max-lg:w-full max-lg:border-l-0"
       >
-        <div ref={contentRef} className="flex flex-col gap-8 px-10 pt-7 pb-16 max-lg:px-8 max-md:px-5 *:shrink-0">
+        <div ref={contentRef} className="flex flex-col gap-8 px-10 pt-7 pb-16 max-lg:px-8 max-md:px-5 max-md:pb-0 *:shrink-0">
           <div className="flex items-center justify-between">
             <span className={`${T16} text-foreground/80`}>{shown.category}</span>
             {/* Same close control as the site's modals: the cross turns a quarter on hover. */}
@@ -215,7 +225,7 @@ export function TemplatePreviewDrawer({ template, templates = [], isWishlisted, 
               ))}
             </div>
             {price != null && (
-              <p className={`flex items-baseline gap-2 ${T14} text-foreground/60`}>
+              <p className={`flex items-baseline gap-2 ${T14} text-foreground/60 max-md:hidden`}>
                 <b className={`${PRICE} ${T24} leading-none font-normal text-foreground`}>${price}</b>
                 {owned ? "yours" : "one-time, or 1 template credit"}
               </p>
@@ -240,28 +250,28 @@ export function TemplatePreviewDrawer({ template, templates = [], isWishlisted, 
 
             {shown.tagline && <p className={`w-[80%] ${T16} leading-relaxed text-foreground/80 max-lg:w-full`}>{shown.tagline}</p>}
 
-            {/* items-stretch: the heart and Buy take the buttons' height. Buttons keep their own
-                width on every screen (w-fit on phones), as in the effect preview drawer. */}
-            <div className="flex flex-wrap items-stretch gap-2">
+            {/* items-stretch: the heart and Buy take the buttons' height. Phones: View template,
+                Demo, then a square heart, filling the row; Buy moves to the pinned bar. */}
+            <div className="flex flex-wrap items-stretch gap-2 max-md:w-full max-md:flex-nowrap">
               <button
                 type="button"
                 aria-pressed={saved}
                 aria-label={saved ? `Remove ${shown.title} from saved` : `Save ${shown.title}`}
                 onClick={() => onToggleWishlist(shown)}
-                className={`flex cursor-pointer items-center justify-center gap-2 border border-foreground/20 px-3 leading-[1.2] ${saved ? "text-primary! [&_svg]:fill-primary [&_svg]:stroke-primary" : ""}`}
+                className={`flex cursor-pointer items-center justify-center gap-2 border border-foreground/20 px-3 leading-[1.2] max-md:order-3 max-md:w-12 max-md:shrink-0 max-md:px-0 ${saved ? "text-primary! [&_svg]:fill-primary [&_svg]:stroke-primary" : ""}`}
               >
                 <span className="size-4.5">
                   <Heart className="size-full" aria-hidden="true" />
                 </span>
               </button>
-              <Button text="Demo" href={shown.previewHref || href}  variant="outline" className="tracking-normal! bg-transparent! border-foreground/20 max-md:w-fit" />
-              <Button text="View Template" href={href} target_blank className="tracking-normal! border border-primary max-md:w-fit" />
+              <Button text="Demo" href={shown.previewHref || href}  variant="outline" className={`tracking-normal! bg-transparent! border-foreground/20 max-md:order-2 ${MOBILE_FIT_BTN}`} />
+              <Button text="View Template" href={href} target_blank className={`tracking-normal! border border-primary max-md:order-1 ${MOBILE_ROW_BTN} ${MOBILE_OUTLINE}`} />
                 {/* Buy opens the "Get this template" popup; once it's yours it downloads. */}
                 <button
                   type="button"
                   onClick={() => onBuy(shown)}
                   // Same text size and font as the Button component beside it
-                  className="inline-flex cursor-pointer items-center gap-2 bg-primary px-4 max-md:min-h-11 font-avenir text-[calc(var(--hx-vw,1vw)*1.15)] max-lg:text-[clamp(13px,calc(var(--hx-vw,1vw)*1.6),15px)] text-background transition-colors duration-500 hover:bg-primary-hover max-md:text-[calc(var(--hx-vw,1vw)*2.2)] max-sm:text-[calc(var(--hx-vw,1vw)*4)]"
+                  className="inline-flex cursor-pointer items-center gap-2 bg-primary px-4 max-md:hidden font-avenir text-[calc(var(--hx-vw,1vw)*1.15)] max-lg:text-[clamp(13px,calc(var(--hx-vw,1vw)*1.6),15px)] text-background transition-colors duration-500 hover:bg-primary-hover max-md:text-[calc(var(--hx-vw,1vw)*2.2)] max-sm:text-[calc(var(--hx-vw,1vw)*4)]"
                 >
                   <Download className="size-4" aria-hidden="true" />
                   {owned ? "Download" : "Buy Template"}
@@ -298,6 +308,23 @@ export function TemplatePreviewDrawer({ template, templates = [], isWishlisted, 
               </div>
             </div>
           )}
+          {/* Phones: price and Buy, pinned to the bottom of the drawer */}
+          <div className="sticky bottom-0 z-2 -mx-5 hidden items-center justify-between gap-4 border-t border-foreground/10 bg-background px-5 pt-4 max-md:flex max-md:pb-[calc(1.75rem+env(safe-area-inset-bottom))]">
+            {price != null ? (
+              <p className="flex min-w-0 flex-col gap-0.5">
+                <b className={`${PRICE} ${T24} leading-none font-normal text-foreground`}>${price}</b>
+                <span className={`${T14} truncate text-foreground/60`}>{owned ? "Yours" : "one-time, or 1 template credit"}</span>
+              </p>
+            ) : (
+              <span />
+            )}
+            <Button
+              text={owned ? "Download" : "Buy template"}
+              preventDefault
+              onClick={() => onBuy(shown)}
+              className="tracking-normal! shrink-0 max-md:w-fit"
+            />
+          </div>
         </div>
       </div>
     </div>,

@@ -6,6 +6,15 @@ client showcase, testimonials, FAQ, contact modal, footer - built from
 [Hyperiux Vault](https://vault.hyperiux.com) effects arranged into a full
 site.
 
+## What's in this download
+
+```
+elenavoss/
+├── Code/          # this Next.js project - see "Running it locally" below
+├── Figma File/    # the source .fig design file
+└── LICENSE.md     # your license terms
+```
+
 ## Tech stack
 
 | | |
@@ -53,16 +62,14 @@ elenavoss/
 
 ## Running it locally
 
-This template lives inside the Hyperiux monorepo, at
-`vault-main/src/app/(marketing)/templates/elenavoss/`.
+This is a standalone Next.js project - no monorepo, no workspace setup.
 
 ```bash
-cd vault-main
-npm install      # once
+npm install
 npm run dev
 ```
 
-Then open **http://localhost:3000/templates/elenavoss**.
+Then open **http://localhost:3000**.
 
 ## Customizing
 
@@ -90,3 +97,7 @@ a static layout - not just "animation off," but a deliberate alternate
 composition (e.g. the scroll-pinned logo wall in `SectionBreak.tsx`
 becomes a plain static grid; the interactive divider line in `Line.tsx`
 renders as a plain straight line).
+
+## License
+
+See [`LICENSE.md`](../LICENSE.md).

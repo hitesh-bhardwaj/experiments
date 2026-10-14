@@ -260,9 +260,9 @@ export function TemplatesListing({ templates: baseTemplates = [], description = 
               </button>
             </div>
           ) : (
-            <div className="flex flex-wrap gap-x-[2vw] gap-y-[5vw] max-md:gap-y-[12vw]">
+            <div className="flex flex-wrap gap-[2.5vw] max-md:gap-y-[12vw]">
               {filtered.map((template, index) => (
-                <motion.div key={template.slug} layout transition={CARD_LAYOUT_TRANSITION} className="w-[calc((100%-2vw)/2)] max-md:w-full">
+                <motion.div key={template.slug} layout transition={CARD_LAYOUT_TRANSITION} className="w-[calc((100%-2.5vw)/2)] max-md:w-full">
                   <motion.div {...cardReveal(index)}>
                     <TemplateCard
                       template={template}

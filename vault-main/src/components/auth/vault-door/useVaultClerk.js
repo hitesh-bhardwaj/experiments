@@ -1,6 +1,8 @@
 "use client";
 
+import { useAuth } from "@clerk/nextjs";
 import { useSignIn, useSignUp } from "@clerk/nextjs/legacy";
+import { notifyClerkSessionChanged } from "@/lib/clerkSessionCache";
 import { errorMessage, isSessionExistsError } from "@/components/auth/AuthFormPrimitives";
 import { SSO_CALLBACK_URL } from "./constants";
 import { splitName } from "./utils";
@@ -28,7 +30,11 @@ function unexpected(label, result, message) {
 export function useVaultClerk({ redirectUrl }) {
   const { isLoaded: signInLoaded, signIn, setActive } = useSignIn();
   const { isLoaded: signUpLoaded, signUp } = useSignUp();
-  const isLoaded = signInLoaded && signUpLoaded;
+  // A live session this browser already has. Clerk would answer any sign-in
+  // attempt with "session exists" without checking the password, so the forms
+  // check this first rather than asking for one.
+  const { isLoaded: authLoaded, isSignedIn } = useAuth();
+  const isLoaded = signInLoaded && signUpLoaded && authLoaded;
 
   async function signInWithPassword({ email, password }) {
     try {
@@ -158,6 +164,7 @@ export function useVaultClerk({ redirectUrl }) {
   // redirectUrl goes straight into setActive so the provider's fallback can't override it
   async function activate(sessionId, { email, isNewAccount } = {}) {
     await setActive({ session: sessionId, redirectUrl });
+    notifyClerkSessionChanged();
 
     // Referral lead tracking (client-side only, see lib/referral-rocket.js)
     if (isNewAccount) {
@@ -169,5 +176,5 @@ export function useVaultClerk({ redirectUrl }) {
     }
   }
 
-  return { isLoaded, getStepAction, resendCode, startOAuth, activate };
+  return { isLoaded, isSignedIn: Boolean(isSignedIn), getStepAction, resendCode, startOAuth, activate };
 }

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
+import { Download } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -12,6 +13,9 @@ import { prefersReducedMotion } from "@/lib/motion";
 import { LABEL, T13, T14, T16, catalogueOf, priceOf } from "../tokens";
 import { PLANS, canRedeemCatalogue } from "@/lib/plans";
 import { SignInRequiredModal } from "@/components/ui/SignInRequiredModal";
+import { buttonClassName, ButtonChrome } from "@/homepage/components/Button";
+import { markScrollToPricingCards } from "@/lib/pricingScrollIntent";
+import { markTemplateOwned } from "../useTemplateAccess";
 
 // Most credit coins drawn at once; a bigger balance shows as a number too
 const MAX_COINS = 10;
@@ -21,6 +25,7 @@ const TABS = [
 ];
 // The pricing page's plan comparison (components/Pricing/exploded/PricingProCompare.jsx).
 const COMPARE_HREF = "/pricing#compare";
+const PLANS_HREF = "/pricing#plans";
 const EASE = [0.16, 1, 0.3, 1];
 
 // Tab panels: the old one slides out and fades first, then the new one slides in from the side
@@ -56,24 +61,43 @@ export function GetTemplateModal({ template, open, tab = "buy", onTab, onClose, 
   const [busy, setBusy] = useState(false);
   // The sign-in modal over this one; closing it reloads the balance (now signed in)
   const [signIn, setSignIn] = useState(false);
+  // Signed in from that modal, until the balance has reloaded as the signed-in visitor
+  const [signingIn, setSigningIn] = useState(false);
+  // Continue to Payment opened the sign-in modal: carry on to payment once the
+  // balance has reloaded as the signed-in visitor (onBuy reads who's signed in)
+  const buyAfterSignInRef = useRef(false);
+  const pendingBuyRef = useRef(false);
+  const [signInHovered, setSignInHovered] = useState(false);
   const [walletKey, setWalletKey] = useState(0);
   const signInRef = useRef(false);
+  const onBuyRef = useRef(onBuy);
   useEffect(() => {
     signInRef.current = signIn;
+    onBuyRef.current = onBuy;
   });
 
-  // Fresh balance each time the popup opens, a different template is shown, or after signing in
+  // Fresh balance - and whether this visitor already owns the template - each time
+  // the popup opens, a different template is shown, or after signing in
   useEffect(() => {
     if (!open || !template) return undefined;
     let live = true;
-    fetch("/api/templates/credits")
-      .then((res) => (res.ok ? res.json() : null))
-      .catch(() => null)
-      .then((data) => {
-        if (!live) return;
-        setWallet(data);
-        setOutcome(null);
-      });
+    const getJson = (url) =>
+      fetch(url)
+        .then((res) => (res.ok ? res.json() : null))
+        .catch(() => null);
+    Promise.all([getJson("/api/templates/credits"), getJson(`/api/templates/${template.slug}/access`)]).then(([data, access]) => {
+      if (!live) return;
+      const owned = Boolean(data?.signedIn && access?.allowed);
+      setWallet(data && { ...data, owned });
+      setOutcome(null);
+      setSigningIn(false);
+      if (owned) markTemplateOwned(template.slug);
+      // Signed in to buy it: carry on to payment, unless it turns out they own it already
+      if (pendingBuyRef.current && data?.signedIn) {
+        pendingBuyRef.current = false;
+        if (!owned) onBuyRef.current?.();
+      }
+    });
     return () => {
       live = false;
     };
@@ -101,7 +125,8 @@ export function GetTemplateModal({ template, open, tab = "buy", onTab, onClose, 
   const subscribed = wallet?.plan === "pro";
   const remaining = wallet?.balance ?? 0;
   const locked = subscribed && !canRedeemCatalogue(wallet.tier, catalogueOf(template));
-  const canRedeem = subscribed && !locked && remaining > 0 && !outcome;
+  const owned = Boolean(wallet?.owned);
+  const canRedeem = subscribed && !locked && remaining > 0 && !outcome && !owned;
   const coins = Math.min(remaining, MAX_COINS);
   const downloadHref = `/api/templates/${template.slug}/download`;
 
@@ -126,6 +151,8 @@ export function GetTemplateModal({ template, open, tab = "buy", onTab, onClose, 
       setBusy(false);
       return;
     }
+
+    markTemplateOwned(template.slug);
 
     const coin = coinRefs.current[coins - 1];
     const thumb = thumbRef.current;
@@ -158,7 +185,7 @@ export function GetTemplateModal({ template, open, tab = "buy", onTab, onClose, 
   let message = "";
   if (!wallet) message = "Checking your credits…";
   else if (outcome === "redeemed") message = `${template.title} is yours to keep, even if you cancel.`;
-  else if (outcome === "already-owned") message = `You already own ${template.title}.`;
+  else if (outcome === "already-owned" || owned) message = `You already own ${template.title}.`;
   else if (outcome === "error") message = "Couldn't redeem the credit. Please try again.";
   else if (!wallet.signedIn) message = "Sign in to use a template credit from your plan.";
   else if (!subscribed) message = "Template credits come with Pro and Pro+: 3 or 5 a year on yearly billing.";
@@ -254,13 +281,33 @@ export function GetTemplateModal({ template, open, tab = "buy", onTab, onClose, 
                           </li>
                         ))}
                       </ul>
+                      {owned ? (
+                        <>
+                          <p className={`${T14} text-foreground/70`}>You already own {template.title}. Download it any time.</p>
+                          <a
+                            href={downloadHref}
+                            className={`inline-flex h-12 w-fit items-center gap-2 bg-primary px-5 ${T16} text-background transition-colors duration-500 hover:bg-primary-hover`}
+                          >
+                            <Download className="size-4" aria-hidden="true" /> Download
+                          </a>
+                        </>
+                      ) : (
                       <button
                         type="button"
-                        onClick={onBuy}
+                        onClick={() => {
+                          // Signed out: sign in here, without leaving the page
+                          if (wallet && !wallet.signedIn) {
+                            buyAfterSignInRef.current = true;
+                            setSignIn(true);
+                            return;
+                          }
+                          onBuy();
+                        }}
                         className={`inline-flex h-12 w-fit cursor-pointer items-center bg-primary px-5 ${T16} text-background transition-colors duration-500 hover:bg-primary-hover`}
                       >
                         Continue to Payment
                       </button>
+                      )}
                      
                     </div>
                 </motion.div>
@@ -304,30 +351,39 @@ export function GetTemplateModal({ template, open, tab = "buy", onTab, onClose, 
                             disabled={busy}
                             className={`inline-flex h-11 cursor-pointer items-center bg-primary px-5 ${T16} text-background transition-colors duration-500 hover:bg-primary-hover disabled:opacity-60`}
                           >
-                            Redeem 1 credit
+                            {busy ? "Claiming…" : "Redeem 1 credit"}
                           </button>
                         )}
-                        {(outcome === "redeemed" || outcome === "already-owned") && (
+                        {(outcome === "redeemed" || outcome === "already-owned" || owned) && (
                           <a
                             href={downloadHref}
-                            className={`inline-flex h-11 items-center bg-primary px-5 ${T16} text-background transition-colors duration-500 hover:bg-primary-hover`}
+                            className={`inline-flex h-11 items-center gap-2 bg-primary px-5 ${T16} text-background transition-colors duration-500 hover:bg-primary-hover`}
                           >
-                            Download source
+                            <Download className="size-4" aria-hidden="true" /> Download
                           </a>
                         )}
                         {wallet && !wallet.signedIn && (
+                          // The header's Sign In button, as a <button> that opens the modal
                           <button
                             type="button"
                             onClick={() => setSignIn(true)}
-                            className={`inline-flex h-11 cursor-pointer items-center bg-primary px-5 ${T16} text-background transition-colors duration-500 hover:bg-primary-hover`}
+                            disabled={signIn || signingIn}
+                            onPointerEnter={() => setSignInHovered(true)}
+                            onPointerLeave={() => setSignInHovered(false)}
+                            data-sound-kind="primary"
+                            className={buttonClassName({ disabled: signIn || signingIn })}
                           >
-                            Sign In
+                            <ButtonChrome label={signIn || signingIn ? "Signing in…" : "Sign In"} hovered={signInHovered} />
                           </button>
                         )}
-                        {wallet && !outcome && (!subscribed || locked || remaining < 1) && (
+                        {wallet && !outcome && !owned && (!subscribed || locked || remaining < 1) && (
                           <Link
-                            href={COMPARE_HREF}
-                            onClick={onClose}
+                            // See Pro+ lands on the plan cards, the same way the header's Upgrade does
+                            href={locked ? PLANS_HREF : COMPARE_HREF}
+                            onClick={() => {
+                              if (locked) markScrollToPricingCards();
+                              onClose();
+                            }}
                             className={`inline-flex h-11 items-center px-5 ${T16} text-light ring-1 ring-inset ring-foreground/14 transition-shadow duration-500 hover:ring-primary/70`}
                           >
                             {locked ? "See Pro+" : "Compare Plans"}
@@ -344,8 +400,13 @@ export function GetTemplateModal({ template, open, tab = "buy", onTab, onClose, 
     </AnimatePresence>
     <SignInRequiredModal
       open={signIn}
+      onSignedIn={() => {
+        setSigningIn(true);
+        pendingBuyRef.current = buyAfterSignInRef.current;
+      }}
       onClose={() => {
         setSignIn(false);
+        buyAfterSignInRef.current = false;
         setWalletKey((n) => n + 1);
       }}
       redirect={pathname}

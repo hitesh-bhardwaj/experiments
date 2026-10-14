@@ -69,6 +69,13 @@ export default function VaultDoorAuth({ catalogue }) {
   const valuesRef = useRef(EMPTY_VALUES);
   useSiteHeaderHeight(rootRef);
 
+  // Already signed in (e.g. sent here by an expired server cookie while the
+  // browser's session is still good): go straight on, no password asked.
+  const alreadySignedIn = clerk.isLoaded && clerk.isSignedIn;
+  useEffect(() => {
+    if (alreadySignedIn) router.replace(redirectUrl);
+  }, [alreadySignedIn, router, redirectUrl]);
+
   // State
   const [mode, setMode] = useState(routeMode);
   const [syncedRouteMode, setSyncedRouteMode] = useState(routeMode);

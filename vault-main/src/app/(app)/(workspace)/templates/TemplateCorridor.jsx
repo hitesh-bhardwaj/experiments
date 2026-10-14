@@ -489,15 +489,17 @@ export default function TemplateCorridor({ templates, onUnsupported }) {
               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
               className="flex flex-col gap-2.5"
             >
+              <div className="flex items-center justify-between">
               <h2 className={`${DISPLAY} font-aeonik text-[2.2vw] leading-[1.1] max-lg:text-[4vw] max-md:text-[7vw]`}>{current.title}</h2>
-              <p className={`line-clamp-3 ${T13} text-foreground/70`}>{current.tagline}</p>
               <div className="flex flex-wrap gap-1.25">
                 {(current.tags || []).map((tag) => (
-                  <span key={tag} className={`inline-flex h-5.5 items-center px-1.75 font-mono ${T13} text-foreground/70 ring-1 ring-inset ring-foreground/15`}>
+                  <span key={tag} className={`inline-flex h-5.5 items-center px-1.75 font-avenir ${T13} text-foreground/70 ring-1 ring-inset ring-foreground/15`}>
                     {tag}
                   </span>
                 ))}
               </div>
+              </div>
+              <p className={`line-clamp-3 ${T13} text-foreground/70`}>{current.tagline}</p>
             </motion.div>
           </aside>
         )}

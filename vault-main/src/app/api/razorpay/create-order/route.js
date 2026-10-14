@@ -79,6 +79,16 @@ export async function POST(req) {
         email_notify: 0,
       });
 
+      // The invoice's notes don't carry over to its auto-generated order, and
+      // Checkout.js only ever hands verify-payment that ORDER (order_id,
+      // payment_id, signature - never invoice fields). Without copying the
+      // notes onto the order, verify-payment can't tell whose purchase it is
+      // and every template purchase fails after Razorpay already took the
+      // money. Same fix as the reference repo (hyperiux-pro-components).
+      await razorpay.orders.edit(invoice.order_id, {
+        notes: { clerk_user_id: userId, template_slug: templateSlug },
+      });
+
       return NextResponse.json({
         orderId: invoice.order_id,
         amount: Math.round(amount * 100),

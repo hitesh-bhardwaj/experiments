@@ -4,14 +4,16 @@ import { useCallback, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import { TemplatePaywallModal } from "@/components/ui/TemplatePaywallModal";
+import { useToastQueue, ToastViewport } from "@/components/ui/Toast";
 import { GetTemplateModal } from "./[slug]/GetTemplateModal";
+import { markTemplateOwned } from "./useTemplateAccess";
 
 /**
  * The template purchase flow used by the v4 cards and preview drawer: Buy
  * opens the "Get this template" popup first; its "Continue to payment" then
  * signs the visitor in (coming back to this page) or opens the paywall, and a
- * finished purchase downloads the source. A template you already own just
- * downloads.
+ * finished purchase downloads the source and says so in a toast. A template you
+ * already own just downloads.
  *
  *   const { buy, modals } = useTemplatePurchase();
  *   <button onClick={() => buy(template, hasAccess)}>Buy</button>
@@ -25,6 +27,7 @@ export function useTemplatePurchase() {
   const [getOpen, setGetOpen] = useState(false);
   const [getTab, setGetTab] = useState("buy");
   const [paywallOpen, setPaywallOpen] = useState(false);
+  const { toast, showToast, dismissToast } = useToastQueue();
 
   const buy = useCallback((t, owned = false) => {
     if (owned) {
@@ -58,8 +61,11 @@ export function useTemplatePurchase() {
         onPurchased={() => {
           setPaywallOpen(false);
           window.location.href = `/api/templates/${template.slug}/download`;
+          markTemplateOwned(template.slug);
+          showToast({ title: `${template.title} purchased`, description: `${template.title} has been purchased and downloaded.` });
         }}
       />
+      <ToastViewport toast={toast} onDismiss={dismissToast} />
     </>
   ) : null;
 

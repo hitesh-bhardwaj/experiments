@@ -36,14 +36,17 @@ export async function recordTemplatePurchase({
   }
 }
 
-// Used by getTemplateAccessDecision() - true if this user already owns a
-// standalone purchase of this specific template.
+// Used by getTemplateAccessDecision() - true if this user owns this
+// template: bought it, or redeemed a template credit on it. Paid rows only,
+// so a purchase markTemplatePurchaseRefunded() flipped to "refunded" stops
+// granting access.
 export async function hasTemplatePurchase(clerkUserId, templateSlug) {
   const { data, error } = await supabase
     .from("template_purchases")
     .select("id")
     .eq("clerk_user_id", clerkUserId)
     .eq("template_slug", templateSlug)
+    .eq("status", "paid")
     // A template can be both bought and redeemed with a credit - any row
     // means owned, and maybeSingle() would error on two.
     .limit(1)
@@ -55,4 +58,22 @@ export async function hasTemplatePurchase(clerkUserId, templateSlug) {
   }
 
   return Boolean(data);
+}
+
+// Called from the refund webhook branch - flips this purchase's status so
+// hasTemplatePurchase() above stops granting access. Matched by
+// razorpay_payment_id (recordTemplatePurchase()'s natural key), since that's
+// all the refund payload reliably carries.
+export async function markTemplatePurchaseRefunded(razorpayPaymentId) {
+  if (!razorpayPaymentId) return;
+
+  const { error } = await supabase
+    .from("template_purchases")
+    .update({ status: "refunded" })
+    .eq("razorpay_payment_id", razorpayPaymentId);
+
+  if (error) {
+    console.error("MARK_TEMPLATE_PURCHASE_REFUNDED_ERROR:", error);
+    throw error;
+  }
 }

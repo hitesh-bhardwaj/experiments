@@ -211,8 +211,13 @@ export default function ProfileDropdown({
             <div className="my-2 border-t border-white/10 w-[110%] translate-x-[-5%]" />
 
             <button
+              // Stay on this page (reloaded, so account-dependent content - unlocked code,
+              // saved hearts, plan buttons - shows the signed-out view). The dashboard needs
+              // a session, so signing out there goes to the effects listing instead.
               onClick={() => signOut(() => {
-                window.location.href = "/effects";
+                const onDashboard = window.location.pathname.startsWith("/dashboard");
+                if (onDashboard) window.location.href = "/effects";
+                else window.location.reload();
               })}
               className="group relative isolate w-full text-left px-4 py-3 transition text-red-400"
             >

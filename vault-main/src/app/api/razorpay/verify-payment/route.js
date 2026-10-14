@@ -1,7 +1,7 @@
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import crypto from "crypto";
-import { razorpay } from "@/lib/razorpay";
+import { razorpay, withRazorpayRetry } from "@/lib/razorpay";
 import { markUserProFromSubscription, recordInvoice } from "@/lib/pro-access";
 import { grantCreditsForCharge } from "@/lib/template-credits";
 import { cancelReplacedSubscription } from "@/lib/subscription-events";
@@ -76,8 +76,8 @@ export async function POST(req) {
     }
 
     if (razorpay_subscription_id) {
-      const subscription = await razorpay.subscriptions.fetch(
-        razorpay_subscription_id
+      const subscription = await withRazorpayRetry(() =>
+        razorpay.subscriptions.fetch(razorpay_subscription_id)
       );
 
       if (subscription?.notes?.clerk_user_id !== userId) {
@@ -110,7 +110,7 @@ export async function POST(req) {
       // Razorpay fetch hiccup here can't block the plan activation the user
       // is waiting on.
       try {
-        const payment = await razorpay.payments.fetch(razorpay_payment_id);
+        const payment = await withRazorpayRetry(() => razorpay.payments.fetch(razorpay_payment_id));
         await recordInvoice({ clerkUserId: userId, subscription, payment });
 
         // Same reasoning for template credits: the visitor may open a
@@ -146,7 +146,7 @@ export async function POST(req) {
     // already the real receipt link, no separate payment/invoice lookup
     // needed the way the old bare-order flow required.
     if (razorpay_invoice_id) {
-      const invoice = await razorpay.invoices.fetch(razorpay_invoice_id);
+      const invoice = await withRazorpayRetry(() => razorpay.invoices.fetch(razorpay_invoice_id));
 
       if (invoice?.notes?.clerk_user_id !== userId) {
         return NextResponse.json(
@@ -180,10 +180,13 @@ export async function POST(req) {
       });
     }
 
-    // Order (one-time payment) branch - only the legacy $1 test-payment path
-    // reaches here now (see create-order/route.js's else branch); every
-    // template purchase goes through the invoice branch above instead.
-    const order = await razorpay.orders.fetch(razorpay_order_id);
+    // Order (one-time payment) branch. Template purchases land here, every
+    // time: Checkout.js is opened with the invoice's order_id, and its
+    // handler only ever returns razorpay_order_id - never an invoice ID - so
+    // the invoice branch above doesn't see them. create-order copies the
+    // buyer and template onto this order's notes (orders.edit) exactly so
+    // this branch can record the purchase.
+    const order = await withRazorpayRetry(() => razorpay.orders.fetch(razorpay_order_id));
 
     if (order?.notes?.clerk_user_id !== userId) {
       return NextResponse.json(
@@ -192,13 +195,28 @@ export async function POST(req) {
       );
     }
 
+    if (order?.notes?.template_slug) {
+      await recordTemplatePurchase({
+        clerkUserId: userId,
+        templateSlug: order.notes.template_slug,
+        razorpayPaymentId: razorpay_payment_id,
+        razorpayOrderId: razorpay_order_id,
+        amount: typeof order.amount === "number" ? order.amount / 100 : null,
+        currency: order.currency || "USD",
+      });
+    }
+
     console.log("RAZORPAY_PAYMENT_VERIFIED:", {
       userId,
       razorpay_order_id,
       razorpay_payment_id,
+      templateSlug: order?.notes?.template_slug || null,
     });
 
-    return NextResponse.json({ verified: true });
+    return NextResponse.json({
+      verified: true,
+      templateSlug: order?.notes?.template_slug || null,
+    });
   } catch (error) {
     console.error("RAZORPAY_VERIFY_PAYMENT_ERROR:", error);
 

@@ -37,3 +37,6 @@ next-env.d.ts
 
 # Claude Code instructions
 CLAUDE.md
+
+# Template packaging output and Figma sources (scripts/package-template.mjs) - large, never committed
+/dist

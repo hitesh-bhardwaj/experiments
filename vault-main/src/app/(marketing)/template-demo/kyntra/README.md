@@ -2,6 +2,15 @@
 
 A single-page app landing template for home maintenance and service booking, built with Next.js, Tailwind CSS, and GSAP scroll animations. Built using [Hyperiux Vault](https://vault.hyperiux.com).
 
+## What's in this download
+
+```
+kyntra/
+├── Code/          # this Next.js project - see "Getting started" below
+├── Figma File/    # the source .fig design file
+└── LICENSE.md     # your license terms
+```
+
 ## What's included
 
 - **Header** - animated navigation with a mobile menu
@@ -18,6 +27,54 @@ A single-page app landing template for home maintenance and service booking, bui
 - **CTA** - app download call to action
 - **Parallax footer** - animated footer with contact form
 - **Modals** - enquiry form and app download flows
+
+## Folder structure
+
+Inside `Code/`:
+
+```
+app/
+├── page.tsx                    # Composes every section, in order
+├── kyntra-styles.css            # Color tokens and @font-face declarations
+├── assets/                      # Images, icons, self-hosted fonts
+│   ├── fonts/
+│   ├── features/
+│   ├── smarter/
+│   ├── testimonial/
+│   └── blogs/
+└── components/
+    ├── Header.tsx                # Animated nav with a mobile menu
+    ├── Hero.tsx                  # Full-screen intro with app mockup
+    ├── About.tsx                 # Brand/positioning section
+    ├── SectionBreak.tsx          # Scroll-driven transition between sections
+    ├── Features.tsx              # Appliance records, warranties, repair history
+    ├── Smarter.tsx                # Supporting feature breakdown
+    ├── HowKyntraWorks.tsx         # Step-by-step onboarding walkthrough
+    ├── Trust.tsx                  # Trusted professionals / credibility section
+    ├── Testimonial.tsx            # Customer testimonial carousel
+    ├── Blogs.tsx                  # Article listing
+    ├── KyntraFaq.tsx               # Animated accordion
+    ├── CTA.tsx                     # App download call to action
+    ├── DownloadAppModal.tsx        # App download modal
+    ├── EnquiryModal.tsx            # Enquiry form modal
+    ├── IntroOverlay.tsx            # Entry loading overlay
+    ├── LenisSmoothScroll.tsx       # Lenis provider
+    ├── ScrollTopOnLoad.tsx         # Resets scroll position on load
+    ├── Buttons/                    # Shared button primitives
+    ├── Animations/                 # Shared GSAP + reduced-motion helpers
+    ├── smooth-carousel/            # Custom drag/inertia carousel engine
+    ├── shader/                     # Gradient shader background
+    └── effects/                    # Self-contained effect components
+        ├── animated-faq/
+        ├── animated-form/
+        ├── char-stagger-button/
+        ├── char-stagger-primary-button/
+        ├── number-counter/
+        ├── parallax-footer/
+        ├── parallax-image-animation/
+        ├── scroll-stack/
+        └── text-fill-animation/
+```
 
 ## Requirements
 
@@ -79,4 +136,4 @@ Animated sections respect `prefers-reduced-motion` via the helpers in `component
 
 ## License
 
-This template is licensed for use per your Hyperiux purchase agreement. See [vault.hyperiux.com](https://vault.hyperiux.com) for full license terms. Do not redistribute or resell the source files outside of your licensed usage.
+This template is licensed for use per your Hyperiux purchase agreement - see [`LICENSE.md`](../LICENSE.md) or [vault.hyperiux.com](https://vault.hyperiux.com) for full license terms. Do not redistribute or resell the source files outside of your licensed usage.

@@ -61,7 +61,8 @@ const TIERS = [
   { id: "pro", label: "Pro" },
 ];
 // Card widths for the catalogue (flex-wrap, gap-x 1.4vw): 2 or 3 per row on desktop
-const GRID_COLS = { 2: "w-[calc((100%-1.4vw)/2)]", 3: "w-[calc((100%-2.8vw)/3)]" };
+// Card widths for 2 / 3 per row, net of the grid's 2.5vw gaps (one gap per row for 2, two for 3)
+const GRID_COLS = { 2: "w-[calc((100%-2.5vw)/2)]", 3: "w-[calc((100%-5vw)/3)]" };
 // Two- and three-pane window icons for the column switch.
 const COLUMN_ICONS = {
   2: (
@@ -789,9 +790,9 @@ export function EffectsListing({
               </button>
             </div>
           ) : (
-            <div ref={gridRef} className="flex flex-wrap gap-x-[1.4vw] gap-y-8">
+            <div ref={gridRef} className="flex flex-wrap gap-[2.5vw] gap-y-8">
               {visible.map((effect, index) => (
-                <motion.div key={effect.name} layout transition={CARD_LAYOUT_TRANSITION} className={`${GRID_COLS[cols]} max-lg:w-[calc((100%-1.4vw)/2)] max-md:w-full`}>
+                <motion.div key={effect.name} layout transition={CARD_LAYOUT_TRANSITION} className={`${GRID_COLS[cols]} max-lg:w-[calc((100%-2.5vw)/2)] max-md:w-full`}>
                   <EffectCard {...cardProps(effect, index)} tagClassName="border-black/20" />
                 </motion.div>
               ))}

@@ -52,18 +52,22 @@ export function Modal({ open, onClose, title, children }) {
  * form itself (AuthModalForm: sign in, create account, reset password), so visitors
  * sign in without leaving the page; the session then picks up on `redirect` (the
  * current page). `action` finishes the sentence "Sign in or create a free account to …".
+ * `onSignedIn` runs only when the form actually signs someone in (`onClose` runs either way).
  */
-export function SignInRequiredModal({ open, onClose, redirect = "/", action = "continue", initialMode = "sign-in" }) {
+export function SignInRequiredModal({ open, onClose, onSignedIn: onSignedInProp, redirect = "/", action = "continue", initialMode = "sign-in" }) {
   // Portals need <body>; false on the server and during hydration.
   const mounted = useSyncExternalStore(subscribeNever, () => true, () => false);
   // "You're signed in" once the form finishes (it stays up after the modal closes)
   const { toast, showToast, dismissToast } = useToastQueue();
-  const onSignedIn = ({ isNewAccount } = {}) => {
+  const onSignedIn = ({ isNewAccount, alreadySignedIn } = {}) => {
+    onSignedInProp?.();
     onClose?.();
     showToast(
-      isNewAccount
-        ? { title: "Account created", description: "You’re signed in. Welcome to Vault." }
-        : { title: "You’re signed in", description: "Welcome Back - pick up right where you left off." },
+      alreadySignedIn
+        ? { title: "You’re already signed in", description: "Your session was still active, so no password was needed." }
+        : isNewAccount
+          ? { title: "Account created", description: "You’re signed in. Welcome to Vault." }
+          : { title: "You’re signed in", description: "Welcome Back - pick up right where you left off." },
     );
   };
   // A fresh form every time it opens; it stays as it was while fading out.
@@ -111,6 +115,7 @@ export function SignInRequiredModal({ open, onClose, redirect = "/", action = "c
           initialMode={initialMode}
           intro={`Sign in or create a free account to ${action} and pick up right where you left off.`}
           onDone={onSignedIn}
+          active={open}
         />
       </div>
     </div>

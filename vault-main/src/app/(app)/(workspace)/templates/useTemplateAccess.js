@@ -9,6 +9,14 @@ import { useUser } from "@clerk/nextjs";
 // exactly "every template this signed-in user can download" (purchased, or
 // included via an active annual-Pro subscription), which is exactly the set
 // TemplateCard's purchase button needs to know about.
+// Fired by a finished purchase or credit redemption, so every card on the page
+// switches to Download without a refetch.
+const OWNED_EVENT = "template-owned";
+
+export function markTemplateOwned(slug) {
+  window.dispatchEvent(new CustomEvent(OWNED_EVENT, { detail: { slug } }));
+}
+
 export function useTemplateAccess() {
   const { isSignedIn } = useUser();
   const [accessSlugs, setAccessSlugs] = useState([]);
@@ -29,6 +37,15 @@ export function useTemplateAccess() {
       active = false;
     };
   }, [isSignedIn]);
+
+  useEffect(() => {
+    const onOwned = (event) => {
+      const slug = event.detail?.slug;
+      if (slug) setAccessSlugs((slugs) => (slugs.includes(slug) ? slugs : [...slugs, slug]));
+    };
+    window.addEventListener(OWNED_EVENT, onOwned);
+    return () => window.removeEventListener(OWNED_EVENT, onOwned);
+  }, []);
 
   return accessSlugs;
 }
