@@ -142,7 +142,9 @@ export function TemplateDetail({ template, devices = {}, effects = [], stack = [
   const [device, setDevice] = useState("desktop");
   // Start the live preview on the visitor's own device: phone view on phones,
   // tablet view on tablets (same widths as max-md / max-lg).
+  // Intentional: the screen width only exists client-side, so it can't be the initial state without a hydration mismatch
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (window.matchMedia(MEDIA.mobile).matches) setDevice("phone");
     else if (window.matchMedia(MEDIA.tablet).matches) setDevice("tablet");
   }, []);

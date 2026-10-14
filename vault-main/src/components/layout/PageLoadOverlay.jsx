@@ -2,6 +2,7 @@
 
 import { useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
+import { usePathname } from "next/navigation";
 import { GridDots } from "@/components/grid-dots";
 
 // Longest a vault page waits for its sidebar before the cover lifts anyway - generous,
@@ -24,6 +25,8 @@ const SIDEBAR_WAIT_MS = 3000;
  */
 export function PageLoadOverlay() {
   const ref = useRef(null);
+  // The homepage has its own loader, so the cover there stays plain (no grid)
+  const isHome = usePathname() === "/";
 
   useLayoutEffect(() => {
     const hide = () => gsap.set(ref.current, { opacity: 0 });
@@ -60,7 +63,7 @@ export function PageLoadOverlay() {
           justifyContent: "center",
         }}
       >
-        <GridDots
+        {!isHome && <GridDots
           size={56}
           squareSize={8}
           color="var(--primary, #ff5f00)"
@@ -70,7 +73,7 @@ export function PageLoadOverlay() {
             alignItems: "center",
             justifyContent: "center",
           }}
-        />
+        />}
       </div>
       {/* No JavaScript, no hydration: never leave the page covered */}
       <noscript>

@@ -8,7 +8,7 @@ const clerkLocalization = {
       subtitle:
         "Create an account and start with the Free Core. Install what you need. Own what you ship.",
       actionText: "Already have an account?",
-      actionLink: "Sign in →",
+      actionLink: "Sign In →",
     },
   },
   formFieldLabel__emailAddress: "Email",
