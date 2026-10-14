@@ -559,7 +559,9 @@ export function EffectDetailContent({
                           <div
                             key={relatedEffect.name}
                             onClickCapture={blockClickAfterDrag}
-                            className="w-[32%] shrink-0 cursor-pointer snap-start max-lg:w-[60%] max-md:w-full"
+                            // Three fill the row exactly, gaps included (32% each overshot by a
+                            // couple of px, enough to show a scrollbar with only three cards)
+                            className="w-[calc((100%-var(--cvw)*3)/3)] shrink-0 cursor-pointer snap-start max-lg:w-[60%] max-md:w-full"
                           >
                             <EffectCard
                               effect={relatedEffect}
