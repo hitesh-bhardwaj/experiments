@@ -47,9 +47,9 @@ const ROWS = [
 ];
 
 const LABEL = "type-label";
-const CELL = "flex w-[30%] items-center justify-center text-center px-[1.6vw] max-md:w-[40vw] max-md:px-[3vw]";
+const CELL = "flex w-[30%] items-center justify-center text-center px-[calc(var(--cvw)*1.6)] max-md:w-[40vw] max-md:px-[3vw]";
 // Pro+ is a solid dark column; its row lines are drawn on the cells so they stay dark too
-const PLUS = "bg-[#1D1D1D] text-foreground border-foreground/10";
+const PLUS = "bg-ink text-foreground border-foreground/10";
 const TEXT = "type-body h-[1.7em]";
 
 // Same tick as the Pricing Plans cards (orange square, white check); a muted dash when not included
@@ -61,7 +61,7 @@ function Mark({ on }) {
       </svg>
     </i>
   ) : (
-    <i className="flex size-5 shrink-0 items-center justify-center bg-background/5 not-italic text-background/30" aria-label="Not included">
+    <i className="flex size-5 shrink-0 items-center justify-center bg-black/10 not-italic text-black/20" aria-label="Not included">
       <svg viewBox="0 0 24 24" className="size-3.5" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" aria-hidden="true">
         <path d="M6 12h12" />
       </svg>
@@ -73,7 +73,7 @@ function Cell({ value, period, dir, plus }) {
   const v = value !== null && typeof value === "object" ? value[period] : value;
   // Long text wraps to two lines on mobile, so its box is two lines tall
   const long = typeof v === "string" && v.length > 22;
-  return typeof v === "boolean" ? <Mark on={v} /> : <RollText fixed text={v} dir={dir} className={`w-full text-center ${plus ? "text-foreground" : "text-background/60"} ${TEXT} ${long ? "max-lg:h-[3.3em]!" : ""}`} />;
+  return typeof v === "boolean" ? <Mark on={v} /> : <RollText fixed text={v} dir={dir} className={`w-full text-center ${plus ? "text-foreground" : "text-black/60"} ${TEXT} ${long ? "max-lg:h-[3.3em]" : ""}`} />;
 }
 
 export default function PricingProCompare({ currency: initialCurrency }) {
@@ -119,15 +119,15 @@ export default function PricingProCompare({ currency: initialCurrency }) {
   };
 
   return (
-    <section ref={rootRef} id="compare" data-sound-flow="off" className="relative bg-light px-[4.5vw] max-md:px-0 py-[7%] max-md:py-[12%] font-avenir text-background">
-      <div className="mx-auto flex w-full max-w-[1536px] flex-col gap-[3vw] max-md:gap-[10vw]">
-        <div className="flex max-md:px-[6vw] items-end justify-between gap-[2vw] max-md:flex-col max-md:items-start max-md:gap-[10vw]">
-          <LineReveal as="h2" className="type-h1 leading-[1.2]!">
+    <section ref={rootRef} id="compare" data-sound-flow="off" className="section-x relative bg-light py-[7%] font-avenir text-ink">
+      <div className="site-container flex flex-col gap-[calc(var(--cvw)*3)] max-md:gap-[10vw]">
+        <div className="flex items-end justify-between gap-[calc(var(--cvw)*2)] max-md:flex-col max-md:items-start max-md:gap-[10vw]">
+          <LineReveal as="h2" className="type-h1">
             Pro vs Pro+,<br />
             <span className="gradient-text-animate">Line by Line.</span>
           </LineReveal>
 
-          <div ref={toggleRef} role="radiogroup" aria-label="Billing period" data-sound-hover="off" className="fadeup relative isolate flex w-fit bg-[#1D1D1D] p-[0.3vw] max-lg:p-[0.6vw] max-md:p-[1vw]">
+          <div ref={toggleRef} role="radiogroup" aria-label="Billing period" data-sound-hover="off" className="fadeup relative isolate flex w-fit bg-ink p-[calc(var(--cvw)*0.3)] max-lg:p-[0.6vw] max-md:p-[1vw]">
             {PERIODS.map((p) => (
               <button
                 key={p.id}
@@ -135,33 +135,33 @@ export default function PricingProCompare({ currency: initialCurrency }) {
                 role="radio"
                 aria-checked={p.id === period}
                 onClick={() => choose(p.id)}
-                className={`cursor-pointer rounded-none px-[1.2vw] py-[0.7vw] text-foreground max-lg:px-[2.4vw] max-lg:py-[1.4vw] max-md:px-[4vw] max-md:py-[2.4vw] ${LABEL}`}
+                className={`cursor-pointer rounded-none px-[calc(var(--cvw)*1.2)] py-[calc(var(--cvw)*0.7)] text-foreground max-lg:px-[2.4vw] max-lg:py-[1.4vw] max-md:px-[4vw] max-md:py-[2.4vw] ${LABEL}`}
               >
                 {p.label}
               </button>
             ))}
-            <div ref={clipRef} aria-hidden="true" className="pointer-events-none absolute inset-0 flex bg-foreground p-[0.3vw] max-lg:p-[0.6vw] max-md:p-[1vw]">
+            <div ref={clipRef} aria-hidden="true" className="pointer-events-none absolute inset-0 flex bg-foreground p-[calc(var(--cvw)*0.3)] max-lg:p-[0.6vw] max-md:p-[1vw]">
               {PERIODS.map((p) => (
-                <span key={p.id} className={`px-[1.2vw] py-[0.7vw] text-background max-lg:px-[2.4vw] max-lg:py-[1.4vw] max-md:px-[4vw] max-md:py-[2.4vw] ${LABEL}`}>{p.label}</span>
+                <span key={p.id} className={`px-[calc(var(--cvw)*1.2)] py-[calc(var(--cvw)*0.7)] text-ink max-lg:px-[2.4vw] max-lg:py-[1.4vw] max-md:px-[4vw] max-md:py-[2.4vw] ${LABEL}`}>{p.label}</span>
               ))}
             </div>
           </div>
         </div>
 
-        <div className="fadeup overflow-x-auto max-md:px-[6vw]">
+        <div className="fadeup overflow-x-auto">
           <div role="table" aria-label="Pro and Pro+ compared" className="flex min-w-full flex-col max-md:min-w-[116vw]">
             <div role="row" className="flex">
-              <div role="columnheader" className="flex w-[40%] max-md:w-[36vw] items-start border-b border-background/10 py-[2.2vw] type-body max-md:px-[4vw] max-md:py-[6vw]">Feature</div>
+              <div role="columnheader" className="flex w-[40%] max-md:w-[36vw] items-start border-b border-black/10 py-[calc(var(--cvw)*2.2)] type-body max-md:px-[4vw] max-md:py-[6vw]">Feature</div>
               {[["pro", "Pro"], ["plus", "Pro+"]].map(([id, name]) => (
-                <div key={id} role="columnheader" className={`${CELL} flex-col justify-start gap-[0.6vw] border-b py-[2.2vw] max-md:gap-[2vw] max-md:py-[6vw] ${id === "plus" ? PLUS : "border-background/10"}`}>
-                  <p className="type-h3 font-avenir">{id === "plus" ? <>Pro<span className="text-primary">+</span></> : name}</p>
-                  <div className={`flex items-center justify-center max-lg:flex-wrap ${id === "plus" ? "text-foreground" : "text-background/60"} ${LABEL}`}>
-                    <span className="flex h-[1.2vw] items-center leading-none max-lg:h-[2.4vw] max-md:h-[4vw]">
+                <div key={id} role="columnheader" className={`${CELL} flex-col justify-start gap-[calc(var(--cvw)*0.6)] border-b py-[calc(var(--cvw)*2.2)] max-md:gap-[2vw] max-md:py-[6vw] ${id === "plus" ? PLUS : "border-black/10"}`}>
+                  <p className="type-h3">{id === "plus" ? <>Pro<span className="text-primary">+</span></> : name}</p>
+                  <div className={`flex items-center justify-center max-lg:flex-wrap ${id === "plus" ? "text-foreground" : "text-black/60"} ${LABEL}`}>
+                    <span className="flex h-[calc(var(--cvw)*1.2)] items-center leading-none max-lg:h-[2.4vw] max-md:h-[4vw]">
                       {currencyReady ? <>{CURRENCY_SYMBOLS[currency]}<RollNumber value={prices[id][period]} values={[prices[id].q, prices[id].y]} /></> : <Skeleton className="h-[1em] w-10" />}
                     </span>
                     <span>/mo</span>
                     <span className="max-lg:hidden">&nbsp;·&nbsp;</span>
-                    {currencyReady ? <RollText fixed text={periodInfo.billed} dir={dir} className="h-[1.2vw] w-[10vw] leading-[1.2vw] max-lg:h-[2.4vw] max-lg:w-full max-lg:leading-[2.4vw] max-md:h-[4vw] max-md:w-full max-md:leading-[4vw]" /> : <Skeleton className="h-[1em] w-[8vw] max-lg:w-24" />}
+                    {currencyReady ? <RollText fixed text={periodInfo.billed} dir={dir} className="h-[calc(var(--cvw)*1.2)] w-[calc(var(--cvw)*10)] leading-[calc(var(--cvw)*1.2)] max-lg:h-[2.4vw] max-lg:w-full max-lg:leading-[2.4vw] max-md:h-[4vw] max-md:w-full max-md:leading-[4vw]" /> : <Skeleton className="h-[1em] w-[calc(var(--cvw)*8)] max-lg:w-24" />}
                   </div>
                 </div>
               ))}
@@ -170,11 +170,11 @@ export default function PricingProCompare({ currency: initialCurrency }) {
             <div>
               {ROWS.map((row) => (
                 <div key={row.feature} role="row" className="flex">
-                  <div role="rowheader" className="flex w-[40%] max-md:w-[36vw] items-center border-b border-background/10 py-[1.4vw] type-body max-md:px-[4vw] max-md:py-[4.6vw]">{row.feature}</div>
-                  <div role="cell" className={`${CELL} border-b border-background/10 py-[1.4vw] max-md:py-[4.6vw]`}>
+                  <div role="rowheader" className="flex w-[40%] max-md:w-[36vw] items-center border-b border-black/10 py-[calc(var(--cvw)*1.4)] type-body max-md:px-[4vw] max-md:py-[4.6vw]">{row.feature}</div>
+                  <div role="cell" className={`${CELL} border-b border-black/10 py-[calc(var(--cvw)*1.4)] max-md:py-[4.6vw]`}>
                     <Cell value={row.pro} period={period} dir={dir} />
                   </div>
-                  <div role="cell" className={`${CELL} ${PLUS} border-b py-[1.4vw] max-md:py-[4.6vw]`}>
+                  <div role="cell" className={`${CELL} ${PLUS} border-b py-[calc(var(--cvw)*1.4)] max-md:py-[4.6vw]`}>
                     <Cell value={row.plus} period={period} dir={dir} plus />
                   </div>
                 </div>

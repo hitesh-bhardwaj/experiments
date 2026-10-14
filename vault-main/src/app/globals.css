@@ -1105,7 +1105,7 @@ html.lenis.lenis-stopped[data-v4-drawer-open] {
   font-family: var(--font-aeonik), system-ui, sans-serif;
   font-weight: 400;
   font-size: calc(var(--cvw) * 4.6);
-  line-height: 1.05;
+  line-height: 1.15;
   letter-spacing: -0.035em;
   @variant max-lg { font-size: 5.5vw; }
   @variant max-md { font-size: min(11vw, 46px); }
