@@ -84,7 +84,7 @@ const tailwindConfigCode = `export default {
 export default function DocsInstallation() {
 
   return (
-    <DocsContent className="max-w-none mx-0">
+    <DocsContent>
 
       <Para>
         Hyperiux Vault is not designed as a heavy package that quietly expands inside your

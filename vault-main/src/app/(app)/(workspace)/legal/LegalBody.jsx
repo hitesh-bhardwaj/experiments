@@ -8,7 +8,7 @@ import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import { TableOfContents } from "@/components/ui/TableOfContents";
 import DocsPageFooter from "../docs/DocsPageFooter";
 
-const WRAP = "mx-auto w-full max-w-[1536px] px-[4.5vw] max-md:px-[6vw]";
+const WRAP = "site-container section-x";
 
 // Page titles for the dark hero (the content itself starts at its first section)
 // Same order as the site footer's legal links (License Agreement first)
@@ -44,7 +44,7 @@ export default function LegalBody({ children }) {
       {/* Same white sheet as docs (.docs-sheet in globals.css): background, text colours,
           fonts, content column, footer and TOC are all the docs ones */}
       <section id="legal-content" data-sound-flow="off" className="docs-sheet py-[4vw]">
-        <div className="mx-auto flex w-full max-w-[1536px] items-start gap-[3vw] px-[4.5vw] max-lg:flex-col max-md:px-[6vw]">
+        <div className="site-container section-x flex items-start gap-[3vw] max-lg:flex-col">
           <div className="flex min-w-0 flex-1 flex-col gap-[5vw] max-lg:w-full max-md:gap-[15vw]">
             <div ref={contentRef} className="blog-content">
               {children}

@@ -26,10 +26,10 @@ function FeaturedBlogContent({ featuredPost }) {
   useFadeUp(sectionRef);
 
   return (
-    <section ref={sectionRef} id="featured-blog" className="mx-auto flex w-full max-w-[1536px] flex-col gap-[5vw] px-[4.5vw] py-[7%] max-md:gap-[10vw] max-md:px-[6vw] max-md:pt-[15%] max-md:py-[12%]">
-      <div className="flex items-end justify-between gap-4 max-md:flex-col max-md:items-start max-md:gap-[10vw]">
+    <section ref={sectionRef} id="featured-blog" className="site-container section-x flex flex-col gap-[5vw] py-[7%] max-md:gap-[10vw] max-md:py-[12%]">
+      <div className="flex  items-end justify-between gap-4 max-md:flex-col max-md:items-start max-md:gap-[10vw]">
         <LineWipe lit={INK}>
-          <h2 className="type-h1">Latest From The Vault</h2>
+          <h2 className="type-h1 w-[30%]">Latest From The Vault</h2>
         </LineWipe>
         <LineWipe delay={0.5} lit={INK}>
           <p className="type-body-lg w-[35%] text-black/60 max-md:w-full">
@@ -38,11 +38,11 @@ function FeaturedBlogContent({ featuredPost }) {
         </LineWipe>
       </div>
 
-      <div className="flex items-center gap-[4vw] bg-white px-[2vw] py-[3.5vw] max-[1025px]:flex-col max-[1025px]:items-start max-md:gap-[6vw] max-md:px-[4vw] max-md:py-[8vw]">
+      <div className="flex items-center gap-[4vw] bg-foreground p-[2.5vw] max-lg:flex-col max-lg:items-start max-md:gap-[6vw] max-md:px-[4vw] max-md:py-[8vw]">
         {featuredPost.coverImage?.url && (
           <Link
             href={`/blog/${featuredPost.slug}`}
-            className="fadeup group block h-[34vw] w-[55%] shrink-0 max-[1025px]:h-[50vw] max-[1025px]:w-full max-md:h-[60vw]"
+            className="fadeup group block h-[34vw] w-[55%] shrink-0 max-lg:h-[50vw] max-lg:w-full max-md:h-[60vw]"
           >
             <div className="relative h-full w-full overflow-hidden bg-grey">
               <Image
@@ -56,14 +56,14 @@ function FeaturedBlogContent({ featuredPost }) {
           </Link>
         )}
 
-        <div className="flex grow flex-col items-start gap-[1.2vw] max-[1025px]:w-full max-md:gap-[4vw]">
+        <div className="flex grow flex-col items-start gap-[1.2vw] max-lg:w-full max-md:gap-[4vw]">
           <LineWipe lit={INK}>
             <p className="type-small text-black/60">
               {formatFeaturedDate(featuredPost.publishedAt)}
             </p>
           </LineWipe>
 
-          <Link href={`/blog/${featuredPost.slug}`} className="w-[90%]  max-[1025px]:w-full">
+          <Link href={`/blog/${featuredPost.slug}`} className="w-[90%] max-lg:w-full">
             <LineWipe lit={INK}>
               <h3 className="type-h2">{featuredPost.title}</h3>
             </LineWipe>
@@ -71,7 +71,7 @@ function FeaturedBlogContent({ featuredPost }) {
 
           {featuredPost.summary && (
             <LineWipe delay={0.5} lit={INK}>
-              <p className="type-body-lg w-[90%] mt-4 text-black/60 max-[1025px]:w-full">
+              <p className="type-body-lg w-[75%] text-black/60 max-lg:w-full">
                 {featuredPost.summary}
               </p>
             </LineWipe>
@@ -81,7 +81,7 @@ function FeaturedBlogContent({ featuredPost }) {
             text="Read More"
             href={`/blog/${featuredPost.slug}`}
             variant="orange"
-            className="fadeup w-fit mt-3"
+            className="fadeup mt-[1vw] w-fit max-lg:mt-[1.5vw] max-md:mt-[2vw]"
           />
         </div>
       </div>

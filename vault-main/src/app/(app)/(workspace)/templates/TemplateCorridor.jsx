@@ -6,8 +6,8 @@ import * as THREE from "three";
 import gsap from "gsap";
 import { useLenis } from "lenis/react";
 import { motion } from "motion/react";
-import Button from "@/homepage/components/Button";
-import { DISPLAY, LABEL, PRICE, T16, T13, catalogueOf, priceOf } from "./tokens";
+import { prefersReducedMotion } from "@/lib/motion";
+import { DISPLAY, LABEL, T16, T13, catalogueOf } from "./tokens";
 
 /*
  * "The corridor": every template hangs as a browser frame along a dark runway,
@@ -113,7 +113,7 @@ export default function TemplateCorridor({ templates, onUnsupported }) {
       return;
     }
     R.setClearColor(BG);
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reduced = prefersReducedMotion();
 
     const S = new THREE.Scene();
     S.fog = new THREE.Fog(BG, 7, 34);
@@ -499,12 +499,6 @@ export default function TemplateCorridor({ templates, onUnsupported }) {
                 ))}
               </div>
             </motion.div>
-            {/* <div className="flex flex-wrap items-center gap-3.5 pt-1.5">
-              <Button className="tracking-normal!" text="View template" href={current.href || `/templates/${current.slug}`} />
-              {priceOf(current) != null && (
-                <span className={`${LABEL} text-foreground/80`}><span className={PRICE}>${priceOf(current)}</span> · or 1 credit</span>
-              )}
-            </div> */}
           </aside>
         )}
 

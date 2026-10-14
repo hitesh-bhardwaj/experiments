@@ -12,18 +12,14 @@ export const T20 = "text-[1.4vw] max-lg:text-[2.4vw] max-md:text-[5vw]";
 // these pages; every text size is in vw.
 export const DISPLAY = "font-normal";
 export const LABEL = T14;
-export const T10 = "text-[0.66vw] max-lg:text-[1.2vw] max-md:text-[2.5vw]";
 export const T24 = "text-[1.7vw] max-lg:text-[3.4vw] max-md:text-[6vw]";
-export const T40 = "text-[3.5vw] max-lg:text-[4.6vw] max-md:text-[8vw]";
 
-// The standard button size (Button's text size and vertical padding), for chips and toggles
-export { BUTTON_TEXT as BTN_TEXT, BUTTON_SIZE as BTN_SIZE } from "@/homepage/components/Button";
 
 // Prices ($39 and the like) are always set in Aeonik Pro.
 export const PRICE = "font-aeonik";
 
 // The standard section wrapper: capped width + page gutter
-export const GUTTER = "mx-auto w-full max-w-[1536px] px-[4.5vw] max-md:px-[6vw]";
+export const GUTTER = "site-container section-x";
 
 // Small pill on a template shot (category, price, catalogue).
 // Badges sit on the card shot - a barely-there shadow (as on the effect cards) keeps

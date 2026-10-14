@@ -2,6 +2,7 @@
 
 import { useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
+import { GridDots } from "@/components/grid-dots";
 
 // Longest a vault page waits for its sidebar before the cover lifts anyway - generous,
 // since a slow first load (a dev compile) can take a few seconds to hydrate
@@ -54,8 +55,23 @@ export function PageLoadOverlay() {
           zIndex: 2147483647,
           pointerEvents: "none",
           background: "var(--background, #111111)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
         }}
-      />
+      >
+        <GridDots
+          size={56}
+          squareSize={8}
+          color="var(--primary, #ff5f00)"
+          style={{
+            display: "inline-grid",
+            gap: 4,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        />
+      </div>
       {/* No JavaScript, no hydration: never leave the page covered */}
       <noscript>
         <style>{"[data-page-load-overlay]{display:none}"}</style>

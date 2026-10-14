@@ -51,7 +51,7 @@ function openDocsSearch() {
 function DocsHero({ pathname, meta }) {
   const hero = DOCS_HERO[pathname?.replace(/\/$/, "") || "/docs"];
   return (
-    <section id="docs-hero" className="mx-auto flex w-full max-w-[1536px] flex-col gap-7 px-[4.5vw] pb-[10vw] max-md:px-[6vw] max-md:pb-[20vw]">
+    <section id="docs-hero" className="site-container section-x flex flex-col gap-7 pb-[10vw] max-md:pb-[20vw]">
       <Breadcrumb />
       {hero && (
         <div className="flex w-[65%] flex-col gap-[1.5vw] max-md:w-full max-md:gap-[4vw]">
@@ -213,17 +213,17 @@ export default function DocsBody({ children }) {
           {/* White sheet (Docs prototype's .sheet), square-edged, under the content, the
               docs footer and the TOC column. Code blocks stay dark. */}
           <section id="docs-content" data-sound-flow="off" className="docs-sheet py-[4vw]">
-            <div className="mx-auto flex w-full max-w-[1536px] items-start gap-[3vw] px-[4.5vw] max-lg:flex-col max-md:px-[6vw]">
-            <div ref={contentRef} className="flex min-w-0 flex-1 flex-col gap-[5vw] max-lg:w-full max-md:gap-[15vw]" onClick={onContentClick}>
-              <div className="blog-content">
-                {children}
+            <div className="site-container section-x flex items-start gap-[3vw] max-lg:flex-col">
+              <div ref={contentRef} className="flex min-w-0 flex-1 flex-col gap-[5vw] max-lg:w-full max-md:gap-[15vw]" onClick={onContentClick}>
+                <div className="blog-content">
+                  {children}
+                </div>
+                <DocsPageFooter />
               </div>
-              <DocsPageFooter />
-            </div>
-            {/* TOC lives in the sheet's right column, sticky at the vertical centre */}
-            <aside className="sticky top-1/2 flex h-fit w-[22%] shrink-0 -translate-y-1/2 justify-end max-lg:hidden">
-              <TableOfContents containerRef={contentRef} watchKey={pathname} hideNearFooter />
-            </aside>
+              {/* TOC lives in the sheet's right column, sticky at the vertical centre */}
+              <aside className="sticky top-1/2 flex h-fit w-[22%] shrink-0 -translate-y-1/2 justify-end max-lg:hidden">
+                <TableOfContents containerRef={contentRef} watchKey={pathname} hideNearFooter />
+              </aside>
             </div>
           </section>
         </div>

@@ -14,7 +14,7 @@ const CHIP_ON = "bg-primary text-background";
 // Same column switch as the effects listing: 2 or 3 cards per row on desktop
 // (tablet is always 2, mobile 1). The choice is remembered.
 const COLS_KEY = "hyperiux-blog-cols";
-const GRID_COLS = { 2: "w-[calc((100%-2.4vw)/2)]", 3: "w-[calc((100%-4.8vw)/3)]" };
+const GRID_COLS = { 2: "w-[calc((100%-1.5vw)/2)]", 3: "w-[calc((100%-3vw)/3)]" };
 const COLUMN_ICONS = {
   2: (
     <>
@@ -124,13 +124,13 @@ export default function BlogListing({
   return (
     <section ref={sectionRef} id="blog-grid" className="relative flex flex-col">
       {/* summary + category filters; scrolls away with the page */}
-      <div className="h-fit border-b border-black/8 bg-light max-[1025px]:border-b-0">
-        <div className="mx-auto flex w-full max-w-[1536px] flex-wrap items-end justify-between gap-[1vw] px-[4.5vw] pt-10 pb-4 max-md:gap-[4vw] max-md:px-[6vw] max-md:pt-8">
+      <div className="h-fit border-b border-black/8 bg-light max-lg:border-b-0">
+        <div className="site-container section-x flex flex-wrap items-end justify-between gap-[1vw] pt-10 pb-4 max-md:gap-[4vw] max-md:pt-8">
           <div className="flex flex-wrap items-end gap-x-[2vw] gap-y-[1vw] max-md:gap-[4vw]">
             <p aria-live="polite" className="type-body-lg flex flex-wrap items-baseline gap-x-[0.4vw] max-md:gap-x-[1.5vw]">
               <span className="font-medium tabular-nums">{total}</span>
               <span className="text-black/60">{total === 1 ? "post" : "posts"}</span>
-              {activeTitle && <span className="pl-[0.3vw] text-black/60">· {activeTitle}</span>}
+              {/* {activeTitle && <span className="pl-[0.3vw] text-black/60">· {activeTitle}</span>} */}
             </p>
 
             {categories.length > 0 && (
@@ -158,12 +158,12 @@ export default function BlogListing({
             value={cols}
             onChange={chooseCols}
             itemClassName="w-8.5"
-            className="max-[1025px]:hidden"
+            className="max-lg:hidden"
           />
         </div>
       </div>
 
-      <div className="mx-auto flex w-full max-w-[1536px] flex-col gap-[2.8vw] px-[4.5vw] pt-6 pb-24 max-md:gap-[10vw] max-md:px-[6vw] max-md:py-[12%]">
+      <div className="site-container section-x flex flex-col gap-[2.8vw] pt-6 pb-24 max-md:gap-[10vw] max-md:py-[12%]">
         {posts.length === 0 ? (
           <div className="flex flex-col items-center gap-3.5 px-4 py-20 text-center">
             <b className="type-h3">Nothing here, yet.</b>
@@ -175,13 +175,13 @@ export default function BlogListing({
             )}
           </div>
         ) : (
-          <div className="flex flex-wrap gap-x-[2.4vw] gap-y-[3.6vw] max-md:gap-y-[10vw]">
+          <div className="flex flex-wrap gap-x-[1.5vw] gap-y-[2.5vw] max-lg:gap-x-[2.4vw] max-lg:gap-y-[3.6vw] max-md:gap-y-[10vw]">
             {posts.map((post, index) => (
               <motion.div
                 key={post.slug}
                 layout
                 transition={CARD_LAYOUT_TRANSITION}
-                className={`${GRID_COLS[cols]} max-[1025px]:w-[calc((100%-2.4vw)/2)] max-md:w-full`}
+                className={`${GRID_COLS[cols]} max-lg:w-[calc((100%-2.4vw)/2)] max-md:w-full`}
               >
                 {/* keyed by the column count so the title/summary line splits re-measure at the new width */}
                 <BlogCard key={cols} post={post} priority={index < 3} light />

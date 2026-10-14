@@ -100,9 +100,9 @@ export default async function BlogPostPage({ params }) {
       <main className="relative flex w-full flex-col gap-[5.5vw] pt-25 max-lg:pt-32 max-md:gap-[15vw] max-md:pt-28">
         <BlogDetailHero post={postWithAuthor} />
 
-        {/* One light area (docs sheet grey) for everything below the cover image, as on the effect page */}
-        <div data-sound-flow="off" className="bg-light text-background">
-          <article id="blog-content" className="blog-theme-light mx-auto w-full max-w-[1536px] px-[4.5vw] pt-[5.5vw] pb-6 max-md:px-[6vw] max-md:py-[12%]">
+        {/* One light area (bg-light) for everything below the cover image, as on the effect page */}
+        <div data-sound-flow="off" className="bg-light text-ink">
+          <article id="blog-content" className="blog-theme-light site-container section-x pt-[5.5vw] pb-6 max-md:py-[12%]">
             <BlogArticleBody
               slug={slug}
               author={author}

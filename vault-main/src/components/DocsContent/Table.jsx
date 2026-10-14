@@ -73,7 +73,7 @@ export default function DocsTable({
     )}
   >
     {caption ? (
-      <caption className="px-4 py-3 text-left text-sm text-[#6B6B6B]">
+      <caption className="px-4 py-3 text-left text-sm text-muted">
         {caption}
       </caption>
     ) : null}

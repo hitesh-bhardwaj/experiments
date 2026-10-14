@@ -14,7 +14,7 @@ const DocsLink = ({ href, children }) => (
     href={href}
     target="_blank"
     rel="noopener noreferrer"
-    className="text-[#ff5f00] underline underline-offset-2 transition-colors hover:text-white"
+    className="text-primary underline underline-offset-2 transition-colors hover:text-white"
   >
     {children}
   </a>
@@ -96,7 +96,7 @@ export default function DocsMcp() {
   useFadeUp();
 
   return (
-    <DocsContent className="max-w-none mx-0">
+    <DocsContent>
 
       <Para>
         <code>hyperiux-mcp-server</code> is an{" "}
@@ -170,7 +170,7 @@ export default function DocsMcp() {
           <DocsLink href="https://antigravity.google">Google Antigravity</DocsLink>, or any
           other client that supports the MCP standard&apos;s local server
           transport. (The ChatGPT web app is a notable exception - see{" "}
-          <a href="#chatgpt-web-app" className="text-[#ff5f00] underline underline-offset-2 hover:text-white transition-colors">
+          <a href="#chatgpt-web-app" className="text-primary underline underline-offset-2 hover:text-white transition-colors">
             ChatGPT (web app) - not currently supported
           </a>
           .)
@@ -291,7 +291,7 @@ export default function DocsMcp() {
         </DocsListItem>
         <DocsListItem>
           Test it - see{" "}
-          <a href="#try-it-out" className="text-[#ff5f00] underline underline-offset-2 hover:text-white transition-colors">
+          <a href="#try-it-out" className="text-primary underline underline-offset-2 hover:text-white transition-colors">
             Try it out
           </a>{" "}
           below.
@@ -344,7 +344,7 @@ export default function DocsMcp() {
 
       <Para>
         <span className="font-semibold">6.</span> Test it - see{" "}
-        <a href="#try-it-out" className="text-[#ff5f00] underline underline-offset-2 hover:text-white transition-colors">
+        <a href="#try-it-out" className="text-primary underline underline-offset-2 hover:text-white transition-colors">
           Try it out
         </a>{" "}
         below.
@@ -393,7 +393,7 @@ export default function DocsMcp() {
         <span className="font-semibold">Settings → Tools &amp; MCP</span>, confirm{" "}
         <code>hyperiux</code> shows as connected, and enable it if it
         isn&apos;t already. Test it - see{" "}
-        <a href="#try-it-out" className="text-[#ff5f00] underline underline-offset-2 hover:text-white transition-colors">
+        <a href="#try-it-out" className="text-primary underline underline-offset-2 hover:text-white transition-colors">
           Try it out
         </a>{" "}
         below.
@@ -480,7 +480,7 @@ export default function DocsMcp() {
         </DocsListItem>
         <DocsListItem>
           Test it - see{" "}
-          <a href="#try-it-out" className="text-[#ff5f00] underline underline-offset-2 hover:text-white transition-colors">
+          <a href="#try-it-out" className="text-primary underline underline-offset-2 hover:text-white transition-colors">
             Try it out
           </a>{" "}
           below.
@@ -556,7 +556,7 @@ export default function DocsMcp() {
 
       <Para>
         <span className="font-semibold">4. Test it</span> - see{" "}
-        <a href="#try-it-out" className="text-[#ff5f00] underline underline-offset-2 hover:text-white transition-colors">
+        <a href="#try-it-out" className="text-primary underline underline-offset-2 hover:text-white transition-colors">
           Try it out
         </a>{" "}
         below. (Antigravity&apos;s exact connected/disconnected indicator
@@ -625,7 +625,7 @@ export default function DocsMcp() {
         <code>text</code>, with counts for each) - not a vague or
         made-up-sounding answer. That&apos;s your sign the connection is live
         and pulling real data. From here, jump into the{" "}
-        <a href="#example-usage" className="text-[#ff5f00] underline underline-offset-2 hover:text-white transition-colors">
+        <a href="#example-usage" className="text-primary underline underline-offset-2 hover:text-white transition-colors">
           Example usage
         </a>{" "}
         section below for more things to try.
@@ -944,7 +944,7 @@ export default function DocsMcp() {
         <span className="font-semibold">resources</span> feature - so a resources-specific check
         correctly finds none. It says nothing about whether the tools
         themselves work. Test with an actual question instead (see{" "}
-        <a href="#try-it-out" className="text-[#ff5f00] underline underline-offset-2 hover:text-white transition-colors">
+        <a href="#try-it-out" className="text-primary underline underline-offset-2 hover:text-white transition-colors">
           Try it out
         </a>
         ).
@@ -969,7 +969,7 @@ export default function DocsMcp() {
 
       <Para>
         This won&apos;t work, and isn&apos;t fixable via configuration - see{" "}
-        <a href="#chatgpt-web-app" className="text-[#ff5f00] underline underline-offset-2 hover:text-white transition-colors">
+        <a href="#chatgpt-web-app" className="text-primary underline underline-offset-2 hover:text-white transition-colors">
           ChatGPT (web app) - not currently supported
         </a>{" "}
         above for why.

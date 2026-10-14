@@ -123,11 +123,11 @@ export default function RelatedBlogsSlider({ posts = [] }) {
   const showMobileControls = posts.length > 1;
 
   return (
-    <section ref={sectionRef} id="related-blogs" className="relative mx-auto flex w-full max-w-[1536px] flex-col gap-[2.8vw] px-[4.5vw] py-[7%] max-md:gap-[10vw] max-md:px-[6vw] max-md:py-[12%]">
-      <div className="flex items-center justify-between gap-[1.4vw] max-[1025px]:flex-col max-[1025px]:gap-[5vw] max-md:gap-[10vw]">
+    <section ref={sectionRef} id="related-blogs" className="relative site-container section-x flex flex-col gap-[2.8vw] py-[7%] max-md:gap-[10vw] max-md:py-[12%]">
+      <div className="flex items-center justify-between gap-[1.4vw] max-lg:flex-col max-lg:gap-[5vw] max-md:gap-[10vw]">
         <LineWipe lineStyle={RELATED_BLOGS_HEADING_LINE_STYLE} lit="var(--ink)">
           <h2
-            className="type-h1 text-center text-background"
+            className="type-h1 text-center text-ink"
             style={RELATED_BLOGS_HEADING_LINE_STYLE}
           >
             Related Blogs
@@ -156,13 +156,13 @@ export default function RelatedBlogsSlider({ posts = [] }) {
         onPointerLeave={handlePointerEnd}
         onPointerCancel={handlePointerEnd}
         onDragStart={(event) => event.preventDefault()}
-        className="flex cursor-grab snap-x snap-mandatory select-none gap-[1.5vw] overflow-x-auto scroll-smooth pb-4 active:cursor-grabbing max-[1025px]:gap-[2vw] max-md:gap-[4vw]"
+        className="flex cursor-grab snap-x snap-mandatory select-none gap-[1.5vw] overflow-x-auto scroll-smooth pb-4 active:cursor-grabbing max-lg:gap-[2vw] max-md:gap-[4vw]"
       >
         {posts.map((post, index) => (
           <div
             key={post.slug}
             onClick={handleCardClick}
-            className="w-[32%] flex-none snap-start max-[1025px]:w-[60%] max-md:w-full"
+            className="w-[32%] flex-none snap-start max-lg:w-[60%] max-md:w-full"
           >
             <BlogCard post={post} priority={index === 0} light />
           </div>

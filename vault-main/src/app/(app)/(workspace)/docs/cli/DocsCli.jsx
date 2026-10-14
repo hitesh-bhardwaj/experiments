@@ -98,7 +98,7 @@ export default function DocsCli() {
   useFadeUp()
 
   return (
-    <DocsContent className="max-w-none mx-0">
+    <DocsContent>
 
       <Para>
         The Hyperiux Vault CLI adds creative interaction patterns directly into your

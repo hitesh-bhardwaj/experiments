@@ -46,7 +46,7 @@ export default function LlmInfo({ counts }) {
   });
 
   return (
-    <DocsContent className="max-w-none mx-0">
+    <DocsContent>
       <Para>
         <b>Last updated: {LAST_UPDATED}.</b> This page holds structured, first-party information about
         Hyperiux Vault and the company behind it, Hyperiux Immersion Labs. It is written for AI assistants such as

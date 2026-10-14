@@ -86,16 +86,6 @@ function FeedbackMessage({ vote }) {
   );
 }
 
-// The site buttons' pixelated arrow (Button), sized to the label's cap height
-function PagerArrow({ className = "" }) {
-  return (
-    <span
-      aria-hidden="true"
-      className={`block size-[0.8vw] shrink-0 bg-current [mask-image:url(/svgs/pixelated-arrow.svg)] mask-center mask-no-repeat mask-contain transition-transform duration-300 ${className}`}
-    />
-  );
-}
-
 function PagerCard({ page, direction }) {
   const next = direction === "next";
   return (
@@ -108,9 +98,7 @@ function PagerCard({ page, direction }) {
       }`}
     >
       <span className={`${label} flex items-center gap-2.5 leading-none text-foreground/70 transition-colors duration-300 group-hover:text-primary`}>
-        {/* {!next && <PagerArrow className="rotate-180 group-hover:-translate-x-1" />} */}
         {next ? "Next" : "Previous"}
-        {/* {next && <PagerArrow className="group-hover:translate-x-1" />} */}
       </span>
       <span className="type-h3 leading-none text-foreground">{page.label}</span>
     </Link>

@@ -10,7 +10,7 @@ import LinkButton from "@/components/WebsiteComps/LinkButton";
 
 export default function LicenseAgreement() {
   return (
-    <DocsContent className="max-w-none mx-0">
+    <DocsContent>
 
       <Para>
         This License Agreement (&quot;Agreement,&quot; &quot;License&quot;) is a legal

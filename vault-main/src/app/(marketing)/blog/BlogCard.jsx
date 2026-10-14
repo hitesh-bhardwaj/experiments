@@ -24,11 +24,11 @@ function truncateSummary(text = "", max = SUMMARY_MAX) {
   return `${atWord.replace(/[\s,.;:!?-]+$/, "")}\u2026`;
 }
 
-// `light`: for the white area on the blog detail page (the listing is dark)
+// `light`: for the light (bg-light) sheets on the blog listing and detail pages
 export default function BlogCard({ post, priority = false, light = false }) {
   return (
     <div className="fadeup group/card relative h-full w-full">
-      <div className={`flex h-full min-h-[28vw] flex-col gap-[1.8vw] ${light ? "bg-light text-ink" : "bg-dark-card"} p-[2.2vw] max-lg:p-[1.8vw] max-md:min-h-[45vh] max-lg:min-h-[45vh]  max-lg:gap-[3vw] max-md:gap-[5vw] max-md:p-[4vw] pb-9 max-md:pb-12`}>
+      <div className={`flex h-full min-h-[28vw] flex-col gap-[1.8vw] ${light ? "bg-foreground text-ink transition-shadow duration-500 group-hover/card:shadow-[0_1.2vw_2.4vw_-1.2vw_color-mix(in_srgb,black_35%,transparent)]" : "bg-dark-card"} p-[2.2vw] max-lg:p-[1.8vw] max-lg:min-h-[45vh] max-lg:gap-[3vw] max-md:gap-[5vw] max-md:p-[4vw] pb-9 max-md:pb-12`}>
         <div className="aspect-[5/3] w-full shrink-0 max-lg:aspect-auto overflow-hidden bg-grey max-lg:h-[32vw] max-md:h-[30vh]">
           {post.coverImage?.url && (
             <Image
@@ -36,6 +36,7 @@ export default function BlogCard({ post, priority = false, light = false }) {
               alt={post.coverImage.alt || post.title}
               width={560}
               height={315}
+              sizes="(max-width: 767px) 100vw, (max-width: 1024px) 50vw, 33vw"
               quality={75}
               priority={priority}
               loading={priority ? undefined : "lazy"}
@@ -44,7 +45,7 @@ export default function BlogCard({ post, priority = false, light = false }) {
           )}
         </div>
 
-        <div className="mt-2 flex items-center justify-between gap-3 pb-3 font-avenir">
+        <div className="flex items-center justify-between gap-3 pb-3 font-avenir">
           <div className="flex min-w-0 flex-wrap items-center gap-2">
             {post.categories?.length > 0 && (
               <span className={`${light ? "bg-black/5 text-ink" : "bg-grey text-foreground/90"} px-2 py-0.5 type-small max-lg:px-3 max-lg:py-1.5 max-md:px-3 max-md:py-1`}>
@@ -75,7 +76,7 @@ export default function BlogCard({ post, priority = false, light = false }) {
             text="Read More"
             tilted={false}
             underline={true}
-            className={`relative type-body z-10 mt-5 max-md:mt-0! ${light ? "text-ink!" : ""}`}
+            className={`relative type-body z-10 mt-[1.2vw] max-lg:mt-[2vw] max-md:mt-0 ${light ? "text-ink!" : ""}`}
           />
         </div>
       </div>

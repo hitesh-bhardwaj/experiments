@@ -6,6 +6,7 @@ import gsap from 'gsap'
 import { useLenis } from 'lenis/react'
 import { prefersReducedMotion } from '@/lib/motion'
 import { useInteraction } from '@/homepage/components/InteractionProvider'
+import { GridDots } from '@/components/grid-dots'
 
 /**
  * Site-wide route transition for the main pages, built on the pixel-transition
@@ -116,6 +117,7 @@ export default function PixelPageTransition() {
   const { sound } = useInteraction()
 
   const canvasRef = useRef(null)
+  const loaderRef = useRef(null)
   const tweenRef = useRef(null)
   const stateRef = useRef({ progress: 0 })
   const prevPathRef = useRef(pathname)
@@ -134,6 +136,17 @@ export default function PixelPageTransition() {
     canvas.style.width = `${w}px`
     canvas.style.height = `${h}px`
     canvas.getContext('2d').setTransform(dpr, 0, 0, dpr, 0, 0)
+  }, [])
+
+  const setLoaderVisible = useCallback((visible) => {
+    const loader = loaderRef.current
+    if (!loader) return
+    gsap.to(loader, {
+      opacity: visible ? 1 : 0,
+      duration: visible ? 0.22 : 0.18,
+      ease: 'power2.out',
+      overwrite: true,
+    })
   }, [])
 
   const animateGrid = useCallback(({ duration, isEnter, fromTopLeft = false, onComplete }) => {
@@ -156,13 +169,14 @@ export default function PixelPageTransition() {
       onComplete: () => {
         drawGrid(canvas, 1, isEnter, fromTopLeft)
         if (isEnter) {
+          setLoaderVisible(false)
           canvas.style.opacity = '0'
           canvas.style.pointerEvents = 'none'
         }
         onComplete()
       },
     })
-  }, [])
+  }, [setLoaderVisible])
 
   useEffect(() => {
     resizeCanvas()
@@ -231,12 +245,20 @@ export default function PixelPageTransition() {
 
       // Silent until the visitor has turned sound on (the engine gates itself)
       sound?.whoosh()
-      animateGrid({ duration: DURATION_LEAVE, isEnter: false, onComplete: () => router.push(href) })
+      setLoaderVisible(false)
+      animateGrid({
+        duration: DURATION_LEAVE,
+        isEnter: false,
+        onComplete: () => {
+          setLoaderVisible(true)
+          router.push(href)
+        },
+      })
     }
 
     document.addEventListener('click', handleAnchorClick, { capture: true })
     return () => document.removeEventListener('click', handleAnchorClick, { capture: true })
-  }, [animateGrid, router, sound])
+  }, [animateGrid, router, setLoaderVisible, sound])
 
   // 2. Reveal the new page once the route has changed
   useEffect(() => {
@@ -269,6 +291,7 @@ export default function PixelPageTransition() {
       window.setTimeout(resetScroll, 150)
     }
 
+    setLoaderVisible(true)
     animateGrid({
       duration: DURATION_ENTER,
       isEnter: true,
@@ -277,13 +300,22 @@ export default function PixelPageTransition() {
         isTransitioningRef.current = false
       },
     })
-  }, [pathname, animateGrid, lenis])
+  }, [pathname, animateGrid, lenis, setLoaderVisible])
 
   return (
-    <canvas
-      ref={canvasRef}
-      aria-hidden="true"
-      className="pointer-events-none fixed top-0 left-0 z-999 h-screen w-screen opacity-0"
-    />
+    <>
+      <canvas
+        ref={canvasRef}
+        aria-hidden="true"
+        className="pointer-events-none fixed top-0 left-0 z-999 h-screen w-screen opacity-0"
+      />
+      <div
+        ref={loaderRef}
+        aria-hidden="true"
+        className="pointer-events-none fixed inset-0 z-[1000] flex items-center justify-center opacity-0"
+      >
+        <GridDots size={56} squareSize={8} color="#111111" />
+      </div>
+    </>
   )
 }

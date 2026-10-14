@@ -96,7 +96,7 @@ const tailwindContentPathCode = `content: [
 export default function DocsDependencies() {
 
   return (
-    <DocsContent className="max-w-none mx-0">
+    <DocsContent>
 
       <Para>
         Hyperiux Vault is source-first. Effects are added into your project as editable

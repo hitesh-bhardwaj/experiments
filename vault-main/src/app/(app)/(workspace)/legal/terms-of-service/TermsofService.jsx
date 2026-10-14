@@ -10,7 +10,7 @@ import LinkButton from "@/components/WebsiteComps/LinkButton";
 
 export default function TermsOfService() {
   return (
-    <DocsContent className="max-w-none mx-0">
+    <DocsContent>
 
       <Para>
         These Terms of Service (&quot;Terms&quot;) are a legal agreement between Hyperiux

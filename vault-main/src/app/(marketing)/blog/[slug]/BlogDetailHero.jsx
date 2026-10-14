@@ -18,19 +18,19 @@ export default function BlogDetailHero({ post }) {
 
   return (
     <div ref={heroRef} className="flex flex-col gap-[3.5vw] max-md:gap-0">
-      <section id="blog-hero" className="mx-auto flex w-full max-w-[1536px] flex-col gap-10 px-[4.5vw] max-md:px-[6vw] max-md:pb-[12%]">
+      <section id="blog-hero" className="site-container section-x flex flex-col gap-10 max-md:pb-[12%]">
         <Breadcrumb maxWords={3} />
 
         <div className="flex flex-col gap-6">
           <LineWipe>
-            <h1 className="type-h1 w-[80%]  leading-[1.2] text-[3.2vw] max-md:text-[8vw] text-foreground max-lg:w-full">
+            <h1 className="type-h1 w-[80%] leading-[1.2] text-[3.2vw] max-md:text-[8vw] text-foreground max-lg:w-full">
               {post.title}
             </h1>
           </LineWipe>
 
           {post.summary && (
             <LineWipe delay={0.5}>
-              <p className="type-body-lg w-[60%] text-foreground/90 max-lg:w-full">
+              <p className="type-body-lg w-[60%] text-foreground/80 max-lg:w-full">
                 {post.summary}
               </p>
             </LineWipe>
@@ -39,7 +39,7 @@ export default function BlogDetailHero({ post }) {
       </section>
 
       {post.coverImage?.url && (
-        <section id="blog-cover" className="fadeup mx-auto w-full max-w-[1536px] px-[4.5vw] max-md:px-[6vw] max-md:py-[12%] max-md:pt-4">
+        <section id="blog-cover" className="fadeup site-container section-x max-md:py-[12%] max-md:pt-4">
           <div className="group relative h-[48vw] w-full overflow-hidden max-md:h-[60vw]">
             <Image
               src={post.coverImage.url}

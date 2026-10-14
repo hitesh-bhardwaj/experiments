@@ -46,7 +46,7 @@ export default function Page() {
 export default function DocsIntro() {
 
   return (
-    <DocsContent className="max-w-none mx-0">
+    <DocsContent>
 
       <Para>
         Hyperiux Vault is a library of creative interaction patterns for React and Next.js

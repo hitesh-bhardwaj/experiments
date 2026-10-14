@@ -175,7 +175,7 @@ export default function ExploreTheEffects() {
                     style={{ transitionTimingFunction: EASE }}
                 >
                     {CATEGORIES.map((category) => (
-                        <span key={category.label} className="flex h-[calc(var(--cvw)*2.6)] max-lg:h-[calc(var(--cvw)*5.5)] max-md:h-[calc(var(--cvw)*9)] shrink-0 items-center px-[calc(var(--cvw)*1.2)] max-lg:px-[calc(var(--cvw)*2.5)] max-md:px-[calc(var(--cvw)*3.5)] font-avenir text-[calc(var(--cvw)*1)] max-lg:text-[calc(var(--cvw)*1.9)] max-md:text-[calc(var(--cvw)*3)] font-medium tracking-wide text-[#111111] uppercase">
+                        <span key={category.label} className="flex h-[calc(var(--cvw)*2.6)] max-lg:h-[calc(var(--cvw)*5.5)] max-md:h-[calc(var(--cvw)*9)] shrink-0 items-center px-[calc(var(--cvw)*1.2)] max-lg:px-[calc(var(--cvw)*2.5)] max-md:px-[calc(var(--cvw)*3.5)] font-avenir text-[calc(var(--cvw)*1)] max-lg:text-[calc(var(--cvw)*1.9)] max-md:text-[calc(var(--cvw)*3)] font-medium text-[#111111]">
                             {category.label}
                         </span>
                     ))}
@@ -188,7 +188,7 @@ export default function ExploreTheEffects() {
                         aria-selected={tab === i}
                         aria-controls="explore-the-effects-panel"
                         onClick={() => choose(i)}
-                        className="relative z-1 h-[calc(var(--cvw)*2.6)] max-lg:h-[calc(var(--cvw)*5.5)] max-md:h-[calc(var(--cvw)*9)] shrink-0 px-[calc(var(--cvw)*1.2)] max-lg:px-[calc(var(--cvw)*2.5)] max-md:px-[calc(var(--cvw)*3.5)] font-avenir text-[calc(var(--cvw)*1)] max-lg:text-[calc(var(--cvw)*1.9)] max-md:text-[calc(var(--cvw)*3)] font-medium tracking-wide text-white/50 uppercase transition-colors duration-300 hover:text-white/80"
+                        className="relative z-1 h-[calc(var(--cvw)*2.6)] max-lg:h-[calc(var(--cvw)*5.5)] max-md:h-[calc(var(--cvw)*9)] shrink-0 px-[calc(var(--cvw)*1.2)] max-lg:px-[calc(var(--cvw)*2.5)] max-md:px-[calc(var(--cvw)*3.5)] font-avenir text-[calc(var(--cvw)*1)] max-lg:text-[calc(var(--cvw)*1.9)] max-md:text-[calc(var(--cvw)*3)] font-medium  text-white/50 transition-colors duration-300 hover:text-white/80"
                     >
                         {category.label}
                     </button>

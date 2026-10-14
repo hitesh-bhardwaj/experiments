@@ -15,7 +15,7 @@ export default function DocsContent({ className, children, ...props }) {
     <div
       ref={contentRef}
       className={cx(
-        "w-full py-5 space-y-6",
+        "mx-0 w-full max-w-none py-5 space-y-6",
         className
       )}
       {...props}

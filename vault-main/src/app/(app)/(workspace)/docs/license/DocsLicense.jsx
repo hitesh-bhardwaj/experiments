@@ -18,7 +18,7 @@ const licenseTiersCode = `Hyperiux Vault
 export default function DocsLicense() {
 
   return (
-    <DocsContent className="max-w-none mx-0">
+    <DocsContent>
       <Para>Code already installed remains in project, new Pro downloads and new client-project usage require active access.</Para>
 
       <Para>
@@ -491,7 +491,7 @@ export default function DocsLicense() {
       </Para>
       
      
-       <LinkButton href={"mailto:hello@hyperiux.com"} shimmer={false} tilted={false} showArrow={false}  text={"hello@hyperiux.com"} className="text-[#ff5f00]!"/>
+       <LinkButton href={"mailto:hello@hyperiux.com"} shimmer={false} tilted={false} showArrow={false}  text={"hello@hyperiux.com"} className="text-primary!"/>
        
 
       <Para>Useful details to include:</Para>

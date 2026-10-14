@@ -8,6 +8,7 @@ import { usePathname } from "next/navigation";
 import gsap from "gsap";
 import { useLenis } from "lenis/react";
 import { AnimatePresence, motion } from "motion/react";
+import { prefersReducedMotion } from "@/lib/motion";
 import { LABEL, T13, T14, T16, catalogueOf, priceOf } from "../tokens";
 import { PLANS, canRedeemCatalogue } from "@/lib/plans";
 import { SignInRequiredModal } from "@/components/ui/SignInRequiredModal";
@@ -134,7 +135,7 @@ export function GetTemplateModal({ template, open, tab = "buy", onTab, onClose, 
       setBusy(false);
       if (thumb) gsap.fromTo(thumb, { scale: 0.96 }, { scale: 1, duration: 1, ease: "elastic.out(1,.5)" });
     };
-    if (!coin || !thumb || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return finish();
+    if (!coin || !thumb || prefersReducedMotion()) return finish();
     const from = coin.getBoundingClientRect();
     const to = thumb.getBoundingClientRect();
     const token = coin.cloneNode(true);
