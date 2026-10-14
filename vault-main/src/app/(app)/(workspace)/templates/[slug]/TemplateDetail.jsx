@@ -22,6 +22,7 @@ import { useTemplateAccess } from "../useTemplateAccess";
 import { TemplateCard } from "../TemplateCard";
 import { BADGE, GUTTER, LABEL, T13, T14, cardReveal, catalogueOf, priceOf } from "../tokens";
 import { GetTemplateModal } from "./GetTemplateModal";
+import { MEDIA } from "@/lib/breakpoints";
 import { isLighthouseOrHeadless, isSoftwareRenderer } from "@/lib/audit";
 
 // three.js only loads when the exploded view is shown.
@@ -59,8 +60,9 @@ const MODES = [
 
 const CHIP = `inline-flex h-7 items-center px-2.5 font-mono ${T13}`;
 
-/* ---------- can this device show the exploded view? (motion allowed, WebGL) ---------- */
-const EXPLODED_QUERY = "(prefers-reduced-motion: no-preference)";
+/* ---------- can this device show the exploded view? (desktop, motion allowed, WebGL) ---------- */
+// Desktop only (lg and up, see lib/breakpoints): tablets and phones get the live preview.
+const EXPLODED_QUERY = "(min-width: 1025px) and (prefers-reduced-motion: no-preference)";
 let webgl;
 const hasWebGL = () => {
   if (webgl === undefined) {
@@ -129,6 +131,12 @@ export function TemplateDetail({ template, devices = {}, effects = [], stack = [
   const hasCapture = Object.keys(devices).length > 0;
   const mode = explodedOk && !glFailed && hasCapture ? chosenMode || "exploded" : "live";
   const [device, setDevice] = useState("desktop");
+  // Start the live preview on the visitor's own device: phone view on phones,
+  // tablet view on tablets (same widths as max-md / max-lg).
+  useEffect(() => {
+    if (window.matchMedia(MEDIA.mobile).matches) setDevice("phone");
+    else if (window.matchMedia(MEDIA.tablet).matches) setDevice("tablet");
+  }, []);
 
   const { toast, showToast, dismissToast } = useToastQueue();
   const { wishlist, toggleWishlist, signInModal } = useTemplateWishlist({

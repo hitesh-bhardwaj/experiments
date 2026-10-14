@@ -236,7 +236,7 @@ export function TemplatesListing({ templates: baseTemplates = [], description = 
       {/* ---------- grid + credits sheet ---------- */}
       <div data-sound-hover="off" data-sound-flow="off" className="relative flex flex-col gap-[8vw] bg-light py-[7%] text-ink max-md:gap-[15vw] max-md:py-[15%]">
         <section id="templates-grid" className={`${GUTTER} flex flex-col gap-12`}>
-          <div className="flex items-end justify-between gap-4">
+          <div className="flex items-end justify-between gap-4 max-md:flex-col max-md:items-start">
             <HeadAnim key={category} rotate={0} by="words">
               <h2 className="type-h1">
                 {category === "All" ? "All" : category} <span className="gradient-text-animate">Templates.</span>

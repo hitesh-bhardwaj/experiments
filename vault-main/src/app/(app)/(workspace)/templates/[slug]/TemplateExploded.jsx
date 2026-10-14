@@ -549,7 +549,7 @@ export default function TemplateExploded({
             className={`group/reset inline-flex h-9 cursor-pointer items-center gap-2 px-3.5 ${LABEL} text-foreground/80 ring-1 ring-inset ring-foreground/12 transition-colors duration-500 hover:bg-foreground/8 hover:text-foreground`}
           >
             <RotateCcw className="size-3.5 transition-transform duration-500 ease-in-out group-hover/reset:-rotate-180" aria-hidden="true" />
-            Reset view
+            Reset View
           </button>
 
           </div>

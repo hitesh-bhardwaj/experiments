@@ -166,7 +166,7 @@ export function FilterMenu({
           !EFFECT_SORT_OPTIONS.includes(options[index - 1]);
 
         return (
-          <div key={cat} className="flex flex-col gap-1.5">
+          <div key={cat} className="flex flex-col gap-1.5 backdrop-blur-lg">
             {showDivider && (
               <span
                 aria-hidden="true"
