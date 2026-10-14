@@ -12,19 +12,21 @@ if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger, useGSAP);
 }
 
-// How far each box starts to the right before sliding in as you scroll
-const SLIDE_X_PERCENT = [110, 70, 70, 70, 70];
+// How far each box starts to the right before sliding in as you scroll: the first from further out
+const slideStart = (i) => (i === 0 ? 110 : 70);
 
 function UseCaseBox({ item }) {
   return (
-    <article className="use-case-box relative w-full border border-t-0 border-background/15 first:border-t max-md:border-t">
-      <div className="border-b border-background/15 px-[2vw] py-[2.5vw] max-md:px-[6vw] max-md:py-[7vw]">
+    <article className="use-case-box relative w-full border border-t-0 border-black/10 first:border-t max-md:border-t">
+      <div className="border-b border-black/10 px-[calc(var(--cvw)*2)] py-[calc(var(--cvw)*2.5)] max-md:px-[6vw] max-md:py-[7vw]">
         <h3 className="type-h3">{item.title}</h3>
       </div>
 
-      <div className="flex flex-col justify-between gap-[4vw] px-[2vw] py-[2.5vw] max-md:gap-[10vw] max-md:px-[6vw] max-md:py-[7vw]">
+      <div className="flex flex-col justify-between gap-[calc(var(--cvw)*4)] px-[calc(var(--cvw)*2)] py-[calc(var(--cvw)*2.5)] max-md:gap-[10vw] max-md:px-[6vw] max-md:py-[7vw]">
         <p className="type-body w-[80%] max-md:w-full">{item.text}</p>
-        <LinkButton href={item.link} text={item.cta} tilted={false} className="text-background!" />
+        <div className="[&_a]:text-ink">
+          <LinkButton href={item.link} text={item.cta} tilted={false} />
+        </div>
       </div>
     </article>
   );
@@ -45,7 +47,7 @@ export default function PricingUseCase({ useCases }) {
       boxes.forEach((box, i) => {
         gsap.fromTo(
           box,
-          { xPercent: SLIDE_X_PERCENT[i] },
+          { xPercent: slideStart(i) },
           {
             xPercent: 0,
             ease: "power1.out",
@@ -58,11 +60,11 @@ export default function PricingUseCase({ useCases }) {
   );
 
   return (
-    <section ref={container} id="use-cases" data-sound-flow="off" className="overflow-x-clip bg-light px-[4.5vw] py-[7%] text-background max-md:px-[6vw] max-md:py-[15%]">
-      <div className="mx-auto flex h-fit w-full max-w-[1536px] items-start justify-between max-md:flex-col max-md:gap-[10vw]">
+    <section ref={container} id="use-cases" data-sound-flow="off" className="section-x overflow-x-clip bg-light py-[7%] text-ink">
+      <div className="site-container flex h-fit items-start justify-between max-md:flex-col max-md:gap-[10vw]">
         <div className="sticky top-[20vh] w-[45%] max-md:static max-md:w-full">
           {/* The blog card's line wipe, scrubbed with the scroll like the cards beside it */}
-          <LineWipe scrub start="top 95%" end="top top" lit="var(--background)">
+          <LineWipe scrub start="top 95%" end="top top" lit="var(--ink)">
             <h2 className="font-aeonik text-[calc(var(--cvw)*3.6)] leading-[1.1] max-lg:text-[5vw] max-md:text-[8vw]">
               Built for teams where frontend is part of the brand & your interface needs to feel as premium as the product.
             </h2>

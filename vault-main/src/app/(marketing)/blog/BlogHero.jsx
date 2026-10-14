@@ -36,7 +36,7 @@ export default function BlogHero() {
 
   return (
     <section id="blog-hero" className="relative isolate w-full overflow-hidden">
-      <div className="absolute inset-0 z-0 max-lg:bottom-auto max-lg:h-svh" aria-hidden="true">
+      <div className="absolute inset-0 z-0 max-lg:top-[18vw] max-lg:bottom-auto max-lg:h-svh max-md:top-0" aria-hidden="true">
         {isDesktop && !audit && <ParticleBlob preset="fomosphere" phoneTop={0.4} />}
         {/* Tablet and mobile: a looping video instead of the WebGL blob */}
         {isDesktop === false && !audit && (

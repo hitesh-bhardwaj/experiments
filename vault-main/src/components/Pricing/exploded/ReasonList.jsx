@@ -35,8 +35,10 @@ function Row({ item, mountedRef }) {
 
   return (
     <li ref={ref} data-id={item.id} className="overflow-hidden">
-      <div className="flex gap-[0.8vw] pb-[0.8vw] type-body text-foreground/70 max-lg:gap-[2vw] max-lg:pb-[2vw] max-md:gap-[3vw] max-md:pb-[3vw]">
-        <i className="relative top-[0.5vw] size-[0.4vw] shrink-0 bg-primary max-lg:top-[1.2vw] max-lg:size-[0.8vw] max-md:top-[2vw] max-md:size-[1.5vw]" />
+      <div className="flex gap-[calc(var(--cvw)*0.8)] pb-[calc(var(--cvw)*0.8)] type-body text-foreground/70 max-lg:gap-[2vw] max-lg:pb-[2vw] max-md:gap-[3vw] max-md:pb-[3vw]">
+        <span className="flex h-[1.65em] shrink-0 items-center">
+          <i className="size-[calc(var(--cvw)*0.4)] bg-primary max-lg:size-[0.8vw] max-md:size-[1.5vw]" />
+        </span>
         <p><Parts parts={item.parts} /></p>
       </div>
     </li>
@@ -79,7 +81,7 @@ export default function ReasonList({ items }) {
   }, [items]);
 
   return (
-    <ul ref={listRef} className="flex h-[15vw] flex-col overflow-hidden max-lg:h-[35vw] max-md:h-[60vw]">
+    <ul ref={listRef} className="flex min-h-[calc(var(--cvw)*15)] flex-col max-lg:min-h-[35vw] max-md:min-h-[60vw]">
       {rows.map((item) => (
         <Row key={item.id} item={item} mountedRef={mounted} />
       ))}

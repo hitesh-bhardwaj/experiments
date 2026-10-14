@@ -145,10 +145,12 @@ export default function ExploreTheEffects() {
         <section
             ref={container}
             id="explore-the-effects"
-            className="relative mx-auto w-full max-w-[1536px] overflow-x-clip px-[calc(var(--cvw)*4.5)] py-[15%] max-md:py-[12%] text-center max-md:px-[calc(var(--cvw)*7)]  space-y-[calc(var(--cvw)*2)] max-md:space-y-[calc(var(--cvw)*6)]"
+            className="section-x relative overflow-x-clip py-[15%] text-center max-md:py-[12%]"
         >
-            <LineReveal as="h2" className="type-h1 leading-[1.2] mx-auto w-[calc(var(--cvw)*60)] max-md:w-full">
-                Explore the Moments Your Website is <span className="gradient-text-animate">Missing.</span>
+            <div className="site-container flex flex-col gap-[calc(var(--cvw)*3)] max-md:gap-[calc(var(--cvw)*10)]">
+            <div className="flex flex-col gap-[calc(var(--cvw)*4.2)] max-md:gap-[calc(var(--cvw)*10)]">
+            <LineReveal as="h2" className="type-h1 mx-auto w-[calc(var(--cvw)*60)] max-md:w-full">
+                Explore the Moments Your Website Is <span className="gradient-text-animate">Missing.</span>
             </LineReveal>
 
             <div
@@ -157,25 +159,22 @@ export default function ExploreTheEffects() {
                 aria-label="Effect categories"
                 data-sound-hover="off"
                 data-fadeup-delay="0.1"
-                className="fadeup relative mt-[34px] inline-flex max-w-full max-md:overflow-x-auto gap-0.5 border border-white/20 bg-black/30 p-[3px] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+                className="fadeup relative inline-flex max-w-full gap-0.5 self-center border border-white/20 bg-black/30 p-0.5 [scrollbar-width:none] max-md:overflow-x-auto [&::-webkit-scrollbar]:hidden"
             >
-              
                 <span
                     ref={pillRef}
                     aria-hidden="true"
-                    className="absolute inset-y-0.75 left-0 border border-primary bg-primary transition-[transform,width] duration-[600ms] motion-reduce:transition-none"
+                    className="absolute inset-y-0.5 left-0 border border-primary bg-primary transition-[transform,width] duration-[600ms] motion-reduce:transition-none"
                     style={{ transitionTimingFunction: EASE }}
-                >
-                   
-                </span>
+                />
                 <span
                     ref={inkRef}
                     aria-hidden="true"
-                    className="pointer-events-none absolute top-0 left-0 z-2 flex h-full w-max gap-0.5 p-[3px] transition-[clip-path] duration-[600ms] motion-reduce:transition-none"
+                    className="pointer-events-none absolute top-0 left-0 z-2 flex h-full w-max gap-0.5 p-0.5 transition-[clip-path] duration-[600ms] motion-reduce:transition-none"
                     style={{ transitionTimingFunction: EASE }}
                 >
                     {CATEGORIES.map((category) => (
-                        <span key={category.label} className="flex h-[calc(var(--cvw)*2.6)] max-lg:h-[calc(var(--cvw)*5.5)] max-md:h-[calc(var(--cvw)*9)] shrink-0 items-center px-[calc(var(--cvw)*1.2)] max-lg:px-[calc(var(--cvw)*2.5)] max-md:px-[calc(var(--cvw)*3.5)] font-avenir text-[calc(var(--cvw)*1)] max-lg:text-[calc(var(--cvw)*1.9)] max-md:text-[calc(var(--cvw)*3)] font-medium text-[#111111]">
+                        <span key={category.label} className="flex h-[calc(var(--cvw)*2.6)] max-lg:h-[calc(var(--cvw)*5.5)] max-md:h-[calc(var(--cvw)*9)] shrink-0 items-center px-[calc(var(--cvw)*1.2)] max-lg:px-[calc(var(--cvw)*2.5)] max-md:px-[calc(var(--cvw)*3.5)] type-label text-background">
                             {category.label}
                         </span>
                     ))}
@@ -188,20 +187,20 @@ export default function ExploreTheEffects() {
                         aria-selected={tab === i}
                         aria-controls="explore-the-effects-panel"
                         onClick={() => choose(i)}
-                        className="relative z-1 h-[calc(var(--cvw)*2.6)] max-lg:h-[calc(var(--cvw)*5.5)] max-md:h-[calc(var(--cvw)*9)] shrink-0 px-[calc(var(--cvw)*1.2)] max-lg:px-[calc(var(--cvw)*2.5)] max-md:px-[calc(var(--cvw)*3.5)] font-avenir text-[calc(var(--cvw)*1)] max-lg:text-[calc(var(--cvw)*1.9)] max-md:text-[calc(var(--cvw)*3)] font-medium  text-white/50 transition-colors duration-300 hover:text-white/80"
+                        className="relative z-1 h-[calc(var(--cvw)*2.6)] max-lg:h-[calc(var(--cvw)*5.5)] max-md:h-[calc(var(--cvw)*9)] shrink-0 px-[calc(var(--cvw)*1.2)] max-lg:px-[calc(var(--cvw)*2.5)] max-md:px-[calc(var(--cvw)*3.5)] type-label text-white/50 transition-colors duration-300 hover:text-white/80"
                     >
                         {category.label}
                     </button>
                 ))}
+            </div>
             </div>
 
             <div
                 ref={gridRef}
                 id="explore-the-effects-panel"
                 role="tabpanel"
-                aria-live="polite"
                 data-fadeup-delay="0.2"
-                className="fadeup mx-auto mt-4 grid grid-cols-2 gap-4 max-md:gap-6 text-left max-md:grid-cols-1"
+                className="fadeup mx-auto grid grid-cols-2 gap-4 text-left max-md:grid-cols-1 max-md:gap-6"
             >
                 {CATEGORIES[shown].effects.map((item) => (
                     <article
@@ -210,21 +209,21 @@ export default function ExploreTheEffects() {
                         // Starts hidden; the slide-in brings it up.
                         key={`${shown}-${item.slug}`}
                         style={{ opacity: 0 }}
-                        className="relative grid grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] gap-6 border border-white/20 bg-black/30 backdrop-blur-lg p-4 text-white max-sm:grid-cols-1 max-sm:gap-4"
+                        className="relative grid grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] gap-6 border border-white/20 bg-black/30 backdrop-blur-lg p-4 text-white max-md:grid-cols-1 max-md:gap-4"
                     >
-                        {/* <CornerMarks /> */}
                         <div className="aspect-16/10 overflow-hidden bg-white/5">
                             <LazyVideo src={item.video} poster={item.poster} loop muted playsInline className="size-full object-cover" />
                         </div>
                         <div className="flex flex-col justify-between gap-4 py-1">
-                            <div className="space-y-[1.1vw]">
+                            <div className="flex flex-col gap-[calc(var(--cvw)*1.6)]">
                                 <h3 className="type-h3">{item.title}</h3>
-                                <p className="type-body leading-[1.3] mt-[calc(var(--cvw)*0.5)] text-white/60">{item.text}</p>
+                                <p className="type-body text-white/60">{item.text}</p>
                             </div>
-                            <LinkButton href={item.href} text="Explore" underline tilted={false} underlineClassName="mt-0" className="text18 text-foreground hover:text-primary transition-colors duration-300" />
+                            <LinkButton href={item.href} text="Explore" underline tilted={false} underlineClassName="mt-0" className="type-small text-foreground hover:text-primary transition-colors duration-300" />
                         </div>
                     </article>
                 ))}
+            </div>
             </div>
         </section>
     );

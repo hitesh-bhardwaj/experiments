@@ -8,7 +8,7 @@ const ScrollDistortion = dynamic(() => import("@/components/scroll-distortion"),
 
 export default function ScrollDemo() {
     return (
-        <div className="relative h-full w-full overflow-hidden bg-[#080808]">
+        <div className="relative h-full w-full overflow-hidden bg-background">
             <ScrollDistortion contained />
         </div>
     );

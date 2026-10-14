@@ -296,7 +296,7 @@ export default function PricingPlansHome({ currency: initialCurrency, checkout =
                                 <span className={`type-body-lg ${dark ? "text-[#a9a9a9]" : "text-[#6B6B6B]"}`}>{plan.for}</span>
                             </div>
 
-                            <div className="relative mt-2 flex items-baseline leading-none tracking-[-.05em]">
+                            <div className="relative mt-2 flex items-baseline leading-none">
                                 {/* Skeleton until the visitor's currency (INR / USD) is known */}
                                 {currencyReady ? (
                                     <>
@@ -309,7 +309,7 @@ export default function PricingPlansHome({ currency: initialCurrency, checkout =
                                 ) : (
                                     <Skeleton className="h-[calc(var(--cvw)*6.4)] w-[calc(var(--cvw)*12)] max-md:h-[calc(var(--cvw)*16)] max-md:w-[calc(var(--cvw)*30)]" />
                                 )}
-                                <span className={`ml-2 text-[calc(var(--cvw)*1.1)] max-md:text-[calc(var(--cvw)*4.1)] tracking-normal ${dark ? "text-[#a9a9a9]" : "text-[#6B6B6B]"}`}>/mo</span>
+                                <span className={`ml-2 text-[calc(var(--cvw)*1.1)] max-md:text-[calc(var(--cvw)*4.1)] ${dark ? "text-[#a9a9a9]" : "text-[#6B6B6B]"}`}>/mo</span>
                             </div>
 
                             {/* Billing + savings, closed off by a thin rule */}

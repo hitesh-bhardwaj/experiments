@@ -51,9 +51,9 @@ function Tile({ index, filled: filledProp, leaving = false, delay, sizeClass, on
   }, [filled]);
 
   return (
-    <span ref={ref} className="flex shrink-0 justify-start overflow-hidden py-[0.2vw] pr-[0.5vw] max-md:py-[0.8vw] max-md:pr-[2vw]">
+    <span ref={ref} className="flex shrink-0 justify-start overflow-hidden py-[calc(var(--cvw)*0.2)] pr-[calc(var(--cvw)*0.5)] max-md:py-[0.8vw] max-md:pr-[2vw]">
       <span ref={popRef} className="flex origin-center">
-      <i ref={(el) => onTile?.(index, el)} className={`flex origin-center items-center justify-center not-italic transition-colors duration-500 ${sizeClass} ${filled ? "bg-primary text-background" : "border border-foreground/20 text-foreground/40"}`}>
+      <i ref={(el) => onTile?.(index, el)} className={`flex origin-center items-center justify-center type-small not-italic transition-colors duration-500 ${sizeClass} ${filled ? "bg-primary text-background" : "border border-foreground/20 text-foreground/40"}`}>
         <span ref={numRef} className="inline-block">{index + 1}</span>
       </i>
       </span>
@@ -61,7 +61,7 @@ function Tile({ index, filled: filledProp, leaving = false, delay, sizeClass, on
   );
 }
 
-export default function CreditTiles({ count, used, sizeClass = "size-[1.8vw] text-[0.7vw] max-md:size-[7vw] max-md:text-[2.8vw]", onTile }) {
+export default function CreditTiles({ count, used, sizeClass = "size-[calc(var(--cvw)*1.8)] max-md:size-[7vw]", onTile }) {
   const rootRef = useRef(null);
   const mountedRef = useRef(false);
   const [shown, setShown] = useState(count);
@@ -95,7 +95,7 @@ export default function CreditTiles({ count, used, sizeClass = "size-[1.8vw] tex
   }, [count]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <div ref={rootRef} className="flex max-md:gap-2 max-md:my-2" aria-label={`${count} template credits, ${Math.min(used, count)} used`}>
+    <div ref={rootRef} className="flex max-md:gap-2" aria-label={`${count} template credits, ${Math.min(used, count)} used`}>
       {Array.from({ length: shown }, (_, i) => (
         <Tile key={i} index={i} filled={i < used} leaving={i >= count} sizeClass={sizeClass} onTile={onTile} delay={Math.max(0, i - (shown - 1)) * 0.08} />
       ))}

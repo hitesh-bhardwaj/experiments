@@ -9,6 +9,7 @@ import DrawCheck from '../components/DrawCheck'
 import DrawCross from '../components/DrawCross'
 import LineReveal from '@/components/Animations/LineReveal'
 import { useFadeUp } from '@/components/Animations/gsapAnimations'
+import { prefersReducedMotion } from '@/lib/motion'
 
 if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger)
@@ -47,7 +48,7 @@ const cards = [
   {
     title: 'Mobile fallbacks',
     description: 'Responsive behavior built for touch and smaller screens.',
-    label: 'Touch Devices ',
+    label: 'Touch Devices',
   },
   {
     title: 'Cleanup on unmount',
@@ -71,6 +72,12 @@ export default function ProblemFixes() {
 
     const mount = () => {
       setArmed(true)
+
+      // Reduced motion: every card is shown at once, nothing scrubs with the scroll
+      if (prefersReducedMotion()) {
+        setActiveIndex(cards.length - 1)
+        return
+      }
 
       ctx = gsap.context(() => {
         const cardEls = gsap.utils.toArray('.tension-card')
@@ -103,7 +110,6 @@ export default function ProblemFixes() {
             start: 'top 70%',
             end: 'bottom 50%',
             scrub: true,
-            markers: false,
           },
         })
 
@@ -162,22 +168,23 @@ export default function ProblemFixes() {
   return (
     <section
       ref={sectionRef}
-      className="relative z-200  max-md:mt-[calc(var(--cvw)*-8)] w-full overflow-hidden px-[calc(var(--cvw)*4.5)] py-[7%] max-md:py-[12%] text-foreground max-md:px-[calc(var(--cvw)*7)] "
+      id="problem-fixes"
+      className="section-x relative z-200 w-full overflow-hidden py-[7%] text-foreground"
     >
-      <div className="mx-auto relative z-200 flex w-full max-w-[1536px] flex-col items-center">
-        <div className=" text-center w-[55%] max-lg:w-[85%] max-md:w-full">
+      <div className="site-container relative z-200 flex flex-col items-center gap-[calc(var(--cvw)*8)] max-md:gap-20">
+        <div className="flex w-[55%] flex-col gap-[calc(var(--cvw)*3.5)] text-center max-lg:w-[85%] max-md:w-full max-md:gap-[calc(var(--cvw)*5)]">
           <LineReveal as='h2' className="type-h1 w-full">
-            Good Motion is{' '}
-            <span className="gradient-text-animate">Harder</span> Than it Looks
+            Good Motion Is{' '}
+            <span className="gradient-text-animate">Harder</span> Than It Looks
           </LineReveal>
-          <p data-fadeup-delay="0.2" className="type-body-lg fadeup mx-auto mt-[calc(var(--cvw)*3.5)] max-w-[calc(var(--cvw)*55)] max-lg:max-w-[90%] text-foreground max-md:mt-[calc(var(--cvw)*5)] max-md:w-full max-md:max-w-full max-sm:mt-[calc(var(--cvw)*10)]">
-          Anyone can add a fade. What&apos;s hard is everything around it. Get timing, restraint, or performance wrong, and the moment meant to impress becomes the reason the site feels worse. Most teams see that risk and drop their ambitions to play it safe. And your interface ends up looking like everyone else&apos;s.  Vault is engineered around that discipline by default, not as an afterthought.
+          <p data-fadeup-delay="0.2" className="type-body-lg fadeup mx-auto max-w-[calc(var(--cvw)*55)] max-lg:max-w-[90%] max-md:w-full max-md:max-w-full">
+          Anyone can add a fade. What&apos;s hard is everything around it. Get timing, restraint, or performance wrong, and the moment meant to impress becomes the reason the site feels worse. Most teams see that risk and drop their ambitions to play it safe. And your interface ends up looking like everyone else&apos;s. Vault is engineered around that discipline by default, not as an afterthought.
           </p>
         </div>
 
         <div
           ref={cardsRef}
-          className="mt-[calc(var(--cvw)*8)] px-10 max-lg:px-0 h-fit w-full space-y-[calc(var(--cvw)*1)] max-md:mt-20 max-md:w-full max-md:space-y-5 max-sm:mt-20 max-sm:space-y-5"
+          className="h-fit w-full space-y-[calc(var(--cvw)*1)] px-10 max-lg:px-0 max-md:space-y-5"
         >
           <div className="type-body-lg flex w-full items-center justify-between px-[calc(var(--cvw)*.5)]">
             <p>The Risks</p>
@@ -187,22 +194,22 @@ export default function ProblemFixes() {
           {cards.map((item, index) => (
             <div
               key={item.title}
-              className="tension-card bg-grey/30 backdrop-blur-lg flex items-center justify-between p-[calc(var(--cvw)*.7)] pr-[calc(var(--cvw)*1.5)] max-md:p-3 max-sm:p-2 max-sm:pr-2"
+              className="tension-card flex items-center justify-between bg-grey/30 px-[calc(var(--cvw)*1.1)] py-[calc(var(--cvw)*0.7)] backdrop-blur-lg max-md:p-3"
             >
-              <div className="flex min-w-0 flex-1 items-center max-md:flex-col max-md:items-start max-md:gap-3 max-sm:gap-2.5">
+              <div className="flex min-w-0 flex-1 items-center max-md:flex-col max-md:items-start max-md:gap-3">
 
-                <div className="flex w-[calc(var(--cvw)*25)] pl-[calc(var(--cvw)*1)] shrink-0 items-center gap-[calc(var(--cvw)*1)] max-md:w-auto max-md:gap-4 max-sm:gap-2.5">
+                <div className="flex w-[calc(var(--cvw)*25)] shrink-0 items-center gap-[calc(var(--cvw)*1)] px-[calc(var(--cvw)*0.3)] max-md:w-auto max-md:gap-4">
 
                   <FadeText
                     as="p"
                     lang="en"
-                    className="type-body-lg capitalize max-sm:min-w-0 max-sm:flex-1 max-sm:wrap-break-word max-sm:hyphens-auto"
+                    className="type-body-lg capitalize max-md:min-w-0 max-md:flex-1 max-md:wrap-break-word max-md:hyphens-auto"
                     active={index <= activeIndex}
                     armed={armed}
                   >
                     {item.label}
                   </FadeText>
-                  <div className="flex size-[calc(var(--cvw)*3)] shrink-0 items-center justify-center bg-background p-1 max-lg:size-10 max-md:size-8 max-sm:size-9">
+                  <div className="flex size-[calc(var(--cvw)*3)] shrink-0 items-center justify-center bg-background p-1 max-lg:size-10 max-md:size-8">
                     <DrawCross
                       active={index <= activeIndex}
                       armed={armed}
@@ -210,8 +217,9 @@ export default function ProblemFixes() {
                     />
                   </div>
                 </div>
-                <p className="text-light-grey font-mono text18 max-lg:w-[50%] max-lg:flex-none max-md:w-[90%] max-md:flex-none max-md:px-0 max-md:text-[clamp(0.8rem,calc(var(--cvw)*2.6),1rem)]! max-lg:text-sm! max-md:pr-0! min-w-0 flex-1 px-[calc(var(--cvw)*2)] text-left [--scramble-flash:var(--primary)] [--scramble-pre:var(--primary)] max-sm:w-[75%]">
+                <p className="type-body min-w-0 flex-1 px-[calc(var(--cvw)*2)] text-left text-light-grey [--scramble-flash:var(--primary)] [--scramble-pre:var(--primary)] max-lg:w-[50%] max-lg:flex-none max-md:w-[90%] max-md:px-0">
                   <ScrambleText
+                    className="font-mono"
                     text={item.description}
                     active={index <= activeIndex}
                     armed={armed}
@@ -219,7 +227,7 @@ export default function ProblemFixes() {
                 </p>
               </div>
 
-              <div className="flex w-[calc(var(--cvw)*13)] shrink-0 items-center gap-[calc(var(--cvw)*1)] justify-end max-md:gap-3 max-md:w-[38%] max-md:max-w-[40%] max-sm:w-[42%] max-sm:max-w-[48%] max-sm:gap-2">
+              <div className="flex w-[calc(var(--cvw)*13)] shrink-0 items-center gap-[calc(var(--cvw)*1)] justify-end max-md:w-[38%] max-md:max-w-[40%] max-md:gap-3">
 
                 <FadeText
                   as="p"
@@ -229,7 +237,7 @@ export default function ProblemFixes() {
                 >
                   {item.title}
                 </FadeText>
-                <div className="flex size-[calc(var(--cvw)*3)] shrink-0 items-center justify-center bg-background p-2.5 max-lg:size-10 max-md:size-8 max-sm:size-9">
+                <div className="flex size-[calc(var(--cvw)*3)] shrink-0 items-center justify-center bg-background p-2.5 max-lg:size-10 max-md:size-8">
                   <DrawCheck
                     active={index <= activeIndex}
                     armed={armed}

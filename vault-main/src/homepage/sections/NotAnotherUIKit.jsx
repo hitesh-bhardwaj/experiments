@@ -1,8 +1,9 @@
 'use client'
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
 import { prefersReducedMotion } from '@/lib/motion'
+import { MEDIA } from '@/lib/breakpoints'
 
 if (typeof window !== "undefined") {
     gsap.registerPlugin(ScrollTrigger)
@@ -43,10 +44,10 @@ const UI_CARDS = [
 
 export default function NotAnotherUIKit() {
   useEffect(() => {
-    let ctx = gsap.context(() => {
+    const ctx = gsap.context(() => {
       const reduceMotion = prefersReducedMotion();
 
-      if (globalThis.matchMedia("(min-width: 1026px)").matches) {
+      if (!globalThis.matchMedia(MEDIA.tablet).matches) {
         gsap.set(".use-case", { y: reduceMotion ? "0vw" : "37vw" });
 
         const tl = gsap.timeline({
@@ -55,7 +56,6 @@ export default function NotAnotherUIKit() {
             start: "30% 90%",
             end: "102% bottom",
             scrub: true,
-            // markers:true,
           },
         });
 
@@ -102,23 +102,17 @@ export default function NotAnotherUIKit() {
   }, []);
 
   return (
-    <div id="uikit-section" className="w-full h-[250vh] text-foreground max-lg:overflow-hidden max-lg:h-fit max-lg:py-[4%] max-md:overflow-hidden max-md:h-fit max-sm:pb-[25%] max-sm:pt-0 max-md:py-[12%] relative z-20">
-        {/* <div>
-            <LineReveal as="h2" className="t96 w-[calc(var(--cvw)*90)] font-aeonik max-md:text-center max-md:w-full mx-auto text-center">
-               Not <span className='gradient-text-animate'>Another UI Kit.</span>  Not a Side Project.
-            </LineReveal>
-        </div> */}
-
+    <div id="uikit-section" className="relative z-20 h-[250vh] w-full text-foreground max-lg:h-fit max-lg:overflow-hidden max-lg:py-[4%] max-md:py-[12%]">
       {/* Use Case Cards */}
-      <div className="pointer-events-none max-lg:pointer-events-auto w-screen h-screen sticky mt-[-60vh] max-lg:static max-lg:h-fit max-lg:mt-[calc(var(--cvw)*12)] max-lg:pb-[calc(var(--cvw)*4)] max-lg:overflow-x-scroll max-lg:overflow-y-hidden max-lg:pr-[calc(var(--cvw)*7)] max-sm:mt-[8vh] top-0  overflow-hidden px-[calc(var(--cvw)*3)] max-md:overflow-y-hidden max-md:h-fit max-md:static max-md:mt-[calc(var(--cvw)*12)] max-md:pb-[calc(var(--cvw)*4)] max-md:overflow-x-scroll mobile-scrollbar max-md:pr-[calc(var(--cvw)*7)] z-15 ">
-        <div className="w-fit h-full flex gap-[calc(var(--cvw)*3)] max-md:gap-[calc(var(--cvw)*8)]  items-end use-case-container translate-x-[20%] max-lg:translate-x-0 max-lg:gap-[calc(var(--cvw)*6)] max-sm:pl-[calc(var(--cvw)*5)] ">
+      <div className="section-x pointer-events-none sticky top-0 z-15 mt-[-60vh] h-screen w-full overflow-hidden mobile-scrollbar max-lg:pointer-events-auto max-lg:static max-lg:mt-[calc(var(--cvw)*12)] max-lg:h-fit max-lg:overflow-x-scroll max-lg:overflow-y-hidden max-lg:pb-[calc(var(--cvw)*4)]">
+        <div className="use-case-container flex h-full w-fit translate-x-[20%] items-end gap-[calc(var(--cvw)*3)] max-lg:translate-x-0 max-lg:gap-[calc(var(--cvw)*6)] max-md:gap-[calc(var(--cvw)*8)]">
           {UI_CARDS.map((card) => (
             <div
               key={card.id}
-              className="pointer-events-auto w-[calc(var(--cvw)*28)] h-fit flex flex-col relative use-case justify-between max-lg:w-[calc(var(--cvw)*45)] max-md:w-[calc(var(--cvw)*80)]  bg-background/40 backdrop-blur-lg"
+              className="pointer-events-auto w-[calc(var(--cvw)*28)] h-fit flex flex-col relative use-case justify-between max-lg:w-[calc(var(--cvw)*45)] max-md:w-[calc(var(--cvw)*80)] bg-background/40 backdrop-blur-lg"
             >
               {/* Always visible top orange bar */}
-              <div className="w-full h-[calc(var(--cvw)*0.5)] bg-[#ff5f00] max-md:h-[calc(var(--cvw)*1)] max-sm:h-[calc(var(--cvw)*1.5)] shrink-0" />
+              <div className="w-full h-[calc(var(--cvw)*0.5)] bg-primary max-md:h-[calc(var(--cvw)*1)] shrink-0" />
 
               {/* Expanding card content */}
               <div className="w-full h-[calc(var(--cvw)*37)] border border-grey content-container overflow-hidden max-lg:h-[calc(var(--cvw)*55)] max-md:h-[calc(var(--cvw)*100)]">
