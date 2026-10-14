@@ -10,7 +10,6 @@ import Button from "../components/Button";
 import { useInteraction } from "../components/InteractionProvider";
 import NotAnotherUIKit from "./NotAnotherUIKit";
 
-
 const HOLD_DEAD_ZONE_MS = 200;
 const HOLD_CHARGE_MS = 1900;
 const TAP_MAX_MS = 220;
@@ -126,19 +125,18 @@ export default function SignalSection() {
 
     return (
         <section ref={sectionRef} id="signal" data-sound-flow="soft" data-hold-zone data-cursor-label="Hold to Explore" className="relative z-20 select-none text-white">
-           
             <div className="pointer-events-none absolute inset-x-0 -top-[100vh] -bottom-[100vh] z-50 max-lg:hidden" aria-hidden="true">
                 <div className="sticky top-0 h-screen">
                     <canvas ref={canvasRef} className="block size-full" />
                 </div>
             </div>
-            <div className="relative z-[60]! mx-auto h-[80vh]  max-w-[1536px] px-[calc(var(--cvw)*4.5)] py-[7%] max-md:py-[12%] max-lg:h-fit max-md:px-[calc(var(--cvw)*5)] max-sm:px-[calc(var(--cvw)*7)]">
+            <div className="section-x site-container relative z-60 h-[80vh] py-[7%] max-lg:h-fit">
                 <div className="grid min-h-[62vh] grid-cols-2 items-start gap-12 max-lg:min-h-fit max-lg:grid-cols-1">
-                    <div>
-                        <LineReveal as="h2" className="type-h1 leading-[1.2] max-w-[calc(var(--cvw)*30)] max-lg:max-w-full max-md:max-w-full">
+                    <div className="flex flex-col gap-[calc(var(--cvw)*4)] max-md:gap-8">
+                        <LineReveal as="h2" className="type-h1 max-w-[calc(var(--cvw)*30)] max-lg:max-w-full max-md:max-w-full">
                             Small Motion. <span className="gradient-text-animate gradient-text-single">Big Signal.</span>
                         </LineReveal>
-                        <div className="fadeup mt-[calc(var(--cvw)*4)] flex flex-wrap gap-4 max-md:mt-8 max-sm:flex-col max-sm:items-start" data-fadeup-delay="0.16">
+                        <div className="fadeup flex flex-wrap gap-4 max-md:flex-col max-md:items-start" data-fadeup-delay="0.16">
                             <Button href="/effects" text="Browse Effects" />
                             <Button variant="outline" href="/docs" text="Read the Docs" />
                         </div>

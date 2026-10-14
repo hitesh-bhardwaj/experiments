@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { createFluidField } from "../../lib/fluid-field";
 import RectangularTextReveal from "@/components/rectangular-text-reveal";
+import { useCssVar } from "@/lib/useCssVar";
 
 const TEXT = "Signal appears when the noise decides to leave.";
 
@@ -33,21 +34,25 @@ function FluidGrid() {
 // "Text" tab); clicking the text remounts it to play again.
 export default function TextDemo() {
     const [run, setRun] = useState(0);
+    const primary = useCssVar("--primary");
+    const light = useCssVar("--light");
 
     return (
-        <div className="relative flex h-full items-center overflow-hidden bg-[#101010] px-[8%]">
+        <div className="relative flex h-full items-center overflow-hidden bg-background px-[8%]">
             <FluidGrid />
             <button type="button" onClick={() => setRun((n) => n + 1)} className="relative z-1 cursor-pointer text-left" title="Click to replay">
+                {primary && (
                 <RectangularTextReveal
                     key={run}
                     once
                     direction="left"
-                    baseColor="#FF6B00"
-                    overlayColor="#F4F4F4"
-                    className="font-avenir text-[calc(var(--cvw)*3.2)] font-normal leading-[1.02] tracking-[-.03em] text-white uppercase max-md:text-[calc(var(--cvw)*8)]"
+                    baseColor={primary}
+                    overlayColor={light}
+                    className="font-avenir text-[calc(var(--cvw)*3.2)] font-normal leading-[1.02]  text-white uppercase max-md:text-[calc(var(--cvw)*8)]"
                 >
                     {TEXT}
                 </RectangularTextReveal>
+                )}
             </button>
         </div>
     );

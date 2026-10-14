@@ -39,7 +39,7 @@ export default function CommunityHero() {
       >
         {/* Tablet and mobile: a looping video instead of the WebGL crowd,
             pinned to the first screen */}
-        <div className="pointer-events-none absolute inset-x-0 top-0 -z-1 hidden h-svh max-lg:block" aria-hidden="true">
+        <div className="pointer-events-none absolute inset-x-0 top-0 -z-1 hidden h-svh max-lg:top-[18vw] max-lg:block max-md:top-0" aria-hidden="true">
           {isDesktop === false && !audit && (
             <video
               src="/assets/hero-videos/community.mp4"

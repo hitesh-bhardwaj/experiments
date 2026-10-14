@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
+import { useCssVar } from "@/lib/useCssVar";
 
 const ButterflyTrailCursor = dynamic(() => import("@/components/butterfly-trail-cursor"), {
     ssr: false,
@@ -13,6 +14,8 @@ const IDLE_MS = 1200;
 export default function CursorDemo() {
     const rootRef = useRef(null);
     const [moving, setMoving] = useState(false);
+    const bg = useCssVar("--dark-card");
+    const wing = useCssVar("--primary");
 
     useEffect(() => {
         const root = rootRef.current;
@@ -33,12 +36,8 @@ export default function CursorDemo() {
     }, []);
 
     return (
-        <div ref={rootRef} className="relative h-full w-full overflow-hidden bg-[#1a1a1a]">
-            <ButterflyTrailCursor
-                embedded
-                backgroundColor="#1a1a1a"
-                wingColor="#ff5f00"
-            />
+        <div ref={rootRef} className="relative h-full w-full overflow-hidden bg-dark-card">
+            {bg && <ButterflyTrailCursor embedded backgroundColor={bg} wingColor={wing} />}
             <p
                 aria-hidden="true"
                 className={`pointer-events-none absolute inset-x-0 top-1/2 z-1 -translate-y-1/2 text-center type-label text-white/40 transition-[opacity,filter] duration-700 ease-[cubic-bezier(.16,1,.3,1)] ${moving ? "opacity-0 blur-[2px]" : "opacity-100 blur-0"}`}

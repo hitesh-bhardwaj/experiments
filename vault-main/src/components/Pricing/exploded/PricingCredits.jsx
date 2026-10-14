@@ -292,7 +292,7 @@ export default function PricingCredits() {
                     <i className={`absolute top-[56%] left-[8%] h-[30%] w-[84%] transition-colors duration-1000 ${isOwned ? "bg-grey" : "bg-black/10"}`} />
                   </div>
                   <div className="flex flex-col gap-[calc(var(--cvw)*0.3)] max-lg:flex-1 max-lg:gap-[1vw] max-md:flex-1 max-md:gap-[1vw]">
-                    <p className="type-body tracking-tight">{t.name}</p>
+                    <p className="type-body">{t.name}</p>
                     <p className={`flex items-center gap-[calc(var(--cvw)*0.4)] max-lg:gap-[1vw] max-md:gap-[1.4vw] ${LABEL} ${t.full ? "text-black/60" : "text-primary"}`}>
                       {t.full ? "Full Catalogue" : "Selected Catalogue"}
                     </p>

@@ -41,7 +41,6 @@ const SCROLL_DURATION = 1.8;
 const CARD_TOP_GAP = 20;
 export default function WhyVault() {
     const rootRef = useRef(null);
-    const bgRef = useRef(null);
     const lenis = useLenis();
     const [active, setActive] = useState(0);
     const [activations, setActivations] = useState(() => WHY_VAULT_ITEMS.map(() => 0));
@@ -89,46 +88,49 @@ export default function WhyVault() {
             id="why"
             aria-label="Why Vault"
             data-sound-flow="off"
-            className="relative isolate px-[calc(var(--cvw)*4.5)] py-[7%] max-md:py-[12%]  text-[#1D1D1D]  max-md:px-[calc(var(--cvw)*7)]"
+            className="section-x relative isolate py-[7%] text-ink"
         >
             {/* The white layer; the content sits on top */}
-            <div ref={bgRef} aria-hidden="true" className="pointer-events-none absolute inset-0 -z-1 bg-[#F4F4F4]" />
-            <div className="mx-auto grid max-w-[1536px] grid-cols-[minmax(0,.8fr)_minmax(0,1.6fr)] max-md:gap-4 gap-[calc(var(--cvw)*2)] max-md:grid-cols-1">
+            <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-1 bg-light" />
+            <div className="site-container flex flex-col gap-[calc(var(--cvw)*7)] max-md:gap-12">
+            <div className="grid grid-cols-[minmax(0,.8fr)_minmax(0,1.6fr)] gap-[calc(var(--cvw)*2)] max-md:grid-cols-1 max-md:gap-4">
                 {/* Both reveal as the section starts scaling in ("top 85%"),
                     the intro line first, then the heading's lines */}
                 <LineReveal as="p" start="top 85%" className="type-body-lg max-w-[calc(var(--cvw)*15)] max-lg:max-w-[36ch]">
                     Production-grade motion, without the production complexity.
                 </LineReveal>
                 <LineReveal as="h2" start="top 85%" delay={0.2} className="type-h1">
-                    Built for teams where the frontend <span className="gradient-text-animate gradient-text-single">is the brand.</span>
+                    Built for Teams Where the Frontend <span className="gradient-text-animate gradient-text-single">Is the Brand.</span>
                 </LineReveal>
             </div>
 
-            <div className="mx-auto grid max-w-[1536px] grid-cols-[minmax(0,.8fr)_minmax(0,1.6fr)] gap-[calc(var(--cvw)*2)] pt-[calc(var(--cvw)*7)] max-md:grid-cols-1 max-md:pt-12">
-                <nav className="sticky top-[40svh] grid gap-[18px] self-start max-md:hidden" aria-label="Why Vault">
-                    
+            <div className="grid grid-cols-[minmax(0,.8fr)_minmax(0,1.6fr)] gap-[calc(var(--cvw)*2)] max-md:grid-cols-1">
+                <nav className="sticky top-[40svh] grid gap-[calc(var(--cvw)*1.2)] self-start max-md:hidden" aria-label="Why Vault sections">
                     {WHY_VAULT_ITEMS.map((item, i) => (
                         <button
                             key={item.id}
                             type="button"
                             onClick={() => goTo(i)}
                             aria-current={active === i ? "true" : undefined}
-                            className={`w-fit justify-self-start text-left type-h2 font-aeonik transition-colors duration-600 ease-[cubic-bezier(.16,1,.3,1)] ${active === i ? "text-[#1D1D1D]" : "text-[#B4B4B4] hover:text-[#8a8a8a]"}`}
+                            className={`w-fit justify-self-start text-left type-h2 font-aeonik transition-colors duration-600 ease-[cubic-bezier(.16,1,.3,1)] ${active === i ? "text-ink" : "text-black/20 hover:text-black/40"}`}
                         >
-                           <span> {item.nav}</span>
+                           <span>{item.nav}</span>
                         </button>
                     ))}
                 </nav>
 
-                <div className="grid grid-cols-[minmax(0,1fr)] gap-[clamp(8rem,22vh,14rem)] max-lg:gap-10 max-md:gap-12 ">
+                <div className="grid grid-cols-[minmax(0,1fr)] gap-[calc(var(--cvw)*12)] max-lg:gap-10 max-md:gap-12">
                     {WHY_VAULT_ITEMS.map((item, i) => (
-                        <article key={item.id} data-wv-panel={i}>
+                        <article key={item.id} data-wv-panel={i} className="flex flex-col gap-[calc(var(--cvw)*1.8)] max-md:gap-[calc(var(--cvw)*12)]">
                             <div className="fadeup">{renderCard(item.id, i)}</div>
-                            <LineReveal as="h3" className="mt-[calc(var(--cvw)*1.8)] max-md:mt-[calc(var(--cvw)*12)] max-md:text-[6vw] type-h3">{item.title}</LineReveal>
-                            <p data-fadeup-delay="0.15" className="fadeup mt-[calc(var(--cvw)*1)] max-md:mt-[calc(var(--cvw)*3)] max-w-[52ch] type-body text-[#6B6B6B]">{item.body}</p>
+                            <div className="flex flex-col gap-[calc(var(--cvw)*1)] max-md:gap-[calc(var(--cvw)*3)]">
+                                <LineReveal as="h3" className="type-h3">{item.title}</LineReveal>
+                                <p data-fadeup-delay="0.15" className="fadeup type-body max-w-[52ch] text-black/60">{item.body}</p>
+                            </div>
                         </article>
                     ))}
                 </div>
+            </div>
             </div>
         </section>
     );

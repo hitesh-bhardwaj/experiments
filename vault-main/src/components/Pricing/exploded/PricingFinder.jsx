@@ -172,7 +172,7 @@ export default function PricingFinder({ currency: initialCurrency }) {
       <div className="site-container flex items-center justify-between gap-[calc(var(--cvw)*3)] max-lg:flex-col max-lg:items-stretch max-lg:gap-[7vw] max-md:gap-[10vw]">
         <div className="flex w-[40%] flex-col gap-[calc(var(--cvw)*1.8)] max-lg:w-full max-lg:gap-[3vw] max-md:gap-[10vw]">
           <LineReveal as="h2" className="type-h1 w-[70%] text-foreground max-lg:w-[80%]">
-            Not Sure? <span className="gradient-text-animate">Let’s Size it.</span>
+            Not Sure? <span className="gradient-text-animate">Let’s Size It.</span>
           </LineReveal>
           <p className="fadeup type-body-lg w-[80%] text-foreground/60 max-lg:w-[70%] max-md:w-full">
             Tell us how you build. We’ll point you to the plan that fits, and show you exactly why.

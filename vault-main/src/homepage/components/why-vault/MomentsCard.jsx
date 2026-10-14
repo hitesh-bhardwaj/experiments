@@ -62,7 +62,7 @@ export default function MomentsCard() {
     }, [tab]);
 
     return (
-        <div ref={cardRef} data-sound-hover="off" className="group/moments relative aspect-[16/11] overflow-hidden bg-[#141414] text-white max-md:aspect-[4/5]">
+        <div ref={cardRef} data-sound-hover="off" className="group/moments relative aspect-[16/11] overflow-hidden bg-dark-card text-white max-md:aspect-[4/5]">
             <div className="absolute inset-0">
                 {near && (!needsWebGL || canRunWebGL) ? (
                     <Demo key={tab} tab={tab} />
@@ -72,11 +72,11 @@ export default function MomentsCard() {
                     </p>
                 )}
             </div>
-            <div ref={tabsRef} className="absolute top-6 left-1/2 z-10 flex -translate-x-1/2 gap-0.5 bg-[#F4F4F4]/90 p-[3px]" role="tablist" aria-label="Effect type">
+            <div ref={tabsRef} className="absolute top-6 left-1/2 z-10 flex -translate-x-1/2 gap-0.5 bg-light/90 p-0.5" role="tablist" aria-label="Effect type">
                 <span
                     ref={pillRef}
                     aria-hidden="true"
-                    className="absolute inset-y-[3px] left-0 bg-[#1D1D1D] transition-[transform,width] duration-[600ms] ease-[cubic-bezier(.16,1,.3,1)]"
+                    className="absolute inset-y-0.5 left-0 bg-ink transition-[transform,width] duration-[600ms] ease-[cubic-bezier(.16,1,.3,1)]"
                 />
                 {TABS.map((t) => (
                     <button
@@ -89,7 +89,7 @@ export default function MomentsCard() {
                             setLeaving(tab);
                             setTab(t.id);
                         }}
-                        className={`relative z-1 h-[30px] px-3.5 font-avenir text-[13px] transition-colors duration-[600ms] ease-[cubic-bezier(.16,1,.3,1)] ${tab === t.id ? "text-white" : "text-[#1D1D1D]"} ${leaving === t.id && tab !== t.id ? "motion-safe:animate-[hx-tab-release_.9s_ease-out_both]" : ""}`}
+                        className={`relative z-1 h-8 px-3.5 type-small transition-colors duration-[600ms] ease-[cubic-bezier(.16,1,.3,1)] ${tab === t.id ? "text-foreground" : "text-ink"} ${leaving === t.id && tab !== t.id ? "motion-safe:animate-[hx-tab-release_.9s_ease-out_both]" : ""}`}
                     >
                         {t.label}
                     </button>
