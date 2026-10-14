@@ -168,7 +168,7 @@ export default function PricingFinder({ currency: initialCurrency }) {
   }, { dependencies: [key], scope: outRef, revertOnUpdate: true });
 
   return (
-    <section ref={rootRef} id="finder" className="section-x relative py-[7%] text-foreground">
+    <section ref={rootRef} id="finder" className="section-x relative py-[7%] max-md:py-[15%] text-foreground">
       <div className="site-container flex items-center justify-between gap-[calc(var(--cvw)*3)] max-lg:flex-col max-lg:items-stretch max-lg:gap-[7vw] max-md:gap-[10vw]">
         <div className="flex w-[40%] flex-col gap-[calc(var(--cvw)*1.8)] max-lg:w-full max-lg:gap-[3vw] max-md:gap-[10vw]">
           <LineReveal as="h2" className="type-h1 w-[70%] text-foreground max-lg:w-[80%]">

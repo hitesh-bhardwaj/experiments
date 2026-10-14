@@ -70,7 +70,7 @@ export function DashboardShell({ children, totalEffects = 0, effects = [] }) {
           button and the tabs below. */}
       <VaultHeader mobileOnly showSearch totalEffects={totalEffects} effects={effects} />
 
-      <section id="dashboard" className={`site-container section-x flex flex-col gap-[3vw] pt-32 max-lg:gap-10 max-lg:pt-32 max-md:gap-8 max-md:pt-28 ${lightSheet ? "pb-[3vw] max-lg:pb-10 max-md:pb-8" : "pb-[3vw]"}`}>
+      <section id="dashboard" className={`mx-auto w-full section-x flex flex-col gap-[3vw] pt-32 max-lg:gap-10 max-lg:pt-32 max-md:gap-8 max-md:pt-28 ${lightSheet ? "pb-[3vw] max-lg:pb-10 max-md:pb-8" : "pb-[3vw]"}`}>
         {/* hero: back + breadcrumb, then the heading with Browse Effects beside it */}
         <header className="flex flex-col gap-[1.6vw] max-lg:gap-6">
           <div className="flex items-center gap-4">
@@ -119,7 +119,7 @@ export function DashboardShell({ children, totalEffects = 0, effects = [] }) {
 
       {/* the content: a full-width light sheet (white cards on it) for restyled tabs */}
       <div id="dashboard-content" className={lightSheet ? "bg-light text-ink" : ""}>
-        <div className={`site-container section-x ${lightSheet ? "py-[4vw] max-lg:py-12 max-md:py-10" : "pb-[7%]"}`}>{children}</div>
+        <div className={`mx-auto w-full section-x ${lightSheet ? "py-[4vw] max-lg:py-12 max-md:py-10" : "pb-[7%]"}`}>{children}</div>
       </div>
     </div>
   );

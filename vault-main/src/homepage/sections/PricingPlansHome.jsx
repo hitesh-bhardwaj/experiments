@@ -363,9 +363,9 @@ export default function PricingPlansHome({ currency: initialCurrency, checkout =
                 })}
             </div>
 
-            <ul className="mx-auto mt-[calc(var(--cvw)*2)] flex w-full max-w-[1536px] flex-wrap max-lg:flex-col justify-center max-lg:justify-start max-lg:gap-[2.5vw] max-lg:mt-[4vw] max-md:mt-[5vh] gap-x-[calc(var(--cvw)*2)] gap-y-[calc(var(--cvw)*0.8)] type-label text-[#6B6B6B]">
+            <ul className="mx-auto mt-[calc(var(--cvw)*2)] flex w-full max-w-[1536px] flex-wrap max-lg:flex-col justify-center max-lg:justify-start max-lg:gap-[2.5vw] max-lg:mt-[4vw] max-md:gap-4 max-md:mt-[5vh] gap-x-[calc(var(--cvw)*2)] gap-y-[calc(var(--cvw)*0.8)] type-label text-[#6B6B6B]">
                 {ASSURANCES.map((a) => (
-                    <li key={a} className="flex items-center  gap-2"><Tick />{a}</li>
+                    <li key={a} className="flex items-center  gap-2 "><Tick />{a}</li>
                 ))}
             </ul>
         </section>

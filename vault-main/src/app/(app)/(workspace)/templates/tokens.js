@@ -22,7 +22,7 @@ export const T24 = "text-[1.7vw] max-lg:text-[3.4vw] max-md:text-[6vw]";
 export const PRICE = "font-aeonik";
 
 // The standard section wrapper: capped width + page gutter
-export const GUTTER = "site-container section-x";
+export const GUTTER = "mx-auto w-full section-x";
 
 // Small pill on a template shot (category, price, catalogue).
 // Badges sit on the card shot - a barely-there shadow (as on the effect cards) keeps

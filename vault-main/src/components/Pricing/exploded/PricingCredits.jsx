@@ -217,7 +217,7 @@ export default function PricingCredits() {
   }
 
   return (
-    <section ref={rootRef} id="credits" data-sound-flow="off" className="section-x relative bg-light py-[7%] font-avenir text-ink">
+    <section ref={rootRef} id="credits" data-sound-flow="off" className="section-x relative bg-light py-[7%] max-md:py-[15%] font-avenir text-ink">
       <div className="site-container flex flex-col gap-[calc(var(--cvw)*3)] max-lg:gap-[5vw] max-md:gap-[10vw]">
         <div className="flex flex-col gap-[calc(var(--cvw)*1.8)] max-lg:gap-[3vw] max-md:gap-[10vw]">
           <LineReveal as="h2" className="type-h1">
@@ -275,7 +275,7 @@ export default function PricingCredits() {
             </div>
           </div>
 
-          <ul className="flex w-[70%] flex-wrap content-start gap-[calc(var(--cvw)*1)] max-lg:w-full max-lg:gap-[2vw] max-md:w-full max-md:gap-[3vw] max-md:gap-y-[10vw]">
+          <ul className="flex w-[70%] max-md:pt-8 flex-wrap content-start gap-[calc(var(--cvw)*1)] max-lg:w-full max-lg:gap-[2vw] max-md:w-full max-md:gap-[3vw] max-md:gap-y-[10vw]">
             {TEMPLATES.map((t, i) => {
               const isOwned = owned.includes(i);
               const locked = t.full && !plan.full;

@@ -29,7 +29,7 @@ function FeaturedBlogContent({ featuredPost }) {
     <section ref={sectionRef} id="featured-blog" className="site-container section-x flex flex-col gap-[5vw] py-[7%] max-md:gap-[10vw] max-md:py-[12%]">
       <div className="flex  items-end justify-between gap-4 max-md:flex-col max-md:items-start max-md:gap-[10vw]">
         <LineWipe lit={INK}>
-          <h2 className="type-h1 w-[30%]">Latest From The Vault</h2>
+          <h2 className="type-h1 w-[30%] max-md:w-[90%]">Latest From The Vault</h2>
         </LineWipe>
         <LineWipe delay={0.5} lit={INK}>
           <p className="type-body-lg w-[35%] text-black/60 max-md:w-full">
@@ -38,7 +38,7 @@ function FeaturedBlogContent({ featuredPost }) {
         </LineWipe>
       </div>
 
-      <div className="flex items-center gap-[4vw] bg-foreground p-[2.5vw] max-lg:flex-col max-lg:items-start max-md:gap-[6vw] max-md:px-[4vw] max-md:py-[8vw]">
+      <div className="flex items-center gap-[4vw] bg-foreground p-[2.5vw] max-lg:flex-col  max-lg:items-start max-md:gap-[6vw] max-md:px-[7vw] max-md:py-[8vw]">
         {featuredPost.coverImage?.url && (
           <Link
             href={`/blog/${featuredPost.slug}`}

@@ -85,7 +85,7 @@ export default function WaitlistForm({ className = "" }) {
         onChange={(e) => { setEmail(e.target.value); if (error) setError(""); }}
         aria-invalid={!!error}
         aria-describedby={`${inputId}-msg`}
-        className={`type-body h-11 min-w-0 flex-1 border-0 bg-transparent px-[calc(var(--cvw)*1.2)] text-foreground outline-none [--input-autofill-bg:var(--background)] [--input-autofill-text:var(--foreground)] max-md:basis-full max-md:px-2.5 ${joined ? "placeholder:text-success" : "placeholder:text-foreground/60"}`}
+        className={`type-body h-11 min-w-0  flex-1 border-0 bg-transparent px-[calc(var(--cvw)*1.2)] text-foreground outline-none [--input-autofill-bg:var(--background)] [--input-autofill-text:var(--foreground)] max-md:basis-full max-md:px-2.5 ${joined ? "placeholder:text-success" : "placeholder:text-foreground/60"}`}
       />
       <button
         ref={buttonRef}
@@ -94,11 +94,11 @@ export default function WaitlistForm({ className = "" }) {
         onPointerEnter={() => setHovered(true)}
         onPointerLeave={() => setHovered(false)}
         data-sound-kind="primary"
-        className={buttonClassName({ className: "max-md:w-full max-md:justify-center", disabled: joined || sending })}
+        className={buttonClassName({ className: "max-md:w-[85%] max-md:mx-auto max-md:justify-center", disabled: joined || sending })}
       >
         <ButtonChrome label={label} hovered={hovered} />
       </button>
-      <p id={`${inputId}-msg`} className={`type-label absolute top-[calc(100%+var(--cvw)*0.7)] left-[calc(var(--cvw)*1.2)] min-h-[1em] text-left text-danger max-md:static max-md:basis-full max-md:px-2.5 max-md:py-1`} aria-live="polite">{error}</p>
+      <p id={`${inputId}-msg`} className={`type-label absolute top-[calc(100%+var(--cvw)*0.7)] left-[calc(var(--cvw)*1.2)] min-h-[1em] text-left text-danger max-md:static max-md:basis-full max-md:px-2.5 `} aria-live="polite">{error}</p>
     </form>
   );
 }

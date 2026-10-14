@@ -592,7 +592,7 @@ export function EffectsListing({
 
       {/* ---------- trending ---------- */}
       {trendingEffects.length > 0 && (
-        <section id="trending" data-v4-fade aria-labelledby="v4-trending" className="site-container flex flex-col gap-[2vw] px-[calc(var(--cvw)*4.5)] pb-28 pt-4 max-lg:gap-8 max-lg:px-0 max-lg:pb-20">
+        <section id="trending" data-v4-fade aria-labelledby="v4-trending" className="mx-auto w-full flex flex-col gap-[2vw] px-[calc(var(--cvw)*4.5)] pb-28 pt-4 max-lg:gap-8 max-lg:px-0 max-lg:pb-20">
           <div className="flex items-end justify-between">
             <h2 id="v4-trending" className={`${DISPLAY} max-md:px-[7vw]  max-lg:px-[5vw] text-[calc(var(--cvw)*2.2)] max-lg:text-[4vw] max-md:text-[7vw]`}>
               Trending this Week
@@ -633,7 +633,7 @@ export function EffectsListing({
 
       <div ref={sheetRef} id="v4-grid" data-v4-fade data-sound-hover="off" data-sound-flow="off" data-vault-header-scroll-away className="relative scroll-mt-4 bg-light  text-ink">
         <div className="sticky top-[-2%] z-5 h-fit border-b border-black/8 bg-light max-lg:static max-lg:border-b-0">
-          <div className="site-container flex flex-wrap items-end justify-between gap-[calc(var(--cvw)*1)] px-[calc(var(--cvw)*4.5)] pt-10 pb-4 max-lg:px-0 max-md:gap-[8vw] max-md:pt-8">
+          <div className="mx-auto w-full flex flex-wrap items-end justify-between gap-[calc(var(--cvw)*1)] px-[calc(var(--cvw)*4.5)] pt-10 pb-4 max-lg:px-0 max-md:gap-[8vw] max-md:pt-8">
             {/* A div, not a p: RollText renders a div, which a <p> can't contain. */}
             <div aria-live="polite" className={`${DISPLAY} ${T20} flex max-md:px-[7vw] max-lg:px-[5vw] flex-wrap items-baseline font-aeonik tracking-tight`}>
               {/* Fixed-width slots, so nothing beside them moves when the count or page name changes */}

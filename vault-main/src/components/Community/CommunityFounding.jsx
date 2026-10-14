@@ -23,7 +23,7 @@ export default function CommunityFounding() {
   useFadeUp(rootRef);
 
   return (
-    <section ref={rootRef} className="section-x py-[7%]" id="founding" aria-labelledby="fd-h">
+    <section ref={rootRef} className="section-x py-[7%] max-md:py-[15%]" id="founding" aria-labelledby="fd-h">
       <div className="site-container flex flex-col gap-[calc(var(--cvw)*5)] max-md:gap-[10vw]">
       <LineReveal as="h2" id="fd-h" className="type-h1 w-[50%] max-lg:w-[77%] max-md:w-full">
         The First Cohort <span className="gradient-text-animate gradient-text-single">Shapes the Room.</span>

@@ -51,7 +51,7 @@ export default function CommunityStack() {
   };
 
   return (
-    <section ref={rootRef} id="stack" className="section-x relative z-1 py-[calc(var(--cvw)*18)] text-center max-lg:py-[14vw] max-md:py-[12%]" data-zone="crowd2">
+    <section ref={rootRef} id="stack" className="section-x relative z-1 py-[calc(var(--cvw)*18)] text-center max-lg:py-[14vw] max-md:py-[15%]" data-zone="crowd2">
       <div className="site-container flex flex-col items-center gap-[calc(var(--cvw)*3)] max-lg:gap-[4vw] max-md:gap-[10vw]">
         <LineReveal as="h2" className="type-h1">
           What Do You <span className="gradient-text-animate gradient-text-single">Build With?</span>

@@ -6,7 +6,7 @@ import { useFadeUp } from "@/components/Animations/gsapAnimations";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import { TableOfContents } from "@/components/ui/TableOfContents";
 
-const WRAP = "mx-auto w-full max-w-[1536px] px-[4.5vw] max-md:px-[6vw]";
+const WRAP = "mx-auto w-full px-[4.5vw] max-md:px-[6vw]";
 
 // Same shell as the legal pages: title on the dark top, then the docs sheet
 // (text column + sticky TOC), styled by blog.css like docs.
@@ -26,7 +26,7 @@ export default function LlmInfoBody({ children }) {
       </section>
 
       <section id="llm-info-content" data-sound-flow="off" className="docs-sheet py-[4vw]">
-        <div className="mx-auto flex w-full max-w-[1536px] items-start gap-[3vw] px-[4.5vw] max-lg:flex-col max-md:px-[6vw]">
+        <div className="mx-auto flex w-full items-start gap-[3vw] px-[4.5vw] max-lg:flex-col max-md:px-[6vw]">
           <div ref={contentRef} className="blog-content min-w-0 flex-1 max-lg:w-full">
             {children}
           </div>

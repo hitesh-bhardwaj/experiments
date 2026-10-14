@@ -188,7 +188,7 @@ export function TeardownCard() {
         />
         <span className={`${LABEL} min-w-[calc(var(--cvw)*3.8)] text-right text-foreground/80 tabular-nums max-md:min-w-[14vw]`}>{(progress * TD_DURATION).toFixed(2)}s</span>
       </div>
-      <pre className="relative m-0 overflow-hidden border-t border-foreground/5 px-[calc(var(--cvw)*1.4)] py-[calc(var(--cvw)*0.9)] type-small whitespace-pre text-foreground/80 max-md:px-[3.6vw] max-md:py-[3vw] max-md:whitespace-pre-wrap" aria-hidden="true">
+      <pre className="relative m-0 overflow-hidden border-t border-foreground/5 px-[calc(var(--cvw)*1.4)] py-[calc(var(--cvw)*1.2)] type-small whitespace-pre text-foreground/80 max-md:py-[8vw] max-md:px-[3.6vw]  max-md:whitespace-pre-wrap" aria-hidden="true">
         {TD_LINES.map((parts, i) => (
           // Mobile: each line is its own block and wraps, continuing under the call (hanging indent);
           // it spans the block's padding so the highlight still runs edge to edge

@@ -83,7 +83,7 @@ function EffectDetailMainSkeleton() {
     <main className="relative w-full pt-25 max-md:pt-36">
       <div className="flex flex-col gap-[calc(var(--cvw)*5.5)] max-md:gap-[15vw]">
         <div className="flex flex-col gap-7">
-          <section className="site-container section-x flex flex-col gap-[calc(var(--cvw)*1.4)] max-md:gap-[5vw]">
+          <section className="mx-auto w-full section-x flex flex-col gap-[calc(var(--cvw)*1.4)] max-md:gap-[5vw]">
             <div className="flex w-fit max-w-full flex-wrap items-center gap-[calc(var(--cvw)*0.5)] max-md:gap-[2vw]">
               <SkeletonBlock className="h-4 w-12" />
               <span className="text-foreground/25">/</span>
@@ -104,13 +104,13 @@ function EffectDetailMainSkeleton() {
               <SkeletonBlock className="h-10 w-18" />
             </div>
           </section>
-          <section className="site-container section-x h-[calc(var(--cvw)*46)]">
+          <section className="mx-auto w-full section-x h-[calc(var(--cvw)*46)]">
             <SkeletonBlock className="h-full w-full" />
           </section>
         </div>
 
         <div className="flex flex-col gap-[calc(var(--cvw)*5)] bg-foreground py-[calc(var(--cvw)*5.5)] max-md:gap-[10vw] max-md:py-[15vw]">
-          <section className="site-container section-x">
+          <section className="mx-auto w-full section-x">
             <div className="flex w-[70%] flex-col gap-8 max-lg:w-full">
               <SkeletonBlock className="h-10 w-[58%] bg-background/10" />
               <div className="flex flex-col gap-3">
@@ -128,7 +128,7 @@ function EffectDetailMainSkeleton() {
             </div>
           </section>
 
-          <section className="site-container section-x">
+          <section className="mx-auto w-full section-x">
             <div className="flex flex-col gap-5 bg-ink px-[calc(var(--cvw)*2.8)] py-[calc(var(--cvw)*3.3)] max-md:px-[7vw] max-md:py-[10vw]">
               <SkeletonBlock className="h-10 w-[52%] bg-light/15 max-md:h-8 max-md:w-[84%]" />
               <div className="flex flex-col gap-3">
@@ -139,7 +139,7 @@ function EffectDetailMainSkeleton() {
             </div>
           </section>
 
-          <section className="site-container section-x flex flex-col gap-[calc(var(--cvw)*2.8)] max-md:gap-[10vw]">
+          <section className="mx-auto w-full section-x flex flex-col gap-[calc(var(--cvw)*2.8)] max-md:gap-[10vw]">
             <div className="flex items-center justify-between gap-[calc(var(--cvw)*1.4)] max-lg:flex-col">
               <SkeletonBlock className="h-12 w-[30%] bg-background/10 max-lg:w-[60%] max-md:w-[80%]" />
               <SkeletonBlock className="h-12 w-44 bg-primary/45 max-lg:hidden" />
@@ -441,7 +441,7 @@ export function EffectDetailContent({
           <main className="relative w-full pt-25 max-md:pt-36">
             <div className="flex flex-col gap-[calc(var(--cvw)*5.5)] max-md:gap-[15vw]">
               <div className="flex flex-col gap-7">
-              <section id="effect-hero" className="site-container section-x flex flex-col gap-[calc(var(--cvw)*1.4)] max-md:gap-[5vw]">
+              <section id="effect-hero" className="mx-auto w-full section-x flex flex-col gap-[calc(var(--cvw)*1.4)] max-md:gap-[5vw]">
                 <Breadcrumb />
 
                 {pageTitle && (
@@ -474,7 +474,7 @@ export function EffectDetailContent({
                 )}
               </section>
 
-              <section id="effect-stage" data-sound-flow="off" className="site-container section-x fadeup">
+              <section id="effect-stage" data-sound-flow="off" className="mx-auto w-full section-x fadeup">
                 {/* Live stage + Playground (remixer), in place of the preview video */}
                 <EffectStage
                   effect={effect}
@@ -489,7 +489,7 @@ export function EffectDetailContent({
                     animation block, and related effects - so no dark gaps show between them. */}
               <div data-sound-hover="off" data-sound-flow="off" className="bg-light text-ink">
                 {/* blog-theme-light: blog.css prose in its light colours on this white section */}
-                <section id="effect-content" className="site-container section-x blog-theme-light relative flex items-start gap-[calc(var(--cvw)*3)] pt-[calc(var(--cvw)*5.5)] pb-6 max-lg:flex-col max-md:pt-[15vw]">
+                <section id="effect-content" className="mx-auto w-full section-x blog-theme-light relative flex items-start gap-[calc(var(--cvw)*3)] pt-[calc(var(--cvw)*5.5)] pb-6 max-lg:flex-col max-md:pt-[15vw]">
                   <div className="flex min-w-0 flex-1 flex-col max-lg:w-full">
                     <CodeLockContext.Provider value={{ reason: codeLock, tier: lockTier, onSignIn: () => setShowSignInToCopyModal(true) }}>
                     <EffectDynamicContent
@@ -511,7 +511,7 @@ export function EffectDetailContent({
                 {/* FAQ + custom animation block - the same components as the effects listing */}
                 <div className="flex h-full w-full flex-col gap-[calc(var(--cvw)*2)]">
                   {faqItems.length > 0 && <FAQ faqItems={faqItems} translateTop={false} bgClassName="bg-light" />}
-                  <div className="site-container section-x">
+                  <div className="mx-auto w-full section-x">
                     <CustomAnimationCta cta={safeContent?.ctaBanner} sectionRef={ctaSectionRef} />
                   </div>
                 </div>
@@ -520,7 +520,7 @@ export function EffectDetailContent({
                   <section
                     ref={relatedEffectsRef}
                     id="related-effects"
-                    className="site-container section-x relative flex flex-col gap-[calc(var(--cvw)*2.8)] py-[7%] max-md:gap-[10vw] max-lg:pt-20"
+                    className="mx-auto w-full section-x relative flex flex-col gap-[calc(var(--cvw)*2.8)] py-[7%] max-md:gap-[10vw] max-lg:pt-20"
                   >
                     <div className="flex items-center justify-between gap-[calc(var(--cvw)*1.4)] max-lg:flex-col max-lg:gap-[5vw]">
                       <HeadAnim rotate={0}>

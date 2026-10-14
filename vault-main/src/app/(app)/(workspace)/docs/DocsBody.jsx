@@ -51,7 +51,7 @@ function openDocsSearch() {
 function DocsHero({ pathname, meta }) {
   const hero = DOCS_HERO[pathname?.replace(/\/$/, "") || "/docs"];
   return (
-    <section id="docs-hero" className="site-container section-x flex flex-col gap-7 pb-[10vw] max-md:pb-[20vw]">
+    <section id="docs-hero" className="mx-auto w-full section-x flex flex-col gap-7 pb-[10vw] max-md:pb-[20vw]">
       <Breadcrumb />
       {hero && (
         <div className="flex w-[65%] flex-col gap-[1.5vw] max-md:w-full max-md:gap-[4vw]">
@@ -212,8 +212,8 @@ export default function DocsBody({ children }) {
 
           {/* White sheet (Docs prototype's .sheet), square-edged, under the content, the
               docs footer and the TOC column. Code blocks stay dark. */}
-          <section id="docs-content" data-sound-flow="off" className="docs-sheet py-[4vw]">
-            <div className="site-container section-x flex items-start gap-[3vw] max-lg:flex-col">
+          <section id="docs-content" data-sound-flow="off" className="docs-sheet py-[4vw] max-md:pb-[10vh]">
+            <div className="mx-auto w-full section-x flex items-start gap-[3vw] max-lg:flex-col">
               <div ref={contentRef} className="flex min-w-0 flex-1 flex-col gap-[5vw] max-lg:w-full max-md:gap-[15vw]" onClick={onContentClick}>
                 <div className="blog-content">
                   {children}
