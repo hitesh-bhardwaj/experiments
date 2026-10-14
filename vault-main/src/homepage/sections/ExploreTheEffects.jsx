@@ -9,22 +9,23 @@ import LazyVideo from "@/components/WebsiteComps/LazyVideo";
 import LinkButton from "@/components/WebsiteComps/LinkButton";
 import { useInteraction } from "@/homepage/components/InteractionProvider";
 import { prefersReducedMotion } from "@/lib/motion";
-import { getImageProps } from "next/image";
+import Image from "next/image";
 import { resolveEffectVideoUrl, resolveMediaUrl } from "@/lib/media";
 
 gsap.registerPlugin(useGSAP);
 
-const POSTER_SIZE = { width: 480, height: 320 };
+// Listing images whose R2 filename differs from the effect slug
+const POSTER_NAME = { "milky-way": "milkyway" };
 
 function effectMedia(slug, categorySlug) {
     const image =
-        resolveMediaUrl(slug, { defaultDirectory: "vault-listing-images", defaultExtension: "png" }) ||
+        resolveMediaUrl(POSTER_NAME[slug] || slug, { defaultDirectory: "vault-listing-images", defaultExtension: "png" }) ||
         `/homepage-v3/imgs/${slug}.webp`;
     return {
         video: resolveEffectVideoUrl({ videoUrl: `${slug}.mp4`, categorySlug, effectSlug: slug }),
         // R2 serves the original full-size PNG (2-4MB) and ignores size params, so the
-        // poster goes through the Next image optimizer: resized, WebP/AVIF, cached a year
-        poster: image.startsWith("/") ? image : getImageProps({ src: image, alt: "", ...POSTER_SIZE }).props.src,
+        // poster is rendered with next/image: resized, WebP/AVIF, cached a year
+        poster: image,
         href: `/effects/${categorySlug}/${slug}`,
     };
 }
@@ -170,7 +171,7 @@ export default function ExploreTheEffects() {
                 <span
                     ref={inkRef}
                     aria-hidden="true"
-                    className="pointer-events-none absolute top-0 left-0 z-2 flex h-full w-max gap-0.5 p-0.5 transition-[clip-path] duration-[600ms] motion-reduce:transition-none"
+                    className="pointer-events-none absolute top-0 left-0 z-2 flex h-full w-max gap-0.5 p-0.5 transition-[clip-path] duration-600 motion-reduce:transition-none"
                     style={{ transitionTimingFunction: EASE }}
                 >
                     {CATEGORIES.map((category) => (
@@ -211,8 +212,10 @@ export default function ExploreTheEffects() {
                         style={{ opacity: 0 }}
                         className="relative grid grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] gap-6 border border-white/20 bg-black/30 backdrop-blur-lg p-4 text-white max-md:grid-cols-1 max-md:gap-4"
                     >
-                        <div className="aspect-16/10 overflow-hidden bg-white/5">
-                            <LazyVideo src={item.video} poster={item.poster} loop muted playsInline className="size-full object-cover" />
+                        <div className="relative aspect-16/10 overflow-hidden bg-white/5">
+                            {/* Poster sits under the video and shows until the video has a frame */}
+                            <Image src={item.poster} alt="" fill sizes="(max-width: 767px) 90vw, 30vw" className="object-cover" />
+                            <LazyVideo src={item.video} loop muted playsInline className="relative size-full object-cover" />
                         </div>
                         <div className="flex flex-col justify-between gap-4 py-1">
                             <div className="flex flex-col gap-[calc(var(--cvw)*1.6)]">
