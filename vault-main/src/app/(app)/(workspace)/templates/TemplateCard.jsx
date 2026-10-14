@@ -141,7 +141,7 @@ export function TemplateCard({ template, priority = false, isWishlisted = false,
               <Heart aria-hidden="true" />
             </button>
           </Tooltip>
-          <Tooltip label="Live demo" className={`${CARD_SLIDE} delay-40`}>
+          <Tooltip label="Live Demo" className={`${CARD_SLIDE} delay-40`}>
             <a
               href={previewHref}
               target="_blank"

@@ -96,7 +96,7 @@ export default function PricingHero() {
           media={MEDIA.tablet}
           fetchPriority="high"
         />
-        {!videoPlaying && <Image {...POSTER} className="hidden object-cover max-lg:object-top max-md:object-center max-lg:block" />}
+        {!videoPlaying && <Image {...POSTER} alt="" className="hidden object-cover max-lg:object-top max-md:object-center max-lg:block" />}
       </div>
       <div className="pointer-events-none relative z-2 site-container section-x flex flex-col pt-[calc(var(--cvw)*8)] pb-[calc(var(--cvw)*8)] max-lg:pt-[12vw] max-md:pt-[48svh] max-md:pb-10 [&_a]:pointer-events-auto [&_button]:pointer-events-auto">
         <div className="flex w-full justify-start max-md:flex-col max-md:items-stretch">

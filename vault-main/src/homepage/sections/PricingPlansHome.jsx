@@ -115,7 +115,7 @@ function FadeSwap({ children, swapKey }) {
     const [visible, setVisible] = useState(true);
     const latest = useRef(children);
     const first = useRef(true);
-    latest.current = children;
+    useLayoutEffect(() => { latest.current = children; });
     useEffect(() => {
         if (first.current) { first.current = false; return; }
         // Always fades toward the newest content, so quick toggles never strand it half-faded

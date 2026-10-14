@@ -42,7 +42,7 @@ const EASE = "expo.out"; // ≈ cubic-bezier(.16, 1, .3, 1)
 const IDLE_MS = 3200;
 
 /* ---------- class tokens ---------- */
-const LABEL = "m-0 text-[11px] font-semibold uppercase tracking-[.14em]";
+const LABEL = "m-0 text-[15px] font-medium";
 const CODE_FONT = "font-code";
 const BTN =
   "inline-flex h-9.5 min-w-9.5 cursor-pointer items-center justify-center gap-2 px-2.5 text-[#cfcfcf] transition-colors duration-400 " +
@@ -805,7 +805,7 @@ function PreviewBar({ title: titleProp, tier: tierProp, backHref: backHrefProp, 
             className={`flex touch-none items-center justify-between border-b border-[rgba(244,244,244,.08)] py-2 pr-2 pl-[0.9rem] select-none ${dragging ? "cursor-grabbing" : "cursor-grab"}`}
           >
             {/* Same heading as the effect page's Playground panel. */}
-            <p className="text-[1.1vw] tracking-normal text-white max-lg:text-[1.6vw] max-md:text-[3.3vw]">Tune the real props</p>
+            <p className="text-[1.1vw] tracking-normal text-white max-lg:text-[1.6vw] max-md:text-[3.3vw]">Tune the Real Props</p>
             <button type="button" aria-label="Close props" onClick={() => setPanel(false)} className={BTN}>
               ✕
             </button>

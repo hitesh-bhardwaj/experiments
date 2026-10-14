@@ -34,7 +34,7 @@ export default function RollText({ text, dir = 1, fixed = false, block = false, 
   const splits = useRef(new Map());
   const last = useRef(text);
   const layersRef = useRef(layers);
-  layersRef.current = layers;
+  useLayoutEffect(() => { layersRef.current = layers; });
 
   useEffect(() => {
     if (text === last.current) return;
@@ -87,7 +87,7 @@ export default function RollText({ text, dir = 1, fixed = false, block = false, 
         });
       }
     });
-  }, [layers]);
+  }, [layers, block, stagger, travel]);
 
   useEffect(() => () => splits.current.forEach((split) => split.revert()), []);
 

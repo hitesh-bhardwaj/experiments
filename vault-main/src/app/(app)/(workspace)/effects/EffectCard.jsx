@@ -183,7 +183,7 @@ export function EffectCard({
               </button>
             </Tooltip>
             {canInstall ? (
-              <Tooltip label={copied ? "Copied" : "Copy install command"} className={`${ACTION_SLIDE} delay-40`}>
+              <Tooltip label={copied ? "Copied" : "Copy Install Command"} className={`${ACTION_SLIDE} delay-40`}>
                 <button
                   type="button"
                   aria-label={`Copy install command for ${effect.title}`}
@@ -208,7 +208,7 @@ export function EffectCard({
               </Tooltip>
             )}
            
-            <Tooltip label="Live demo" className={`${ACTION_SLIDE} delay-80`}>
+            <Tooltip label="Live Demo" className={`${ACTION_SLIDE} delay-80`}>
               <Link
                 href={getEffectPreviewHref(effect)}
                 // Opens in a new tab, so a prefetch would never be used.

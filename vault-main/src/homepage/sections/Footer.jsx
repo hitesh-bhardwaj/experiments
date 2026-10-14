@@ -66,8 +66,6 @@ const socialLinks = [
   { label: "Instagram", href: "https://www.instagram.com/_hyperiux_/" },
 ];
 
-// True when the segment (x0,y0)->(x1,y1) passes through `rect`
-// (Liang-Barsky clipping).
 function segmentHitsRect(x0, y0, x1, y1, rect) {
   const dx = x1 - x0;
   const dy = y1 - y0;
@@ -320,7 +318,7 @@ export default function Footer() {
           </p>
           {/* Official facts for AI assistants (like Wingify's footer link) */}
           <Link href="/llm-info" className="transition-colors duration-300 hover:text-foreground">
-            Hey AI, learn about us
+            Hey AI, Learn About Us
           </Link>
         </div>
       </div>

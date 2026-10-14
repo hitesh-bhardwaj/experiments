@@ -715,13 +715,15 @@ export function mountThereminRibbons(
     ribbons.position.copy(cur.rp);
     ribbons.position.y -= state.introT * INTRO_DROP;
     ribbons.position.x += Math.sin(time * 40) * ch * ch * 0.04;
-    ribbons.scale.setScalar(cur.rs * (1 - ch * 0.09));
+    // Footer: a bigger model on wider screens (1x up to 1440px, up to 1.3x at 1920px and above)
+    const footerSize = isHero ? 1 : clamp(1 + (window.innerWidth - 1440) / 1600, 1, 1.3);
+    ribbons.scale.setScalar(cur.rs * footerSize * (1 - ch * 0.09));
     ribbons.rotation.set(
       // Scroll speed only nudges the tilt: capped, so a fast flick can't swing the model off its axis
       // The hero model stays put while scrolling: no scroll tilt there (footer keeps it)
       cur.rr.x + mouse.sy * 0.06 * tilt + (isHero ? 0 : clamp(scrollV, -MAX_TILT_SCROLL, MAX_TILT_SCROLL) * 0.0008),
-      // Left-right turn with the pointer (a touch gentler in the footer)
-      cur.rr.y + mouse.sx * (isHero ? 0.18 : 0.1) * tilt,
+      // Left-right turn with the pointer (gentler in the footer, so it never swings out of frame)
+      cur.rr.y + mouse.sx * (isHero ? 0.18 : 0.05) * tilt,
       // The slow turn with page scroll belongs to the hero; at the footer (far
       // down the page) it would add a whole extra radian of twist
       cur.rr.z + Math.sin(time * 0.12) * 0.03 + ch * 0.12,
@@ -735,8 +737,9 @@ export function mountThereminRibbons(
       const footerTop = host.getBoundingClientRect().top;
       footerSlide = lerp(footerSlide, footerTop < window.innerHeight * 0.85 ? 0 : FOOTER_SLIDE_FROM, 1 - Math.pow(0.06, dt));
       ribbons.position.x += footerSlide;
-      // Drifts left / right with the pointer
-      ribbons.position.x += mouse.sx * 1.3;
+      // Drifts left / right with the pointer - kept small, so a pointer at the far
+      // edge of a wide screen doesn't carry the model out of the canvas
+      ribbons.position.x += mouse.sx * 0.5;
       // Settles into its corner as the footer arrives (scaled to the small pose)
       const fr = clamp(host.getBoundingClientRect().top / window.innerHeight, -1, 1);
       ribbons.rotation.z += fr * 0.3;

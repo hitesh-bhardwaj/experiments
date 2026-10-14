@@ -47,7 +47,7 @@ function RazorpayButtonV3({ variant = "orange", label, className = "", ...razorp
 // signed-in visitor doesn't already have access to this template - see
 // getTemplateAccessDecision() in lib/template-access.js for the reasons.
 // Offers the one-time purchase, and the yearly plans whose template credits
-// can redeem it (Pro+ only, for a full-catalogue template). Subscribers
+// can redeem it (Pro+ Only, for a full-catalogue template). Subscribers
 // redeem a credit from the "Get this template" popup instead.
 export function TemplatePaywallModal({
   template,

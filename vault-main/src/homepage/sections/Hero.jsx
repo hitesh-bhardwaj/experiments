@@ -27,8 +27,8 @@ const INTRO_DURATION = 1.7;
 const AT_HEADING = 1;
 const AT_COPY = 2.3;
 const AT_ACTIONS = 2.75;
-// Scroll unlocks ~2s after the loader (timeline position + NAV_LEAD)
-const AT_UNLOCK = 1.75;
+// Scroll (the shared Lenis lock from the loader) resumes while the heading is still rising
+const AT_UNLOCK = AT_HEADING + 0.5;
 
 const INTRO_HIDDEN = { visibility: "hidden" };
 function revealIntroTargets(...els) {
@@ -181,6 +181,7 @@ export default function Hero() {
 
             tl.call(unlockScroll, null, AT_UNLOCK);
 
+
             return () => {
                 heading.revert();
                 copy.revert();
@@ -214,7 +215,8 @@ export default function Hero() {
                         priority
                         sizes="100vw"
                         unoptimized
-                        className="object-cover"
+                        draggable={false}
+                        className="pointer-events-none object-cover select-none"
                     />
                 )}
             </div>
