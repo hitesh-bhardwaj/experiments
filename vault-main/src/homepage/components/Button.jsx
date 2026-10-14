@@ -185,7 +185,7 @@ export const BUTTON_TEXT =
 export const BUTTON_SIZE = `py-2 max-md:py-3 ${BUTTON_TEXT}`;
 
 export function buttonClassName({ variant = "orange", disabled = false, className = "" } = {}) {
-  return `group relative flex cursor-pointer font-avenir shrink-0 items-center overflow-hidden text-nowrap max-md:justify-between max-md:gap-(--btn-gap) max-md:px-[calc(var(--hx-vw,1vw)*10)] px-(--btn-pad) py-2 text-[calc(var(--hx-vw,1vw)*1.15)] max-lg:text-[clamp(13px,calc(var(--hx-vw,1vw)*1.6),15px)] tracking-wide transition-colors duration-300 max-md:py-3 max-md:text-[calc(var(--hx-vw,1vw)*2.2)] max-sm:py-3 max-sm:text-[calc(var(--hx-vw,1vw)*4)] motion-reduce:transition-none [--btn-pad:calc(var(--hx-vw,1vw)*1.2)] [--btn-gap:calc(var(--hx-vw,1vw)*.5)] [--btn-square:0.5rem] [--btn-arrow:calc(var(--hx-vw,1vw)*1)] max-md:[--btn-pad:20px] max-md:[--btn-gap:12px] max-md:[--btn-square:8px] max-md:[--btn-arrow:16px] max-sm:[--btn-pad:24px] max-sm:[--btn-gap:14px] max-sm:[--btn-square:8px] max-sm:[--btn-arrow:18px] [--btn-slot:calc(var(--btn-square)+var(--btn-gap))] [--btn-room:max(0px,var(--btn-arrow)+var(--btn-gap)-var(--btn-slot))] [--btn-inset:calc((var(--btn-pad)*1.8+var(--btn-slot)+var(--btn-room)-var(--btn-arrow)-var(--btn-gap))*.5)] [--btn-shift:calc(var(--btn-pad)+var(--btn-slot)-var(--btn-inset))] ${variant === "outline" ? "border border-current/60 bg-background text-foreground [--btn-flash:var(--primary)] [--btn-pre:#6f6f6f] [--btn-square-scale:.85]" : "bg-primary text-black [--btn-flash:#ffffff] [--btn-pre:#ffffff]"} ${disabled ? "pointer-events-none opacity-60" : ""} ${className}`;
+  return `group relative flex cursor-pointer font-avenir shrink-0 items-center overflow-hidden text-nowrap max-md:justify-between max-md:gap-(--btn-gap) max-md:px-[calc(var(--hx-vw,1vw)*10)] px-(--btn-pad) py-2 text-[calc(var(--hx-vw,1vw)*1.15)] max-lg:text-[clamp(13px,calc(var(--hx-vw,1vw)*1.6),15px)] tracking-wide transition-colors duration-300 max-md:py-3 max-md:text-[calc(var(--hx-vw,1vw)*2.2)] max-sm:py-3 max-sm:text-[calc(var(--hx-vw,1vw)*4)] motion-reduce:transition-none [--btn-pad:calc(var(--hx-vw,1vw)*1.2)] [--btn-gap:calc(var(--hx-vw,1vw)*.5)] [--btn-square:0.5rem] [--btn-arrow:calc(var(--hx-vw,1vw)*1)] max-md:[--btn-pad:20px] max-md:[--btn-gap:12px] max-md:[--btn-square:8px] max-md:[--btn-arrow:16px] max-sm:[--btn-pad:24px] max-sm:[--btn-gap:14px] max-sm:[--btn-square:8px] max-sm:[--btn-arrow:18px] [--btn-slot:calc(var(--btn-square)+var(--btn-gap))] [--btn-room:max(0px,var(--btn-arrow)+var(--btn-gap)-var(--btn-slot))] [--btn-inset:calc((var(--btn-pad)*1.8+var(--btn-slot)+var(--btn-room)-var(--btn-arrow)-var(--btn-gap))*.5)] [--btn-shift:calc(var(--btn-pad)+var(--btn-slot)-var(--btn-inset))] ${variant === "outline" ? "border border-current/20 bg-[#161616] text-foreground [--btn-flash:var(--primary)] [--btn-pre:#6f6f6f] [--btn-square-scale:.85]" : "bg-primary text-black [--btn-flash:#ffffff] [--btn-pre:#ffffff]"} ${disabled ? "pointer-events-none opacity-60" : ""} ${className}`;
 }
 
 // The label/square/arrow markup that lives inside Button's <Link> below -
@@ -215,7 +215,7 @@ export function ButtonChrome({ label, hovered = false, innerClassName = "" }) {
       </span>
       <span
         aria-hidden="true"
-        className="pointer-events-none absolute top-1/2 right-(--btn-inset) -translate-y-1/2 size-(--btn-arrow) bg-current [mask-image:url(/svgs/pixelated-arrow.svg)] mask-center mask-no-repeat mask-contain translate-x-[calc(var(--btn-inset)+100%)] opacity-0 transition-all duration-300 group-hover:opacity-100 motion-safe:group-hover:translate-x-0 motion-reduce:translate-x-0 motion-reduce:transition-none max-md:static! max-md:shrink-0 max-md:translate-x-0! max-md:translate-y-0! max-md:opacity-100!"
+        className="pointer-events-none absolute top-1/2 right-(--btn-inset) -translate-y-1/2 size-(--btn-arrow) bg-current [mask-image:url(/icons/arrow-icon-final.svg)] mask-center mask-no-repeat mask-contain translate-x-[calc(var(--btn-inset)+100%)] opacity-0 transition-all duration-300 group-hover:opacity-100 motion-safe:group-hover:translate-x-0 motion-reduce:translate-x-0 motion-reduce:transition-none max-md:static! max-md:shrink-0 max-md:translate-x-0! max-md:translate-y-0! max-md:opacity-100!"
       />
     </>
   );
@@ -306,6 +306,10 @@ export default function Button({
       aria-label={ariaLabel}
       aria-disabled={disabled}
       data-sound-kind={variant === "outline" ? "secondary" : "primary"}
+      // An action button (preventDefault: opens a modal, runs a handler) never
+      // navigates, so the page transition - which takes over link clicks in the
+      // capture phase, before this onClick - must leave it alone.
+      data-no-page-transition={preventDefault || undefined}
       tabIndex={disabled ? -1 : undefined}
       className={buttonClassName({ variant, disabled, className })}
     >

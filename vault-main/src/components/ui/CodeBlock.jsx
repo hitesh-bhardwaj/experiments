@@ -201,9 +201,31 @@ function HeaderSwitch({ label, options, value, onPick }) {
     const groupRef = useRef(null);
     const [pill, setPill] = useState(null);
 
+    // Measured on every change, and again whenever the buttons resize - the code font
+    // loading late, a window resize, a layout change - or the pill keeps a stale size
+    // and spills out of the switch until a reload.
     useLayoutEffect(() => {
-        const btn = groupRef.current?.querySelector('[aria-checked="true"]');
-        if (btn) setPill({ x: btn.offsetLeft, w: btn.offsetWidth });
+        const group = groupRef.current;
+        if (!group) return undefined;
+        const measure = () => {
+            const btn = group.querySelector('[aria-checked="true"]');
+            if (!btn) return;
+            setPill((current) =>
+                current && current.x === btn.offsetLeft && current.w === btn.offsetWidth ? current : { x: btn.offsetLeft, w: btn.offsetWidth }
+            );
+        };
+        measure();
+        let ro;
+        if (typeof ResizeObserver !== "undefined") {
+            ro = new ResizeObserver(measure);
+            group.querySelectorAll("button").forEach((btn) => ro.observe(btn));
+        }
+        let live = true;
+        document.fonts?.ready.then(() => live && measure());
+        return () => {
+            live = false;
+            ro?.disconnect();
+        };
     }, [value, options]);
 
     return (

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import Button from "@/homepage/components/Button";
 import RazorpayButtonV3 from "./RazorpayButtonV3";
+import { SignInRequiredModal } from "@/components/ui/SignInRequiredModal";
 import { PLANS, formatPrice, getUpgradeKind } from "@/lib/plans";
 import { savePendingCheckout } from "@/lib/pendingCheckout";
 
@@ -37,6 +38,8 @@ export default function PlanCheckoutButton({
   onSwitchToYearly,
 }) {
   const { isLoaded, isSignedIn, user } = useUser();
+  // Signed out: the sign-in modal, which lands on /checkout/<plan> once signed in
+  const [signInOpen, setSignInOpen] = useState(false);
 
   const meta = user?.publicMetadata || {};
   // Subscribers from before Pro+ have no tier and count as Pro+
@@ -65,13 +68,25 @@ export default function PlanCheckoutButton({
   if (!isLoaded || !isSignedIn) {
     const planKey = `${tier}.${interval}`;
     return (
-      <Button
-        variant={variant}
-        href={`/sign-in?redirect_url=${encodeURIComponent(`/checkout/${planKey}`)}`}
-        onClick={() => savePendingCheckout(planKey)}
-        text={label}
-        className={className}
-      />
+      <>
+        <Button
+          variant={variant}
+          href={`/checkout/${planKey}`}
+          preventDefault
+          onClick={() => {
+            savePendingCheckout(planKey);
+            setSignInOpen(true);
+          }}
+          text={label}
+          className={className}
+        />
+        <SignInRequiredModal
+          open={signInOpen}
+          onClose={() => setSignInOpen(false)}
+          redirect={`/checkout/${planKey}`}
+          action={`get ${PLANS[tier]?.name || "Pro"}`}
+        />
+      </>
     );
   }
 

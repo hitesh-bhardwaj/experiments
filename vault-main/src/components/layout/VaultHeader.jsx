@@ -499,7 +499,7 @@ export function VaultHeader({
                   id={"upgrade-to-pro-navbar"}
                   href="/pricing#plans"
                   onClick={markScrollToPricingCards}
-                  className="border-white/50!"
+                  className=""
                   variant="outline"
                 />
               </div>

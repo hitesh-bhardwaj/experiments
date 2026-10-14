@@ -14,6 +14,7 @@ import HeadAnim from "@/components/Animations/HeadAnim";
 import Copy from "@/components/Animations/Copy";
 import { useFadeUp } from "@/components/Animations/gsapAnimations";
 import { TemplatePaywallModal } from "@/components/ui/TemplatePaywallModal";
+import { SignInRequiredModal } from "@/components/ui/SignInRequiredModal";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import { useToastQueue, ToastViewport } from "@/components/ui/Toast";
 import Button from "@/homepage/components/Button";
@@ -127,6 +128,8 @@ export function TemplateDetail({ template, devices = {}, effects = [], stack = [
     [baseRelated, viewCounts],
   );
   const [paywallOpen, setPaywallOpen] = useState(false);
+  // Signed out: the sign-in modal; signing in lands back here with ?buy=1, which resumes the purchase
+  const [buySignInOpen, setBuySignInOpen] = useState(false);
   const [autoOpenCheckout, setAutoOpenCheckout] = useState(false);
   const [getOpen, setGetOpen] = useState(false);
   const [getTab, setGetTab] = useState("buy");
@@ -199,7 +202,7 @@ export function TemplateDetail({ template, devices = {}, effects = [], stack = [
     }
     if (hasAccess) return download();
     if (templateAccess.reason === "anonymous") {
-      router.push(`/sign-in?redirect_url=${encodeURIComponent(`${pathname}?${RESUME_PURCHASE_PARAM}=1`)}`);
+      setBuySignInOpen(true);
       return;
     }
     setPaywallOpen(true);
@@ -483,6 +486,12 @@ export function TemplateDetail({ template, devices = {}, effects = [], stack = [
       </div>
 
       {signInModal}
+      <SignInRequiredModal
+        open={buySignInOpen}
+        onClose={() => setBuySignInOpen(false)}
+        redirect={`${pathname}?${RESUME_PURCHASE_PARAM}=1`}
+        action="buy this template"
+      />
       <GetTemplateModal template={template} open={getOpen} tab={getTab} onTab={setGetTab} onClose={closeGet} onBuy={buy} />
 
       <TemplatePaywallModal

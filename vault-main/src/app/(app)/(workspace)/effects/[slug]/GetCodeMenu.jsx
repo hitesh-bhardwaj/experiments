@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useId, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { Check, ChevronDown, FileCode2, LoaderCircle, LockKeyhole } from "lucide-react";
 import { buttonClassName, ButtonChrome } from "@/homepage/components/Button";
@@ -13,10 +13,11 @@ const ROLL_EASE = [0.65, 0, 0.35, 1];
 
 // "Get code" dropdown beside Live Preview - the only way to take an effect's
 // source from its page. JSX/TSX and the AI prompt are fetched from
-// /api/effects/[slug]/copy (sign-in + Pro checks there; only JSX/TSX use a
-// daily copy slot). The CLI command and MCP prompt carry no source, so
-// they're built here and never metered - an install from them is counted
-// by the CLI/MCP themselves.
+// /api/effects/[slug]/copy (sign-in + Pro checks there). The CLI command and
+// MCP prompt carry no source, so they're built here. Every option counts
+// against the daily install limit - the effect's slot for today (copying the
+// same effect again that day is free): the route claims it for JSX/TSX/prompt,
+// and CLI/MCP claim it through useCopyLimit's requestCopy before copying.
 //
 // Signed out: the trigger opens the "log in first" modal instead of the
 // dropdown. Pro effect without Pro: the panel still opens with every row
@@ -192,6 +193,7 @@ export default function GetCodeMenu({
     lockedCtaHref,
     lockedCtaLabel,
     usage,
+    requestCopy,
   } = useCopyLimit();
   const [open, setOpen] = useState(false);
   const [view, setView] = useState("menu"); // "menu" | "mcp"
@@ -279,15 +281,33 @@ export default function GetCodeMenu({
     items[(index + step + items.length) % items.length].focus();
   };
 
+  // CLI / MCP: claim the effect's slot for today first (requestCopy - it also
+  // handles signed out and the limit, with their own messages), then copy. The
+  // clipboard write starts inside the click and resolves once the claim is back
+  // (Safari refuses a write that only begins after a network wait).
   const copyLocalText = async (key, text) => {
     startCopy(key);
+    let allowed = null;
+    const textPromise = requestCopy().then((ok) => {
+      allowed = ok;
+      if (!ok) throw new Error("copy-denied");
+      return text;
+    });
     try {
-      await navigator.clipboard.writeText(text);
+      if (typeof window.ClipboardItem === "function" && navigator.clipboard?.write) {
+        await navigator.clipboard.write([
+          new window.ClipboardItem({ "text/plain": textPromise.then((t) => new Blob([t], { type: "text/plain" })) }),
+        ]);
+      } else {
+        await navigator.clipboard.writeText(await textPromise);
+      }
       finishCopy(key);
-      showToast(COPY_TOASTS[key]);
+      // A limited account already got the "X of Y left" message from requestCopy
+      if (usage?.isAdmin || typeof usage?.limit !== "number") showToast(COPY_TOASTS[key]);
     } catch {
       failCopy();
-      showToast({ title: "Couldn't copy", description: "Your browser blocked clipboard access." });
+      // Not allowed (signed out / limit): requestCopy already said why
+      if (allowed) showToast({ title: "Couldn't copy", description: "Your browser blocked clipboard access." });
     }
   };
 
@@ -313,17 +333,17 @@ export default function GetCodeMenu({
       return { ...body, ok: response.ok && Boolean(body.allowed), status: response.status };
     });
 
-    // JSX/TSX responses carry the shared daily usage - keep the count and
-    // its toast in sync whether the copy was allowed or hit the limit.
-    if (option !== "prompt" && typeof data.limit !== "undefined") applyUsage(data);
+    // Every response carries the shared daily usage - keep the count and its
+    // toast in sync whether the copy was allowed or hit the limit.
+    if (typeof data.limit !== "undefined") applyUsage(data);
 
     if (!data.ok) failCopy();
 
     if (data.ok) {
       finishCopy(option);
-      // JSX/TSX copies already got the "X of Y left" toast from applyUsage -
-      // except for accounts with no daily limit, which get a plain confirm.
-      const reportedUsage = option !== "prompt" && typeof data.limit === "number" && !data.isAdmin;
+      // The copy already got the "X of Y left" toast from applyUsage - except
+      // for accounts with no daily limit, which get a plain confirm.
+      const reportedUsage = typeof data.limit === "number" && !data.isAdmin;
       if (!reportedUsage) {
         showToast(COPY_TOASTS[option] ?? { title: "Copied", description: `${effectSlug}.${option} is on your clipboard.` });
       }
@@ -387,6 +407,26 @@ export default function GetCodeMenu({
   const busy = copyStatus?.phase === "copying";
   const statusLabel = copyStatus ? TRIGGER_LABELS[copyStatus.key]?.[copyStatus.phase] : null;
 
+  // The trigger label's width, measured from a hidden copy of the label it's moving to
+  const labelSizerRef = useRef(null);
+  const [labelWidth, setLabelWidth] = useState(null);
+  const [labelShrinking, setLabelShrinking] = useState(false);
+  const labelWidthRef = useRef(null);
+  useLayoutEffect(() => {
+    const measure = () => {
+      const width = labelSizerRef.current?.getBoundingClientRect().width;
+      if (!width) return;
+      const next = Math.ceil(width);
+      setLabelShrinking(labelWidthRef.current != null && next < labelWidthRef.current);
+      labelWidthRef.current = next;
+      setLabelWidth(next);
+    };
+    measure();
+    // The text size changes across breakpoints
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, [statusLabel]);
+
   return (
     <div ref={rootRef} className={`relative flex shrink-0 self-stretch ${className}`}>
       <button
@@ -400,8 +440,20 @@ export default function GetCodeMenu({
         // button size; an inset ring rather than a border, which would add 2px of height
         className={`relative flex h-full cursor-pointer items-center ring-1 ring-inset bg-foreground/5 backdrop-blur-lg py-2 pr-[calc(var(--cvw)*3)] pl-[calc(var(--cvw)*1.2)] text-left text-[calc(var(--hx-vw,calc(var(--cvw)*1))*1.15)] ring-foreground/20 tracking-wide text-foreground outline-none transition hover:ring-foreground/25 focus-visible:ring-foreground/25 max-lg:pr-12 max-lg:pl-5 max-lg:text-[clamp(13px,calc(var(--hx-vw,1vw)*1.6),15px)] max-md:py-3 max-md:text-[calc(var(--hx-vw,1vw)*2.2)] max-sm:text-[calc(var(--hx-vw,1vw)*4)] ${triggerClassName}`}
       >
-        {/* The label rolls up out of a clipped line, like the code block's copy button */}
-        <span className="relative block overflow-hidden whitespace-nowrap">
+        {/* The label rolls up out of a line clipped top and bottom only (like the code
+            block's copy button), and the line's width eases between labels - clipping it
+            sideways too cut the outgoing label off when the next one was shorter. */}
+        <span ref={labelSizerRef} aria-hidden="true" className="pointer-events-none invisible absolute whitespace-nowrap">
+          {statusLabel ?? "Get Code"}
+        </span>
+        <motion.span
+          className="relative block overflow-x-visible overflow-y-clip whitespace-nowrap"
+          initial={false}
+          animate={labelWidth ? { width: labelWidth } : undefined}
+          // Growing: straight away, so the incoming label has room. Shrinking: only once
+          // the outgoing (longer) label has rolled out, so it never sticks out meanwhile.
+          transition={{ duration: 0.4, ease: ROLL_EASE, delay: labelShrinking ? 0.35 : 0 }}
+        >
           <AnimatePresence mode="popLayout" initial={false}>
             <motion.span
               key={statusLabel ?? "Get Code"}
@@ -414,7 +466,7 @@ export default function GetCodeMenu({
               {statusLabel ?? "Get Code"}
             </motion.span>
           </AnimatePresence>
-        </span>
+        </motion.span>
         {/* Chevron, spinner and check share the right-hand slot */}
         <span
           aria-hidden="true"

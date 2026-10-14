@@ -24,7 +24,9 @@
  * Writes web-sized WebP copies and manifest.json to
  * public/assets/templates/templates-exploded/<slug>/, replacing what was there, plus
  * full-desktop.webp: the desktop sections stacked into one page, which the
- * listing card scrolls through on hover.
+ * listing card scrolls through on hover. A hand-supplied full-page image at
+ * public/assets/templates/templates-full/<slug>.webp (720px wide) is used instead
+ * when there is one - this script never touches that folder.
  */
 
 import { mkdir, readdir, rm, writeFile } from "node:fs/promises";
@@ -77,6 +79,14 @@ async function build(slug) {
     console.log(`${slug} · ${device}: ${sections.length} sections`);
 
     if (device === "desktop") {
+      // A hand-supplied full page wins (e.g. a real screenshot of the built site)
+      const override = path.join(ROOT, "public/assets/templates/templates-full", `${slug}.webp`);
+      const overrideMeta = await sharp(override).metadata().catch(() => null);
+      if (overrideMeta) {
+        manifest.full = { src: `/assets/templates/templates-full/${slug}.webp`, width: overrideMeta.width, height: overrideMeta.height };
+        console.log(`${slug} · full page: templates-full/${slug}.webp`);
+        continue;
+      }
       // Stack the sections at one width into a single full page.
       const parts = await Promise.all(
         files.map((file) => sharp(path.join(dir, file)).resize({ width: FULL_WIDTH }).toBuffer({ resolveWithObject: true })),

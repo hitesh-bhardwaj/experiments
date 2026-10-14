@@ -38,7 +38,7 @@ export function StepTrack({ stepIndex, total, direction, stepKey, onBack, busy =
           >
             <span
               aria-hidden="true"
-              className="size-[1vw] -scale-x-100 bg-current transition-transform duration-300 [mask-image:url(/svgs/pixelated-arrow.svg)] mask-contain mask-center mask-no-repeat group-hover:-translate-x-1 max-lg:size-4"
+              className="size-[1vw] -scale-x-100 bg-current transition-transform duration-300 [mask-image:url(/icons/arrow-icon-final.svg)] mask-contain mask-center mask-no-repeat group-hover:-translate-x-1 max-lg:size-4"
             />
           </button>
           <span className="text24 font-aeonik tracking-[-.02em] text-primary" aria-live="polite">

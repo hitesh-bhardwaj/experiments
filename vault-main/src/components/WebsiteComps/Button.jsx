@@ -11,7 +11,7 @@ const buttonTv = tv({
   variants: {
     variant: {
       orange: "bg-[linear-gradient(to_right,#f16b0d,#e61216)] text-white ",
-      black: "bg-black text-white border border-background",
+      black: "bg-[#161616] text-white border border-background",
       white: "bg-white text-black border border-foreground",
       outline: "bg-transparent text-background border border-background",
       outline2: "bg-transparent text-foreground border border-foregound",

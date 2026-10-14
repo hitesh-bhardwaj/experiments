@@ -70,12 +70,31 @@ export function SignInRequiredModal({ open, onClose, onSignedIn: onSignedInProp,
           : { title: "You’re signed in", description: "Welcome Back - pick up right where you left off." },
     );
   };
+  // While it's open, the page URL says so - ?auth=sign-in | sign-up | reset, following
+  // the form - without navigating anywhere (replaceState). Removed again on close.
+  const [authMode, setAuthMode] = useState(initialMode);
+  useEffect(() => {
+    if (!open) return undefined;
+    const url = new URL(window.location.href);
+    url.searchParams.set("auth", authMode);
+    window.history.replaceState(window.history.state, "", url);
+    return () => {
+      const back = new URL(window.location.href);
+      if (back.searchParams.get("auth") !== authMode) return;
+      back.searchParams.delete("auth");
+      window.history.replaceState(window.history.state, "", back);
+    };
+  }, [open, authMode]);
+
   // A fresh form every time it opens; it stays as it was while fading out.
   const [session, setSession] = useState(0);
   const [wasOpen, setWasOpen] = useState(open);
   if (open !== wasOpen) {
     setWasOpen(open);
-    if (open) setSession((n) => n + 1);
+    if (open) {
+      setSession((n) => n + 1);
+      setAuthMode(initialMode);
+    }
   }
 
   useEffect(() => {
@@ -115,6 +134,7 @@ export function SignInRequiredModal({ open, onClose, onSignedIn: onSignedInProp,
           initialMode={initialMode}
           intro={`Sign in or create a free account to ${action} and pick up right where you left off.`}
           onDone={onSignedIn}
+          onModeChange={setAuthMode}
           active={open}
         />
       </div>

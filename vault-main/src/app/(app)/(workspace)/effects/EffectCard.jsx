@@ -32,8 +32,9 @@ export const ICON_BTN =
 // plus its own height, so the clipped frame hides it) up into place, and back. Ease-out
 // coming in, ease-in going out (the timing on the hovered state drives the entrance,
 // the resting one the exit); will-change keeps it on the GPU.
+// Triggered by the whole card (group/card), not just the preview.
 export const ACTION_SLIDE =
-  "translate-y-[calc(100%+0.75rem)] will-change-transform transition-transform duration-350 ease-[cubic-bezier(.55,0,1,.45)] group-hover/preview:translate-y-0 group-hover/preview:ease-[cubic-bezier(.22,1,.36,1)] group-focus-within/preview:translate-y-0 group-focus-within/preview:ease-[cubic-bezier(.22,1,.36,1)] max-lg:translate-y-0 motion-reduce:transition-none";
+  "translate-y-[calc(100%+0.75rem)] will-change-transform transition-transform duration-350 ease-[cubic-bezier(.55,0,1,.45)] group-hover/card:translate-y-0 group-hover/card:ease-[cubic-bezier(.22,1,.36,1)] group-focus-within/card:translate-y-0 group-focus-within/card:ease-[cubic-bezier(.22,1,.36,1)] max-lg:translate-y-0 motion-reduce:transition-none";
 // The card's action buttons: no backdrop blur - a blur re-rendered every frame under
 // a moving button (inside the lifted preview) made the slide flicker and pop - and a
 // slightly more opaque fill instead.
@@ -128,12 +129,13 @@ export function EffectCard({
           onOpen?.(effect);
         }
       }}
-      className={`group relative flex flex-col gap-[calc(var(--cvw)*1)] outline-none max-md:gap-[3.5vw] ${className}`}
+      // Light contexts: a white card with padding (as the template cards); on dark rows
+      // (trending, the drawer's related cards) it stays frameless.
+      // Hover anywhere on the card: it comes a touch towards the viewer with a soft shadow
+      // and the action buttons slide up into the preview (group/card).
+      className={`group group/card relative flex flex-col gap-[calc(var(--cvw)*1)] outline-none transition-[transform,box-shadow] duration-500 transform-[perspective(1200px)_translateZ(0)] hover:transform-[perspective(1200px)_translateZ(calc(var(--cvw)*1))] hover:shadow-[0_calc(var(--cvw)*1.2)_calc(var(--cvw)*2.4)_calc(var(--cvw)*-1.2)_color-mix(in_srgb,black_35%,transparent)] max-md:gap-[3.5vw] ${dark ? "" : "bg-foreground p-[calc(var(--cvw)*1.1)] max-lg:p-4 max-md:p-3.5"} ${className}`}
     >
-      {/* Hover - over this preview block only (group/preview), not the title or tags: it
-          comes a touch towards the viewer (translateZ in perspective) with a soft shadow
-          behind it, and the action buttons slide up into it. */}
-      <div data-card-preview className="group/preview relative aspect-[16/8.6] cursor-pointer overflow-hidden bg-dark-card duration-500 transition-all transform-[perspective(1200px)_translateZ(0)] hover:transform-[perspective(1200px)_translateZ(calc(var(--cvw)*1))] hover:shadow-[0_calc(var(--cvw)*1.2)_calc(var(--cvw)*2.4)_calc(var(--cvw)*-1.2)_color-mix(in_srgb,black_35%,transparent)] group-focus-visible:ring-2 group-focus-visible:ring-primary">
+      <div data-card-preview className="relative aspect-[16/8.6] cursor-pointer overflow-hidden bg-dark-card group-focus-visible:ring-2 group-focus-visible:ring-primary">
         {cover && !imageError ? (
           <Image
             src={cover}
@@ -156,10 +158,22 @@ export function EffectCard({
         )}
         <span aria-hidden="true" className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-foreground/7" />
 
-        {/* Pro effects keep the tier marker; free cards stay unbadged. */}
-        {effect.tier === "pro" && (
-          <div className="pointer-events-none absolute top-3 right-3">
-            <TierBadge tier={effect.tier} />
+        {/* Tier (Free / Pro), top right */}
+        <div className="pointer-events-none absolute top-3 right-3">
+          <TierBadge tier={effect.tier} />
+        </div>
+
+        {/* Tech tags, bottom left (the hover actions come in on the right) */}
+        {deps.length > 0 && (
+          <div className="pointer-events-none absolute bottom-3 left-3 flex max-w-[45%] flex-wrap gap-1">
+            {deps.map((dep) => (
+              <span
+                key={dep}
+                className={twMerge(`block max-w-full truncate whitespace-nowrap bg-background/80 px-1.5 py-0.5 font-avenir ${T11} text-foreground/85 backdrop-blur-lg`, tagClassName)}
+              >
+                {dep}
+              </span>
+            ))}
           </div>
         )}
 
@@ -240,41 +254,22 @@ export function EffectCard({
         )}
       </div>
 
-      <div className="flex items-start justify-between gap-[calc(var(--cvw)*0.8)] max-md:gap-[3vw]">
-        <div className="flex min-w-0 flex-1 flex-col gap-1">
-          <h4 className={twMerge(`${T18} truncate`, titleClassName)}>
-            {effect.title}
-          </h4>
-          <p className={twMerge(`flex items-center gap-[calc(var(--cvw)*0.8)] ${T14} max-md:gap-[3vw] ${dark ? "text-foreground/50" : "text-black/60"}`, metaClassName)}>
-            <span>{category}</span>
-            {effect.installCountPending ? (
-              <Skeleton className="h-[1em] w-10" />
-            ) : (
-              effect.installCount > 0 && (
-                <span className="inline-flex items-center gap-1" title="CLI installs">
-                  <Download className="size-3" aria-hidden="true" />
-                  {effect.installCount}
-                </span>
-              )
-            )}
-          </p>
-        </div>
-        {/* Tags never break mid-word: each chip stays on one line (ellipsis if a single tag is wider than the column). */}
-        <div className="flex max-w-[45%] flex-wrap justify-end gap-1 max-lg:max-w-[55%]">
-          {deps.map((dep) => (
-            <span
-              key={dep}
-              className={twMerge(
-                `font-avenir block h-5.5 max-w-full truncate whitespace-nowrap border px-1.75 py-0.5 ${T11} ${
-                dark ? "text-foreground/50" : "text-black/60"
-              }`,
-                tagClassName,
-              )}
-            >
-              {dep}
-            </span>
-          ))}
-        </div>
+      {/* Title on the left; category and CLI installs on the right */}
+      <div className="flex items-center justify-between gap-[calc(var(--cvw)*0.8)] max-md:gap-[3vw]">
+        <h4 className={twMerge(`${T18} min-w-0 truncate`, titleClassName)}>{effect.title}</h4>
+        <p className={twMerge(`flex shrink-0 items-center gap-[calc(var(--cvw)*0.8)] ${T14} max-md:gap-[3vw] ${dark ? "text-foreground/50" : "text-black/60"}`, metaClassName)}>
+          <span>{category}</span>
+          {effect.installCountPending ? (
+            <Skeleton className="h-[1em] w-10" />
+          ) : (
+            effect.installCount > 0 && (
+              <span className="inline-flex items-center gap-1" title="CLI installs">
+                <Download className="size-3" aria-hidden="true" />
+                {effect.installCount}
+              </span>
+            )
+          )}
+        </p>
       </div>
     </article>
   );

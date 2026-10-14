@@ -85,7 +85,7 @@ export function StepField({ id, field, value, message, busy, submitLabel, onChan
           ) : (
             <span
               aria-hidden="true"
-              className="size-[0.9vw] bg-current [mask-image:url(/svgs/pixelated-arrow.svg)] mask-contain mask-center mask-no-repeat max-lg:size-3.5"
+              className="size-[0.9vw] bg-current [mask-image:url(/icons/arrow-icon-final.svg)] mask-contain mask-center mask-no-repeat max-lg:size-3.5"
             />
           )}
         </button>

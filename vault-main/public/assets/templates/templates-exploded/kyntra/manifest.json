@@ -156,8 +156,8 @@
     }
   },
   "full": {
-    "src": "/assets/templates/templates-exploded/kyntra/full-desktop.webp",
+    "src": "/assets/templates/templates-full/kyntra.webp",
     "width": 720,
-    "height": 6101
+    "height": 6099
   }
 }
