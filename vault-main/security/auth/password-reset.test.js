@@ -73,7 +73,7 @@ describe("reset OTP basics", () => {
 });
 
 describe("[M3] OTP hardening gaps", () => {
-  it.fails("[M3] the OTP is generated with a CSPRNG, not Math.random()", async () => {
+  it("[M3] the OTP is generated with a CSPRNG, not Math.random()", async () => {
     const spy = vi.spyOn(Math, "random");
     clerk.signIn("user_1");
     await sendOtp();
@@ -82,7 +82,7 @@ describe("[M3] OTP hardening gaps", () => {
 
   // No attempt counter: a wrong guess leaves the stored hash in place, so a
   // hijacked session can try all 900k codes within the 10-minute window.
-  it.fails("[M3] the OTP is burned after 5 wrong guesses", async () => {
+  it("[M3] the OTP is burned after 5 wrong guesses", async () => {
     clerk.signIn("user_1");
     await sendOtp();
     const otp = lastOtp();
@@ -91,14 +91,14 @@ describe("[M3] OTP hardening gaps", () => {
     expect((await attempt(otp)).status).not.toBe(200);
   });
 
-  it.fails("[M3] requesting codes is rate-limited (no unlimited resend)", async () => {
+  it("[M3] requesting codes is rate-limited (no unlimited resend)", async () => {
     clerk.signIn("user_1");
     const statuses = [];
     for (let i = 0; i < 10; i++) statuses.push((await sendOtp()).status);
     expect(statuses).toContain(429);
   });
 
-  it.fails("[M3] a successful reset revokes the account's other sessions", async () => {
+  it("[M3] a successful reset revokes the account's other sessions", async () => {
     clerk.signIn("user_1");
     await sendOtp();
     await attempt(lastOtp());

@@ -18,7 +18,7 @@ describe("getSafeRedirectUrl", () => {
     }
   });
 
-  it.fails("[M1] rejects backslash variants that browsers treat as protocol-relative", () => {
+  it("[M1] rejects backslash variants that browsers treat as protocol-relative", () => {
     for (const value of ["/\\evil.example", "/\\/evil.example", "/\t/evil.example"]) {
       const result = getSafeRedirectUrl(value, "/effects");
       expect(resolve(result).host, JSON.stringify(value)).toBe("vault.hyperiux.com");

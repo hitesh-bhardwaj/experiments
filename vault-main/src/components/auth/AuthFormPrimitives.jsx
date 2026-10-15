@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { getSafeRedirectPath } from "@/lib/safe-redirect";
 import { Eye, EyeOff } from "lucide-react";
 import Button from "@/homepage/components/Button";
 
@@ -11,16 +12,12 @@ export function errorMessage(err, fallback) {
   return err?.errors?.[0]?.longMessage || err?.errors?.[0]?.message || fallback;
 }
 
-// Only ever redirect to a same-app relative path after auth completes -
-// `redirect_url` comes straight from a query param (e.g. a "buy this
-// template" link bouncing an anonymous visitor through sign-in), so an
-// unvalidated value would let a crafted link send a freshly authenticated
-// session to an attacker's origin. "/" prefix only, and explicitly not
-// "//..." (protocol-relative - still cross-origin).
+// Only ever redirect to a same-app path after auth completes - `redirect_url`
+// comes straight from a query param (e.g. a "buy this template" link bouncing
+// an anonymous visitor through sign-in). The rules live in lib/safe-redirect,
+// shared with the sign-in/sign-up pages.
 export function getSafeRedirectUrl(rawValue, fallback) {
-  if (typeof rawValue !== "string") return fallback;
-  if (!rawValue.startsWith("/") || rawValue.startsWith("//")) return fallback;
-  return rawValue;
+  return getSafeRedirectPath(rawValue, fallback);
 }
 
 // Clerk rejects signIn.create()/signUp.create() with this code when the

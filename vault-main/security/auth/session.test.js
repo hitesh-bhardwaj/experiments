@@ -132,7 +132,7 @@ describe("post-sign-in redirect target", () => {
       }
     });
 
-    it.fails(`[M1] ${name}: backslash / control-char variants can't redirect off-site`, async () => {
+    it(`[M1] ${name}: backslash / control-char variants can't redirect off-site`, async () => {
       for (const target of BACKSLASH_BYPASS) {
         const landed = await landing(Page, target);
         // Resolve exactly like a browser would against the app origin.

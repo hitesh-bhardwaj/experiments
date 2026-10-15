@@ -1,6 +1,7 @@
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { createPageMetadata } from "@/lib/seo-metadata";
+import { getSafeRedirectPath } from "@/lib/safe-redirect";
 
 export const metadata = createPageMetadata({
   title: "Sign Up | Hyperiux Vault",
@@ -21,9 +22,7 @@ export default async function SignUpPage({ searchParams }) {
   // send /pricing?checkout=<plan>, which opens checkout), or to the effects.
   // Same-app paths only, so a crafted link can't send the session elsewhere.
   if (userId) {
-    const target = (await searchParams)?.redirect_url;
-    const safe = typeof target === "string" && target.startsWith("/") && !target.startsWith("//");
-    redirect(safe ? target : "/effects");
+    redirect(getSafeRedirectPath((await searchParams)?.redirect_url, "/effects"));
   }
 
   return null;
