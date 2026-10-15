@@ -68,7 +68,7 @@
     "maath": "^0.10.8",
     "matter-js": "^0.19.0",
     "motion": "^12.40.0",
-    "next": "^16.3.5",
+    "next": "^16.3.8",
     "next-cloudinary": "^6.17.5",
     "next-recaptcha-v3": "^1.5.3",
     "next-transition-router": "^0.2.11",
