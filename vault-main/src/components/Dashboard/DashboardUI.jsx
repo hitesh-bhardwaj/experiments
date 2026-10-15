@@ -187,3 +187,20 @@ export function Pager({ page, pages, total, noun, onPage }) {
 const ACTION = `inline-flex w-fit shrink-0 cursor-pointer items-center gap-2 px-4 ${BUTTON_SIZE} transition-[background-color,color,box-shadow] duration-300 disabled:cursor-default disabled:opacity-60 [&_svg]:size-4`;
 export const ACTION_PRIMARY = `${ACTION} bg-primary text-background hover:bg-primary-hover`;
 export const ACTION_LINE = `${ACTION} text-ink ring-1 ring-inset ring-black/10 hover:text-primary hover:ring-primary`;
+
+// An on / off switch (square track, round knob); `disabled` for one that's always on
+export function Toggle({ checked, onChange, label, disabled = false }) {
+  return (
+    <button
+      type="button"
+      role="switch"
+      aria-checked={checked}
+      aria-label={label}
+      disabled={disabled}
+      onClick={() => onChange?.(!checked)}
+      className={`relative h-6 w-11 shrink-0 cursor-pointer transition-colors duration-300 disabled:cursor-default ${checked ? "bg-primary" : "bg-black/20"} ${disabled ? "opacity-60" : ""}`}
+    >
+      <span aria-hidden="true" className={`absolute top-1 left-1 size-4  bg-foreground transition-transform duration-300 ${checked ? "translate-x-5" : ""}`} />
+    </button>
+  );
+}

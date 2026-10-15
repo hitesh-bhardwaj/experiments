@@ -1,7 +1,7 @@
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import { getUserPlan, getUserPlanInfo } from "@/lib/subscription";
-import { isAdminUser } from "@/lib/admin";
+import { getRole, isAdminUser } from "@/lib/admin";
 import { supabase } from "@/lib/supabase";
 
 const NO_STORE = { headers: { "Cache-Control": "private, no-store" } };
@@ -9,7 +9,7 @@ const NO_STORE = { headers: { "Cache-Control": "private, no-store" } };
 // The signed-in visitor's plan ("free" | "pro"), for pages that are cached
 // (ISR) and so can't read the session on the server themselves.
 // With ?detail=1 (the dashboard sidebar's plan card) it also returns the tier, the
-// billing interval, when the current period ends, and whether this is an admin.
+// billing interval, when the current period ends, and whether (and which kind of) admin.
 export async function GET(request) {
   const { userId } = await auth();
 
@@ -26,6 +26,8 @@ export async function GET(request) {
           plan,
           tier,
           isAdmin: isAdminUser(user),
+          // "admin" | "super_admin" | null
+          role: getRole(user),
           billingInterval: subscription?.billing_interval || null,
           planValidUntil: subscription?.current_period_end || null,
         },

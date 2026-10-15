@@ -2,25 +2,17 @@
 
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import Image from "next/image";
-import { Eye, EyeOff, LoaderCircle, Trash2, Upload, User } from "lucide-react";
+import { Eye, EyeOff, LoaderCircle, Trash2, Upload, User, X } from "lucide-react";
 import { createPortal } from "react-dom";
-import { Modal } from "@/components/ui/SignInRequiredModal";
-import { useUser } from "@clerk/nextjs";
-import { useAdminRole } from "@/lib/useAdminRole";
-import { ACTION_LINE, ACTION_PRIMARY, CARD, CARD_PAD, FIELD, FIELD_LABEL, SubmitButton } from "@/components/Dashboard/DashboardUI";
+import { useClerk, useUser } from "@clerk/nextjs";
+import { useDashboard } from "@/components/Dashboard/DashboardContext";
+import { ACTION_LINE, ACTION_PRIMARY, CARD, CARD_PAD, FIELD, FIELD_LABEL, SubmitButton, Toggle } from "@/components/Dashboard/DashboardUI";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { getDashboardPreview, samplePreviewUser } from "@/lib/dev/dashboardPreview";
 
 const MAX_AVATAR_DIMENSION = 512;
 
 const subscribeNever = () => () => {};
-
-const ROLE_LABELS = { admin: "Admin", super_admin: "Super admin" };
-
-function RoleBadge({ role }) {
-  if (!ROLE_LABELS[role]) return null;
-  return <span className="type-small inline-flex w-fit bg-primary/10 px-2.5 py-1 text-ink ring-1 ring-inset ring-primary/30">{ROLE_LABELS[role]}</span>;
-}
 
 // Clerk's profile image upload rejects anything over its size cap - PNG
 // screenshots regularly blow past that at full resolution even though a
@@ -73,29 +65,88 @@ export default function SettingsPage() {
   const user = previewUser || clerk.user;
   const isLoaded = Boolean(previewUser) || clerk.isLoaded;
 
-  // Delete account: a request to the team, confirmed in a dialog first
+  // Product updates (the newsletter): null while loading
+  const [productUpdates, setProductUpdates] = useState(null);
+  const [savingUpdates, setSavingUpdates] = useState(false);
+  const [emailError, setEmailError] = useState("");
+  useEffect(() => {
+    if (getDashboardPreview()) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setProductUpdates(true);
+      return;
+    }
+    fetch("/api/user/email-preferences")
+      .then((res) => (res.ok ? res.json() : Promise.reject(new Error(`preferences ${res.status}`))))
+      .then((data) => setProductUpdates(Boolean(data.productUpdates)))
+      .catch(() => {
+        setProductUpdates(false);
+        setEmailError("Couldn’t load your email preferences.");
+      });
+  }, []);
+
+  async function changeProductUpdates(next) {
+    setSavingUpdates(true);
+    setEmailError("");
+    setProductUpdates(next);
+    try {
+      if (!getDashboardPreview()) {
+        const res = await fetch("/api/user/email-preferences", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ productUpdates: next }) });
+        if (!res.ok) throw new Error(`preferences ${res.status}`);
+      }
+    } catch {
+      setProductUpdates(!next);
+      setEmailError("Couldn’t update your email preferences. Please try again.");
+    } finally {
+      setSavingUpdates(false);
+    }
+  }
+
+  // Delete account: for real, after typing DELETE in a dialog (api/user/delete-account)
+  const { isAdmin } = useDashboard();
+  const { signOut } = useClerk();
   const [deleteOpen, setDeleteOpen] = useState(false);
-  const [requestingDelete, setRequestingDelete] = useState(false);
-  const [deleteRequested, setDeleteRequested] = useState(false);
+  const [confirmText, setConfirmText] = useState("");
+  const [deleting, setDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState("");
   const mounted = useSyncExternalStore(subscribeNever, () => true, () => false);
 
-  async function requestDeletion() {
-    setRequestingDelete(true);
+  const closeDelete = () => {
+    if (deleting) return;
+    setDeleteOpen(false);
+    setConfirmText("");
+    setDeleteError("");
+  };
+
+  // Escape closes the dialog
+  useEffect(() => {
+    if (!deleteOpen) return undefined;
+    const onKey = (event) => event.key === "Escape" && closeDelete();
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  });
+
+  async function deleteAccount() {
+    if (confirmText !== "DELETE") return;
+    setDeleting(true);
     setDeleteError("");
     try {
-      const res = await fetch("/api/user/delete-request", { method: "POST" });
+      if (getDashboardPreview()) {
+        setDeleting(false);
+        closeDelete();
+        return;
+      }
+      const res = await fetch("/api/user/delete-account", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ confirm: confirmText }) });
       const data = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(data.error || "Couldn’t send your request.");
-      setDeleteRequested(true);
-      setDeleteOpen(false);
+      if (!res.ok) throw new Error(data.error || "Couldn’t delete your account.");
+      // The account is gone: clear the session and leave
+      await signOut({ redirectUrl: "/" }).catch(() => {
+        window.location.href = "/";
+      });
     } catch (err) {
       setDeleteError(err.message);
-    } finally {
-      setRequestingDelete(false);
+      setDeleting(false);
     }
   }
-  const { role } = useAdminRole();
   const fileInputRef = useRef(null);
 
   const [savingProfile, setSavingProfile] = useState(false);
@@ -359,7 +410,6 @@ export default function SettingsPage() {
                 )}
               </div>
               <p className="type-small text-black/60">PNG, JPG or WebP · square works best</p>
-              <RoleBadge role={role} />
             </div>
             <input ref={fileInputRef} type="file" accept="image/png,image/jpeg,image/webp" onChange={handleImageChange} className="hidden" />
           </div>
@@ -444,7 +494,35 @@ export default function SettingsPage() {
           )}
         </section>
 
-        {/* privacy & data: a request to delete the account */}
+        {/* email: product updates (the newsletter) can be turned off; account mail can't */}
+        <section id="email" aria-labelledby="email-h" className={`${CARD} ${CARD_PAD} scroll-mt-32 gap-(--cvw) max-lg:gap-4`}>
+          <h2 id="email-h" className="type-h3">
+            Email
+          </h2>
+          <ul className="flex flex-col">
+            <li className="flex items-center justify-between gap-4 border-b border-black/10 py-[calc(var(--cvw)*0.9)] max-lg:py-3">
+              <span className="flex flex-col gap-1">
+                <span className="type-body">Product updates</span>
+                <span className="type-small text-black/60">New effects and the occasional behind-the-scenes note. Unsubscribe any time.</span>
+              </span>
+              <Toggle label="Product updates" checked={Boolean(productUpdates)} disabled={productUpdates === null || savingUpdates} onChange={changeProductUpdates} />
+            </li>
+            <li className="flex items-center justify-between gap-4 py-[calc(var(--cvw)*0.9)] max-lg:py-3">
+              <span className="flex flex-col gap-1">
+                <span className="type-body">Account and billing</span>
+                <span className="type-small text-black/60">Receipts and security notices. Always on, so you never miss one.</span>
+              </span>
+              <Toggle label="Account and billing emails" checked disabled />
+            </li>
+          </ul>
+          {emailError && (
+            <p role="status" className="type-small text-primary">
+              {emailError}
+            </p>
+          )}
+        </section>
+
+        {/* privacy & data: delete the account */}
         <section id="privacy" aria-labelledby="privacy-h" className={`${CARD} ${CARD_PAD} scroll-mt-32 gap-[calc(var(--cvw)*1)] max-lg:gap-4`}>
           <div className="flex flex-col gap-1">
             <h2 id="privacy-h" className="type-h3">
@@ -462,25 +540,82 @@ export default function SettingsPage() {
             <li className="flex items-center justify-between gap-4 py-[calc(var(--cvw)*0.9)] max-md:flex-col max-md:items-start max-lg:py-3">
               <span className="flex flex-col gap-1">
                 <span className="type-body text-primary">Delete Account</span>
-                <span className="type-small text-black/60">Removes your account and saves. Billing records are kept as the law requires. Installed code in your projects keeps working.</span>
+                <span className="type-small text-black/60">
+                  {isAdmin ? "Admin accounts can’t be deleted here. Ask a super admin to remove your access first." : "Removes your account and saves. Billing records are kept as the law requires. Installed code in your projects keeps working."}
+                </span>
               </span>
-              <button type="button" onClick={() => setDeleteOpen(true)} disabled={deleteRequested} className={ACTION_LINE}>
+              <button type="button" onClick={() => setDeleteOpen(true)} disabled={isAdmin} className={ACTION_LINE}>
                 <Trash2 aria-hidden="true" />
-                {deleteRequested ? "Requested" : "Delete account"}
+                Delete account
               </button>
             </li>
           </ul>
         </section>
 
         {mounted &&
+          deleteOpen &&
           createPortal(
-            <Modal open={deleteOpen} onClose={() => setDeleteOpen(false)} title="Delete your account?">
-              We’ll send your request to the team, who will confirm by email before anything is deleted. Billing records are kept as the law requires, and code in your projects keeps working.
-              <div className="flex flex-col items-center gap-3">
-                <SubmitButton type="button" label="Send deletion request" busy={requestingDelete} onClick={requestDeletion} />
-                {deleteError && <p className="type-small text-primary">{deleteError}</p>}
+            // The site's dialog look (as SignInRequiredModal's Modal): dark panel, close button
+            <div onClick={closeDelete} className="fixed inset-0 z-9999 flex items-center justify-center bg-black/40 p-4 backdrop-blur-lg">
+              <div
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="delete-h"
+                onClick={(event) => event.stopPropagation()}
+                className="relative flex w-[35vw] flex-col gap-6 border border-white/20 bg-background p-10 text-foreground shadow-2xl max-lg:w-[70%] max-lg:p-6 max-md:w-full"
+              >
+                <button
+                  type="button"
+                  aria-label="Close"
+                  onClick={closeDelete}
+                  disabled={deleting}
+                  className="group absolute top-5 right-5 grid size-10 cursor-pointer place-items-center border border-white/20 bg-white/10 text-foreground/80 transition-colors duration-500 hover:border-primary hover:bg-primary hover:text-foreground max-md:top-3 max-md:right-3"
+                >
+                  <X className="size-4 transition-transform duration-300 ease-out group-hover:rotate-90 motion-reduce:transition-none" aria-hidden="true" />
+                </button>
+                <h2 id="delete-h" className="type-h3 pr-12">
+                  Delete your account?
+                </h2>
+                <ul className="flex flex-col gap-2">
+                  {[
+                    "Your profile, saved effects and templates, usage history and CLI token are removed.",
+                    "Payment records are kept, as tax law requires.",
+                    "Code you’ve installed in your projects keeps working.",
+                    "An active subscription is cancelled straight away; unused time isn’t refunded.",
+                  ].map((line) => (
+                    <li key={line} className="type-body flex items-start gap-3 text-foreground/80">
+                      <span aria-hidden="true" className="mt-[0.6em] size-1.5 shrink-0 rounded-full bg-primary" />
+                      {line}
+                    </li>
+                  ))}
+                </ul>
+                <label className="flex flex-col gap-2">
+                  <span className="sr-only">Type DELETE to confirm</span>
+                  <input
+                    value={confirmText}
+                    onChange={(event) => setConfirmText(event.target.value)}
+                    placeholder="Type DELETE to confirm"
+                    autoComplete="off"
+                    autoFocus
+                    className="type-body w-full bg-foreground/5 px-4 py-3 text-foreground ring-1 ring-inset ring-foreground/15 outline-none transition-shadow duration-300 placeholder:text-foreground/40 focus:ring-primary"
+                  />
+                </label>
+                {deleteError && (
+                  <p role="alert" className="type-small text-primary">
+                    {deleteError}
+                  </p>
+                )}
+                <div className="flex flex-wrap items-center gap-[calc(var(--cvw)*1.2)] max-lg:gap-4">
+                  <button type="button" onClick={deleteAccount} disabled={confirmText !== "DELETE" || deleting} className={ACTION_PRIMARY}>
+                    {deleting ? <LoaderCircle className="animate-spin" aria-hidden="true" /> : <Trash2 aria-hidden="true" />}
+                    {deleting ? "Deleting…" : "Delete account"}
+                  </button>
+                  <button type="button" onClick={closeDelete} disabled={deleting} className="type-label cursor-pointer text-foreground underline underline-offset-3 transition-colors duration-300 hover:text-primary disabled:opacity-60">
+                    Keep it
+                  </button>
+                </div>
               </div>
-            </Modal>,
+            </div>,
             document.body,
           )}
       </div>
@@ -492,6 +627,7 @@ export default function SettingsPage() {
 const SECTIONS = [
   ["profile", "Profile"],
   ["password", "Password"],
+  ["email", "Email"],
   ["privacy", "Privacy & data"],
 ];
 

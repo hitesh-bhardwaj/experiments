@@ -155,7 +155,18 @@ Rules: STYLE_GUIDE.md type scale, square corners, tokens; nav stays as our tab r
 | Settings: Email block removed (and `/api/user/email-preferences`, unused `Toggle`) | done | |
 | Storage: npm cache (32 GB) + old Chromium 1187 cleared → 36 GB free; dev server needed a restart after the disk-full | done | |
 
+## Iteration 3.3 – settings + admin sidebar card (2026-10-15)
+| Step | Status | Files / notes |
+|---|---|---|
+| Settings: role tag removed from the profile | done | |
+| Settings: Email block back; Product updates toggle works (Resend newsletter audience); Account & billing always on | done | `/api/user/email-preferences` (GET/POST) restored, `Toggle` restored |
+| **Delete account deletes for real**: dialog with what happens, "Type DELETE to confirm", button unlocks only then, "Keep it" | done, **not run against a real account** | `/api/user/delete-account`: cancels a live Razorpay subscription first (aborts if that fails), deletes saves / credits / usage / subscription row (CLI token), anonymises CLI telemetry, keeps invoices + template purchases, then deletes the Clerk user. Admins blocked. `/api/user/delete-request` removed |
+| Sidebar card for admins / super admins: role + what they can do + "Open admin" | done | `/api/user/plan?detail=1` returns `role` |
+| Sidebar card buttons fit their text; delete dialog in the site's dark dialog style (dark panel, white/20 border, close ×) | done | |
+| Verify | done | lint, tests, Playwright (settings, dialog lock/unlock, admin card) |
+
 ## Iteration 4+ (next)
+- Test Delete account end to end with a throwaway account on a deployed preview (Clerk can't sign in on localhost)
 - Admin Email log page still has the old dark styling (reached from Users → Email log)
 - Invoicing: "needs review" flags, GST columns + CA export, one merged ledger (needs a server-side merged query)
 - Admin data layer: Postgres aggregates (selects of all rows hit PostgREST's 1000-row cap as data grows); previous-period deltas on KPIs

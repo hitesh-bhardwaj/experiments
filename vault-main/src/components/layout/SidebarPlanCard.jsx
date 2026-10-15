@@ -14,7 +14,7 @@ const INTERVALS = { monthly: "Monthly", quarterly: "Quarterly", yearly: "Yearly"
  * The account's plan, pinned to the foot of the sidebar on dashboard pages (the sidebar
  * hides it while collapsed): the plan and billing cycle, days left with a bar for how far
  * through the period it is, and the next step - Pro+ for Pro, Pro for free accounts,
- * billing for Pro+. Nothing for admins, whose access isn't a plan.
+ * billing for Pro+. Admins get what their role is, with a way into the admin view.
  */
 export function SidebarPlanCard({ username }) {
   const [info, setInfo] = useState(null);
@@ -28,7 +28,7 @@ export function SidebarPlanCard({ username }) {
     const preview = getDashboardPreview();
     if (preview) {
       const sample = sampleDashboard(preview);
-      setInfo({ ...sample, isAdmin: preview === "admin" });
+      setInfo({ ...sample, isAdmin: preview === "admin", role: preview === "admin" ? "super_admin" : null });
       return () => {
         active = false;
       };
@@ -42,7 +42,26 @@ export function SidebarPlanCard({ username }) {
     };
   }, []);
 
-  if (!info || info.isAdmin || !now) return null;
+  if (!info || !now) return null;
+
+  // Admins: their access isn't a plan - say what it is, and lead to the admin view
+  if (info.isAdmin) {
+    const superAdmin = info.role === "super_admin";
+    return (
+      <div className="flex w-full flex-col gap-(--cvw) bg-dark-card p-[calc(var(--cvw)*1.2)] ring-1 ring-inset ring-foreground/10">
+        <p className="type-label text-foreground/80">
+          {superAdmin ? "Super" : ""}
+          <span className="text-primary">{superAdmin ? " admin" : "Admin"}</span>
+        </p>
+        <p className="type-small text-foreground/80">
+          {superAdmin
+            ? "Unlimited effects and every template. You can see revenue and every user, and change roles."
+            : "Unlimited effects and every template. You can see activity and every user."}
+        </p>
+        <Button text="Open admin" href={dashboardPath(username, "admin/activity")} className="w-fit" />
+      </div>
+    );
+  }
 
   const isPro = info.plan === "pro";
   const name = !isPro ? "Free plan" : info.tier === "pro_plus" ? "Pro+" : "Pro";
@@ -78,7 +97,7 @@ export function SidebarPlanCard({ username }) {
           <span className="block h-full bg-primary" style={{ width: `${(elapsed * 100).toFixed(1)}%` }} />
         </span>
       )}
-      <Button text={next.text} href={next.href} onClick={next.onClick} variant={next.outline ? "outline" : undefined} className="w-full" />
+      <Button text={next.text} href={next.href} onClick={next.onClick} variant={next.outline ? "outline" : undefined} className="w-fit" />
     </div>
   );
 }
