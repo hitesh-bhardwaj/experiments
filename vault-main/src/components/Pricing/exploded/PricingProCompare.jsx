@@ -123,8 +123,8 @@ export default function PricingProCompare({ currency: initialCurrency }) {
       <div className="site-container flex flex-col gap-[calc(var(--cvw)*3)] max-md:gap-[10vw]">
         <div className="flex items-end justify-between gap-[calc(var(--cvw)*2)] max-md:flex-col max-md:items-start max-md:gap-[10vw]">
           <LineReveal as="h2" className="type-h1">
-            Pro vs Pro+,<br />
-            <span className="gradient-text-animate">Line by Line.</span>
+            <span className="block">Pro vs Pro+,</span>
+            <span className="block"><span className="gradient-text-animate">Line by Line.</span></span>
           </LineReveal>
 
           <div ref={toggleRef} role="radiogroup" aria-label="Billing period" data-sound-hover="off" className="fadeup relative isolate flex w-fit bg-ink p-[calc(var(--cvw)*0.3)] max-lg:p-[0.6vw] max-md:p-[1vw]">

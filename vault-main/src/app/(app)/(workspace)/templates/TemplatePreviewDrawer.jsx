@@ -4,10 +4,14 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import Image from "next/image";
 import gsap from "gsap";
+import { prefersReducedMotion } from "@/lib/motion";
 import { useLenis } from "lenis/react";
 import { Download, Heart } from "lucide-react";
 import Button from "@/homepage/components/Button";
 import { BADGE, DISPLAY, PRICE, T11, T14, T16, T18, T24, catalogueLabel, catalogueOf, priceOf } from "./tokens";
+
+// Off-screen panel: slid out to the right, or (reduced motion) faded out in place.
+const panelHidden = () => (prefersReducedMotion() ? { xPercent: 0, opacity: 0 } : { xPercent: 100, opacity: 1 });
 
 // Same open/close choreography as the effects preview drawer (PreviewDrawer):
 // the panel slides in from the right while the backdrop fades, then the content
@@ -61,7 +65,7 @@ export function TemplatePreviewDrawer({ template, templates = [], isWishlisted, 
       tlRef.current?.kill();
       tlRef.current = gsap
         .timeline()
-        .to(panelRef.current, { xPercent: 0, duration: PANEL_DURATION, ease: EASE })
+        .to(panelRef.current, { xPercent: 0, opacity: 1, duration: PANEL_DURATION, ease: EASE })
         .to(overlayRef.current, { opacity: 1, duration: PANEL_DURATION, ease: EASE }, "<")
         .add(() => {
           if (template === prev) gsap.to(contentRef.current, { opacity: 1, duration: CONTENT_DURATION, ease: EASE });
@@ -98,7 +102,7 @@ export function TemplatePreviewDrawer({ template, templates = [], isWishlisted, 
           },
         })
         .to(contentRef.current, { opacity: 0, duration: CONTENT_DURATION, ease: EASE })
-        .to(panelRef.current, { xPercent: 100, duration: PANEL_DURATION, ease: EASE })
+        .to(panelRef.current, { ...panelHidden(), duration: PANEL_DURATION, ease: EASE })
         .to(overlayRef.current, { opacity: 0, duration: PANEL_DURATION, ease: EASE }, "<");
     }
   }, [template]);
@@ -110,12 +114,12 @@ export function TemplatePreviewDrawer({ template, templates = [], isWishlisted, 
     panelRef.current.scrollTop = 0;
     if (!wasOpenRef.current) {
       wasOpenRef.current = true;
-      gsap.set(panelRef.current, { xPercent: 100 });
+      gsap.set(panelRef.current, panelHidden());
       gsap.set(overlayRef.current, { opacity: 0 });
       gsap.set(contentRef.current, { opacity: 0 });
       tlRef.current = gsap
         .timeline()
-        .to(panelRef.current, { xPercent: 0, duration: PANEL_DURATION, ease: EASE })
+        .to(panelRef.current, { xPercent: 0, opacity: 1, duration: PANEL_DURATION, ease: EASE })
         .to(overlayRef.current, { opacity: 1, duration: PANEL_DURATION, ease: EASE }, "<")
         .to(contentRef.current, { opacity: 1, duration: CONTENT_DURATION, ease: EASE });
     } else {
@@ -179,7 +183,7 @@ export function TemplatePreviewDrawer({ template, templates = [], isWishlisted, 
       <div
         ref={panelRef}
         data-lenis-prevent
-        className="absolute inset-y-0 right-0 w-[53vw] overflow-y-auto overscroll-contain border-l border-foreground/10 bg-background font-avenir text-foreground shadow-[-1.1vw_0_2.8vw_-1.7vw_color-mix(in_srgb,black_60%,transparent)] max-lg:w-full max-lg:border-l-0"
+        className="absolute inset-y-0 right-0 w-[53vw] overflow-y-auto overscroll-contain border-l border-foreground/10 bg-background font-avenir text-foreground shadow-float max-lg:w-full max-lg:border-l-0"
       >
         <div ref={contentRef} className="flex flex-col gap-8 px-10 pt-7 pb-16 max-lg:px-8 max-md:px-5 max-md:pb-0 *:shrink-0">
           <div className="flex items-center justify-between">
@@ -271,7 +275,7 @@ export function TemplatePreviewDrawer({ template, templates = [], isWishlisted, 
                   type="button"
                   onClick={() => onBuy(shown)}
                   // Same text size and font as the Button component beside it
-                  className="inline-flex cursor-pointer items-center gap-2 bg-primary px-4 max-md:hidden font-avenir text-[calc(var(--hx-vw,1vw)*1.15)] max-lg:text-[clamp(13px,calc(var(--hx-vw,1vw)*1.6),15px)] text-background transition-colors duration-500 hover:bg-primary-hover max-md:text-[calc(var(--hx-vw,1vw)*2.2)] max-sm:text-[calc(var(--hx-vw,1vw)*4)]"
+                  className="inline-flex cursor-pointer items-center gap-2 bg-primary px-4 max-md:hidden font-avenir text-[calc(var(--hx-vw,1vw)*1.15)] max-lg:text-[clamp(13px,calc(var(--hx-vw,1vw)*1.6),15px)] text-background transition-colors duration-500 hover:bg-primary-hover max-md:text-[clamp(14px,calc(var(--hx-vw,1vw)*4),16px)]"
                 >
                   <Download className="size-4" aria-hidden="true" />
                   {owned ? "Download" : "Buy Template"}
@@ -286,7 +290,7 @@ export function TemplatePreviewDrawer({ template, templates = [], isWishlisted, 
                 {/* Same look as the effect drawer's small cards. */}
                 {others.map((t) => (
                   <button key={t.slug} type="button" onClick={() => onOpen(t)} className="group grid cursor-pointer gap-3.5 text-left">
-                    <span className="relative block aspect-[16/8.6] overflow-hidden bg-grey transition-shadow duration-700 group-hover:shadow-[0_14px_28px_-16px_rgba(0,0,0,.35)]">
+                    <span className="relative block aspect-[16/8.6] overflow-hidden bg-grey transition-shadow duration-700 group-hover:shadow-float">
                       {(t.screenshots?.[0] || t.fullShot?.src) && (
                         <Image
                           src={t.screenshots?.[0] || t.fullShot.src}
@@ -297,7 +301,7 @@ export function TemplatePreviewDrawer({ template, templates = [], isWishlisted, 
                           className="object-cover object-top transition-[scale] duration-700 group-hover:scale-[1.03]"
                         />
                       )}
-                      <span aria-hidden="true" className="pointer-events-none absolute inset-0 shadow-[inset_0_0_0_1px_rgba(244,244,244,.07)]" />
+                      <span aria-hidden="true" className="pointer-events-none absolute inset-0 ring ring-inset ring-light/7" />
                     </span>
                     <span className="grid gap-1">
                       <span className={`${DISPLAY} truncate ${T18} leading-tight font-medium text-foreground`}>{t.title}</span>

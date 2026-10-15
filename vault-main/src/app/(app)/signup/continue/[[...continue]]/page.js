@@ -25,7 +25,7 @@ export default async function SignUpContinuePage() {
       <NavbarMobile />
 
       <AuthShell>
-        <div className="hyperiux-clerk mx-auto w-[40vw] max-lg:w-[90vw] max-md:w-full">
+        <div className="hyperiux-clerk mx-auto w-[calc(var(--cvw)*40)] max-lg:w-[90vw] max-md:w-full">
           <SignUp
             path="/signup/continue"
             routing="path"

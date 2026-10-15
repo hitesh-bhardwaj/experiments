@@ -17,14 +17,14 @@ export default function NavLinks({
 
     return (
         <div
-            className="relative ml-[13.5vw]"
+            className="relative ml-[calc(var(--hx-vw,1vw)*13.5)]"
             onMouseLeave={onNavLeave}
         >
-            <div className="text20 relative flex gap-[0.6vw] bg-grey p-[0.6vw] py-[0.4vw] font-medium">
+            <div className="text20 relative flex gap-[calc(var(--hx-vw,1vw)*0.6)] bg-grey p-[calc(var(--hx-vw,1vw)*0.6)] py-[calc(var(--hx-vw,1vw)*0.4)] font-medium">
                 {vaultLinks.map(({ label, href, dropdown }, index) => {
                     const highlighted = isHighlighted(index, dropdown)
                     const isExternal = href.startsWith('http')
-                    const itemClassName = `relative z-10 p-[0.4vw] px-[1.2vw] text-[1.15vw] font-medium tracking-wide transition-colors duration-300 motion-reduce:transition-none ${
+                    const itemClassName = `relative z-10 p-[calc(var(--hx-vw,1vw)*0.4)] px-[calc(var(--hx-vw,1vw)*1.2)] text-[calc(var(--hx-vw,1vw)*1.15)] font-medium tracking-wide transition-colors duration-300 motion-reduce:transition-none ${
                         highlighted ? 'text-foreground' : 'text-white/70'
                     }`
 
@@ -71,10 +71,10 @@ export default function NavLinks({
                                 onMouseEnter={() => onNavEnter(index, dropdown)}
                                 className={itemClassName}
                             >
-                                <span className="inline-flex items-center gap-[0.3vw]">
+                                <span className="inline-flex items-center gap-[calc(var(--hx-vw,1vw)*0.3)]">
                                     {label}
                                     <ChevronDown
-                                        className={`size-[0.9vw] transition-transform duration-300 motion-reduce:transition-none ${
+                                        className={`size-[calc(var(--hx-vw,1vw)*0.9)] transition-transform duration-300 motion-reduce:transition-none ${
                                             highlighted ? 'rotate-180' : ''
                                         }`}
                                     />

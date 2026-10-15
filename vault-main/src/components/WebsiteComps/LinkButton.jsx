@@ -4,6 +4,7 @@ import { prefetchFor } from "@/lib/prefetch";
 import React, { useRef, useEffect } from "react";
 import Link from "next/link";
 import gsap from "gsap";
+import { prefersReducedMotion } from "@/lib/motion";
 
 const ArrowSVG = ({ className = "" }) => (
   <svg
@@ -36,8 +37,8 @@ export default function LinkButton({
   // The text colour; light surfaces pass a dark one (e.g. "text-ink").
   colorClassName = "text-white",
   shimmer = false,
-  shimmerBaseColor = "#979797",
-  shimmerColor = "#ffffff",
+  shimmerBaseColor = "var(--light-grey)",
+  shimmerColor = "var(--foreground)",
   onClick,
   id,
   underline = 'w-full',
@@ -59,7 +60,8 @@ export default function LinkButton({
     : undefined;
 
   useEffect(() => {
-    if (!shimmer) return;
+    // Reduced motion: plain label, no looping shimmer
+    if (!shimmer || prefersReducedMotion()) return;
 
     const els = [labelRef.current, labelShadowRef.current].filter(Boolean);
     if (!els.length) return;
@@ -93,7 +95,7 @@ export default function LinkButton({
   }, [shimmer, shimmerBaseColor, shimmerColor]);
 
   const setShimmerPaused = (paused) => {
-    if (!shimmer) return;
+    if (!shimmer || !shimmerTl.current) return;
     const els = [labelRef.current, labelShadowRef.current].filter(Boolean);
     if (!els.length) return;
     if (paused) {
@@ -145,7 +147,7 @@ export default function LinkButton({
       onMouseLeave={handleLeave}
       onClick={handleClick}
     >
-      <span className="flex items-center gap-[0.5vw] max-lg:gap-2 w-fit cursor-pointer">
+      <span className="flex items-center gap-[calc(var(--cvw)*0.5)] max-lg:gap-2 w-fit cursor-pointer">
         <span className="relative">
           <span className="relative overflow-hidden inline-flex h-[1.4em]">
             <span

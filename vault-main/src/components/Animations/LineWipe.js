@@ -19,8 +19,8 @@ const useIsomorphicLayoutEffect =
 // through the accent colour as the leading edge crosses it before settling.
 // Words on a line sweep together because they share its gradient. The
 // reference settles to a black/grey two-tone; here everything settles to white.
-const ACCENT = "#ff5f00";
-const LIT = "#ffffff";
+const ACCENT = "var(--primary)";
+const LIT = "var(--foreground)";
 
 function isInViewport(element) {
   if (!element || typeof window === "undefined") return false;

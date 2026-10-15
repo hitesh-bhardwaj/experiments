@@ -354,7 +354,7 @@ export function TemplateDetail({ template, devices = {}, effects = [], stack = [
                           setGetOpen(true);
                         }
                   }
-                  className="inline-flex h-11 cursor-pointer items-center gap-2 bg-primary px-5 text-[calc(var(--hx-vw,1vw)*1.15)] text-background transition-colors duration-500 hover:bg-primary-hover max-lg:text-[clamp(13px,calc(var(--hx-vw,1vw)*1.6),15px)] max-md:text-[calc(var(--hx-vw,1vw)*2.2)] max-sm:text-[calc(var(--hx-vw,1vw)*4)]"
+                  className="inline-flex h-11 cursor-pointer items-center gap-2 bg-primary px-5 text-[calc(var(--hx-vw,1vw)*1.15)] text-background transition-colors duration-500 hover:bg-primary-hover max-lg:text-[clamp(13px,calc(var(--hx-vw,1vw)*1.6),15px)] max-md:text-[clamp(14px,calc(var(--hx-vw,1vw)*4),16px)]"
                 >
                   {/* "Buy Template" while ownership is still being checked (disabled for that
                       moment), then "Download" if it's already yours - no skeleton */}
@@ -411,9 +411,9 @@ export function TemplateDetail({ template, devices = {}, effects = [], stack = [
       </div>
 
       {/* ---------- what's inside + more templates ---------- */}
-      <div data-sound-hover="off" data-sound-flow="off" className="relative flex flex-col gap-[7vw] bg-light py-[7%] text-ink max-md:gap-[15vw] max-md:py-[15%]">
+      <div data-sound-hover="off" data-sound-flow="off" className="relative flex flex-col gap-[calc(var(--cvw)*7)] bg-light py-[7%] text-ink max-md:gap-[15vw] max-md:py-[15%]">
         {/* The copy on top; the sections and the effects it's built from below, side by side */}
-        <section id="template-inside" className={`${GUTTER} flex flex-col gap-[3vw] max-lg:gap-10`}>
+        <section id="template-inside" className={`${GUTTER} flex flex-col gap-[calc(var(--cvw)*3)] max-lg:gap-10`}>
           {/* Article copy: styled by blog.css. Its light theme applies to a .blog-content
               inside a .blog-theme-light wrapper (as on the effect page), not to both on one
               element; body text is #1d1d1d here rather than the theme's #3a3a3a. */}
@@ -432,11 +432,11 @@ export function TemplateDetail({ template, devices = {}, effects = [], stack = [
             {published && <p className={`${LABEL} text-black/40`}>Published {published}</p>}
           </div>
 
-          <div className="fadeup flex items-stretch gap-[0.9vw] max-md:flex-col max-md:gap-[3.5vw]">
+          <div className="fadeup flex items-stretch gap-[calc(var(--cvw)*0.9)] max-md:flex-col max-md:gap-[3.5vw]">
             <InsideCard title="Sections included" className="flex-1">
               {/* Two columns (first half, then second half), pushed to the card's edges */}
               <ol
-                className="grid grid-flow-col justify-between gap-x-[2vw] gap-y-2 max-md:gap-x-6"
+                className="grid grid-flow-col justify-between gap-x-[calc(var(--cvw)*2)] gap-y-2 max-md:gap-x-6"
                 style={{ gridTemplateRows: `repeat(${Math.max(1, Math.ceil((devices.desktop?.sections || []).length / 2))}, auto)` }}
               >
                 {(devices.desktop?.sections || []).map((s, i) => (
@@ -472,7 +472,7 @@ export function TemplateDetail({ template, devices = {}, effects = [], stack = [
               </div>
             </div>
             {/* Same spacing and card width as the /templates grid (TemplatesListing) */}
-            <div className="flex flex-wrap gap-[2.5vw] max-md:gap-y-[12vw]">
+            <div className="flex flex-wrap gap-[calc(var(--cvw)*2.5)] max-md:gap-y-[12vw]">
               {/* Same fade-up as the /templates grid (cardReveal). */}
               {related.map((t, index) => (
                 <motion.div key={t.slug} {...cardReveal(index)} className="w-[calc((100%-2.5vw)/2)] max-md:w-full">
@@ -574,7 +574,7 @@ function LivePreview({ template, device, toolbar = null }) {
     <div
       ref={boxRef}
       onPointerLeave={(event) => event.pointerType === "mouse" && setInteractive(false)}
-      className="absolute inset-x-[4.5vw] top-28 bottom-24 flex items-center justify-center overflow-hidden max-md:inset-x-[6vw] max-md:top-24 max-md:bottom-40"
+      className="absolute inset-x-[calc(var(--cvw)*4.5)] top-28 bottom-24 flex items-center justify-center overflow-hidden max-md:inset-x-[6vw] max-md:top-24 max-md:bottom-40"
     >
       <div style={{ width: size.width, height: size.height, transform: `scale(${scale})` }} className="shrink-0 origin-center bg-foreground transition-transform duration-300">
         <iframe
@@ -600,7 +600,7 @@ function LivePreview({ template, device, toolbar = null }) {
           <span
             ref={tipRef}
             aria-hidden="true"
-            className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[calc(100%+0.8vw)] bg-background/80 px-3 py-1.5 text-[0.9vw] whitespace-nowrap text-foreground opacity-0 ring-1 ring-inset ring-foreground/15 backdrop-blur-lg transition-opacity duration-300 group-hover/interact:opacity-100 [@media(hover:none)]:opacity-100 max-lg:text-[1.6vw] max-md:-translate-y-1/2 max-md:text-[3.3vw]"
+            className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[calc(100%+0.8vw)] bg-background/80 px-3 py-1.5 text-[calc(var(--cvw)*0.9)] whitespace-nowrap text-foreground opacity-0 ring-1 ring-inset ring-foreground/15 backdrop-blur-lg transition-opacity duration-300 group-hover/interact:opacity-100 [@media(hover:none)]:opacity-100 max-lg:text-[1.6vw] max-md:-translate-y-1/2 max-md:text-[3.3vw]"
           >
             Click to interact
           </span>
@@ -608,7 +608,7 @@ function LivePreview({ template, device, toolbar = null }) {
       )}
     </div>
       {/* Same position and spacing as the exploded view's toolbar. */}
-      <div className="absolute right-[4.5vw] bottom-6 left-[4.5vw] z-10 flex flex-wrap items-center justify-between gap-3 max-md:inset-x-[6vw] max-md:bottom-4">
+      <div className="absolute right-[calc(var(--cvw)*4.5)] bottom-6 left-[calc(var(--cvw)*4.5)] z-10 flex flex-wrap items-center justify-between gap-3 max-md:inset-x-[6vw] max-md:bottom-4">
         {toolbar}
       </div>
     </div>

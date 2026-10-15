@@ -1,5 +1,5 @@
 /**
- * Fluid Field — a small incompressible fluid (advection + pressure projection) on the CPU,
+ * Fluid Field - a small incompressible fluid (advection + pressure projection) on the CPU,
  * rendered as soft glowing orange ink, with a dot grid floating on top that the flow pushes around.
  *
  * Two canvases:

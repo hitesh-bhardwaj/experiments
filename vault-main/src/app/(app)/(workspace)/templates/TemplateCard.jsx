@@ -81,7 +81,7 @@ export function TemplateCard({ template, priority = false, isWishlisted = false,
     // The whole card comes a touch towards the viewer with a soft shadow on hover. No
     // `group` here: Buy (Button) animates on any `.group:hover` above it, so it would
     // play whenever the card was hovered - it should only react to its own hover.
-    <article className="group/card flex flex-col gap-[1.1vw] bg-foreground p-[1.1vw] transition-[transform,box-shadow] duration-500 transform-[perspective(1200px)_translateZ(0)] hover:transform-[perspective(1200px)_translateZ(1vw)] hover:shadow-[0_1.2vw_2.4vw_-1.2vw_color-mix(in_srgb,black_35%,transparent)] max-lg:gap-4 max-lg:p-4 max-md:p-3.5">
+    <article className="group/card flex flex-col gap-[calc(var(--cvw)*1.1)] bg-foreground p-[calc(var(--cvw)*1.1)] transition-[transform,box-shadow] duration-500 transform-[perspective(1200px)_translateZ(0)] hover:transform-[perspective(1200px)_translateZ(1vw)] hover:shadow-float max-lg:gap-4 max-lg:p-4 max-md:p-3.5">
       {/* Over the shot only (group/preview): the page inside pans down and the action
           buttons slide up into it. */}
       <div onPointerLeave={setResetDuration} className="group/preview relative aspect-16/10 overflow-hidden bg-black/10">
@@ -92,7 +92,7 @@ export function TemplateCard({ template, priority = false, isWishlisted = false,
             {shot && !imageError && (
               <Image
                 src={shot}
-                alt=""
+                alt="template shot"
                 fill
                 sizes="(max-width: 767px) 100vw, (max-width: 1025px) 50vw, 44vw"
                 quality={75}
@@ -161,10 +161,10 @@ export function TemplateCard({ template, priority = false, isWishlisted = false,
         )}
       </div>
 
-      <div className="flex flex-col gap-[1.1vw] max-lg:gap-4">
+      <div className="flex flex-col gap-[calc(var(--cvw)*1.1)] max-lg:gap-4">
         {/* title + category / views on the left, price + "or 1 credit" on the right */}
         <div className="flex items-start justify-between gap-3">
-          <div className="flex min-w-0 flex-col gap-[0.3vw] max-lg:gap-1">
+          <div className="flex min-w-0 flex-col gap-[calc(var(--cvw)*0.3)] max-lg:gap-1">
             <h3 className="type-h3 flex min-w-0 flex-wrap items-center gap-2">
               <Link href={href} prefetch={false} className="transition-colors duration-500 hover:text-primary">
                 {template.title}
@@ -191,7 +191,7 @@ export function TemplateCard({ template, priority = false, isWishlisted = false,
             </p>
           </div>
           {price != null && (
-            <p className={`${DISPLAY} flex shrink-0 flex-col items-end gap-[0.2vw] max-lg:gap-0.5`}>
+            <p className={`${DISPLAY} flex shrink-0 flex-col items-end gap-[calc(var(--cvw)*0.2)] max-lg:gap-0.5`}>
               <span className={`${PRICE} ${T20} leading-none text-ink`}>${price}</span>
               <small className={`${T13} text-black/50`}>or 1 credit</small>
             </p>
@@ -199,7 +199,7 @@ export function TemplateCard({ template, priority = false, isWishlisted = false,
         </div>
 
         {/* description, with Buy beside it */}
-        <div className="flex items-center justify-between gap-[2vw] max-md:flex-col max-md:items-start max-md:gap-4">
+        <div className="flex items-center justify-between gap-[calc(var(--cvw)*2)] max-md:flex-col max-md:items-start max-md:gap-4">
           <p className={`line-clamp-2 min-w-0 flex-1 ${T14} text-black/60`}>{template.tagline}</p>
           {template.tier === "pro" && (
             <Button

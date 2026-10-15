@@ -66,7 +66,7 @@ export function PageLoadOverlay() {
         {!isHome && <GridDots
           size={56}
           squareSize={8}
-          color="var(--primary, #ff5f00)"
+          color="var(--primary)"
           style={{
             display: "inline-grid",
             gap: 4,

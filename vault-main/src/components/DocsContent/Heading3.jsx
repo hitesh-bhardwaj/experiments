@@ -21,11 +21,6 @@ export default function Heading3({ children, text, className, id, ...props }) {
       id={anchorId || undefined}
       {...props}
     >
-      {/* <span
-        aria-hidden="true"
-        className="docs-heading2-line absolute left-0 right-0 top-0 h-px bg-border/60 lineDraw block"
-      /> */}
-      {/* only the words (and the icon) reveal the copy link, not the full-width row */}
       <span className="group/htext">
         <span className="relative inline-block fadeup">{children ?? text}</span>
         <HeadingAnchor id={anchorId} />

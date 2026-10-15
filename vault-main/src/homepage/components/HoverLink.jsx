@@ -206,7 +206,7 @@ export default function HoverLink({
       target={target_blank ? "_blank" : undefined}
       rel={target_blank ? "noopener noreferrer" : undefined}
       aria-label={ariaLabel}
-      className={`group flex items-center font-medium gap-[0.8vw] text-nowrap transition-colors duration-300 motion-reduce:transition-none [--link-flash:var(--primary)] [--link-pre:var(--primary)] ${className}`}
+      className={`group flex items-center font-medium gap-[calc(var(--cvw)*0.8)] text-nowrap transition-colors duration-300 motion-reduce:transition-none [--link-flash:var(--primary)] [--link-pre:var(--primary)] ${className}`}
     >
       {leading}
       <ScrambleText text={text} run={run} />

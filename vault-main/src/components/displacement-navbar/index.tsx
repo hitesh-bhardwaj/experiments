@@ -674,7 +674,7 @@ const DisplacementNavbar = ({
                     >
                       <Image
                         src={item.src}
-                        alt=""
+                        alt="media"
                         fill
                         sizes="18vw"
                         className={`object-cover object-[50%_20%] ${

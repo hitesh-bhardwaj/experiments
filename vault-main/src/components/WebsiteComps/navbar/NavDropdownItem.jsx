@@ -10,6 +10,7 @@ import { motion, useReducedMotion } from 'motion/react'
 import { prefersReducedMotion } from '@/lib/motion'
 import { DROPDOWN_TEXT_ANIM } from './constants'
 import { useIsomorphicLayoutEffect } from './utils'
+import { cssVar } from "@/lib/useCssVar";
 
 gsap.registerPlugin(SplitText)
 
@@ -87,14 +88,14 @@ export default function NavDropdownItem({ label, href, icon, hoverGroupRef }) {
         gsap.set(hoverChars, {
             yPercent: 100,
             autoAlpha: 1,
-            color: DROPDOWN_TEXT_ANIM.hoverColor,
+            color: cssVar(DROPDOWN_TEXT_ANIM.hoverColorVar),
             force3D: true,
         })
     }, [getChars])
 
     const playEnter = useCallback(() => {
         if (prefersReducedMotion()) {
-            tintLabel(DROPDOWN_TEXT_ANIM.hoverColor)
+            tintLabel(cssVar(DROPDOWN_TEXT_ANIM.hoverColorVar))
             return
         }
 
@@ -107,7 +108,7 @@ export default function NavDropdownItem({ label, href, icon, hoverGroupRef }) {
 
         gsap.to(defaultChars, {
             yPercent: -100,
-            color: DROPDOWN_TEXT_ANIM.hoverColor,
+            color: cssVar(DROPDOWN_TEXT_ANIM.hoverColorVar),
             duration: DROPDOWN_TEXT_ANIM.duration,
             stagger: {
                 each: DROPDOWN_TEXT_ANIM.stagger,
@@ -121,11 +122,11 @@ export default function NavDropdownItem({ label, href, icon, hoverGroupRef }) {
             hoverChars,
             {
                 yPercent: 100,
-                color: DROPDOWN_TEXT_ANIM.hoverColor,
+                color: cssVar(DROPDOWN_TEXT_ANIM.hoverColorVar),
             },
             {
                 yPercent: 0,
-                color: DROPDOWN_TEXT_ANIM.hoverColor,
+                color: cssVar(DROPDOWN_TEXT_ANIM.hoverColorVar),
                 duration: DROPDOWN_TEXT_ANIM.duration,
                 stagger: {
                     each: DROPDOWN_TEXT_ANIM.stagger,
@@ -164,7 +165,7 @@ export default function NavDropdownItem({ label, href, icon, hoverGroupRef }) {
 
         gsap.to(hoverChars, {
             yPercent: 100,
-            color: DROPDOWN_TEXT_ANIM.hoverColor,
+            color: cssVar(DROPDOWN_TEXT_ANIM.hoverColorVar),
             duration: DROPDOWN_TEXT_ANIM.leaveDuration,
             stagger: {
                 each: DROPDOWN_TEXT_ANIM.leaveStagger,
@@ -313,7 +314,7 @@ export default function NavDropdownItem({ label, href, icon, hoverGroupRef }) {
         <Link
             href={href}
             data-nav-dropdown-link
-            className="group relative isolate flex items-center gap-[0.75vw] px-[0.7vw] py-[0.8vw]"
+            className="group relative isolate flex items-center gap-[calc(var(--hx-vw,1vw)*0.8)] px-[calc(var(--hx-vw,1vw)*0.7)] py-[calc(var(--hx-vw,1vw)*0.8)]"
             onMouseEnter={handleTextEnter}
             onMouseLeave={handleTextLeave}
         >
@@ -341,7 +342,7 @@ export default function NavDropdownItem({ label, href, icon, hoverGroupRef }) {
                 />
             )}
 
-            <span className="relative z-10 flex size-[1.35vw] shrink-0 items-center justify-center">
+            <span className="relative z-10 flex size-[calc(var(--hx-vw,1vw)*1.4)] shrink-0 items-center justify-center">
                 <Image
                     src={icon}
                     alt="icon"
@@ -352,7 +353,7 @@ export default function NavDropdownItem({ label, href, icon, hoverGroupRef }) {
                 />
             </span>
 
-            <span className="relative z-10 block overflow-hidden text-[1.05vw] font-medium whitespace-nowrap leading-[1.15]">
+            <span className="relative z-10 block overflow-hidden text-[calc(var(--hx-vw,1vw)*1.05)] font-medium whitespace-nowrap leading-[1.15]">
                 <span
                     ref={defaultLabelRef}
                     className="block"

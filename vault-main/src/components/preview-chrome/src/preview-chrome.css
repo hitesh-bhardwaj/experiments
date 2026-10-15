@@ -1,4 +1,4 @@
-/* Preview chrome for demo pages (from "GSAP Flip Card — Live preview"). Every class is `pc-`.
+/* Preview chrome for demo pages (from "GSAP Flip Card - Live preview"). Every class is `pc-`.
    Fonts come from three tokens so the host can hand it its own faces. */
 .pc {
   --pc-accent: #FF6B00;

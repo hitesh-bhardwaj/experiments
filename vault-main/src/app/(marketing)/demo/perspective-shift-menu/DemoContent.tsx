@@ -18,7 +18,7 @@ const Hero = () => (
     <div className="absolute inset-0 h-screen w-full">
       <Image
         src={BACKGROUND_IMAGE}
-        alt=""
+        alt="background image"
         priority
         width={1000}
         height={1000}

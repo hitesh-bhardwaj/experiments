@@ -21,7 +21,7 @@ function Demo({ tab }) {
     return <TextDemo />;
 }
 
-// 01 "150+ components": live Vault effects behind Cursor · Text · Scroll tabs
+// 01 "Every moment" (the full component library): live Vault effects behind Cursor · Text · Scroll tabs
 export default function MomentsCard() {
     const cardRef = useRef(null);
     const tabsRef = useRef(null);

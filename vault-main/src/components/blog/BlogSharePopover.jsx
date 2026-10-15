@@ -2,11 +2,9 @@
 
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { Facebook, Linkedin, Link as LinkIcon, Check, Share } from "lucide-react";
+import { Facebook, Linkedin, Link as LinkIcon, Check} from "lucide-react";
 import { Tooltip } from "@/components/ui/Tooltip";
 
-// Lucide ships neither the Threads glyph nor the post-rebrand X mark, so
-// those two are inlined.
 function ThreadsIcon({ className = "" }) {
   return (
     <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" className={className}>
@@ -22,11 +20,6 @@ function XIcon({ className = "" }) {
     </svg>
   );
 }
-
-// Opening: the panel slides up first, then the rows stagger in behind it
-// (delayChildren waits out the panel's own travel). Closing reverses the
-// order - staggerDirection -1 fades the rows from the bottom up, and the
-// panel only drops once they're gone (`when: "afterChildren"`).
 const PANEL_DURATION = 0.32;
 const ITEM_DURATION = 0.22;
 
@@ -60,9 +53,6 @@ const itemVariants = {
   visible: { opacity: 1, y: 0, transition: { duration: ITEM_DURATION } },
 };
 
-// `url` is the absolute canonical URL, computed server-side (getCanonicalUrl)
-// and passed in - avoids depending on window.location for the intent links,
-// so they're correct even before hydration.
 export default function BlogSharePopover({ url, title }) {
   const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -152,11 +142,8 @@ export default function BlogSharePopover({ url, title }) {
             initial="hidden"
             animate="visible"
             exit="hidden"
-            className="absolute bottom-[calc(100%+0.75rem)] left-0 z-50 w-[16vw] min-w-56 overflow-hidden bg-dark-card shadow-2xl"
+            className="absolute bottom-[calc(100%+0.75rem)] left-0 z-50 w-[calc(var(--cvw)*16)] min-w-56 overflow-hidden bg-dark-card shadow-2xl"
           >
-            {/* Same hover treatment as the TOC rows: an inset layer that
-                scales up from the top rather than a background swap, so the
-                orange sweeps in instead of appearing all at once. */}
             <motion.button
               variants={itemVariants}
               type="button"

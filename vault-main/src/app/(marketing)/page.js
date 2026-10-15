@@ -3,6 +3,7 @@ import { FAQJSONLD, WebpageJsonLd } from "@/lib/json-ld";
 import { createPageMetadata } from "@/lib/seo-metadata";
 import { getSearchIndexEffects } from "@/lib/search-index";
 import ReferralRocketTracking from "@/components/WebsiteComps/ReferralRocketTracking";
+import { FREE_LABEL, TOTAL_LABEL } from "@/lib/library-counts";
 
 const faqItems = [
   {
@@ -91,7 +92,7 @@ const faqItems = [
 export const metadata = createPageMetadata({
   title: "Hyperiux Vault - React & Next.js Interaction Effects.",
   description:
-    "Start with 50+ free source-first effects. Upgrade to Pro for 150+ effects.",
+    `Start with ${FREE_LABEL} free source-first effects. Upgrade to Pro for ${TOTAL_LABEL} effects.`,
   path: "/",
   image:
     "https://h1r7ltksnzlh2a5c.public.blob.vercel-storage.com/seo/homepage.jpg",

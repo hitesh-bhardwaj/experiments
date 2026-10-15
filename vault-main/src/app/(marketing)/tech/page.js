@@ -50,7 +50,7 @@ export default async function TechOverviewPage() {
           <TechHeader />
 
           {/* Cards Grid showing 6 selected technologies */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-3 gap-8 max-lg:grid-cols-2 max-md:grid-cols-1">
             {TECHNOLOGIES.map((tech) => {
               const count = getCountForTech(tech.slug, registry.items);
               return (
@@ -65,11 +65,11 @@ export default async function TechOverviewPage() {
         </div>
 
         {/* Footer */}
-        <footer className="relative overflow-hidden rounded-3xl border border-border/30 bg-zinc-950/40 backdrop-blur-md pt-10 pb-5 mb-8 px-12 max-md:px-6">
+        <footer className="relative overflow-hidden rounded-3xl border border-border/30 bg-zinc-950/40 backdrop-blur-lg pt-10 pb-5 mb-8 px-12 max-md:px-6">
           <div className="relative z-10 flex flex-col items-center text-center max-md:gap-2">
             <h2 className="text-2xl font-semibold tracking-tight text-white mb-2">Hyperiux Immersion Labs</h2>
             <p className="text-sm text-zinc-500">Optimized creative engineering for elite web developers.</p>
-            <p suppressHydrationWarning className="text-xs text-zinc-600 mt-6">© {new Date().getFullYear()} Hyperiux UI. All rights reserved.</p>
+            <p suppressHydrationWarning className="text-xs text-zinc-600 mt-6">© {new Date().getFullYear()} Hyperiux UI. All Rights Reserved.</p>
           </div>
         </footer>
       </TechBackground>

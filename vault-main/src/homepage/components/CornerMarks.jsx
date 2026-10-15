@@ -1,5 +1,5 @@
 
-const MARK = "pointer-events-none absolute size-[calc(var(--cvw)*0.5)] border-primary max-lg:size-2 max-sm:size-1.5";
+const MARK = "pointer-events-none absolute size-[calc(var(--cvw)*0.5)] border-primary max-lg:size-2 max-md:size-1.5";
 const CORNERS = [
     "-top-px -left-px border-t border-l",
     "-top-px -right-px border-t border-r",

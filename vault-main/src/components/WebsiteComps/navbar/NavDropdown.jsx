@@ -375,10 +375,10 @@ export default function NavDropdown({ panel }) {
     const NextPanel = nextPanel ? PANELS[nextPanel].Panel : null
 
     return (
-        <div className="absolute top-full left-1/2 z-50 w-max -translate-x-1/2 pt-[0.75vw]">
+        <div className="absolute top-full left-1/2 z-50 w-max -translate-x-1/2 pt-[calc(var(--hx-vw,1vw)*0.8)]">
             <div
                 ref={shellRef}
-                className="overflow-hidden border border-white/8 bg-grey p-[1vw] shadow-[0_1.2vw_3.5vw_rgba(0,0,0,0.55)]"
+                className="overflow-hidden border border-white/8 bg-grey p-[calc(var(--hx-vw,1vw)*1)] shadow-float"
                 style={{
                     width: currentPanel
                         ? PANELS[currentPanel].width

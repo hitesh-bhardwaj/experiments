@@ -47,19 +47,19 @@ export default function BlogArticleBody({
           stay visible for the article's full height. */}
       <div className="w-[30%] shrink-0 max-lg:hidden">
       
-        <div className="sticky top-[15vh] flex flex-col gap-[1.6vw]">
+        <div className="sticky top-[15vh] flex flex-col gap-[calc(var(--cvw)*1.6)]">
           <BlogAuthor author={author} />
 
       
-          <div className="flex flex-col gap-[0.8vw] type-small text-ink">
+          <div className="flex flex-col gap-[calc(var(--cvw)*0.8)] type-small text-ink">
             {(publishedAt || readingMinutes) && (
-              <div className="flex items-center gap-[1.2vw] type-small text-black/60">
+              <div className="flex items-center gap-[calc(var(--cvw)*1.2)] type-small text-black/60">
                 {publishedAt && (
                   <time dateTime={publishedAt}>Featured: {formatRailDate(publishedAt)}</time>
                 )}
 
                 {publishedAt && readingMinutes ? (
-                  <span aria-hidden="true" className="h-[1.6vw] w-px bg-black/20" />
+                  <span aria-hidden="true" className="h-[calc(var(--cvw)*1.6)] w-px bg-black/20" />
                 ) : null}
 
                 {readingMinutes ? <span>Read Time: {readingMinutes} mins</span> : null}
@@ -71,7 +71,7 @@ export default function BlogArticleBody({
             )}
           </div>
 
-          <div className="flex items-center gap-[0.6vw] type-small text-black/60">
+          <div className="flex items-center gap-[calc(var(--cvw)*0.6)] type-small text-black/60">
             <span>Share this Article:</span>
             <BlogSharePopover url={shareUrl} title={shareTitle} />
           </div>
@@ -91,11 +91,11 @@ export default function BlogArticleBody({
         </div>
       </div>
 
-      <div className="flex w-[66%] min-w-0 flex-col gap-[6vw] max-lg:w-full max-md:gap-[8vw]">
-        <div className="hidden flex-col gap-[3vw] max-lg:flex max-md:gap-[4vw]">
+      <div className="flex w-[66%] min-w-0 flex-col gap-[calc(var(--cvw)*6)] max-lg:w-full max-md:gap-[8vw]">
+        <div className="hidden flex-col gap-[calc(var(--cvw)*3)] max-lg:flex max-md:gap-[4vw]">
           <BlogAuthor author={author} />
 
-          <div className="flex flex-wrap items-center gap-x-[3vw] gap-y-2 type-small text-black/60">
+          <div className="flex flex-wrap items-center gap-x-[calc(var(--cvw)*3)] gap-y-2 type-small text-black/60">
             {publishedAt && (
               <time dateTime={publishedAt}>Featured: {formatRailDate(publishedAt)}</time>
             )}

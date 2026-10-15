@@ -84,13 +84,13 @@ function NavIconLink({
       onMouseEnter={onMouseEnter}
       target={external ? "_blank" : undefined}
       rel={external ? "noopener noreferrer" : undefined}
-      className={`group relative flex h-10 items-center gap-3 px-4 py-[1.5vw] text22 font-medium text-white/90 transition-[width,color] duration-300 ease-out hover:text-white ${
-        isExpanded ? "w-[18vw]" : "w-[3.6vw]"
+      className={`group relative flex h-10 items-center gap-3 px-4 py-[calc(var(--hx-vw,1vw)*1.5)] text22 font-medium text-white/90 transition-[width,color] duration-300 ease-out hover:text-white ${
+        isExpanded ? "w-[calc(var(--hx-vw,1vw)*18)]" : "w-[calc(var(--hx-vw,1vw)*3.6)]"
       }`}
     >
       <span
         aria-hidden="true"
-        className={`pointer-events-none absolute inset-0 -z-10 origin-top bg-[#1C1C1C] transition-transform duration-300 ease-out motion-reduce:transition-none ${
+        className={`pointer-events-none absolute inset-0 -z-10 origin-top bg-dark-card transition-transform duration-300 ease-out motion-reduce:transition-none ${
           isActive ? "scale-y-100" : "scale-y-0 group-hover:scale-y-100"
         }`}
       />
@@ -130,13 +130,13 @@ function SectionButton({
       type="button"
       onClick={onClick}
       onMouseEnter={onMouseEnter}
-      className={`group relative flex h-10 cursor-pointer items-center px-4 py-[1.5vw] text-left text22 font-medium text-white/90 transition-[width,color] duration-300 ease-out hover:text-white ${
-        isExpanded ? "w-[18vw]" : "w-[3.6vw]"
+      className={`group relative flex h-10 cursor-pointer items-center px-4 py-[calc(var(--hx-vw,1vw)*1.5)] text-left text22 font-medium text-white/90 transition-[width,color] duration-300 ease-out hover:text-white ${
+        isExpanded ? "w-[calc(var(--hx-vw,1vw)*18)]" : "w-[calc(var(--hx-vw,1vw)*3.6)]"
       } ${isExpanded ? "gap-3" : "gap-1.5"}`}
     >
       <span
         aria-hidden="true"
-        className={`pointer-events-none absolute inset-0 -z-10 origin-top bg-[#1C1C1C] transition-transform duration-300 ease-out motion-reduce:transition-none ${
+        className={`pointer-events-none absolute inset-0 -z-10 origin-top bg-dark-card transition-transform duration-300 ease-out motion-reduce:transition-none ${
           isActive ? "scale-y-100" : "scale-y-0 group-hover:scale-y-100"
         }`}
       />
@@ -577,7 +577,7 @@ export function Sidebar({
       // however late this hydrates; the slide is only on once the page is ready.
       data-sidebar-width
       data-sound-flow="off"
-      className="sticky bottom-0 left-0 top-0 z-51 h-screen opacity-0 bg-[#111111] text-white max-lg:hidden"
+      className="sticky bottom-0 left-0 top-0 z-51 h-screen opacity-0 bg-background text-white max-lg:hidden"
     >
       <button
         type="button"
@@ -585,7 +585,7 @@ export function Sidebar({
         onClick={toggle}
         // Its spot follows the sidebar's width (globals.css, html[data-sidebar])
         data-vault-sidebar-toggle
-        className="absolute top-6  z-50 bg-[#1C1C1C] hidden size-10 cursor-pointer items-center justify-center  text-white hover:bg-stone-700 hover:text-white sm:flex"
+        className="absolute top-6  z-50 bg-dark-card flex size-10 cursor-pointer items-center justify-center  text-white hover:bg-stone-700 hover:text-white max-md:hidden"
       >
         <div className={isExpanded ? "" : "-scale-x-100"}>
           <PanelLeft className="h-4 w-4" />
@@ -689,9 +689,9 @@ export function Sidebar({
                       onClick={(event) => navigateCategory(event, category.id)}
                       onMouseEnter={() => setHoveredSidebarKey("categories")}
                       className={`relative flex w-full items-center justify-between gap-3  py-1 text-left text-sm transition-colors cursor-pointer ${
-                        id === 0 ? "mt-[0.7vw]" : ""
+                        id === 0 ? "mt-[calc(var(--hx-vw,1vw)*0.7)]" : ""
                       } ${
-                        id === effectCategories.length - 1 ? "mb-[0.7vw]" : ""
+                        id === effectCategories.length - 1 ? "mb-[calc(var(--hx-vw,1vw)*0.7)]" : ""
                       } ${
                         isActive
                           ? "text-white"
@@ -709,7 +709,7 @@ export function Sidebar({
                       </span>
 
                       {count > 0 && (
-                        <span className="flex h-6 w-6 shrink-0 items-center justify-center bg-[#1C1C1C] text-center text-[0.65vw] text-white">
+                        <span className="flex h-6 w-6 shrink-0 items-center justify-center bg-dark-card text-center text-[calc(var(--hx-vw,1vw)*0.7)] text-white">
                           {count}
                         </span>
                       )}
@@ -769,9 +769,9 @@ export function Sidebar({
                       }
                       onMouseEnter={() => setHoveredSidebarKey("docs")}
                       className={`relative flex w-full items-center py-2 text-left text-sm transition-colors cursor-pointer ${
-                        index === 0 ? "mt-[0.7vw]" : ""
+                        index === 0 ? "mt-[calc(var(--hx-vw,1vw)*0.7)]" : ""
                       } ${
-                        index === resolvedTopLinks.length - 1 ? "mb-[0.7vw]" : ""
+                        index === resolvedTopLinks.length - 1 ? "mb-[calc(var(--hx-vw,1vw)*0.7)]" : ""
                       } ${
                         isActive
                           ? "text-white"
@@ -826,9 +826,9 @@ export function Sidebar({
                       onClick={(event) => navigateLegal(event, link.href)}
                       onMouseEnter={() => setHoveredSidebarKey("legal")}
                       className={`relative flex w-full items-center py-2 text-left text-sm transition-colors cursor-pointer ${
-                        index === 0 ? "mt-[0.7vw]" : ""
+                        index === 0 ? "mt-[calc(var(--hx-vw,1vw)*0.7)]" : ""
                       } ${
-                        index === resolvedLegalLinks.length - 1 ? "mb-[0.7vw]" : ""
+                        index === resolvedLegalLinks.length - 1 ? "mb-[calc(var(--hx-vw,1vw)*0.7)]" : ""
                       } ${
                         isActive
                           ? "text-white"

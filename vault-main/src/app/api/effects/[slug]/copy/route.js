@@ -1,6 +1,6 @@
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
-import { getEffectMetadata, getEffectSource } from "@/lib/registry";
+import { getEffectMetadata } from "@/lib/registry";
 import { getEffectAccessDecision } from "@/lib/effect-access";
 import { getInstallLimitDecision, getUnlockedEffectSlugsToday } from "@/lib/install-limit";
 import { getSanityEffectSource } from "@/lib/sanity";
@@ -10,7 +10,7 @@ import { buildEffectAiPrompt } from "@/lib/effect-ai-prompt";
 // every option that returns code goes through here, after sign-in + Pro
 // access checks:
 //   jsx / tsx - Sanity jsxCode/tsxCode
-//   prompt    - AI prompt built from the registry source
+//   prompt    - AI prompt built around Sanity tsxCode (same source as tsx)
 // Every option consumes the effect's daily copy slot (same shared bucket as
 // copy-usage, `hyperiux add` and MCP; an effect already taken today is free).
 // "Copy CLI" and "MCP" contain no source, so the client builds those itself -
@@ -28,12 +28,6 @@ function usageFields(result, effectSlugs) {
     remaining: result.remaining,
     effectSlugs,
   };
-}
-
-function findMainSource(effect) {
-  const files = effect?.files || [];
-  const main = files.find((file) => file.path === (effect.main || "index.tsx")) || files[0];
-  return typeof main?.content === "string" ? main.content : null;
 }
 
 export async function POST(request, { params }) {
@@ -56,7 +50,7 @@ export async function POST(request, { params }) {
     return NextResponse.json({ allowed: false, error: `Effect "${slug}" not found.` }, { status: 404 });
   }
 
-  const sanitySource = option === "prompt" ? null : await getSanityEffectSource(slug);
+  const sanitySource = await getSanityEffectSource(slug);
   const effectTier = sanitySource?.tier ?? effectMeta.tier ?? "pro";
   const access = await getEffectAccessDecision({ effectTier, clerkUserId: userId });
 
@@ -73,9 +67,8 @@ export async function POST(request, { params }) {
   let filename = null;
 
   if (option === "prompt") {
-    const effect = getEffectSource(slug);
-    const source = findMainSource(effect);
-    if (source) content = buildEffectAiPrompt({ effect, source });
+    const source = sanitySource?.tsxCode;
+    if (source) content = buildEffectAiPrompt({ effect: effectMeta, source });
   } else {
     content = option === "jsx" ? sanitySource?.jsxCode : sanitySource?.tsxCode;
     filename = `index.${option}`;

@@ -16,9 +16,6 @@ import { getCreditsPerYear } from "@/lib/plans";
 const FLY_DURATION = 0.9;
 const FLY_FADE_DELAY = 0.75;
 
-// Demo wallet: spend template credits on example templates and watch each
-// credit fly into the card it unlocks. Display only - it isn't linked to the
-// visitor's account. Credit counts come from lib/plans.js.
 const PLAN_OPTIONS = [
   { id: "pro", label: "Pro · Yearly", name: "Pro yearly", credits: getCreditsPerYear("pro", "yearly"), note: "selected catalogue", full: false },
   { id: "plus", label: "Pro+ · Yearly", name: "Pro+ yearly", credits: getCreditsPerYear("pro_plus", "yearly"), note: "full catalogue · worth ~$200", full: true },
@@ -221,8 +218,8 @@ export default function PricingCredits() {
       <div className="site-container flex flex-col gap-[calc(var(--cvw)*3)] max-lg:gap-[5vw] max-md:gap-[10vw]">
         <div className="flex flex-col gap-[calc(var(--cvw)*1.8)] max-lg:gap-[3vw] max-md:gap-[10vw]">
           <LineReveal as="h2" className="type-h1">
-            One Credit.<br />
-            <span className="gradient-text-animate">One Whole Site.</span>
+            <span className="block">One Credit.</span>
+            <span className="block"><span className="gradient-text-animate">One Whole Site.</span></span>
           </LineReveal>
           <p className="fadeup type-body-lg w-[40%] text-black/60 max-lg:w-[70%] max-md:w-full">
             A credit unlocks one complete template: every page, section and interaction, as source code you own. Try it: spend your credits below.

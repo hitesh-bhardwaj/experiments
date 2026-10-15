@@ -118,7 +118,7 @@ const About = () => {
         <Image
           ref={lineRef}
           src={aboutLine}
-          alt=""
+          alt="kyntra"
           aria-hidden
           className="pointer-events-none absolute top-[70%] left-1/2 w-screen max-w-none -translate-x-1/2 -translate-y-1/2 opacity-0 select-none max-[1025px]:hidden"
         />

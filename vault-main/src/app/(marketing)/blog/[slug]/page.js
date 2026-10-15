@@ -97,12 +97,12 @@ export default async function BlogPostPage({ params }) {
       <Navbar effects={effects} />
       <LenisSmoothScroll allowNestedScroll />
 
-      <main className="relative flex w-full flex-col gap-[5.5vw] pt-25 max-lg:pt-32 max-md:gap-[15vw] max-md:pt-28">
+      <main className="relative flex w-full flex-col gap-[calc(var(--cvw)*5.5)] pt-25 max-lg:pt-32 max-md:gap-[15vw] max-md:pt-28">
         <BlogDetailHero post={postWithAuthor} />
 
         {/* One light area (bg-light) for everything below the cover image, as on the effect page */}
         <div data-sound-flow="off" className="bg-light text-ink">
-          <article id="blog-content" className="blog-theme-light site-container section-x pt-[5.5vw] pb-6 max-md:py-[12%]">
+          <article id="blog-content" className="blog-theme-light site-container section-x pt-[calc(var(--cvw)*5.5)] pb-6 max-md:py-[12%]">
             <BlogArticleBody
               slug={slug}
               author={author}

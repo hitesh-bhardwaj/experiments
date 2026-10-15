@@ -17,7 +17,7 @@ const SCRAMBLE_TAIL = 8;
 const GLYPH_SWAP_MS = 40;
 const FLASH_MS = 90;
 const SCRAMBLE_PRE = "rgba(255,255,255,0.28)";
-const SCRAMBLE_FLASH = "#ffffff";
+const SCRAMBLE_FLASH = "var(--foreground)";
 
 const randomGlyph = () =>
   SCRAMBLE_GLYPHS[Math.floor(Math.random() * SCRAMBLE_GLYPHS.length)];
@@ -28,7 +28,7 @@ function TerminalTick({ dataKey }) {
     <svg
       data-tick-key={dataKey}
       viewBox="0 0 18 18"
-      className="size-3.5 shrink-0 text-[#63d69a] opacity-0"
+      className="size-3.5 shrink-0 text-success opacity-0"
       fill="none"
       aria-hidden="true"
     >
@@ -49,7 +49,7 @@ function Panel({ title, children, className = "" }) {
       className={`overflow-hidden bg-black/40 ring-1 ring-inset ring-foreground/8 backdrop-blur-lg ${className}`}
     >
       <div className="flex h-[30px] items-center border-b border-white/6 px-3">
-        <p className="font-mono text-[#8a8a8a]">
+        <p className="font-mono text-[11px] text-light-grey">
           {title}
         </p>
       </div>
@@ -61,7 +61,7 @@ function Panel({ title, children, className = "" }) {
 function TreeFolder({ label, depth = 0 }) {
   return (
     <div
-      className="flex items-center gap-3 text-[#bdbdbd]"
+      className="flex items-center gap-3 text-border"
       style={{ paddingLeft: `${depth * 1.35}vw` }}
     >
       <svg
@@ -82,7 +82,7 @@ function TreeFile({ label, depth = 0, className = "", right = null, dataKey }) {
   return (
     <div
       data-file-key={dataKey}
-      className={`flex items-center justify-between px-[calc(var(--cvw)*0.55)] py-[calc(var(--cvw)*0.35)] opacity-0 max-md:px-2 max-md:py-1.5 ${className}`}
+      className={`flex items-center justify-between px-[calc(var(--cvw)*0.6)] py-[calc(var(--cvw)*0.4)] opacity-0 max-md:px-2 max-md:py-1.5 ${className}`}
       style={{ paddingLeft: `calc(var(--cvw) * ${depth * 1.35 + 0.55})` }}
     >
       <div className="flex min-w-0 items-center gap-3">
@@ -96,7 +96,7 @@ function TreeFile({ label, depth = 0, className = "", right = null, dataKey }) {
           <path d="M7 3.75h6l4 4v12.5H7A1.25 1.25 0 0 1 5.75 19V5A1.25 1.25 0 0 1 7 3.75z" />
           <path d="M13 3.75V8h4.25" />
         </svg>
-        <span className="truncate font-mono text-[12px] leading-[1.9] text-[#bdbdbd]">
+        <span className="truncate font-mono text-[12px] leading-[1.9] text-border">
           {label}
         </span>
       </div>
@@ -430,13 +430,13 @@ export default function InstallationProcess({ id = "code-block", play }) {
         }, ">");
 
         // Code block reveals - typed with per-token syntax colours
-        const W = "#bdbdbd"; // Theremin's code text
+        const W = "var(--border)"; // Theremin's code text
         typeColoredLine(tl, codeRefs.current.line1, [
-          { text: "import",                            color: "#939393" },
+          { text: "import",                            color: "var(--light-grey)" },
           { text: " ",                                 color: W },
           { text: "SplitCanvas",                       color: "#B383D3" },
           { text: " ",                                 color: W },
-          { text: "from",                              color: "#939393" },
+          { text: "from",                              color: "var(--light-grey)" },
           { text: " ",                                 color: W },
           { text: '"@/components/effects/split-canvas"', color: "#DDA75A" },
           { text: ";",                                 color: W },
@@ -445,7 +445,7 @@ export default function InstallationProcess({ id = "code-block", play }) {
         typeColoredLine(tl, codeRefs.current.line2, [], "+=0.02");
 
         typeColoredLine(tl, codeRefs.current.line3, [
-          { text: "export default function", color: "#939393" },
+          { text: "export default function", color: "var(--light-grey)" },
           { text: " ",                       color: W },
           { text: "Page",                    color: "#B383D3" },
           { text: "()",                      color: W },
@@ -508,57 +508,57 @@ export default function InstallationProcess({ id = "code-block", play }) {
     <section
       id={id || undefined}
       ref={sectionRef}
-      className="relative w-full overflow-hidden text-foreground max-md:px-0 max-md:py-20 max-sm:py-0 max-sm:pb-8"
+      className="relative w-full overflow-hidden text-foreground max-md:px-0 max-md:pt-0 max-md:pb-8"
     >
       <div className="mx-auto w-full max-w-450">
         <div className="grid grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] gap-[calc(var(--cvw)*1.4)] max-md:grid-cols-1 max-md:gap-5">
           {/* LEFT COLUMN - terminal + code */}
           <div className="flex flex-col gap-[calc(var(--cvw)*1.4)] max-md:contents">
-            <Panel title="amazing_project" className="fadeup min-h-[calc(var(--cvw)*25)] max-sm:min-h-[40vh] max-md:min-h-[30vh] ">
-              <div className="font-mono text-[12px] leading-[1.9] text-[#bdbdbd]">
+            <Panel title="amazing_project" className="fadeup min-h-[calc(var(--cvw)*25)] max-md:min-h-[40vh]">
+              <div className="font-mono text-[12px] leading-[1.9] text-border">
                 <div className="flex items-center gap-2">
-                  <span data-terminal-key="dollar1" className="text-[#FF6B00]">$</span>
-                  <span data-terminal-key="init" className="text-[#bdbdbd]" />
+                  <span data-terminal-key="dollar1" className="text-primary">$</span>
+                  <span data-terminal-key="init" className="text-border" />
                 </div>
 
                 <div className="flex items-center gap-2">
                   <TerminalTick dataKey="created" />
-                  <span data-terminal-key="created" className="text-[#63d69a]" />
+                  <span data-terminal-key="created" className="text-success" />
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <span data-terminal-key="dollar2" className="text-[#FF6B00]">$</span>
-                  <span data-terminal-key="add" className="text-[#bdbdbd]" />
+                  <span data-terminal-key="dollar2" className="text-primary">$</span>
+                  <span data-terminal-key="add" className="text-border" />
                 </div>
 
                 <div className="flex items-center gap-2">
                   <span className="text-white/0">•</span>
-                  <span data-terminal-key="resolving" className="text-[#666]" />
+                  <span data-terminal-key="resolving" className="text-light-grey" />
                 </div>
 
                 <div className="flex items-center gap-2">
                   <TerminalTick dataKey="added" />
-                  <span data-terminal-key="added" className="text-[#63d69a]" />
+                  <span data-terminal-key="added" className="text-success" />
                 </div>
 
                 <div className="flex items-center gap-2">
                   <span className="text-white/0">•</span>
-                  <span data-terminal-key="reduced" className="text-[#666]" />
+                  <span data-terminal-key="reduced" className="text-light-grey" />
                 </div>
 
                 <div className="flex items-center gap-2">
                   <TerminalTick dataKey="done" />
-                  <span data-terminal-key="done" className="text-[#63d69a]" />
+                  <span data-terminal-key="done" className="text-success" />
                   <span
                     data-terminal-key="doneCursor"
-                    className="inline-block h-[1.15em] w-[0.45em] bg-[#FF6B00] opacity-0"
+                    className="inline-block h-[1.15em] w-[0.45em] bg-primary opacity-0"
                   />
                 </div>
               </div>
             </Panel>
 
-            <Panel title="app/page.jsx" className={`fadeup min-h-[calc(var(--cvw)*20)] max-md:min-h-[20vh] max-sm:min-h-[25vh] max-md:order-last`}>
-              <div className="font-mono text-[12px] leading-[1.9] text-[#bdbdbd]">
+            <Panel title="app/page.jsx" className={`fadeup min-h-[calc(var(--cvw)*20)] max-md:min-h-[25vh] max-md:order-last`}>
+              <div className="font-mono text-[12px] leading-[1.9] text-border">
                 <div data-code-key="line1" />
                 <div data-code-key="line2" />
                 <div data-code-key="line3" />
@@ -570,14 +570,14 @@ export default function InstallationProcess({ id = "code-block", play }) {
 
           {/* RIGHT COLUMN - file tree */}
           <div className="flex flex-col gap-[calc(var(--cvw)*1.15)] max-md:gap-5">
-            <Panel title="amazing_project / Components" className="fadeup h-full max-md:min-h-[25vh] max-sm:min-h-[25vh]">
+            <Panel title="amazing_project / Components" className="fadeup h-full max-md:min-h-[25vh]">
               <div className="space-y-[calc(var(--cvw)*0.9)] max-md:space-y-3">
 
                 {/* app/ */}
                 <TreeFolder label="app" depth={0} />
                 <div>
-                  <div className="relative ml-[calc(var(--cvw)*0.38)] border-l border-white/10 pl-[calc(var(--cvw)*1.2)] max-md:ml-1.5 max-md:pl-3">
-                    <div className="flex items-center gap-3 text-[#bdbdbd]">
+                  <div className="relative ml-[calc(var(--cvw)*0.4)] border-l border-white/10 pl-[calc(var(--cvw)*1.2)] max-md:ml-1.5 max-md:pl-3">
+                    <div className="flex items-center gap-3 text-border">
                       <svg viewBox="0 0 24 24" className="size-3.5 shrink-0 text-[#c084fc]" fill="none" stroke="currentColor" strokeWidth="1.7">
                         <path d="M7 3.75h6l4 4v12.5H7A1.25 1.25 0 0 1 5.75 19V5A1.25 1.25 0 0 1 7 3.75z" />
                         <path d="M13 3.75V8h4.25" />
@@ -590,20 +590,20 @@ export default function InstallationProcess({ id = "code-block", play }) {
                 {/* components/ */}
                 <TreeFolder label="components" depth={0} />
                 <div>
-                  <div className="relative ml-[calc(var(--cvw)*0.38)] border-l border-white/10 pl-[calc(var(--cvw)*1.1)] max-md:ml-1.5 max-md:pl-4">
+                  <div className="relative ml-[calc(var(--cvw)*0.4)] border-l border-white/10 pl-[calc(var(--cvw)*1.1)] max-md:ml-1.5 max-md:pl-4">
 
                     {/* effects/ - hidden until animation */}
                     <div data-file-key="effectsFolder">
                       <TreeFolder label="effects" depth={0} />
                     </div>
-                    <div className=" pt-[calc(var(--cvw)*0.45)]  max-md:pt-1.5">
-                      <div className="relative ml-[calc(var(--cvw)*0.38)] border-l border-white/10 pl-[calc(var(--cvw)*1.1)] max-md:ml-1.5 max-md:pl-4">
+                    <div className=" pt-[calc(var(--cvw)*0.5)]  max-md:pt-1.5">
+                      <div className="relative ml-[calc(var(--cvw)*0.4)] border-l border-white/10 pl-[calc(var(--cvw)*1.1)] max-md:ml-1.5 max-md:pl-4">
 
                         {/* split-canvas/ - hidden until animation */}
                         <div data-file-key="splitCanvasFolder">
                           <TreeFolder label="split-canvas" depth={0} />
                         </div>
-                        <div className="space-y-[calc(var(--cvw)*0.35)]  pt-[calc(var(--cvw)*0.45)] max-md:space-y-1.5 max-md:pl-3 max-md:pt-1.5">
+                        <div className="space-y-[calc(var(--cvw)*0.4)]  pt-[calc(var(--cvw)*0.5)] max-md:space-y-1.5 max-md:pl-3 max-md:pt-1.5">
 
                           <TreeFile
                             label="index.jsx"
@@ -611,12 +611,12 @@ export default function InstallationProcess({ id = "code-block", play }) {
                             right={
                               <span
                                 data-file-key="addedBadge1"
-                                className="px-3 py-1 font-mono text-[12px] text-[#63d69a] opacity-0"
+                                className="px-3 py-1 font-mono text-[12px] text-success opacity-0"
                               >
                                 + Added
                               </span>
                             }
-                            className="bg-[rgba(99,214,154,.1)]"
+                            className="bg-success/10"
                           />
 
                           <TreeFile
@@ -625,12 +625,12 @@ export default function InstallationProcess({ id = "code-block", play }) {
                             right={
                               <span
                                 data-file-key="addedBadge2"
-                                className="px-3 py-1 max-sm:text-nowrap font-mono text-[12px] text-[#63d69a] opacity-0"
+                                className="px-3 py-1 max-md:text-nowrap font-mono text-[12px] text-success opacity-0"
                               >
                                 + Added
                               </span>
                             }
-                            className="bg-[rgba(99,214,154,.1)]"
+                            className="bg-success/10"
                           />
 
                           <TreeFile
@@ -639,12 +639,12 @@ export default function InstallationProcess({ id = "code-block", play }) {
                             right={
                               <span
                                 data-file-key="addedBadge3"
-                                className="px-3 py-1 font-mono text-[12px] text-[#63d69a] opacity-0"
+                                className="px-3 py-1 font-mono text-[12px] text-success opacity-0"
                               >
                                 + Added
                               </span>
                             }
-                            className="bg-[rgba(99,214,154,.1)]"
+                            className="bg-success/10"
                           />
 
                         </div>
@@ -654,7 +654,7 @@ export default function InstallationProcess({ id = "code-block", play }) {
                 </div>
 
                 <div className="pt-[calc(var(--cvw)*1)] max-md:pt-3">
-                  <p className="font-mono text-[12px] leading-[1.9] text-[#666]">ui</p>
+                  <p className="font-mono text-[12px] leading-[1.9] text-light-grey">ui</p>
                 </div>
               </div>
             </Panel>

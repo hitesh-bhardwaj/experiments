@@ -1,8 +1,9 @@
 import { homepage } from "./util";
+import { FREE_LABEL, TOTAL_LABEL } from "./library-counts";
 
 const DEFAULT_TITLE = "Hyperiux Vault - React & Next.js Interaction Effects.";
 const DEFAULT_DESCRIPTION =
-  "Start with 50+ free source-first effects. Join Pro for 150+ effects.";
+  `Start with ${FREE_LABEL} free source-first effects. Join Pro for ${TOTAL_LABEL} effects.`;
 const DEFAULT_IMAGE = "/seo/homepage.png";
 
 export function getCanonicalUrl(path = "/") {

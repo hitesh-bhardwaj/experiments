@@ -8,8 +8,7 @@ import React from 'react'
  * }} props
  */
 const ScrollBottom = ({ textColor,
-  className = 'bottom-[5%] gap-[1vw]',
-  as = 'p'
+  className = 'bottom-[5%] gap-[calc(var(--cvw)*1)]',
 }) => {
   return (
     <div className={`fixed left-1/2 z-10 -translate-x-1/2 ${textColor} flex flex-col justify-center items-center  ${className}`}>
@@ -17,7 +16,7 @@ const ScrollBottom = ({ textColor,
       <svg
         width="20"
         height="28"
-        className="size-[1.5vw] max-lg:size-[3vw] max-md:size-[4vw]"
+        className="size-[calc(var(--cvw)*1.5)] max-lg:size-[3vw] max-md:size-[4vw]"
         viewBox="0 0 20 28"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"

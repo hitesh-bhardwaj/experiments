@@ -148,7 +148,7 @@ export function TooltipHost() {
               transition={{ type: "spring", stiffness: 400, damping: 26, mass: 0.6 }}
               style={{ transformOrigin: anchor.origin }}
               // w-max: size to the label, not to the space left before the viewport edge; max-w still wraps long ones.
-              className="relative w-max max-w-[20vw] max-h-30 overflow-hidden bg-[#2B2B2B] px-3 py-1.5 text-center text-xs font-medium text-white shadow-lg"
+              className="relative w-max max-w-[20vw] max-h-30 overflow-hidden bg-grey px-3 py-1.5 text-center text-xs font-medium text-white shadow-lg"
             >
               <AnimatePresence mode="popLayout" initial={false}>
                 <motion.div

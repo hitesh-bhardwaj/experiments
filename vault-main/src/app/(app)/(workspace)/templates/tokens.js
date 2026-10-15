@@ -27,7 +27,7 @@ export const GUTTER = "mx-auto w-full section-x";
 // Small pill on a template shot (category, price, catalogue).
 // Badges sit on the card shot - a barely-there shadow (as on the effect cards) keeps
 // them readable over any screenshot.
-export const BADGE = `inline-flex py-1 items-center gap-1.5 px-2.25 ${T14} backdrop-blur-lg shadow-[0_0.1vw_0.4vw_color-mix(in_srgb,black_8%,transparent)]`;
+export const BADGE = `inline-flex py-1 items-center gap-1.5 px-2.25 ${T14} backdrop-blur-lg shadow-sm`;
 
 // Which credit catalogue a template sits in (lib/mock-templates): "selected"
 // templates can be redeemed with a Pro credit, "full" ones need Pro+.
@@ -67,5 +67,5 @@ export const EFFECT_GRID_COLS = {
   2: "w-[calc((100%-2.5vw)/2)] max-lg:w-[calc((100%-2.5vw)/2)] max-md:w-full",
   3: "w-[calc((100%-5vw)/3)] max-lg:w-[calc((100%-2.5vw)/2)] max-md:w-full",
 };
-export const TEMPLATE_GRID = "flex flex-wrap gap-[2.5vw] max-md:gap-y-[12vw]";
-export const TEMPLATE_CARD_WIDTH = "w-[calc((100%-2.5vw)/2)] max-md:w-full";
+export const TEMPLATE_GRID = "flex flex-wrap gap-[calc(var(--cvw)*2.5)] max-md:gap-y-[12vw]";
+export const TEMPLATE_CARD_WIDTH = "w-[calc((100%-var(--cvw)*2.5)/2)] max-md:w-full";

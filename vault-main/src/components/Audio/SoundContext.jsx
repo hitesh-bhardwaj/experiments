@@ -149,7 +149,7 @@ const [isAudioEnabled, setIsAudioEnabled] = useState(true);
       } else {
         // Disable audio - stop background music
         backgroundAudioRef.current.pause();
-        console.log("Disabled audio");
+        // console.log("Disabled audio");
         setIsAudioPlaying(false);
       }
     } catch (error) {

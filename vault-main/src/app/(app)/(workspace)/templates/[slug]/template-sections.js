@@ -22,10 +22,10 @@ export const TEMPLATE_SECTIONS = {
     sections: [
       { match: "hero", name: "Hero", note: "An intro sequence: the image settles first, then the headline and header rise in.", effect: "overflow-text-reveal" },
       { match: "portfolio", name: "Portfolio", note: "A scroll-pinned project list that steps through the work.", effect: "overflow-text-reveal" },
-      { match: "work-with-me", name: "Why work with me", note: "Positioning copy revealed line by line.", effect: "overflow-text-reveal" },
+      { match: "work-with-me", name: "Why Work with Me", note: "Positioning copy revealed line by line.", effect: "overflow-text-reveal" },
       { match: "services", name: "Services", note: "Horizontal scroll on desktop, a plain grid on mobile.", effect: "overflow-text-reveal" },
       { match: "awards", name: "Awards", note: "A hover-reveal award list with an interactive divider.", effect: "overflow-text-reveal" },
-      { match: "trusted", name: "Trusted by", note: "Floating award objects around the trust statement.", effect: "overflow-text-reveal" },
+      { match: "trusted", name: "Trusted By", note: "Floating award objects around the trust statement.", effect: "overflow-text-reveal" },
       { match: "clientblur", name: "Clients", note: "Ripple rings around the client logos." },
       { match: "clients", name: "Clients", note: "Ripple rings around the client logos." },
       { match: "testimonials", name: "Testimonials", note: "A quote carousel.", effect: "overflow-text-reveal" },
@@ -40,13 +40,13 @@ export const TEMPLATE_SECTIONS = {
     sections: [
       { match: "oris-hero", name: "Hero", note: "A real-time 3D tooth model visitors can rotate, beside the intro copy.", effect: "split-text-lines" },
       { match: "about-oris", name: "About", note: "Practice overview with four animated slot counters.", effect: "slot-counter" },
-      { match: "care-comfort", name: "Care & comfort", note: "A smooth carousel of care highlights.", effect: "smooth-carousel" },
+      { match: "care-comfort", name: "Care & Comfort", note: "A smooth carousel of care highlights.", effect: "smooth-carousel" },
       { match: "dental-treatments", name: "Treatments", note: "A scroll-pinned, stacked card deck of treatments.", effect: "split-text-lines" },
-      { match: "parallax", name: "Statement break", note: "A full-bleed parallax statement with a scroll-driven text fill.", effect: "text-fill-animation" },
+      { match: "parallax", name: "Statement Break", note: "A full-bleed parallax statement with a scroll-driven text fill.", effect: "text-fill-animation" },
       { match: "oris-reviews", name: "Reviews", note: "Ribbon strips of patient reviews.", effect: "text-fill-animation" },
       { match: "reviews", name: "Reviews", note: "Ribbon strips of patient reviews.", effect: "text-fill-animation" },
-      { match: "passion-meet-purpose", name: "Clinic & doctors", note: "A grid gallery of the clinic and its doctors.", effect: "split-text-lines" },
-      { match: "oris-form", name: "Book an appointment", note: "A booking card with a validated contact form.", effect: "contact-form" },
+      { match: "passion-meet-purpose", name: "Clinic & Doctors", note: "A grid gallery of the clinic and its doctors.", effect: "split-text-lines" },
+      { match: "oris-form", name: "Book an Appointment", note: "A booking card with a validated contact form.", effect: "contact-form" },
       { match: "brighten", name: "Footer", note: "An interactive dot-canvas footer with the brand wordmark.", effect: "char-stagger-button" },
     ],
   },
@@ -56,24 +56,24 @@ export const TEMPLATE_SECTIONS = {
     sections: [
       { match: "hero", name: "Hero", note: "A full-screen intro with counting launch figures.", effect: "number-counter" },
       { match: "about", name: "About", note: "Brand positioning with a masked headline reveal.", effect: "mask-text-reveal" },
-      { match: "lumera-features", name: "Feature reveal", note: "A pinned section that scrolls the residence features sideways.", effect: "horizontal-feature-reveal" },
+      { match: "lumera-features", name: "Feature Reveal", note: "A pinned section that scrolls the residence features sideways.", effect: "horizontal-feature-reveal" },
       { match: "services", name: "Services", note: "A draggable marquee of what the development offers.", effect: "draggable-marquee" },
-      { match: "feature-reveal", name: "Feature reveal", note: "A statement, then a pinned section that scrolls the residences sideways.", effect: "horizontal-feature-reveal" },
+      { match: "feature-reveal", name: "Feature Reveal", note: "A statement, then a pinned section that scrolls the residences sideways.", effect: "horizontal-feature-reveal" },
       { match: "works", name: "Works", note: "Project listing with parallax images.", effect: "parallax-image-animation" },
       { match: "residences", name: "Residences", note: "A dark gallery of the residence interiors, room by room.", effect: "parallax-image-animation" },
-      { match: "refinement", name: "A world of refinement", note: "An image slider with the advisor call to action.", effect: "mask-text-reveal" },
+      { match: "refinement", name: "A World of Refinement", note: "An image slider with the advisor call to action.", effect: "mask-text-reveal" },
       { match: "heart-of-dubai", name: "Location", note: "The address, framed by the landmarks around it.", effect: "mask-text-reveal" },
-      { match: "new-standard", name: "A new standard", note: "A closing statement with a video of the residences.", effect: "mask-text-reveal" },
-      { match: "stats", name: "Track record", note: "Years of experience, homes delivered and projects, counted up.", effect: "number-counter" },
+      { match: "new-standard", name: "A New Standard", note: "A closing statement with a video of the residences.", effect: "mask-text-reveal" },
+      { match: "stats", name: "Track Record", note: "Years of experience, homes delivered and projects, counted up.", effect: "number-counter" },
       { match: "project", name: "Project", note: "Project detail with an infinite carousel.", effect: "mask-text-reveal" },
       { match: "showcase", name: "Showcase", note: "A background-video showcase.", effect: "mask-text-reveal" },
-      { match: "core features", name: "Core features", note: "The signature features around an interactive image gallery.", effect: "mask-text-reveal" },
-      { match: "bringing", name: "Bringing it home", note: "A supporting video section.", effect: "mask-text-reveal" },
-      { after: "bringing", name: "Project hover", note: "Hover a project name to preview its image." },
+      { match: "core features", name: "Core Features", note: "The signature features around an interactive image gallery.", effect: "mask-text-reveal" },
+      { match: "bringing", name: "Bringing It Home", note: "A supporting video section.", effect: "mask-text-reveal" },
+      { after: "bringing", name: "Project Hover", note: "Hover a project name to preview its image." },
       { match: "faq", name: "FAQ", note: "Accordion answers that open with a smooth height animation.", effect: "animated-faq" },
       { match: "highlights", name: "Highlights", note: "Nearby highlights and amenities.", effect: "mask-text-reveal" },
       { match: "roi", name: "ROI", note: "Investment and return figures that count up.", effect: "number-counter" },
-      { match: "cta", name: "Call to action", note: "The enquiry call to action.", effect: "mask-text-reveal" },
+      { match: "cta", name: "Call to Action", note: "The enquiry call to action.", effect: "mask-text-reveal" },
       { match: "footer", name: "Footer", note: "A parallax footer with the contact form.", effect: "parallax-footer" },
     ],
   },
@@ -83,19 +83,22 @@ export const TEMPLATE_SECTIONS = {
     sections: [
       { match: "one app", name: "Hero", note: "A full-screen intro with an animated app mockup." },
       { match: "kyntra-about", name: "About", note: "Brand and positioning." },
-      { match: "kyntra-section-break", name: "Section break", note: "A scroll-driven transition between sections." },
+      { match: "kyntra-section-break", name: "Section Break", note: "A scroll-driven transition between sections." },
       { match: "features", name: "Features", note: "Appliance records, warranties and repair history, stacked as you scroll.", effect: "scroll-stack" },
       { match: "smarter", name: "Smarter", note: "A supporting feature breakdown." },
-      { match: "how-it-works", name: "How Kyntra works", note: "A step-by-step onboarding walkthrough.", effect: "char-stagger-primary-button" },
+      { match: "how-it-works", name: "How Kyntra Works", note: "A step-by-step onboarding walkthrough.", effect: "char-stagger-primary-button" },
       { match: "trusted", name: "Trust", note: "Trusted-professional proof with counting figures and parallax imagery.", effect: "number-counter" },
       { match: "stories", name: "Testimonials", note: "A customer testimonial carousel." },
       { match: "resources", name: "Blogs", note: "An article listing.", effect: "char-stagger-button" },
       { match: "faq", name: "FAQ", note: "Accordion answers that open with a smooth height animation.", effect: "animated-faq" },
-      { match: "cta", name: "Call to action", note: "The app download call to action.", effect: "char-stagger-primary-button" },
+      { match: "cta", name: "Call to Action", note: "The app download call to action.", effect: "char-stagger-primary-button" },
       { match: "footer", name: "Footer", note: "A parallax footer with the enquiry form.", effect: "parallax-footer" },
     ],
   },
 };
+
+// Title case: every word capitalised except short joining words mid-name.
+const SMALL_WORDS = new Set(["a", "an", "the", "and", "or", "of", "to", "in", "on", "at", "by", "for", "with"]);
 
 const tidy = (label = "") =>
   label
@@ -103,8 +106,12 @@ const tidy = (label = "") =>
     .split(/[-_\s]+/)
     .filter(Boolean)
     .slice(0, 5)
-    .join(" ")
-    .replace(/^./, (c) => c.toUpperCase());
+    .map((word, i, words) =>
+      i > 0 && i < words.length - 1 && SMALL_WORDS.has(word.toLowerCase())
+        ? word.toLowerCase()
+        : word.charAt(0).toUpperCase() + word.slice(1),
+    )
+    .join(" ");
 
 /**
  * Names the captured layers of one device. Tiny unlabelled layers (spacers)

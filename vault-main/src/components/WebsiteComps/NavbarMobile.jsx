@@ -562,7 +562,7 @@ export default function NavbarMobile() {
           visibility: "hidden",
           transform: "translate3d(0, -18px, 0)",
         }}
-        className="fixed left-0 top-(--announcement-offset) transition-[top] duration-300 ease-out z-1100 hidden w-full items-center justify-between border-b border-white/5 bg-black/90 px-6 py-4 backdrop-blur-xl max-lg:flex"
+        className="fixed left-0 top-(--announcement-offset) transition-[top] duration-300 ease-out z-1100 hidden w-full items-center justify-between border-b border-white/5 bg-black/90 px-6 py-4 backdrop-blur-lg max-lg:flex"
       >
         <Link prefetch={false} href="/" onClick={handleNavigate} aria-label="Hyperiux Vault home">
           <HyperiuxLogo className="h-auto max-md:w-[40vw] text-primary max-lg:w-[25vw]" />

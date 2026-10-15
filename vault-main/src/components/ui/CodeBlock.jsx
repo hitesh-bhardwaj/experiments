@@ -25,9 +25,9 @@ import { ToastViewport, useToastQueue } from "@/components/ui/Toast";
 const LABELS = { bash: "Terminal", sh: "Terminal", tsx: "TSX", ts: "TS", jsx: "JSX", js: "JS", css: "CSS", json: "JSON", glsl: "GLSL", text: "Text", plaintext: "Text" };
 
 const TOKEN = {
-    c: "text-[#6a6a6a] italic",
+    c: "text-light-grey italic",
     s: "text-[#FFB27A]",
-    k: "text-[#FF8A3D]",
+    k: "text-primary-hover",
     t: "text-[#7fd1c7]",
     n: "text-[#f2c46d]",
 };
@@ -176,7 +176,7 @@ function getVariantFilename(filename, variant) {
 
 function CopyLimitOverlay({ message, ctaHref, ctaLabel = "Upgrade to Pro" }) {
     return (
-        <div className="absolute inset-0 z-20 flex flex-col items-center justify-center gap-3 bg-white/10 px-6 py-6 text-center backdrop-blur-md">
+        <div className="absolute inset-0 z-20 flex flex-col items-center justify-center gap-3 bg-white/10 px-6 py-6 text-center backdrop-blur-lg">
             <Lock className="h-8 w-8 text-white/70" strokeWidth={1.5} />
             <p className="max-w-2xl text-sm font-medium text-white">{message}</p>
             {ctaHref && (
@@ -184,7 +184,7 @@ function CopyLimitOverlay({ message, ctaHref, ctaLabel = "Upgrade to Pro" }) {
               id={"upgrade-to-pro-codeblock"}
 
                     href={ctaHref}
-                    className="bg-[#ff5f00] px-4 py-2 text-xs font-medium text-white! transition hover:bg-[#e05500]"
+                    className="bg-primary px-4 py-2 text-xs font-medium text-white! transition hover:bg-primary-hover"
                 >
                     {ctaLabel}
                 </Link>
@@ -229,7 +229,7 @@ function HeaderSwitch({ label, options, value, onPick }) {
     }, [value, options]);
 
     return (
-        <span ref={groupRef} role="radiogroup" aria-label={label} className="relative isolate inline-flex gap-0.5 bg-[#f4f4f4]/6 p-0.5 max-sm:hidden">
+        <span ref={groupRef} role="radiogroup" aria-label={label} className="relative isolate inline-flex gap-0.5 bg-light/6 p-0.5 max-md:hidden">
             <span
                 aria-hidden="true"
                 className="absolute top-0.5 bottom-0.5 left-0 -z-1 bg-primary transition-[transform,width] duration-500 ease-[cubic-bezier(.16,1,.3,1)]"
@@ -243,7 +243,7 @@ function HeaderSwitch({ label, options, value, onPick }) {
                     aria-checked={option.value === value}
                     onClick={() => onPick(option.value)}
                     className={`h-[26px] cursor-pointer px-[9px] font-mono text-[11.5px] transition-colors duration-500 ${
-                        option.value === value ? "text-background" : "text-[#9c9c9c] hover:text-white"
+                        option.value === value ? "text-background" : "text-light-grey hover:text-white"
                     }`}
                 >
                     {option.label}
@@ -352,13 +352,13 @@ export function CodeBlock({
     };
 
     return (
-        <div data-sound-hover="off" className={`codeblock-root fadeup relative my-6 overflow-hidden bg-[#111] shadow-[0_30px_60px_-40px_rgba(0,0,0,.6)] ${className}`}>
+        <div data-sound-hover="off" className={`codeblock-root fadeup relative my-6 overflow-hidden bg-background shadow-float ${className}`}>
             {copyLocked && <CopyLimitOverlay message={lockedMessage} ctaHref={lockedCtaHref} ctaLabel={lockedCtaLabel} />}
-            <div className="flex h-12 items-center justify-between border-b border-[#f4f4f4]/6 bg-[#1a1a1a] pr-2.5 pl-4">
-                <span className="flex min-w-0 items-center gap-[7px] font-mono text-[13px] text-[#d8d8d8]">
-                    <i className="size-[9px] shrink-0 rounded-full bg-[#3a3a3a]" />
-                    <i className="size-[9px] shrink-0 rounded-full bg-[#3a3a3a]" />
-                    <i className="mr-2 size-[9px] shrink-0 rounded-full bg-[#3a3a3a]" />
+            <div className="flex h-12 items-center justify-between border-b border-light/6 bg-dark-card pr-2.5 pl-4">
+                <span className="flex min-w-0 items-center gap-[7px] font-mono text-[13px] text-secondary">
+                    <i className="size-[9px] shrink-0 rounded-full bg-grey" />
+                    <i className="size-[9px] shrink-0 rounded-full bg-grey" />
+                    <i className="mr-2 size-[9px] shrink-0 rounded-full bg-grey" />
                     <span className="truncate">{displayFilename || LABELS[activeLanguage] || activeLanguage.toUpperCase()}</span>
                 </span>
                 <span className="flex items-center gap-2">
@@ -381,8 +381,8 @@ export function CodeBlock({
                             disabled={copyLocked}
                             className={`inline-flex h-[30px] cursor-pointer items-center gap-[7px] px-[11px] text-[12px] font-medium tracking-normal transition-colors duration-500 disabled:cursor-not-allowed disabled:opacity-50 ${
                                 copied
-                                    ? "text-[#63d69a] shadow-[inset_0_0_0_1px_rgba(99,214,154,.45)]"
-                                    : "text-[#d8d8d8] shadow-[inset_0_0_0_1px_rgba(244,244,244,.14)] hover:bg-[#f4f4f4]/8 hover:text-white"
+                                    ? "text-success ring ring-inset ring-success/45"
+                                    : "text-secondary ring ring-inset ring-light/14 hover:bg-light/8 hover:text-white"
                             }`}
                         >
                             <CopyButtonContent copied={copied} />
@@ -398,12 +398,12 @@ export function CodeBlock({
                 <div ref={contentRef}>
                 <pre
                     onCopy={onNativeCopy}
-                    className={`m-0 py-[18px] font-mono text-[13px] leading-[1.75] text-[#d4d4d4] ${!selectable ? "select-none" : ""}`}
+                    className={`m-0 py-[18px] font-mono text-[13px] leading-[1.75] text-secondary ${!selectable ? "select-none" : ""}`}
                 >
                     <code ref={codeRef} className="block">
                         {lines.map((tokens, i) => (
                             <span key={i} className="flex pr-5">
-                                <span aria-hidden="true" className="inline-block w-12 shrink-0 select-none pr-4 text-right text-[#4a4a4a]">{i + 1}</span>
+                                <span aria-hidden="true" className="inline-block w-12 shrink-0 select-none pr-4 text-right text-grey">{i + 1}</span>
                                 <span className="whitespace-pre">
                                     {tokens.length ? tokens.map(([k, v], j) => (k ? <span key={j} className={TOKEN[k]}>{v}</span> : v)) : " "}
                                 </span>
@@ -414,7 +414,7 @@ export function CodeBlock({
                 </div>
             </div>
             {collapsed && (
-                <div className="absolute inset-x-0 bottom-0 z-10 flex h-[120px] items-end justify-center bg-linear-to-t from-[#111] via-[#111]/80 to-transparent pb-4">
+                <div className="absolute inset-x-0 bottom-0 z-10 flex h-[120px] items-end justify-center bg-linear-to-t from-background via-background/80 to-transparent pb-4">
                     {/* The site's underlined link with the shimmer; href="#" so it only expands */}
                     <LinkButton
                         id={seeMoreId}
@@ -425,7 +425,7 @@ export function CodeBlock({
                         showArrow
                         aria-expanded={false}
                         onClick={() => setExpanded(true)}
-                        className="type-small text-[#d8d8d8]!"
+                        className="type-small text-secondary!"
                     />
                 </div>
             )}

@@ -65,7 +65,7 @@ export function ToastViewport({ toast, onDismiss, position = "top-right" }) {
         <div
           key={toast.id}
           role="status"
-          className="pointer-events-auto flex items-start gap-3  border border-white/15 bg-[#0e0e0e]/95 px-5 py-4 shadow-2xl backdrop-blur-md"
+          className="pointer-events-auto flex items-start gap-3  border border-white/15 bg-background/95 px-5 py-4 shadow-2xl backdrop-blur-lg"
         >
           <div className="min-w-0 flex-1">
             {toast.title && (
@@ -81,9 +81,9 @@ export function ToastViewport({ toast, onDismiss, position = "top-right" }) {
             {toast.ctaHref && (
               <Link
                 href={toast.ctaHref}
-                className="mt-2 inline-block text-xs font-medium text-[#ff5f00] hover:text-[#ff7a29]"
+                className="mt-2 inline-block text-xs font-medium text-primary hover:text-primary-hover"
               >
-                {toast.ctaLabel || "Learn more"}
+                {toast.ctaLabel || "Learn More"}
               </Link>
             )}
           </div>

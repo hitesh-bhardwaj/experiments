@@ -7,7 +7,7 @@ import BlogCard from "./BlogCard";
 import { useFadeIn, useFadeUp } from "@/components/Animations/gsapAnimations";
 
 // Same chips and text sizes as the effects listing's light catalogue sheet
-const CHIP = `inline-flex h-8 shrink-0 cursor-pointer items-center gap-[0.5vw] px-3 type-small transition-[background-color,color,box-shadow] duration-500 max-md:gap-[2vw]`;
+const CHIP = `inline-flex h-8 shrink-0 cursor-pointer items-center gap-[calc(var(--cvw)*0.5)] px-3 type-small transition-[background-color,color,box-shadow] duration-500 max-md:gap-[2vw]`;
 const CHIP_OFF = "text-black/60 ring-1 ring-inset ring-black/10 hover:text-ink hover:ring-primary";
 const CHIP_ON = "bg-primary text-background";
 
@@ -121,22 +121,20 @@ export default function BlogListing({
   useFadeUp(sectionRef, [activeCategory, page]);
   useFadeIn(sectionRef, [activeCategory, page]);
 
-  const activeTitle = categories.find((c) => c.slug === activeCategory)?.title;
 
   return (
     <section ref={sectionRef} id="blog-grid" className="relative flex flex-col">
       {/* summary + category filters; scrolls away with the page */}
       <div className="h-fit border-b border-black/8 bg-light max-lg:border-b-0">
-        <div className="site-container section-x flex flex-wrap items-end justify-between gap-[1vw] pt-10 pb-4 max-md:gap-[4vw] max-md:pt-8">
-          <div className="flex flex-wrap items-end gap-x-[2vw] gap-y-[1vw] max-md:gap-[4vw]">
-            <p aria-live="polite" className="type-body-lg flex flex-wrap items-baseline gap-x-[0.4vw] max-md:gap-x-[1.5vw]">
+        <div className="site-container section-x flex flex-wrap items-end justify-between gap-[calc(var(--cvw)*1)] pt-10 pb-4 max-md:gap-[4vw] max-md:pt-8">
+          <div className="flex flex-wrap items-end gap-x-[calc(var(--cvw)*2)] gap-y-[calc(var(--cvw)*1)] max-md:gap-[4vw]">
+            <p aria-live="polite" className="type-body-lg flex flex-wrap items-baseline gap-x-[calc(var(--cvw)*0.4)] max-md:gap-x-[1.5vw]">
               <span className="font-medium tabular-nums">{total}</span>
               <span className="text-black/60">{total === 1 ? "post" : "posts"}</span>
-              {/* {activeTitle && <span className="pl-[0.3vw] text-black/60">· {activeTitle}</span>} */}
             </p>
 
             {categories.length > 0 && (
-              <div className="flex flex-wrap gap-[0.4vw] max-md:gap-[1.5vw]">
+              <div className="flex flex-wrap gap-[calc(var(--cvw)*0.4)] max-md:gap-[1.5vw]">
                 <Link href={buildHref({ category: "all" })} scroll={false} className={chip(activeCategory === "all")}>
                   All
                 </Link>
@@ -165,7 +163,7 @@ export default function BlogListing({
         </div>
       </div>
 
-      <div className="site-container section-x flex flex-col gap-[2.8vw] pt-6 pb-24 max-md:gap-[10vw] max-md:py-[12%]">
+      <div className="site-container section-x flex flex-col gap-[calc(var(--cvw)*2.8)] pt-6 pb-24 max-md:gap-[10vw] max-md:py-[12%]">
         {posts.length === 0 ? (
           <div className="flex flex-col items-center gap-3.5 px-4 py-20 text-center">
             <b className="type-h3">Nothing here, yet.</b>
@@ -177,7 +175,7 @@ export default function BlogListing({
             )}
           </div>
         ) : (
-          <div className="flex flex-wrap gap-x-[1.5vw] gap-y-[2.5vw] max-lg:gap-x-[2.4vw] max-lg:gap-y-[3.6vw] max-md:gap-y-[10vw]">
+          <div className="flex flex-wrap gap-x-[calc(var(--cvw)*1.5)] gap-y-[calc(var(--cvw)*2.5)] max-lg:gap-x-[2.4vw] max-lg:gap-y-[3.6vw] max-md:gap-y-[10vw]">
             {posts.map((post, index) => (
               <motion.div
                 key={post.slug}
@@ -193,7 +191,7 @@ export default function BlogListing({
         )}
 
         {pageCount > 1 && (
-          <nav aria-label="Blog pages" className="flex items-center justify-center gap-[0.4vw] max-md:gap-[1.5vw]">
+          <nav aria-label="Blog pages" className="flex items-center justify-center gap-[calc(var(--cvw)*0.4)] max-md:gap-[1.5vw]">
             <Link
               href={buildHref({ category: activeCategory, page: page - 1 })}
               aria-disabled={page === 1}

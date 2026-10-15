@@ -15,6 +15,7 @@ import {
   Tailwind,
   Text,
 } from "@react-email/components";
+import { FREE_LABEL } from "../library-counts";
 
 // NOTE: baseUrl and every asset path below (logo, hero image, social icons)
 // are placeholders - swap them once the final design assets are ready.
@@ -37,7 +38,7 @@ Welcome to Vault.
 
 Explore the collection, preview an effect, add the source code to your project, and customise every detail. No black box. No rebuilding the same interaction from scratch.
 
-Free gets you access to 50+ core effects. When you're ready for the full library with sharper effects and deeper control, Pro is one click away.
+Free gets you access to ${FREE_LABEL} core effects. When you're ready for the full library with sharper effects and deeper control, Pro is one click away.
 
 Choose Your First Effect: ${baseUrl}/effects
 
@@ -68,7 +69,7 @@ export function WelcomeEmail() {
             }
           `}</style>
         </Head>
-        <Preview>Start with 50+ free, source-owned interaction effects.</Preview>
+        <Preview>{`Start with ${FREE_LABEL} free, source-owned interaction effects.`}</Preview>
         <Body className="m-0" style={{ fontFamily }}>
           <Container
             className="mx-auto w-full max-w-150 px-4"
@@ -116,7 +117,7 @@ export function WelcomeEmail() {
                   className="m-0 mt-4 text-[15px] leading-6 text-[#1D1D1D]"
                   style={{ fontFamily }}
                 >
-                  Free gets you access to 50+ core effects. When
+                  Free gets you access to {FREE_LABEL} core effects. When
                   you&apos;re ready for the full library with sharper
                   effects and deeper control, Pro is one click away.
                 </Text>

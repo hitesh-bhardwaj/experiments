@@ -8,6 +8,7 @@ import { useLenis } from "lenis/react";
 import { motion } from "motion/react";
 import { prefersReducedMotion } from "@/lib/motion";
 import { DISPLAY, LABEL, T16, T13, catalogueOf } from "./tokens";
+import { cssVar } from "@/lib/useCssVar";
 
 /*
  * "The corridor": every template hangs as a browser frame along a dark runway,
@@ -41,7 +42,7 @@ function chromeTexture(text) {
   c.height = H * 2;
   const g = c.getContext("2d");
   g.scale(2, 2);
-  g.fillStyle = "#1d1d1d";
+  g.fillStyle = cssVar("--ink");
   g.fillRect(0, 0, W, H);
   ["#FF5F57", "#FEBC2E", "#28C840"].forEach((color, i) => {
     g.fillStyle = color;
@@ -49,11 +50,11 @@ function chromeTexture(text) {
     g.arc(16 + i * 14, 16, 4.5, 0, Math.PI * 2);
     g.fill();
   });
-  g.fillStyle = "#2c2c2c";
+  g.fillStyle = cssVar("--grey");
   g.beginPath();
   g.roundRect(W / 2 - 150, 7, 300, 18, 5);
   g.fill();
-  g.fillStyle = "#9a9a9a";
+  g.fillStyle = cssVar("--light-grey");
   g.font = "500 11px ui-monospace, Menlo, monospace";
   g.textAlign = "center";
   g.fillText(text, W / 2, 20);
@@ -69,7 +70,7 @@ function glowTexture() {
   const g = c.getContext("2d");
   const gr = g.createRadialGradient(64, 64, 10, 64, 64, 64);
   // The site's primary token as rgb, for the canvas glow
-  const hex = (getComputedStyle(document.documentElement).getPropertyValue("--primary").trim() || "#ff5f00").replace("#", "");
+  const hex = cssVar("--primary").replace("#", "");
   const [r, g2, b] = [0, 2, 4].map((i) => parseInt(hex.slice(i, i + 2), 16));
   gr.addColorStop(0, `rgba(${r},${g2},${b},0.55)`);
   gr.addColorStop(1, `rgba(${r},${g2},${b},0)`);
@@ -467,7 +468,7 @@ export default function TemplateCorridor({ templates, onUnsupported }) {
         {current && (
           <aside
             aria-live="polite"
-            className="absolute right-[4.5vw] bottom-[10vh] flex w-[30vw] flex-col gap-2.5 bg-background/70 p-5.5 ring-1 ring-inset ring-foreground/10 shadow-[0_2.8vw_5.5vw_-2vw_black] backdrop-blur-lg max-lg:w-[50vw] max-md:inset-x-[6vw] max-md:bottom-16 max-md:w-auto"
+            className="absolute right-[4.5vw] bottom-[10vh] flex w-[30vw] flex-col gap-2.5 bg-background/70 p-5.5 ring-1 ring-inset ring-foreground/10 shadow-float backdrop-blur-lg max-lg:w-[50vw] max-md:inset-x-[6vw] max-md:bottom-16 max-md:w-auto"
           >
             <div className={`${LABEL} flex items-center gap-2.5 text-foreground/80`}>
               <span>{pad2(active + 1)}</span>

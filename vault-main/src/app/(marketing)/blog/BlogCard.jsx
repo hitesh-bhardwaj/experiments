@@ -28,7 +28,7 @@ function truncateSummary(text = "", max = SUMMARY_MAX) {
 export default function BlogCard({ post, priority = false, light = false }) {
   return (
     <div className="fadeup group/card relative h-full w-full">
-      <div className={`flex h-full min-h-[28vw] flex-col gap-[1.8vw] ${light ? "bg-foreground text-ink transition-shadow duration-500 group-hover/card:shadow-[0_1.2vw_2.4vw_-1.2vw_color-mix(in_srgb,black_35%,transparent)]" : "bg-dark-card"} p-[2.2vw] max-lg:p-[1.8vw] max-lg:min-h-[45vh] max-lg:gap-[3vw] max-md:gap-[5vw] max-md:px-[7vw] max-md:py-8 pb-9 max-md:pb-12`}>
+      <div className={`flex h-full min-h-[calc(var(--cvw)*28)] flex-col gap-[calc(var(--cvw)*1.8)] ${light ? "bg-foreground text-ink transition-shadow duration-500 group-hover/card:shadow-float" : "bg-dark-card"} p-[calc(var(--cvw)*2.2)] max-lg:p-[1.8vw] max-lg:min-h-[45vh] max-lg:gap-[3vw] max-md:gap-[5vw] max-md:px-[7vw] max-md:py-8 pb-9 max-md:pb-12`}>
         <div className="aspect-[5/3] w-full shrink-0 max-lg:aspect-auto overflow-hidden bg-grey max-lg:h-[32vw] max-md:h-[30vh]">
           {post.coverImage?.url && (
             <Image
@@ -76,7 +76,7 @@ export default function BlogCard({ post, priority = false, light = false }) {
             text="Read More"
             tilted={false}
             underline={true}
-            className={`relative type-body z-10 mt-[1.2vw] max-lg:mt-[2vw] max-md:mt-0 ${light ? "text-ink!" : ""}`}
+            className={`relative type-body z-10 mt-[calc(var(--cvw)*1.2)] max-lg:mt-[2vw] max-md:mt-0 ${light ? "text-ink!" : ""}`}
           />
         </div>
       </div>

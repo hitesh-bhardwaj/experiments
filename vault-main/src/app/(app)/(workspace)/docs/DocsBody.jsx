@@ -42,41 +42,15 @@ function useDocMeta(containerRef, key) {
   return meta;
 }
 
-// Opens the header search (SearchBar listens for ⌘K / Ctrl+K)
-function openDocsSearch() {
-  const mac = /mac/i.test(navigator.platform || navigator.userAgent);
-  document.dispatchEvent(new KeyboardEvent("keydown", { key: "k", metaKey: mac, ctrlKey: !mac, bubbles: true }));
-}
-
 function DocsHero({ pathname, meta }) {
   const hero = DOCS_HERO[pathname?.replace(/\/$/, "") || "/docs"];
   return (
-    <section id="docs-hero" className="mx-auto w-full section-x flex flex-col gap-7 pb-[10vw] max-md:pb-[20vw]">
+    <section id="docs-hero" className="mx-auto w-full section-x flex flex-col gap-7 pb-[calc(var(--cvw)*10)] max-md:pb-[20vw]">
       <Breadcrumb />
       {hero && (
-        <div className="flex w-[65%] flex-col gap-[1.5vw] max-md:w-full max-md:gap-[4vw]">
+        <div className="flex w-[65%] flex-col gap-[calc(var(--cvw)*1.5)] max-md:w-full max-md:gap-[4vw]">
           <h1 className="fadeup type-display text-foreground">{hero.title}</h1>
           <p className="fadeup type-body-lg w-[70%] text-white/70 max-md:w-[90%]">{hero.lede}</p>
-          {/* Read time · sections · search, hidden for now
-          <div className="fadeup mt-[30px] flex flex-wrap items-center gap-x-3.5 gap-y-2.5 text-[13px] uppercase tracking-[.08em] text-white/70">
-            {meta.read && <span>{meta.read}</span>}
-            {meta.read && <span aria-hidden="true">·</span>}
-            {meta.secs && <span>{meta.secs}</span>}
-            {meta.secs && <span aria-hidden="true">·</span>}
-            <button
-              type="button"
-              onClick={openDocsSearch}
-              className="inline-flex h-9 items-center gap-2.5 pr-2 pl-3 text-[13px] font-medium normal-case tracking-normal text-white/70 shadow-[inset_0_0_0_1px_rgba(244,244,244,.14)] transition-[background-color,color,box-shadow] duration-500 hover:bg-[rgba(244,244,244,.06)] hover:text-white hover:shadow-[inset_0_0_0_1px_rgba(255,107,0,.5)]"
-            >
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="size-3.5">
-                <circle cx="11" cy="11" r="7" />
-                <path d="m20 20-3.5-3.5" />
-              </svg>
-              <span>Search the docs</span>
-              <span className="px-1.5 py-0.5 font-avenir text-[11px] text-white/70 shadow-[inset_0_0_0_1px_rgba(244,244,244,.14)]">⌘ K</span>
-            </button>
-          </div>
-          */}
         </div>
       )}
     </section>
@@ -212,9 +186,9 @@ export default function DocsBody({ children }) {
 
           {/* White sheet (Docs prototype's .sheet), square-edged, under the content, the
               docs footer and the TOC column. Code blocks stay dark. */}
-          <section id="docs-content" data-sound-flow="off" className="docs-sheet py-[4vw] max-md:pb-[10vh]">
-            <div className="mx-auto w-full section-x flex items-start gap-[3vw] max-lg:flex-col">
-              <div ref={contentRef} className="flex min-w-0 flex-1 flex-col gap-[5vw] max-lg:w-full max-md:gap-[15vw]" onClick={onContentClick}>
+          <section id="docs-content" data-sound-flow="off" className="docs-sheet py-[calc(var(--cvw)*4)] max-md:pb-[10vh]">
+            <div className="mx-auto w-full section-x flex items-start gap-[calc(var(--cvw)*3)] max-lg:flex-col">
+              <div ref={contentRef} className="flex min-w-0 flex-1 flex-col gap-[calc(var(--cvw)*5)] max-lg:w-full max-md:gap-[15vw]" onClick={onContentClick}>
                 <div className="blog-content">
                   {children}
                 </div>

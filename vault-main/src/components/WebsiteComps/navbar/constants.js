@@ -48,7 +48,7 @@ export const DROPDOWN_TEXT_ANIM = {
     ease: 'power3.out',
     leaveEase: 'power3.out',
     idleColor: 'rgba(255, 255, 255, 0.75)',
-    hoverColor: '#ffffff',
+    hoverColorVar: '--foreground',
 }
 
 export const LOADER_COMPLETE_EVENT = 'loaderComplete'

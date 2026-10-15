@@ -19,7 +19,7 @@ const Trust = () => {
   
       <Image
         src={trust}
-        alt=""
+        alt="kyntra"
         aria-hidden
         className="pointer-events-none absolute inset-0 h-full w-full scale-110 object-cover "
       />

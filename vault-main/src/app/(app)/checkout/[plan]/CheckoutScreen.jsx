@@ -8,6 +8,7 @@ import PlanCheckoutButton from "@/components/Payments/PlanCheckoutButton";
 import { clearPendingCheckout, savePendingCheckout } from "@/lib/pendingCheckout";
 import { FOCUS_RING_CLASS } from "@/components/auth/vault-door/constants";
 import { PLANS, formatPrice, getCreditsPerYear, getMonthlyEquivalent, getPrice } from "@/lib/plans";
+import ButtonArrowIcon from "@/components/ui/ButtonArrowIcon";
 
 // Opens Razorpay for one plan as soon as Clerk confirms the visitor is
 // signed in; sends them to sign-in (and back here) if not. The plan summary
@@ -34,19 +35,16 @@ export default function CheckoutScreen({ tier, interval, currency }) {
   const gst = currency === "INR" ? " + GST" : "";
 
   return (
-    <main id="checkout" className="flex min-h-svh w-full items-center justify-center bg-background px-[6vw] py-[7%] text-foreground max-md:px-[7vw]">
-      <section className="flex w-[34vw] flex-col gap-6 border border-foreground/15 bg-dark-card p-[2.4vw] max-lg:w-[70vw] max-lg:p-[4vw] max-md:w-full max-md:p-[7vw]">
+    <main id="checkout" className="flex min-h-svh w-full items-center justify-center bg-background px-[calc(var(--cvw)*6)] py-[7%] text-foreground max-md:px-[7vw]">
+      <section className="flex w-[calc(var(--cvw)*34)] flex-col gap-6 border border-foreground/15 bg-dark-card p-[calc(var(--cvw)*2.4)] max-lg:w-[70vw] max-lg:p-[4vw] max-md:w-full max-md:p-[7vw]">
         <div className="flex items-center justify-between gap-4">
           {/* Same back control as the sign-in steps (vault-door/StepTrack.jsx) */}
           <Link
             href="/"
             aria-label="Back to home"
-            className={`group -ml-[0.4vw] grid cursor-pointer place-items-center p-[0.4vw] text-white/80 transition-colors duration-300 hover:text-primary max-lg:-ml-1.5 max-lg:p-1.5 ${FOCUS_RING_CLASS}`}
+            className={`group -ml-[calc(var(--cvw)*0.4)] grid cursor-pointer place-items-center p-[calc(var(--cvw)*0.4)] text-white/80 transition-colors duration-300 hover:text-primary max-lg:-ml-1.5 max-lg:p-1.5 ${FOCUS_RING_CLASS}`}
           >
-            <span
-              aria-hidden="true"
-              className="size-[1vw] -scale-x-100 bg-current transition-transform duration-300 [mask-image:url(/icons/arrow-icon-final.svg)] mask-contain mask-center mask-no-repeat group-hover:-translate-x-1 max-lg:size-4"
-            />
+            <ButtonArrowIcon className="size-[calc(var(--cvw)*1)] -scale-x-100 transition-transform duration-300 group-hover:-translate-x-1 max-lg:size-4" />
           </Link>
           <p className="type-label text-foreground/50">Checkout</p>
         </div>

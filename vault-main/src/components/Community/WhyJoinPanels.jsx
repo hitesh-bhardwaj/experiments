@@ -170,7 +170,7 @@ export function TeardownCard() {
           {TD_KEYS.map((k) => (
             <i
               key={k}
-              className={`absolute -top-[calc(var(--cvw)*0.35)] -ml-[calc(var(--cvw)*0.35)] size-[calc(var(--cvw)*0.7)] rotate-45 ring-1 ring-inset ring-primary/60 max-md:-top-[1.3vw] max-md:-ml-[1.3vw] max-md:size-[2.6vw] ${progress >= k - 0.001 ? "bg-primary" : "bg-foreground/10"}`}
+              className={`absolute -top-[calc(var(--cvw)*0.4)] -ml-[calc(var(--cvw)*0.4)] size-[calc(var(--cvw)*0.7)] rotate-45 ring-1 ring-inset ring-primary/60 max-md:-top-[1.3vw] max-md:-ml-[1.3vw] max-md:size-[2.6vw] ${progress >= k - 0.001 ? "bg-primary" : "bg-foreground/10"}`}
               style={{ left: `${k * 100}%` }}
             />
           ))}
@@ -406,9 +406,9 @@ export function FeaturedCard({ joined }) {
   return (
     <div className={`${CARD} items-center justify-center p-[calc(var(--cvw)*2.8)] max-md:p-[6vw]`}>
       <CardFluid />
-      <div className="relative flex aspect-[4/5] w-[78%] max-w-[29vw] flex-col justify-end gap-[calc(var(--cvw)*0.7)] overflow-hidden bg-black/20 p-[calc(var(--cvw)*1.8)] border-beam backdrop-blur-lg max-md:max-w-none max-md:gap-[2.5vw] max-md:p-[6.6vw] after:absolute after:-top-[30%] after:-right-[30%] after:aspect-square after:w-4/5 after:bg-[radial-gradient(circle,color-mix(in_srgb,var(--primary)_45%,transparent),transparent_65%)] after:content-['']">
+      <div className="relative flex aspect-[4/5] w-[78%] max-w-[calc(var(--cvw)*29)] flex-col justify-end gap-[calc(var(--cvw)*0.7)] overflow-hidden bg-black/20 p-[calc(var(--cvw)*1.8)] border-beam backdrop-blur-lg max-md:max-w-none max-md:gap-[2.5vw] max-md:p-[6.6vw] after:absolute after:-top-[30%] after:-right-[30%] after:aspect-square after:w-4/5 after:bg-[radial-gradient(circle,color-mix(in_srgb,var(--primary)_45%,transparent),transparent_65%)] after:content-['']">
         <p className={`${LABEL} relative text-primary-hover`}>Featured on Vault · this week</p>
-        <p className="type-h2 relative text-foreground">Your work<br />could be here.</p>
+        <p className="type-h2 relative text-foreground"><span className="block">Your work</span><span className="block">could be here.</span></p>
         <p className={`${LABEL} relative text-foreground/80`}>by <span className="text-foreground">{joined ? "you, founding member" : "you"}</span></p>
       </div>
     </div>

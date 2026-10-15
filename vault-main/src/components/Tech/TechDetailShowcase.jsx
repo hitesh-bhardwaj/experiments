@@ -89,34 +89,34 @@ export default function TechDetailShowcase({ slug, tech, filteredEffects }) {
         Back to Technologies
       </Link>
 
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8 mb-16">
+      <div className="flex flex-row items-center justify-between max-lg:flex-col max-lg:items-stretch gap-8 mb-16">
         <div className="max-w-3xl">
           <div className="flex items-center gap-4 mb-4">
             <div className="p-4 bg-zinc-900/80 rounded-2xl border border-border/20">
-              <TechLogo slug={slug} color={'#ff5f00'} />
+              <span className="text-primary"><TechLogo slug={slug} color="currentColor" /></span>
             </div>
             <div>
               <span className="text-xs uppercase tracking-widest text-muted block font-mono">{tech.subtitle}</span>
-              <h1 className="text-4xl md:text-5xl font-semibold tracking-tight text-white mt-1" style={{ color: '#fff' }}>
+              <h1 className="text-5xl max-md:text-4xl font-semibold tracking-tight text-white mt-1">
                 {tech.name} Integration
               </h1>
             </div>
           </div>
-          <p className="text-lg md:text-[20px] text-[#d2d2d2] font-medium leading-[1.4] mb-3">{tech.tagline}</p>
-          <p className="text-sm md:text-base text-muted leading-[1.6]">{tech.description}</p>
+          <p className="text-[20px] max-md:text-lg text-muted font-medium leading-[1.4] mb-3">{tech.tagline}</p>
+          <p className="text-base max-md:text-sm text-muted leading-[1.6]">{tech.description}</p>
         </div>
 
-        <div className="shrink-0 p-6 bg-zinc-950 border border-border/20 rounded-2xl backdrop-blur-md text-center max-w-[200px]">
+        <div className="shrink-0 p-6 bg-zinc-950 border border-border/20 rounded-2xl backdrop-blur-lg text-center max-w-[200px]">
           <span className="text-4xl font-semibold text-white block mb-1 font-mono">{filteredEffects.length}</span>
           <span className="text-xs uppercase tracking-wider text-muted font-mono">Compatible {filteredEffects.length === 1 ? "Effect" : "Effects"}</span>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-start mb-20">
-        <div className="lg:col-span-2 space-y-10">
+      <div className="grid grid-cols-3 gap-12 max-lg:grid-cols-1 items-start mb-20">
+        <div className="col-span-2 space-y-10 max-lg:col-span-1">
           <div className="space-y-4">
             <h2 className="text-2xl font-semibold tracking-tight text-white">Why {tech.name} inside Hyperiux?</h2>
-            <p className="text-sm md:text-base text-[#d2d2d2] leading-[1.6]">{tech.whyText}</p>
+            <p className="text-base max-md:text-sm text-muted leading-[1.6]">{tech.whyText}</p>
           </div>
           <div className="space-y-3">
             <h2 className="text-2xl font-semibold tracking-tight text-white">Quick Start Configuration</h2>
@@ -125,7 +125,7 @@ export default function TechDetailShowcase({ slug, tech, filteredEffects }) {
           </div>
         </div>
 
-        <div className="lg:col-span-1 bg-zinc-950/60 p-6 rounded-2xl border border-border/20 backdrop-blur-md space-y-6">
+        <div className="col-span-1 bg-zinc-950/60 p-6 rounded-2xl border border-border/20 backdrop-blur-lg space-y-6">
           <h3 className="font-semibold text-white text-lg tracking-tight">Integration Specs</h3>
           <div className="space-y-4 text-sm ">
             <div className="flex justify-between border-b border-border/10 pb-2"><span className="text-muted">Target Ecosystem</span><span className="text-white font-medium">{tech.name}</span></div>
@@ -141,7 +141,7 @@ export default function TechDetailShowcase({ slug, tech, filteredEffects }) {
         <h2 className="text-3xl font-semibold tracking-tight text-white mb-3">Compatible Showcase</h2>
         <p className="text-sm text-muted mb-8 max-w-xl">Browse through our live collection of {filteredEffects.length} creative components built with {tech.name} mechanics. Hover to see dynamic interactive animations in real-time.</p>
         {filteredEffects.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-3 gap-8 max-lg:grid-cols-2 max-md:grid-cols-1">
             {filteredEffects.map((effect) => (
               <EffectCard
                 key={effect.name}

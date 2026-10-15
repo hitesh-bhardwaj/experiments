@@ -26,10 +26,10 @@ function FeaturedBlogContent({ featuredPost }) {
   useFadeUp(sectionRef);
 
   return (
-    <section ref={sectionRef} id="featured-blog" className="site-container section-x flex flex-col gap-[5vw] py-[7%] max-md:gap-[10vw] max-md:py-[12%]">
+    <section ref={sectionRef} id="featured-blog" className="site-container section-x flex flex-col gap-[calc(var(--cvw)*5)] py-[7%] max-md:gap-[10vw] max-md:py-[12%]">
       <div className="flex  items-end justify-between gap-4 max-md:flex-col max-md:items-start max-md:gap-[10vw]">
         <LineWipe lit={INK}>
-          <h2 className="type-h1 w-[30%] max-md:w-[90%]">Latest From The Vault</h2>
+          <h2 className="type-h1 w-[30%] max-md:w-[90%]">Latest From the Vault</h2>
         </LineWipe>
         <LineWipe delay={0.5} lit={INK}>
           <p className="type-body-lg w-[35%] text-black/60 max-md:w-full">
@@ -38,11 +38,11 @@ function FeaturedBlogContent({ featuredPost }) {
         </LineWipe>
       </div>
 
-      <div className="flex items-center gap-[4vw] bg-foreground p-[2.5vw] max-lg:flex-col  max-lg:items-start max-md:gap-[6vw] max-md:px-[7vw] max-md:py-[8vw]">
+      <div className="flex items-center gap-[calc(var(--cvw)*4)] bg-foreground p-[calc(var(--cvw)*2.5)] max-lg:flex-col  max-lg:items-start max-md:gap-[6vw] max-md:px-[7vw] max-md:py-[8vw]">
         {featuredPost.coverImage?.url && (
           <Link
             href={`/blog/${featuredPost.slug}`}
-            className="fadeup group block h-[34vw] w-[55%] shrink-0 max-lg:h-[50vw] max-lg:w-full max-md:h-[60vw]"
+            className="fadeup group block h-[calc(var(--cvw)*34)] w-[55%] shrink-0 max-lg:h-[50vw] max-lg:w-full max-md:h-[60vw]"
           >
             <div className="relative h-full w-full overflow-hidden bg-grey">
               <Image
@@ -56,7 +56,7 @@ function FeaturedBlogContent({ featuredPost }) {
           </Link>
         )}
 
-        <div className="flex grow flex-col items-start gap-[1.2vw] max-lg:w-full max-md:gap-[4vw]">
+        <div className="flex grow flex-col items-start gap-[calc(var(--cvw)*1.2)] max-lg:w-full max-md:gap-[4vw]">
           <LineWipe lit={INK}>
             <p className="type-small text-black/60">
               {formatFeaturedDate(featuredPost.publishedAt)}
@@ -81,7 +81,7 @@ function FeaturedBlogContent({ featuredPost }) {
             text="Read More"
             href={`/blog/${featuredPost.slug}`}
             variant="orange"
-            className="fadeup mt-[1vw] w-fit max-lg:mt-[1.5vw] max-md:mt-[2vw]"
+            className="fadeup mt-[calc(var(--cvw)*1)] w-fit max-lg:mt-[1.5vw] max-md:mt-[2vw]"
           />
         </div>
       </div>

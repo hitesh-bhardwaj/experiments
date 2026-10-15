@@ -16,7 +16,7 @@ import { getClerkErrorField, getStepHint, validateField } from "./vault-door/uti
 const EMPTY_VALUES = { name: "", email: "", password: "", newPassword: "", code: "" };
 const OAUTH_ICONS = { oauth_google: GoogleIcon, oauth_github: GitHubIcon };
 const NOT_READY = "Still connecting to the vault. Try again in a moment.";
-const T13 = "text-[0.85vw] max-lg:text-[1.6vw] max-md:text-[3.4vw]";
+const T13 = "text-[0.9vw] max-lg:text-[1.6vw] max-md:text-[3.4vw]";
 const T16 = "text-[1.05vw] max-lg:text-[2vw] max-md:text-[4vw]";
 const T32 = "text-[2.2vw] max-lg:text-[4vw] max-md:text-[7.5vw]";
 
@@ -183,7 +183,7 @@ export function AuthModalForm({ redirectUrl = "/", initialMode = "sign-in", intr
   return (
     <form key={mode} noValidate onSubmit={handleSubmit} className="home-type grid grid-cols-[minmax(0,1fr)] text-left font-avenir">
 
-      <h2 className={`${T32} mb-[0.6vw] font-aeonik leading-[1.1] text-[#F4F4F4] max-lg:mb-2`}>
+      <h2 className={`${T32} mb-[0.6vw] font-aeonik leading-[1.1] text-light max-lg:mb-2`}>
         {pane.lead} <span className="gradient-text-animate">{pane.accent}</span>
       </h2>
       {intro && <p className={`${T16} mb-[2vw] text-white/60 max-lg:mb-6`}>{intro}</p>}
@@ -251,7 +251,7 @@ export function AuthModalForm({ redirectUrl = "/", initialMode = "sign-in", intr
                   type="button"
                   onClick={() => handleOAuth(strategy)}
                   disabled={busy}
-                  className={`${T16} flex cursor-pointer items-center justify-center gap-[0.7vw] border border-white/20 bg-black/30 px-[1.2vw] py-[0.75vw] text-white transition-colors duration-300 hover:border-white/60 hover:bg-white/5 disabled:pointer-events-none disabled:opacity-50 max-lg:gap-2.5 max-lg:px-4 max-lg:py-3 ${FOCUS_RING_CLASS}`}
+                  className={`${T16} flex cursor-pointer items-center justify-center gap-[0.7vw] border border-white/20 bg-black/30 px-[1.2vw] py-[0.8vw] text-white transition-colors duration-300 hover:border-white/60 hover:bg-white/5 disabled:pointer-events-none disabled:opacity-50 max-lg:gap-2.5 max-lg:px-4 max-lg:py-3 ${FOCUS_RING_CLASS}`}
                 >
                   <Icon className="size-[1.1vw] shrink-0 max-lg:size-5" />
                   {label}
@@ -265,7 +265,7 @@ export function AuthModalForm({ redirectUrl = "/", initialMode = "sign-in", intr
       <div className={`${T13} mt-[1.4vw] flex flex-wrap items-baseline gap-x-[0.6vw] gap-y-1 text-light-grey max-lg:mt-5 max-lg:gap-x-2`}>
         {mode === "sign-in" && (
           <>
-            New to Vault? {modeLink("sign-up", "Create an account")}
+            New to Vault? {modeLink("sign-up", "Create an Account")}
           </>
         )}
         {mode === "sign-up" && <>Already have an account? {modeLink("sign-in", "Sign in")}</>}

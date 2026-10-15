@@ -307,18 +307,18 @@ export function TableOfContents({
   const isLeft = side === "left";
 
   return (
-    <div className="group relative flex items-center gap-[1vw]">
+    <div className="group relative flex items-center gap-[calc(var(--cvw)*1)]">
       <span
         aria-hidden="true"
         className={`absolute top-1/2 h-full min-h-48 w-8 -translate-y-1/2 ${isLeft ? "left-full" : "right-full"}`}
       />
 
       <div
-        className={`pointer-events-none absolute top-1/2 w-[18vw] max-h-[60vh] -translate-y-1/2 overflow-hidden border border-foreground/10 bg-[#F4F4F4] p-[0.5vw] opacity-0 shadow-[0_1.4vw_3.5vw_-1.7vw_color-mix(in_srgb,black_40%,transparent)] transition-[opacity,translate,scale] duration-500 ease-[cubic-bezier(.16,1,.3,1)] group-hover:pointer-events-auto group-hover:translate-x-0 group-hover:scale-100 group-hover:opacity-100 ${isLeft ? "left-[calc(100%+1vw)] -translate-x-3" : "right-[calc(100%+1vw)] translate-x-3"} scale-95
+        className={`pointer-events-none absolute top-1/2 w-[calc(var(--cvw)*18)] max-h-[60vh] -translate-y-1/2 overflow-hidden border border-foreground/10 bg-light p-[calc(var(--cvw)*0.5)] opacity-0 shadow-float transition-[opacity,translate,scale] duration-500 ease-[cubic-bezier(.16,1,.3,1)] group-hover:pointer-events-auto group-hover:translate-x-0 group-hover:scale-100 group-hover:opacity-100 ${isLeft ? "left-[calc(100%+1vw)] -translate-x-3" : "right-[calc(100%+1vw)] translate-x-3"} scale-95
           }`}
       >
         <ul
-          className="flex flex-col gap-[0.3vw] overflow-y-auto overscroll-contain max-h-[calc(60vh-1vw)] toc"
+          className="flex flex-col gap-[calc(var(--cvw)*0.3)] overflow-y-auto overscroll-contain max-h-[calc(60vh-1vw)] toc"
           onMouseLeave={() => setHoveredId(null)}
         >
           {items.map((item) => {
@@ -349,7 +349,7 @@ export function TableOfContents({
             );
           })}
           {showBackToTop && (
-            <li className="border-t border-foreground/10 py-[0.3vw]">
+            <li className="border-t border-foreground/10 py-[calc(var(--cvw)*0.3)]">
               <a
                 href="#top"
                 onMouseEnter={() => setHoveredId("__top")}
@@ -371,7 +371,7 @@ export function TableOfContents({
       </div>
 
       {/* Dashes sit flush against the page edge the widget is pinned to (right on docs, left on blog) */}
-      <ul className={`flex w-12 flex-col gap-[0.8vw] ${isLeft ? "items-start" : "items-end"}`}>
+      <ul className={`flex w-12 flex-col gap-[calc(var(--cvw)*0.8)] ${isLeft ? "items-start" : "items-end"}`}>
         {items.map((item) => (
           <li key={item.id}>
             <Link

@@ -6,7 +6,6 @@ import Para from "@/components/DocsContent/Para";
 import DocsList, { DocsListItem } from "@/components/DocsContent/List";
 import DocsTable from "@/components/DocsContent/Table";
 import { CodeBlock } from "@/components/DocsContent/DocsCodeBlock";
-import Link from "next/link";
 import LinkButton from "@/components/WebsiteComps/LinkButton";
 
 const licenseTiersCode = `Hyperiux Vault

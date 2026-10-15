@@ -175,7 +175,7 @@ export function useEffectCardActions({ userPlan = "free", signInRedirect = "/eff
       if (!allowed) {
         drop(new Error("not allowed"));
         if (failed || !data) {
-          showToast({ title: "Couldn't copy the command", description: "Please try again in a moment." });
+          showToast({ title: "Couldn't Copy the Command", description: "Please try again in a moment." });
         } else {
           showToast(getLimitNudge(data));
         }
@@ -203,8 +203,8 @@ export function useEffectCardActions({ userPlan = "free", signInRedirect = "/eff
           : null;
       showToast(
         copied
-          ? { title: "Install command copied", description: left ?? command }
-          : { title: "Copy this command", description: command },
+          ? { title: "Install Command Copied", description: left ?? command }
+          : { title: "Copy This Command", description: command },
       );
       return copied;
     },

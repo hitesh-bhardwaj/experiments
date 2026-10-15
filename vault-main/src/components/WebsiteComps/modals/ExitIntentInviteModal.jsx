@@ -9,6 +9,7 @@ import { useReCaptcha } from "next-recaptcha-v3";
 import { Mail } from "lucide-react";
 import { armRecaptcha } from "@/lib/recaptchaEvents";
 import { buttonClassName, ButtonChrome } from "@/homepage/components/Button";
+import { FREE_LABEL } from "@/lib/library-counts";
 
 // Site-wide exit-intent capture (except sign-in and /dashboard - see
 // isExcludedRoute below), mirroring WorkWithHyperiuxModal.jsx's technical
@@ -203,7 +204,7 @@ export function ExitIntentInviteModal() {
             type="button"
             aria-label="Close"
             onClick={close}
-            className="absolute inset-0 cursor-default bg-black/70 backdrop-blur-md"
+            className="absolute inset-0 cursor-default bg-black/70 backdrop-blur-lg"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -211,7 +212,7 @@ export function ExitIntentInviteModal() {
           />
 
           <motion.div
-            className="relative z-10 w-[36vw] max-md:w-full max-lg:w-[70%] border border-white/20 bg-[#0e0e0e] p-10 max-md:p-6 shadow-2xl"
+            className="relative z-10 w-[36vw] max-md:w-full max-lg:w-[70%] border border-white/20 bg-background p-10 max-md:p-6 shadow-2xl"
             initial={{ opacity: 0, scale: 0.97, y: 10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.97, y: 10 }}
@@ -221,7 +222,7 @@ export function ExitIntentInviteModal() {
               type="button"
               aria-label="Close"
               onClick={close}
-              className="group absolute right-4 top-4 flex h-9 w-9 items-center justify-center border border-white/20 bg-white/10 text-white/70 transition-all duration-300 hover:border-[#ff5f00] hover:bg-[#ff5f00] hover:text-white"
+              className="group absolute right-4 top-4 flex h-9 w-9 items-center justify-center border border-white/20 bg-white/10 text-white/70 transition-all duration-300 hover:border-primary hover:bg-primary hover:text-white"
             >
               <div className="relative flex h-4 w-4 items-center justify-center duration-500 ease-in-out group-hover:rotate-90">
                 <span className="h-px w-4 rotate-45 bg-white" />
@@ -231,7 +232,7 @@ export function ExitIntentInviteModal() {
 
             {isSuccess ? (
               <div className="flex flex-col items-center gap-3 py-6 text-center">
-                <Mail className="h-10 w-10 text-[#ff5f00]" strokeWidth={1.2} />
+                <Mail className="h-10 w-10 text-primary" strokeWidth={1.2} />
                 <h3 className="text-xl font-bold text-white">Invite sent.</h3>
                 <p className="max-w-sm text-sm leading-relaxed text-white/60">
                   Check your inbox for your Hyperiux Vault invite - accept it to set a
@@ -240,15 +241,15 @@ export function ExitIntentInviteModal() {
               </div>
             ) : (
               <>
-                <span className="inline-block bg-[#ff5f00]/15 px-3 py-1 text-xs font-medium uppercase tracking-wide text-[#ff5f00]">
-                  Before you go
+                <span className="inline-block bg-primary/15 px-3 py-1 text-xs font-medium tracking-wide text-primary">
+                  Before You Go
                 </span>
 
                 <h3
                   id="exit-intent-title"
                   className="mt-6 text-2xl font-bold leading-tight text-white max-md:text-xl"
                 >
-                  Get instant access to 50+ free effects.
+                  Get instant access to {FREE_LABEL} free effects.
                 </h3>
 
                 <p className="mt-4 text-sm leading-relaxed text-white/60">
@@ -278,9 +279,9 @@ export function ExitIntentInviteModal() {
                     // autofilled text to a fixed dark color otherwise.
                     style={{
                       "--input-autofill-bg": "transparent",
-                      "--input-autofill-text": "#ffffff",
+                      "--input-autofill-text": "var(--foreground)",
                     }}
-                    className="w-full border-b border-white bg-transparent pb-4 text-sm text-white placeholder:text-white/60 outline-none focus:border-[#ff5f00]"
+                    className="w-full border-b border-white bg-transparent pb-4 text-sm text-white placeholder:text-white/60 outline-none focus:border-primary"
                   />
 
                   <label className="flex cursor-pointer items-start gap-2.5 text-sm text-white/60">
@@ -301,8 +302,8 @@ export function ExitIntentInviteModal() {
                     />
                     <span
                       aria-hidden="true"
-                      className={`mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center border transition-colors peer-focus-visible:ring-2 peer-focus-visible:ring-[#ff5f00] peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-black ${
-                        agreed ? "border-[#ff5f00] bg-[#ff5f00]" : "border-white/30 bg-transparent"
+                      className={`mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center border transition-colors peer-focus-visible:ring-2 peer-focus-visible:ring-primary peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-black ${
+                        agreed ? "border-primary bg-primary" : "border-white/30 bg-transparent"
                       }`}
                     >
                       {agreed && (

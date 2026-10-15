@@ -66,7 +66,7 @@ Shared values (class strings, size constants, data) are defined **once** and imp
 |---|---|
 | `site-container` on every section's content wrapper (`mx-auto w-full max-w-[1536px]`) | Hand-written `mx-auto max-w-[1536px]` (and never drop `w-full`) |
 | `section-x` for every section's side gutter | Hand-written gutters (`px-[4.5vw] max-md:px-[6vw]`, `px-[calc(var(--cvw)*4.5)]`) |
-| `section-y` or `py-[7%]` for a section's vertical padding | One-off values (`py-[15%]`, `py-[18vw]`, `pt-[10vh] pb-[14vh]`) |
+| `py-[7%]` for a section's vertical padding (mobile may step up to `max-md:py-[12%]` or `max-md:py-[15%]`) | One-off values (`py-[18vw]`, `pt-[10vh] pb-[14vh]`) |
 | An `id` on every section | Sections without an `id`, or section content outside its `section` |
 | Flexbox for new layouts (`flex`, `flex-col`, `w-[30%]`, `gap-[…]`) | New CSS grid (existing grid may stay), shorthand like `flex-[0.7_1_0%]` |
 
@@ -76,7 +76,6 @@ Shared values (class strings, size constants, data) are defined **once** and imp
 |---|---|---|---|
 | `site-container` | `margin-inline: auto; width: 100%; max-width: 1536px` | same | same |
 | `section-x` | `padding-inline: cvw×4.5` | `6vw` | `7vw` |
-| `section-y` | `padding-block: cvw×7` | `10vw` | `15vw` |
 
 Hero sections keep their own vertical padding (they sit under the fixed header). Use the same hero top padding as the other page of the same kind: listings `pt-36 max-lg:pt-32 max-md:pt-28`, detail pages `pt-25 max-md:pt-36`.
 
@@ -117,7 +116,7 @@ Every class sets font, size, line height and letter spacing for all screens, and
 | Class | Use for | Font | Desktop | `max-lg` | `max-md` | Line height |
 |---|---|---|---|---|---|---|
 | `type-display` | hero headline (one per page) | Aeonik | `cvw×6.4` | `8vw` | `min(13vw, 65px)` | 1.05 |
-| `type-h1` | section headings | Aeonik | `cvw×4.6` | `5.5vw` | `min(11vw, 46px)` | 1.05 |
+| `type-h1` | section headings | Aeonik | `cvw×4.6` | `5.5vw` | `min(11vw, 46px)` | 1.15 |
 | `type-h2` | sub-headings, large card titles, statements | Aeonik | `cvw×2.6` | `3.4vw` | `min(6.5vw, 31px)` | 1.15 |
 | `type-h3` | card titles, FAQ questions, list titles | Aeonik | `cvw×1.6` | `2.2vw` | `min(5vw, 20px)` | 1.25 |
 | `type-body-lg` | intro paragraphs, card body on large cards | Avenir | `cvw×1.1` | `clamp(15px, 2.5vw, 18px)` | `clamp(15px, 4.1vw, 17px)` | 1.6 |
@@ -218,7 +217,7 @@ New colours (for example a success green or an error red) are added as tokens in
 | Square corners everywhere | `rounded-*` (`rounded-md`, `rounded-lg`, `rounded-[…]`) and the `--radius-*` variables |
 | `rounded-full` only on true circles: avatar, cursor dot, toggle knob, slider thumb, spinner | `rounded-full` on pills, tags or buttons |
 | `backdrop-blur-lg` | Other blur sizes |
-| Tailwind's `shadow-*` scale, or one shared shadow constant | New one-off `shadow-[…]` values in each component |
+| `shadow-float` (the one floating-surface shadow: hovered cards, drawers, menus, modals) or `shadow-sm` for small badges | New one-off `shadow-[…]` values in each component |
 
 ## Buttons and links
 
@@ -270,6 +269,7 @@ These pages take **all** of their content styling from `src/styles/blog.css` (th
 | Plain elements inside `.blog-content` (`<p>`, `<h2>`, `<h3>`, `<strong>`, `<a>`, `<ul>`, `<ol>`, tables, images, code blocks) | Tailwind classes on content that change its look: sizes, weights (`font-semibold`), colours (`text-[#ff5f00]`), spacing (`space-y-5`, `mt-4`), widths |
 | Changes made inside `blog.css` when content should look different (they reach every detail page at once) | `!` overrides on content or content wrappers (`mb-[4vw]!`, `w-fit!`, `m-0!`) |
 | `blog-theme-light` on a wrapper around `.blog-content` for light areas | Inline overrides of `blog.css` variables (`[--blog-text-secondary:#1d1d1d]`) |
+| `docs-sheet` for the light content sheet on docs, legal, llm-info and effect detail pages (colours come from `--light` / `--ink` and the sheet's own `--docs-body` / `--muted`) | New hex colours inside `.docs-sheet`, or a third light-theme class |
 | Content components (`DocsContent`, `Heading2`, `Para`, `List`, `Table`, `Image`) that only output plain markup | Content components that add their own colours, sizes or spacing |
 | | One-off CSS for one page's content, or a per-page copy of `blog.css` rules |
 

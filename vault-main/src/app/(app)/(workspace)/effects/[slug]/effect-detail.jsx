@@ -29,7 +29,7 @@ import {
   FAQWrapper,
 } from "@/components/animated-faq";
 import { getEffectHref, getEffectPreviewHref } from "@/lib/categories";
-import { resolveEffectVideoUrl, resolveMediaUrl } from "@/lib/media";
+import { resolveEffectVideoUrl} from "@/lib/media";
 import HeadAnim from "@/components/Animations/HeadAnim";
 import Copy from "@/components/Animations/Copy";
 import { useFadeUp, useLineAnim } from "@/components/Animations/gsapAnimations";
@@ -87,7 +87,7 @@ function EffectDetailMainSkeleton() {
     <main className="relative w-full pt-25 max-md:pt-36">
       <div className="flex flex-col gap-[calc(var(--cvw)*5.5)] max-md:gap-[15vw]">
         <div className="flex flex-col gap-7">
-          <section className="mx-auto w-full section-x flex flex-col gap-[calc(var(--cvw)*1.4)] max-md:gap-[5vw]">
+          <section id="effect-skeleton-hero" className="mx-auto w-full section-x flex flex-col gap-[calc(var(--cvw)*1.4)] max-md:gap-[5vw]">
             <div className="flex w-fit max-w-full flex-wrap items-center gap-[calc(var(--cvw)*0.5)] max-md:gap-[2vw]">
               <SkeletonBlock className="h-4 w-12" />
               <span className="text-foreground/25">/</span>
@@ -108,13 +108,13 @@ function EffectDetailMainSkeleton() {
               <SkeletonBlock className="h-10 w-18" />
             </div>
           </section>
-          <section className="mx-auto w-full section-x h-[calc(var(--cvw)*46)]">
+          <section id="effect-skeleton-stage" className="mx-auto w-full section-x h-[calc(var(--cvw)*46)]">
             <SkeletonBlock className="h-full w-full" />
           </section>
         </div>
 
         <div className="flex flex-col gap-[calc(var(--cvw)*5)] bg-foreground py-[calc(var(--cvw)*5.5)] max-md:gap-[10vw] max-md:py-[15vw]">
-          <section className="mx-auto w-full section-x">
+          <section id="effect-skeleton-article" className="mx-auto w-full section-x">
             <div className="flex w-[70%] flex-col gap-8 max-lg:w-full">
               <SkeletonBlock className="h-10 w-[58%] bg-background/10" />
               <div className="flex flex-col gap-3">
@@ -132,7 +132,7 @@ function EffectDetailMainSkeleton() {
             </div>
           </section>
 
-          <section className="mx-auto w-full section-x">
+          <section id="effect-skeleton-cta" className="mx-auto w-full section-x">
             <div className="flex flex-col gap-5 bg-ink px-[calc(var(--cvw)*2.8)] py-[calc(var(--cvw)*3.3)] max-md:px-[7vw] max-md:py-[10vw]">
               <SkeletonBlock className="h-10 w-[52%] bg-light/15 max-md:h-8 max-md:w-[84%]" />
               <div className="flex flex-col gap-3">
@@ -143,7 +143,7 @@ function EffectDetailMainSkeleton() {
             </div>
           </section>
 
-          <section className="mx-auto w-full section-x flex flex-col gap-[calc(var(--cvw)*2.8)] max-md:gap-[10vw]">
+          <section id="effect-skeleton-related" className="mx-auto w-full section-x flex flex-col gap-[calc(var(--cvw)*2.8)] max-md:gap-[10vw]">
             <div className="flex items-center justify-between gap-[calc(var(--cvw)*1.4)] max-lg:flex-col">
               <SkeletonBlock className="h-12 w-[30%] bg-background/10 max-lg:w-[60%] max-md:w-[80%]" />
               <SkeletonBlock className="h-12 w-44 bg-primary/45 max-lg:hidden" />
@@ -175,8 +175,6 @@ export function EffectDetailContent({
   content,
   relatedEffects: baseRelatedEffects = [],
   installCounts: installCountsSource = null,
-  effectCounts,
-  totalEffects,
   isLocked = false,
   // Server-decided: "sign-in" | "pro" | "limit" | null (code shown)
   codeLock = null,
@@ -662,7 +660,7 @@ function EffectChangelogSection({ changelog = [] }) {
   if (!changelog?.length) return null;
 
   return (
-    <section className="fadeup blog-faq-section">
+    <section id="changelog" className="fadeup blog-faq-section">
       <h2>Changelog</h2>
 
       <FAQGroup
@@ -689,7 +687,7 @@ function EffectChangelogSection({ changelog = [] }) {
                   iconStrokeWidth={1.8}
                 >
                   <FAQTitle
-                    className="blog-changelog-trigger w-fit! justify-start! gap-[0.8vw]!"
+                    className="blog-changelog-trigger w-fit! justify-start! gap-[calc(var(--cvw)*0.8)]!"
                     iconPosition="right"
                   >
                     <div className="blog-changelog-row">
@@ -801,7 +799,7 @@ function EffectPropsTable({ props = [] }) {
     <>
     {/* Same divider as the body's horizontal rules (.blog-divider) */}
     <hr className="fadeup blog-divider" />
-    <div className="space-y-5! mb-[4vw]! fadeup max-md:mb-[10vw]!">
+    <div className="space-y-5! mb-[calc(var(--cvw)*4)]! fadeup max-md:mb-[10vw]!">
       <h2>API Reference</h2>
 
       <div className="blog-table-wrap blog-props-table" data-variant="vault">
@@ -1084,7 +1082,7 @@ function LockedCodePlaceholder() {
 
   // Stays a dark code panel (like the code blocks) on the white article.
   return (
-    <section className="fadeup relative min-h-[40vh] max-md:min-h-[40vh] max-lg:min-h-[30vh] overflow-hidden border border-white/30 bg-[#141414]">
+    <section className="fadeup relative min-h-[40vh] max-md:min-h-[40vh] max-lg:min-h-[30vh] overflow-hidden border border-white/30 bg-background">
       <div
         aria-hidden="true"
         className="absolute inset-0 "

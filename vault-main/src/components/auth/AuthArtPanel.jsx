@@ -21,7 +21,7 @@ export default function AuthArtPanel({
         style={{ filter: `url(#${filterId})` }}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={src} alt="" className="h-full w-full object-cover" />
+        <img src={src} alt="auth art" className="h-full w-full object-cover" />
       </div>
     </div>
   );

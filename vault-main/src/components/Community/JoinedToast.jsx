@@ -56,7 +56,7 @@ export default function JoinedToast() {
       aria-live="polite"
       className="fixed bottom-[calc(var(--cvw)*5+env(safe-area-inset-bottom,0px))] left-1/2 z-80 flex w-[calc(var(--cvw)*30)] max-lg:w-[50vw] -translate-x-1/2 flex-col gap-[calc(var(--cvw)*0.7)] bg-background/80 px-[calc(var(--cvw)*1.7)] py-[calc(var(--cvw)*1.5)] text-left ring-1 ring-inset ring-success/30 shadow-2xl backdrop-blur-lg backdrop-saturate-150 max-md:bottom-[calc(18vw+env(safe-area-inset-bottom,0px))] max-md:w-[88vw] max-md:gap-[2.5vw] max-md:px-[6vw] max-md:py-[5.6vw]"
     >
-      <span className="type-label inline-flex items-center gap-[calc(var(--cvw)*0.7)] text-primary-hover before:size-[calc(var(--cvw)*0.35)] before:bg-primary before:content-[''] max-md:gap-[2.5vw] max-md:before:size-[1.3vw]">You’re on the list</span>
+      <span className="type-label inline-flex items-center gap-[calc(var(--cvw)*0.7)] text-primary-hover before:size-[calc(var(--cvw)*0.4)] before:bg-primary before:content-[''] max-md:gap-[2.5vw] max-md:before:size-[1.3vw]">You’re on the list</span>
       <strong className="type-h2 font-medium!">Welcome to the crowd.</strong>
       <p className="type-small text-foreground/80">That bright dot joining the swarm? That’s you.{matched} We’ll email you when your invite is ready.</p>
       <div className="flex items-center justify-between gap-[calc(var(--cvw)*0.8)] max-md:gap-[3vw]">

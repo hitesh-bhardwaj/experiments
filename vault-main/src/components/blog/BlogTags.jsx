@@ -3,8 +3,6 @@ export default function BlogTags({ tags = [] }) {
 
   return (
     <div>
-      {/* <hr className="blog-divider" /> */}
-
       <div className="flex flex-wrap items-center gap-3 pt-10">
         <span className="type-small text-black/60">tags:</span>
 

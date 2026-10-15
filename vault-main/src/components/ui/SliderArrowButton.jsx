@@ -8,7 +8,7 @@ const TONES = {
   // On dark surfaces (the listing's trending row)
   dark: "border-white/40 text-white",
   // On light surfaces (the effect page's related effects and the blog's related posts)
-  light: "border-black/20 text-[#141414]",
+  light: "border-black/20 text-background",
 };
 
 /**
@@ -75,7 +75,7 @@ export function SliderNav({
   // below lg, where Button's text size changes.
   const arrow = "h-auto self-stretch w-[calc(var(--hx-vw,1vw)*1.725+1rem)]";
   return (
-    <div className={twMerge("flex items-stretch gap-[0.5vw]", className)}>
+    <div className={twMerge("flex items-stretch gap-[calc(var(--cvw)*0.5)]", className)}>
       {exploreText && <Button text={exploreText} href={exploreHref} variant="orange" className="shrink-0" />}
       {showArrows && (
         <>

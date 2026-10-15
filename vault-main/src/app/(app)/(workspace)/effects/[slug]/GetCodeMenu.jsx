@@ -37,11 +37,11 @@ const MIN_COPYING_MS = 450;
 
 // Trigger text for each copy, while it runs and once it's done.
 const TRIGGER_LABELS = {
-  jsx: { copying: "Copying code", copied: "Code copied" },
-  tsx: { copying: "Copying code", copied: "Code copied" },
-  cli: { copying: "Copying CLI command", copied: "CLI command copied" },
-  mcp: { copying: "Copying MCP prompt", copied: "MCP prompt copied" },
-  prompt: { copying: "Copying AI prompt", copied: "AI prompt copied" },
+  jsx: { copying: "Copying Code", copied: "Code Copied" },
+  tsx: { copying: "Copying Code", copied: "Code Copied" },
+  cli: { copying: "Copying CLI Command", copied: "CLI Command Copied" },
+  mcp: { copying: "Copying MCP Prompt", copied: "MCP Prompt Copied" },
+  prompt: { copying: "Copying AI Prompt", copied: "AI Prompt Copied" },
 };
 
 function buildMcpPrompt(slug, title) {
@@ -105,9 +105,9 @@ async function copyServerText(fetchResult) {
 
 // Nudge shown after a copy that doesn't already report daily usage.
 const COPY_TOASTS = {
-  cli: { title: "CLI command copied", description: "Paste it into your project's terminal to install the effect." },
-  mcp: { title: "MCP prompt copied", description: "Paste it into your agent with the Hyperiux MCP installed." },
-  prompt: { title: "AI prompt copied", description: "Paste it into any coding agent to add the effect." },
+  cli: { title: "CLI Command Copied", description: "Paste it into your project's terminal to install the effect." },
+  mcp: { title: "MCP Prompt Copied", description: "Paste it into your agent with the Hyperiux MCP installed." },
+  prompt: { title: "AI Prompt Copied", description: "Paste it into any coding agent to add the effect." },
 };
 
 function MenuItem({ children, trailing = null, onSelect, disabled = false, className = "", ...props }) {
@@ -308,7 +308,7 @@ export default function GetCodeMenu({
     } catch {
       failCopy();
       // Not allowed (signed out / limit): requestCopy already said why
-      if (allowed) showToast({ title: "Couldn't copy", description: "Your browser blocked clipboard access." });
+      if (allowed) showToast({ title: "Couldn't Copy", description: "Your browser blocked clipboard access." });
     }
   };
 
@@ -359,7 +359,7 @@ export default function GetCodeMenu({
     } else if (data.status === 429) {
       // The limit message already showed, from applyUsage
     } else {
-      showToast({ title: "Couldn't copy", description: data.error || "Something went wrong. Please try again." });
+      showToast({ title: "Couldn't Copy", description: data.error || "Something went wrong. Please try again." });
     }
   };
 
@@ -439,7 +439,7 @@ export default function GetCodeMenu({
         onClick={onTriggerClick}
         // Text size and vertical padding are Button's (buttonClassName), so it sits at the standard
         // button size; an inset ring rather than a border, which would add 2px of height
-        className={`relative flex h-full cursor-pointer items-center ring-1 ring-inset bg-foreground/5 backdrop-blur-lg py-2 pr-[calc(var(--cvw)*3)] pl-[calc(var(--cvw)*1.2)] text-left text-[calc(var(--hx-vw,calc(var(--cvw)*1))*1.15)] ring-foreground/20 tracking-wide text-foreground outline-none transition hover:ring-foreground/25 focus-visible:ring-foreground/25 max-lg:pr-12 max-lg:pl-5 max-lg:text-[clamp(13px,calc(var(--hx-vw,1vw)*1.6),15px)] max-md:py-3 max-md:text-[calc(var(--hx-vw,1vw)*2.2)] max-sm:text-[calc(var(--hx-vw,1vw)*4)] ${triggerClassName}`}
+        className={`relative flex h-full cursor-pointer items-center ring-1 ring-inset bg-foreground/5 backdrop-blur-lg py-2 pr-[calc(var(--cvw)*3)] pl-[calc(var(--cvw)*1.2)] text-left text-[calc(var(--hx-vw,1vw)*1.15)] ring-foreground/20 tracking-wide text-foreground outline-none transition hover:ring-foreground/25 focus-visible:ring-foreground/25 max-lg:pr-12 max-lg:pl-5 max-lg:text-[clamp(13px,calc(var(--hx-vw,1vw)*1.6),15px)] max-md:py-3 max-md:text-[clamp(14px,calc(var(--hx-vw,1vw)*4),16px)] ${triggerClassName}`}
       >
         {/* The label rolls up out of a line clipped top and bottom only (like the code
             block's copy button), and the line's width eases between labels - clipping it
@@ -552,10 +552,10 @@ export default function GetCodeMenu({
               <MenuItem
                 onSelect={() => copyLocalText("cli", cliCommand)}
                 disabled={codeLocked}
-                aria-label="Copy CLI command"
+                aria-label="Copy CLI Command"
                 trailing={<LockTrail locked={codeLocked} />}
               >
-                Copy CLI command
+                Copy CLI Command
                 <span className="type-small text-foreground/50 group-enabled:group-hover:text-background/70">
                   Install it in the terminal of your preferred IDE
                 </span>
@@ -567,7 +567,7 @@ export default function GetCodeMenu({
                 aria-label="Copy MCP prompt"
                 trailing={<LockTrail locked={codeLocked} />}
               >
-                Copy MCP prompt
+                Copy MCP Prompt
                 <span className="type-small text-foreground/50 group-enabled:group-hover:text-background/70">
                   For agents with the Hyperiux MCP installed
                 </span>
@@ -576,10 +576,10 @@ export default function GetCodeMenu({
               <MenuItem
                 onSelect={() => copyFromServer("prompt")}
                 disabled={codeLocked || busy}
-                aria-label="Copy AI prompt"
+                aria-label="Copy AI Prompt"
                 trailing={<LockTrail locked={codeLocked} />}
               >
-                Copy AI prompt
+                Copy AI Prompt
                 <span className="type-small text-foreground/50 group-enabled:group-hover:text-background/70">
                   Full source + setup steps for any coding agent
                 </span>

@@ -2,6 +2,8 @@ import { clerkClient, clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/
 import { NextRequest, NextResponse } from "next/server";
 import { DEV_PREVIEW_USERNAME } from "@/lib/dev/dashboardPreview";
 import { dashboardUsername } from "@/lib/user-slug";
+import registryIndex from "../public/r/index.json";
+import { getEffectSlugAliases } from "@/lib/effect-slugs";
 
 const isProtectedRoute = createRouteMatcher([
   "/dashboard(.*)",
@@ -68,6 +70,20 @@ const withClerk = clerkMiddleware(async (auth, request) => {
   }
 });
 
+// Effect detail pages stream behind loading.js, so the 200 header is already sent by
+// the time the page's notFound() runs (a "soft 404"). Unknown effects are caught here,
+// before rendering, and rewritten to a path no route matches, so the site's 404 page is
+// served with a real 404 status. Only the effect slug is checked: a known effect under
+// the wrong category still reaches the page, which redirects it to the right one.
+const EFFECT_DETAIL_PATH = /^\/effects\/[^/]+\/([^/]+)\/?$/;
+const knownEffectSlugs = new Set((registryIndex.items || registryIndex).map((effect) => effect.name));
+
+const isUnknownEffect = (pathname) => {
+  const match = pathname.match(EFFECT_DETAIL_PATH);
+  if (!match) return false;
+  return !getEffectSlugAliases(match[1]).some((slug) => knownEffectSlugs.has(slug));
+};
+
 // Strip stale __client_uat cookies before Clerk processes the request.
 // When the site ran with dev Clerk keys, browsers received a __client_uat
 // cookie issued by the dev instance. After switching to production keys,
@@ -81,6 +97,10 @@ export default async function middleware(request) {
     const url = new URL(request.url);
     url.host = host.replace(/^www\./, "");
     return NextResponse.redirect(url.toString(), 301);
+  }
+
+  if (isUnknownEffect(request.nextUrl.pathname)) {
+    return NextResponse.rewrite(new URL("/_effect-not-found", request.url));
   }
 
   if (isMarketingRoute(request)) {

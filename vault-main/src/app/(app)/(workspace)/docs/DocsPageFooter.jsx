@@ -93,7 +93,7 @@ function PagerCard({ page, direction }) {
       href={page.href}
       // The site's full page transition (PageTransition), not the docs' in-place fade
       data-page-transition
-      className={`group flex w-[calc(50%-0.5vw)] flex-col gap-[0.8vw] border border-foreground/10 bg-foreground/3 p-[1.5vw] transition-colors duration-300 hover:border-primary/60 hover:bg-primary/6 max-md:gap-[3vw] max-md:p-[4vw] max-md:text-center ${
+      className={`group flex w-[calc(50%-0.5vw)] flex-col gap-[calc(var(--cvw)*0.8)] border border-foreground/10 bg-foreground/3 p-[calc(var(--cvw)*1.5)] transition-colors duration-300 hover:border-primary/60 hover:bg-primary/6 max-md:gap-[3vw] max-md:p-[4vw] max-md:text-center ${
         next ? "items-end text-right max-md:items-center max-md:text-center" : "items-start max-md:items-center"
       }`}
     >
@@ -114,10 +114,10 @@ export default function DocsPageFooter({ pages = DOCS_PAGES }) {
   const next = index >= 0 && index < pages.length - 1 ? pages[index + 1] : null;
 
   return (
-    <div className="flex flex-col gap-[1vw] border-t border-foreground/10 pt-[2.5vw] max-md:gap-[4vw] max-md:pt-[8vw]">
-      <div className="flex flex-wrap items-center gap-[1.5vw] border border-foreground/10 p-[1.5vw] max-md:gap-[4vw] max-md:p-[5vw]">
+    <div className="flex flex-col gap-[calc(var(--cvw)*1)] border-t border-foreground/10 pt-[calc(var(--cvw)*2.5)] max-md:gap-[4vw] max-md:pt-[8vw]">
+      <div className="flex flex-wrap items-center gap-[calc(var(--cvw)*1.5)] border border-foreground/10 p-[calc(var(--cvw)*1.5)] max-md:gap-[4vw] max-md:p-[5vw]">
         <p className="type-body m-0! text-foreground">Was this page helpful?</p>
-        <div className="flex gap-[0.5vw] max-md:gap-[2vw]">
+        <div className="flex gap-[calc(var(--cvw)*0.5)] max-md:gap-[2vw]">
           <FeedbackButton active={vote === "yes"} onClick={() => setVote("yes")}>Yes</FeedbackButton>
           <FeedbackButton active={vote === "no"} onClick={() => setVote("no")}>Not Quite</FeedbackButton>
         </div>
@@ -125,7 +125,7 @@ export default function DocsPageFooter({ pages = DOCS_PAGES }) {
       </div>
 
       {(prev || next) && (
-        <nav aria-label="Docs pages" className={`flex gap-[1vw] ${prev ? "justify-between" : "justify-end"}`}>
+        <nav aria-label="Docs pages" className={`flex gap-[calc(var(--cvw)*1)] ${prev ? "justify-between" : "justify-end"}`}>
           {prev && <PagerCard page={prev} direction="prev" />}
           {next && <PagerCard page={next} direction="next" />}
         </nav>

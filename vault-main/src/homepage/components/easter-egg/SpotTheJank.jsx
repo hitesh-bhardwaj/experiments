@@ -19,9 +19,9 @@ const EXIT_MS = 320;
 // Engines without the jank voices get the closest game sound instead
 const JANK_FALLBACK = { right: "catch", wrong: "bug", streak: "level", start: "open", over: "over" };
 
-const label = "text-[11px] font-semibold uppercase tracking-[.14em]";
+const label = "text-[13px] font-medium tracking-wide";
 const btnBase = `inline-flex h-11 items-center px-5 no-underline transition-[box-shadow,background-color] duration-[600ms] ease-[cubic-bezier(.16,1,.3,1)] ${label}`;
-const btnGhost = `${btnBase} bg-white/5 text-white shadow-[inset_0_0_0_1px_rgba(244,244,244,.14)] hover:shadow-[inset_0_0_0_1px_rgba(255,107,0,.6)]`;
+const btnGhost = `${btnBase} bg-white/5 text-white ring ring-inset ring-light/14 hover:ring hover:ring-inset hover:ring-primary/60`;
 
 function readSaved() {
     try {
@@ -275,7 +275,7 @@ export default function SpotTheJank({ onClose, sound, toast, realHref = "/effect
     const lives = "●●●".slice(0, hud.lives) + "○○○".slice(0, MAX_LIVES - hud.lives);
     const screenCls = "absolute inset-0 grid place-content-center justify-items-center gap-[18px] bg-[radial-gradient(60%_60%_at_50%_50%,rgba(15,15,15,.6),rgba(15,15,15,.92))] p-8 text-center";
     const display = "font-aeonik text-[clamp(2.6rem,6vw,5rem)] font-normal leading-[1.02] tracking-[-.035em]";
-    const eyebrow = `inline-flex items-center gap-2.5 text-[#9c9c9c] before:size-[5px] before:bg-primary before:content-[''] ${label}`;
+    const eyebrow = `inline-flex items-center gap-2.5 text-light-grey before:size-[5px] before:bg-primary before:content-[''] ${label}`;
 
     return createPortal(
         <div
@@ -283,49 +283,49 @@ export default function SpotTheJank({ onClose, sound, toast, realHref = "/effect
             role="dialog"
             aria-modal="true"
             aria-labelledby="stj-title"
-            className={`fixed inset-0 z-[2147482000] grid place-items-center bg-[rgba(8,8,8,.78)] p-[clamp(12px,3vw,40px)] font-avenir leading-relaxed text-white backdrop-blur-[18px] backdrop-saturate-[1.4] ${closing ? "motion-safe:animate-[hx-fade-out_.32s_ease-in_both]" : "motion-safe:animate-[hx-fade-in_.5s_ease-out_both]"}`}
+            className={`fixed inset-0 z-[2147482000] grid place-items-center bg-background/78 p-[clamp(12px,3vw,40px)] font-avenir leading-relaxed text-white backdrop-blur-lg backdrop-saturate-[1.4] ${closing ? "motion-safe:animate-[hx-fade-out_.32s_ease-in_both]" : "motion-safe:animate-[hx-fade-in_.5s_ease-out_both]"}`}
             data-lenis-prevent
             onClick={(e) => { if (e.target === e.currentTarget) requestClose(); }}
         >
-            <div className={`relative grid aspect-[16/10] max-h-[calc(100vh-24px)] w-[min(1040px,100%)] grid-rows-[auto_auto_1fr_auto] border border-grey bg-[#0f0f0f] px-[clamp(16px,3vw,40px)] pt-16 pb-[26px] shadow-[0_60px_120px_-40px_rgba(255,107,0,.35)] max-md:aspect-auto max-md:h-[calc(100vh-24px)] ${closing ? "motion-safe:animate-[hx-scale-out_.32s_cubic-bezier(.7,0,.84,0)_both]" : "motion-safe:animate-[hx-scale-in_.8s_cubic-bezier(.16,1,.3,1)_both]"}`}>
+            <div className={`relative grid aspect-[16/10] max-h-[calc(100vh-24px)] w-[min(1040px,100%)] grid-rows-[auto_auto_1fr_auto] border border-grey bg-background px-[clamp(16px,3vw,40px)] pt-16 pb-[26px] shadow-float max-md:aspect-auto max-md:h-[calc(100vh-24px)] ${closing ? "motion-safe:animate-[hx-scale-out_.32s_cubic-bezier(.7,0,.84,0)_both]" : "motion-safe:animate-[hx-scale-in_.8s_cubic-bezier(.16,1,.3,1)_both]"}`}>
                 {/* <CornerMarks /> */}
-                <div className={`pointer-events-none absolute inset-x-0 top-0 flex items-center gap-[clamp(12px,3vw,34px)] px-[22px] py-[18px] text-[#8a8a8a] max-md:flex-wrap max-md:gap-y-1 max-md:pr-[70px] ${label}`} aria-hidden="true">
+                <div className={`pointer-events-none absolute inset-x-0 top-0 flex items-center gap-[clamp(12px,3vw,34px)] px-[22px] py-[18px] text-light-grey max-md:flex-wrap max-md:gap-y-1 max-md:pr-[70px] ${label}`} aria-hidden="true">
                     {[["Score", hud.score], ["Streak", hud.streak], ["Lives", lives], ["Round", hud.round], ["Best", hud.best]].map(([name, value]) => (
                         <span key={name}>{name} <b className="ml-1.5 font-semibold text-white tabular-nums">{value}</b></span>
                     ))}
                 </div>
-                <button type="button" onClick={requestClose} aria-label="Close game" className={`absolute top-3 right-4 z-20 h-[30px] border border-grey bg-[#0f0f0f] px-2.5 text-white transition-colors duration-500 hover:border-primary hover:text-foreground ${label}`}>
+                <button type="button" onClick={requestClose} aria-label="Close game" className={`absolute top-3 right-4 z-20 h-[30px] border border-grey bg-background px-2.5 text-white transition-colors duration-500 hover:border-primary hover:text-foreground ${label}`}>
                     Esc
                 </button>
 
                 <div className="mt-1.5 h-0.5 overflow-hidden bg-white/10" aria-hidden="true">
                     <i ref={timerRef} className="block h-full origin-left bg-primary" />
                 </div>
-                <p className={`mt-[18px] mb-3.5 text-center text-[#8a8a8a] ${label}`} aria-hidden="true">Which one is smooth?</p>
+                <p className={`mt-[18px] mb-3.5 text-center text-light-grey ${label}`} aria-hidden="true">Which one is smooth?</p>
 
                 <div className="grid min-h-0 grid-cols-2 gap-[clamp(10px,2vw,22px)] max-md:grid-cols-1 max-md:grid-rows-2">
                     {[0, 1].map((side) => {
                         const isFlawed = reveal && reveal.flawedSide === side;
                         const isGood = reveal && reveal.flawedSide !== side;
-                        let ring = "shadow-[inset_0_0_0_1px_rgba(244,244,244,.08)] hover:shadow-[inset_0_0_0_1px_rgba(255,107,0,.55),0_20px_50px_-24px_rgba(255,107,0,.5)]";
-                        if (isGood) ring = "shadow-[inset_0_0_0_2px_rgba(99,214,154,.7)]";
-                        if (isFlawed) ring = "shadow-[inset_0_0_0_2px_rgba(255,90,74,.6)]";
+                        let ring = "ring ring-inset ring-light/8 hover:ring-primary/55 hover:shadow-float";
+                        if (isGood) ring = "ring-2 ring-inset ring-success/70";
+                        if (isFlawed) ring = "ring-2 ring-inset ring-danger/60";
                         return (
                             <button
                                 key={side}
                                 type="button"
                                 onClick={() => choose(side)}
                                 aria-label={`Choose ${side ? "B" : "A"}`}
-                                className={`relative bg-[#161616] transition-shadow duration-500 ${ring}`}
+                                className={`relative bg-dark-card transition-shadow duration-500 ${ring}`}
                             >
                                 {/* <CornerMarks /> */}
                                 <canvas ref={(el) => { canvasRefs.current[side] = el; }} className="absolute inset-0 size-full" />
-                                <span className={`absolute top-3 left-3.5 flex items-center gap-2 text-[#9c9c9c] ${label}`}>
+                                <span className={`absolute top-3 left-3.5 flex items-center gap-2 text-light-grey ${label}`}>
                                     {side ? "B" : "A"}
-                                    <span className="inline-flex items-center px-1.5 py-px text-[11px] text-[#9c9c9c] shadow-[inset_0_0_0_1px_rgba(244,244,244,.1)]">{side ? "→" : "←"}</span>
+                                    <span className="inline-flex items-center px-1.5 py-px text-[11px] text-light-grey ring ring-inset ring-light/10">{side ? "→" : "←"}</span>
                                 </span>
                                 {reveal && (
-                                    <span className={`absolute bottom-4 left-1/2 -translate-x-1/2 px-3 py-[7px] whitespace-nowrap ${label} ${isGood ? "bg-[rgba(99,214,154,.14)] text-[#63d69a] shadow-[inset_0_0_0_1px_rgba(99,214,154,.4)]" : "bg-[rgba(255,90,74,.14)] text-[#ff7a6a] shadow-[inset_0_0_0_1px_rgba(255,90,74,.45)]"}`}>
+                                    <span className={`absolute bottom-4 left-1/2 -translate-x-1/2 px-3 py-[7px] whitespace-nowrap ${label} ${isGood ? "bg-success/14 text-success ring ring-inset ring-success/40" : "bg-danger/14 text-[#ff7a6a] ring ring-inset ring-danger/45"}`}>
                                         {isGood ? "✓ smooth" : `✕ ${reveal.flawName}`}
                                     </span>
                                 )}
@@ -333,16 +333,16 @@ export default function SpotTheJank({ onClose, sound, toast, realHref = "/effect
                         );
                     })}
                 </div>
-                <p className="mt-3.5 min-h-[1.6em] text-center text-sm text-[#b5b5b5]" aria-live="polite">{note}</p>
+                <p className="mt-3.5 min-h-[1.6em] text-center text-sm text-border" aria-live="polite">{note}</p>
 
                 {screen === "start" && (
                     <div className={screenCls}>
                         <p className={eyebrow}>You found the easter egg</p>
                         <h2 id="stj-title" className={display}>Spot the <span className="gradient-text-animate">jank.</span></h2>
-                        <p className="max-w-[46ch] text-[#b5b5b5]">
+                        <p className="max-w-[46ch] text-border">
                             Two versions of the same interaction play side by side. One is Vault-smooth. The other hides a flaw: dropped frames, stiff easing, layout shift, sloppy stagger. Pick the smooth one before time runs out. The flaws get subtler as you go.
                         </p>
-                        <p className={`text-[#6d6d6d] ${label}`}>Click a panel or press ← / → · 3 lives</p>
+                        <p className={`text-light-grey ${label}`}>Click a panel or press ← / → · 3 lives</p>
                         <button
                             ref={startBtnRef}
                             type="button"
@@ -362,10 +362,10 @@ export default function SpotTheJank({ onClose, sound, toast, realHref = "/effect
                     <div className={`${screenCls} *:motion-safe:animate-[hx-up_1.2s_cubic-bezier(.16,1,.3,1)_both] [&>*:nth-child(2)]:[animation-delay:.08s] [&>*:nth-child(3)]:[animation-delay:.16s] [&>*:nth-child(4)]:[animation-delay:.24s] [&>*:nth-child(5)]:[animation-delay:.32s]`}>
                         <p className={eyebrow}>{result.verdict}</p>
                         <h2 id="stj-title" className={display}>{result.score} <span>points</span></h2>
-                        <p className="max-w-[46ch] text-[#b5b5b5]">{result.summary}</p>
+                        <p className="max-w-[46ch] text-border">{result.summary}</p>
                         <ul className="flex max-w-[560px] flex-wrap justify-center gap-2">
                             {result.badges.map((b) => (
-                                <li key={b.key} className={`px-2.5 py-1.5 text-xs ${b.got ? "bg-primary/10 text-[#FFB27A] shadow-[inset_0_0_0_1px_rgba(255,107,0,.5)]" : "text-[#6d6d6d] shadow-[inset_0_0_0_1px_rgba(244,244,244,.1)]"}`}>
+                                <li key={b.key} className={`px-2.5 py-1.5 text-xs ${b.got ? "bg-primary/10 text-[#FFB27A] ring ring-inset ring-primary/50" : "text-light-grey ring ring-inset ring-light/10"}`}>
                                     {b.got ? "✓ " : ""}{b.text}
                                 </li>
                             ))}

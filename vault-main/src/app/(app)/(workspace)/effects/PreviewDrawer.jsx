@@ -4,6 +4,7 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import Image from "next/image";
 import gsap from "gsap";
+import { prefersReducedMotion } from "@/lib/motion";
 import { useLenis } from "lenis/react";
 import { usePathname } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
@@ -21,6 +22,9 @@ import {
   resolveCover,
 } from "./EffectCard";
 import { T11, T14, T16, T18 } from "../templates/tokens";
+
+// Off-screen panel: slid out to the right, or (reduced motion) faded out in place.
+const panelHidden = () => (prefersReducedMotion() ? { xPercent: 0, opacity: 0 } : { xPercent: 100, opacity: 1 });
 
 // Phones: a Button that shares the drawer's action row - grows to fill it, text from the
 // left, no arrow (it would crowd the label at that width).
@@ -102,7 +106,7 @@ export function PreviewDrawer({
       tlRef.current?.kill();
       tlRef.current = gsap
         .timeline()
-        .to(panelRef.current, { xPercent: 0, duration: PANEL_DURATION, ease: EASE })
+        .to(panelRef.current, { xPercent: 0, opacity: 1, duration: PANEL_DURATION, ease: EASE })
         .to(overlayRef.current, { opacity: 1, duration: PANEL_DURATION, ease: EASE }, "<")
         .add(() => {
           if (effect === prev) gsap.to(contentRef.current, { opacity: 1, duration: CONTENT_DURATION, ease: EASE });
@@ -139,7 +143,7 @@ export function PreviewDrawer({
           },
         })
         .to(contentRef.current, { opacity: 0, duration: CONTENT_DURATION, ease: EASE })
-        .to(panelRef.current, { xPercent: 100, duration: PANEL_DURATION, ease: EASE })
+        .to(panelRef.current, { ...panelHidden(), duration: PANEL_DURATION, ease: EASE })
         .to(overlayRef.current, { opacity: 0, duration: PANEL_DURATION, ease: EASE }, "<");
     }
   }, [effect]);
@@ -151,12 +155,12 @@ export function PreviewDrawer({
     panelRef.current.scrollTop = 0;
     if (!wasOpenRef.current) {
       wasOpenRef.current = true;
-      gsap.set(panelRef.current, { xPercent: 100 });
+      gsap.set(panelRef.current, panelHidden());
       gsap.set(overlayRef.current, { opacity: 0 });
       gsap.set(contentRef.current, { opacity: 0 });
       tlRef.current = gsap
         .timeline()
-        .to(panelRef.current, { xPercent: 0, duration: PANEL_DURATION, ease: EASE })
+        .to(panelRef.current, { xPercent: 0, opacity: 1, duration: PANEL_DURATION, ease: EASE })
         .to(overlayRef.current, { opacity: 1, duration: PANEL_DURATION, ease: EASE }, "<")
         .to(contentRef.current, { opacity: 1, duration: CONTENT_DURATION, ease: EASE });
     } else {
@@ -238,7 +242,7 @@ export function PreviewDrawer({
       <div
         ref={panelRef}
         data-lenis-prevent
-        className="absolute inset-y-0 right-0 w-[calc(var(--cvw)*53)] overflow-y-auto overscroll-contain border-l border-foreground/10 bg-background font-avenir text-foreground shadow-[calc(var(--cvw)*-1.1)_0_calc(var(--cvw)*2.8)_calc(var(--cvw)*-1.7)_color-mix(in_srgb,black_60%,transparent)] max-lg:w-full max-lg:border-l-0"
+        className="absolute inset-y-0 right-0 w-[calc(var(--cvw)*53)] overflow-y-auto overscroll-contain border-l border-foreground/10 bg-background font-avenir text-foreground shadow-float max-lg:w-full max-lg:border-l-0"
       >
       <div ref={contentRef} className="flex flex-col gap-10 px-10 pt-7 pb-16 max-lg:px-8 max-lg:gap-8 max-md:px-[6vw] max-md:pb-0 *:shrink-0">
         <div className="flex items-center justify-between">
@@ -259,7 +263,7 @@ export function PreviewDrawer({
         </div>
 
         <div className="relative aspect-[16/8.6] overflow-hidden border border-foreground/10 bg-background">
-          {cover && <Image src={cover} alt="" fill sizes="(max-width: 1025px) 100vw, 53vw" className="object-cover" />}
+          {cover && <Image src={cover} alt="cover image" fill sizes="(max-width: 1025px) 100vw, 53vw" className="object-cover" />}
           {videoUrl && (
             <video
               key={videoUrl}
@@ -342,7 +346,7 @@ export function PreviewDrawer({
                 clearTimeout(copiedTimerRef.current);
                 copiedTimerRef.current = setTimeout(() => setCopied(false), 1600);
               }}
-              aria-label={copied ? "Install command copied" : "Copy install command"}
+              aria-label={copied ? "Install Command Copied" : "Copy Install Command"}
               className={`inline-flex shrink-0 cursor-pointer items-center gap-1.5 px-2 ${T14} transition-colors duration-300 max-md:w-12 max-md:justify-center max-md:bg-primary max-md:px-0 max-md:text-background! ${copied ? "text-primary" : "text-foreground/70 hover:text-primary"}`}
             >
               {/* Tablet / phones: icon only (it flips to a tick once copied). */}

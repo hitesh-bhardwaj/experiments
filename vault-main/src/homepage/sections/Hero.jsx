@@ -210,7 +210,7 @@ export default function Hero() {
                 ) : (
                     <Image
                         src="/assets/img/hero-mobile.webp"
-                        alt=""
+                        alt="hero mobile"
                         fill
                         priority
                         sizes="100vw"
@@ -220,7 +220,7 @@ export default function Hero() {
                     />
                 )}
             </div>
-            <div className="pointer-events-none relative z-10 mx-auto flex min-h-dvh w-full max-w-384 flex-col justify-end px-[calc(var(--cvw)*4.5)] pt-[calc(var(--cvw)*8)] max-lg:px-[calc(var(--cvw)*7)] max-md:px-[calc(var(--cvw)*7)]! pb-[calc(var(--cvw)*5)] max-lg:pt-32 max-lg:pb-[12vw] max-md:pt-32 max-md:pb-10 max-sm:px-5">
+            <div className="pointer-events-none relative z-10 mx-auto flex min-h-dvh w-full max-w-384 flex-col justify-end px-[calc(var(--cvw)*4.5)] pt-[calc(var(--cvw)*8)] max-lg:px-[calc(var(--cvw)*7)] max-md:px-5! pb-[calc(var(--cvw)*5)] max-lg:pt-32 max-lg:pb-[12vw] max-md:pt-32 max-md:pb-10">
                 <div className="flex items-end justify-between gap-[calc(var(--cvw)*3)] max-lg:flex-col max-lg:items-stretch max-lg:gap-[6vw] max-md:items-stretch max-md:gap-5">
                    
                     <h1 ref={headingRef} className="relative min-w-0 flex-[1.5] type-display leading-[1.15] max-w-[calc(var(--cvw)*53)] max-lg:max-w-full max-md:max-w-full text-white">
@@ -235,20 +235,20 @@ export default function Hero() {
                         <div
                             ref={actionsRef}
                             style={INTRO_HIDDEN}
-                            className="pointer-events-auto flex max-sm:pt-4 max-sm:flex-col w-fit max-sm:w-full gap-[calc(var(--cvw)*1)] max-lg:w-full max-lg:flex-col max-lg:gap-5 max-md:w-full max-md:flex-row max-md:gap-5"
+                            className="pointer-events-auto flex w-fit gap-[calc(var(--cvw)*1)] max-lg:w-full max-lg:flex-col max-lg:gap-5 max-md:pt-4"
                         >
                             <Button
                                 text="Read Docs"
                                 href="/docs"
                                 variant="outline"
-                                className="max-lg:w-[40%] max-lg:py-[2vw] max-lg:justify-center max-md:w-auto max-sm:w-full max-sm:justify-center"
+                                className="max-lg:w-[40%] max-lg:py-[2vw] max-lg:justify-center max-md:w-full"
                             />
                             <Button
                                 text="Browse All Effects"
                                 href="/effects"
                                 variant="orange"
                                 scrollOffset={-1000}
-                                className="max-lg:w-[40%] max-lg:py-[2vw] max-lg:justify-center max-md:w-auto max-sm:w-full max-sm:justify-center"
+                                className="max-lg:w-[40%] max-lg:py-[2vw] max-lg:justify-center max-md:w-full"
                             />
                         </div>
                     </div>

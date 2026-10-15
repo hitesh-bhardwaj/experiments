@@ -4,6 +4,7 @@ import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
 import { shouldSkipRealtimeGPU } from '@/lib/audit';
+import { cssVar } from "@/lib/useCssVar";
 
 if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger);
@@ -94,11 +95,11 @@ function measureGlyphs(node, text, originX, originY) {
 
 export default function TextFillPixel({
   text = "Design systems should feel effortless, not like you're fighting your own components every time you build.",
-  textColor = '#ffffff',
-  primaryColor = '#ff5f00',
-  dimColor = '#272727',
+  textColor,
+  primaryColor,
+  dimColor,
   className = 'text64',
-  wrapperClassName = 'w-[95%] sm:w-[88%] md:w-[90%]',
+  wrapperClassName = 'w-[90%] max-md:w-[95%]',
   containerClassName = '',
   id = 'text-fill-pixel-v3',
   start = '20% 80%',
@@ -252,9 +253,9 @@ export default function TextFillPixel({
       const scratch = makeLayer(width * dpr, height * dpr);
       const mask = makeLayer(width * dpr, height * dpr);
 
-      paint(crispDim, dimColor);
-      paint(crispFill, textColor);
-      paint(crispAccent, primaryColor);
+      paint(crispDim, dimColor || cssVar('--grey'));
+      paint(crispFill, textColor || cssVar('--foreground'));
+      paint(crispAccent, primaryColor || cssVar('--primary'));
 
       layout = {
         width,
@@ -326,7 +327,7 @@ export default function TextFillPixel({
         const fadePx = Math.max(axisSize * 0.42, soft * axisSize * 0.75);
 
         if (whiteT >= 0.999) {
-          mctx.fillStyle = '#fff';
+          mctx.fillStyle = 'white';
           mctx.fillRect(char.x, char.top, char.width, char.height);
           hasWhite = true;
         } else if (whiteT > 0.001) {

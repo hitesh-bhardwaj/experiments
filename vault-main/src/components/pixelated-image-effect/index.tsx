@@ -276,7 +276,7 @@ export default function PixelatedImageEffect({
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={resolvedSrc}
-          alt=""
+          alt="pixelated-image"
           className={`object-cover absolute inset-0 ${imageClassName}`.trim()}
         />
       </div>

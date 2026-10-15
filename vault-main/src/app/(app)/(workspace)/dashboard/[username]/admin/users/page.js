@@ -327,7 +327,7 @@ function InviteModal({ onClose }) {
 
   return (
     <motion.div
-      className="fixed inset-0 z-900 flex items-center justify-center bg-black/60 px-4 backdrop-blur-md"
+      className="fixed inset-0 z-900 flex items-center justify-center bg-black/60 px-4 backdrop-blur-lg"
       onClick={onClose}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -335,7 +335,7 @@ function InviteModal({ onClose }) {
       transition={{ duration: 0.22, ease: "easeOut" }}
     >
       <motion.div
-        className="relative w-full max-w-lg  border border-white/10 bg-[#0a0a0a] p-6"
+        className="relative w-full max-w-lg  border border-white/10 bg-background p-6"
         onClick={(e) => e.stopPropagation()}
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -346,7 +346,7 @@ function InviteModal({ onClose }) {
           type="button"
           aria-label="Close"
           onClick={onClose}
-          className=" group absolute right-5 top-5 flex h-10 w-10 items-center justify-center  border border-white/20 bg-white/10 text-xl leading-none text-white/70 transition-all duration-500 ease-in-out hover:border-[#ff5f00] hover:bg-[#ff5f00] hover:text-white "
+          className=" group absolute right-5 top-5 flex h-10 w-10 items-center justify-center  border border-white/20 bg-white/10 text-xl leading-none text-white/70 transition-all duration-500 ease-in-out hover:border-primary hover:bg-primary hover:text-white "
         >
           <div className="relative flex h-4 w-4 items-center justify-center duration-500 ease-in-out group-hover:rotate-90">
             <span className="h-px w-4 rotate-45 bg-white" />
@@ -374,7 +374,7 @@ function InviteModal({ onClose }) {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="max-h-[30vw] overflow-y-auto border border-white/10 bg-white/5 p-2 focus-within:border-white/25">
+          <div className="max-h-[calc(var(--cvw)*30)] overflow-y-auto border border-white/10 bg-white/5 p-2 focus-within:border-white/25">
             {emails.length > 0 && (
               <div className="mb-2 flex flex-wrap gap-1.5 px-1 pt-1">
                 {emails.map((e) => (
@@ -409,7 +409,7 @@ function InviteModal({ onClose }) {
           </div>
 
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <label className={`inline-flex items-center gap-2  border border-white/15 px-3 py-[.8vw] text-[1.1vw] max-md:text-[3.5vw] max-lg:text-[2.5vw] font-medium text-white/70 transition ${atDailyLimit ? "cursor-not-allowed opacity-50" : "cursor-pointer hover:border-white/30 hover:text-white"}`}>
+            <label className={`inline-flex items-center gap-2  border border-white/15 px-3 py-[calc(var(--cvw)*.8)] text-[calc(var(--cvw)*1.1)] max-md:text-[3.5vw] max-lg:text-[2.5vw] font-medium text-white/70 transition ${atDailyLimit ? "cursor-not-allowed opacity-50" : "cursor-pointer hover:border-white/30 hover:text-white"}`}>
               <Upload className="h-5 w-5" />
               Upload CSV
               <input
@@ -485,7 +485,7 @@ const levelOf = (user) => (user.plan === "pro" ? user.tier || "pro_plus" : "free
 function ModalShell({ onClose, children, maxWidth = "max-w-lg" }) {
   return (
     <motion.div
-      className="fixed inset-0 z-900 flex items-center justify-center bg-black/60 px-4 backdrop-blur-md"
+      className="fixed inset-0 z-900 flex items-center justify-center bg-black/60 px-4 backdrop-blur-lg"
       onClick={onClose}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -493,7 +493,7 @@ function ModalShell({ onClose, children, maxWidth = "max-w-lg" }) {
       transition={{ duration: 0.22, ease: "easeOut" }}
     >
       <motion.div
-        className={`relative w-full ${maxWidth}  border border-white/10 bg-[#0a0a0a] p-6`}
+        className={`relative w-full ${maxWidth}  border border-white/10 bg-background p-6`}
         onClick={(e) => e.stopPropagation()}
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -504,7 +504,7 @@ function ModalShell({ onClose, children, maxWidth = "max-w-lg" }) {
           type="button"
           aria-label="Close"
           onClick={onClose}
-          className="max-lg:hidden group absolute right-5 top-5 flex h-10 w-10 items-center justify-center  border border-white/20 bg-white/10 text-xl leading-none text-white/70 transition-all duration-500 ease-in-out hover:border-[#ff5f00] hover:bg-[#ff5f00] hover:text-white "
+          className="max-lg:hidden group absolute right-5 top-5 flex h-10 w-10 items-center justify-center  border border-white/20 bg-white/10 text-xl leading-none text-white/70 transition-all duration-500 ease-in-out hover:border-primary hover:bg-primary hover:text-white "
         >
           <div className="relative flex h-4 w-4 items-center justify-center duration-500 ease-in-out group-hover:rotate-90">
             <span className="h-px w-4 rotate-45 bg-white" />

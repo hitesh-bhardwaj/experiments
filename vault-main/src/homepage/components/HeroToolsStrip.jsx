@@ -84,7 +84,7 @@ export default function HeroToolsStrip() {
     );
 
     return (
-        <section ref={rootRef} aria-label="Built on" className="relative z-10 px-[calc(var(--cvw)*3)] max-md:px-6 max-sm:px-0 mt-[20vh]">
+        <section ref={rootRef} aria-label="Built on" className="relative z-10 px-[calc(var(--cvw)*3)] max-md:px-0 mt-[20vh]">
             <div className="fadeup border-t border-white/10 max-md:px-0! pt-[calc(var(--cvw)*4)] pb-[calc(var(--cvw)*12)] max-md:pt-12 max-md:pb-28">
                 <p className="mb-[calc(var(--cvw)*2.4)] text-center type-label text-white/40 max-md:mb-8">
                     Built on the tools your team already trusts

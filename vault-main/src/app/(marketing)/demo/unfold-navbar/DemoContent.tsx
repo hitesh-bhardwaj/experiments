@@ -19,7 +19,7 @@ const DemoContent = ({ registry }: { registry: RegistryLike }) => {
       <div className="absolute inset-0 h-full w-full">
         <Image
           src={BACKGROUND_IMAGE}
-          alt=""
+          alt="background image"
           fill
           priority
           sizes="100vw"

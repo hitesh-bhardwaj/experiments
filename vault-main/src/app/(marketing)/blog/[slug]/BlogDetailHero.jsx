@@ -17,13 +17,13 @@ export default function BlogDetailHero({ post }) {
   useFadeUp(heroRef);
 
   return (
-    <div ref={heroRef} className="flex flex-col gap-[3.5vw] max-md:gap-0">
+    <div ref={heroRef} className="flex flex-col gap-[calc(var(--cvw)*3.5)] max-md:gap-0">
       <section id="blog-hero" className="site-container section-x flex flex-col gap-10 max-md:pb-[12%]">
         <Breadcrumb maxWords={3} />
 
         <div className="flex flex-col gap-6">
           <LineWipe>
-            <h1 className="type-h1 w-[80%] leading-[1.2] text-[3.2vw] max-md:text-[8vw] text-foreground max-lg:w-full">
+            <h1 className="type-h1 w-[80%] leading-[1.2] text-[calc(var(--cvw)*3.2)] max-md:text-[8vw] text-foreground max-lg:w-full">
               {post.title}
             </h1>
           </LineWipe>
@@ -40,7 +40,7 @@ export default function BlogDetailHero({ post }) {
 
       {post.coverImage?.url && (
         <section id="blog-cover" className="fadeup site-container section-x max-md:py-[12%] max-md:pt-4">
-          <div className="group relative h-[48vw] w-full overflow-hidden max-md:h-[60vw]">
+          <div className="group relative h-[calc(var(--cvw)*48)] w-full overflow-hidden max-md:h-[60vw]">
             <Image
               src={post.coverImage.url}
               alt={post.coverImage.alt || post.title}

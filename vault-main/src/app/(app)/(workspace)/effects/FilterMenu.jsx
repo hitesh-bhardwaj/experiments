@@ -153,7 +153,7 @@ export function FilterMenu({
       }
       className={[
         light
-          ? `space-y-1.5 ${widthClassName ? "w-full min-w-0" : "min-w-44"} border border-black/10 bg-foreground p-1.5 shadow-[0_calc(var(--cvw)*1.4)_calc(var(--cvw)*2.8)_calc(var(--cvw)*-1.4)_color-mix(in_srgb,black_35%,transparent)]`
+          ? `space-y-1.5 ${widthClassName ? "w-full min-w-0" : "min-w-44"} border border-black/10 bg-foreground p-1.5 shadow-float`
           : "space-y-1.5 min-w-44 border border-white/10 bg-black/20  p-1.5",
         menuPos ? "fixed z-9999" : "absolute left-0 top-[calc(100%+calc(var(--cvw)*0.5))] z-30",
         panelClassName,
@@ -226,7 +226,7 @@ export function FilterMenu({
           relative backdrop-blur-lg flex items-center gap-2 justify-center
           cursor-pointer transition-colors duration-300
           ${activeFilter
-              ? "bg-primary text-background hover:bg-primary"
+              ? "bg-primary text-background hover:bg-primary-hover"
               : idleClassName
             }
         `}

@@ -66,7 +66,7 @@ export default function ProfileDropdown({
     >
       <button
         onClick={() => setOpen(!open)}
-        className="group relative flex size-(--vault-ctl-h) shrink-0 items-center justify-center p-0.5 rounded-full cursor-pointer outline-none focus-visible:ring-1 focus-visible:ring-[#ff5f00]"
+        className="group relative flex size-(--vault-ctl-h) shrink-0 items-center justify-center p-0.5 rounded-full cursor-pointer outline-none focus-visible:ring-1 focus-visible:ring-primary"
         aria-label="User menu"
         aria-expanded={open}
       >
@@ -75,11 +75,11 @@ export default function ProfileDropdown({
             className="absolute -inset-[100%] animate-[spin_4s_linear_infinite] motion-reduce:animate-none"
             style={{
               background: isPro
-                ? "conic-gradient(from 0deg, #f16b0d, #e61216, #ff5f00, #f16b0d)"
-                : "conic-gradient(from 0deg, #2e2e2e, #666666, #999999, #333333, #2e2e2e)",
+                ? "conic-gradient(from 0deg, var(--primary), var(--primary-hover), var(--primary))"
+                : "conic-gradient(from 0deg, var(--grey), var(--light-grey), var(--grey))",
             }}
           />
-          <div className="relative z-10 bg-[#0c0c0c] rounded-full p-1">
+          <div className="relative z-10 bg-background rounded-full p-1">
             {user.hasImage ? (
               <Image
                 src={user.imageUrl}
@@ -89,7 +89,7 @@ export default function ProfileDropdown({
                 className="size-[calc(var(--vault-ctl-h)-14px)] object-cover rounded-full block"
               />
             ) : (
-              <div className="size-[calc(var(--vault-ctl-h)-14px)] flex items-center justify-center rounded-full bg-[#161616] text-white/80 transition-colors group-hover:text-white group-hover:bg-[#1f1f1f]">
+              <div className="size-[calc(var(--vault-ctl-h)-14px)] flex items-center justify-center rounded-full bg-dark-card text-white/80 transition-colors group-hover:text-white group-hover:bg-dark-card">
                 <User className="size-4 text-white/70 group-hover:text-white transition-colors" />
               </div>
             )}
@@ -98,7 +98,7 @@ export default function ProfileDropdown({
       </button>
 
       {open && (
-        <div className="absolute right-0 top-14 w-72 bg-[#141414] border border-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.6)] backdrop-blur-xl z-50">
+        <div className="absolute right-0 top-14 w-72 bg-background border border-white/10 shadow-float backdrop-blur-lg z-50">
           <div className="p-5 border-b border-white/10">
             <p className="text-white font-medium">
               {user.fullName}
@@ -117,7 +117,7 @@ export default function ProfileDropdown({
             >
               <span
                 aria-hidden="true"
-                className="absolute inset-0 -z-10 origin-top scale-y-0 bg-[#0e0e0e] transition-transform duration-300 ease-out group-hover:scale-y-100 motion-reduce:transition-none"
+                className="absolute inset-0 -z-10 origin-top scale-y-0 bg-background transition-transform duration-300 ease-out group-hover:scale-y-100 motion-reduce:transition-none"
               />
               Dashboard
             </Link>
@@ -129,7 +129,7 @@ export default function ProfileDropdown({
             >
               <span
                 aria-hidden="true"
-                className="absolute inset-0 -z-10 origin-top scale-y-0 bg-[#0e0e0e] transition-transform duration-300 ease-out group-hover:scale-y-100 motion-reduce:transition-none"
+                className="absolute inset-0 -z-10 origin-top scale-y-0 bg-background transition-transform duration-300 ease-out group-hover:scale-y-100 motion-reduce:transition-none"
               />
               <span>Saved Effects</span>
 
@@ -146,7 +146,7 @@ export default function ProfileDropdown({
               >
                 <span
                   aria-hidden="true"
-                  className="absolute inset-0 -z-10 origin-top scale-y-0 bg-[#0e0e0e] transition-transform duration-300 ease-out group-hover:scale-y-100 motion-reduce:transition-none"
+                  className="absolute inset-0 -z-10 origin-top scale-y-0 bg-background transition-transform duration-300 ease-out group-hover:scale-y-100 motion-reduce:transition-none"
                 />
                 <span>Usage</span>
 
@@ -167,7 +167,7 @@ export default function ProfileDropdown({
                 >
                   <span
                     aria-hidden="true"
-                    className="absolute inset-0 -z-10 origin-top scale-y-0 bg-[#0e0e0e] transition-transform duration-300 ease-out group-hover:scale-y-100 motion-reduce:transition-none"
+                    className="absolute inset-0 -z-10 origin-top scale-y-0 bg-background transition-transform duration-300 ease-out group-hover:scale-y-100 motion-reduce:transition-none"
                   />
                   Activity
                 </Link>
@@ -179,7 +179,7 @@ export default function ProfileDropdown({
                 >
                   <span
                     aria-hidden="true"
-                    className="absolute inset-0 -z-10 origin-top scale-y-0 bg-[#0e0e0e] transition-transform duration-300 ease-out group-hover:scale-y-100 motion-reduce:transition-none"
+                    className="absolute inset-0 -z-10 origin-top scale-y-0 bg-background transition-transform duration-300 ease-out group-hover:scale-y-100 motion-reduce:transition-none"
                   />
                   User Management
                 </Link>
@@ -191,7 +191,7 @@ export default function ProfileDropdown({
                 >
                   <span
                     aria-hidden="true"
-                    className="absolute inset-0 -z-10 origin-top scale-y-0 bg-[#0e0e0e] transition-transform duration-300 ease-out group-hover:scale-y-100 motion-reduce:transition-none"
+                    className="absolute inset-0 -z-10 origin-top scale-y-0 bg-background transition-transform duration-300 ease-out group-hover:scale-y-100 motion-reduce:transition-none"
                   />
                   Invoicing
                 </Link>
@@ -205,7 +205,7 @@ export default function ProfileDropdown({
             >
               <span
                 aria-hidden="true"
-                className="absolute inset-0 -z-10 origin-top scale-y-0 bg-[#0e0e0e] transition-transform duration-300 ease-out group-hover:scale-y-100 motion-reduce:transition-none"
+                className="absolute inset-0 -z-10 origin-top scale-y-0 bg-background transition-transform duration-300 ease-out group-hover:scale-y-100 motion-reduce:transition-none"
               />
               Settings
             </Link>
@@ -225,7 +225,7 @@ export default function ProfileDropdown({
             >
               <span
                 aria-hidden="true"
-                className="absolute inset-0 -z-10 origin-top scale-y-0 bg-[#0e0e0e] transition-transform duration-300 ease-out group-hover:scale-y-100 motion-reduce:transition-none"
+                className="absolute inset-0 -z-10 origin-top scale-y-0 bg-background transition-transform duration-300 ease-out group-hover:scale-y-100 motion-reduce:transition-none"
               />
               Sign Out
             </button>

@@ -145,7 +145,7 @@ export function EffectCard({
     >
 
 
-      <div className="pointer-events-none  relative aspect-3/2  px-[1.8vw] pt-[1.8vw] max-md:px-[4vw] max-md:pt-[4vw] overflow-hidden  bg-black/20 backdrop-blur-lg max-md:aspect-4/3.5">
+      <div className="pointer-events-none  relative aspect-3/2  px-[calc(var(--cvw)*1.8)] pt-[calc(var(--cvw)*1.8)] max-md:px-[4vw] max-md:pt-[4vw] overflow-hidden  bg-black/20 backdrop-blur-lg max-md:aspect-4/3.5">
         <div className=" w-full relative h-[80%] overflow-hidden max-md:h-[70%]">
           {coverImage && !imageError ? (
             <Image
@@ -162,7 +162,7 @@ export function EffectCard({
               }`}
             />
           ) : (
-            <div className="h-full w-full bg-[#202020]" />
+            <div className="h-full w-full bg-dark-card" />
           )}
           {shouldRenderVideo && (
             <video
@@ -179,7 +179,7 @@ export function EffectCard({
             {dependencyPills.map((pill) => (
               <span
                 key={pill}
-                className="bg-[#2B2B2B] px-[0.4vw] py-[0.1vw] text18 text-white/90 max-md:px-3 max-md:py-1 max-md:text-[3vw]!"
+                className="bg-grey px-[calc(var(--cvw)*0.4)] py-[calc(var(--cvw)*0.1)] text18 text-white/90 max-md:px-3 max-md:py-1 max-md:text-[3vw]!"
               >
                 {pill}
               </span>
@@ -187,16 +187,16 @@ export function EffectCard({
             {extraDependencyCount > 0 && (
               <Tooltip
                 label={allDependencyLabels.slice(2).join(" • ")}
-                className="pointer-events-auto max-w-[10vw]"
+                className="pointer-events-auto max-w-[calc(var(--cvw)*10)]"
               >
-                <span className="cursor-default bg-[#2B2B2B] px-[0.8vw] py-[0.1vw] text18 font-medium text-white/70 max-md:px-3 max-md:py-1 max-md:text-[3vw]!">
+                <span className="cursor-default bg-grey px-[calc(var(--cvw)*0.8)] py-[calc(var(--cvw)*0.1)] text18 font-medium text-white/70 max-md:px-3 max-md:py-1 max-md:text-[3vw]!">
                   +{extraDependencyCount}
                 </span>
               </Tooltip>
             )}
           </div>
           {effect.tier === "pro" && (
-            <span className="shrink-0 bg-primary px-[0.8vw] py-[0.1vw] text18 text-white max-sm:px-4 max-sm:py-1 max-sm:text-[3vw]!">
+            <span className="shrink-0 bg-primary px-[calc(var(--cvw)*0.8)] py-[calc(var(--cvw)*0.1)] text18 text-white max-md:px-4 max-md:py-1 max-md:text-[clamp(11px,3vw,13px)]!">
               Pro
             </span>
           )}
@@ -207,27 +207,27 @@ export function EffectCard({
 
      
       <div className="pointer-events-none mt-4 relative flex items-start justify-between gap-4 px-3 pt-3 pb-1.5 max-lg:pt-5 max-md:gap-3 max-md:px-2 max-md:pt-2">
-        {/* <span className="pointer-events-none max-sm:hidden absolute -top-px -left-px h-1.5 w-1.5 border-t border-l border-primary opacity-0 transition-opacity duration-300 group-hover:opacity-100 max-lg:opacity-100 max-md:h-3 max-md:w-3" />
-        <span className="pointer-events-none max-sm:hidden absolute -top-px -right-px h-1.5 w-1.5 border-t border-r border-primary opacity-0 transition-opacity duration-300 group-hover:opacity-100 max-lg:opacity-100 max-md:h-3 max-md:w-3" />
-        <span className="pointer-events-none max-sm:hidden absolute -bottom-px -left-px h-1.5 w-1.5 border-b border-l border-primary opacity-0 transition-opacity duration-300 group-hover:opacity-100 max-lg:opacity-100 max-md:h-3 max-md:w-3" />
-        <span className="pointer-events-none max-sm:hidden absolute -bottom-px -right-px h-1.5 w-1.5 border-b border-r border-primary opacity-0 transition-opacity duration-300 group-hover:opacity-100 max-lg:opacity-100 max-md:h-3 max-md:w-3" /> */}
+        {/* <span className="pointer-events-none max-md:hidden absolute -top-px -left-px h-1.5 w-1.5 border-t border-l border-primary opacity-0 transition-opacity duration-300 group-hover:opacity-100 max-lg:opacity-100" />
+        <span className="pointer-events-none max-md:hidden absolute -top-px -right-px h-1.5 w-1.5 border-t border-r border-primary opacity-0 transition-opacity duration-300 group-hover:opacity-100 max-lg:opacity-100" />
+        <span className="pointer-events-none max-md:hidden absolute -bottom-px -left-px h-1.5 w-1.5 border-b border-l border-primary opacity-0 transition-opacity duration-300 group-hover:opacity-100 max-lg:opacity-100" />
+        <span className="pointer-events-none max-md:hidden absolute -bottom-px -right-px h-1.5 w-1.5 border-b border-r border-primary opacity-0 transition-opacity duration-300 group-hover:opacity-100 max-lg:opacity-100" /> */}
 
         <div className="flex min-w-0 flex-col gap-0.5">
-          <h3 className="truncate  text-[1.25vw] max-md:text-[3vw] max-sm:text-[4.5vw] font-medium leading-[1.2]! text-white max-md:text-base">
+          <h3 className="truncate  text-[calc(var(--cvw)*1.3)] font-medium leading-[1.2]! text-white max-md:text-base">
             <span>
               {effect.title}
             </span>
           </h3>
-          <p className="text18 text-[#AEAEAE] max-md:text-xs">
+          <p className="text18 text-border max-md:text-xs">
             {primaryCategoryLabel}
           </p>
         </div>
 
         <div className="pointer-events-auto relative z-30 flex shrink-0 items-center gap-3 opacity-0 transition-opacity duration-300 max-md:gap-3 group-hover:opacity-100 max-lg:opacity-100 ">
           {installCount > 0 && (
-            <span className="flex items-center gap-1.5 text-[1vw]  text-white/55 max-sm:text-[3vw]!">
+            <span className="flex items-center gap-1.5 text-[calc(var(--cvw)*1)]  text-white/55 max-md:text-[clamp(11px,3vw,13px)]!">
               {installCountLabel}
-              <Download className="h-3 w-3 text-white/45 max-sm:h-3 max-sm:w-3" aria-hidden="true" />
+              <Download className="h-3 w-3 text-white/45" aria-hidden="true" />
             </span>
           )}
 
@@ -240,7 +240,7 @@ export function EffectCard({
                 e.stopPropagation();
                 toggleWishlist?.(effect);
               }}
-              className="flex h-8 w-8 cursor-pointer items-center justify-center  bg-[#242424] text-white transition-colors hover:bg-white/10 max-lg:h-11 max-lg:w-11 max-md:h-9 max-md:w-9"
+              className="flex h-8 w-8 cursor-pointer items-center justify-center  bg-grey text-white transition-colors hover:bg-white/10 max-lg:h-11 max-lg:w-11 max-md:h-9 max-md:w-9"
               aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
             >
               <Heart
@@ -260,7 +260,7 @@ export function EffectCard({
                 e.stopPropagation();
                 window.open(previewHref, "_blank", "noopener,noreferrer");
               }}
-              className="flex h-8 w-8 cursor-pointer items-center justify-center bg-[#242424] text-white transition-colors hover:bg-white/10 max-lg:h-11 max-lg:w-11 max-md:h-9 max-md:w-9"
+              className="flex h-8 w-8 cursor-pointer items-center justify-center bg-grey text-white transition-colors hover:bg-white/10 max-lg:h-11 max-lg:w-11 max-md:h-9 max-md:w-9"
               aria-label="Preview"
             >
               <Eye className="h-4.5 w-4.5 max-lg:h-5 max-lg:w-5 max-md:h-4 max-md:w-4" />

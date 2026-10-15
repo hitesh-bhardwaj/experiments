@@ -1,7 +1,6 @@
 "use client";
 
 import DocsContent from "@/components/DocsContent/DocsContent";
-import Heading from "@/components/DocsContent/Heading";
 import Heading2 from "@/components/DocsContent/Heading2";
 import Para from "@/components/DocsContent/Para";
 import DocsList, { DocsListItem } from "@/components/DocsContent/List";

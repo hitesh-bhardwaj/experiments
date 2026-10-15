@@ -25,7 +25,7 @@ export default function Page() {
     { src: "https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/h-02.jpg", alt: "Gradient 7" },
   ];
   return (
-    <div className="relative h-screen w-screen bg-[#f8fdfe]">
+    <div className="relative h-screen w-full bg-light">
       <PhantomImageTrail
         images={images}
         enableRotation={true}
@@ -158,7 +158,7 @@ export default function DocsIntro() {
       </Para>
 
       <Para>
-        <span className="font-semibold">Copy the code. Tune the motion. Ship the moment.</span>
+        <strong>Copy the code. Tune the motion. Ship the moment.</strong>
       </Para>
 
       <Heading2 id="whats-inside">What&rsquo;s Inside</Heading2>
@@ -532,7 +532,7 @@ export default function DocsIntro() {
       </Para>
 
       <Para>
-        <span className="font-semibold">Small motion. Big signal.</span>
+        <strong>Small motion. Big signal.</strong>
       </Para>
     </DocsContent>
   );

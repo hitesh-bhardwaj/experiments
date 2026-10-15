@@ -9,10 +9,10 @@ export default function BlogAuthor({ author, className = "" }) {
   const designation = author.designation || author.role;
   const image = author.image || author.avatar;
   const avatarClassName =
-    "h-[3.5vw] w-[3.5vw] max-lg:h-[10vw] max-lg:w-[10vw] max-md:h-[14vw] max-md:w-[14vw] shrink-0 overflow-hidden";
+    "h-[calc(var(--cvw)*3.5)] w-[calc(var(--cvw)*3.5)] max-lg:h-[10vw] max-lg:w-[10vw] max-md:h-[14vw] max-md:w-[14vw] shrink-0 overflow-hidden";
 
   return (
-    <div className={`flex items-center gap-[0.9vw] max-lg:gap-4 ${className}`}>
+    <div className={`flex items-center gap-[calc(var(--cvw)*0.9)] max-lg:gap-4 ${className}`}>
       {image?.url ? (
         <div className={avatarClassName}>
           <Image
@@ -32,7 +32,7 @@ export default function BlogAuthor({ author, className = "" }) {
         </div>
       )}
 
-      <div className="flex flex-col gap-[0.4vw]">
+      <div className="flex flex-col gap-[calc(var(--cvw)*0.4)]">
         <p className="type-small text-ink">
           {author.name}
         </p>

@@ -83,10 +83,10 @@ export function TextField({ id, label, type = "text", value, onChange, placehold
             {visible ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
           </button>
         )}
-        <span className="pointer-events-none max-sm:hidden absolute top-0 left-0 h-1.5 w-1.5 border-t border-l border-primary opacity-0 transition-opacity duration-300 group-focus-within:opacity-100 max-md:h-3 max-md:w-3 focus-frame" />
-        <span className="pointer-events-none max-sm:hidden absolute top-0 right-0 h-1.5 w-1.5 border-t border-r border-primary opacity-0 transition-opacity duration-300 group-focus-within:opacity-100 max-md:h-3 max-md:w-3" />
-        <span className="pointer-events-none max-sm:hidden absolute bottom-0 left-0 h-1.5 w-1.5 border-b border-l border-primary opacity-0 transition-opacity duration-300 group-focus-within:opacity-100 max-md:h-3 max-md:w-3" />
-        <span className="pointer-events-none max-sm:hidden absolute bottom-0 right-0 h-1.5 w-1.5 border-b border-r border-primary opacity-0 transition-opacity duration-300 group-focus-within:opacity-100 max-md:h-3 max-md:w-3" />
+        <span className="pointer-events-none max-md:hidden absolute top-0 left-0 h-1.5 w-1.5 border-t border-l border-primary opacity-0 transition-opacity duration-300 group-focus-within:opacity-100 focus-frame" />
+        <span className="pointer-events-none max-md:hidden absolute top-0 right-0 h-1.5 w-1.5 border-t border-r border-primary opacity-0 transition-opacity duration-300 group-focus-within:opacity-100" />
+        <span className="pointer-events-none max-md:hidden absolute bottom-0 left-0 h-1.5 w-1.5 border-b border-l border-primary opacity-0 transition-opacity duration-300 group-focus-within:opacity-100" />
+        <span className="pointer-events-none max-md:hidden absolute bottom-0 right-0 h-1.5 w-1.5 border-b border-r border-primary opacity-0 transition-opacity duration-300 group-focus-within:opacity-100" />
       </div>
     </div>
   );
@@ -141,7 +141,7 @@ export function SecondaryButton({ onClick, children }) {
     <button
       type="button"
       onClick={onClick}
-      className="text-sm text-white/50 transition hover:text-[#ff5f00] duration-300 ease-in-out "
+      className="text-sm text-white/50 transition hover:text-primary duration-300 ease-in-out "
     >
       {children}
     </button>

@@ -1,5 +1,5 @@
 /**
- * Preview chrome for effect demo pages, ported from "GSAP Flip Card — Live preview".
+ * Preview chrome for effect demo pages, ported from "GSAP Flip Card - Live preview".
  *
  *   · a floating glass bar at the top: ← back to the effect page · Free/Pro badge · Desktop / Tablet / Phone
  *     · Replay · Reduced motion · Props · Shortcuts · Copy props

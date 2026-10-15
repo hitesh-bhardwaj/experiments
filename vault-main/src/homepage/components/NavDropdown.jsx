@@ -23,10 +23,10 @@ function MenuItem({ item, onNavigate }) {
       leading={
         <NavMenuIcon
           src={item.icon}
-          className="size-[1.2vw] text-white transition-colors duration-300 group-hover:text-primary motion-reduce:transition-none"
+          className="size-[calc(var(--hx-vw,1vw)*1.2)] text-white transition-colors duration-300 group-hover:text-primary motion-reduce:transition-none"
         />
       }
-      className="relative isolate px-[0.8vw] py-[0.55vw] text18 leading-[1.15] text-white/75 hover:text-foreground"
+      className="relative isolate px-[calc(var(--hx-vw,1vw)*0.8)] py-[calc(var(--hx-vw,1vw)*0.6)] text18 leading-[1.15] text-white/75 hover:text-foreground"
     >
       <span
         aria-hidden="true"
@@ -269,7 +269,7 @@ export default function NavDropdown({ panel, onNavigate }) {
       // move it has already charged for.
       // It spans the gutters, so it passes pointers through to the page and
       // the panel takes them back.
-      className="pointer-events-none absolute top-[85%] right-[3vw] left-[3vw] flex justify-center"
+      className="pointer-events-none absolute top-[85%] right-[calc(var(--hx-vw,1vw)*3)] left-[calc(var(--hx-vw,1vw)*3)] flex justify-center"
     >
       {/* Keyed on the menu so a switch mounts a new panel rather than resizing
           this one. A node that was not in the previous frame has nowhere to
@@ -280,14 +280,14 @@ export default function NavDropdown({ panel, onNavigate }) {
       <div
         key={visible}
         ref={panelRef}
-        className="pointer-events-auto w-max max-w-full border border-white/10 bg-[#121212]/60 backdrop-blur-md will-change-[clip-path,transform]"
+        className="pointer-events-auto w-max max-w-full border border-white/10 bg-background/60 backdrop-blur-lg will-change-[clip-path,transform]"
       >
-        <div ref={contentRef} className="flex min-h-[19vw] w-full">
+        <div ref={contentRef} className="flex min-h-[calc(var(--hx-vw,1vw)*19)] w-full">
           {menu.columns.map((column, index) => (
             // A fixed column width is what makes the panel size to its menu:
             // three columns for Categories, two (so two thirds as wide) for
             // Docs, with the same generous gutter inside each either way.
-            <div key={column.title} className="relative w-[23vw] shrink-0">
+            <div key={column.title} className="relative w-[calc(var(--hx-vw,1vw)*23)] shrink-0">
               {index > 0 && (
                 <span
                   data-nav-v3-sep
@@ -298,14 +298,14 @@ export default function NavDropdown({ panel, onNavigate }) {
 
               <p
                 data-nav-v3-head
-                className="border-b border-white/10 bg-white/2 px-[1.5vw] py-[0.85vw] text18 flex items-center gap-[1vw] text-white capitalize"
+                className="border-b border-white/10 bg-white/2 px-[calc(var(--hx-vw,1vw)*1.5)] py-[calc(var(--hx-vw,1vw)*0.9)] text18 flex items-center gap-[calc(var(--hx-vw,1vw)*1)] text-white capitalize"
               >
 
-                <span className="size-[.6vw] font-avenir bg-primary inline-block" />
+                <span className="size-[calc(var(--hx-vw,1vw)*.6)] font-avenir bg-primary inline-block" />
                 {column.title}
               </p>
 
-              <div className="flex flex-col px-[0.8vw] py-[0.9vw]">
+              <div className="flex flex-col px-[calc(var(--hx-vw,1vw)*0.8)] py-[calc(var(--hx-vw,1vw)*0.9)]">
                 {column.items.map((item) => (
                   <div key={item.label} data-nav-v3-item>
                     <MenuItem item={item} onNavigate={onNavigate} />

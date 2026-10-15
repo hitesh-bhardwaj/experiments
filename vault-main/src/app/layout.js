@@ -25,7 +25,9 @@ import { CookieConsentNudge } from "@/components/WebsiteComps/CookieConsentNudge
 import PixelPageTransition from "@/components/PageTransition/PixelPageTransition";
 import { TooltipHost } from "@/components/ui/Tooltip";
 import SiteInteractions from "@/components/WebsiteComps/SiteInteractions";
+import ReducedMotionConfig from "@/components/WebsiteComps/ReducedMotionConfig";
 import { PageLoadOverlay } from "@/components/layout/PageLoadOverlay";
+import { BREAKPOINTS } from "@/lib/breakpoints";
 
 // The site's two faces: Aeonik Pro (headings / display) and Avenir Next (text),
 // exposed to Tailwind as font-aeonik and font-avenir (globals.css @theme).
@@ -69,7 +71,7 @@ export const metadata = createRootMetadata();
 // so the CSS below can hide body content, preventing a flash of hero content before the loader canvas appears.
 // Skips audit agents: UA/webdriver, plus software WebGL (PSI desktop often has a
 // plain Chrome UA and no navigator.webdriver - see lib/audit.js).
-const LOADER_FIRST_VISIT_BLOCK = `(function(){try{if(sessionStorage.getItem('hyperiux-loader-has-run')==='true')return;if(window.location.pathname!=='/')return;if(window.innerWidth<1025)return;if(navigator.webdriver||/Lighthouse|Chrome-Lighthouse|Google Page Speed|PTST|HeadlessChrome/i.test(navigator.userAgent||''))return;var c=document.createElement('canvas');var gl=c.getContext('webgl')||c.getContext('experimental-webgl');if(gl){var di=gl.getExtension('WEBGL_debug_renderer_info');var r=di?gl.getParameter(di.UNMASKED_RENDERER_WEBGL):(gl.getParameter(gl.RENDERER)||'');if(/SwiftShader|llvmpipe|Software Rasterizer|Mesa OffScreen/i.test(String(r||'')))return;}document.documentElement.classList.add('loader-first-visit');}catch(e){}})();`;
+const LOADER_FIRST_VISIT_BLOCK = `(function(){try{if(sessionStorage.getItem('hyperiux-loader-has-run')==='true')return;if(window.location.pathname!=='/')return;if(window.innerWidth<${BREAKPOINTS.lg})return;if(navigator.webdriver||/Lighthouse|Chrome-Lighthouse|Google Page Speed|PTST|HeadlessChrome/i.test(navigator.userAgent||''))return;var c=document.createElement('canvas');var gl=c.getContext('webgl')||c.getContext('experimental-webgl');if(gl){var di=gl.getExtension('WEBGL_debug_renderer_info');var r=di?gl.getParameter(di.UNMASKED_RENDERER_WEBGL):(gl.getParameter(gl.RENDERER)||'');if(/SwiftShader|llvmpipe|Software Rasterizer|Mesa OffScreen/i.test(String(r||'')))return;}document.documentElement.classList.add('loader-first-visit');}catch(e){}})();`;
 
 const CLEAR_STALE_CLERK_COOKIES = `(function(){
   var hasUat=document.cookie.indexOf('__client_uat=')!==-1;
@@ -107,11 +109,7 @@ export default function RootLayout({ children }) {
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
         <link rel="manifest" href="/site.webmanifest" />
-        {/* Plain script tag, not next/script: this layout is a Server
-            Component, so the tag ships in the SSR HTML and the browser
-            executes it during parse - before first paint. next/script is a
-            client component and triggers React's "scripts inside components
-            are never executed" warning for inline beforeInteractive code. */}
+
         {/* <script
           id="loader-first-visit-block"
           dangerouslySetInnerHTML={{ __html: LOADER_FIRST_VISIT_BLOCK }}
@@ -141,36 +139,27 @@ export default function RootLayout({ children }) {
         <ImageObjectJsonLd />
         <WebsiteJsonLd />
         <SoftwareApplicationJsonLd />
-        {/* One sound engine + liquid cursor, the full-page dotted grid and
-            fluid, and the sound toggle - mounted here so they survive client
-            navigation. Wraps PixelPageTransition so it can play the route whoosh. */}
-        <SiteInteractions>
-          <PixelPageTransition />
-          <CookieConsentNudge />
-          {/* CustomAnimationFormProvider adds no DOM of its own (just a
-              Context.Provider) - it wraps children so any page's
-              CustomAnimationFormTrigger can reach the single globally-mounted
-              modal below via local state instead of a URL round-trip. */}
-          <CustomAnimationFormProvider>
-            {children}
-            {/* LazyRecaptchaProvider mounts only when a modal opens - never
-                wrap page children or the homepage remounts when reCAPTCHA
-                arms. ExitIntentInviteModal has to live inside this provider
-                (not on the homepage route itself) so its executeRecaptcha()
-                call actually has a <ReCaptchaProvider> ancestor - it gates
-                itself back down to homepage-only via usePathname(). */}
-            <LazyRecaptchaProvider>
-              <Suspense>
-                <CustomAnimationFormModal />
-              </Suspense>
-              <Suspense>
-                <WorkWithHyperiuxModal />
-              </Suspense>
-              <ExitIntentInviteModal />
-            </LazyRecaptchaProvider>
-          </CustomAnimationFormProvider>
-        </SiteInteractions>
-        <TooltipHost />
+        
+        <ReducedMotionConfig>
+          <SiteInteractions>
+            <PixelPageTransition />
+            <CookieConsentNudge />
+            
+            <CustomAnimationFormProvider>
+              {children}
+              <LazyRecaptchaProvider>
+                <Suspense>
+                  <CustomAnimationFormModal />
+                </Suspense>
+                <Suspense>
+                  <WorkWithHyperiuxModal />
+                </Suspense>
+                <ExitIntentInviteModal />
+              </LazyRecaptchaProvider>
+            </CustomAnimationFormProvider>
+          </SiteInteractions>
+          <TooltipHost />
+        </ReducedMotionConfig>
         <Analytics />
         <SpeedInsights />
         <DeferredGTM />

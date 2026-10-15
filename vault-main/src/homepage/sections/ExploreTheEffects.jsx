@@ -151,7 +151,7 @@ export default function ExploreTheEffects() {
             <div className="site-container flex flex-col gap-[calc(var(--cvw)*3)] max-md:gap-[calc(var(--cvw)*10)]">
             <div className="flex flex-col gap-[calc(var(--cvw)*4.2)] max-md:gap-[calc(var(--cvw)*10)]">
             <LineReveal as="h2" className="type-h1 mx-auto w-[calc(var(--cvw)*60)] max-md:w-full">
-                Explore the Moments Your Website Is <span className="gradient-text-animate">Missing.</span>
+                Explore the Moments Your Website is <span className="gradient-text-animate">Missing.</span>
             </LineReveal>
 
             <div
@@ -214,7 +214,7 @@ export default function ExploreTheEffects() {
                     >
                         <div className="relative aspect-16/10 overflow-hidden bg-white/5">
                             {/* Poster sits under the video and shows until the video has a frame */}
-                            <Image src={item.poster} alt="" fill sizes="(max-width: 767px) 90vw, 30vw" className="object-cover" />
+                            <Image src={item.poster} alt="poster" fill sizes="(max-width: 767px) 90vw, 30vw" className="object-cover" />
                             <LazyVideo src={item.video} loop muted playsInline className="relative size-full object-cover" />
                         </div>
                         <div className="flex flex-col justify-between gap-4 py-1">

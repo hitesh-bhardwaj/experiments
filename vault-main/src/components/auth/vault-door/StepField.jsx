@@ -5,6 +5,7 @@ import { FIELDS, FOCUS_RING_CLASS, INPUT_AUTOFILL_STYLE, LABEL_CLASS } from "./c
 import { LoaderCircle } from "lucide-react";
 import { EyeIcon } from "./icons";
 import { passwordStrength } from "./utils";
+import ButtonArrowIcon from "@/components/ui/ButtonArrowIcon";
 
 const FINE_POINTER_QUERY = "(pointer: fine)";
 const STRONG_ENOUGH = 3;
@@ -33,12 +34,12 @@ export function StepField({ id, field, value, message, busy, submitLabel, onChan
   const isError = message?.tone === "bad";
 
   return (
-    <div className="grid gap-[0.6vw] max-md:gap-2" data-step>
+    <div className="grid gap-[calc(var(--cvw)*0.6)] max-md:gap-2" data-step>
       <label htmlFor={id} className={`${LABEL_CLASS} text-white/80`}>
         {config.label}
       </label>
 
-      <div className="relative flex items-center gap-[1vw] border-b border-foreground/30 transition-colors duration-300 after:absolute after:inset-x-0 after:-bottom-px after:h-px after:origin-left after:scale-x-0 after:bg-primary after:transition-transform after:duration-700 after:ease-[cubic-bezier(.16,1,.3,1)] focus-within:border-white/70 focus-within:after:scale-x-100 max-md:gap-3">
+      <div className="relative flex items-center gap-[calc(var(--cvw)*1)] border-b border-foreground/30 transition-colors duration-300 after:absolute after:inset-x-0 after:-bottom-px after:h-px after:origin-left after:scale-x-0 after:bg-primary after:transition-transform after:duration-700 after:ease-[cubic-bezier(.16,1,.3,1)] focus-within:border-white/70 focus-within:after:scale-x-100 max-md:gap-3">
         <input
           ref={inputRef}
           id={id}
@@ -54,7 +55,7 @@ export function StepField({ id, field, value, message, busy, submitLabel, onChan
           aria-invalid={isError || undefined}
           required
           style={INPUT_AUTOFILL_STYLE}
-          className="text24 h-auto min-w-0 flex-1 border-0 bg-transparent px-0 py-[0.9vw] text-white caret-primary outline-none placeholder:text-[#6e6e6e] max-md:py-3"
+          className="text24 h-auto min-w-0 flex-1 border-0 bg-transparent px-0 py-[calc(var(--cvw)*0.9)] text-white caret-primary outline-none placeholder:text-light-grey max-md:py-3"
         />
 
         {isPassword && (
@@ -66,9 +67,9 @@ export function StepField({ id, field, value, message, busy, submitLabel, onChan
             }}
             aria-label={revealed ? "Hide password" : "Show password"}
             aria-pressed={revealed}
-            className={`grid size-[2.4vw] shrink-0 cursor-pointer place-items-center text-white/80 transition-colors duration-300 hover:text-white aria-pressed:text-white max-lg:size-10 ${FOCUS_RING_CLASS}`}
+            className={`grid size-[calc(var(--cvw)*2.4)] shrink-0 cursor-pointer place-items-center text-white/80 transition-colors duration-300 hover:text-white aria-pressed:text-white max-lg:size-10 ${FOCUS_RING_CLASS}`}
           >
-            <EyeIcon className="size-[1.2vw] max-lg:size-[18px]" />
+            <EyeIcon className="size-[calc(var(--cvw)*1.2)] max-lg:size-[18px]" />
           </button>
         )}
 
@@ -77,22 +78,19 @@ export function StepField({ id, field, value, message, busy, submitLabel, onChan
           disabled={busy}
           aria-label={submitLabel}
           data-sound-kind="primary"
-          className={`grid size-[2.5vw] shrink-0 cursor-pointer place-items-center bg-primary text-black transition-colors duration-300 hover:bg-white disabled:pointer-events-none disabled:opacity-60 max-lg:size-10 ${FOCUS_RING_CLASS}`}
+          className={`grid size-[calc(var(--cvw)*2.5)] shrink-0 cursor-pointer place-items-center bg-primary text-black transition-colors duration-300 hover:bg-white disabled:pointer-events-none disabled:opacity-60 max-lg:size-10 ${FOCUS_RING_CLASS}`}
         >
           {busy ? (
             // Signing in / checking: a spinner in place of the arrow
-            <LoaderCircle className="size-[1.1vw] animate-spin motion-reduce:animate-none max-lg:size-4" aria-hidden="true" />
+            <LoaderCircle className="size-[calc(var(--cvw)*1.1)] animate-spin motion-reduce:animate-none max-lg:size-4" aria-hidden="true" />
           ) : (
-            <span
-              aria-hidden="true"
-              className="size-[0.9vw] bg-current [mask-image:url(/icons/arrow-icon-final.svg)] mask-contain mask-center mask-no-repeat max-lg:size-3.5"
-            />
+            <ButtonArrowIcon className="size-[calc(var(--cvw)*0.9)] max-lg:size-3.5" />
           )}
         </button>
       </div>
 
       {field === "newPassword" && (
-        <div className="-mt-[0.6vw] h-px bg-white/10 max-md:-mt-2" aria-hidden="true">
+        <div className="-mt-[calc(var(--cvw)*0.6)] h-px bg-white/10 max-md:-mt-2" aria-hidden="true">
           <i
             className="block h-full transition-[width,background-color] duration-700 ease-[cubic-bezier(.16,1,.3,1)]"
             style={{ width: `${strength * 25}%`, backgroundColor: strength >= STRONG_ENOUGH ? "var(--primary)" : "var(--light-grey)" }}

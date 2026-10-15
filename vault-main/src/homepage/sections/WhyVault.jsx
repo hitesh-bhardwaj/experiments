@@ -11,11 +11,12 @@ import { useSectionOverlay } from "@/components/Animations/useSectionOverlay";
 import CodeCard from "../components/why-vault/CodeCard";
 import MomentsCard from "../components/why-vault/MomentsCard";
 import TuneCard from "../components/why-vault/TuneCard";
+import { TOTAL_LABEL, FREE_EFFECTS } from "@/lib/library-counts";
 
 const WHY_VAULT_ITEMS = [
     {
         id: "moments",
-        nav: "150+ components / 56 free",
+        nav: `${TOTAL_LABEL} components / ${FREE_EFFECTS} free`,
         title: "Every moment, already built.",
         body: "Scroll systems, cursor presence, text reveals, transitions, loaders and WebGL scenes. Preview exactly how each one behaves before it touches your project.",
     },

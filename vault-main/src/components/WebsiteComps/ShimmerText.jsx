@@ -2,11 +2,12 @@
 
 import React, { useRef, useLayoutEffect } from "react";
 import gsap from "gsap";
+import { prefersReducedMotion } from "@/lib/motion";
 
 export default function ShimmerText({
     children,
-    baseColor = "#ffffff",
-    shimmerColor = "#ff5f00",
+    baseColor = "var(--foreground)",
+    shimmerColor = "var(--primary)",
     className = "",
     as: Component = "span"
 }) {
@@ -14,7 +15,8 @@ export default function ShimmerText({
 
     useLayoutEffect(() => {
         const shimmerEl = shimmerRef.current;
-        if (!shimmerEl) return;
+        // Reduced motion: plain text, no looping shimmer
+        if (!shimmerEl || prefersReducedMotion()) return;
 
         gsap.set(shimmerEl, {
             color: "transparent",

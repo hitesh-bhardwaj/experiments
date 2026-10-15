@@ -226,7 +226,7 @@ export default function ScrollStack({
                             >
                               <Image
                                 src={item.icon}
-                                alt=""
+                                alt="kyntra"
                                 aria-hidden
                                 className="w-[2.3vw] h-auto object-contain max-[1025px]:size-[3vw] max-md:size-[6vw]"
                               />

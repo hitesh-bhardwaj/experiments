@@ -93,7 +93,7 @@ export function CustomSelect({
         <div
           role="listbox"
           onMouseLeave={() => setHovered(null)}
-          className={`absolute z-30 mt-2 min-w-full space-y-1 border border-white/10 bg-[#1a1a1a] p-1.5 whitespace-nowrap ${
+          className={`absolute z-30 mt-2 min-w-full space-y-1 border border-white/10 bg-dark-card p-1.5 whitespace-nowrap ${
             align === "right" ? "right-0" : "left-0"
           } ${panelClassName}`}
         >
@@ -116,12 +116,12 @@ export function CustomSelect({
               >
                 <span
                   aria-hidden="true"
-                  className={`absolute inset-0 z-0 origin-top bg-[#ff5f00] transition-transform duration-300 ease-out motion-reduce:transition-none ${
+                  className={`absolute inset-0 z-0 origin-top bg-primary transition-transform duration-300 ease-out motion-reduce:transition-none ${
                     highlighted ? "scale-y-100" : "scale-y-0"
                   }`}
                 />
                 <span
-                  className={`relative z-10 ${highlighted ? "text-[#111111]" : "text-white/80"}`}
+                  className={`relative z-10 ${highlighted ? "text-background" : "text-white/80"}`}
                 >
                   {option.label}
                 </span>

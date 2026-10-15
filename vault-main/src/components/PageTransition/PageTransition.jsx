@@ -5,6 +5,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import gsap from 'gsap'
 import { useLenis } from 'lenis/react'
 import { useInteraction } from '@/homepage/components/InteractionProvider'
+import { cssVar } from "@/lib/useCssVar";
 
 /** Bayer 8x8 ordered-dither matrix for retro halftone dissolve effect */
 const BAYER = [
@@ -36,7 +37,7 @@ function GridSquares({
   cols = 3,
   size = 56,
   squareSize = 8,
-  color = '#ffffff',
+  color = 'var(--foreground)',
   className = '',
   style,
   ...props
@@ -204,7 +205,7 @@ export default function PageTransition() {
       return
     }
 
-    const dotColor = packHex('#ff5f00')
+    const dotColor = packHex(cssVar('--primary'))
     const invRows = rows > 1 ? 1 / (rows - 1) : 0
 
     pixels.fill(0)
@@ -491,7 +492,7 @@ export default function PageTransition() {
       {/* Grid Squares Loading Indicator */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
         <div ref={logoRef} className="opacity-0 flex items-center justify-center">
-          <GridSquares size={56} squareSize={8} color="#0e0e0e" />
+          <GridSquares size={56} squareSize={8} color="var(--background)" />
         </div>
       </div>
     </div>

@@ -17,13 +17,13 @@ import { T11, T12, T14, T18 } from "../templates/tokens";
 // Site fonts: body is Avenir, h1–h4 get Aeonik from globals.css, code is IBM Plex Mono.
 export const DISPLAY = "font-normal tracking-tight";
 export const MONO = "font-mono";
-export const LABEL = `${T11} uppercase tracking-normal`;
+export const LABEL = `${T11}  tracking-normal`;
 
 const NEW_WINDOW_MS = 1000 * 60 * 60 * 24 * 30;
 
 // The Free / Pro badge sits on the preview image, with a barely-there shadow so it
 // holds against any cover.
-const BADGE = `inline-flex py-1 items-center px-3 ${T12} tracking-normal backdrop-blur-lg shadow-[0_calc(var(--cvw)*0.1)_calc(var(--cvw)*0.4)_color-mix(in_srgb,black_8%,transparent)]`;
+const BADGE = `inline-flex py-1 items-center px-3 ${T12} tracking-normal backdrop-blur-lg shadow-sm`;
 // The dark action buttons on a card (Save, Copy install, Preview); the drawer reuses it.
 export const ICON_BTN =
   `inline-flex h-8.5 min-w-8.5 cursor-pointer items-center justify-center gap-2 px-2.5 ${T12} text-foreground/90 bg-background/70 ring-1 ring-inset ring-foreground/12 backdrop-blur-lg transition-colors duration-500 hover:bg-grey/90 hover:text-foreground [&_svg]:size-3.5`;
@@ -135,9 +135,9 @@ export function EffectCard({
       // (trending, the drawer's related cards) it stays frameless.
       // Hover anywhere on the card: it comes a touch towards the viewer with a soft shadow
       // and the action buttons slide up into the preview (group/card).
-      className={`group group/card relative flex flex-col gap-[calc(var(--cvw)*1)] outline-none transition-[transform,box-shadow] duration-500 transform-[perspective(1200px)_translateZ(0)] hover:transform-[perspective(1200px)_translateZ(calc(var(--cvw)*1))] hover:shadow-[0_calc(var(--cvw)*1.2)_calc(var(--cvw)*2.4)_calc(var(--cvw)*-1.2)_color-mix(in_srgb,black_35%,transparent)] max-md:gap-[3.5vw] ${dark ? "" : "bg-foreground p-[calc(var(--cvw)*1.1)] max-lg:p-4 max-md:p-3.5"} ${className}`}
+      className={`group group/card relative flex flex-col gap-[calc(var(--cvw)*1)] outline-none transition-[transform,box-shadow] duration-500 transform-[perspective(1200px)_translateZ(0)] hover:transform-[perspective(1200px)_translateZ(calc(var(--cvw)*1))] hover:shadow-float max-md:gap-[3.5vw] ${dark ? "" : "bg-foreground p-[calc(var(--cvw)*1.1)] max-lg:p-4 max-md:p-3.5"} ${className}`}
     >
-      <div data-card-preview className="relative aspect-[16/8.6] cursor-pointer overflow-hidden bg-dark-card group-focus-visible:ring-2 group-focus-visible:ring-primary">
+      <div data-card-preview className="relative aspect-[16/8.6] cursor-pointer overflow-hidden group-focus-visible:ring-2 group-focus-visible:ring-primary">
         {cover && !imageError ? (
           <Image
             src={cover}
@@ -160,10 +160,12 @@ export function EffectCard({
         )}
         <span aria-hidden="true" className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-foreground/7" />
 
-        {/* Tier (Free / Pro), top right */}
-        <div className="pointer-events-none absolute top-3 right-3">
-          <TierBadge tier={effect.tier} />
-        </div>
+        {/* Pro badge, top right (free effects carry no tag) */}
+        {effect.tier === "pro" && (
+          <div className="pointer-events-none absolute top-3 right-3">
+            <TierBadge tier="pro" />
+          </div>
+        )}
 
         {/* Tech tags, bottom left (the hover actions come in on the right) */}
         {deps.length > 0 && (

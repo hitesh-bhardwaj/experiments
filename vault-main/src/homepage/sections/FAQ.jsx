@@ -32,10 +32,10 @@ const OPEN_DURATION = 0.6;
 //       "No. Vault is the interaction layer around your UI kit. Use it beside your design system, shadcn, Tailwind, Radix, or custom components.",
 //   },
 //   {
-//     id: "faq-v3-2",
+//     id: "faq-v3-2", // needs: import { FREE_LABEL } from "@/lib/library-counts"
 //     question: "What do I get for free?",
 //     answer:
-//       "30+ free effects, installable with the CLI and usable in real projects. No account gymnastics, no trial timer, no watermark.",
+//       `${FREE_LABEL} free effects, installable with the CLI and usable in real projects. No account gymnastics, no trial timer, no watermark.`,
 //   },
 //   {
 //     id: "faq-v3-3",

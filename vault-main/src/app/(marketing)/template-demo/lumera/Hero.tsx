@@ -131,12 +131,12 @@ const Hero: React.FC = () => {
                     >
                       <Image
                         src={arrowDownIcon}
-                        alt=""
+                        alt="arrow down icon"
                         className="absolute h-[2.3vw] w-auto object-contain transition-transform duration-500 ease-in-out group-hover:translate-y-[180%] max-[1025px]:h-[7vw]"
                       />
                       <Image
                         src={arrowDownIcon}
-                        alt=""
+                        alt="arrow down icon"
                         className="absolute h-[2.3vw] w-auto translate-y-[-180%] object-contain transition-transform duration-500 ease-in-out group-hover:translate-y-0 max-[1025px]:h-[7vw]"
                       />
                     </FadeUp>

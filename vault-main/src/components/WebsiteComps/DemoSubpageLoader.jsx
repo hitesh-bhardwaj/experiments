@@ -253,14 +253,14 @@ function DemoSubpageOverlay({ pathname }) {
   return (
     <div
       aria-hidden="true"
-      className={`fixed inset-0 z-99999 flex items-center justify-center bg-[#0e0e0e] transition-opacity duration-500 ease-out ${
+      className={`fixed inset-0 z-99999 flex items-center justify-center bg-background transition-opacity duration-500 ease-out ${
         fadingOut ? "pointer-events-none opacity-0" : "opacity-100"
       }`}
     >
       <ShimmerText
         as="p"
-        baseColor="#939393" shimmerColor="#ffffff"
-        className="text-[1.4vw] font-medium tracking-tight max-[1025px]:text-[4.5vw] text-[#939393]"
+        baseColor="var(--light-grey)" shimmerColor="var(--foreground)"
+        className="text-[1.4vw] font-medium tracking-tight max-lg:text-[4.5vw] text-light-grey"
       >
         Loading {formatLabel(pathname)}
       </ShimmerText>

@@ -85,12 +85,12 @@ function TutorialVideoModal() {
             role="dialog"
             aria-modal="true"
             aria-label="Vault walkthrough video"
-            className={`fixed inset-0 z-9500 flex items-center justify-center bg-black/70 p-[4vw] backdrop-blur-sm max-md:p-4 ${closing ? "motion-safe:animate-[hx-fade-out_.32s_ease-in_both]" : "motion-safe:animate-[hx-fade-in_.5s_ease-out_both]"}`}
+            className={`fixed inset-0 z-9500 flex items-center justify-center bg-black/70 p-[calc(var(--cvw)*4)] backdrop-blur-lg max-md:p-4 ${closing ? "motion-safe:animate-[hx-fade-out_.32s_ease-in_both]" : "motion-safe:animate-[hx-fade-in_.5s_ease-out_both]"}`}
             onClick={requestClose}
             data-lenis-prevent
         >
             <div
-                className={`relative w-full max-w-[80vw] max-lg:max-w-full ${closing ? "motion-safe:animate-[hx-scale-out_.32s_cubic-bezier(.7,0,.84,0)_both]" : "motion-safe:animate-[hx-scale-in_.8s_cubic-bezier(.16,1,.3,1)_both]"}`}
+                className={`relative w-full max-w-[calc(var(--cvw)*80)] max-lg:max-w-full ${closing ? "motion-safe:animate-[hx-scale-out_.32s_cubic-bezier(.7,0,.84,0)_both]" : "motion-safe:animate-[hx-scale-in_.8s_cubic-bezier(.16,1,.3,1)_both]"}`}
                 onClick={(e) => e.stopPropagation()}
             >
                 <button

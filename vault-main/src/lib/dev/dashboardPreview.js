@@ -1,3 +1,5 @@
+import { FREE_EFFECTS, TOTAL_EFFECTS } from "../library-counts";
+
 // Development-only dashboard preview. Clerk can't sign in on localhost (production keys),
 // so the dashboard can't be seen while working on it. In `next dev` only, a
 // `vault-dev-preview` cookie lets /dashboard pages through the proxy without a session
@@ -40,9 +42,9 @@ export function sampleDashboard(plan = "pro") {
     manageSubscriptionUrl: pro ? "https://example.com/manage" : null,
     dailyInstallLimit: pro ? 5 : 3,
     templateCredits: pro ? 2 : 0,
-    totalEffects: 150,
-    totalFreeEffects: 53,
-    totalEffectsAccess: pro ? 150 : 53,
+    totalEffects: TOTAL_EFFECTS,
+    totalFreeEffects: FREE_EFFECTS,
+    totalEffectsAccess: pro ? TOTAL_EFFECTS : FREE_EFFECTS,
     savedCount: 12,
     copiedCount: 34,
     cliCount: 15,

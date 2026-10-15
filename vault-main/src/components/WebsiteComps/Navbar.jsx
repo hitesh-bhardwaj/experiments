@@ -91,10 +91,10 @@ export default function Navbar({ effects = [] }) {
                     opacity: 0,
                     transform: 'translateY(-18px)',
                 }}
-                className="fixed top-(--announcement-offset) transition-[top] duration-300 ease-out left-0 z-999 flex w-full items-center justify-between overflow-visible px-[3.5vw] py-[2vw] max-lg:hidden"
+                className="fixed top-(--announcement-offset) transition-[top] duration-300 ease-out left-0 z-999 flex w-full items-center justify-between overflow-visible px-[calc(var(--hx-vw,1vw)*3.5)] py-[calc(var(--hx-vw,1vw)*2)] max-lg:hidden"
             >
             <Link prefetch={false} href="/" aria-label="Hyperiux Vault home">
-                <HyperiuxLogo className="h-auto w-[13vw] text-primary" />
+                <HyperiuxLogo className="h-auto w-[calc(var(--hx-vw,1vw)*13)] text-primary" />
             </Link>
 
             <NavLinks
@@ -104,14 +104,14 @@ export default function Navbar({ effects = [] }) {
                 isHighlighted={isHighlighted}
             />
 
-            <div className="flex items-center justify-center gap-[1vw]">
+            <div className="flex items-center justify-center gap-[calc(var(--hx-vw,1vw)*1)]">
                 {/* Clerk-free by design: marketing routes render without
                     ClerkProvider, so this navbar always shows the anonymous
                     state. Plan-aware UI lives in the (app) group. */}
                 <button
                     type="button"
                     onClick={openSearch}
-                    className="group flex py-[.8vw] cursor-pointer items-center gap-10 bg-grey! px-3 text-xs text-white/70 backdrop-blur-md transition-colors duration-300 hover:bg-white/10 hover:border-[#ff5f00] hover:text-white max-lg:hidden max-lg:gap-3"
+                    className="group flex py-[calc(var(--hx-vw,1vw)*.8)] cursor-pointer items-center gap-10 bg-grey! px-3 text-xs text-white/70 backdrop-blur-lg transition-colors duration-300 hover:bg-white/10 hover:border-primary hover:text-white max-lg:hidden max-lg:gap-3"
                     aria-label="Search effects"
                 >
                     <div className="flex items-center gap-2">
@@ -140,7 +140,7 @@ export default function Navbar({ effects = [] }) {
                     id={"upgrade-to-pro-navbar"}
                     text="Upgrade to Pro"
                     href="/sign-up"
-                    className="border-white/40! bg-[#0E0E0E]!"
+                    className="border-white/40! bg-background!"
                     scrollOffset={getUpgradeScrollOffset}
                 />
             </div>

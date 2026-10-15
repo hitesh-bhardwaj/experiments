@@ -83,7 +83,7 @@ function Accordion({ open, children }) {
 
   return (
     <div ref={wrapperRef} className="h-0 overflow-hidden opacity-0">
-      <div ref={contentRef} className="pb-[6vw] md:pb-[3.5vw]">
+      <div ref={contentRef} className="pb-[3.5vw] max-md:pb-[6vw]">
         {everOpened ? children : null}
       </div>
     </div>
@@ -92,8 +92,8 @@ function Accordion({ open, children }) {
 
 /**
  * The v3 bar below `lg`, where the desktop pill is hidden - phones and tablets
- * alike. The `md:` overrides below re-scale the phone-tuned `vw` ramp for the
- * 768–1024px band, where raw viewport units would render everything oversized.
+ * alike. The base sizes are tuned for the 768–1024px band and the `max-md:`
+ * overrides scale them up for phones, so raw viewport units stay readable on both.
  *
  * @param {boolean} visible - the desktop bar's scroll-reveal state, so both
  *   halves hide together on scroll.
@@ -270,7 +270,7 @@ export default function NavbarMobile({
         data-site-header
         // Translucent rather than solid: the hero's ASCII field keeps moving
         // under the bar, and the blur is what keeps the logo readable over it.
-        className={`fixed top-0 left-0 z-1000 hidden max-lg:flex w-full items-center justify-between border-b border-white/8 bg-background px-[6vw] py-[5vw]  transition-[transform,translate,opacity] duration-500 ease-out motion-reduce:transition-none md:px-[3.5vw] md:py-[2.5vw]  ${!intro
+        className={`fixed top-0 left-0 z-1000 hidden max-lg:flex w-full items-center justify-between border-b border-white/8 bg-background px-[3.5vw] max-md:px-[6vw] py-[2.5vw] max-md:py-[5vw]  transition-[transform,translate,opacity] duration-500 ease-out motion-reduce:transition-none  ${!intro
           ? "pointer-events-none translate-y-0 opacity-0"
           : (visible && !scrollHidden) || open
             ? "translate-y-0 opacity-100"
@@ -285,21 +285,21 @@ export default function NavbarMobile({
           href="/"
           onClick={close}
           aria-label="Hyperiux Vault home"
-          className="w-[36vw] md:w-[15vw]"
+          className="w-[15vw] max-md:w-[36vw]"
         >
           <HyperiuxLogo className="size-full text-primary" />
         </Link>
 
-        <div className="flex items-center gap-[3vw] md:gap-[2vw]">
+        <div className="flex items-center gap-[2vw] max-md:gap-[3vw]">
           {SHOW_HEADER_TUTORIAL && (
             <TutorialVideoButton
-              className={`relative flex size-[10vw] shrink-0 items-center justify-center bg-[#161616] text-primary backdrop-blur-md transition-opacity duration-500 delay-200 ease-out motion-reduce:transition-none md:size-[5vw] ${intro ? "opacity-100" : "opacity-0"}`}
-              iconClassName="size-[4.5vw] md:size-[2.4vw]"
+              className={`relative flex size-[5vw] max-md:size-[10vw] shrink-0 items-center justify-center bg-dark-card text-primary backdrop-blur-lg transition-opacity duration-500 delay-200 ease-out motion-reduce:transition-none ${intro ? "opacity-100" : "opacity-0"}`}
+              iconClassName="size-[2.4vw] max-md:size-[4.5vw]"
             />
           )}
           <SoundToggle
             size={40}
-            className={`bg-[#161616]! transition-opacity duration-500 delay-200 ease-out motion-reduce:transition-none ${intro ? "opacity-100" : "opacity-0"}`}
+            className={`bg-dark-card! transition-opacity duration-500 delay-200 ease-out motion-reduce:transition-none ${intro ? "opacity-100" : "opacity-0"}`}
           />
           {SHOW_HEADER_SEARCH && (
             <button
@@ -307,10 +307,10 @@ export default function NavbarMobile({
               onClick={handleSearch}
               aria-label="Search effects"
               // Trails the logo on the way in, same as the hamburger beside it.
-              className={`relative flex size-[10vw] shrink-0 items-center justify-center bg-[#161616] text-primary backdrop-blur-md transition-opacity duration-500 delay-200 ease-out motion-reduce:transition-none md:size-[5vw] ${intro ? "opacity-100" : "opacity-0"}`}
+              className={`relative flex size-[5vw] max-md:size-[10vw] shrink-0 items-center justify-center bg-dark-card text-primary backdrop-blur-lg transition-opacity duration-500 delay-200 ease-out motion-reduce:transition-none ${intro ? "opacity-100" : "opacity-0"}`}
             >
               <svg
-                className="size-[4.5vw] shrink-0 md:size-[2.4vw]"
+                className="size-[2.4vw] max-md:size-[4.5vw] shrink-0"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -332,16 +332,16 @@ export default function NavbarMobile({
             aria-label={open ? "Close menu" : "Open menu"}
             aria-expanded={open}
             // Trails the logo on the way in, the way the desktop bar's links do.
-            className={`relative flex size-[10vw] shrink-0 items-center justify-center bg-[#161616] text-primary transition-opacity duration-500 delay-200 ease-out motion-reduce:transition-none md:size-[5vw] ${intro ? "opacity-100" : "opacity-0"}`}
+            className={`relative flex size-[5vw] max-md:size-[10vw] shrink-0 items-center justify-center bg-dark-card text-primary transition-opacity duration-500 delay-200 ease-out motion-reduce:transition-none ${intro ? "opacity-100" : "opacity-0"}`}
           >
             <span
               aria-hidden="true"
-              className={`absolute h-px w-[4.5vw] bg-current transition-transform duration-300 ease-out motion-reduce:transition-none md:w-[2.4vw] ${open ? "rotate-45" : "-translate-y-[1.2vw] md:translate-y-[-0.6vw]"
+              className={`absolute h-px w-[2.4vw] max-md:w-[4.5vw] bg-current transition-transform duration-300 ease-out motion-reduce:transition-none ${open ? "rotate-45" : "translate-y-[-0.6vw] max-md:-translate-y-[1.2vw]"
                 }`}
             />
             <span
               aria-hidden="true"
-              className={`absolute h-px w-[4.5vw] bg-current transition-transform duration-300 ease-out motion-reduce:transition-none md:w-[2.4vw] ${open ? "-rotate-45" : "translate-y-[1.2vw] md:translate-y-[0.6vw]"
+              className={`absolute h-px w-[2.4vw] max-md:w-[4.5vw] bg-current transition-transform duration-300 ease-out motion-reduce:transition-none ${open ? "-rotate-45" : "translate-y-[0.6vw] max-md:translate-y-[1.2vw]"
                 }`}
             />
           </button>
@@ -355,9 +355,9 @@ export default function NavbarMobile({
       >
         <div
           data-lenis-prevent
-          className="mobile-nav-scroll absolute inset-0 overflow-y-auto px-[6vw] pt-[22vw] pb-[12vw] md:px-[3.5vw] md:pt-[11vw] md:pb-[7vw]"
+          className="mobile-nav-scroll absolute inset-0 overflow-y-auto px-[3.5vw] max-md:px-[6vw] pt-[11vw] max-md:pt-[22vw] pb-[7vw] max-md:pb-[12vw]"
         >
-          <div className="mt-[2vw] md:mt-[1.2vw]">
+          <div className="mt-[1.2vw] max-md:mt-[2vw]">
             {NAV_ROWS.map((row) => {
               if (row.type === "link") {
                 const external = row.href.startsWith("http");
@@ -371,7 +371,7 @@ export default function NavbarMobile({
                     onClick={close}
                     target={external ? "_blank" : undefined}
                     rel={external ? "noopener noreferrer" : undefined}
-                    className="flex border-t border-white/10 max-lg:py-[2.4vw] max-md:text-[4.75vw] text-white/90 max-md:py-[4.5vw] max-lg:text-[2.6vw]"
+                    className="flex border-t border-white/10 max-lg:py-[2.4vw] max-md:text-[4.8vw] text-white/90 max-md:py-[4.5vw] max-lg:text-[2.6vw]"
                   >
                     {row.label}
                   </Link>
@@ -395,17 +395,17 @@ export default function NavbarMobile({
                       }
                       aria-label={`${expanded ? "Collapse" : "Expand"} ${label}`}
                       aria-expanded={expanded}
-                      className="flex w-full items-center justify-between py-[4.5vw] text-left  text-white/90 max-md:py-[4.5vw] max-lg:py-[2.4vw] max-lg:text-[2.6vw] max-md:text-[4.75vw]"
+                      className="flex w-full items-center justify-between py-[4.5vw] text-left  text-white/90 max-md:py-[4.5vw] max-lg:py-[2.4vw] max-lg:text-[2.6vw] max-md:text-[4.8vw]"
                     >
                       <span>{label}</span>
-                      <div className="relative flex size-[8vw] shrink-0 items-center justify-center bg-grey text-primary md:size-[3.6vw]">
+                      <div className="relative flex size-[3.6vw] max-md:size-[8vw] shrink-0 items-center justify-center bg-grey text-primary">
                         <span
                           aria-hidden="true"
-                          className="absolute h-px w-[3.5vw] bg-current md:w-[1.6vw]"
+                          className="absolute h-px w-[1.6vw] max-md:w-[3.5vw] bg-current"
                         />
                         <span
                           aria-hidden="true"
-                          className={`absolute h-px w-[3.5vw] bg-current md:w-[1.6vw] transition-transform duration-300 ease-out motion-reduce:transition-none ${expanded ? "rotate-180" : "rotate-90"
+                          className={`absolute h-px w-[1.6vw] max-md:w-[3.5vw] bg-current transition-transform duration-300 ease-out motion-reduce:transition-none ${expanded ? "rotate-180" : "rotate-90"
                             }`}
                         />
                       </div>
@@ -415,22 +415,18 @@ export default function NavbarMobile({
                   <Accordion open={expanded}>
                     {NAV_MENUS[key].columns.map((column) => (
                       <div key={column.title} className=" last:mb-0">
-                        {/* <p className="font-mono text-[2.5vw] mb-[3vw] tracking-[0.18em] text-light-grey uppercase">
-                          {column.title}
-                        </p> */}
-
-                        <div className="mt-[1.5vw] flex flex-col md:mt-[0.9vw]">
+                        <div className="mt-[0.9vw] max-md:mt-[1.5vw] flex flex-col">
                           {column.items.map((item) => (
                             <Link
                               key={item.label}
                               prefetch={false}
                               href={item.href}
                               onClick={close}
-                              className="flex items-center gap-[3vw] py-[2.6vw] text-[4vw] text-white/75 active:text-primary md:gap-[1.4vw] md:py-[1.2vw] md:text-[2vw]"
+                              className="flex items-center gap-[1.4vw] max-md:gap-[3vw] py-[1.2vw] max-md:py-[2.6vw] text-[2vw] max-md:text-[4vw] text-white/75 active:text-primary"
                             >
                               <NavMenuIcon
                                 src={item.icon}
-                                className="size-[4.5vw] text-light-grey md:size-[2vw]"
+                                className="size-[2vw] max-md:size-[4.5vw] text-light-grey"
                               />
                               {item.label}
                             </Link>
@@ -445,7 +441,7 @@ export default function NavbarMobile({
           </div>
 
           {!(hideSignIn && !isSignedIn) && (
-          <div data-mobile-row className="mt-[8vw] flex md:mt-[4.6vw]">
+          <div data-mobile-row className="mt-[4.6vw] max-md:mt-[8vw] flex">
             {/* Across the menu; tablet: touch-sized (15-17px text, 48px tall), as VaultHeader */}
             {isSignedIn ? (
               <Button

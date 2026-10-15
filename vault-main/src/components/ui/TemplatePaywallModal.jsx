@@ -105,21 +105,21 @@ export function TemplatePaywallModal({
 
   return createPortal(
     <div
-      className="fixed inset-0 z-9999 flex items-center justify-center bg-black/70 backdrop-blur-md p-4 max-md:p-0"
+      className="fixed inset-0 z-9999 flex items-center justify-center bg-black/70 backdrop-blur-lg p-4 max-md:p-0"
       role="dialog"
       aria-modal="true"
       aria-labelledby="template-paywall-title"
       onClick={onClose}
     >
       <div
-        className="relative w-[40vw] max-h-[90vh] overflow-y-auto border border-white/15 bg-[#111111] px-9 py-9 max-lg:w-[85%] max-lg:px-7 max-lg:py-8 max-md:h-[80vh] max-md:max-h-none  max-md:border-x-0 max-md:border-b-0 max-md:px-5 max-md:py-12"
+        className="relative w-[40vw] max-h-[90vh] overflow-y-auto border border-white/15 bg-background px-9 py-9 max-lg:w-[85%] max-lg:px-7 max-lg:py-8 max-md:h-[80vh] max-md:max-h-none  max-md:border-x-0 max-md:border-b-0 max-md:px-5 max-md:py-12"
         onClick={(event) => event.stopPropagation()}
       >
         <button
           type="button"
           aria-label="Close"
           onClick={onClose}
-          className="group absolute right-4 top-4 flex h-9 w-9 items-center justify-center border border-white/20 group bg-white/10 text-white/70 transition-all duration-300 hover:border-[#ff5f00] hover:bg-[#ff5f00] hover:text-white max-md:right-3 max-md:top-3 max-md:h-8 max-md:w-8"
+          className="group absolute right-4 top-4 flex h-9 w-9 items-center justify-center border border-white/20 group bg-white/10 text-white/70 transition-all duration-300 hover:border-primary hover:bg-primary hover:text-white max-md:right-3 max-md:top-3 max-md:h-8 max-md:w-8"
         >
           <X className="h-4 w-4 group-hover:rotate-90 duration-500 ease-in-out" />
         </button>

@@ -28,7 +28,7 @@ const QUIP_MS = 3600;
 
 const label = "text20";
 // Button scales with the viewport; here it stays one compact size on every screen.
-const COMPACT_BTN = "py-2! text-[0.95vw]! max-[1025px]:text-[2.3vw]! max-md:px-[4vw]! max-md:text-[3.3vw]! [--btn-pad:1vw]! [--btn-gap:0.6vw]! [--btn-square:0.4vw]! [--btn-arrow:0.8vw]! max-md:[--btn-pad:4vw]! max-md:[--btn-gap:2vw]! max-md:[--btn-square:1.5vw]! max-md:[--btn-arrow:3vw]!";
+const COMPACT_BTN = "py-2! text-[1vw]! max-lg:text-[2.3vw]! max-md:px-[4vw]! max-md:text-[3.3vw]! [--btn-pad:1vw]! [--btn-gap:0.6vw]! [--btn-square:0.4vw]! [--btn-arrow:0.8vw]! max-md:[--btn-pad:4vw]! max-md:[--btn-gap:2vw]! max-md:[--btn-square:1.5vw]! max-md:[--btn-arrow:3vw]!";
 const riseIn = "motion-safe:animate-[hx-up_1s_cubic-bezier(.16,1,.3,1)_both]";
 
 // "This page fell over": drag 4 0 4 back onto the line (or skip the physics),
@@ -104,7 +104,7 @@ export default function SiteNotFound({ pages = [] }) {
             </p>
 
             {revealed && (
-                <section className="fixed top-[var(--hintY,62vh)] left-1/2 z-2 flex w-[50vw] -translate-x-1/2 flex-col items-center gap-[1.4vw] text-center max-[1025px]:w-[80vw] max-md:w-[88vw] max-md:gap-[5vw]" aria-live="polite">
+                <section className="fixed top-[var(--hintY,62vh)] left-1/2 z-2 flex w-[50vw] -translate-x-1/2 flex-col items-center gap-[1.4vw] text-center max-lg:w-[80vw] max-md:w-[88vw] max-md:gap-[5vw]" aria-live="polite">
                     <p className={`text20 text-foreground/70 ${riseIn}`}>Shame the page still doesn’t exist.</p>
                     <ul className={`flex flex-wrap justify-center gap-[0.7vw] max-md:gap-[2vw] ${riseIn} [animation-delay:.08s]`}>
                         {suggestions.map((p) => (

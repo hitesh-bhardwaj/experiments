@@ -1,15 +1,3 @@
-// The Crowd: thousands of particles drifting in a curl-like current behind the
-// community page's dark sections. The cursor gathers them like a school of
-// fish, press and hold explodes them like the homepage hero, the stack chips light up their share of the
-// swarm, and joining the waitlist launches one bright particle into it.
-//
-// Framework-free. The formation eases between poses per `data-zone` section
-// ("crowd", "crowd2", "ring"); a "sheet" zone that covers the viewport pauses
-// rendering because the light sheet hides the canvas anyway.
-//
-//   const crowd = mountCrowd(canvas, { THREE, zoneRoot, reducedMotion });
-//   crowd.highlight(new Set([0, 3])); crowd.launch(x, y); crowd.destroy();
-
 import { MEDIA } from "@/lib/breakpoints";
 import { createHover } from "../../Animations/particleHover";
 import { createShatter, screenBounds, shockwave } from "../../Animations/particleShatter";

@@ -2,13 +2,12 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { AnimatePresence, motion } from "motion/react";
-import { Search, X } from "lucide-react";
+import {X } from "lucide-react";
 import { AppVaultHeader } from "@/components/layout/AppVaultHeader";
 import {
   effectCategories,
@@ -166,7 +165,6 @@ export function EffectsListing({
   const rootRef = useRef(null);
   const gridRef = useRef(null);
   const sheetRef = useRef(null);
-  const searchRef = useRef(null);
   const trendRef = useRef(null);
   const [trendEdges, setTrendEdges] = useState({ start: true, end: false });
 
@@ -322,23 +320,15 @@ export function EffectsListing({
     [context],
   );
 
-  // A filter, column or "show more" change resizes the grid, which moves everything
-  // below it (the FAQ's reveal included). Re-measure the scroll triggers once the
-  // cards' layout animation (0.5s) has settled, or those reveals fire in the wrong place.
   useEffect(() => {
     const id = setTimeout(() => ScrollTrigger.refresh(), 650);
     return () => clearTimeout(id);
   }, [filterKey, shown, cols, scope]);
 
   /* ---------- actions ---------- */
-  const scrollToGrid = () => sheetRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
 
   const closeDrawer = useCallback(() => setDrawerEffect(null), []);
 
-  // Trending row, free mode: no snapping. Mouse drags, horizontal wheel/trackpad
-  // and the arrows all move one target scroll position, and a rAF loop eases the
-  // row toward it, so every input glides the same way; a drag released mid-flick
-  // carries on with its speed. Touch (tablet/mobile) keeps the native scroll.
   const trendMotion = useRef({ target: 0, current: 0, raf: 0, drag: null });
   const setTrendTarget = useCallback((left) => {
     const row = trendRef.current;
@@ -501,7 +491,7 @@ export function EffectsListing({
 
       {/* ---------- trending ---------- */}
       {trendingEffects.length > 0 && (
-        <section id="trending" data-v4-fade aria-labelledby="v4-trending" className="mx-auto w-full flex flex-col gap-[2vw] px-[calc(var(--cvw)*4.5)] pb-28 pt-4 max-lg:gap-8 max-lg:px-0 max-lg:pb-20">
+        <section id="trending" data-v4-fade aria-labelledby="v4-trending" className="mx-auto w-full flex flex-col gap-[calc(var(--cvw)*2)] px-[calc(var(--cvw)*4.5)] pb-28 pt-4 max-lg:gap-8 max-lg:px-0 max-lg:pb-20">
           <div className="flex items-end justify-between">
             <h2 id="v4-trending" className={`${DISPLAY} max-md:px-[7vw]  max-lg:px-[5vw] text-[calc(var(--cvw)*2.2)] max-lg:text-[4vw] max-md:text-[7vw]`}>
               Trending this Week
@@ -665,7 +655,7 @@ export function EffectsListing({
                         onClick={clearAll}
                         className={`group ${LABEL} h-7.5 cursor-pointer px-2 text-black/60 transition-colors duration-500 hover:text-ink`}
                       >
-                        <span className="relative inline-block after:absolute after:inset-x-0 after:-bottom-1 after:h-px after:origin-right after:scale-x-0 after:bg-primary after:transition-transform after:duration-300 after:ease-out group-hover:after:origin-left group-hover:after:scale-x-100 motion-reduce:after:transition-none">Clear all</span>
+                        <span className="relative inline-block after:absolute after:inset-x-0 after:-bottom-1 after:h-px after:origin-right after:scale-x-0 after:bg-primary after:transition-transform after:duration-300 after:ease-out group-hover:after:origin-left group-hover:after:scale-x-100 motion-reduce:after:transition-none">Clear All</span>
                       </motion.button>
                     )}
                   </AnimatePresence>
@@ -684,7 +674,7 @@ export function EffectsListing({
                 onClick={clearAll}
                 className={`${LABEL} h-11 cursor-pointer px-5 ring-1 ring-inset ring-black/10 transition-shadow duration-500 hover:ring-primary`}
               >
-                Clear filters
+                Clear Filters
               </button>
             </div>
           ) : (

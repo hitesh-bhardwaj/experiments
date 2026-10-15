@@ -1924,7 +1924,7 @@ function HyperiuxLogo({ sphere = false }: HyperiuxLogoProps) {
       <button
         type="button"
         onClick={() => setIsLightMode((prev) => !prev)}
-        className="absolute top-6 right-6 z-20 px-4 py-2 rounded-full border text-sm font-medium backdrop-blur-md"
+        className="absolute top-6 right-6 z-20 px-4 py-2 rounded-full border text-sm font-medium backdrop-blur-lg"
         style={{
           backgroundColor: isLightMode ? "rgba(255,255,255,0.9)" : "rgba(17,17,17,0.75)",
           color: isLightMode ? "#111111" : "#ffffff",

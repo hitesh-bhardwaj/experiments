@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import gsap from "gsap";
+import { prefersReducedMotion } from "@/lib/motion";
 import { motion } from "motion/react";
 import { useLenis } from "lenis/react";
 import { RotateCcw } from "lucide-react";
@@ -199,6 +200,8 @@ export default function TemplateExploded({
     const V = new THREE.Vector3();
     let last = performance.now();
     let raf = 0;
+    // Reduced motion: no tilt following the mouse (dragging still turns it)
+    const follow = prefersReducedMotion() ? 0 : 1;
 
     const tick = (now) => {
       raf = requestAnimationFrame(tick);
@@ -215,8 +218,8 @@ export default function TemplateExploded({
 
       // turn (straightened while a section is zoomed; the view angle comes back after)
       const k = Math.min(1, dt * 5);
-      const turnX = zoomed ? 0 : rot.tx + (state.drag ? 0 : mouse.y * 0.05);
-      const turnY = zoomed ? 0 : rot.ty + (state.drag ? 0 : mouse.x * 0.08);
+      const turnX = zoomed ? 0 : rot.tx + (state.drag ? 0 : mouse.y * 0.05 * follow);
+      const turnY = zoomed ? 0 : rot.ty + (state.drag ? 0 : mouse.x * 0.08 * follow);
       rot.x += (turnX - rot.x) * k;
       rot.y += (turnY - rot.y) * k;
       root.rotation.set(rot.x, rot.y, 0);
@@ -500,7 +503,7 @@ export default function TemplateExploded({
           <aside
             data-exploded-ui
             aria-live="polite"
-            className="absolute top-28 left-[4.5vw] flex w-[22vw] flex-col gap-2 bg-background/70 p-4.5 ring-1 ring-inset ring-foreground/10 backdrop-blur-lg max-lg:left-[4.5vw] max-lg:w-[44vw] max-md:inset-x-[6vw] max-md:top-24 max-md:w-auto"
+            className="absolute top-28 left-[calc(var(--cvw)*4.5)] flex w-[calc(var(--cvw)*22)] flex-col gap-2 bg-background/70 p-4.5 ring-1 ring-inset ring-foreground/10 backdrop-blur-lg max-lg:left-[4.5vw] max-lg:w-[44vw] max-md:inset-x-[6vw] max-md:top-24 max-md:w-auto"
           >
             <p className={`${LABEL} flex justify-between text-foreground/50`}>
               <span>{selected >= 0 ? "Selected section" : "In view"}</span>
@@ -521,7 +524,7 @@ export default function TemplateExploded({
           </aside>
         )}
 
-        <div data-exploded-ui className="absolute bottom-6 left-[4.5vw] right-[4.5vw] flex flex-wrap items-center justify-between gap-3 max-lg:inset-x-[4.5vw] max-md:inset-x-[6vw] max-md:bottom-4">
+        <div data-exploded-ui className="absolute bottom-6 left-[calc(var(--cvw)*4.5)] right-[calc(var(--cvw)*4.5)] flex flex-wrap items-center justify-between gap-3 max-lg:inset-x-[4.5vw] max-md:inset-x-[6vw] max-md:bottom-4">
           {toolbar}
           <div className="flex items-center gap-3">
           <label className={`flex items-center gap-2.5 ${LABEL} text-foreground/50 max-md:hidden`}>
@@ -539,7 +542,7 @@ export default function TemplateExploded({
                 setExplode(e.target.value / 100);
               }}
               aria-label="Explode the page into sections"
-              className="h-4 w-[11vw] cursor-pointer appearance-none bg-transparent [&::-moz-range-thumb]:size-3.5 [&::-moz-range-thumb]:rounded-none [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-primary [&::-moz-range-track]:h-0.5 [&::-moz-range-track]:border-0 [&::-moz-range-track]:bg-foreground/25 [&::-moz-range-progress]:h-0.5 [&::-moz-range-progress]:bg-primary [&::-webkit-slider-runnable-track]:h-0.5 [&::-webkit-slider-runnable-track]:border-0 [&::-webkit-slider-runnable-track]:bg-[linear-gradient(to_right,var(--primary)_var(--fill),color-mix(in_srgb,var(--foreground)_25%,transparent)_var(--fill))] [&::-webkit-slider-thumb]:-mt-1.5 [&::-webkit-slider-thumb]:size-3.5 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-none [&::-webkit-slider-thumb]:border-0 [&::-webkit-slider-thumb]:bg-primary"
+              className="h-4 w-[calc(var(--cvw)*11)] cursor-pointer appearance-none bg-transparent [&::-moz-range-thumb]:size-3.5 [&::-moz-range-thumb]:rounded-none [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-primary [&::-moz-range-track]:h-0.5 [&::-moz-range-track]:border-0 [&::-moz-range-track]:bg-foreground/25 [&::-moz-range-progress]:h-0.5 [&::-moz-range-progress]:bg-primary [&::-webkit-slider-runnable-track]:h-0.5 [&::-webkit-slider-runnable-track]:border-0 [&::-webkit-slider-runnable-track]:bg-[linear-gradient(to_right,var(--primary)_var(--fill),color-mix(in_srgb,var(--foreground)_25%,transparent)_var(--fill))] [&::-webkit-slider-thumb]:-mt-1.5 [&::-webkit-slider-thumb]:size-3.5 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-none [&::-webkit-slider-thumb]:border-0 [&::-webkit-slider-thumb]:bg-primary"
             />
             <span>Exploded</span>
           </label>
@@ -555,10 +558,9 @@ export default function TemplateExploded({
           </div>
         </div>
 
-        <p className={`${LABEL} pointer-events-none absolute top-28 right-[4.5vw] text-right text-foreground/60 max-lg:hidden`}>
-          Scroll to move down the page
-          <br />
-          Drag to turn · click a layer for close-up
+        <p className={`${LABEL} pointer-events-none absolute top-28 right-[calc(var(--cvw)*4.5)] text-right text-foreground/60 max-lg:hidden`}>
+          <span className="block">Scroll to move down the page</span>
+          <span className="block">Drag to turn · click a layer for close-up</span>
         </p>
       </div>
     </section>

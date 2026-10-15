@@ -6,8 +6,8 @@ import { X } from "lucide-react";
 import { AuthModalForm } from "@/components/auth/AuthModalForm";
 import { ToastViewport, useToastQueue } from "@/components/ui/Toast";
 
-const T14 = "text-[0.97vw] max-lg:text-[1.7vw] max-md:text-[3.6vw]";
-const T24 = "text-[1.67vw] max-lg:text-[2.9vw] max-md:text-[6vw]";
+const T14 = "text-[1vw] max-lg:text-[1.7vw] max-md:text-[3.6vw]";
+const T24 = "text-[1.7vw] max-lg:text-[2.9vw] max-md:text-[6vw]";
 
 const subscribeNever = () => () => {};
 
@@ -21,7 +21,7 @@ export function Modal({ open, onClose, title, children }) {
   return (
     <div
       onClick={onClose}
-      className={`fixed inset-0 z-9999 flex items-center justify-center bg-black/40 p-4 backdrop-blur-sm transition-opacity duration-300 ${open ? "opacity-100" : "pointer-events-none opacity-0"}`}
+      className={`fixed inset-0 z-9999 flex items-center justify-center bg-black/40 p-4 backdrop-blur-lg transition-opacity duration-300 ${open ? "opacity-100" : "pointer-events-none opacity-0"}`}
     >
       <div
         role="dialog"
@@ -110,7 +110,7 @@ export function SignInRequiredModal({ open, onClose, onSignedIn: onSignedInProp,
     <>
     <div
       onClick={onClose}
-      className={`fixed inset-0 z-9999 flex items-center justify-center bg-black/40 p-4 backdrop-blur-sm transition-opacity duration-300 ${open ? "opacity-100" : "pointer-events-none opacity-0"}`}
+      className={`fixed inset-0 z-9999 flex items-center justify-center bg-black/40 p-4 backdrop-blur-lg transition-opacity duration-300 ${open ? "opacity-100" : "pointer-events-none opacity-0"}`}
     >
       <div
         role="dialog"

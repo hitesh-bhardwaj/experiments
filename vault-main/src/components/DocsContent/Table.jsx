@@ -48,13 +48,13 @@ export default function DocsTable({
 
   const variantClassName =
     colorVariant === "orange"
-      ? "[--docs-table-border:rgba(255,95,0,0.32)] [--docs-table-header-bg:var(--primary)] [--docs-table-header-color:#0e0e0e] [--docs-table-cell-color:rgba(255,255,255,0.82)]"
+      ? "[--docs-table-border:color-mix(in_srgb,var(--primary)_32%,transparent)] [--docs-table-header-bg:var(--primary)] [--docs-table-header-color:var(--background)] [--docs-table-cell-color:rgba(255,255,255,0.82)]"
       : colorVariant === "muted"
         ? "[--docs-table-border:rgba(147,147,147,0.28)] [--docs-table-header-bg:rgba(255,255,255,0.08)] [--docs-table-header-color:rgba(255,255,255,0.9)] [--docs-table-cell-color:rgba(255,255,255,0.68)]"
         : colorVariant === "outline"
-          ? "[--docs-table-border:rgba(255,255,255,0.22)] [--docs-table-header-bg:transparent] [--docs-table-header-color:#fff] [--docs-table-cell-color:rgba(255,255,255,0.76)]"
+          ? "[--docs-table-border:rgba(255,255,255,0.22)] [--docs-table-header-bg:transparent] [--docs-table-header-color:white] [--docs-table-cell-color:rgba(255,255,255,0.76)]"
           : // Default: the docs content sits on the light sheet - dark text and rules, dark header
-            "[--docs-table-border:rgba(29,29,29,0.14)] [--docs-table-header-bg:rgb(0,0,0,0.8)] [--docs-table-header-color:#fff] [--docs-table-cell-color:rgba(29,29,29,0.82)]";
+            "[--docs-table-border:rgba(29,29,29,0.14)] [--docs-table-header-bg:rgb(0,0,0,0.8)] [--docs-table-header-color:white] [--docs-table-cell-color:rgba(29,29,29,0.82)]";
 
   return (
     <div

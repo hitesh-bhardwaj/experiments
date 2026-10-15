@@ -33,8 +33,8 @@ export default function LegalBody({ children }) {
   useFadeUp(rootRef, [pathname]);
 
   return (
-    <main ref={rootRef} className="relative flex w-full flex-col gap-[10vw] pt-25 max-md:gap-[20vw] max-md:pt-36">
-      <section id="legal-hero" className={`${WRAP} flex flex-col gap-[1.4vw] max-md:gap-[5vw]`}>
+    <main ref={rootRef} className="relative flex w-full flex-col gap-[calc(var(--cvw)*10)] pt-25 max-md:gap-[20vw] max-md:pt-36">
+      <section id="legal-hero" className={`${WRAP} flex flex-col gap-[calc(var(--cvw)*1.4)] max-md:gap-[5vw]`}>
         <Breadcrumb />
         <LineReveal key={pathname} as="h1" className="type-h1 w-[70%] text-foreground max-lg:w-full">
           {title}
@@ -43,9 +43,9 @@ export default function LegalBody({ children }) {
 
       {/* Same white sheet as docs (.docs-sheet in globals.css): background, text colours,
           fonts, content column, footer and TOC are all the docs ones */}
-      <section id="legal-content" data-sound-flow="off" className="docs-sheet py-[4vw]">
-        <div className="mx-auto w-full section-x flex items-start gap-[3vw] max-lg:flex-col">
-          <div className="flex min-w-0 flex-1 flex-col gap-[5vw] max-lg:w-full max-md:gap-[15vw]">
+      <section id="legal-content" data-sound-flow="off" className="docs-sheet py-[calc(var(--cvw)*4)]">
+        <div className="mx-auto w-full section-x flex items-start gap-[calc(var(--cvw)*3)] max-lg:flex-col">
+          <div className="flex min-w-0 flex-1 flex-col gap-[calc(var(--cvw)*5)] max-lg:w-full max-md:gap-[15vw]">
             <div ref={contentRef} className="blog-content">
               {children}
             </div>

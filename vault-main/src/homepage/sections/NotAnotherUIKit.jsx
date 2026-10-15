@@ -4,6 +4,7 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
 import { prefersReducedMotion } from '@/lib/motion'
 import { MEDIA } from '@/lib/breakpoints'
+import { FREE_LABEL } from '@/lib/library-counts'
 
 if (typeof window !== "undefined") {
     gsap.registerPlugin(ScrollTrigger)
@@ -38,7 +39,7 @@ const UI_CARDS = [
     id: 5,
     icon: "/icons/free-entry.svg",
     title: "Free entry, clear upgrade",
-    text: "Start with 50+ free effects. Upgrade to Pro when you need the full library, advanced systems, complete packs, and ongoing drops.",
+    text: `Start with ${FREE_LABEL} free effects. Upgrade to Pro when you need the full library, advanced systems, complete packs, and ongoing drops.`,
   },
 ];
 

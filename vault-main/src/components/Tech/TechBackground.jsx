@@ -13,7 +13,7 @@ export default function TechBackground({ children, className = "" }) {
         className="pointer-events-none absolute inset-0 z-0"
         style={{
           background:
-            "radial-gradient(ellipse at 50% 0%, rgba(255,95,0,0.10) 0%, transparent 55%)",
+            "radial-gradient(ellipse at 50% 0%, color-mix(in srgb, var(--primary) 10%, transparent) 0%, transparent 55%)",
         }}
       />
       {/* Page content sits above the glow */}

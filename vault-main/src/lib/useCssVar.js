@@ -10,3 +10,9 @@ export function useCssVar(name) {
   }, [name]);
   return value;
 }
+
+// Same lookup outside React (canvas draws, GSAP tweens): reads the variable at call time.
+export function cssVar(name) {
+  if (typeof document === "undefined") return "";
+  return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+}

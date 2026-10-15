@@ -83,10 +83,10 @@ function SidebarFallback({ isExpanded }) {
   return (
     <aside
       data-sidebar-width
-      className="sticky bottom-0 left-0 top-0 h-screen border-r border-white/10 bg-[#111111] text-foreground max-lg:hidden"
+      className="sticky bottom-0 left-0 top-0 h-screen border-r border-white/10 bg-background text-foreground max-lg:hidden"
     >
       <div className="flex h-full items-start justify-center px-2 py-3">
-        <div className="h-29.5 w-full border-b border-white/10 bg-[#111111]" />
+        <div className="h-29.5 w-full border-b border-white/10 bg-background" />
       </div>
     </aside>
   );

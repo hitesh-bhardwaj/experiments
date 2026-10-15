@@ -89,7 +89,7 @@ function updateHoverAndNotify() {
 
  if (newHoveredTarget !== hoveredTarget) {
  if (hoveredTarget) {
- console.log('[2dCanvasTracker] Leave detected:', hoveredTarget.el)
+//  console.log('[2dCanvasTracker] Leave detected:', hoveredTarget.el)
  handlersByEl.get(hoveredTarget.el)?.onLeave?.()
  }
  if (newHoveredTarget) {

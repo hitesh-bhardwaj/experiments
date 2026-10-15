@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import Image, { getImageProps } from "next/image";
 import gsap from "gsap";
+import { prefersReducedMotion } from "@/lib/motion";
 import SplitLine from "@/components/WebsiteComps/SplitLine";
 import LineReveal from "@/components/Animations/LineReveal";
 import Button from "@/homepage/components/Button";
@@ -43,7 +44,8 @@ export default function PricingHero() {
   useEffect(() => {
     const el = ctaRef.current;
     if (!el) return undefined;
-    gsap.set(el, { opacity: 0, y: "100%" });
+    // Reduced motion: fade in place, no rise
+    gsap.set(el, { opacity: 0, y: prefersReducedMotion() ? 0 : "100%" });
     let tween;
     const play = () => {
       tween = gsap.to(el, {
@@ -96,14 +98,14 @@ export default function PricingHero() {
           media={MEDIA.tablet}
           fetchPriority="high"
         />
-        {!videoPlaying && <Image {...POSTER} alt="" className="hidden object-cover max-lg:object-top max-md:object-center max-lg:block" />}
+        {!videoPlaying && <Image {...POSTER} alt="poster" className="hidden object-cover max-lg:object-top max-md:object-center max-lg:block" />}
       </div>
       <div className="pointer-events-none relative z-2 site-container section-x flex flex-col pt-[calc(var(--cvw)*8)] pb-[calc(var(--cvw)*8)] max-lg:pt-[12vw] max-md:pt-[48svh] max-md:pb-10 [&_a]:pointer-events-auto [&_button]:pointer-events-auto">
         <div className="flex w-full justify-start max-md:flex-col max-md:items-stretch">
           <div className="flex w-[46%] flex-col gap-[calc(var(--cvw)*3)] max-lg:w-[75%] max-lg:gap-[4vw] max-md:w-full max-md:gap-[5vw]">
         
             <LineReveal as="h1" className="type-display relative w-full text-foreground">
-              Pick a Plan.<br /><span className="gradient-text-animate">Keep the Code.</span>
+              <span className="block">Pick a Plan.</span><span className="block"><span className="gradient-text-animate">Keep the Code.</span></span>
             </LineReveal>
             <div className="flex w-[70%] flex-col gap-[calc(var(--cvw)*2)] max-lg:w-[90%] max-lg:gap-[3vw] max-md:w-full max-md:gap-[8vw]">
               <SplitLine as="p" start="top 120%" className="type-body-lg w-full text-foreground/80">

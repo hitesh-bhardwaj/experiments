@@ -140,7 +140,7 @@ export default function TechCard({ tech, count }) {
       href={`/tech/${tech.slug}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className="group relative flex flex-col justify-between bg-white/[0.04] p-8 border border-white/10 rounded-2xl transition-all duration-500 hover:scale-[1.02] hover:-translate-y-1 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.45),inset_0_1px_0_rgba(255,255,255,0.08)] hover:border-white/20 hover:shadow-[0_12px_40px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.12)]"
+      className="group relative flex flex-col justify-between bg-white/[0.04] p-8 border border-white/10 rounded-2xl transition-all duration-500 hover:scale-[1.02] hover:-translate-y-1 backdrop-blur-lg shadow-float hover:border-white/20 hover:shadow-float"
     >
       <svg
         aria-hidden="true"
@@ -154,7 +154,7 @@ export default function TechCard({ tech, count }) {
           height={borderSize.height + 1}
           rx={40}
           fill="none"
-          stroke="#ff5f00"
+          className="stroke-primary"
           strokeWidth="1.5"
           style={{ opacity: 0 }}
         />
@@ -163,12 +163,12 @@ export default function TechCard({ tech, count }) {
       {/* Orange radial glow on hover */}
       <div
         className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"
-        style={{ background: 'radial-gradient(ellipse at 50% 0%, rgba(255,95,0,0.13) 0%, transparent 65%)' }}
+        style={{ background: 'radial-gradient(ellipse at 50% 0%, color-mix(in srgb, var(--primary) 13%, transparent) 0%, transparent 65%)' }}
       />
 
       <div className="relative z-20">
         <div className="flex items-center justify-between mb-6">
-          <div className="p-3 bg-zinc-900/80 rounded-full border border-border/20 group-hover:border-border/60 transition-colors text-[#ff5f00]">
+          <div className="p-3 bg-zinc-900/80 rounded-full border border-border/20 group-hover:border-border/60 transition-colors text-primary">
             <TechIcon slug={tech.slug} />
           </div>
           <span className="text-xs font-mono px-3 py-1 border border-border/20 rounded-full bg-zinc-900/40 text-muted group-hover:text-white group-hover:border-white/30 transition-colors">
@@ -176,16 +176,16 @@ export default function TechCard({ tech, count }) {
           </span>
         </div>
 
-        <span className="text-xs uppercase tracking-widest text-muted block mb-1 mt-[3vw] font-mono">{tech.subtitle}</span>
-        <h2 className="text-2xl font-semibold mb-3 tracking-tight text-[#fff] transition-colors">
+        <span className="text-xs uppercase tracking-widest text-muted block mb-1 mt-[calc(var(--cvw)*3)] font-mono">{tech.subtitle}</span>
+        <h2 className="text-2xl font-semibold mb-3 tracking-tight text-white transition-colors">
           {tech.name}
         </h2>
-        <p className="text-sm  mt-[5vw] text-muted group-hover:text-[#d2d2d2] transition-colors leading-[1.6]">
+        <p className="text-sm  mt-[calc(var(--cvw)*5)] text-muted group-hover:text-muted transition-colors leading-[1.6]">
           {tech.description}
         </p>
       </div>
 
-      <div className="mt-[5vw] flex items-center gap-2 text-sm font-semibold text-[#fff] transition-all group-hover:translate-x-1 duration-300  relative z-20">
+      <div className="mt-[calc(var(--cvw)*5)] flex items-center gap-2 text-sm font-semibold text-white transition-all group-hover:translate-x-1 duration-300  relative z-20">
         Explore {tech.name} Effects
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />

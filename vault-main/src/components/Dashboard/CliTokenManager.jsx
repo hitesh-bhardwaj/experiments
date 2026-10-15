@@ -11,7 +11,7 @@ import { PACKAGE_MANAGERS, getPackageManager, getPackageManagerVariants, setPack
 import { markScrollToPricingCards } from "@/lib/pricingScrollIntent";
 
 // A dark well for a token or a command
-const WELL = "flex items-center gap-3 bg-light px-[1.2vw] py-[0.9vw] ring-1 ring-inset ring-black/10 max-lg:px-4 max-lg:py-3";
+const WELL = "flex items-center gap-3 bg-light px-[calc(var(--cvw)*1.2)] py-[calc(var(--cvw)*0.9)] ring-1 ring-inset ring-black/10 max-lg:px-4 max-lg:py-3";
 
 const subscribeNever = () => () => {};
 
@@ -137,9 +137,9 @@ export default function CliTokenManager({ plan }) {
   }
 
   return (
-    <section aria-labelledby="cli-token" className="flex flex-col gap-[2vw] bg-foreground p-[1.6vw] text-ink ring-1 ring-inset ring-black/10 max-lg:gap-6 max-lg:p-6">
-      <div className="flex items-start justify-between gap-[3vw] max-lg:flex-col max-lg:gap-6">
-        <div className="flex w-[70%] flex-col gap-[0.6vw] max-lg:w-full max-lg:gap-2">
+    <section aria-labelledby="cli-token" className="flex flex-col gap-[calc(var(--cvw)*2)] bg-foreground p-[calc(var(--cvw)*1.6)] text-ink ring-1 ring-inset ring-black/10 max-lg:gap-6 max-lg:p-6">
+      <div className="flex items-start justify-between gap-[calc(var(--cvw)*3)] max-lg:flex-col max-lg:gap-6">
+        <div className="flex w-[70%] flex-col gap-[calc(var(--cvw)*0.6)] max-lg:w-full max-lg:gap-2">
           <h2 id="cli-token" className="type-h2 font-aeonik">CLI token</h2>
           <p className="type-body text-black/60">
             A private token that identifies you to the Hyperiux CLI and MCP, so installs count against your
@@ -162,7 +162,7 @@ export default function CliTokenManager({ plan }) {
         </div>
 
         {/* phones: stacked, full width */}
-        <div className="flex shrink-0 gap-[0.6vw] max-lg:gap-3 max-md:w-full max-md:flex-col">
+        <div className="flex shrink-0 gap-[calc(var(--cvw)*0.6)] max-lg:gap-3 max-md:w-full max-md:flex-col">
           <Button text="Revoke" variant="outline" preventDefault disabled={isLoading} onClick={revokeToken} className="max-md:w-full" />
           <Button text={isLoading ? "Working…" : "Generate token"} preventDefault disabled={isLoading} onClick={generateToken} className="max-md:w-full" />
         </div>

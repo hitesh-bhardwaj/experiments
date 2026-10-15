@@ -33,7 +33,7 @@ const MODAL_TRANSITION = {
 // color otherwise, unreadable here no matter what the background does.
 const AUTOFILL_STYLE = {
   "--input-autofill-bg": "transparent",
-  "--input-autofill-text": "#ffffff",
+  "--input-autofill-text": "var(--foreground)",
 };
 
 const INITIAL_FORM = {
@@ -252,7 +252,7 @@ function WorkWithHyperiuxModalInner() {
             type="button"
             aria-label="Close modal"
             onClick={close}
-            className="absolute inset-0 cursor-default bg-black/70 backdrop-blur-md"
+            className="absolute inset-0 cursor-default bg-black/70 backdrop-blur-lg"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -271,7 +271,7 @@ function WorkWithHyperiuxModalInner() {
               type="button"
               aria-label="Close"
               onClick={close}
-              className="group md:hidden absolute -top-12 right-0 flex h-9 w-9 items-center justify-center rounded-none border border-white/20 bg-white/10 text-white/70 transition-all duration-300 hover:border-[#ff5f00] hover:bg-[#ff5f00] hover:text-white max-md:right-[-5%]"
+              className="group hidden max-md:flex absolute -top-12 right-0 h-9 w-9 items-center justify-center rounded-none border border-white/20 bg-white/10 text-white/70 transition-all duration-300 hover:border-primary hover:bg-primary hover:text-white max-md:right-[-5%]"
             >
               <div className="relative flex h-4 w-4 items-center justify-center transition-transform duration-500 ease-in-out group-hover:rotate-90">
                 <span className="h-px w-4 rotate-45 bg-white" />
@@ -280,7 +280,7 @@ function WorkWithHyperiuxModalInner() {
             </button>
 
             <div
-              className="relative w-full overflow-x-hidden overflow-y-auto rounded-none border border-white/20 bg-black/4 p-[3.5vw] text-white shadow-[0_30px_120px_rgba(0,0,0,0.45)] backdrop-blur-xl h-[80vh] max-lg:h-[75vh] max-lg:p-[6vw]"
+              className="relative w-full overflow-x-hidden overflow-y-auto rounded-none border border-white/20 bg-black/4 p-[3.5vw] text-white shadow-float backdrop-blur-lg h-[80vh] max-lg:h-[75vh] max-lg:p-[6vw]"
               onWheelCapture={(e) => e.stopPropagation()}
               onTouchStart={(e) => e.stopPropagation()}
               onTouchMove={(e) => e.stopPropagation()}
@@ -290,7 +290,7 @@ function WorkWithHyperiuxModalInner() {
               type="button"
               aria-label="Close"
               onClick={close}
-              className="max-lg:hidden group absolute right-5 top-5 flex h-10 w-10 items-center justify-center rounded-none border border-white/20 bg-white/10 text-xl leading-none text-white/70 transition-all duration-500 ease-in-out hover:border-[#ff5f00] hover:bg-[#ff5f00] hover:text-white "
+              className="max-lg:hidden group absolute right-5 top-5 flex h-10 w-10 items-center justify-center rounded-none border border-white/20 bg-white/10 text-xl leading-none text-white/70 transition-all duration-500 ease-in-out hover:border-primary hover:bg-primary hover:text-white "
             >
               <div className="relative flex h-4 w-4 items-center justify-center duration-500 ease-in-out group-hover:rotate-90">
                 <span className="h-px w-4 rotate-45 bg-white" />
@@ -334,7 +334,7 @@ function WorkWithHyperiuxModalInner() {
                         id="wwh-name"
                         name="name"
                         label={false}
-                        className="rounded-none! border-white/20 bg-white/10 text-white placeholder:text-white/35 focus:border-[#ff5f00]!"
+                        className="rounded-none! border-white/20 bg-white/10 text-white placeholder:text-white/35 focus:border-primary!"
                         style={AUTOFILL_STYLE}
                         value={values.name}
                         onChange={updateField("name")}
@@ -351,7 +351,7 @@ function WorkWithHyperiuxModalInner() {
                         name="email"
                         type="email"
                         label={false}
-                        className="rounded-none! border-white/20 bg-white/10 text-white placeholder:text-white/35 focus:border-[#ff5f00]!"
+                        className="rounded-none! border-white/20 bg-white/10 text-white placeholder:text-white/35 focus:border-primary!"
                         style={AUTOFILL_STYLE}
                         value={values.email}
                         onChange={updateField("email")}
@@ -374,7 +374,7 @@ function WorkWithHyperiuxModalInner() {
                         countries={COUNTRIES}
                         showCountryName
                         error={errors.number}
-                        className="rounded-none! border-white/20 bg-white/10 text-white focus-within:border-[#ff5f00]!"
+                        className="rounded-none! border-white/20 bg-white/10 text-white focus-within:border-primary!"
                         style={AUTOFILL_STYLE}
                         countryButtonClassName="text-white/80 hover:text-white"
                         flagClassName="text-base"
@@ -389,9 +389,9 @@ function WorkWithHyperiuxModalInner() {
                         // input's own border-radius) renders rounded
                         // corners poking out of the now-square field.
                         inputClassName="rounded-none! text-white placeholder:text-white/35"
-                        dropdownClassName="rounded-none! min-w-64 border-white/10! bg-[#111111]! text-white shadow-[0_20px_60px_rgba(0,0,0,0.45)]"
+                        dropdownClassName="rounded-none! min-w-64 border-white/10! bg-background! text-white shadow-float"
                         optionClassName="rounded-none! text-white/70 hover:bg-white/10 hover:text-white"
-                        activeOptionClassName="text-[#ff5f00]"
+                        activeOptionClassName="text-primary"
                         optionDialClassName="text-white/40"
                         errorClassName="text-red-300"
                       />
@@ -404,7 +404,7 @@ function WorkWithHyperiuxModalInner() {
                       id="wwh-message"
                       name="message"
                       label={false}
-                      className="h-[17.3vw]! rounded-none! border-white/20 bg-white/10 text-white placeholder:text-white/35 focus:border-[#ff5f00]! max-lg:h-36!"
+                      className="h-[17.3vw]! rounded-none! border-white/20 bg-white/10 text-white placeholder:text-white/35 focus:border-primary! max-lg:h-36!"
                       style={AUTOFILL_STYLE}
                       rows={3}
                       value={values.message}

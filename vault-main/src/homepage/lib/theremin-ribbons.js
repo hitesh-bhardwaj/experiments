@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import gsap from "gsap";
+import { MEDIA } from "@/lib/breakpoints";
 
 // Scene
 const FOG_COLOR = 0x111111;
@@ -226,7 +227,7 @@ export function mountThereminRibbons(
   const isHero = pose === "hero";
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const finePointer = matchMedia("(hover: hover) and (pointer: fine)").matches;
-  const small = matchMedia("(max-width: 760px)").matches || (navigator.hardwareConcurrency || 8) <= 4;
+  const small = matchMedia(MEDIA.mobile).matches || (navigator.hardwareConcurrency || 8) <= 4;
   const timers = new Set();
   const later = (fn, ms) => {
     const id = setTimeout(() => { timers.delete(id); fn(); }, ms);

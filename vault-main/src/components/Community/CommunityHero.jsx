@@ -57,7 +57,7 @@ export default function CommunityHero() {
           {!videoPlaying && (
             <Image
               src="/assets/hero-videos/posters/community-hero.webp"
-              alt=""
+              alt="community-hero"
               fill
               sizes="100vw"
               quality={90}

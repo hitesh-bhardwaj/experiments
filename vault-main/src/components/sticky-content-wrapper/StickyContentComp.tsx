@@ -51,7 +51,7 @@ const getLink = (item: StickyContentItem): StickyContentLink | null => {
   if (item.href) {
     return {
       href: item.href,
-      text: item.linkText || item.cta || "Learn more",
+      text: item.linkText || item.cta || "Learn More",
     };
   }
   return null;
@@ -89,7 +89,7 @@ const renderStickyContent = (item: StickyContentItem) => {
           rel={link.rel || (link.target === "_blank" ? "noreferrer" : undefined)}
         >
           <span className="relative inline-block w-fit after:absolute after:bottom-[-2%] after:left-0 after:h-[1.5px] after:w-full after:origin-right after:scale-x-0 after:bg-current after:transition-transform after:duration-500 after:ease-[cubic-bezier(0.62,0.05,0.01,0.99)] after:content-[''] group-hover:after:origin-left group-hover:after:scale-x-100 group-focus-visible:after:origin-left group-focus-visible:after:scale-x-100">
-            {link.text || link.label || "Learn more"}
+            {link.text || link.label || "Learn More"}
           </span>
           <svg
             className="h-[1em] w-[1em] flex-none transition-transform duration-300 group-hover:-rotate-45 group-focus-visible:-rotate-45"

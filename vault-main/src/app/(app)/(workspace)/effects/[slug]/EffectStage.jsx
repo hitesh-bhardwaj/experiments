@@ -200,12 +200,12 @@ export default function EffectStage({ effect, title, previewHref, getCode = null
 
       {/* Stage + Playground side by side: the Playground opens from 0 to --pg-w (its
           width animates, through --pg-col) and fades and slides in with it instead of
-          mounting / unmounting in a jump. --pg-w: 17.65vw desktop. On tablet and phones
+          mounting / unmounting in a jump. --pg-w: 17.7vw desktop. On tablet and phones
           the panel stacks below the stage at full width (side by side, the stage
           shrank to half the screen with a sticky gap above it). */}
       <div
         ref={gridRef}
-        className="flex items-start [--pg-w:calc(var(--cvw)*17.65)] max-lg:flex-col max-lg:gap-y-[2vw] max-md:gap-y-[3.5vw] "
+        className="flex items-start [--pg-w:calc(var(--cvw)*17.7)] max-lg:flex-col max-lg:gap-y-[2vw] max-md:gap-y-[3.5vw] "
         style={{ columnGap: play ? "1vw" : "0vw", transition: `column-gap .8s ${EASE}` }}
       >
         {/* Only in Playground: sticks centred on screen while the long panel scrolls past

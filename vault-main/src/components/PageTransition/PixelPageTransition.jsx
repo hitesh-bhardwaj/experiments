@@ -7,6 +7,8 @@ import { useLenis } from 'lenis/react'
 import { prefersReducedMotion } from '@/lib/motion'
 import { useInteraction } from '@/homepage/components/InteractionProvider'
 import { GridDots } from '@/components/grid-dots'
+import { BREAKPOINTS } from "@/lib/breakpoints";
+import { cssVar } from "@/lib/useCssVar";
 
 /**
  * Site-wide route transition for the main pages, built on the pixel-transition
@@ -18,7 +20,6 @@ import { GridDots } from '@/components/grid-dots'
  */
 const COLS = 40
 const ROWS = 40
-const COLOR = '#ff5f00'
 const DURATION_LEAVE = 1.0
 const DURATION_ENTER = 0.8
 
@@ -30,7 +31,7 @@ function drawGrid(canvas, progress, isEnter, fromTopLeft = false) {
   const w = canvas.clientWidth
   const h = canvas.clientHeight
 
-  const isMobile = window.innerWidth < 640
+  const isMobile = window.innerWidth < BREAKPOINTS.sm
   const cols = isMobile ? 10 : COLS
   const rows = isMobile ? 50 : ROWS
   const cellW = w / cols
@@ -38,7 +39,7 @@ function drawGrid(canvas, progress, isEnter, fromTopLeft = false) {
   const totalDiag = cols + rows
 
   ctx.clearRect(0, 0, w, h)
-  ctx.fillStyle = COLOR
+  ctx.fillStyle = cssVar('--primary')
 
   for (let c = 0; c < cols; c++) {
     for (let r = 0; r < rows; r++) {
@@ -316,7 +317,7 @@ export default function PixelPageTransition() {
         aria-hidden="true"
         className="pointer-events-none fixed inset-0 z-100002 flex items-center justify-center opacity-0"
       >
-        <GridDots size={56} squareSize={8} color="#111111" />
+        <GridDots size={56} squareSize={8} color="var(--background)" />
       </div>
     </>
   )

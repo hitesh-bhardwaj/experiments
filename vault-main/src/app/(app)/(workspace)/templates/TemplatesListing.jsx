@@ -82,7 +82,7 @@ const formatPrices = (prices) =>
   ));
 
 /**
- * Sample Templates listing: the v4 design (public/v4/Templates — Hyperiux
+ * Sample Templates listing: the v4 design (public/v4/Templates - Hyperiux
  * Vault (1).html, sidebar left out) merged with the live /templates page.
  *
  * From v4: the split hero with stats, the Corridor / Grid view switch, the 3D
@@ -105,7 +105,6 @@ export function TemplatesListing({ templates: baseTemplates = [], description = 
   const [glFailed, setGlFailed] = useState(false);
 
   const corridorOk = useSyncExternalStore(subscribeCorridor, canShowCorridor, () => true) && !glFailed;
-  const view = corridorOk ? chosenView || "corr" : "grid";
 
   const { toast, showToast, dismissToast } = useToastQueue();
   const { wishlist, toggleWishlist, signInModal } = useTemplateWishlist({
@@ -126,8 +125,8 @@ export function TemplatesListing({ templates: baseTemplates = [], description = 
 
   useFadeUp(rootRef);
 
-  // The corridor's height follows the filtered count (and it unmounts when nothing
-  // matches, or for the grid view), so the page's height jumps on a filter change and
+  // The corridor's height follows the filtered count (and it unmounts when one or no
+  // template matches, or for the grid view), so the page's height jumps on a filter change and
   // every ScrollTrigger below it (fade-ups, FAQ reveal...) keeps stale positions.
   // Re-measure them whenever the listing's height actually changes.
   useEffect(() => {
@@ -160,6 +159,8 @@ export function TemplatesListing({ templates: baseTemplates = [], description = 
       ),
     [templates, category, catalogue],
   );
+  // One or no match shows only the grid, so the switch reflects that.
+  const view = corridorOk && filtered.length > 1 ? chosenView || "corr" : "grid";
 
   const clearFilters = () => {
     setCategory("All");
@@ -176,12 +177,12 @@ export function TemplatesListing({ templates: baseTemplates = [], description = 
 
         <div className="flex justify-between gap-12 max-lg:flex-col max-lg:items-stretch max-lg:gap-10">
           <HeadAnim rotate={0} animateOnScroll={false} delay={0.2}>
-            <h1 className="type-display w-[40vw] max-lg:w-full -mt-3">
+            <h1 className="type-display w-[calc(var(--cvw)*40)] max-lg:w-full -mt-3">
               Whole Sites. <span className="gradient-text-animate">Ready to Ship.</span>
             </h1>
           </HeadAnim>
 
-          <div className="flex w-[25vw] flex-col gap-6 max-lg:w-full">
+          <div className="flex w-[calc(var(--cvw)*25)] flex-col gap-6 max-lg:w-full">
             <Copy animateOnScroll={false} delay={0.5}>
               <p className="type-body-lg text-foreground/80 max-lg:w-[70%] max-md:w-full">
                 {description} Buy one outright, or redeem a template credit from your plan.
@@ -192,7 +193,7 @@ export function TemplatesListing({ templates: baseTemplates = [], description = 
 
         {/* view on the left · category + catalogue on the right */}
         <motion.div {...heroFadeUp(1.2)} className="flex flex-wrap items-center justify-between gap-3.5 pt-7 max-md:pt-3">
-          {corridorOk && <DarkSegment label="View" items={VIEWS} value={view} onChange={setChosenView} itemClassName="w-[5.5vw] max-lg:w-20" />}
+          {corridorOk && <DarkSegment label="View" items={VIEWS} value={view} onChange={setChosenView} itemClassName="w-[calc(var(--cvw)*5.5)] max-lg:w-20" />}
           <div className="ml-auto flex flex-wrap items-center gap-3.5 max-md:ml-0">
             <div role="group" aria-label="Category" className="flex flex-wrap gap-1.5">
               {categories.map((c) => (
@@ -227,10 +228,10 @@ export function TemplatesListing({ templates: baseTemplates = [], description = 
       </section>
 
       {/* ---------- corridor ---------- */}
-      {view === "corr" && filtered.length > 0 && <TemplateCorridor templates={filtered} onUnsupported={() => setGlFailed(true)} />}
+      {view === "corr" && <TemplateCorridor templates={filtered} onUnsupported={() => setGlFailed(true)} />}
 
       {/* ---------- grid + credits sheet ---------- */}
-      <div data-sound-hover="off" data-sound-flow="off" className="relative flex flex-col gap-[8vw] bg-light py-[7%] text-ink max-md:gap-[15vw] max-md:py-[15%]">
+      <div data-sound-hover="off" data-sound-flow="off" className="relative flex flex-col gap-[calc(var(--cvw)*8)] bg-light py-[7%] text-ink max-md:gap-[15vw] max-md:py-[15%]">
         <section id="templates-grid" className={`${GUTTER} flex flex-col gap-12`}>
           <div className="flex items-end justify-between gap-4 max-md:flex-col max-md:items-start">
             <HeadAnim key={category} rotate={0} by="words">
@@ -276,11 +277,12 @@ export function TemplatesListing({ templates: baseTemplates = [], description = 
         </section>
 
         {/* template credits: the pitch on the left, one row per way to get a template on the right */}
-        <section id="template-credits" className={`${GUTTER} flex items-center justify-between gap-[4vw] max-lg:flex-col max-lg:items-stretch max-lg:gap-10`}>
-          <div className="flex w-[38%] flex-col gap-[2vw] max-lg:w-full max-lg:gap-6">
+        <section id="template-credits" className={`${GUTTER} flex items-center justify-between gap-[calc(var(--cvw)*4)] max-lg:flex-col max-lg:items-stretch max-lg:gap-10`}>
+          <div className="flex w-[38%] flex-col gap-[calc(var(--cvw)*2)] max-lg:w-full max-lg:gap-6">
             <HeadAnim rotate={0} by="words">
               <h2 className={`${DISPLAY} type-h1 font-aeonik`}>
-                One Credit.<br/> <span className="gradient-text-animate">One Whole Site.</span>
+                <span className="block">One Credit.</span>
+                <span className="block"><span className="gradient-text-animate">One Whole Site.</span></span>
               </h2>
             </HeadAnim>
             <p className="fadeup type-body w-[90%] text-black/60 max-lg:w-full">
@@ -291,7 +293,7 @@ export function TemplatesListing({ templates: baseTemplates = [], description = 
             </div>
           </div>
 
-          <div className="fadeup flex w-[62%] flex-col gap-[0.6vw] max-lg:w-full max-md:gap-3">
+          <div className="fadeup flex w-[62%] flex-col gap-[calc(var(--cvw)*0.6)] max-lg:w-full max-md:gap-3">
             {prices.length > 0 && (
               <CreditRow
                 figure={<span className={PRICE}>${prices[0]}</span>}
@@ -355,12 +357,12 @@ function creditsLine(tier) {
 /** One way to get a template: a big figure with its caption, then the plan and how it works. */
 function CreditRow({ figure, caption, title, dark = false, children }) {
   return (
-    <div className={`flex items-center gap-[2vw] px-[1.6vw] py-[1.8vw] max-lg:gap-6 max-lg:px-6 max-lg:py-6 max-md:gap-4 max-md:px-4 ${dark ? "bg-ink text-light" : "bg-foreground"}`}>
-      <div className="flex w-[8vw] shrink-0 flex-col gap-[0.3vw] max-lg:w-[16vw] max-md:w-[24vw] max-md:gap-1">
-        <span className={`font-aeonik text-[2.4vw] leading-none max-lg:text-[4.4vw] max-md:text-[8vw] ${dark ? "text-primary" : "text-ink"}`}>{figure}</span>
+    <div className={`flex items-center gap-[calc(var(--cvw)*2)] px-[calc(var(--cvw)*1.6)] py-[calc(var(--cvw)*1.8)] max-lg:gap-6 max-lg:px-6 max-lg:py-6 max-md:gap-4 max-md:px-4 ${dark ? "bg-ink text-light" : "bg-foreground"}`}>
+      <div className="flex w-[calc(var(--cvw)*8)] shrink-0 flex-col gap-[calc(var(--cvw)*0.3)] max-lg:w-[16vw] max-md:w-[24vw] max-md:gap-1">
+        <span className={`font-aeonik text-[calc(var(--cvw)*2.4)] leading-none max-lg:text-[4.4vw] max-md:text-[8vw] ${dark ? "text-primary" : "text-ink"}`}>{figure}</span>
         <span className={`${T11} ${dark ? "text-light/50" : "text-black/50"}`}>{caption}</span>
       </div>
-      <div className="flex min-w-0 flex-col gap-[0.4vw] max-lg:gap-1.5">
+      <div className="flex min-w-0 flex-col gap-[calc(var(--cvw)*0.4)] max-lg:gap-1.5">
         <b className="type-h3 font-normal!">{title}</b>
         <p className={`${T14} ${dark ? "text-light/60" : "text-black/60"}`}>{children}</p>
       </div>

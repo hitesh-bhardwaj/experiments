@@ -224,7 +224,7 @@
 
 /* Strong & Emphasis */
 .blog-content strong {
-  font-weight: 600;
+  font-weight: 500;
   color: var(--blog-text-color);
 }
 

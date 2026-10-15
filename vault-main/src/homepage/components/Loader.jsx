@@ -410,7 +410,7 @@ export default function Loader() {
         <div ref={imageRef} aria-hidden="true" className="absolute inset-0 opacity-0">
           <Image
             src={MOBILE_IMAGE}
-            alt=""
+            alt="loader-mobile"
             fill
             priority
             unoptimized

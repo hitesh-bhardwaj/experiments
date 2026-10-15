@@ -736,7 +736,7 @@ const MorphingDock = ({
                   <span ref={mediaImgRef} className="absolute inset-0 block h-full w-full will-change-transform">
                     <Image
                       src={teaserImage}
-                      alt=""
+                      alt="teaser image"
                       fill
                       sizes="(max-width: 768px) 92vw, 35vw"
                       className="h-full w-full object-cover"

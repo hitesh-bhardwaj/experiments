@@ -1,5 +1,3 @@
-// import AuthBgVideo from "./AuthBgVideo";
-
 export default function AuthShell({
   children,
   backHref = "/",

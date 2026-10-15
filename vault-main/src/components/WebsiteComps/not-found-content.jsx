@@ -7,8 +7,8 @@ import { useFadeUp } from "../Animations/gsapAnimations";
 import Button from "@/homepage/components/Button";
 
 const SHIMMER_ANGLE = -45;
-const SHIMMER_BASE_COLOR = "#272727";
-const SHIMMER_COLOR = "#ffffff";
+const SHIMMER_BASE_COLOR = "var(--grey)";
+const SHIMMER_COLOR = "var(--foreground)";
 const SHIMMER_BG_WIDTH_PERCENT = 600;
 
 const SHIMMER_HALF_WIDTH = 0.3;
@@ -96,7 +96,7 @@ export default function NotFoundContent() {
   return (
     <main className="flex min-h-dvh items-center justify-center bg-background px-6 text-foreground">
       <div className="max-w-2xl text-center">
-        <NotFoundShimmerText className="text-[20vw] text-center uppercase font-semibold font-laygrotesk leading-none max-md:text-[34vw] max-lg:text-[25vw] fadeup">
+        <NotFoundShimmerText className="text-[20vw] text-center font-semibold font-laygrotesk leading-none max-md:text-[34vw] max-lg:text-[25vw] fadeup">
           404
         </NotFoundShimmerText>
         <SplitLine>

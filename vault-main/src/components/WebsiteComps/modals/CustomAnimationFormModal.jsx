@@ -36,7 +36,7 @@ const MODAL_TRANSITION = {
 // color otherwise, unreadable here no matter what the background does.
 const AUTOFILL_STYLE = {
   "--input-autofill-bg": "transparent",
-  "--input-autofill-text": "#ffffff",
+  "--input-autofill-text": "var(--foreground)",
 };
 
 const INITIAL_FORM = {
@@ -91,7 +91,7 @@ const FIELD_CLASS =
   "w-full border border-white/10 bg-white/5 px-4 py-3 text-base! text-white placeholder:text-white/30 outline-none transition";
 
 function FocusCorners() {
-  const corner = "pointer-events-none absolute h-1.5 w-1.5 border-primary opacity-0 transition-opacity duration-300 group-focus-within:opacity-100 max-sm:hidden max-md:h-3 max-md:w-3";
+  const corner = "pointer-events-none absolute h-1.5 w-1.5 border-primary opacity-0 transition-opacity duration-300 group-focus-within:opacity-100 max-md:hidden";
   return (
     <>
       <span aria-hidden="true" className={`${corner} top-0 left-0 border-t border-l`} />
@@ -337,7 +337,7 @@ function CustomAnimationFormModalInner() {
             type="button"
             aria-label="Close custom animation form modal"
             onClick={closeCustomAnimationForm}
-            className="absolute inset-0 cursor-default bg-black/70 backdrop-blur-md"
+            className="absolute inset-0 cursor-default bg-black/70 backdrop-blur-lg"
             initial={{
               opacity: 0,
             }}
@@ -359,7 +359,7 @@ function CustomAnimationFormModalInner() {
           >
             {/* Card: the sign-in page's surface - site background, hairline border. */}
             <div
-              className="custom-animation-form-scroll relative max-h-[88vh] w-full overflow-x-hidden overflow-y-auto border border-white/10 bg-[#111111] px-12 py-12 text-white shadow-[0_30px_80px_-30px_rgba(0,0,0,0.7)] max-lg:px-8 max-lg:py-10 max-md:px-5 max-md:py-8"
+              className="custom-animation-form-scroll relative max-h-[88vh] w-full overflow-x-hidden overflow-y-auto border border-white/10 bg-background px-12 py-12 text-white shadow-float max-lg:px-8 max-lg:py-10 max-md:px-5 max-md:py-8"
               onWheelCapture={(e) => e.stopPropagation()}
               onTouchStart={(e) => e.stopPropagation()}
               onTouchMove={(e) => e.stopPropagation()}
@@ -369,7 +369,7 @@ function CustomAnimationFormModalInner() {
                 type="button"
                 aria-label="Close"
                 onClick={closeCustomAnimationForm}
-                className="group absolute top-5 right-5 flex h-10 w-10 items-center justify-center border border-white/20 bg-white/10 text-white/70 transition-colors duration-500 ease-in-out hover:border-[#ff5f00] hover:bg-[#ff5f00] hover:text-white max-md:top-4 max-md:right-4 max-md:h-9 max-md:w-9"
+                className="group absolute top-5 right-5 flex h-10 w-10 items-center justify-center border border-white/20 bg-white/10 text-white/70 transition-colors duration-500 ease-in-out hover:border-primary hover:bg-primary hover:text-white max-md:top-4 max-md:right-4 max-md:h-9 max-md:w-9"
               >
                 <span className="relative flex h-4 w-4 items-center justify-center transition-transform duration-500 ease-in-out group-hover:rotate-90">
                   <span className="h-px w-4 rotate-45 bg-white" />
@@ -379,7 +379,7 @@ function CustomAnimationFormModalInner() {
 
               <div id="custom-animation-form-title" className="pr-12">
                 <StepHeading
-                  title={isSuccess ? "Request sent." : "Request a custom animation."}
+                  title={isSuccess ? "Request Sent." : "Request a Custom Animation."}
                   subtitle={
                     isSuccess
                       ? "We received your request and will get back to you shortly."
@@ -446,9 +446,9 @@ function CustomAnimationFormModalInner() {
                       // PhoneInput's own <input> is rounded (it's built as a pill); squared
                       // here so the autofill fill doesn't poke rounded corners out.
                       inputClassName="rounded-none! text-base! text-white placeholder:text-base! placeholder:text-white/30"
-                      dropdownClassName="rounded-none! min-w-64 border-white/10! bg-[#111111]! text-white shadow-[0_20px_60px_rgba(0,0,0,0.45)]"
+                      dropdownClassName="rounded-none! min-w-64 border-white/10! bg-background! text-white shadow-float"
                       optionClassName="rounded-none! text-white/70 hover:bg-white/10 hover:text-white"
-                      activeOptionClassName="text-[#ff5f00]"
+                      activeOptionClassName="text-primary"
                       optionDialClassName="text-white/40"
                     />
                   </Field>
@@ -483,7 +483,7 @@ function CustomAnimationFormModalInner() {
                   {/* Same submit control as the sign-in page: Button + a hidden real
                       submit button so Enter in a field still submits. */}
                   <SubmitButton loading={isSubmitting} formRef={formRef} className="w-fit">
-                    Send request
+                    Send Request
                   </SubmitButton>
                 </form>
               )}

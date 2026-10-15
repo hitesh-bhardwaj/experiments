@@ -3,6 +3,7 @@
 import { AnimatePresence, motion } from "motion/react";
 import { FOCUS_RING_CLASS } from "./constants";
 import { padStep } from "./utils";
+import ButtonArrowIcon from "@/components/ui/ButtonArrowIcon";
 
 // Smooth in-out, so a step glides across rather than snapping in
 const EASE = [0.65, 0, 0.35, 1];
@@ -25,8 +26,8 @@ export function StepTrack({ stepIndex, total, direction, stepKey, onBack, busy =
   const step = stepIndex + 1;
 
   return (
-    <div className="grid grid-cols-[minmax(0,1fr)] gap-[1.4vw] max-lg:gap-5">
-      <div className="grid gap-[0.8vw] max-lg:gap-3">
+    <div className="grid grid-cols-[minmax(0,1fr)] gap-[calc(var(--cvw)*1.4)] max-lg:gap-5">
+      <div className="grid gap-[calc(var(--cvw)*0.8)] max-lg:gap-3">
         <div className="flex items-center justify-between gap-4">
           <button
             type="button"
@@ -34,12 +35,9 @@ export function StepTrack({ stepIndex, total, direction, stepKey, onBack, busy =
             disabled={busy || stepIndex === 0}
             aria-label="Back to the previous step"
             // Arrow only; the -ml lines the arrow up with the form's left edge
-            className={`group -ml-[0.4vw] grid cursor-pointer place-items-center p-[0.4vw] text-white/80 transition-[color,opacity] duration-300 hover:text-primary disabled:pointer-events-none disabled:opacity-0 max-lg:-ml-1.5 max-lg:p-1.5 ${FOCUS_RING_CLASS}`}
+            className={`group -ml-[calc(var(--cvw)*0.4)] grid cursor-pointer place-items-center p-[calc(var(--cvw)*0.4)] text-white/80 transition-[color,opacity] duration-300 hover:text-primary disabled:pointer-events-none disabled:opacity-0 max-lg:-ml-1.5 max-lg:p-1.5 ${FOCUS_RING_CLASS}`}
           >
-            <span
-              aria-hidden="true"
-              className="size-[1vw] -scale-x-100 bg-current transition-transform duration-300 [mask-image:url(/icons/arrow-icon-final.svg)] mask-contain mask-center mask-no-repeat group-hover:-translate-x-1 max-lg:size-4"
-            />
+            <ButtonArrowIcon className="size-[calc(var(--cvw)*1)] -scale-x-100 transition-transform duration-300 group-hover:-translate-x-1 max-lg:size-4" />
           </button>
           <span className="text24 font-aeonik tracking-[-.02em] text-primary" aria-live="polite">
             {padStep(step)} / {padStep(total)}

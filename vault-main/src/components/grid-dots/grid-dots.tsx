@@ -40,6 +40,17 @@ export function GridDots({
             opacity: 0.55;
           }
         }
+        /* Reduced motion: no scaling or bobbing, just a soft opacity pulse */
+        @keyframes amicro-grid-square-fade {
+          0%, 100% { opacity: 0.3; }
+          50% { opacity: 1; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .amicro-grid-square {
+            animation-name: amicro-grid-square-fade !important;
+            animation-duration: 2s !important;
+          }
+        }
       `}</style>
       <div
         role="status"
@@ -62,7 +73,7 @@ export function GridDots({
           return (
             <span
               key={i}
-              className="rounded-none will-change-transform"
+              className="amicro-grid-square rounded-none will-change-transform"
               style={{
                 width: itemSize,
                 height: itemSize,

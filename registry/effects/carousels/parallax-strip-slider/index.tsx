@@ -480,7 +480,7 @@ export default function ParallaxStripSlider({
           >
             <Image
               src={slide.src}
-              alt=""
+              alt="slide images"
               fill
               sizes="100vw"
               draggable={false}

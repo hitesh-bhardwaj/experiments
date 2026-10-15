@@ -110,7 +110,7 @@ export default async function TechDetailPage({ params }) {
         />
 
         {/* Footer */}
-        <footer className="relative overflow-hidden rounded-3xl border border-border/30 bg-zinc-950/40 backdrop-blur-md pt-10 pb-5 mb-8 px-12 max-md:px-6 mt-20">
+        <footer className="relative overflow-hidden rounded-3xl border border-border/30 bg-zinc-950/40 backdrop-blur-lg pt-10 pb-5 mb-8 px-12 max-md:px-6 mt-20">
           <div className="relative z-10 flex flex-col items-center text-center max-md:gap-2">
             <h2 className="text-2xl font-semibold tracking-tight text-white mb-2">Hyperiux Immersion Labs</h2>
             <p className="text-sm text-zinc-500">Built using state of the art web engineering standards.</p>

@@ -284,7 +284,7 @@ export default function Smarter() {
       >
         <Image
           src={cardTexture}
-          alt=""
+          alt="kyntra"
           aria-hidden
           sizes="(max-width: 767px) 76vw, (max-width: 1025px) 50vw, 28vw"
           className="smarter-card-texture pointer-events-none absolute inset-0 h-full w-full object-cover opacity-0 mix-blend-screen will-change-[opacity,mask-position]"
@@ -306,7 +306,7 @@ export default function Smarter() {
         <div className="relative z-10 flex h-[45%] max-[1025px]:h-[40%] shrink-0 items-start">
           <Image
             src={card.icon}
-            alt=""
+            alt="kyntra"
             aria-hidden
             className="h-[3vw] w-[3vw] object-contain max-[1025px]:h-[5.5vw] max-[1025px]:w-[5.5vw] max-md:h-[12vw] max-md:w-[12vw]"
           />

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { createFluidField } from "../lib/fluid-field";
+import { MEDIA } from "@/lib/breakpoints";
 
 // Cheaper solver on narrow or low-core devices; desktop keeps the defaults
 // (16px cells, 14 pressure iterations).
@@ -14,7 +15,7 @@ export const getSiteFluid = () => siteFluid;
 
 function isLowQualityDevice() {
     return (
-        window.matchMedia("(max-width: 760px)").matches ||
+        window.matchMedia(MEDIA.mobile).matches ||
         (navigator.hardwareConcurrency || 8) <= LOW_CORE_COUNT
     );
 }

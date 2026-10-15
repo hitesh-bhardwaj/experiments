@@ -537,7 +537,7 @@ const Testimonial = () => {
                       >
                         <Image
                           src={t.image}
-                          alt=""
+                          alt="kyntra"
                           fill
                           sizes="(max-width: 768px) 26vw, 13vw"
                           className="object-cover"
