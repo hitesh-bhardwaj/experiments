@@ -107,16 +107,6 @@
       "path": "index.tsx",
       "type": "registry:component",
       "target": "src/components/effects/svg-path/index.tsx"
-    },
-    {
-      "path": "SVGPathComp.tsx",
-      "type": "registry:component",
-      "target": "src/components/effects/svg-path/SVGPathComp.tsx"
-    },
-    {
-      "path": "createSuspendedRaf.ts",
-      "type": "registry:component",
-      "target": "src/components/effects/svg-path/createSuspendedRaf.ts"
     }
   ]
 }

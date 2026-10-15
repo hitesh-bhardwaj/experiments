@@ -113,11 +113,6 @@
       "path": "index.tsx",
       "type": "registry:component",
       "target": "src/components/effects/inertia-img/index.tsx"
-    },
-    {
-      "path": "InertiaImgComp.tsx",
-      "type": "registry:component",
-      "target": "src/components/effects/inertia-img/InertiaImgComp.tsx"
     }
   ]
 }

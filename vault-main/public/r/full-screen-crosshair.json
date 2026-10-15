@@ -27,7 +27,7 @@
     {
       "name": "color",
       "type": "color",
-      "default": "#ffffff",
+      "default": "#000000",
       "demoDefault": "#F0F3FF",
       "description": "Crosshair line and center color.",
       "remixer": {
@@ -144,16 +144,6 @@
       "path": "index.tsx",
       "type": "registry:component",
       "target": "src/components/effects/full-screen-crosshair/index.tsx"
-    },
-    {
-      "path": "useMouse.ts",
-      "type": "registry:component",
-      "target": "src/components/effects/full-screen-crosshair/useMouse.ts"
-    },
-    {
-      "path": "createSuspendedRaf.ts",
-      "type": "registry:component",
-      "target": "src/components/effects/full-screen-crosshair/createSuspendedRaf.ts"
     }
   ]
 }

@@ -1,11 +1,10 @@
 {
   "name": "@hyperiux/fish-eye",
   "version": "1.0.1",
-  "description": "WebGPU fish-eye lens distortion on images using Three.ts TSL node materials with smooth cursor tracking",
+  "description": "WebGPU fish-eye lens distortion on images using Three.js TSL node materials with smooth cursor tracking",
   "main": "index.tsx",
   "files": [
     "index.tsx",
-    "createSuspendedRaf.ts",
     "registry.json"
   ],
   "keywords": [
@@ -13,8 +12,8 @@
     "hyperiux"
   ],
   "dependencies": {
-    "@react-three/fiber": "*",
     "@react-three/drei": "*",
+    "@react-three/fiber": "*",
     "three": "*"
   }
 }

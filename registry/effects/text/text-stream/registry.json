@@ -30,19 +30,8 @@
   "main": "index.tsx",
   "files": [
     {
-      "path": "hooks.ts",
-      "type": "registry:component",
-      "target": "src/components/effects/text-stream/hooks.ts"
-    },
-    {
       "path": "index.tsx",
-      "type": "registry:component",
       "target": "src/components/effects/text-stream/index.tsx"
-    },
-    {
-      "path": "TextStreamComp.tsx",
-      "type": "registry:component",
-      "target": "src/components/effects/text-stream/TextStreamComp.tsx"
     }
   ],
   "props": [
@@ -61,7 +50,7 @@
       }
     },
     {
-      "name": "stagger",
+      "name": "verticalSpacing",
       "type": "number",
       "default": 0.08,
       "description": "Vertical spacing between streamed lines.",
@@ -129,5 +118,7 @@
     "copyCode": {
       "includeOnlyPublicProps": true
     }
-  }
+  },
+  "importPath": "@/components/effects/text-stream",
+  "target": "src/components/effects/text-stream"
 }

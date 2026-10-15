@@ -12,7 +12,7 @@
     "hyperiux"
   ],
   "dependencies": {
-    "gsap": "*",
-    "@gsap/react": "*"
+    "@gsap/react": "*",
+    "gsap": "*"
   }
 }

@@ -115,24 +115,24 @@ export default function Project() {
   return (
     <section
       id="project"
-      className="w-screen overflow-hidden pt-[8%] pb-[12%] text-[#1c1b1a] max-md:pt-[20%] max-md:pb-[16%] max-[1025px]:py-[10%]"
+      className="w-screen overflow-hidden pt-[8%] pb-[12%] text-[#1c1b1a] max-md:pt-[20%] max-md:pb-[16%] max-lg:py-[10%]"
     >
       <div className="px-[5%]">
         <MaskTextReveal>
 
         <h2
           data-para-anim
-          className="font-medium! text-[#1C1B1A] font-neue-montreal text-[3.8vw] leading-[1.06] tracking-[-0.04em] max-[1025px]:text-[6.8vw] max-md:text-[10vw]"
+          className="font-medium! text-[#1C1B1A] font-neue-montreal text-[3.8vw] leading-[1.06] tracking-[-0.04em] max-lg:text-[6.8vw] max-md:text-[10vw]"
           >
           A World of Refinement
         </h2>
           </MaskTextReveal>
-        <div className="my-[3.5vw] h-px w-full bg-black/15 lineDraw max-md:my-[8vw] max-[1025px]:my-[5vw]" />
+        <div className="my-[3.5vw] h-px w-full bg-black/15 lineDraw max-md:my-[8vw] max-lg:my-[5vw]" />
 
-        <div className="mb-[4.5vw] grid grid-cols-[minmax(0,1fr)_minmax(18rem,34vw)] items-start gap-[4vw] pl-[23%] pr-[2%] max-[1025px]:grid-cols-1 max-[1025px]:gap-[7vw] max-[1025px]:px-0 max-md:mb-[10vw]">
+        <div className="mb-[4.5vw] grid grid-cols-[minmax(0,1fr)_minmax(18rem,34vw)] items-start gap-[4vw] pl-[23%] pr-[2%] max-lg:grid-cols-1 max-lg:gap-[7vw] max-lg:px-0 max-md:mb-[10vw]">
           <FadeUp>
 
-          <div className="fadeup max-[1025px]:order-1">
+          <div className="fadeup max-lg:order-1">
             <BlackButton
               btnText="Enquire Now"
               link="#"
@@ -149,7 +149,7 @@ export default function Project() {
 
           <p
             data-para-anim
-            className="max-w-[38vw] text-[1.25vw] leading-[1.75] tracking-[-0.02em] text-[#1C1B1A] max-[1025px]:max-w-full max-[1025px]:text-[2.5vw] max-md:text-[4.6vw]"
+            className="max-w-[38vw] text-[1.25vw] leading-[1.75] tracking-[-0.02em] text-[#1C1B1A] max-lg:max-w-full max-lg:text-[2.5vw] max-md:text-[4.6vw]"
             >
             Immerse yourself in the stylish allure of Lumera Heights, where every
             corner exudes sophistication. This is not just a residence, it&apos;s a
@@ -167,14 +167,14 @@ export default function Project() {
       <div className="">
         <SmoothInfiniteCarousel
           config={carouselConfig}
-          wrapperClassName="fadeup pl-[25.5%] pr-[5%] pb-[1vw] gap-[1.2vw] max-[1025px]:pl-[5%] max-[1025px]:gap-[8vw]"
+          wrapperClassName="fadeup pl-[25.5%] pr-[5%] pb-[1vw] gap-[1.2vw] max-lg:pl-[5%] max-lg:gap-[8vw]"
           itemClassName="cursor-grab active:cursor-grabbing"
           onReady={handleReady}
         >
           {interiorImages.map((src, index) => (
             <div
               key={index}
-              className="relative h-[29vw] w-[43vw] shrink-0 overflow-hidden rounded-[1.8vw] max-[1025px]:h-[50vw] max-[1025px]:w-[72vw] max-md:h-[62vw] max-md:w-[84vw]"
+              className="relative h-[29vw] w-[43vw] shrink-0 overflow-hidden rounded-[1.8vw] max-lg:h-[50vw] max-lg:w-[72vw] max-md:h-[62vw] max-md:w-[84vw]"
             >
               <Image
                 src={src}
@@ -188,7 +188,7 @@ export default function Project() {
           ))}
         </SmoothInfiniteCarousel>
         <div
-          className="relative overflow-hidden rounded-full bg-[#e5e5e5] mt-[3.6vw] ml-[25.5%] h-[0.4vw] w-[65vw] max-md:mt-[7vw] max-md:ml-10 max-md:h-[1.2vw]  max-md:w-[80vw] max-[1025px]:ml-[8%]"
+          className="relative overflow-hidden rounded-full bg-[#e5e5e5] mt-[3.6vw] ml-[25.5%] h-[0.4vw] w-[65vw] max-md:mt-[7vw] max-md:ml-10 max-md:h-[1.2vw]  max-md:w-[80vw] max-lg:ml-[8%]"
           aria-hidden="true"
         >
           <div

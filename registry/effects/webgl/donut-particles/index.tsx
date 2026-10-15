@@ -1,12 +1,257 @@
 // Built using Hyperiux Vault: https://vault.hyperiux.com
-
 "use client";
 
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
-import { degToRad } from "three/src/math/MathUtils";
-import { createVisibilityGate } from "./createSuspendedRaf";
+import { degToRad } from "three/src/math/MathUtils.js";
+
+const DEFAULT_ROOT_MARGIN = "256px";
+
+type RafRoot = Element | null | { current: Element | null } | (() => Element | null);
+
+function resolveElement(root: RafRoot): Element | null {
+  if (!root) return null;
+  if (typeof root === "function") return root() ?? null;
+  if (typeof root === "object" && "current" in root) return root.current ?? null;
+  return root;
+}
+
+interface VisibilityGateOptions {
+  root?: RafRoot;
+  rootMargin?: string;
+  threshold?: number;
+  observeTab?: boolean;
+  observeOffscreen?: boolean;
+  onChange?: (active: boolean) => void;
+}
+
+interface VisibilityGate {
+  readonly isActive: boolean;
+  observe: (nextRoot?: RafRoot) => void;
+  destroy: () => void;
+}
+
+function createVisibilityGate({
+  root = null,
+  rootMargin = DEFAULT_ROOT_MARGIN,
+  threshold = 0,
+  observeTab = true,
+  observeOffscreen = true,
+  onChange,
+}: VisibilityGateOptions = {}): VisibilityGate {
+  let tabVisible =
+    typeof document === "undefined" ? true : !document.hidden;
+  // Match border-beam: assume onscreen until the observer reports otherwise.
+  let onscreen = true;
+  let destroyed = false;
+  let observer: IntersectionObserver | null = null;
+
+  const isActive = () => {
+    if (destroyed) return false;
+    if (observeTab && !tabVisible) return false;
+    if (observeOffscreen && resolveElement(root) && !onscreen) return false;
+    return true;
+  };
+
+  let lastActive = isActive();
+
+  const emit = () => {
+    if (destroyed) return;
+    const next = isActive();
+    if (next === lastActive) return;
+    lastActive = next;
+    onChange?.(next);
+  };
+
+  const onVisibilityChange = () => {
+    tabVisible = !document.hidden;
+    emit();
+  };
+
+  if (observeTab && typeof document !== "undefined") {
+    document.addEventListener("visibilitychange", onVisibilityChange);
+  }
+
+  const bindObserver = () => {
+    if (!observeOffscreen || typeof IntersectionObserver === "undefined") {
+      return;
+    }
+
+    const el = resolveElement(root);
+    if (!el) return;
+
+    observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          onscreen = entry.isIntersecting;
+        }
+        emit();
+      },
+      { rootMargin, threshold },
+    );
+
+    observer.observe(el);
+  };
+
+  bindObserver();
+
+  return {
+    /** Whether the animation should currently run. */
+    get isActive() {
+      return isActive();
+    },
+
+    /**
+     * Re-bind IntersectionObserver after the root element mounts late
+     * (e.g. ref not ready on first call). Safe to call multiple times.
+     */
+    observe(nextRoot?: RafRoot) {
+      if (destroyed) return;
+      if (nextRoot != null) root = nextRoot;
+      if (observer) {
+        observer.disconnect();
+        observer = null;
+      }
+      onscreen = true;
+      bindObserver();
+      emit();
+    },
+
+    destroy() {
+      if (destroyed) return;
+      destroyed = true;
+      if (observeTab && typeof document !== "undefined") {
+        document.removeEventListener("visibilitychange", onVisibilityChange);
+      }
+      if (observer) {
+        observer.disconnect();
+        observer = null;
+      }
+    },
+  };
+}
+
+interface SuspendedRafOptions {
+  onFrame: (time: number) => void;
+  root?: RafRoot;
+  rootMargin?: string;
+  threshold?: number;
+  observeTab?: boolean;
+  observeOffscreen?: boolean;
+}
+
+interface SuspendedRaf {
+  start: () => void;
+  stop: () => void;
+  readonly isRunning: boolean;
+  readonly isActive: boolean;
+  observe: (nextRoot?: RafRoot) => void;
+  destroy: () => void;
+}
+
+/**
+ * Owns a requestAnimationFrame loop that auto-pauses when the tab is hidden
+ * or the root element is offscreen.
+ */
+function createSuspendedRaf({
+  onFrame,
+  root = null,
+  rootMargin = DEFAULT_ROOT_MARGIN,
+  threshold = 0,
+  observeTab = true,
+  observeOffscreen = true,
+}: SuspendedRafOptions): SuspendedRaf {
+  if (typeof onFrame !== "function") {
+    throw new TypeError("createSuspendedRaf: onFrame is required");
+  }
+
+  let rafId: number | null = null;
+  let running = false;
+  let destroyed = false;
+
+  const stopRaf = () => {
+    if (rafId != null) {
+      cancelAnimationFrame(rafId);
+      rafId = null;
+    }
+  };
+
+  const tick = (time: number) => {
+    rafId = null;
+    if (destroyed || !running || !gate.isActive) return;
+    onFrame(time);
+    if (!destroyed && running && gate.isActive) {
+      rafId = requestAnimationFrame(tick);
+    }
+  };
+
+  const sync = () => {
+    if (destroyed) return;
+    if (running && gate.isActive) {
+      if (rafId == null) {
+        rafId = requestAnimationFrame(tick);
+      }
+    } else {
+      stopRaf();
+    }
+  };
+
+  const gate = createVisibilityGate({
+    root,
+    rootMargin,
+    threshold,
+    observeTab,
+    observeOffscreen,
+    onChange: sync,
+  });
+
+  return {
+    /** Start (or resume) the loop when visibility allows. */
+    start() {
+      if (destroyed) return;
+      running = true;
+      sync();
+    },
+
+    /** Stop requesting frames (visibility listeners stay attached until destroy). */
+    stop() {
+      running = false;
+      stopRaf();
+    },
+
+    /** Whether the caller has started the loop (may still be paused by visibility). */
+    get isRunning() {
+      return running;
+    },
+
+    /** Whether a frame is currently allowed to schedule. */
+    get isActive() {
+      return gate.isActive;
+    },
+
+    /** Re-attach offscreen observer to a (new) root element. */
+    observe(nextRoot?: RafRoot) {
+      gate.observe(nextRoot);
+      sync();
+    },
+
+    /** Tear down listeners and cancel any pending frame. */
+    destroy() {
+      if (destroyed) return;
+      destroyed = true;
+      running = false;
+      stopRaf();
+      gate.destroy();
+    },
+  };
+}
+
+export {
+  createSuspendedRaf,
+  createVisibilityGate,
+  DEFAULT_ROOT_MARGIN,
+};
 
 const PARTICLE_SIZES = [0.08, 0.09, 0.1, 0.2,0.4,0.6 ];
 const OFFSCREEN = 9999;
@@ -29,6 +274,12 @@ interface DonutParticleProps {
  particleColor?: string
  speed?: number
  intensity?: number
+ /** Seconds for scattered particles to settle back into the donut. */
+ morphDuration?: number
+ /** How strongly the cursor pulls particles out of the donut shape. */
+ demorphIntensity?: number
+ /** Spin speed multiplier. */
+ rotationSpeed?: number
 }
 
 function DonutParticle({
@@ -40,6 +291,9 @@ function DonutParticle({
  particleColor = "#9973ff",
  speed = 1,
  intensity = 1,
+ morphDuration = 1.5,
+ demorphIntensity = 1,
+ rotationSpeed = 1,
 }: DonutParticleProps) {
  const pointsRef = useRef<any>(null);
  const simulationRef = useRef<any>(null);
@@ -494,7 +748,7 @@ function DonutParticle({
  const animTime = time * speed;
  pointsRef.current.material.uniforms.time.value = animTime;
 
- pointsRef.current.rotation.z += 0.00095 * speed;
+ pointsRef.current.rotation.z += 0.00095 * speed * rotationSpeed;
 
  const majorRadius = TORUS_MAJOR_RADIUS;
  const outerMinorRadius = TORUS_OUTER_RADIUS;
@@ -525,7 +779,10 @@ function DonutParticle({
  const STICK = 0.8;
  const FLOW = 0.65;
  const CLOSE_FLOW_BOOST = 5.5;
- const RETURN = 0.003;
+ // Faster/slower settling back into the donut: 1.5s is the original feel.
+ const morphRate = 1.5 / THREE.MathUtils.clamp(morphDuration, 0.2, 5);
+ const demorph = THREE.MathUtils.clamp(demorphIntensity, 0, 4);
+ const RETURN = 0.003 * morphRate;
  const DAMP = 0.7;
 
  for (let i = 0; i < count; i += 1) {
@@ -562,13 +819,13 @@ function DonutParticle({
  : 0;
  const flowBoost = 1 + closePower * CLOSE_FLOW_BOOST;
 
- fx += dx * STICK * power * 0.05 * intensity;
- fy += dy * STICK * power * 0.05 * intensity;
- fz += dz * STICK * power * 0.05 * intensity;
+ fx += dx * STICK * power * 0.05 * intensity * demorph;
+ fy += dy * STICK * power * 0.05 * intensity * demorph;
+ fz += dz * STICK * power * 0.05 * intensity * demorph;
 
- fx += localVelocity.x * FLOW * power * flowBoost * intensity;
- fy += localVelocity.y * FLOW * power * flowBoost * intensity;
- fz += localVelocity.z * FLOW * power * flowBoost * intensity;
+ fx += localVelocity.x * FLOW * power * flowBoost * intensity * demorph;
+ fy += localVelocity.y * FLOW * power * flowBoost * intensity * demorph;
+ fz += localVelocity.z * FLOW * power * flowBoost * intensity * demorph;
 
  stretchPower = power + closePower * 0.4;
  velocityLerp = THREE.MathUtils.lerp(0.25, 1.0, power);
@@ -600,7 +857,7 @@ function DonutParticle({
  const tubeOffset = radial - majorRadius;
  const tubeDistance =
  Math.sqrt(tubeOffset * tubeOffset + nextZ * nextZ) || 0.0001;
- const stretch = stretchPower * 0.06;
+ const stretch = stretchPower * 0.06 * demorph;
  const maxOuter = outerMinorRadius + stretch;
  const minInner = innerMinorRadius - stretch * 0.4;
 
@@ -611,7 +868,7 @@ function DonutParticle({
  outerMinorRadius
  );
  const scale = targetDistance / tubeDistance;
- const lerpBack = 0.15;
+ const lerpBack = Math.min(1, 0.15 * morphRate);
 
  nextX = THREE.MathUtils.lerp(
  nextX,
@@ -689,22 +946,7 @@ function DonutParticle({
  );
 }
 
-// The declarative <Canvas camera={{ fov }}> prop applies the value but only
-// calls updateProjectionMatrix() for aspect/left/right/bottom/top changes,
-// so fov edits are silently ignored without this explicit sync.
-function CameraFovSync({ fov }: { fov: number }) {
- const { camera } = useThree();
-
- useEffect(() => {
- if ("fov" in camera && camera.fov !== fov) {
- // eslint-disable-next-line react-hooks/immutability -- three.js cameras are inherently mutable imperative objects; this is the standard r3f pattern for syncing fov.
- camera.fov = fov;
- camera.updateProjectionMatrix();
- }
- }, [camera, fov]);
-
- return null;
-}
+const CAMERA_FOV = 50;
 
 interface DonutParticlesProps {
  className?: string
@@ -713,13 +955,19 @@ interface DonutParticlesProps {
  donutScale?: number
  donutRotation?: [number, number, number]
  cameraPosition?: [number, number, number]
- cameraFov?: number
  dpr?: number | [number, number]
  particleSize?: number
  particleColor?: string
  mouseInteraction?: boolean
  speed?: number
  intensity?: number
+ morphDuration?: number
+ demorphIntensity?: number
+ rotationSpeed?: number
+ /** Donut tilt around X in degrees (overrides donutRotation[0]). */
+ tiltX?: number
+ /** Donut tilt around Y in degrees (overrides donutRotation[1]). */
+ tiltY?: number
 }
 
 export default function DonutParticles({
@@ -729,13 +977,17 @@ export default function DonutParticles({
  donutScale = 3.5,
  donutRotation = [degToRad(-60), degToRad(45), 0],
  cameraPosition = [2.0, 4, 6],
- cameraFov = 50,
  dpr = [1, 2],
  particleSize = 1,
  particleColor = "#9973ff",
  mouseInteraction = true,
  speed = 1,
  intensity = 1,
+ morphDuration = 1.5,
+ demorphIntensity = 1,
+ rotationSpeed = 1,
+ tiltX,
+ tiltY,
 }: DonutParticlesProps) {
  const rootRef = useRef<HTMLDivElement | null>(null);
  const [frameloop, setFrameloop] = useState<'always' | 'never'>("always");
@@ -778,17 +1030,23 @@ export default function DonutParticles({
 
  return (
  <div ref={rootRef} className={`h-screen w-full bg-black ${className}`}>
- <Canvas aria-hidden="true" className={canvasClassName} camera={{ position: cameraPosition, fov: cameraFov }} dpr={dpr} frameloop={frameloop}>
- <CameraFovSync fov={cameraFov} />
+ <Canvas aria-hidden="true" className={canvasClassName} camera={{ position: cameraPosition, fov: CAMERA_FOV }} dpr={dpr} frameloop={frameloop}>
  <DonutParticle
  position={responsivePosition}
  scale={responsiveScale}
- rotation={donutRotation}
+ rotation={[
+ typeof tiltX === "number" ? degToRad(tiltX) : donutRotation[0],
+ typeof tiltY === "number" ? degToRad(tiltY) : donutRotation[1],
+ donutRotation[2],
+ ]}
  interactive={mouseInteraction && !isTablet && !isMobile}
  particleSize={particleSize}
  particleColor={particleColor}
  speed={speed}
  intensity={intensity}
+ morphDuration={morphDuration}
+ demorphIntensity={demorphIntensity}
+ rotationSpeed={rotationSpeed}
  />
  </Canvas>
  </div>

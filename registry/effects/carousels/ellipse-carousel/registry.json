@@ -220,10 +220,6 @@
     {
       "path": "index.tsx",
       "target": "src/components/effects/ellipse-carousel/index.tsx"
-    },
-    {
-      "path": "EllipseCarouselComp.tsx",
-      "target": "src/components/effects/ellipse-carousel/EllipseCarouselComp.tsx"
     }
   ]
 }

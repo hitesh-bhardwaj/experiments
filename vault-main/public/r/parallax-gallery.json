@@ -108,11 +108,6 @@
       "path": "index.tsx",
       "type": "registry:component",
       "target": "src/components/effects/parallax-gallery/index.tsx"
-    },
-    {
-      "path": "ParallaxGallery.tsx",
-      "type": "registry:component",
-      "target": "src/components/effects/parallax-gallery/ParallaxGallery.tsx"
     }
   ]
 }

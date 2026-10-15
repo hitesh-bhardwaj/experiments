@@ -168,7 +168,7 @@
     {
       "name": "teaserImage",
       "type": "string",
-      "default": "https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/v-10.jpg",
+      "default": "https://picsum.photos/seed/v10/1600/1200",
       "description": "Preview image URL.",
       "remixer": {
         "enabled": false,

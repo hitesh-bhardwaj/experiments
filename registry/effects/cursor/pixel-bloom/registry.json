@@ -103,14 +103,6 @@
     {
       "path": "index.tsx",
       "target": "src/components/effects/pixel-bloom/index.tsx"
-    },
-    {
-      "path": "2dcanvasTracker.tsx",
-      "target": "src/components/effects/pixel-bloom/2dcanvasTracker.ts"
-    },
-    {
-      "path": "createSuspendedRaf.ts",
-      "target": "src/components/effects/pixel-bloom/createSuspendedRaf.ts"
     }
   ]
 }

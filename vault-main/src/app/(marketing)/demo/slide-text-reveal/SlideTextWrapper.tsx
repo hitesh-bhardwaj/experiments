@@ -23,7 +23,7 @@ const SlideTextWrapper = ({ effectProps = {} }: { effectProps?: Record<string, a
                 {...replayProps}
                 className="block"
               >
-                <h1 className="text-6xl font-black uppercase leading-none tracking-tight sm:text-7xl lg:text-8xl">
+                <h1 className="text-6xl font-black leading-none tracking-tight sm:text-7xl lg:text-8xl">
                   Slide text should feel like a clean entrance, not a spectacle.
                 </h1>
               </SlideTextReveal>

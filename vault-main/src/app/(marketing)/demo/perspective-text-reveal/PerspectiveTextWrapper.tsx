@@ -50,27 +50,27 @@ const PerspectiveTextWrapper = ({ effectProps = {} }) => {
             <div className="absolute inset-x-0 bottom-0 h-1/2 bg-[linear-gradient(0deg,#07090d,transparent)]" />
           </div>
 
-          <div className="relative mx-auto grid min-h-[calc(100vh-4rem)] max-w-7xl grid-rows-[auto_1fr_auto] max-[1025px]:min-h-[80vh] max-md:min-h-[calc(100vh-2rem)]">
+          <div className="relative mx-auto grid min-h-[calc(100vh-4rem)] max-w-7xl grid-rows-[auto_1fr_auto] max-lg:min-h-[80vh] max-md:min-h-[calc(100vh-2rem)]">
            
 
-            <div className="grid items-center gap-10 py-18 grid-cols-[0.95fr_1.05fr] max-[1025px]:grid-cols-1 max-md:py-14">
+            <div className="grid items-center gap-10 py-18 grid-cols-[0.95fr_1.05fr] max-lg:grid-cols-1 max-md:py-14">
               <div className="max-w-3xl">
                 <button
                   type="button"
                   onClick={() => setReplayKey((value) => value + 1)}
-                  className="mb-7 w-fit border border-white/20 bg-white/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.22em] text-[#b9e6ff] backdrop-blur max-md:text-[2.6vw] max-md:tracking-[0.16em]"
+                  className="mb-7 w-fit border border-white/20 bg-white/10 px-4 py-2 text-xs font-bold tracking-[0.08em] text-[#b9e6ff] backdrop-blur max-md:text-[2.6vw]"
                 >
                   Replay animation
                 </button>
 
                 <PerspectiveTextReveal key={`hero-title-${replayKey}`} scrub={false} {...effectProps}>
-                  <h1 className="text-[7vw] font-black uppercase leading-[0.84] text-white max-sm:text-[8vw] max-sm:leading-[0.88]">
+                  <h1 className="text-[7vw] font-black leading-[0.9] text-white max-sm:text-[8vw] max-sm:leading-[0.94]">
                     Lines fall into depth.
                   </h1>
                 </PerspectiveTextReveal>
               </div>
 
-              <div className="relative min-h-130  max-[1025px]:min-h-150 max-md:min-h-110">
+              <div className="relative min-h-130  max-lg:min-h-150 max-md:min-h-110">
                 <div className="absolute left-6 right-10 top-8 h-28 skew-y-[-5deg] border border-white/25 bg-white/10 backdrop-blur max-md:left-2 max-md:right-6 max-md:h-20" />
                 <div className="absolute left-16 right-6 top-40 h-36 skew-y-[-5deg] border border-[#b9e6ff]/50 bg-[#b9e6ff]/20 backdrop-blur max-md:left-8 max-md:right-2 max-md:top-28 max-md:h-24" />
                 <div className="absolute bottom-16 left-24 right-0 h-48 skew-y-[-5deg] overflow-hidden border border-white/35 bg-white/10 shadow-[0_30px_80px_rgba(0,0,0,0.45)] max-md:bottom-12 max-md:left-10 max-md:h-36">
@@ -100,14 +100,14 @@ const PerspectiveTextWrapper = ({ effectProps = {} }) => {
                   key={label}
                   className="border-white/15 py-5 px-4 border-r last:border-r-0 max-md:border-r-0 max-md:border-t max-md:first:border-t-0"
                 >
-                  <p className="text-xs font-semibold uppercase tracking-[0.24em] text-white/38 max-md:tracking-[0.16em]">
+                  <p className="text-xs font-semibold tracking-[0.08em] text-white/38">
                     {label}
                   </p>
                   <PerspectiveTextReveal key={`${label}-${replayKey}`} scrub={false} {...effectProps}>
 
                     
 
-                  <p className="mt-2 text-2xl font-black uppercase text-[#b9e6ff] max-md:text-xl">
+                  <p className="mt-2 text-2xl font-black text-[#b9e6ff] max-md:text-xl">
                     {value}
                   </p>
                   </PerspectiveTextReveal>

@@ -45,16 +45,16 @@ export const AppleStoreButton = ({
         marginRight: `calc(-1 * ${1 - scale} * 100%)`,
         ...props.style,
       } as CSSProperties}
-      className={`ease group flex w-[16vw] shrink-0 cursor-pointer items-center justify-start gap-4 overflow-hidden rounded-full border px-[2vw] py-[0.6vw] text-white origin-left scale-(--store-btn-scale) transition-all duration-300 hover:scale-[calc(var(--store-btn-scale)*0.95)] ${className} max-[1025px]:w-[78%] max-[1025px]:min-w-0 max-[1025px]:justify-start max-[1025px]:gap-[3vw] max-[1025px]:px-[6vw] max-[1025px]:py-[1.8vw] max-md:w-[85%] max-md:min-w-0 max-md:gap-[4vw] max-md:px-[7vw] max-md:py-[2.6vw] max-sm:w-[85%] max-sm:min-w-0 max-sm:px-[7vw] max-sm:py-[2.6vw]`}
+      className={`ease group flex w-[16vw] shrink-0 cursor-pointer items-center justify-start gap-4 overflow-hidden rounded-full border px-[2vw] py-[0.6vw] text-white origin-left scale-(--store-btn-scale) transition-all duration-300 hover:scale-[calc(var(--store-btn-scale)*0.95)] ${className} max-lg:w-[78%] max-lg:min-w-0 max-lg:justify-start max-lg:gap-[3vw] max-lg:px-[6vw] max-lg:py-[1.8vw] max-md:w-[85%] max-md:min-w-0 max-md:gap-[4vw] max-md:px-[7vw] max-md:py-[2.6vw] max-sm:w-[85%] max-sm:min-w-0 max-sm:px-[7vw] max-sm:py-[2.6vw]`}
     >
       <div>
-        <AppleIcon className="mt-[-0.5vw] h-[2vw] w-[2vw] max-[1025px]:mt-0 max-[1025px]:h-[4vw] max-[1025px]:w-[4vw] max-md:h-[5.6vw] max-md:w-[5.6vw] max-sm:h-[5.6vw] max-sm:w-[5.6vw]" />
+        <AppleIcon className="mt-[-0.5vw] h-[2vw] w-[2vw] max-lg:mt-0 max-lg:h-[4vw] max-lg:w-[4vw] max-md:h-[5.6vw] max-md:w-[5.6vw] max-sm:h-[5.6vw] max-sm:w-[5.6vw]" />
       </div>
-      <div className="flex flex-col gap-1.5 text-left max-[1025px]:gap-0">
-        <span className="text-18 h-[0.8vw] max-[1025px]:h-auto">
+      <div className="flex flex-col gap-1.5 text-left max-lg:gap-0">
+        <span className="text-18 h-[0.8vw] max-lg:h-auto">
           Download on the
         </span>
-        <p className="mb-1.5 text-28 leading-none text-nowrap max-[1025px]:mb-0">
+        <p className="mb-1.5 text-28 leading-none text-nowrap max-lg:mb-0">
           App Store
         </p>
       </div>
@@ -83,16 +83,16 @@ export const PlayStoreButton = ({
         marginRight: `calc(-1 * ${1 - scale} * 100%)`,
         ...props.style,
       } as CSSProperties}
-      className={`ease group relative z-9999 flex w-[16vw] shrink-0 cursor-pointer items-center justify-start gap-4 overflow-hidden rounded-full border bg-white px-[2vw] py-[0.6vw] origin-left scale-[var(--store-btn-scale)] transition-all duration-300 hover:scale-[calc(var(--store-btn-scale)*0.95)] ${className} max-[1025px]:w-[78%] max-[1025px]:min-w-0 max-[1025px]:justify-start max-[1025px]:gap-[3vw] max-[1025px]:px-[6vw] max-[1025px]:py-[1.8vw] max-md:w-[85%] max-md:min-w-0 max-md:gap-[4vw] max-md:px-[7vw] max-md:py-[2.6vw] max-sm:w-[85%] max-sm:min-w-0 max-sm:px-[7vw] max-sm:py-[2.6vw]`}
+      className={`ease group relative z-9999 flex w-[16vw] shrink-0 cursor-pointer items-center justify-start gap-4 overflow-hidden rounded-full border bg-white px-[2vw] py-[0.6vw] origin-left scale-[var(--store-btn-scale)] transition-all duration-300 hover:scale-[calc(var(--store-btn-scale)*0.95)] ${className} max-lg:w-[78%] max-lg:min-w-0 max-lg:justify-start max-lg:gap-[3vw] max-lg:px-[6vw] max-lg:py-[1.8vw] max-md:w-[85%] max-md:min-w-0 max-md:gap-[4vw] max-md:px-[7vw] max-md:py-[2.6vw] max-sm:w-[85%] max-sm:min-w-0 max-sm:px-[7vw] max-sm:py-[2.6vw]`}
     >
       <div>
-        <GooglePlay className="h-[2vw] w-[2vw] max-[1025px]:h-[4vw] max-[1025px]:w-[4vw] max-md:h-[5.6vw] max-md:w-[5.6vw] max-sm:h-[5.6vw] max-sm:w-[5.6vw]" />
+        <GooglePlay className="h-[2vw] w-[2vw] max-lg:h-[4vw] max-lg:w-[4vw] max-md:h-[5.6vw] max-md:w-[5.6vw] max-sm:h-[5.6vw] max-sm:w-[5.6vw]" />
       </div>
-      <div className="flex flex-col gap-1.5 text-left max-[1025px]:gap-0">
-        <span className="text-18 h-[0.8vw] max-[1025px]:h-auto">
+      <div className="flex flex-col gap-1.5 text-left max-lg:gap-0">
+        <span className="text-18 h-[0.8vw] max-lg:h-auto">
           Get it on
         </span>
-        <p className="text-28 mb-1.5 leading-none text-nowrap max-[1025px]:mb-0">
+        <p className="text-28 mb-1.5 leading-none text-nowrap max-lg:mb-0">
           Google Play
         </p>
       </div>

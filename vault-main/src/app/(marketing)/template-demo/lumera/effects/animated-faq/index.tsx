@@ -80,10 +80,10 @@ export default function AnimatedFaq() {
 
   return (
     <section className="py-[5%] max-md:pt-[20%]" id="faq">
-      <div className="w-full ml-auto max-md:w-full max-[1025px]:w-full px-[5%] max-md:px-[6%]">
+      <div className="w-full ml-auto max-md:w-full max-lg:w-full px-[5%] max-md:px-[6%]">
         <MaskTextReveal>
 
-        <h2 data-para-anim className="font-neue-montreal text-[#1C1B1A] max-md:mb-[10vw] font-medium! text-[3.8vw] leading-[1.2] max-[1025px]:text-[6.8vw] max-md:text-[8.8vw] mb-[5vw]">
+        <h2 data-para-anim className="font-neue-montreal text-[#1C1B1A] max-md:mb-[10vw] font-medium! text-[3.8vw] leading-[1.2] max-lg:text-[6.8vw] max-md:text-[8.8vw] mb-[5vw]">
           FAQs
         </h2>
         </MaskTextReveal>
@@ -96,23 +96,23 @@ export default function AnimatedFaq() {
               <FAQWrapper
                 key={item.id}
                 itemId={item.id}
-                className="group relative mb-[1.1vw] overflow-hidden rounded-md border border-[#111111] transition-colors duration-500 ease-[cubic-bezier(0.215,0.61,0.355,1)] aria-expanded:border-[#E0D4C6] max-md:mb-[4vw] max-md:rounded-[4.5vw] max-[1025px]:mb-[2vw] max-[1025px]:rounded-[2.5vw]"
-                titleClassName="relative z-2 text-[1.5vw] font-medium text-black max-md:text-[5vw] max-[1025px]:text-[3.5vw]"
+                className="group relative mb-[1.1vw] overflow-hidden rounded-md border border-[#111111] transition-colors duration-500 ease-[cubic-bezier(0.215,0.61,0.355,1)] aria-expanded:border-[#E0D4C6] max-md:mb-[4vw] max-md:rounded-[4.5vw] max-lg:mb-[2vw] max-lg:rounded-[2.5vw]"
+                titleClassName="relative z-2 text-[1.5vw] font-medium text-black max-md:text-[5vw] max-lg:text-[3.5vw]"
                 contentClassName="relative z-2"
-                iconClassName="relative flex h-[2.6vw] w-[2.6vw] items-center justify-center rounded-full border border-black text-black max-md:h-[9vw] max-md:w-[9vw] max-[1025px]:h-[6vw] max-[1025px]:w-[6vw]"
+                iconClassName="relative flex h-[2.6vw] w-[2.6vw] items-center justify-center rounded-full border border-black text-black max-md:h-[9vw] max-md:w-[9vw] max-lg:h-[6vw] max-lg:w-[6vw]"
                 iconSize={18}
                 iconStrokeWidth={1.8}
                 duration={0.5}
               >
                 <div className="absolute inset-0 origin-top scale-y-0 bg-[#E0D4C6] transition-transform duration-500 ease-[cubic-bezier(0.215,0.61,0.355,1)] group-aria-expanded:scale-y-100" />
                 <FAQTitle
-                  className="gap-[2vw] font-neue-montreal py-[1.6vw] pl-[2.2vw] pr-[1.6vw] text-left max-md:py-[5vw] max-md:pl-[6vw] max-md:pr-[5vw] max-[1025px]:py-[3vw] max-[1025px]:pl-[4vw] max-[1025px]:pr-[3vw] [&>div:first-child]:max-md:w-[80%]"
+                  className="gap-[2vw] font-neue-montreal py-[1.6vw] pl-[2.2vw] pr-[1.6vw] text-left max-md:py-[5vw] max-md:pl-[6vw] max-md:pr-[5vw] max-lg:py-[3vw] max-lg:pl-[4vw] max-lg:pr-[3vw] [&>div:first-child]:max-md:w-[80%]"
                   iconMode="plus"
                 >
                   {item.title}
                 </FAQTitle>
 
-                <FAQContent className="w-[65%] space-y-[1.5vw] pl-[2.2vw] pb-[1.8vw] text-[1.15vw] leading-normal font-normal text-black max-md:w-[80%] max-md:space-y-[4vw] max-md:pl-[6vw] max-md:pb-[6vw] max-md:text-[4vw] max-[1025px]:w-[90%] max-[1025px]:pl-[4vw] max-[1025px]:pb-[3vw] max-[1025px]:text-[2.7vw]">
+                <FAQContent className="w-[65%] space-y-[1.5vw] pl-[2.2vw] pb-[1.8vw] text-[1.15vw] leading-normal font-normal text-black max-md:w-[80%] max-md:space-y-[4vw] max-md:pl-[6vw] max-md:pb-[6vw] max-md:text-[4vw] max-lg:w-[90%] max-lg:pl-[4vw] max-lg:pb-[3vw] max-lg:text-[2.7vw]">
                   <p data-para-anim>{item.content}</p>
                 </FAQContent>
               </FAQWrapper>

@@ -160,10 +160,6 @@
     {
       "path": "index.tsx",
       "target": "src/components/effects/ring-carousel/index.tsx"
-    },
-    {
-      "path": "RingCarouselComp.tsx",
-      "target": "src/components/effects/ring-carousel/RingCarouselComp.tsx"
     }
   ]
 }

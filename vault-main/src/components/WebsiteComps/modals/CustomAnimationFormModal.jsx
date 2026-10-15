@@ -12,7 +12,7 @@ import {
 } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { useLenis } from "lenis/react";
-import PhoneInput from "@/components/animated-form/PhoneInput";
+import PhoneInput from "@/components/WebsiteComps/form/PhoneInput";
 import { GlobalError, StepHeading, SubmitButton } from "@/components/auth/AuthFormPrimitives";
 import CustomVerifyCheckbox from "@/components/WebsiteComps/Recaptcha/CustomVerifyCheckbox";
 import { validateForm } from "@/lib/form-validation";

@@ -60,10 +60,12 @@ function getPathDrawTween(path: SVGPathElement | null, drawSVGValue: string, str
   }
 }
 
+const BRUSH_REST_WIDTH = 2
+const BRUSH_SWEEP_WIDTH = 300
+
 interface SVGBrushTransitionConfig {
   enableBlur?: boolean
   strokeColor?: string
-  strokeWidth?: number
   duration?: number
   drawSVGPlugin?: any
 }
@@ -72,7 +74,6 @@ interface SVGBrushTransitionProps {
   children?: ReactNode
   config?: SVGBrushTransitionConfig
   strokeColor?: string
-  strokeWidth?: number
   duration?: number
 }
 
@@ -81,14 +82,14 @@ export default function SVGBrushTransition({
   config = {
     enableBlur: false,
     strokeColor: '#82A0FF',
-    strokeWidth: 2,
     duration: 1.5,
   },
-  strokeWidth,
   strokeColor,
   duration,
 }: SVGBrushTransitionProps) {
-  const resolvedStrokeWidth = clampNumber(strokeWidth ?? config.strokeWidth, 1, 320, 2)
+  // The brush rests thin, swells to BRUSH_SWEEP_WIDTH while covering the
+  // screen, then thins back out as it is erased.
+  const resolvedStrokeWidth = BRUSH_REST_WIDTH
   const resolvedStrokeColor = strokeColor ?? config.strokeColor ?? '#82A0FF'
   const resolvedDuration = clampNumber(duration ?? config.duration, 0.25, 4, 1.5)
   const { enableBlur, drawSVGPlugin } = config
@@ -136,7 +137,7 @@ export default function SVGBrushTransition({
           ease: 'power2.inOut',
         }).to(
           activePath,
-          getPathDrawTween(activePath, '100%', 300, {
+          getPathDrawTween(activePath, '100%', BRUSH_SWEEP_WIDTH, {
             duration: resolvedDuration,
             ease: 'power2.inOut',
           }),

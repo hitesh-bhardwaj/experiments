@@ -34,10 +34,6 @@
     {
       "path": "index.tsx",
       "target": "src/components/effects/inertia-img/index.tsx"
-    },
-    {
-      "path": "InertiaImgComp.tsx",
-      "target": "src/components/effects/inertia-img/InertiaImgComp.tsx"
     }
   ],
   "props": [

@@ -107,21 +107,6 @@
       "path": "index.tsx",
       "type": "registry:component",
       "target": "src/components/effects/file-encryption/index.tsx"
-    },
-    {
-      "path": "FileEncryptionComp.tsx",
-      "type": "registry:component",
-      "target": "src/components/effects/file-encryption/FileEncryptionComp.tsx"
-    },
-    {
-      "path": "webgl-context-recovery.ts",
-      "type": "registry:component",
-      "target": "src/components/effects/file-encryption/webgl-context-recovery.ts"
-    },
-    {
-      "path": "createSuspendedRaf.ts",
-      "type": "registry:component",
-      "target": "src/components/effects/file-encryption/createSuspendedRaf.ts"
     }
   ]
 }

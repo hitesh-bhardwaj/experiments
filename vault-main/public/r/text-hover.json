@@ -90,16 +90,6 @@
       "path": "index.tsx",
       "type": "registry:component",
       "target": "src/components/effects/text-hover/index.tsx"
-    },
-    {
-      "path": "TextHoverComp.tsx",
-      "type": "registry:component",
-      "target": "src/components/effects/text-hover/TextHoverComp.tsx"
-    },
-    {
-      "path": "createSuspendedRaf.ts",
-      "type": "registry:component",
-      "target": "src/components/effects/text-hover/createSuspendedRaf.ts"
     }
   ]
 }

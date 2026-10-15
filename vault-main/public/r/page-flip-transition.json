@@ -51,6 +51,38 @@
         "group": "surface",
         "groupTitle": "Surface"
       }
+    },
+    {
+      "name": "loaderColor",
+      "type": "string",
+      "default": "#000000",
+      "description": "Color of the loading blocks shown during the flip.",
+      "remixer": {
+        "control": "color",
+        "group": "surface",
+        "groupTitle": "Surface"
+      }
+    },
+    {
+      "name": "direction",
+      "type": "\"left-to-right\" | \"right-to-left\"",
+      "default": "left-to-right",
+      "description": "Direction the page flips across the screen.",
+      "remixer": {
+        "control": "select",
+        "group": "timing",
+        "groupTitle": "Timing",
+        "options": [
+          {
+            "value": "left-to-right",
+            "label": "Left to Right"
+          },
+          {
+            "value": "right-to-left",
+            "label": "Right to Left"
+          }
+        ]
+      }
     }
   ],
   "remixer": {

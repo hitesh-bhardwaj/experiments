@@ -31,8 +31,49 @@
   "importPath": "@/components/effects/svg-pixel-reveal",
   "target": "src/components/effects/svg-pixel-reveal",
   "props": [
-    { "name": "intensity", "type": "number", "default": 22, "description": "Starting pixelation intensity before the reveal sharpens the image.", "remixer": { "control": "range", "group": "filter", "groupTitle": "Filter", "min": 2, "max": 80, "step": 1 } },
-    { "name": "crossLayers", "type": "boolean", "default": true, "description": "Enables cross-layer pixel merge detail.", "remixer": { "control": "checkbox", "group": "filter", "groupTitle": "Filter" } }
+    {
+      "name": "intensity",
+      "type": "number",
+      "default": 22,
+      "description": "Starting pixelation intensity before the reveal sharpens the image.",
+      "remixer": {
+        "control": "range",
+        "group": "filter",
+        "groupTitle": "Filter",
+        "min": 2,
+        "max": 80,
+        "step": 1
+      }
+    },
+    {
+      "name": "scrub",
+      "type": "boolean",
+      "default": true,
+      "description": "Tie the reveal to scroll position. When off, the reveal plays once when the image enters the viewport.",
+      "remixer": {
+        "control": "checkbox",
+        "group": "motion",
+        "groupTitle": "Motion"
+      }
+    },
+    {
+      "name": "duration",
+      "type": "number",
+      "default": 1.5,
+      "description": "Reveal duration in seconds when scrub is off.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0.2,
+        "max": 5,
+        "step": 0.1,
+        "visibleWhen": {
+          "name": "scrub",
+          "eq": false
+        }
+      }
+    }
   ],
   "remixer": {
     "enabled": true,
@@ -41,16 +82,14 @@
       "buttonClassName": "right-4! top-25!",
       "panelClassName": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
     },
-    "copyCode": { "includeOnlyPublicProps": true }
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
   },
   "files": [
     {
       "path": "index.tsx",
       "target": "src/components/effects/svg-pixel-reveal/index.tsx"
-    },
-    {
-      "path": "PixelatedSvgFilter.tsx",
-      "target": "src/components/effects/svg-pixel-reveal/PixelatedSvgFilter.tsx"
     }
   ]
 }

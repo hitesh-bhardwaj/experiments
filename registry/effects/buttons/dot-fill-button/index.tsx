@@ -1,5 +1,4 @@
 // Built using Hyperiux Vault: https://vault.hyperiux.com
-
 "use client";
 
 import { useEffect, useRef, useState, type ComponentPropsWithoutRef, type PointerEvent } from "react";
@@ -11,7 +10,6 @@ const STAGGER_STEP = 0.01;
 
 export type DotFillBtnProps = {
  btnText?: string;
- href?: string;
  className?: string;
  textClassName?: string;
  staggerStep?: number;
@@ -20,7 +18,7 @@ export type DotFillBtnProps = {
  fillColor?: string;
  hoverTextColor?: string;
  dotColor?: string;
-} & Omit<ComponentPropsWithoutRef<'a'>, 'href'>;
+} & ComponentPropsWithoutRef<"a">;
 
 const DotFillBtn = ({
  btnText ="Try demo",
@@ -43,7 +41,7 @@ const DotFillBtn = ({
  const el = textRef.current;
  if (!el) return;
 
- const sourceText = btnText ||"";
+ const sourceText = btnText ||"Try demo";
  el.innerHTML ="";
 
  [...sourceText].forEach((char, index) => {
@@ -115,28 +113,34 @@ const DotFillBtn = ({
 		};
 	}, []);
 
-	const handleMouseEnter = () => {
-		if (isMobile) return;
+	const activate = () => {
 		const el = textRef.current;
 		if (el) {
 			Array.from(el.children).forEach((span) => {
-				const spanEl = span as HTMLElement;
-				spanEl.style.transform = "translateY(-1.3em) rotate(0.001deg)";
+				(span as HTMLElement).style.transform = "translateY(-1.3em) rotate(0.001deg)";
 			});
 		}
 		setHovered(true);
 	};
 
-	const handleMouseLeave = () => {
-		if (isMobile) return;
+	const deactivate = () => {
 		const el = textRef.current;
 		if (el) {
 			Array.from(el.children).forEach((span) => {
-				const spanEl = span as HTMLElement;
-				spanEl.style.transform = "translateY(0em) rotate(0.001deg)";
+				(span as HTMLElement).style.transform = "translateY(0em) rotate(0.001deg)";
 			});
 		}
 		setHovered(false);
+	};
+
+	const handleMouseEnter = () => {
+		if (isMobile) return;
+		activate();
+	};
+
+	const handleMouseLeave = () => {
+		if (isMobile) return;
+		deactivate();
 	};
 
 	const handlePointerDown = (event: PointerEvent<HTMLAnchorElement>) => {
@@ -150,24 +154,10 @@ const DotFillBtn = ({
 			window.clearTimeout(releaseTimeoutRef.current);
 		}
 
-		const el = textRef.current;
-		if (el) {
-			Array.from(el.children).forEach((span) => {
-				const spanEl = span as HTMLElement;
-				spanEl.style.transform = "translateY(-1.3em) rotate(0.001deg)";
-			});
-		}
-		setHovered(true);
+		activate();
 
 		releaseTimeoutRef.current = window.setTimeout(() => {
-			const currentEl = textRef.current;
-			if (currentEl) {
-				Array.from(currentEl.children).forEach((span) => {
-					const spanEl = span as HTMLElement;
-					spanEl.style.transform = "translateY(0em) rotate(0.001deg)";
-				});
-			}
-			setHovered(false);
+			deactivate();
 			releaseTimeoutRef.current = null;
 		}, MOBILE_HOLD_MS);
 	};
@@ -179,7 +169,7 @@ const DotFillBtn = ({
 			onMouseEnter={handleMouseEnter}
 			onMouseLeave={handleMouseLeave}
 			onPointerDown={handlePointerDown}
-			className={`group relative flex w-fit mx-auto items-center justify-center h-[4.2vw] pl-[3.1vw] pr-[2vw] rounded-full overflow-hidden whitespace-nowrap no-underline font-medium text-[1.5vw] transition-colors duration-500 motion-reduce:transition-none max-[1025px]:h-[9vw] max-[1025px]:pl-[7.6vw] max-[1025px]:pr-[4vw] max-[1025px]:text-[3vw] max-[1025px]:font-normal max-[1025px]:motion-reduce:transition-none max-md:h-[15vw] max-md:pl-[11.8vw] max-md:pr-[6vw] max-md:text-[4.2vw] max-md:motion-reduce:transition-none ${className}`}
+			className={`group relative flex w-fit mx-auto items-center justify-center h-[4.2vw] pl-[3.1vw] pr-[2vw] rounded-full overflow-hidden whitespace-nowrap no-underline font-medium text-[1.5vw] transition-colors duration-500 motion-reduce:transition-none max-lg:h-[9vw] max-lg:pl-[7.6vw] max-lg:pr-[4vw] max-lg:text-[3vw] max-lg:font-normal max-lg:motion-reduce:transition-none max-md:h-[15vw] max-md:pl-[11.8vw] max-md:pr-[6vw] max-md:text-[4.2vw] max-md:motion-reduce:transition-none ${className}`}
 			style={{
 				background: bgColor,
 				color: hovered ? hoverTextColor : textColor,
@@ -187,7 +177,7 @@ const DotFillBtn = ({
 		>
 			<span
 				aria-hidden
-				className={`absolute left-[1.7vw] top-[55%] max-[1025px]:top-[57%] w-[0.5vw] h-[0.5vw] rounded-full z-10 transform -translate-y-1/2 transition-transform duration-500 motion-reduce:transition-none max-[1025px]:left-[3.5vw] max-[1025px]:w-[1.5vw] max-[1025px]:h-[1.5vw] max-[1025px]:motion-reduce:transition-none max-md:left-[6vw] max-md:w-[2.3vw] max-md:h-[2.3vw] max-md:motion-reduce:transition-none`}
+				className={`absolute left-[1.7vw] top-[55%] max-lg:top-[57%] w-[0.5vw] h-[0.5vw] rounded-full z-10 transform -translate-y-1/2 transition-transform duration-500 motion-reduce:transition-none max-lg:left-[3.5vw] max-lg:w-[1.5vw] max-lg:h-[1.5vw] max-lg:motion-reduce:transition-none max-md:left-[6vw] max-md:w-[2.3vw] max-md:h-[2.3vw] max-md:motion-reduce:transition-none`}
 				style={{
 					background: dotColor,
 					transform:

@@ -13,7 +13,12 @@ export default function DemoContent({ registry }: { registry: any }) {
     >
       {({ effect }) => (
         <main className="relative min-h-screen w-screen overflow-hidden bg-black">
-          <DemoHeader />
+          <DemoHeader
+            reducedMotionNote={{
+              title: "The pixels keep shifting.",
+              body: "Mouse Pixelation reacts to cursor position across all three variants, in real time. Since the transition is driven entirely by motion, reduced motion can't be applied here.",
+            }}
+          />
           {effect}
         </main>
       )}

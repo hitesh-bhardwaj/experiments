@@ -15,7 +15,7 @@ export default function DemoContent({ registry }: { registry: RegistryLike }) {
     >
       {({ values, effect }) => (
         <main
-          className="relative h-screen max-[1025px]:h-full max-[1025px]:pb-14"
+          className="relative h-screen max-lg:h-full max-lg:pb-14"
           style={{ backgroundColor: values.backgroundColor as string }}
         >
           <DemoHeader />
@@ -23,7 +23,7 @@ export default function DemoContent({ registry }: { registry: RegistryLike }) {
           <SplitLine
             as="p"
             start="top 120%"
-            className="absolute bottom-[3%] max-[1025px]:border max-[1025px]:p-2 max-[1025px]:rounded-full text-black/70 leading-[1.1] max-[1025px]:w-[80%] w-[20%] left-1/2 -translate-x-1/2 text-center max-[1025px]:bottom-5"
+            className="absolute bottom-[3%] max-lg:border max-lg:p-2 max-lg:rounded-full text-black/70 leading-[1.1] max-lg:w-[80%] w-[20%] left-1/2 -translate-x-1/2 text-center max-lg:bottom-5"
           >
             Click the stack to spread it out, then any frame to swap it in
           </SplitLine>

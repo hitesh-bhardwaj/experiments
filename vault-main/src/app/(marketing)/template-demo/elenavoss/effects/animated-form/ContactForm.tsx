@@ -327,7 +327,7 @@ export default function ContactForm({
           <form
             ref={formRef}
             autoComplete="off"
-            className="space-y-[1.2vw] max-md:space-y-[4vw] max-[1025px]:space-y-[4vw]"
+            className="space-y-[1.2vw] max-md:space-y-[4vw] max-lg:space-y-[4vw]"
             onSubmit={handleSubmit}
           >
             {fields.map((field) => renderField(field))}
@@ -346,14 +346,14 @@ export default function ContactForm({
               <DotFillBtn
                 btnText={isLoading ? loadingLabel : submitLabel}
                 href="#"
-                textClassName="text-[1.2vw] max-md:text-[4vw] max-[1025px]:text-[2.5vw]"
+                textClassName="text-[1.2vw] max-md:text-[4vw] max-lg:text-[2.5vw]"
                 aria-disabled={isLoading}
                 onClick={(e) => {
                   e.preventDefault();
                   if (isLoading) return;
                   formRef.current?.requestSubmit();
                 }}
-                className="mt-[2vw] max-md:mt-0 max-[1025px]:mt-[3vw]"
+                className="mt-[2vw] max-md:mt-0 max-lg:mt-[3vw]"
                 bgColor={`linear-gradient(to right, ${accentColor}, #E61416)`}
                 dotColor="#ffffff"
                 textColor="#ffffff"

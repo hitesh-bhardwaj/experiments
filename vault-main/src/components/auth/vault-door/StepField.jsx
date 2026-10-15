@@ -2,8 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { FIELDS, FOCUS_RING_CLASS, INPUT_AUTOFILL_STYLE, LABEL_CLASS } from "./constants";
-import { LoaderCircle } from "lucide-react";
-import { EyeIcon } from "./icons";
+import { Eye, EyeOff, LoaderCircle } from "lucide-react";
 import { passwordStrength } from "./utils";
 import ButtonArrowIcon from "@/components/ui/ButtonArrowIcon";
 
@@ -69,7 +68,27 @@ export function StepField({ id, field, value, message, busy, submitLabel, onChan
             aria-pressed={revealed}
             className={`grid size-[calc(var(--cvw)*2.4)] shrink-0 cursor-pointer place-items-center text-white/80 transition-colors duration-300 hover:text-white aria-pressed:text-white max-lg:size-10 ${FOCUS_RING_CLASS}`}
           >
-            <EyeIcon className="size-[calc(var(--cvw)*1.2)] max-lg:size-[18px]" />
+            {/* Open eye = password shown, struck eye = hidden. The outgoing icon turns and scales away
+                fast, then the incoming one turns and scales in with a small overshoot (same timing as
+                the site's Copy -> Copied icon). */}
+            <span aria-hidden="true" className="relative block size-[1.2vw] max-lg:size-[18px]">
+              <EyeOff
+                strokeWidth={1.7}
+                className={`absolute inset-0 size-full motion-reduce:transition-none ${
+                  revealed
+                    ? "rotate-90 scale-0 opacity-0 transition-[rotate,scale,opacity] duration-250 ease-[cubic-bezier(.55,0,1,.45)]"
+                    : "rotate-0 scale-100 opacity-100 transition-[rotate,scale,opacity] delay-150 duration-450 ease-[cubic-bezier(.34,1.56,.64,1)]"
+                }`}
+              />
+              <Eye
+                strokeWidth={1.7}
+                className={`absolute inset-0 size-full motion-reduce:transition-none ${
+                  revealed
+                    ? "rotate-0 scale-100 opacity-100 transition-[rotate,scale,opacity] delay-150 duration-450 ease-[cubic-bezier(.34,1.56,.64,1)]"
+                    : "-rotate-90 scale-0 opacity-0 transition-[rotate,scale,opacity] duration-250 ease-[cubic-bezier(.55,0,1,.45)]"
+                }`}
+              />
+            </span>
           </button>
         )}
 

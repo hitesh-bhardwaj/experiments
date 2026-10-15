@@ -21,14 +21,6 @@
     {
       "path": "index.tsx",
       "target": "src/components/effects/testimonial-swiper/index.tsx"
-    },
-    {
-      "path": "NavigationButtons.tsx",
-      "target": "src/components/effects/testimonial-swiper/NavigationButtons.tsx"
-    },
-    {
-      "path": "TestimonialComp.tsx",
-      "target": "src/components/effects/testimonial-swiper/TestimonialComp.tsx"
     }
   ],
   "changelog": [
@@ -54,7 +46,8 @@
       "remixer": {
         "control": "color",
         "group": "style",
-        "groupTitle": "Style"
+        "groupTitle": "Style",
+        "enabled": false
       }
     },
     {

@@ -83,7 +83,7 @@ export function NavButton({
         setIsHovered(false);
         positionFill(e, 0);
       }}
-      className={`group relative inline-flex size-[3.2vw] min-h-11 min-w-11 items-center justify-center overflow-hidden rounded-full border transition-opacity duration-300 select-none max-[1025px]:size-18 max-md:size-12 ${
+      className={`group relative inline-flex size-[3.2vw] min-h-11 min-w-11 items-center justify-center overflow-hidden rounded-full border transition-opacity duration-300 select-none max-lg:size-18 max-md:size-12 ${
         disabled
           ? "pointer-events-none cursor-default opacity-40"
           : "cursor-pointer"
@@ -178,7 +178,7 @@ export default function CarouselNavButtons({
 }: CarouselNavButtonsProps) {
   return (
     <div
-      className={`flex items-center gap-[0.8vw] max-[1025px]:gap-3 ${className}`}
+      className={`flex items-center gap-[0.8vw] max-lg:gap-3 ${className}`}
     >
       <NavButton
         onClick={onPrev}

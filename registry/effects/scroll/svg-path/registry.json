@@ -34,14 +34,6 @@
     {
       "path": "index.tsx",
       "target": "src/components/effects/svg-path/index.tsx"
-    },
-    {
-      "path": "SVGPathComp.tsx",
-      "target": "src/components/effects/svg-path/SVGPathComp.tsx"
-    },
-    {
-      "path": "createSuspendedRaf.ts",
-      "target": "src/components/effects/svg-path/createSuspendedRaf.ts"
     }
   ],
   "props": [

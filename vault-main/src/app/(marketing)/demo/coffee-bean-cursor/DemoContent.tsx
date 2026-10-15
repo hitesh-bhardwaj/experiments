@@ -13,7 +13,12 @@ export default function DemoContent({ registry }: { registry: any }) {
     >
       {({ effect }) => (
         <>
-          <DemoHeader />
+          <DemoHeader
+            reducedMotionNote={{
+              title: "The beans keep drifting.",
+              body: "Coffee Bean Cursor animates in direct response to cursor movement. The motion is the effect, so it can't be reduced without disabling it entirely.",
+            }}
+          />
           {effect}
         </>
       )}

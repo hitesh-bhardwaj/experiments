@@ -160,7 +160,7 @@ function AnimatedFillButton({
       onPointerCancel={handlePointerCancel}
       className={`group/animated-fill relative inline-flex h-(--button-height) w-fit min-w-fit max-w-none cursor-pointer items-center justify-center overflow-hidden rounded-full ${
         showBorder ? "border border-(--btn-border)" : ""
-      } px-[1.5vw] pr-[calc(var(--icon-circle)+var(--icon-right)+2vw)] whitespace-nowrap font-medium text-[1.15vw] leading-none [text-rendering:geometricPrecision] [--button-height:3.65vw] [--icon-circle:2.3vw] [--icon-right:0.55vw] [--circle-inset-y:calc((100%-var(--icon-circle))/2)] max-[1025px]:h-(--button-height) max-[1025px]:px-[5vw] max-[1025px]:pr-[calc(var(--icon-circle)+var(--icon-right)+4vw)] max-[1025px]:text-[3vw] max-[1025px]:font-normal max-[1025px]:[--button-height:11vw] max-[1025px]:[--icon-circle:8vw] max-[1025px]:[--icon-right:1.5vw] max-md:h-(--button-height) max-md:px-[7vw] max-md:pr-[calc(var(--icon-circle)+var(--icon-right)+5vw)] max-md:text-[4.2vw] max-md:[--button-height:15vw] max-md:[--icon-circle:11vw] max-md:[--icon-right:2vw] ${
+      } px-[1.5vw] pr-[calc(var(--icon-circle)+var(--icon-right)+2vw)] whitespace-nowrap font-medium text-[1.15vw] leading-none [text-rendering:geometricPrecision] [--button-height:3.65vw] [--icon-circle:2.3vw] [--icon-right:0.55vw] [--circle-inset-y:calc((100%-var(--icon-circle))/2)] max-lg:h-(--button-height) max-lg:px-[5vw] max-lg:pr-[calc(var(--icon-circle)+var(--icon-right)+4vw)] max-lg:text-[3vw] max-lg:font-normal max-lg:[--button-height:11vw] max-lg:[--icon-circle:8vw] max-lg:[--icon-right:1.5vw] max-md:h-(--button-height) max-md:px-[7vw] max-md:pr-[calc(var(--icon-circle)+var(--icon-right)+5vw)] max-md:text-[4.2vw] max-md:[--button-height:15vw] max-md:[--icon-circle:11vw] max-md:[--icon-right:2vw] ${
         usesUtilityBackground ? "" : "bg-(--btn-bg)"
       } text-(--btn-text) ${className}`}
       style={{
@@ -193,7 +193,7 @@ function AnimatedFillButton({
 
       <div
         aria-hidden="true"
-        className={`pointer-events-none absolute inset-0 z-2 flex items-center px-[1.5vw] pr-[calc(var(--icon-circle)+var(--icon-right)+2vw)] text-(--btn-fill-text) [clip-path:inset(var(--circle-inset-y)_var(--icon-right)_var(--circle-inset-y)_calc(100%-var(--icon-right)-var(--icon-circle)))] max-[1025px]:px-[5vw] max-[1025px]:pr-[calc(var(--icon-circle)+var(--icon-right)+4vw)] max-md:px-[7vw] max-md:pr-[calc(var(--icon-circle)+var(--icon-right)+5vw)] ${
+        className={`pointer-events-none absolute inset-0 z-2 flex items-center px-[1.5vw] pr-[calc(var(--icon-circle)+var(--icon-right)+2vw)] text-(--btn-fill-text) [clip-path:inset(var(--circle-inset-y)_var(--icon-right)_var(--circle-inset-y)_calc(100%-var(--icon-right)-var(--icon-circle)))] max-lg:px-[5vw] max-lg:pr-[calc(var(--icon-circle)+var(--icon-right)+4vw)] max-md:px-[7vw] max-md:pr-[calc(var(--icon-circle)+var(--icon-right)+5vw)] ${
           isReady
             ? "transition-all duration-450 ease-[cubic-bezier(0.785,0.135,0.15,0.86)] motion-reduce:transition-none group-hover/animated-fill:text-(--btn-fill-text-hover) group-hover/animated-fill:[clip-path:inset(0_0_0_0)] group-data-[pressed=true]/animated-fill:text-(--btn-fill-text-hover) group-data-[pressed=true]/animated-fill:[clip-path:inset(0_0_0_0)]"
             : ""
@@ -215,7 +215,7 @@ function AnimatedFillButton({
         aria-hidden="true"
       >
         <ArrowRight
-          className={`absolute left-1/2 top-1/2 size-(--btn-arrow-size) max-[1025px]:size-(--btn-arrow-size-tablet) max-md:size-(--btn-arrow-size-mobile) translate-x-[-170%] -translate-y-1/2 origin-center scale-0 text-current ${
+          className={`absolute left-1/2 top-1/2 size-(--btn-arrow-size) max-lg:size-(--btn-arrow-size-tablet) max-md:size-(--btn-arrow-size-mobile) translate-x-[-170%] -translate-y-1/2 origin-center scale-0 text-current ${
             isReady
               ? "transition-transform duration-450 ease-[cubic-bezier(0.785,0.135,0.15,0.86)] motion-reduce:transition-none group-hover/animated-fill:-translate-x-1/2 group-hover/animated-fill:-translate-y-1/2 group-hover/animated-fill:scale-100 group-data-[pressed=true]/animated-fill:-translate-x-1/2 group-data-[pressed=true]/animated-fill:-translate-y-1/2 group-data-[pressed=true]/animated-fill:scale-100"
               : ""
@@ -224,7 +224,7 @@ function AnimatedFillButton({
         />
 
         <ArrowRight
-          className={`absolute left-1/2 top-1/2 size-(--btn-arrow-size) max-[1025px]:size-(--btn-arrow-size-tablet) max-md:size-(--btn-arrow-size-mobile) -translate-x-1/2 -translate-y-1/2 origin-center text-current ${
+          className={`absolute left-1/2 top-1/2 size-(--btn-arrow-size) max-lg:size-(--btn-arrow-size-tablet) max-md:size-(--btn-arrow-size-mobile) -translate-x-1/2 -translate-y-1/2 origin-center text-current ${
             isReady
               ? "transition-transform duration-450 ease-[cubic-bezier(0.785,0.135,0.15,0.86)] motion-reduce:transition-none group-hover/animated-fill:translate-x-[70%] group-hover/animated-fill:-translate-y-1/2 group-hover/animated-fill:scale-0 group-data-[pressed=true]/animated-fill:translate-x-[70%] group-data-[pressed=true]/animated-fill:-translate-y-1/2 group-data-[pressed=true]/animated-fill:scale-0"
               : ""

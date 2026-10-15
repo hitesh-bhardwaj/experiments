@@ -1,11 +1,10 @@
 {
   "name": "@hyperiux/infinite-carousel",
-  "version": "1.0.1",
-  "description": "Infinitely looping horizontal carousel with GSAP Draggable + inertia, plus mobile-friendly wrap/swiper fallbacks.",
+  "version": "1.0.2",
+  "description": "Infinitely looping card carousel with drag, snap, inertial easing, and an optional swipe tilt.",
   "main": "index.tsx",
   "files": [
     "index.tsx",
-    "InfiniteCarouselComp.tsx",
     "registry.json"
   ],
   "keywords": [

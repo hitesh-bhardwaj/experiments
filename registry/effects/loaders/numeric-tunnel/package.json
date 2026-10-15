@@ -5,7 +5,6 @@
   "main": "index.tsx",
   "files": [
     "index.tsx",
-    "NumericTunnelLoader.tsx",
     "registry.json"
   ],
   "keywords": [
@@ -13,9 +12,9 @@
     "hyperiux"
   ],
   "dependencies": {
-    "gsap": "*",
-    "@react-three/fiber": "*",
     "@react-three/drei": "*",
+    "@react-three/fiber": "*",
+    "gsap": "*",
     "three": "*"
   }
 }

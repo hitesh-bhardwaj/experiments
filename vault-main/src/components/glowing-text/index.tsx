@@ -96,6 +96,16 @@ export default function GlowingText({
     [lineTokens, stagger, duration, lineGap]
   );
 
+  const animationKey = [
+    eyebrow,
+    text,
+    glowColor,
+    glowIntensity,
+    characterStagger,
+    revealDuration,
+    lineGap,
+  ].join("|");
+
   const renderTokens = (tokens: Token[], keyPrefix: string, delayFor: (charIndex: number) => number) =>
     tokens.map((token, tokenIndex) => {
       if (token.isSpace) {
@@ -125,6 +135,7 @@ export default function GlowingText({
 
   return (
     <section
+      key={animationKey}
       className={`glowing-text-root relative flex min-h-screen w-full items-center overflow-hidden px-6 py-24 ${className}`}
       style={
         {

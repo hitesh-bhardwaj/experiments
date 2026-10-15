@@ -92,6 +92,20 @@
         "group": "style",
         "groupTitle": "Style"
       }
+    },
+    {
+      "name": "squareSize",
+      "type": "number",
+      "default": 12,
+      "description": "Width and height of the square marker in pixels.",
+      "remixer": {
+        "control": "range",
+        "group": "style",
+        "groupTitle": "Style",
+        "min": 4,
+        "max": 60,
+        "step": 1
+      }
     }
   ],
   "remixer": {
@@ -110,11 +124,6 @@
       "path": "index.tsx",
       "type": "registry:component",
       "target": "src/components/effects/square-translate/index.tsx"
-    },
-    {
-      "path": "SquareTranslateComp.tsx",
-      "type": "registry:component",
-      "target": "src/components/effects/square-translate/SquareTranslateComp.tsx"
     }
   ]
 }

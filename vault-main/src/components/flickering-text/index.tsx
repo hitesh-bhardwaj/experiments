@@ -100,7 +100,7 @@ const FlickeringText = ({
   minOpacity = 0,
   minAmount = -1,
   maxAmount = 1,
-  fontSize = "10vw",
+  fontSize = "9vw",
   fontWeight = 700,
   glow = true,
   glowColor,

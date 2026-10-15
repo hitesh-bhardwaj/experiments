@@ -148,11 +148,6 @@
       "path": "index.tsx",
       "type": "registry:component",
       "target": "src/components/effects/dither-canvas/index.tsx"
-    },
-    {
-      "path": "createSuspendedRaf.ts",
-      "type": "registry:component",
-      "target": "src/components/effects/dither-canvas/createSuspendedRaf.ts"
     }
   ]
 }

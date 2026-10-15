@@ -136,7 +136,7 @@ const ArticleCard = ({ article }: { article: Article }) => {
       onMouseLeave={handleLeave}
       onFocusCapture={handleEnter}
       onBlurCapture={handleLeave}
-      className="group relative h-[34vw] overflow-hidden w-[30vw] shrink-0  rounded-[1.4vw] max-[1025px]:h-[52vw] max-[1025px]:w-[42vw] max-md:h-[110vw] max-md:w-[82vw] max-md:rounded-[4vw]"
+      className="group relative h-[34vw] overflow-hidden w-[30vw] shrink-0  rounded-[1.4vw] max-lg:h-[52vw] max-lg:w-[42vw] max-md:h-[110vw] max-md:w-[82vw] max-md:rounded-[4vw]"
     >
       <Image
         src={article.image}
@@ -155,7 +155,7 @@ const ArticleCard = ({ article }: { article: Article }) => {
       >
         <h3
           data-panel-item
-          className="w-[90%] text-30 leading-[1.2] font-normal text-white max-[1025px]:text-[3vw] max-md:text-[6vw]"
+          className="w-[90%] text-30 leading-[1.2] font-normal text-white max-lg:text-[3vw] max-md:text-[6vw]"
         >
           {article.title}
         </h3>
@@ -300,39 +300,39 @@ const Blogs = () => {
   );
 
   return (
-    <section id="resources" className="relative w-full overflow-hidden bg-white py-[7%] text-black max-[1025px]:py-[10%]">
-      <div className="px-[5%] max-[1025px]:px-[7%]">
+    <section id="resources" className="relative w-full overflow-hidden bg-white py-[7%] text-black max-lg:py-[10%]">
+      <div className="px-[5%] max-lg:px-[7%]">
         {/* Heading and copy */}
         <ParaAnim
           as="h2"
-          className="font-helvetica-neue w-[55vw] text-[3.8vw] leading-[1.1] font-normal tracking-[-0.02em] max-[1025px]:w-full max-[1025px]:text-[6vw] max-md:text-[9vw]"
+          className="font-helvetica-neue w-[55vw] text-[3.8vw] leading-[1.1] font-normal tracking-[-0.02em] max-lg:w-full max-lg:text-[6vw] max-md:text-[9vw]"
         >
           Notes from People Who Spend their Days Inside Homes
         </ParaAnim>
         <ParaAnim
           as="p"
-          className="text-24 mt-[1.6vw] max-w-[30vw] leading-[1.6] text-black max-[1025px]:mt-[3vw] max-[1025px]:max-w-full max-[1025px]:text-[2.6vw] max-md:text-[4vw]"
+          className="text-24 mt-[1.6vw] max-w-[30vw] leading-[1.6] text-black max-lg:mt-[3vw] max-lg:max-w-full max-lg:text-[2.6vw] max-md:text-[4vw]"
         >
           Practical Perspectives On Maintenance, Ownership And The Systems
           Behind A Well-Run Home.
         </ParaAnim>
       </div>
 
-      <div className="mt-[4vw] flex items-stretch gap-[3vw] pl-[5%] max-[1025px]:pl-0 max-[1025px]:mt-[8vw] max-[1025px]:flex-col max-[1025px]:gap-[6vw]">
-        <div className="flex w-[24%] pb-[2vw] shrink-0 flex-col justify-between  max-[1025px]:contents">
-          <FadeUp className="w-fit max-[1025px]:order-1 max-[1025px]:px-[7%]">
+      <div className="mt-[4vw] flex items-stretch gap-[3vw] pl-[5%] max-lg:pl-0 max-lg:mt-[8vw] max-lg:flex-col max-lg:gap-[6vw]">
+        <div className="flex w-[24%] pb-[2vw] shrink-0 flex-col justify-between  max-lg:contents">
+          <FadeUp className="w-fit max-lg:order-1 max-lg:px-[7%]">
             <CharStaggerPrimaryButton
               text="All Articles"
               href="#"
               hoverColor="#ffffff"
               showArrow
-              className="w-fit rounded-full max-[1025px]:mb-7 bg-[#134BD6] px-[1.8vw] py-[0.7vw] text-white max-[1025px]:px-20 max-[1025px]:py-5"
-              textClassName=" text-22 tracking-tight max-[1025px]:text-[2.4vw] max-md:text-[3.6vw]"
+              className="w-fit rounded-full max-lg:mb-7 bg-[#134BD6] px-[1.8vw] py-[0.7vw] text-white max-lg:px-20 max-lg:py-5"
+              textClassName=" text-22 tracking-tight max-lg:text-[2.4vw] max-md:text-[3.6vw]"
               iconClassName="text-white"
             />
           </FadeUp>
 
-          <FadeUp className="w-fit max-[1025px]:order-3 max-[1025px]:px-[7%]" delay={0.1}>
+          <FadeUp className="w-fit max-lg:order-3 max-lg:px-[7%]" delay={0.1}>
             <CarouselNavButtons
               onPrev={() => sliderRef.current?.goToPrev()}
               onNext={() => sliderRef.current?.goToNext()}
@@ -344,11 +344,11 @@ const Blogs = () => {
 
         <div
           ref={carouselWrapperRef}
-          className="relative min-w-0 flex-1   max-[1025px]:order-2"
+          className="relative min-w-0 flex-1   max-lg:order-2"
         >
           <SmoothInfiniteCarousel
             config={carouselConfig}
-            wrapperClassName="pr-[5%] max-[1025px]:px-[7%]  gap-[1.5vw] max-[1025px]:gap-[3.5vw] max-md:gap-[5vw] "
+            wrapperClassName="pr-[5%] max-lg:px-[7%]  gap-[1.5vw] max-lg:gap-[3.5vw] max-md:gap-[5vw] "
             itemClassName="cursor-grab active:cursor-grabbing"
             onReady={(slider) => {
               sliderRef.current = slider;

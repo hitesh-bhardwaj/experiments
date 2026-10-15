@@ -1,14 +1,15 @@
 // Built using Hyperiux Vault: https://vault.hyperiux.com
-
 'use client'
+import { useSyncExternalStore } from "react";
 
 import React, { useRef, type ReactNode } from 'react'
 import gsap from 'gsap'
 import { TransitionRouter } from 'next-transition-router'
 
 function prefersReducedMotion() {
-    if (typeof window === 'undefined') return false
-    return window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches ?? false
+  if (typeof window === "undefined") return false;
+
+  return window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches ?? false;
 }
 
 interface RadialSliceTransitionProps {

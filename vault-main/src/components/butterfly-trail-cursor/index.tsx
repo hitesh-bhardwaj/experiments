@@ -1,12 +1,259 @@
-'use client'
+/* eslint-disable react-hooks/exhaustive-deps -- React Compiler / legacy-pattern rules: fixing risks changing animation timing (see eslint.config.mjs, issue #16); <img> kept for dynamic user-supplied sources. */
+// Built using Hyperiux Vault: https://vault.hyperiux.com
+"use client";
 
-import { Suspense, useRef, useEffect, useMemo, useState } from 'react'
-import { Canvas, useFrame, useThree, useLoader } from '@react-three/fiber'
-import { useGLTF } from '@react-three/drei'
-import * as THREE from 'three'
-import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js'
-import { createVisibilityGate } from './createSuspendedRaf'
-import { usePrefersReducedMotion } from '@/lib/motion'
+import { useGLTF } from "@react-three/drei";
+import { Canvas, useFrame, useLoader, useThree } from "@react-three/fiber";
+import { useEffect, useMemo, useRef, useState } from "react";
+import * as THREE from "three";
+import * as SkeletonUtils from "three/addons/utils/SkeletonUtils.js";
+
+const DEFAULT_ROOT_MARGIN = "256px";
+
+type RafRoot = Element | null | { current: Element | null } | (() => Element | null);
+
+function resolveElement(root: RafRoot): Element | null {
+  if (!root) return null;
+  if (typeof root === "function") return root() ?? null;
+  if (typeof root === "object" && "current" in root) return root.current ?? null;
+  return root;
+}
+
+interface VisibilityGateOptions {
+  root?: RafRoot;
+  rootMargin?: string;
+  threshold?: number;
+  observeTab?: boolean;
+  observeOffscreen?: boolean;
+  onChange?: (active: boolean) => void;
+}
+
+interface VisibilityGate {
+  readonly isActive: boolean;
+  observe: (nextRoot?: RafRoot) => void;
+  destroy: () => void;
+}
+
+function createVisibilityGate({
+  root = null,
+  rootMargin = DEFAULT_ROOT_MARGIN,
+  threshold = 0,
+  observeTab = true,
+  observeOffscreen = true,
+  onChange,
+}: VisibilityGateOptions = {}): VisibilityGate {
+  let tabVisible =
+    typeof document === "undefined" ? true : !document.hidden;
+  // Match border-beam: assume onscreen until the observer reports otherwise.
+  let onscreen = true;
+  let destroyed = false;
+  let observer: IntersectionObserver | null = null;
+
+  const isActive = () => {
+    if (destroyed) return false;
+    if (observeTab && !tabVisible) return false;
+    if (observeOffscreen && resolveElement(root) && !onscreen) return false;
+    return true;
+  };
+
+  let lastActive = isActive();
+
+  const emit = () => {
+    if (destroyed) return;
+    const next = isActive();
+    if (next === lastActive) return;
+    lastActive = next;
+    onChange?.(next);
+  };
+
+  const onVisibilityChange = () => {
+    tabVisible = !document.hidden;
+    emit();
+  };
+
+  if (observeTab && typeof document !== "undefined") {
+    document.addEventListener("visibilitychange", onVisibilityChange);
+  }
+
+  const bindObserver = () => {
+    if (!observeOffscreen || typeof IntersectionObserver === "undefined") {
+      return;
+    }
+
+    const el = resolveElement(root);
+    if (!el) return;
+
+    observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          onscreen = entry.isIntersecting;
+        }
+        emit();
+      },
+      { rootMargin, threshold },
+    );
+
+    observer.observe(el);
+  };
+
+  bindObserver();
+
+  return {
+    /** Whether the animation should currently run. */
+    get isActive() {
+      return isActive();
+    },
+
+    /**
+     * Re-bind IntersectionObserver after the root element mounts late
+     * (e.g. ref not ready on first call). Safe to call multiple times.
+     */
+    observe(nextRoot?: RafRoot) {
+      if (destroyed) return;
+      if (nextRoot != null) root = nextRoot;
+      if (observer) {
+        observer.disconnect();
+        observer = null;
+      }
+      onscreen = true;
+      bindObserver();
+      emit();
+    },
+
+    destroy() {
+      if (destroyed) return;
+      destroyed = true;
+      if (observeTab && typeof document !== "undefined") {
+        document.removeEventListener("visibilitychange", onVisibilityChange);
+      }
+      if (observer) {
+        observer.disconnect();
+        observer = null;
+      }
+    },
+  };
+}
+
+interface SuspendedRafOptions {
+  onFrame: (time: number) => void;
+  root?: RafRoot;
+  rootMargin?: string;
+  threshold?: number;
+  observeTab?: boolean;
+  observeOffscreen?: boolean;
+}
+
+interface SuspendedRaf {
+  start: () => void;
+  stop: () => void;
+  readonly isRunning: boolean;
+  readonly isActive: boolean;
+  observe: (nextRoot?: RafRoot) => void;
+  destroy: () => void;
+}
+
+/**
+ * Owns a requestAnimationFrame loop that auto-pauses when the tab is hidden
+ * or the root element is offscreen.
+ */
+function createSuspendedRaf({
+  onFrame,
+  root = null,
+  rootMargin = DEFAULT_ROOT_MARGIN,
+  threshold = 0,
+  observeTab = true,
+  observeOffscreen = true,
+}: SuspendedRafOptions): SuspendedRaf {
+  if (typeof onFrame !== "function") {
+    throw new TypeError("createSuspendedRaf: onFrame is required");
+  }
+
+  let rafId: number | null = null;
+  let running = false;
+  let destroyed = false;
+
+  const stopRaf = () => {
+    if (rafId != null) {
+      cancelAnimationFrame(rafId);
+      rafId = null;
+    }
+  };
+
+  const tick = (time: number) => {
+    rafId = null;
+    if (destroyed || !running || !gate.isActive) return;
+    onFrame(time);
+    if (!destroyed && running && gate.isActive) {
+      rafId = requestAnimationFrame(tick);
+    }
+  };
+
+  const sync = () => {
+    if (destroyed) return;
+    if (running && gate.isActive) {
+      if (rafId == null) {
+        rafId = requestAnimationFrame(tick);
+      }
+    } else {
+      stopRaf();
+    }
+  };
+
+  const gate = createVisibilityGate({
+    root,
+    rootMargin,
+    threshold,
+    observeTab,
+    observeOffscreen,
+    onChange: sync,
+  });
+
+  return {
+    /** Start (or resume) the loop when visibility allows. */
+    start() {
+      if (destroyed) return;
+      running = true;
+      sync();
+    },
+
+    /** Stop requesting frames (visibility listeners stay attached until destroy). */
+    stop() {
+      running = false;
+      stopRaf();
+    },
+
+    /** Whether the caller has started the loop (may still be paused by visibility). */
+    get isRunning() {
+      return running;
+    },
+
+    /** Whether a frame is currently allowed to schedule. */
+    get isActive() {
+      return gate.isActive;
+    },
+
+    /** Re-attach offscreen observer to a (new) root element. */
+    observe(nextRoot?: RafRoot) {
+      gate.observe(nextRoot);
+      sync();
+    },
+
+    /** Tear down listeners and cancel any pending frame. */
+    destroy() {
+      if (destroyed) return;
+      destroyed = true;
+      running = false;
+      stopRaf();
+      gate.destroy();
+    },
+  };
+}
+
+export {
+  createSuspendedRaf,
+  createVisibilityGate,
+  DEFAULT_ROOT_MARGIN,
+};
 
 const BUTTERFLY_LIFETIME = 2
 const FADE_DURATION = 0.5
@@ -38,7 +285,7 @@ function ButterflyPool({
 	const activeCountRef = useRef(0)
 	const lastSpawnTime = useRef(0)
 	const clockTimeRef = useRef(0)
-	const { size, gl } = useThree()
+	const { size } = useThree()
 	const resolvedCount = Math.max(0, Math.round(Number(butterflyCount) || 0))
 	const resolvedTrailDistance = Math.max(0, Number(trailDistance) || 0)
 	const resolvedSize = Math.max(1, Number(butterflySize) || 1)
@@ -83,10 +330,6 @@ function ButterflyPool({
 			pool.push(clone)
 		}
 		return { poolGroup: group, pool }
-		// `scale` only sets the pool's initial size - later scale changes are
-		// re-applied imperatively by the effects below, so depending on it
-		// here would rebuild the whole clone/material/mixer pool needlessly.
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [gltfScene, gltfAnimations, matcapMaterial])
 
 	useEffect(() => {
@@ -158,14 +401,8 @@ function ButterflyPool({
 			if (!force && now - lastSpawnTime.current < SPAWN_THROTTLE) return
 			lastSpawnTime.current = now
 
-			// Canvas-relative, so it also works when the canvas isn't full-screen
-			// (e.g. embedded in a card); pointers outside the canvas are ignored
-			const rect = gl.domElement.getBoundingClientRect()
-			const localX = clientX - rect.left
-			const localY = clientY - rect.top
-			if (localX < 0 || localY < 0 || localX > rect.width || localY > rect.height) return
-			const x = (localX / rect.width) * 10 - 5
-			const y = -(localY / rect.height) * 6 + 3
+			const x = (clientX / size.width) * 10 - 5
+			const y = -(clientY / size.height) * 6 + 3
 			const count = Math.max(1, Math.ceil(resolvedCount / 4))
 			const spread = resolvedTrailDistance / 12
 			const createdAt = clockTimeRef.current
@@ -224,7 +461,7 @@ function ButterflyPool({
 			window.removeEventListener('pointermove', handlePointerMove)
 			window.removeEventListener('pointerdown', handlePointerDown)
 		}
-	}, [resolvedCount, resolvedTrailDistance, scale, size, gl])
+	}, [resolvedCount, resolvedTrailDistance, scale, size])
 
 	return <primitive object={poolGroup} />
 }
@@ -251,23 +488,17 @@ export default function ButterflyTrailCursor({
 	butterflyCount = 14,
 	trailDistance = 18,
 	wingColor = '#ffffff',
-	backgroundColor = '#EAEAE9',
 	size = 28,
 	followSpeed = 0.18,
-	embedded = false,
 }: {
 	butterflyCount?: number
 	trailDistance?: number
 	wingColor?: string
-	backgroundColor?: string
 	size?: number
 	followSpeed?: number
-	/** Fill the parent (not the screen) and drop the title and the reduced-motion note */
-	embedded?: boolean
 }) {
 	const rootRef = useRef<HTMLDivElement | null>(null)
 	const [frameloop, setFrameloop] = useState<'always' | 'never'>('always')
-	const prefersReducedMotion = usePrefersReducedMotion()
 
 	useEffect(() => {
 		const gate = createVisibilityGate({
@@ -281,11 +512,11 @@ export default function ButterflyTrailCursor({
 	return (
 		<div
 			ref={rootRef}
-			className={`w-full relative bg-[#EAEAE9] ${embedded ? 'h-full' : 'h-screen'}`}
-			style={{ backgroundColor }}
+			className="w-full h-screen relative bg-[#EAEAE9]"
+			style={{ backgroundColor: '#EAEAE9' }}
 		>
-			{!embedded && <div className="pointer-events-none absolute left-1/2 top-1/2 z-10 w-[min(90vw,760px)] -translate-x-1/2 -translate-y-1/2 text-center text-[#111111]">
-				<h1 className="text-5xl font-semibold leading-none tracking-tight max-[1025px]:text-4xl max-md:text-3xl">
+			<div className="pointer-events-none absolute left-1/2 top-1/2 z-10 w-[min(90vw,760px)] -translate-x-1/2 -translate-y-1/2 text-center text-[#111111]">
+				<h1 className="text-5xl font-semibold leading-none tracking-tight max-lg:text-4xl max-md:text-3xl">
 					Butterfly Trail Cursor
 				</h1>
 				<p className="mt-4 text-sm font-medium uppercase tracking-[0.22em] text-black/55 max-md:hidden">
@@ -294,49 +525,29 @@ export default function ButterflyTrailCursor({
 				<p className="mt-4 hidden text-sm font-medium uppercase tracking-[0.18em] text-black/55 max-md:block">
 					Click to see butterflies spawn
 				</p>
-			</div>}
+			</div>
 
 			<Canvas
-				style={{ backgroundColor }}
+				style={{ backgroundColor: '#EAEAE9' }}
 				camera={{ position: [0, 0, 5], fov: 75 }}
 				gl={{ antialias: false, powerPreference: 'high-performance', alpha: true }}
 				onCreated={({ gl }) => {
-					gl.setClearColor(new THREE.Color(backgroundColor), 1)
+					gl.setClearColor(new THREE.Color('#EAEAE9'), 1)
 				}}
 				dpr={[1, 1]}
 				performance={{ min: 0.5 }}
 				frameloop={frameloop}
 			>
-				<color attach="background" args={[backgroundColor]} />
-				{/* The model loads through useGLTF, which suspends. Catch it inside
-				    the canvas, or the suspension escapes to the page, which hides and
-				    tears down the renderer (the context is lost) before showing it again. */}
-				<Suspense fallback={null}>
-					<ButterflyTrail
-						butterflyCount={butterflyCount}
-						trailDistance={trailDistance}
-						wingColor={wingColor}
-						butterflySize={size}
-						followSpeed={followSpeed}
-					/>
-				</Suspense>
+				<color attach="background" args={['#EAEAE9']} />
+				<ButterflyTrail
+					butterflyCount={butterflyCount}
+					trailDistance={trailDistance}
+					wingColor={wingColor}
+					butterflySize={size}
+					followSpeed={followSpeed}
+				/>
 			</Canvas>
 
-			{prefersReducedMotion && !embedded && (
-				<div
-					aria-live="polite"
-					className="pointer-events-none fixed bottom-4 right-4 z-40 w-fit max-w-65 rounded-md border border-black/10 bg-white/10 backdrop-blur-sm p-3 text-center max-[1025px]:hidden"
-				>
-					<h2 className="text-sm leading-none text-[#111111]">
-						The butterflies keep drifting.
-					</h2>
-					<p className="mt-2 text-xs leading-5 text-black/65">
-						These butterflies are animated purely by cursor movement. Pausing
-						that motion would remove the effect, so reduced motion isn&apos;t
-						supported here.
-					</p>
-				</div>
-			)}
 		</div>
 	)
 }

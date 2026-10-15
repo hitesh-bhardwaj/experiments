@@ -2,7 +2,7 @@
 
 import dynamic from "next/dynamic";
 
-const ScrollDistortion = dynamic(() => import("@/components/scroll-distortion"), {
+const ScrollDistortion = dynamic(() => import("@/homepage/components/why-vault/effects/scroll-distortion"), {
     ssr: false,
 });
 

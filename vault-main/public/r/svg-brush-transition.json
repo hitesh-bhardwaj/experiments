@@ -28,20 +28,6 @@
   ],
   "props": [
     {
-      "name": "strokeWidth",
-      "type": "number",
-      "default": 2,
-      "description": "Final brush stroke width after the covering wipe completes.",
-      "remixer": {
-        "control": "range",
-        "group": "brush",
-        "groupTitle": "Brush",
-        "min": 1,
-        "max": 24,
-        "step": 1
-      }
-    },
-    {
       "name": "strokeColor",
       "type": "string",
       "default": "#82A0FF",

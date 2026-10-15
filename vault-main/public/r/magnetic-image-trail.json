@@ -145,16 +145,6 @@
       "path": "index.tsx",
       "type": "registry:component",
       "target": "src/components/effects/magnetic-image-trail/index.tsx"
-    },
-    {
-      "path": "MagneticTrail.tsx",
-      "type": "registry:component",
-      "target": "src/components/effects/magnetic-image-trail/MagneticTrail.tsx"
-    },
-    {
-      "path": "createSuspendedRaf.ts",
-      "type": "registry:component",
-      "target": "src/components/effects/magnetic-image-trail/createSuspendedRaf.ts"
     }
   ]
 }

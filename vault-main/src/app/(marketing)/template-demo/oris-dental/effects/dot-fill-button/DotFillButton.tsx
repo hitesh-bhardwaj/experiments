@@ -52,7 +52,7 @@ export default function DotFillButton({
             onClick={onClick}
             onMouseEnter={() => setHovered(true)}
             onMouseLeave={() => setHovered(false)}
-            className={`group relative inline-flex max-md:scale-100! items-center justify-center gap-[0.7vw] max-[1025px]:gap-2 rounded-full overflow-hidden whitespace-nowrap bg-[#3365e2] border border-[#3365e2] text-white select-none transition-colors duration-500 cursor-pointer pl-[1.8vw] pr-[1.5vw] py-[0.9vw] max-[1025px]:pl-5 max-[1025px]:pr-4 max-[1025px]:py-4 max-md:py-2 ${className}`}
+            className={`group relative inline-flex max-md:scale-100! items-center justify-center gap-[0.7vw] max-lg:gap-2 rounded-full overflow-hidden whitespace-nowrap bg-[#3365e2] border border-[#3365e2] text-white select-none transition-colors duration-500 cursor-pointer pl-[1.8vw] pr-[1.5vw] py-[0.9vw] max-lg:pl-5 max-lg:pr-4 max-lg:py-4 max-md:py-2 ${className}`}
             style={{
                 color: hovered ? '#3365e2' : '#ffffff',
             }}
@@ -68,7 +68,7 @@ export default function DotFillButton({
             </span>
 
             {/* In-flow perfectly centered dot wrapper */}
-            <span className="relative z-10 flex items-center justify-center w-[0.45vw] h-[0.45vw] max-[1025px]:w-2 max-[1025px]:h-2 pointer-events-none shrink-0">
+            <span className="relative z-10 flex items-center justify-center w-[0.45vw] h-[0.45vw] max-lg:w-2 max-lg:h-2 pointer-events-none shrink-0">
                 <span
                     aria-hidden="true"
                     className="w-full h-full rounded-full bg-white transition-transform duration-500 ease-[cubic-bezier(0.785,0.135,0.15,0.86)] will-change-transform"

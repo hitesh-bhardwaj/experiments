@@ -96,16 +96,6 @@
       "path": "index.tsx",
       "type": "registry:component",
       "target": "src/components/effects/draggable-marquee/index.tsx"
-    },
-    {
-      "path": "DraggableMarqueeComp.tsx",
-      "type": "registry:component",
-      "target": "src/components/effects/draggable-marquee/DraggableMarqueeComp.tsx"
-    },
-    {
-      "path": "createSuspendedRaf.ts",
-      "type": "registry:component",
-      "target": "src/components/effects/draggable-marquee/createSuspendedRaf.ts"
     }
   ]
 }

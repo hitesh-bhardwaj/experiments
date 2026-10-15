@@ -32,17 +32,6 @@
   "target": "src/components/effects/parallax-slider",
   "props": [
     {
-      "name": "bgColor",
-      "type": "color",
-      "default": "#111111",
-      "description": "Slider background color.",
-      "remixer": {
-        "control": "color",
-        "group": "style",
-        "groupTitle": "Style"
-      }
-    },
-    {
       "name": "parallaxAmount",
       "type": "number",
       "default": 25,
@@ -74,7 +63,7 @@
       "name": "scrub",
       "type": "number",
       "default": 1,
-      "description": "GSAP ScrollTrigger scrub value on the main horizontal track \u2014 higher lags/smooths more, lower tracks scroll 1:1.",
+      "description": "GSAP ScrollTrigger scrub value on the main horizontal track - higher lags/smooths more, lower tracks scroll 1:1.",
       "remixer": {
         "control": "range",
         "group": "motion",

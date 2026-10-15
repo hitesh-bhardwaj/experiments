@@ -13,7 +13,12 @@ export default function DemoContent({ registry }: { registry: any }) {
     >
       {({ effect }) => (
         <>
-          <DemoHeader />
+          <DemoHeader
+            reducedMotionNote={{
+              title: "The butterflies keep drifting.",
+              body: "These butterflies are animated purely by cursor movement. Pausing that motion would remove the effect, so reduced motion isn't supported here.",
+            }}
+          />
           {effect}
         </>
       )}

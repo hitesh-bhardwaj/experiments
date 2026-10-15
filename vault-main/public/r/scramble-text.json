@@ -124,6 +124,34 @@
         "max": 0.2,
         "step": 0.005
       }
+    },
+    {
+      "name": "textSize",
+      "type": "number",
+      "default": 6,
+      "description": "Headline size in vw (clamped between 2rem and 9rem).",
+      "remixer": {
+        "control": "range",
+        "group": "style",
+        "groupTitle": "Style",
+        "min": 2,
+        "max": 12,
+        "step": 0.1
+      }
+    },
+    {
+      "name": "initialOpacity",
+      "type": "number",
+      "default": 0,
+      "description": "Opacity of the characters before they decode (0 = hidden, 1 = fully visible).",
+      "remixer": {
+        "control": "range",
+        "group": "style",
+        "groupTitle": "Style",
+        "min": 0,
+        "max": 1,
+        "step": 0.05
+      }
     }
   ],
   "remixer": {

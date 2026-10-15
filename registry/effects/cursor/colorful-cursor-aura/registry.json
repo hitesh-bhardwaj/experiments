@@ -34,10 +34,6 @@
     {
       "path": "index.tsx",
       "target": "src/components/effects/colorful-cursor-aura/index.tsx"
-    },
-    {
-      "path": "ColorfulCursorAuraComp.tsx",
-      "target": "src/components/effects/colorful-cursor-aura/ColorfulCursorAuraComp.tsx"
     }
   ],
   "props": [

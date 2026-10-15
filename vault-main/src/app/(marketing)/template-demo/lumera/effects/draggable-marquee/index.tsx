@@ -25,7 +25,7 @@ const ServiceButton = ({ link, btnText, className }: ServiceButtonProps) => {
   return (
     <Link
       href={link}
-      className={`fadeUp group relative inline-flex h-[7.2vw] min-w-[30vw] items-center justify-center overflow-hidden rounded-full border border-[#ca8216] bg-white px-[2.5vw] text-center text-[1.6vw] hover:border-black text-[#111111] [text-rendering:geometricPrecision] transition-colors duration-500 max-[1025px]:h-[7vw] max-[1025px]:min-w-[33.5vw] max-[1025px]:px-[2.5vw] max-[1025px]:text-[2.2vw] max-[1025px]:font-normal max-md:h-[15vw] max-md:min-w-[65vw] max-md:px-[4.5vw] max-md:text-[4.2vw] max-md:font-normal ${className ?? ""}`}
+      className={`fadeUp group relative inline-flex h-[7.2vw] min-w-[30vw] items-center justify-center overflow-hidden rounded-full border border-[#ca8216] bg-white px-[2.5vw] text-center text-[1.6vw] hover:border-black text-[#111111] [text-rendering:geometricPrecision] transition-colors duration-500 max-lg:h-[7vw] max-lg:min-w-[33.5vw] max-lg:px-[2.5vw] max-lg:text-[2.2vw] max-lg:font-normal max-md:h-[15vw] max-md:min-w-[65vw] max-md:px-[4.5vw] max-md:text-[4.2vw] max-md:font-normal ${className ?? ""}`}
     >
       <span className="absolute inset-0 origin-bottom scale-y-0 rounded-full bg-black transition-transform duration-300 ease-out group-hover:scale-y-100" />
       <span className="relative z-10 transition-colors duration-500 group-hover:text-white">
@@ -56,7 +56,7 @@ const DraggableMarquee = ({
       throwMultiplier={throwMultiplier}
       throwFriction={throwFriction}
       repeatCount={4}
-      gapClassName="gap-[2vw] max-[1025px]:gap-[4vw]"
+      gapClassName="gap-[2vw] max-lg:gap-[4vw]"
       className="fadeup w-full py-[0.4vw]"
       itemClassName="select-none"
       renderItem={(item) => (

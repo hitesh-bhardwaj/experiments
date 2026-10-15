@@ -121,11 +121,6 @@
       "path": "index.tsx",
       "type": "registry:component",
       "target": "src/components/effects/colorful-cursor-aura/index.tsx"
-    },
-    {
-      "path": "ColorfulCursorAuraComp.tsx",
-      "type": "registry:component",
-      "target": "src/components/effects/colorful-cursor-aura/ColorfulCursorAuraComp.tsx"
     }
   ]
 }

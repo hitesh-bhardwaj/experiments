@@ -4,14 +4,14 @@
   "title": "Hero Banner Animated",
   "description": "Immersive WebGL hero with a 3D room, interactive TV screen with pixelated video transition, mouse-tracked lighting, edge blur, and film grain post-processing.",
   "dependencies": [
-    "@react-three/fiber",
     "@react-three/drei",
+    "@react-three/fiber",
     "@react-three/postprocessing",
-    "postprocessing",
     "gsap",
-    "three",
+    "lucide-react",
     "motion",
-    "lucide-react"
+    "postprocessing",
+    "three"
   ],
   "registryDependencies": [],
   "exportName": "HeroBannerAnimated",
@@ -109,37 +109,6 @@
       "path": "index.tsx",
       "type": "registry:component",
       "target": "src/components/effects/hero-banner-animated/index.tsx"
-    },
-    {
-      "path": "CustomGrainNoise.tsx",
-      "type": "registry:component",
-      "target": "src/components/effects/hero-banner-animated/CustomGrainNoise.tsx"
-    },
-    {
-      "path": "EdgeBlurEffect.tsx",
-      "type": "registry:component",
-      "target": "src/components/effects/hero-banner-animated/EdgeBlurEffect.tsx"
-    },
-    {
-      "path": "RoomModel.tsx",
-      "type": "registry:component",
-      "target": "src/components/effects/hero-banner-animated/RoomModel.tsx"
-    },
-    {
-      "path": "VideoUI.tsx",
-      "type": "registry:component",
-      "target": "src/components/effects/hero-banner-animated/VideoUI.tsx"
-    },
-    {
-      "path": "createSuspendedRaf.ts",
-      "type": "registry:component",
-      "target": "src/components/effects/hero-banner-animated/createSuspendedRaf.ts"
-    },
-    {
-      "path": "assets/textures/bathroom-floor-roughness.png",
-      "type": "registry:asset",
-      "target": "public/assets/textures/bathroom-floor-roughness.png",
-      "source": "/assets/textures/bathroom-floor-roughness.png"
     }
   ]
 }

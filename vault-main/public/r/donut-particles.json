@@ -4,8 +4,8 @@
   "title": "Donut Particles",
   "description": "Interactive 3D donut particle field built with React Three Fiber. Includes cursor-driven flow, inertial motion, and a fullscreen canvas wrapper.",
   "dependencies": [
-    "three",
-    "@react-three/fiber"
+    "@react-three/fiber",
+    "three"
   ],
   "registryDependencies": [],
   "exportName": "DonutParticles",
@@ -38,12 +38,6 @@
       "type": "number",
       "default": 3.5,
       "description": "Scale applied to the particle donut."
-    },
-    {
-      "name": "cameraFov",
-      "type": "number",
-      "default": 50,
-      "description": "Camera field of view."
     },
     {
       "name": "particleColor",
@@ -107,6 +101,36 @@
         2
       ],
       "description": "Device pixel ratio range used by the canvas."
+    },
+    {
+      "name": "morphDuration",
+      "type": "number",
+      "default": 1.5,
+      "description": "Seconds for scattered particles to settle back into the donut."
+    },
+    {
+      "name": "demorphIntensity",
+      "type": "number",
+      "default": 1,
+      "description": "How strongly the cursor pulls particles out of the donut shape."
+    },
+    {
+      "name": "rotationSpeed",
+      "type": "number",
+      "default": 1,
+      "description": "Donut spin speed multiplier."
+    },
+    {
+      "name": "tiltX",
+      "type": "number",
+      "default": -60,
+      "description": "Donut tilt around the X axis in degrees."
+    },
+    {
+      "name": "tiltY",
+      "type": "number",
+      "default": 45,
+      "description": "Donut tilt around the Y axis in degrees."
     }
   ],
   "remixer": {
@@ -144,15 +168,6 @@
         "group": "particles"
       },
       {
-        "name": "cameraFov",
-        "label": "Camera FOV",
-        "type": "range",
-        "group": "camera",
-        "min": 20,
-        "max": 90,
-        "step": 1
-      },
-      {
         "name": "mouseInteraction",
         "label": "Mouse Interaction",
         "type": "toggle",
@@ -175,6 +190,67 @@
         "min": 0.2,
         "max": 3,
         "step": 0.1
+      },
+      {
+        "name": "morphDuration",
+        "label": "Morph Duration",
+        "type": "range",
+        "group": "motion",
+        "copyable": true,
+        "min": 0.2,
+        "max": 5,
+        "step": 0.05,
+        "visibleWhen": {
+          "name": "mouseInteraction",
+          "eq": true
+        }
+      },
+      {
+        "name": "demorphIntensity",
+        "label": "Demorph Intensity",
+        "type": "range",
+        "group": "motion",
+        "copyable": true,
+        "min": 0,
+        "max": 4,
+        "step": 0.05,
+        "visibleWhen": {
+          "name": "mouseInteraction",
+          "eq": true
+        }
+      },
+      {
+        "name": "rotationSpeed",
+        "label": "Rotation Speed",
+        "type": "range",
+        "group": "donut",
+        "groupTitle": "Donut",
+        "copyable": true,
+        "min": 0,
+        "max": 5,
+        "step": 0.05
+      },
+      {
+        "name": "tiltX",
+        "label": "Tilt X",
+        "type": "range",
+        "group": "donut",
+        "groupTitle": "Donut",
+        "copyable": true,
+        "min": -180,
+        "max": 180,
+        "step": 1
+      },
+      {
+        "name": "tiltY",
+        "label": "Tilt Y",
+        "type": "range",
+        "group": "donut",
+        "groupTitle": "Donut",
+        "copyable": true,
+        "min": -180,
+        "max": 180,
+        "step": 1
       }
     ]
   },
@@ -183,11 +259,6 @@
       "path": "index.tsx",
       "type": "registry:component",
       "target": "src/components/effects/donut-particles/index.tsx"
-    },
-    {
-      "path": "createSuspendedRaf.ts",
-      "type": "registry:component",
-      "target": "src/components/effects/donut-particles/createSuspendedRaf.ts"
     }
   ]
 }

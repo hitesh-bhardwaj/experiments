@@ -96,7 +96,7 @@ const Hero: React.FC = () => {
   return (
     <>
       <section id="hero" className="relative overflow-hidden">
-        <div className="relative isolate flex min-h-[200vh] w-screen flex-col gap-[5vw] px-[5%] py-[3%] max-[1025px]:min-h-[240vw] max-[1025px]:gap-[8vw] max-[1025px]:py-[7%]">
+        <div className="relative isolate flex min-h-[200vh] w-screen flex-col gap-[5vw] px-[5%] py-[3%] max-lg:min-h-[240vw] max-lg:gap-[8vw] max-lg:py-[7%]">
           {/* The largest thing painted above the fold, so it carries the LCP.
               An aria-hidden / alt="" image is never an LCP candidate, and the
               headings above are all inside SplitText wrappers, which are. */}
@@ -115,29 +115,29 @@ const Hero: React.FC = () => {
             </div>
           </div>
 
-          <div className="relative z-10 flex h-screen flex-col justify-end gap-[8vw] max-[1025px]:gap-[12vw]">
-            <div className="flex flex-col gap-[3vw] max-[1025px]:gap-[6vw] mb-30">
+          <div className="relative z-10 flex h-screen flex-col justify-end gap-[8vw] max-lg:gap-[12vw]">
+            <div className="flex flex-col gap-[3vw] max-lg:gap-[6vw] mb-30">
               <MaskTextReveal delay={2} eager>
-                <h1 className="font-neue-montreal font-medium! flex flex-col gap-[1vw] text-[10vw] leading-[0.94]   uppercase text-[#EEEEEE] max-[1025px]:gap-[4vw] max-md:text-[12vw] max-[1025px]:text-[10vw]">
+                <h1 className="font-neue-montreal font-medium! flex flex-col gap-[1vw] text-[10vw] leading-[0.94]   uppercase text-[#EEEEEE] max-lg:gap-[4vw] max-md:text-[12vw] max-lg:text-[10vw]">
                   <span>Exceptional</span>
-                  <div className="flex items-end gap-[1.8vw] max-[1025px]:flex-col max-[1025px]:items-start max-[1025px]:gap-[4vw]">
+                  <div className="flex items-end gap-[1.8vw] max-lg:flex-col max-lg:items-start max-lg:gap-[4vw]">
                     <span>Living In Dubai</span>
                     <FadeUp
                       as="a"
                       aria-label="Scroll to about section"
                       href="#about"
                       onClick={(event) => handleNavScroll(event, "#about")}
-                      className="group relative flex h-[6.5vw] w-[6.5vw] items-center justify-center self-center overflow-hidden rounded-full border-4 border-white text-white opacity-100 transition-colors  max-[1025px]:h-[18vw] max-[1025px]:w-[18vw] max-[1025px]:self-start"
+                      className="group relative flex h-[6.5vw] w-[6.5vw] items-center justify-center self-center overflow-hidden rounded-full border-4 border-white text-white opacity-100 transition-colors  max-lg:h-[18vw] max-lg:w-[18vw] max-lg:self-start"
                     >
                       <Image
                         src={arrowDownIcon}
                         alt="arrow down icon"
-                        className="absolute h-[2.3vw] w-auto object-contain transition-transform duration-500 ease-in-out group-hover:translate-y-[180%] max-[1025px]:h-[7vw]"
+                        className="absolute h-[2.3vw] w-auto object-contain transition-transform duration-500 ease-in-out group-hover:translate-y-[180%] max-lg:h-[7vw]"
                       />
                       <Image
                         src={arrowDownIcon}
                         alt="arrow down icon"
-                        className="absolute h-[2.3vw] w-auto translate-y-[-180%] object-contain transition-transform duration-500 ease-in-out group-hover:translate-y-0 max-[1025px]:h-[7vw]"
+                        className="absolute h-[2.3vw] w-auto translate-y-[-180%] object-contain transition-transform duration-500 ease-in-out group-hover:translate-y-0 max-lg:h-[7vw]"
                       />
                     </FadeUp>
                   </div>
@@ -146,17 +146,17 @@ const Hero: React.FC = () => {
             </div>
           </div>
 
-          <div className="relative z-10 flex min-h-screen pb-20 flex-col justify-between gap-[8vw] max-[1025px]:min-h-[110vw] max-[1025px]:gap-[10vw]">
-            <div className="flex flex-col gap-[4vw] max-[1025px]:gap-[8vw]">
-              <div className="w-[38vw] text-white max-[1025px]:w-full">
+          <div className="relative z-10 flex min-h-screen pb-20 flex-col justify-between gap-[8vw] max-lg:min-h-[110vw] max-lg:gap-[10vw]">
+            <div className="flex flex-col gap-[4vw] max-lg:gap-[8vw]">
+              <div className="w-[38vw] text-white max-lg:w-full">
                 <MaskTextReveal>
-                  <p className="text-[1.45vw] max-[1025px]:text-[3vw] max-md:leading-[1.4] max-md:text-[5vw]  leading-[1.65] text-[#EEEEEE] ">
+                  <p className="text-[1.45vw] max-lg:text-[3vw] max-md:leading-[1.4] max-md:text-[5vw]  leading-[1.65] text-[#EEEEEE] ">
                     A curated collection of remarkable residences across Dubai&apos;s most sought-after addresses, selected for their design, location and way of life.
                   </p>
                 </MaskTextReveal>
               </div>
 
-              <div className="flex items-center gap-[1vw] max-md:flex-col max-md:items-start max-md:gap-[4vw] max-md:w-[80%] max-[1025px]:flex-wrap max-[1025px]:gap-[3vw]">
+              <div className="flex items-center gap-[1vw] max-md:flex-col max-md:items-start max-md:gap-[4vw] max-md:w-[80%] max-lg:flex-wrap max-lg:gap-[3vw]">
                 <FadeUp delay={0.7}>
                   <PrimaryButton
                     link="#works"
@@ -179,21 +179,21 @@ const Hero: React.FC = () => {
               </div>
             </div>
 
-            <div className="grid grid-cols-4 gap-[5vw] self-stretch max-[1025px]:grid-cols-2 max-md:gap-[3vw] max-[1025px]:gap-[3vw]">
+            <div className="grid grid-cols-4 gap-[5vw] self-stretch max-lg:grid-cols-2 max-md:gap-[3vw] max-lg:gap-[3vw]">
               {heroStats.map((stat) => (
                 <FadeUp
                   key={stat.label}
-                  className="rounded-[1.2vw] bg-white/5 px-[1.5vw] py-[2vw] max-md:py-[5vw] max-[1025px]:py-[4vw] font-neue-montreal text-center backdrop-blur-2xl max-[1025px]:rounded-[4vw] flex flex-col justify-between max-md:min-h-[12vh] min-h-[19vh] border border-[#F9F9F91A]"
+                  className="rounded-[1.2vw] bg-white/5 px-[1.5vw] py-[2vw] max-md:py-[5vw] max-lg:py-[4vw] font-neue-montreal text-center backdrop-blur-2xl max-lg:rounded-[4vw] flex flex-col justify-between max-md:min-h-[12vh] min-h-[19vh] border border-[#F9F9F91A]"
                 >
-                  <p className="inline-flex items-end justify-center gap-[0.25vw] text-[2.9vw] font-medium leading-none text-white max-[1025px]:gap-[1vw] max-[1025px]:text-[6vw]">
+                  <p className="inline-flex items-end justify-center gap-[0.25vw] text-[2.9vw] font-medium leading-none text-white max-lg:gap-[1vw] max-lg:text-[6vw]">
                     <NumberCounter value={stat.value} />
                     {stat.suffix && (
-                      <span className="mb-[0.15vw] text-[0.75vw] font-normal leading-none max-[1025px]:mb-[0.4vw] max-[1025px]:text-[2.5vw]">
+                      <span className="mb-[0.15vw] text-[0.75vw] font-normal leading-none max-lg:mb-[0.4vw] max-lg:text-[2.5vw]">
                         {stat.suffix}
                       </span>
                     )}
                   </p>
-                  <p className="text-[1.1vw] text-white max-[1025px]:text-[3vw]">
+                  <p className="text-[1.1vw] text-white max-lg:text-[3vw]">
                     {stat.label}
                   </p>
                 </FadeUp>

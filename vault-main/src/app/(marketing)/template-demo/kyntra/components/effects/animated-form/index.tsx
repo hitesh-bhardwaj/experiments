@@ -61,15 +61,15 @@ async function submitHandler(data: Record<string, any>) {
 
 export default function AnimatedForm() {
  return (
- <div className="grid w-full grid-cols-2 items-start gap-[4vw] max-[1025px]:grid-cols-1 max-[1025px]:gap-[8vw] pt-[5vh]">
+ <div className="grid w-full grid-cols-2 items-start gap-[4vw] max-lg:grid-cols-1 max-lg:gap-[8vw] pt-[5vh]">
  {/* Left column: heading and copy */}
- <div className="max-[1025px]:pr-0 pr-[2vw]">
- <h2 className="font-helvetica-neue text-70 font-medium leading-[1.08] tracking-tight text-white max-[1025px]:text-[8vw] max-md:text-[9vw]">
+ <div className="max-lg:pr-0 pr-[2vw]">
+ <h2 className="font-helvetica-neue text-70 font-medium leading-[1.08] tracking-tight text-white max-lg:text-[8vw] max-md:text-[9vw]">
  Let&rsquo;s Take Care
  <br />
  of Your Home
  </h2>
- <p className="mt-[2.5vw] w-[28vw] font-aeonik-pro text-22 leading-[1.6] text-white max-[1025px]:mt-[5vw] max-[1025px]:w-full max-[1025px]:text-[3.2vw] max-md:text-[4vw]">
+ <p className="mt-[2.5vw] w-[28vw] font-aeonik-pro text-22 leading-[1.6] text-white max-lg:mt-[5vw] max-lg:w-full max-lg:text-[3.2vw] max-md:text-[4vw]">
  Have a question, need help with a service, or want to know more about
  Kyntra? Tell us what you need and our team will get back to you.
  </p>

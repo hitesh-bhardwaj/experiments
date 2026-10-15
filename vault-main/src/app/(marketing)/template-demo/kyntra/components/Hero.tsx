@@ -78,7 +78,7 @@ const Hero = () => {
           animate={{ opacity: 1 }}
           transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
           style={{ willChange: "opacity" }}
-          className="absolute inset-x-0 top-0 h-[115vh] max-[1025px]:h-[105vh]"
+          className="absolute inset-x-0 top-0 h-[115vh] max-lg:h-[105vh]"
         >
           {isDesktop ? (
             <Gradient />
@@ -97,13 +97,13 @@ const Hero = () => {
           alt="Kyntra"
           loading="eager"
           fetchPriority="high"
-          className="absolute left-1/2 top-[24vh] max-[1025px]:top-[12vh] w-[92vw] max-w-400 -translate-x-1/2 select-none"
+          className="absolute left-1/2 top-[24vh] max-lg:top-[12vh] w-[92vw] max-w-400 -translate-x-1/2 select-none"
         />
       </div>
 
-      <div className="relative z-10 mx-auto flex min-h-screen max-w-400 items-center gap-[10vw] px-[5vw] pb-[8vh] pt-[40vh] max-[1025px]:flex-col-reverse max-[1025px]:items-start max-[1025px]:justify-end max-[1025px]:gap-[8vw] max-[1025px]:px-[7vw] max-[1025px]:pb-0 max-[1025px]:pt-[20vh] max-md:gap-[10vw]">
+      <div className="relative z-10 mx-auto flex min-h-screen max-w-400 items-center gap-[10vw] px-[5vw] pb-[8vh] pt-[40vh] max-lg:flex-col-reverse max-lg:items-start max-lg:justify-end max-lg:gap-[8vw] max-lg:px-[7vw] max-lg:pb-0 max-lg:pt-[20vh] max-md:gap-[10vw]">
         {/* Phone mockup */}
-        <div className="flex w-[33%] shrink-0 justify-center  max-[1025px]:w-full max-md:w-full">
+        <div className="flex w-[33%] shrink-0 justify-center  max-lg:w-full max-md:w-full">
           <motion.div
             initial={{ opacity: 0, y: reduced ? 0 : "110%" }}
             animate={{ opacity: 1, y: 0 }}
@@ -112,7 +112,7 @@ const Hero = () => {
                 ? { duration: 0.4, ease: "linear" }
                 : { duration: 1.3, ease: [0.16, 1, 0.3, 1] }
             }
-            className="ml-20 h-auto w-[25vw] will-change-transform max-[1025px]:ml-0 max-[1025px]:w-[62vw] max-md:w-[80vw]"
+            className="ml-20 h-auto w-[25vw] will-change-transform max-lg:ml-0 max-lg:w-[62vw] max-md:w-[80vw]"
           >
             <div ref={phoneScrollRef} className="will-change-transform">
               <Image
@@ -127,11 +127,11 @@ const Hero = () => {
         </div>
 
        
-        <div className="flex w-[60%] flex-col gap-[3vw] pt-[30vh] max-[1025px]:w-full max-[1025px]:gap-[6vw] max-[1025px]:pt-0 max-[1025px]:text-left max-md:gap-[7vw]">
+        <div className="flex w-[60%] flex-col gap-[3vw] pt-[30vh] max-lg:w-full max-lg:gap-[6vw] max-lg:pt-0 max-lg:text-left max-md:gap-[7vw]">
           <ParaAnim
             as="h1"
             delay={0.5}
-            className="font-helvetica-neue max-[1025px]:leading-[1.8] text-black max-[1025px]:mx-0 max-[1025px]:text-white max-md:max-w-none"
+            className="font-helvetica-neue max-lg:leading-[1.8] text-black max-lg:mx-0 max-lg:text-white max-md:max-w-none"
           >
             One App to
             <br />
@@ -142,30 +142,30 @@ const Hero = () => {
 
           <ParaAnim
             as="p"
-            className="w-[24vw] text-22 leading-[1.6] max-[1025px]:leading-[1.9] tracking-wide text-black max-[1025px]:mx-0 max-[1025px]:w-full max-[1025px]:max-w-[78%] max-[1025px]:text-white max-md:max-w-none"
+            className="w-[24vw] text-22 leading-[1.6] max-lg:leading-[1.9] tracking-wide text-black max-lg:mx-0 max-lg:w-full max-lg:max-w-[78%] max-lg:text-white max-md:max-w-none"
           >
             Kyntra Remembers Your Home, Tracks What Needs Attention, And Gets
             Trusted Help When Something Needs Doing.
           </ParaAnim>
 
-          <div className="space-y-[1.2vw] mt-[-2vh] max-[1025px]:w-full max-[1025px]:space-y-[4vw] max-md:space-y-[5vw]">
-            <div className=" flex flex-wrap items-center gap-[1.2vw] max-[1025px]:w-full  max-[1025px]:flex-col max-[1025px]:items-stretch max-[1025px]:justify-start max-[1025px]:gap-[3vw] max-md:gap-[4vw]">
-              <FadeUp delay={0.1} className="max-[1025px]:w-[75vw]">
+          <div className="space-y-[1.2vw] mt-[-2vh] max-lg:w-full max-lg:space-y-[4vw] max-md:space-y-[5vw]">
+            <div className=" flex flex-wrap items-center gap-[1.2vw] max-lg:w-full  max-lg:flex-col max-lg:items-stretch max-lg:justify-start max-lg:gap-[3vw] max-md:gap-[4vw]">
+              <FadeUp delay={0.1} className="max-lg:w-[75vw]">
                 <AppleStoreButton href="#app-store" />
               </FadeUp>
-              <FadeUp delay={0.2} className="max-[1025px]:w-[75vw]">
+              <FadeUp delay={0.2} className="max-lg:w-[75vw]">
                 <PlayStoreButton href="#google-play" />
               </FadeUp>
             </div>
 
             <FadeUp
               delay={0.3}
-              className="flex items-center gap-[0.5vw] text-20 text-black max-[1025px]:justify-start max-[1025px]:gap-[1.2vw] max-[1025px]:text-white max-md:gap-[1.5vw]"
+              className="flex items-center gap-[0.5vw] text-20 text-black max-lg:justify-start max-lg:gap-[1.2vw] max-lg:text-white max-md:gap-[1.5vw]"
             >
               <span className="text-[#12D415] font-medium">4.9 ★ </span>
               <span className="text-20">
                 From{" "}
-                <span className="font-medium text-black max-[1025px]:text-white">
+                <span className="font-medium text-black max-lg:text-white">
                   8,400+
                 </span>{" "}
                 Households Across The UAE

@@ -19,7 +19,12 @@ export default function DemoContent({ registry }: { registry: any }) {
     >
       {({ effect }) => (
         <>
-          <DemoHeader />
+          <DemoHeader
+            reducedMotionNote={{
+              title: "The letters keep bending.",
+              body: "Cursor Move warps text and tracks coordinates live as you move the cursor. The animation is the interaction itself, so it can't be reduced.",
+            }}
+          />
           {effect}
           <div className="absolute bottom-[3vw] left-1/2 -translate-x-1/2 z-40 bg-white/8 backdrop-blur-sm px-4 py-2 rounded-full text-white text-[1.05vw] max-md:hidden shadow-lg w-[52vw] text-center">
             Glide your cursor over the screen - the crosshair dances, the letters bend, and the coordinates responds.

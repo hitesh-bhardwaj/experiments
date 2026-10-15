@@ -171,7 +171,7 @@ export default function ScrollStack({
       >
         <div
           ref={stickyRef}
-          className="sticky top-25 h-[80vw] max-h-[86vh] w-full motion-reduce:static motion-reduce:h-fit motion-reduce:max-h-none motion-reduce:pt-[3vw] max-[1025px]:top-[24vw] max-[1025px]:h-[70vh] max-[1025px]:max-h-none max-[1025px]:motion-reduce:h-fit max-md:top-[32vw] max-md:h-[82vh] max-md:motion-reduce:h-fit max-md:motion-reduce:pt-[8vw]"
+          className="sticky top-25 h-[80vw] max-h-[86vh] w-full motion-reduce:static motion-reduce:h-fit motion-reduce:max-h-none motion-reduce:pt-[3vw] max-lg:top-[24vw] max-lg:h-[70vh] max-lg:max-h-none max-lg:motion-reduce:h-fit max-md:top-[32vw] max-md:h-[82vh] max-md:motion-reduce:h-fit max-md:motion-reduce:pt-[8vw]"
         >
           <div className="relative mx-auto h-full w-full motion-reduce:h-fit">
             {cards.map((card, index) => {
@@ -191,47 +191,47 @@ export default function ScrollStack({
                       "--card-entry": `${CARD_ENTRY_VH * 100}vh`,
                     } as React.CSSProperties
                   }
-                  className={`absolute inset-x-0 flex h-[26vw] flex-col overflow-hidden border px-[2.4vw] py-[3vw] max-[1025px]:py-[6vh] top-25 motion-reduce:static motion-reduce:mb-[3vw] motion-reduce:h-fit motion-reduce:max-h-none motion-reduce:translate-y-0 max-[1025px]:pt-[5vh] max-[1025px]:top-[calc(50%-35vh)] max-[1025px]:h-[72vh] max-[1025px]:px-[5vw] max-[1025px]:motion-reduce:h-fit max-md:top-0 max-md:h-auto max-md:max-h-[82vh] max-md:px-[6vw] max-md:pt-[7vw] max-md:pb-[7vw] max-md:motion-reduce:h-fit max-md:motion-reduce:max-h-none ${
+                  className={`absolute inset-x-0 flex h-[26vw] flex-col overflow-hidden border px-[2.4vw] py-[3vw] max-lg:py-[6vh] top-25 motion-reduce:static motion-reduce:mb-[3vw] motion-reduce:h-fit motion-reduce:max-h-none motion-reduce:translate-y-0 max-lg:pt-[5vh] max-lg:top-[calc(50%-35vh)] max-lg:h-[72vh] max-lg:px-[5vw] max-lg:motion-reduce:h-fit max-md:top-0 max-md:h-auto max-md:max-h-[82vh] max-md:px-[6vw] max-md:pt-[7vw] max-md:pb-[7vw] max-md:motion-reduce:h-fit max-md:motion-reduce:max-h-none ${
                     index === 0 ? "" : "translate-y-(--card-entry)"
                   }`}
                 >
                   <h3
-                    className="text-44 font-normal font-helvetica-neue tracking-[-0.01em] max-[1025px]:text-[4.4vw] max-md:text-[6.4vw] max-[1025px]:mb-[5vw]"
+                    className="text-44 font-normal font-helvetica-neue tracking-[-0.01em] max-lg:text-[4.4vw] max-md:text-[6.4vw] max-lg:mb-[5vw]"
                     style={{ color: KYNTRA_PRIMARY }}
                   >
                     {card.title}
                   </h3>
 
                   <div
-                    className="my-[1.8vw] max-[1025px]:hidden h-px w-full"
+                    className="my-[1.8vw] max-lg:hidden h-px w-full"
                     style={{ backgroundColor: CARD_RULE }}
                   />
 
-                  <div className="flex pt-[4vh] items-start justify-between gap-[3vw] max-[1025px]:min-h-0 max-[1025px]:flex-1 max-[1025px]:flex-col max-[1025px]:gap-[5vw] max-[1025px]:pt-0 max-md:overflow-y-auto max-md:motion-reduce:overflow-y-visible">
+                  <div className="flex pt-[4vh] items-start justify-between gap-[3vw] max-lg:min-h-0 max-lg:flex-1 max-lg:flex-col max-lg:gap-[5vw] max-lg:pt-0 max-md:overflow-y-auto max-md:motion-reduce:overflow-y-visible">
                     {card.items && card.items.length > 0 && (
-                      <div className="grid w-[45%] grid-cols-2 gap-y-[2vw] max-[1025px]:order-2 max-[1025px]:w-full max-[1025px]:grid-cols-1 max-[1025px]:gap-y-0">
+                      <div className="grid w-[45%] grid-cols-2 gap-y-[2vw] max-lg:order-2 max-lg:w-full max-lg:grid-cols-1 max-lg:gap-y-0">
                         {card.items.map((item, i) => (
                           <div
                             key={item.label}
-                            className={`flex items-center w-[90%] gap-[1.1vw] max-[1025px]:w-[70%] max-[1025px]:gap-[3vw] max-[1025px]:py-[2.4vw] max-[1025px]:pr-0 max-[1025px]:pl-0 max-md:w-[85%] max-md:gap-[4vw] max-md:py-[2.5vw] ${
+                            className={`flex items-center w-[90%] gap-[1.1vw] max-lg:w-[70%] max-lg:gap-[3vw] max-lg:py-[2.4vw] max-lg:pr-0 max-lg:pl-0 max-md:w-[85%] max-md:gap-[4vw] max-md:py-[2.5vw] ${
                               i % 2 === 0
-                                ? "border-r pr-[2vw] max-[1025px]:border-r-0"
+                                ? "border-r pr-[2vw] max-lg:border-r-0"
                                 : "pl-[2vw]"
-                            } ${i === 0 ? "" : "max-[1025px]:border-t"}`}
+                            } ${i === 0 ? "" : "max-lg:border-t"}`}
                             style={{ borderColor: CARD_RULE }}
                           >
                             <span
-                              className="flex size-[3.5vw] shrink-0 items-center justify-center rounded-[0.6vw] max-[1025px]:rounded-md max-[1025px]:size-[6vw] max-md:size-[12vw]"
+                              className="flex size-[3.5vw] shrink-0 items-center justify-center rounded-[0.6vw] max-lg:rounded-md max-lg:size-[6vw] max-md:size-[12vw]"
                               style={{ backgroundColor: KYNTRA_PRIMARY }}
                             >
                               <Image
                                 src={item.icon}
                                 alt="kyntra"
                                 aria-hidden
-                                className="w-[2.3vw] h-auto object-contain max-[1025px]:size-[3vw] max-md:size-[6vw]"
+                                className="w-[2.3vw] h-auto object-contain max-lg:size-[3vw] max-md:size-[6vw]"
                               />
                             </span>
-                            <span className="text-22 max-[1025px]:text-[3vw] max-md:text-[4.4vw]">
+                            <span className="text-22 max-lg:text-[3vw] max-md:text-[4.4vw]">
                               {item.label}
                             </span>
                           </div>
@@ -239,9 +239,9 @@ export default function ScrollStack({
                       </div>
                     )}
 
-                    <div className="flex w-[35%] flex-col items-start gap-[1.8vw] max-[1025px]:contents">
+                    <div className="flex w-[35%] flex-col items-start gap-[1.8vw] max-lg:contents">
                       {card.description && (
-                        <p className="text-22 w-[85%] leading-normal max-[1025px]:order-1 max-[1025px]:w-full max-[1025px]:text-[2.9vw] max-md:text-[4.4vw]">
+                        <p className="text-22 w-[85%] leading-normal max-lg:order-1 max-lg:w-full max-lg:text-[2.9vw] max-md:text-[4.4vw]">
                           {card.description}
                         </p>
                       )}
@@ -251,8 +251,8 @@ export default function ScrollStack({
                           href={card.buttonHref ?? "#"}
                           showArrow
                           hoverColor={CARD_BG}
-                          className="rounded-full px-[1.8vw] py-[0.9vw] max-[1025px]:order-3 max-[1025px]:mt-auto max-[1025px]:self-start max-[1025px]:px-[6vw] max-[1025px]:py-[2.6vw] max-md:px-[7vw] max-md:py-[4vw]"
-                          textClassName="text-[1.05vw] max-[1025px]:text-[2.4vw] max-md:text-[4.4vw]"
+                          className="rounded-full px-[1.8vw] py-[0.9vw] max-lg:order-3 max-lg:mt-auto max-lg:self-start max-lg:px-[6vw] max-lg:py-[2.6vw] max-md:px-[7vw] max-md:py-[4vw]"
+                          textClassName="text-[1.05vw] max-lg:text-[2.4vw] max-md:text-[4.4vw]"
                           style={{
                             backgroundColor: KYNTRA_PRIMARY,
                             color: CARD_BG,

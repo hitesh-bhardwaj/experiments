@@ -29,17 +29,309 @@
   "exportKind": "default",
   "main": "index.tsx",
   "props": [
-    { "name": "animateOnScroll", "type": "boolean", "default": true, "description": "Runs the reveal when scrolled into view.", "remixer": { "enabled": false, "control": "checkbox", "group": "behavior", "groupTitle": "Behavior" } },
-    { "name": "delay", "type": "number", "default": 0, "description": "Animation delay.", "remixer": { "control": "range", "group": "timing", "groupTitle": "Timing", "min": 0, "max": 2, "step": 0.05 } },
-    { "name": "scrub", "type": "boolean", "default": false, "description": "Links the animation to scroll progress.", "remixer": { "enabled": false, "control": "checkbox", "group": "behavior", "groupTitle": "Behavior" } },
-    { "name": "direction", "type": "string", "default": "bottom", "description": "Reveal direction.", "remixer": { "control": "select", "group": "style", "groupTitle": "Style", "options": [ { "value": "bottom", "label": "Bottom" }, { "value": "top", "label": "Top" }, { "value": "left", "label": "Left" }, { "value": "right", "label": "Right" } ] } }
+    {
+      "name": "animateOnScroll",
+      "type": "boolean",
+      "default": true,
+      "description": "Runs the reveal when scrolled into view.",
+      "remixer": {
+        "enabled": false,
+        "control": "checkbox",
+        "group": "behavior",
+        "groupTitle": "Behavior"
+      }
+    },
+    {
+      "name": "delay",
+      "type": "number",
+      "default": 0,
+      "description": "Animation delay.",
+      "remixer": {
+        "control": "range",
+        "group": "timing",
+        "groupTitle": "Timing",
+        "min": 0,
+        "max": 2,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "scrub",
+      "type": "boolean",
+      "default": false,
+      "description": "Links the animation to scroll progress.",
+      "remixer": {
+        "enabled": false,
+        "control": "checkbox",
+        "group": "behavior",
+        "groupTitle": "Behavior"
+      }
+    },
+    {
+      "name": "direction",
+      "type": "string",
+      "default": "bottom",
+      "description": "Reveal direction.",
+      "remixer": {
+        "control": "select",
+        "group": "style",
+        "groupTitle": "Style",
+        "options": [
+          {
+            "value": "bottom",
+            "label": "Bottom"
+          },
+          {
+            "value": "top",
+            "label": "Top"
+          },
+          {
+            "value": "left",
+            "label": "Left"
+          },
+          {
+            "value": "right",
+            "label": "Right"
+          }
+        ]
+      }
+    },
+    {
+      "name": "splitBy",
+      "type": "string",
+      "default": "words",
+      "description": "Animate per character, per word, or per line (each piece is masked).",
+      "remixer": {
+        "control": "select",
+        "group": "style",
+        "groupTitle": "Style",
+        "options": [
+          {
+            "value": "chars",
+            "label": "Characters"
+          },
+          {
+            "value": "words",
+            "label": "Words"
+          },
+          {
+            "value": "lines",
+            "label": "Lines"
+          }
+        ]
+      }
+    },
+    {
+      "name": "startOpacity",
+      "type": "number",
+      "default": 0,
+      "description": "Opacity each piece starts from before it reveals.",
+      "remixer": {
+        "control": "range",
+        "group": "style",
+        "groupTitle": "Style",
+        "min": 0,
+        "max": 1,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "startRotation",
+      "type": "number",
+      "default": 8,
+      "description": "Starting tilt in degrees; the sign follows the direction.",
+      "remixer": {
+        "control": "range",
+        "group": "style",
+        "groupTitle": "Style",
+        "min": 0,
+        "max": 45,
+        "step": 1
+      }
+    },
+    {
+      "name": "duration",
+      "type": "number",
+      "default": 0.5,
+      "description": "Duration of each piece's reveal in seconds.",
+      "remixer": {
+        "control": "range",
+        "group": "timing",
+        "groupTitle": "Timing",
+        "min": 0.1,
+        "max": 3,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "stagger",
+      "type": "number",
+      "default": 0.03,
+      "description": "Delay between consecutive pieces in seconds.",
+      "remixer": {
+        "control": "range",
+        "group": "timing",
+        "groupTitle": "Timing",
+        "min": 0,
+        "max": 0.3,
+        "step": 0.005
+      }
+    },
+    {
+      "name": "ease",
+      "type": "string",
+      "default": "power3.out",
+      "description": "GSAP ease for the reveal.",
+      "remixer": {
+        "control": "select",
+        "group": "timing",
+        "groupTitle": "Timing",
+        "options": [
+          {
+            "value": "none",
+            "label": "none (linear)"
+          },
+          {
+            "value": "power1.in",
+            "label": "power1.in"
+          },
+          {
+            "value": "power1.out",
+            "label": "power1.out"
+          },
+          {
+            "value": "power1.inOut",
+            "label": "power1.inOut"
+          },
+          {
+            "value": "power2.in",
+            "label": "power2.in"
+          },
+          {
+            "value": "power2.out",
+            "label": "power2.out"
+          },
+          {
+            "value": "power2.inOut",
+            "label": "power2.inOut"
+          },
+          {
+            "value": "power3.in",
+            "label": "power3.in"
+          },
+          {
+            "value": "power3.out",
+            "label": "power3.out"
+          },
+          {
+            "value": "power3.inOut",
+            "label": "power3.inOut"
+          },
+          {
+            "value": "power4.in",
+            "label": "power4.in"
+          },
+          {
+            "value": "power4.out",
+            "label": "power4.out"
+          },
+          {
+            "value": "power4.inOut",
+            "label": "power4.inOut"
+          },
+          {
+            "value": "expo.in",
+            "label": "expo.in"
+          },
+          {
+            "value": "expo.out",
+            "label": "expo.out"
+          },
+          {
+            "value": "expo.inOut",
+            "label": "expo.inOut"
+          },
+          {
+            "value": "sine.in",
+            "label": "sine.in"
+          },
+          {
+            "value": "sine.out",
+            "label": "sine.out"
+          },
+          {
+            "value": "sine.inOut",
+            "label": "sine.inOut"
+          },
+          {
+            "value": "circ.in",
+            "label": "circ.in"
+          },
+          {
+            "value": "circ.out",
+            "label": "circ.out"
+          },
+          {
+            "value": "circ.inOut",
+            "label": "circ.inOut"
+          },
+          {
+            "value": "back.in",
+            "label": "back.in"
+          },
+          {
+            "value": "back.out",
+            "label": "back.out"
+          },
+          {
+            "value": "back.inOut",
+            "label": "back.inOut"
+          },
+          {
+            "value": "elastic.in",
+            "label": "elastic.in"
+          },
+          {
+            "value": "elastic.out",
+            "label": "elastic.out"
+          },
+          {
+            "value": "elastic.inOut",
+            "label": "elastic.inOut"
+          },
+          {
+            "value": "bounce.in",
+            "label": "bounce.in"
+          },
+          {
+            "value": "bounce.out",
+            "label": "bounce.out"
+          },
+          {
+            "value": "bounce.inOut",
+            "label": "bounce.inOut"
+          }
+        ]
+      }
+    }
   ],
-  "remixer": { "enabled": true, "defaultOpenGroupId": "behavior", "layout": { "buttonClassName": "right-4! top-25!", "panelClassName": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!" }, "copyCode": { "includeOnlyPublicProps": true } },
+  "remixer": {
+    "enabled": true,
+    "defaultOpenGroupId": "behavior",
+    "layout": {
+      "buttonClassName": "right-4! top-25!",
+      "panelClassName": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
+    },
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
+  },
   "files": [
     {
       "path": "index.tsx",
-      "type": "registry:component",
       "target": "src/components/effects/overflow-text-reveal/index.tsx"
     }
-  ]
+  ],
+  "importPath": "@/components/effects/overflow-text-reveal",
+  "target": "src/components/effects/overflow-text-reveal"
 }

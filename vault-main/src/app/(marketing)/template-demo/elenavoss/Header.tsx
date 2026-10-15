@@ -69,7 +69,7 @@ const Header = () => {
     <>
       <header
         ref={headerRef}
-        className={`w-screen h-fit py-[1.5vw] flex items-center justify-between px-[4vw] fixed inset-0 z-99 opacity-0 transition-[backdrop-filter] duration-500 ease-out max-[1025px]:py-[3vw] max-[1025px]:px-[5vw] max-md:py-4 ${
+        className={`w-screen h-fit py-[1.5vw] flex items-center justify-between px-[4vw] fixed inset-0 z-99 opacity-0 transition-[backdrop-filter] duration-500 ease-out max-lg:py-[3vw] max-lg:px-[5vw] max-md:py-4 ${
           scrolled ? "backdrop-blur-lg" : "backdrop-blur-none"
         }`}
         id="header"
@@ -81,7 +81,7 @@ const Header = () => {
             height={172}
             alt="Logo"
             loading="lazy"
-            className="w-[12vw] max-[1025px]:w-[25vw] max-md:w-[34vw]"
+            className="w-[12vw] max-lg:w-[25vw] max-md:w-[34vw]"
           />
         </Link>
         <DotFillBtn
@@ -92,7 +92,7 @@ const Header = () => {
             openModal();
           }}
           className="border border-white/20!"
-          textClassName="font-normal text-[1.15vw] max-[1025px]:text-[3vw] max-md:text-[4.2vw]"
+          textClassName="font-normal text-[1.15vw] max-lg:text-[3vw] max-md:text-[4.2vw]"
           bgColor="#ffffff"
           dotColor="#070707"
           hoverTextColor="#ffffff"

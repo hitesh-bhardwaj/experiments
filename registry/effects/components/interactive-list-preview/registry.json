@@ -21,10 +21,6 @@
     {
       "path": "index.tsx",
       "target": "src/components/effects/interactive-list-preview/index.tsx"
-    },
-    {
-      "path": "InteractiveListPreviewComp.tsx",
-      "target": "src/components/effects/interactive-list-preview/InteractiveListPreviewComp.tsx"
     }
   ],
   "changelog": [

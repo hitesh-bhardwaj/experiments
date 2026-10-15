@@ -13,7 +13,12 @@ export default function DemoContent({ registry }: { registry: any }) {
     >
       {({ effect }) => (
         <>
-          <DemoHeader />
+          <DemoHeader
+            reducedMotionNote={{
+              title: "The images keep pulling.",
+              body: "Magnetic Image Trail animates images being drawn toward your cursor in real time. Pausing that motion would remove the effect.",
+            }}
+          />
           {effect}
         </>
       )}

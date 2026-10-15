@@ -174,17 +174,17 @@ const Services = () => {
       className={`services-section relative w-screen bg-[#070707] text-white ${prefersReducedMotion ? "" : "h-[275vh]"}`}
       id="services"
     >
-      <div className="relative pt-[6vw] px-[4vw] w-[60%] max-[1025px]:w-[85%] max-md:w-full  max-[1025px]:px-[5vw] max-[1025px]:pt-[15vw]">
+      <div className="relative pt-[6vw] px-[4vw] w-[60%] max-lg:w-[85%] max-md:w-full  max-lg:px-[5vw] max-lg:pt-[15vw]">
         <OverflowTextReveal stagger={0.015}>
-          <h2 className="text-[5.5vw] leading-[1.2] max-[1025px]:text-[7vw] max-md:text-[9vw]">
+          <h2 className="text-[5.5vw] leading-[1.2] max-lg:text-[7vw] max-md:text-[9vw]">
             Design That Speaks
             <br />
             to Your Audience
           </h2>
         </OverflowTextReveal>
-        <div className="w-[75%] max-[1025px]:w-full mt-[1.5vw] max-[1025px]:mt-[5vw]">
+        <div className="w-[75%] max-lg:w-full mt-[1.5vw] max-lg:mt-[5vw]">
           <OverflowTextReveal splitBy="lines">
-            <p className="text-[1.25vw] max-[1025px]:text-[2.5vw] max-md:text-[4.5vw] ">
+            <p className="text-[1.25vw] max-lg:text-[2.5vw] max-md:text-[4.5vw] ">
               My practice is focused on solving real-world digital challenges
               with thoughtful design thinking. Whether you need to refine brand
               identity, streamline user experience, or create memorable
@@ -206,8 +206,8 @@ const Services = () => {
             ref={rowRef}
             className={`services-row ${
               prefersReducedMotion
-                ? "grid grid-cols-3 gap-[1.6vw] px-[4vw] pt-[5vw] max-[1025px]:grid-cols-2 max-md:grid-cols-1"
-                : "flex gap-[1.6vw] px-[4vw] will-change-transform max-[1025px]:gap-[2.5vw] max-md:gap-[6vw]"
+                ? "grid grid-cols-3 gap-[1.6vw] px-[4vw] pt-[5vw] max-lg:grid-cols-2 max-md:grid-cols-1"
+                : "flex gap-[1.6vw] px-[4vw] will-change-transform max-lg:gap-[2.5vw] max-md:gap-[6vw]"
             }`}
           >
             {SERVICES.map((service, index) => (
@@ -217,8 +217,8 @@ const Services = () => {
                 onMouseEnter={() => handleActivate(index)}
                 className={`services-card ${
                   prefersReducedMotion
-                    ? "relative rounded-lg p-[1.6vw] flex flex-col justify-between bg-[#161616] overflow-hidden min-h-[22vw] max-[1025px]:min-h-[32vw] max-[1025px]:p-[3vw] max-md:min-h-0 max-md:p-[5vw] border border-white/20"
-                    : "relative w-[27vw] h-[30vw] shrink-0 rounded-lg p-[1.6vw] flex flex-col justify-between bg-[#161616] overflow-hidden max-[1025px]:w-[55vw] max-[1025px]:h-[65vw] max-[1025px]:p-[3vw] max-md:w-[75vw] max-md:h-[85vw] max-md:p-[5vw]  border border-white/20 group "
+                    ? "relative rounded-lg p-[1.6vw] flex flex-col justify-between bg-[#161616] overflow-hidden min-h-[22vw] max-lg:min-h-[32vw] max-lg:p-[3vw] max-md:min-h-0 max-md:p-[5vw] border border-white/20"
+                    : "relative w-[27vw] h-[30vw] shrink-0 rounded-lg p-[1.6vw] flex flex-col justify-between bg-[#161616] overflow-hidden max-lg:w-[55vw] max-lg:h-[65vw] max-lg:p-[3vw] max-md:w-[75vw] max-md:h-[85vw] max-md:p-[5vw]  border border-white/20 group "
                 }`}
               >
                 <div
@@ -237,7 +237,7 @@ const Services = () => {
                     ref={(el) => {
                       iconRefs.current[index] = el;
                     }}
-                    className={`w-[3vw] h-[3vw] rounded-full flex items-center justify-center border-white/30 border max-[1025px]:w-[7vw] max-[1025px]:h-[7vw] max-md:w-[9vw] max-md:h-[9vw] duration-300 ease-out overflow-hidden relative ${activeIndex === index ? "bg-white text-black" : "text-white"}`}
+                    className={`w-[3vw] h-[3vw] rounded-full flex items-center justify-center border-white/30 border max-lg:w-[7vw] max-lg:h-[7vw] max-md:w-[9vw] max-md:h-[9vw] duration-300 ease-out overflow-hidden relative ${activeIndex === index ? "bg-white text-black" : "text-white"}`}
                   >
                     <div className="group-hover:translate-x-[150%] group-hover:translate-y-[-150%] duration-300 ease-out">
                     <ArrowUpRight size={20} />
@@ -252,14 +252,14 @@ const Services = () => {
                 </div>
 
                 <div className="relative">
-                  <h3 className="text-[2.5vw] font-normal mb-[1vw] max-[1025px]:text-[5vw] max-md:text-[6.5vw]">
+                  <h3 className="text-[2.5vw] font-normal mb-[1vw] max-lg:text-[5vw] max-md:text-[6.5vw]">
                     {service.title}
                   </h3>
-                  <ul className="space-y-[0.4vw] list-disc pl-[0.5vw] max-[1025px]:space-y-[1vw] max-md:space-y-[1.8vw]">
+                  <ul className="space-y-[0.4vw] list-disc pl-[0.5vw] max-lg:space-y-[1vw] max-md:space-y-[1.8vw]">
                     {service.items.map((item, i) => (
                       <li
                         key={item}
-                        className="flex items-center gap-[0.7vw] text-[1.25vw] text-white max-[1025px]:text-[3vw] max-md:text-[4vw]"
+                        className="flex items-center gap-[0.7vw] text-[1.25vw] text-white max-lg:text-[3vw] max-md:text-[4vw]"
                       >
                         <span className="size-1.5 bg-white rounded-full"></span>{" "}
                         <span>{item}</span>

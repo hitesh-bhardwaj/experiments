@@ -21,18 +21,6 @@
     {
       "path": "index.tsx",
       "target": "src/components/effects/lines-loader/index.tsx"
-    },
-    {
-      "path": "LinesLoading.tsx",
-      "target": "src/components/effects/lines-loader/LinesLoading.tsx"
-    },
-    {
-      "path": "CenterLinesLoading.tsx",
-      "target": "src/components/effects/lines-loader/CenterLinesLoading.tsx"
-    },
-    {
-      "path": "utils.ts",
-      "target": "src/components/effects/lines-loader/utils.ts"
     }
   ],
   "props": [

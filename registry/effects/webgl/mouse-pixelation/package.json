@@ -5,10 +5,6 @@
   "main": "index.tsx",
   "files": [
     "index.tsx",
-    "EnhancedPixelCube.tsx",
-    "PixelCircle.tsx",
-    "PixelShift.tsx",
-    "createSuspendedRaf.ts",
     "registry.json"
   ],
   "keywords": [
@@ -16,9 +12,9 @@
     "hyperiux"
   ],
   "dependencies": {
-    "three": "*",
     "@react-three/fiber": "*",
     "@react-three/postprocessing": "*",
-    "gsap": "*"
+    "gsap": "*",
+    "three": "*"
   }
 }

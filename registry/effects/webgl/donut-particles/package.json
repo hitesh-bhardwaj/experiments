@@ -5,7 +5,6 @@
   "main": "index.tsx",
   "files": [
     "index.tsx",
-    "createSuspendedRaf.ts",
     "registry.json"
   ],
   "keywords": [
@@ -13,7 +12,7 @@
     "hyperiux"
   ],
   "dependencies": {
-    "three": "*",
-    "@react-three/fiber": "*"
+    "@react-three/fiber": "*",
+    "three": "*"
   }
 }

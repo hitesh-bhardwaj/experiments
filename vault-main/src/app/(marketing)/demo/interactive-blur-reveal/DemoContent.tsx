@@ -22,7 +22,12 @@ export default function DemoContent({ registry }: { registry: any }) {
       {({ effect }) => (
         <main className="relative h-dvh w-dvw overflow-hidden bg-black text-white">
           {effect}
-          <DemoHeader />
+          <DemoHeader
+            reducedMotionNote={{
+              title: "The reveal keeps trailing.",
+              body: "Interactive Blur Reveal clears the blur only where your cursor has recently moved, redrawing continuously. Since the reveal is driven entirely by motion, reduced motion can't be applied here.",
+            }}
+          />
           <div className="pointer-events-none fixed inset-0 z-10 h-screen w-screen">
             <section className="flex h-full w-full flex-col items-start justify-center px-10">
               <div>

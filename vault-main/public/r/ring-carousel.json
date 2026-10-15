@@ -155,11 +155,6 @@
       "path": "index.tsx",
       "type": "registry:component",
       "target": "src/components/effects/ring-carousel/index.tsx"
-    },
-    {
-      "path": "RingCarouselComp.tsx",
-      "type": "registry:component",
-      "target": "src/components/effects/ring-carousel/RingCarouselComp.tsx"
     }
   ]
 }

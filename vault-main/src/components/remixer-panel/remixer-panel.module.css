@@ -227,10 +227,6 @@
   box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06);
 }
 
-.footerButton:active {
-  transform: translateY(1px);
-}
-
 .footerButtonText {
   font-size: 11px;
   font-weight: 600;
@@ -418,7 +414,6 @@
 }
 
 .fieldLabel {
-  font-family: var(--font-code), "IBM Plex Mono", ui-monospace, Menlo, monospace;
   font-size: 0.9rem;
   color: #fff;
 }
@@ -624,6 +619,31 @@
 
 .footerButton .actionIcon {
   flex-shrink: 0;
+}
+
+/* Reset: the icon leans back on hover; a click spins it a full turn (RemixerPanel). */
+.resetIcon {
+  display: inline-flex;
+  flex-shrink: 0;
+}
+
+.resetIcon svg {
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.footerButton:hover .resetIcon svg {
+  transform: rotate(-40deg);
+}
+
+.footerButtonDone {
+  border-color: var(--remixer-border-strong);
+  color: var(--remixer-text);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .resetIcon svg {
+    transition: none;
+  }
 }
 
 .actionIconSpin {
@@ -978,74 +998,14 @@
 }
 
 /* ---------- "Your props" code block ---------- */
-.codeBlock {
-  margin: 1.1rem 1.25rem 1.25rem;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: #0b0b0b;
-}
 
-.codeHeader {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0.5rem 0.5rem 0.5rem 0.9rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-}
 
-.codeTitle {
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: #8a8a8a;
-}
 
-.codeCopy {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  height: 2rem;
-  padding: 0 0.75rem;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  background: transparent;
-  color: var(--foreground);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: border-color 150ms ease, background-color 150ms ease;
-}
 
-.codeCopy:hover {
-  border-color: rgba(255, 255, 255, 0.3);
-  background: rgba(255, 255, 255, 0.04);
-}
 
-.codeCopy .actionIcon {
-  width: 0.85rem;
-  height: 0.85rem;
-}
 
-.codePre {
-  margin: 0;
-  padding: 0.9rem;
-  overflow-x: auto;
-  font-family: var(--font-code), "IBM Plex Mono", ui-monospace, Menlo, monospace;
-  font-size: 12px;
-  line-height: 1.7;
-  color: #d8d8d8;
-}
 
-.codeLine {
-  display: block;
-  white-space: pre;
-}
 
-.codeTag { color: #7FD1C7; }
-.codeProp { color: #d8d8d8; }
-.codeValue { color: #F2C572; }
-.codeString { color: #F2A65A; }
 
 /* ---------- compact (effect page Playground) ---------- */
 .compact .groupTrigger,
@@ -1058,30 +1018,26 @@
   padding-bottom: 0.85rem !important;
 }
 
-/* Group labels (Motion, Layout…) and "Your props": Title Case, medium weight. */
-.compact .groupTitle,
-.compact .codeTitle {
+/* Group labels (Motion, Layout…): Title Case, medium weight. */
+.compact .groupTitle {
   font-weight: 500;
   text-transform: capitalize;
   letter-spacing: 0;
 }
 
-.compact .groupTitle,
-.compact .codeTitle {
+.compact .groupTitle {
   font-size: 1vw;
 }
 
-/* 1vw gets too small below desktop: same steps as the panel's other text there. */
+
 @media (max-width: 1025px) {
-  .compact .groupTitle,
-  .compact .codeTitle {
+  .compact .groupTitle {
     font-size: 1.6vw;
   }
 }
 
 @media (max-width: 767px) {
-  .compact .groupTitle,
-  .compact .codeTitle {
+  .compact .groupTitle {
     font-size: 3.3vw;
   }
 }
@@ -1093,7 +1049,7 @@
 .compact .fieldLabel {
   min-width: 0;
   font-size: 0.8rem;
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
 }
 
 .compact .fieldValue,
@@ -1120,38 +1076,13 @@
   overflow-wrap: anywhere;
 }
 
-.compact .codeBlock {
-  margin: 0.8rem 0.9rem 0.9rem;
-}
 
-.compact .codeHeader {
-  padding: 0.35rem 0.35rem 0.35rem 0.7rem;
-}
 
-.compact .codeCopy {
-  letter-spacing: 0.06em;
-}
 
-.compact .codeCopy {
-  height: 1.75rem;
-  padding: 0 0.6rem;
-}
 
 /* The props wrap inside the column instead of scrolling sideways; continuation
    lines hang under the prop name. */
-.compact .codePre {
-  padding: 0.7rem;
-  overflow-x: hidden;
-  font-size: 11px;
-  line-height: 1.6;
-}
 
-.compact .codeLine {
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
-  padding-left: 2ch;
-  text-indent: -2ch;
-}
 
 .compact .footer {
   padding: 0.7rem 0.9rem;

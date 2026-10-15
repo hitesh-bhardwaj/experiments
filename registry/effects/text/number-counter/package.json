@@ -5,9 +5,6 @@
   "main": "index.tsx",
   "files": [
     "index.tsx",
-    "NumberCounterOne.tsx",
-    "NumberCounterTwo.tsx",
-    "NumberCounterThree.tsx",
     "registry.json"
   ],
   "keywords": [

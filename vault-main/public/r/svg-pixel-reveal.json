@@ -41,14 +41,32 @@
       }
     },
     {
-      "name": "crossLayers",
+      "name": "scrub",
       "type": "boolean",
       "default": true,
-      "description": "Enables cross-layer pixel merge detail.",
+      "description": "Tie the reveal to scroll position. When off, the reveal plays once when the image enters the viewport.",
       "remixer": {
         "control": "checkbox",
-        "group": "filter",
-        "groupTitle": "Filter"
+        "group": "motion",
+        "groupTitle": "Motion"
+      }
+    },
+    {
+      "name": "duration",
+      "type": "number",
+      "default": 1.5,
+      "description": "Reveal duration in seconds when scrub is off.",
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0.2,
+        "max": 5,
+        "step": 0.1,
+        "visibleWhen": {
+          "name": "scrub",
+          "eq": false
+        }
       }
     }
   ],
@@ -68,11 +86,6 @@
       "path": "index.tsx",
       "type": "registry:component",
       "target": "src/components/effects/svg-pixel-reveal/index.tsx"
-    },
-    {
-      "path": "PixelatedSvgFilter.tsx",
-      "type": "registry:component",
-      "target": "src/components/effects/svg-pixel-reveal/PixelatedSvgFilter.tsx"
     }
   ]
 }

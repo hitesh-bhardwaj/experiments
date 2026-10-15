@@ -1,14 +1,14 @@
 // Built using Hyperiux Vault: https://vault.hyperiux.com
-
 'use client'
 
-import { TransitionRouter } from'next-transition-router'
-import { useEffect, useRef, type ReactNode } from'react'
-import gsap from'gsap'
+import { TransitionRouter } from "next-transition-router";
+import { useEffect, useRef, type ReactNode, useSyncExternalStore } from "react";
+import gsap from "gsap";
 
 function prefersReducedMotion() {
-  if (typeof window === 'undefined') return false
-  return window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches ?? false
+  if (typeof window === "undefined") return false;
+
+  return window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches ?? false;
 }
 
 const COLS = 30
@@ -17,14 +17,14 @@ const COLOR ='#111111'
 const DURATION_LEAVE = 1.0
 const DURATION_ENTER = 0.8
 
-function easeInOut(t: number): number {
-  return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t
-}
-
 function clampNumber(value: unknown, min: number, max: number, fallback: number): number {
  const next = Number(value)
  if (!Number.isFinite(next)) return fallback
  return Math.min(max, Math.max(min, next))
+}
+
+function easeInOut(t: number): number {
+  return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t
 }
 
 function drawGrid(canvas: HTMLCanvasElement | null, progress: number, isEnter: boolean, cols = COLS, rows = ROWS, fromTopLeft = false, pixelColor = COLOR) {

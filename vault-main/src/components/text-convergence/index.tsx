@@ -42,13 +42,11 @@ interface TextConvergenceProps {
   text?: string;
   bgColor?: string;
   textColor?: string;
-  charRotation?: number;
 }
 
 export default function TextConvergence({
   text = TEXT,
   bgColor = "#111111",
-  charRotation = 20,
 }: TextConvergenceProps) {
   // State and refs
   const sectionRef = useRef<HTMLDivElement | null>(null);
@@ -122,29 +120,45 @@ export default function TextConvergence({
       });
 
       split.chars.forEach((character) => {
-        gsap.from(character, {
-          yPercent:
-            gsap.utils.random(CHARACTER_Y_PERCENT_MIN, CHARACTER_Y_PERCENT_MAX) *
-            charScale,
-          rotation:
-            gsap.utils.random(-charRotation, charRotation) *
-            charScale,
-          ease: CHARACTER_EASE,
-          scrollTrigger: {
-            trigger: character,
-            containerAnimation: scrollTween,
-            start: "left 100%",
-            end: "left 30%",
-            scrub: 0.4,
-          },
+        // Kill any tween still in flight on this character (e.g. from a
+        // restart trigger firing mid-animation) so the new tween
+        // never starts from - or compounds onto - an unpredictable
+        // mid-playback transform.
+        gsap.killTweensOf(character);
+
+        const startYPercent =
+          gsap.utils.random(CHARACTER_Y_PERCENT_MIN, CHARACTER_Y_PERCENT_MAX) *
+          charScale;
+
+        // Explicitly snap back to the defined scattered starting state
+        // before animating, instead of relying on gsap.from() to infer
+        // the "end" state from whatever the DOM currently looks like.
+        gsap.set(character, {
+          yPercent: startYPercent,
         });
+
+        gsap.fromTo(
+          character,
+          { yPercent: startYPercent },
+          {
+            yPercent: 0,
+            ease: CHARACTER_EASE,
+            scrollTrigger: {
+              trigger: character,
+              containerAnimation: scrollTween,
+              start: "left 100%",
+              end: "left 30%",
+              scrub: 0.4,
+            },
+          }
+        );
       });
     }, sectionRef);
 
     return () => {
       context.revert();
     };
-  }, [text, charRotation]);
+  }, [text]);
 
   // Return
   return (

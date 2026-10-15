@@ -108,11 +108,6 @@
       "path": "index.tsx",
       "type": "registry:component",
       "target": "src/components/effects/rope-cursor/index.tsx"
-    },
-    {
-      "path": "createSuspendedRaf.ts",
-      "type": "registry:component",
-      "target": "src/components/effects/rope-cursor/createSuspendedRaf.ts"
     }
   ]
 }

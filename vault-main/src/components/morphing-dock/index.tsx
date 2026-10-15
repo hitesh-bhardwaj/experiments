@@ -59,7 +59,6 @@ export interface MorphingDockProps {
   contactLabel?: string;
   email?: string;
   emailNote?: string;
-  brand?: string;
   ctaLabel?: string;
   ctaHref?: string;
   teaserImage?: string;
@@ -128,7 +127,6 @@ const MorphingDock = ({
   contactLabel = "Contact",
   email = "hello@hyperiux.com",
   emailNote = "Partnerships, press and support.",
-  brand = "HYPERIUX",
   ctaLabel = "Get started",
   ctaHref = "#",
   teaserImage = DEFAULT_TEASER,
@@ -648,7 +646,7 @@ const MorphingDock = ({
         "--morphing-dock-nav-w-user": expandedWidthValue,
         "--morphing-dock-nav-h-user": expandedHeightValue,
       } as CSSProperties}
-      className="[--morphing-dock-dock-w:min(30vw,32rem)] [--morphing-dock-dock-h:4vw] [--morphing-dock-nav-w:var(--morphing-dock-nav-w-user,min(48vw,52rem))] [--morphing-dock-nav-h:var(--morphing-dock-nav-h-user,26vw)] [--morphing-dock-contact-w:min(30vw,32rem)] [--morphing-dock-contact-h:14vw] max-[1025px]:[--morphing-dock-dock-w:min(94vw,35rem)] max-[1025px]:[--morphing-dock-dock-h:9vw] max-[1025px]:[--morphing-dock-nav-w:min(94vw,42.5rem)] max-[1025px]:[--morphing-dock-nav-h:52vw] max-[1025px]:[--morphing-dock-contact-w:min(94vw,35rem)] max-[1025px]:[--morphing-dock-contact-h:26vw] max-md:[--morphing-dock-dock-w:92vw] max-md:[--morphing-dock-dock-h:16vw] max-md:[--morphing-dock-nav-w:92vw] max-md:[--morphing-dock-nav-h:150vw] max-md:[--morphing-dock-contact-w:92vw] max-md:[--morphing-dock-contact-h:50vw]"
+      className="[--morphing-dock-dock-w:min(30vw,32rem)] [--morphing-dock-dock-h:4vw] [--morphing-dock-nav-w:var(--morphing-dock-nav-w-user,min(48vw,52rem))] [--morphing-dock-nav-h:var(--morphing-dock-nav-h-user,26vw)] [--morphing-dock-contact-w:min(30vw,32rem)] [--morphing-dock-contact-h:14vw] max-lg:[--morphing-dock-dock-w:min(94vw,35rem)] max-lg:[--morphing-dock-dock-h:9vw] max-lg:[--morphing-dock-nav-w:min(94vw,42.5rem)] max-lg:[--morphing-dock-nav-h:52vw] max-lg:[--morphing-dock-contact-w:min(94vw,35rem)] max-lg:[--morphing-dock-contact-h:26vw] max-md:[--morphing-dock-dock-w:92vw] max-md:[--morphing-dock-dock-h:16vw] max-md:[--morphing-dock-nav-w:92vw] max-md:[--morphing-dock-nav-h:150vw] max-md:[--morphing-dock-contact-w:92vw] max-md:[--morphing-dock-contact-h:50vw]"
     >
       <div
         aria-hidden
@@ -660,11 +658,11 @@ const MorphingDock = ({
 
       <div
         ref={dockRef}
-        className="fixed bottom-16 left-1/2 z-200 -translate-x-1/2 max-[1025px]:bottom-12 max-md:bottom-6"
+        className="fixed bottom-16 left-1/2 z-200 -translate-x-1/2 max-lg:bottom-12 max-md:bottom-6"
       >
         <div
           ref={bodyRef}
-          className="relative box-border max-w-[96vw] overflow-hidden rounded-[2vw] border border-white/15 bg-(--morphing-dock-background) shadow-[0_1.5vw_4vw_rgba(0,0,0,0.45)] will-change-[width,height] max-[1025px]:rounded-[3.5vw] max-md:rounded-[6vw]"
+          className="relative box-border max-w-[96vw] overflow-hidden rounded-[2vw] border border-white/15 bg-(--morphing-dock-background) shadow-[0_1.5vw_4vw_rgba(0,0,0,0.45)] will-change-[width,height] max-lg:rounded-[3.5vw] max-md:rounded-[6vw]"
         >
           {/* Everything above the persistent dock row */}
           <div
@@ -675,11 +673,11 @@ const MorphingDock = ({
             {/* View A - the nav list plus its preview panel */}
             <div
               ref={navViewRef}
-              className="absolute bottom-0 left-0 box-border flex h-[calc(var(--morphing-dock-nav-h)-var(--morphing-dock-dock-h))] w-(--morphing-dock-nav-w) flex-row items-stretch gap-6 px-6 py-6 will-change-[transform,opacity] max-[1025px]:gap-5 max-md:flex-col max-md:justify-start max-md:gap-0 max-md:px-5 max-md:py-5"
+              className="absolute bottom-0 left-0 box-border flex h-[calc(var(--morphing-dock-nav-h)-var(--morphing-dock-dock-h))] w-(--morphing-dock-nav-w) flex-row items-stretch gap-6 px-6 py-6 will-change-[transform,opacity] max-lg:gap-5 max-md:flex-col max-md:justify-start max-md:gap-0 max-md:px-5 max-md:py-5"
             >
               <nav
                 aria-label="Site navigation"
-                className="flex min-w-0 basis-1/2 flex-col items-start justify-end gap-2.5 max-[1025px]:gap-3 max-md:basis-auto max-md:justify-start max-md:gap-4 max-md:pt-8"
+                className="flex min-w-0 basis-1/2 flex-col items-start justify-end gap-2.5 max-lg:gap-3 max-md:basis-auto max-md:justify-start max-md:gap-4 max-md:pt-8"
               >
                 {items.map((item) => (
                   <LinkButton
@@ -696,7 +694,7 @@ const MorphingDock = ({
                       if (item.href === "#") e.preventDefault();
                       api.current?.close();
                     }}
-                    className="inline-block w-fit text-[2.4vw] leading-[1.15] font-light tracking-[-0.03em] whitespace-nowrap no-underline transition-colors duration-250 will-change-[transform,opacity] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-transparent max-[1025px]:text-[3.6vw] max-md:text-[6.5vw]"
+                    className="inline-block w-fit text-[2.4vw] leading-[1.15] font-light tracking-[-0.03em] whitespace-nowrap no-underline transition-colors duration-250 will-change-[transform,opacity] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-transparent max-lg:text-[3.6vw] max-md:text-[6.5vw]"
                   >
                     {item.label}
                   </LinkButton>
@@ -721,7 +719,7 @@ const MorphingDock = ({
               <div
                 ref={panelRef}
                 aria-hidden
-                className="relative min-w-0 basis-1/2 will-change-[transform,opacity] max-[1025px]:h-[34vw] max-[1025px]:self-end max-md:order-first max-md:h-[50vw] max-md:basis-auto max-md:self-auto"
+                className="relative min-w-0 basis-1/2 will-change-[transform,opacity] max-lg:h-[34vw] max-lg:self-end max-md:order-first max-md:h-[50vw] max-md:basis-auto max-md:self-auto"
               >
                 <Link
                   ref={mediaRef}
@@ -779,7 +777,7 @@ const MorphingDock = ({
                     data-blurb={item.label}
                     className="pointer-events-none absolute inset-0 flex flex-col justify-end gap-2 p-4 will-change-[transform,opacity]"
                   >
-                    <span className="text-[0.8vw] tracking-[0.08em] text-white/60 max-[1025px]:text-[1.4vw] max-md:text-[2.8vw]">
+                    <span className="text-[0.8vw] tracking-[0.08em] text-white/60 max-lg:text-[1.4vw] max-md:text-[2.8vw]">
                       {String(i + 1).padStart(2, "0")}
                     </span>
                     <span className="text-sm leading-[1.45] tracking-[0.01em] text-white/90">
@@ -799,7 +797,7 @@ const MorphingDock = ({
                 type="button"
                 onClick={() => api.current?.toNav()}
                 aria-label="Back to navigation"
-                className="flex cursor-pointer items-center gap-1.5 self-start border-none bg-transparent p-0 text-[0.9vw] text-white/50 transition-colors duration-250 hover:text-white/92 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-transparent max-[1025px]:text-[1.6vw] max-md:text-[3.2vw]"
+                className="flex cursor-pointer items-center gap-1.5 self-start border-none bg-transparent p-0 text-[0.9vw] text-white/50 transition-colors duration-250 hover:text-white/92 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-transparent max-lg:text-[1.6vw] max-md:text-[3.2vw]"
               >
                 <svg viewBox="0 0 16 16" fill="none" aria-hidden className="h-3.5 w-3.5 flex-none">
                   <path
@@ -820,7 +818,7 @@ const MorphingDock = ({
                 >
                   {email}
                 </Link>
-                <span className="text-[0.9vw] text-white/50 max-[1025px]:text-[1.6vw] max-md:text-[3.2vw]">
+                <span className="text-[0.9vw] text-white/50 max-lg:text-[1.6vw] max-md:text-[3.2vw]">
                   {emailNote}
                 </span>
               </div>
@@ -830,13 +828,95 @@ const MorphingDock = ({
           {/* Dock row - always visible, always interactive */}
           <div className="absolute inset-x-0 bottom-0 box-border flex h-(--morphing-dock-dock-h) items-center gap-6 pr-2.5 pl-6 max-md:gap-3 max-md:pr-2 max-md:pl-4">
             <Link
-              href="#"
-              aria-label="Home"
-              onClick={(e) => e.preventDefault()}
-              className="flex h-9 flex-none items-center text-[1.05vw] font-medium tracking-[0.18em] whitespace-nowrap text-white/92 no-underline transition-opacity duration-200 hover:opacity-70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-transparent max-[1025px]:text-[2.5vw] max-md:text-[4vw] max-md:tracking-[0.12em]"
+          prefetch={false}
+          href="/"
+          className="flex items-center gap-3 cursor-pointer text-(--morphing-dock-text)"
+        >
+          
+          <div className="flex  items-center gap-2 w-full h-full">
+            <svg
+              width="156"
+              height="45"
+              viewBox="0 0 351 43"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              className={`transition-all duration-300 motion-reduce:transition-none w-28 max-md:w-24`}
             >
-              {brand}
-            </Link>
+              <path
+                d="M315.441 6.10352e-05H306.862L320.055 15.9603L324.019 21.0695L306.862 42.139H315.591L332.597 21.0695L328.555 15.9603L315.441 6.10352e-05Z"
+                fill="currentColor"
+              />
+              <path
+                d="M350.055 6.10352e-05H341.326L332.598 10.6853L336.962 15.9527L350.055 6.10352e-05Z"
+                fill="currentColor"
+              />
+              <path
+                d="M349.905 42.139L341.176 42.139L332.598 31.7548L336.962 26.3369L349.905 42.139Z"
+                fill="currentColor"
+              />
+              <path
+                d="M264.874 6.10352e-05H258.252V34.0122L269.088 42.139H289.555L300.391 34.0122V6.10352e-05H293.769V29.9349C293.769 30.4164 293.539 30.8688 293.149 31.152L287.543 35.2293C287.286 35.4164 286.976 35.5172 286.658 35.5172H271.985C271.667 35.5172 271.357 35.4164 271.1 35.2293L265.494 31.152C265.104 30.8688 264.874 30.4164 264.874 29.9349V6.10352e-05Z"
+                fill="currentColor"
+              />
+              <rect
+                x="244.406"
+                y="6.10352e-05"
+                width="6.62183"
+                height="42.1389"
+                fill="currentColor"
+              />
+              <path
+                d="M195.043 0.000183105H228.002V6.62202H201.665V42.2896H195.043V0.000183105Z"
+                fill="currentColor"
+              />
+              <path
+                d="M233.269 24.0796L237.182 18.1404V6.62202V0.000183105H195.043V6.62202H230.56V15.8023L225.594 24.0796H233.269Z"
+                fill="currentColor"
+              />
+              <path
+                d="M221.078 17.7586H201.664V24.3804H217.466L229.205 42.139H237.163L221.078 17.7586Z"
+                fill="currentColor"
+              />
+              <path
+                d="M182.401 24.3804V17.7585H162.235L153.205 27.9923H162.084L165.245 24.3804H182.401Z"
+                fill="currentColor"
+              />
+              <path
+                d="M158.322 0H188.421V6.62183H161.031L152.904 15.9526V35.5171H188.421V42.1389H146.282V12.0397L158.322 0Z"
+                fill="currentColor"
+              />
+              <rect
+                x="97.5234"
+                y="17.7585"
+                width="6.62183"
+                height="24.3804"
+                fill="currentColor"
+              />
+              <path
+                d="M139.662 0H97.5234V6.62183H133.041V17.7586H111.15L104.534 24.3804H133.643L139.662 18.0595V0Z"
+                fill="currentColor"
+              />
+              <path
+                d="M55.3826 10.8357L55.3826 0H48.7607L48.7607 14.8991L66.5754 24.2299L66.5193 42.1389H73.1411V24.2299L90.8997 14.7486V0H84.2779V10.8357L69.8302 18.4786L55.3826 10.8357Z"
+                fill="currentColor"
+              />
+              <rect width="6.62183" height="42.1389" fill="currentColor" />
+              <rect
+                x="35.5166"
+                width="6.62183"
+                height="42.1389"
+                fill="currentColor"
+              />
+              <rect
+                x="6.62305"
+                y="17.7585"
+                width="28.8953"
+                height="6.62183"
+                fill="currentColor"
+              />
+            </svg>
+          </div>
+        </Link>
 
             <button
               type="button"
@@ -844,9 +924,9 @@ const MorphingDock = ({
               aria-expanded={isOpen}
               aria-controls="morphing-dock-surface"
               aria-label={isOpen ? "Close navigation" : "Open navigation"}
-              className="flex h-11 flex-1 cursor-pointer items-center justify-center gap-2 border-none bg-transparent p-0 text-[1.05vw] font-normal tracking-[0.01em] whitespace-nowrap text-white/92 transition-opacity duration-200 hover:opacity-70 focus-visible:rounded-lg focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-transparent max-[1025px]:text-[1.8vw] max-md:text-[3.4vw]"
+              className="flex h-11 flex-1 cursor-pointer items-center justify-center gap-2 border-none bg-transparent p-0 text-[1.05vw] font-normal tracking-[0.01em] whitespace-nowrap text-(--morphing-dock-text) transition-opacity duration-200 hover:opacity-70 focus-visible:rounded-lg focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-transparent max-lg:text-[1.8vw] max-md:text-[3.4vw]"
             >
-              <svg viewBox="0 0 20 20" fill="none" aria-hidden className="h-5 w-5 flex-none overflow-visible">
+              <svg viewBox="0 0 20 20" fill="none" aria-hidden className="h-5 w-5 flex-none overflow-visible mt-0.5">
                 <rect
                   ref={capsuleRef}
                   x="2"
@@ -861,8 +941,8 @@ const MorphingDock = ({
               </svg>
               <span aria-hidden className="block h-5 w-fit flex-none overflow-hidden">
                 <span ref={triggerRollerRef} className="flex flex-col items-start will-change-transform">
-                  <span className="block h-5 max-sm:text-[4vw] max-[1025px]:text-[2.8vw] leading-5 whitespace-nowrap">Menu</span>
-                  <span className="block h-5 max-sm:text-[4vw] max-[1025px]:text-[2.8vw] leading-5 whitespace-nowrap">Close</span>
+                  <span className="block h-5 max-md:text-[3.5vw] max-lg:text-[2.8vw] leading-5 whitespace-nowrap">Menu</span>
+                  <span className="block h-5 max-md:text-[3.5vw] max-lg:text-[2.8vw] leading-5 whitespace-nowrap">Close</span>
                 </span>
               </span>
             </button>
@@ -874,7 +954,7 @@ const MorphingDock = ({
               onClick={(e) => {
                 if (ctaHref === "#") e.preventDefault();
               }}
-              className="flex h-10 max-sm:h-12 max-[1025px]:h-12  flex-none items-center rounded-full bg-white/10 px-5 text-[1.05vw] max-[1025px]:text-[2.8vw] font-medium whitespace-nowrap no-underline transition-colors duration-200 hover:bg-white/15   max-md:h-8 max-md:px-4  max-md:text-[4.5vw]"
+              className="flex h-10  max-lg:h-12  flex-none items-center rounded-full bg-white/10 px-5 text-[1.05vw] max-lg:text-[2.8vw] font-medium whitespace-nowrap no-underline transition-colors duration-200 hover:bg-white/15   max-md:h-10 max-md:px-4  max-md:text-[4vw]"
             >
               {ctaLabel}
             </LinkButton>

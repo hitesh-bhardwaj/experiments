@@ -1,9 +1,257 @@
+/* eslint-disable react-hooks/refs -- React Compiler / legacy-pattern rules: fixing risks changing animation timing (see eslint.config.mjs, issue #16); <img> kept for dynamic user-supplied sources. */
+// Built using Hyperiux Vault: https://vault.hyperiux.com
 "use client";
 
-import * as THREE from "three";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
-import { createVisibilityGate } from "./createSuspendedRaf";
+import * as THREE from "three";
+
+const DEFAULT_ROOT_MARGIN = "256px";
+
+type RafRoot = Element | null | { current: Element | null } | (() => Element | null);
+
+function resolveElement(root: RafRoot): Element | null {
+  if (!root) return null;
+  if (typeof root === "function") return root() ?? null;
+  if (typeof root === "object" && "current" in root) return root.current ?? null;
+  return root;
+}
+
+interface VisibilityGateOptions {
+  root?: RafRoot;
+  rootMargin?: string;
+  threshold?: number;
+  observeTab?: boolean;
+  observeOffscreen?: boolean;
+  onChange?: (active: boolean) => void;
+}
+
+interface VisibilityGate {
+  readonly isActive: boolean;
+  observe: (nextRoot?: RafRoot) => void;
+  destroy: () => void;
+}
+
+function createVisibilityGate({
+  root = null,
+  rootMargin = DEFAULT_ROOT_MARGIN,
+  threshold = 0,
+  observeTab = true,
+  observeOffscreen = true,
+  onChange,
+}: VisibilityGateOptions = {}): VisibilityGate {
+  let tabVisible =
+    typeof document === "undefined" ? true : !document.hidden;
+  // Match border-beam: assume onscreen until the observer reports otherwise.
+  let onscreen = true;
+  let destroyed = false;
+  let observer: IntersectionObserver | null = null;
+
+  const isActive = () => {
+    if (destroyed) return false;
+    if (observeTab && !tabVisible) return false;
+    if (observeOffscreen && resolveElement(root) && !onscreen) return false;
+    return true;
+  };
+
+  let lastActive = isActive();
+
+  const emit = () => {
+    if (destroyed) return;
+    const next = isActive();
+    if (next === lastActive) return;
+    lastActive = next;
+    onChange?.(next);
+  };
+
+  const onVisibilityChange = () => {
+    tabVisible = !document.hidden;
+    emit();
+  };
+
+  if (observeTab && typeof document !== "undefined") {
+    document.addEventListener("visibilitychange", onVisibilityChange);
+  }
+
+  const bindObserver = () => {
+    if (!observeOffscreen || typeof IntersectionObserver === "undefined") {
+      return;
+    }
+
+    const el = resolveElement(root);
+    if (!el) return;
+
+    observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          onscreen = entry.isIntersecting;
+        }
+        emit();
+      },
+      { rootMargin, threshold },
+    );
+
+    observer.observe(el);
+  };
+
+  bindObserver();
+
+  return {
+    /** Whether the animation should currently run. */
+    get isActive() {
+      return isActive();
+    },
+
+    /**
+     * Re-bind IntersectionObserver after the root element mounts late
+     * (e.g. ref not ready on first call). Safe to call multiple times.
+     */
+    observe(nextRoot?: RafRoot) {
+      if (destroyed) return;
+      if (nextRoot != null) root = nextRoot;
+      if (observer) {
+        observer.disconnect();
+        observer = null;
+      }
+      onscreen = true;
+      bindObserver();
+      emit();
+    },
+
+    destroy() {
+      if (destroyed) return;
+      destroyed = true;
+      if (observeTab && typeof document !== "undefined") {
+        document.removeEventListener("visibilitychange", onVisibilityChange);
+      }
+      if (observer) {
+        observer.disconnect();
+        observer = null;
+      }
+    },
+  };
+}
+
+interface SuspendedRafOptions {
+  onFrame: (time: number) => void;
+  root?: RafRoot;
+  rootMargin?: string;
+  threshold?: number;
+  observeTab?: boolean;
+  observeOffscreen?: boolean;
+}
+
+interface SuspendedRaf {
+  start: () => void;
+  stop: () => void;
+  readonly isRunning: boolean;
+  readonly isActive: boolean;
+  observe: (nextRoot?: RafRoot) => void;
+  destroy: () => void;
+}
+
+/**
+ * Owns a requestAnimationFrame loop that auto-pauses when the tab is hidden
+ * or the root element is offscreen.
+ */
+function createSuspendedRaf({
+  onFrame,
+  root = null,
+  rootMargin = DEFAULT_ROOT_MARGIN,
+  threshold = 0,
+  observeTab = true,
+  observeOffscreen = true,
+}: SuspendedRafOptions): SuspendedRaf {
+  if (typeof onFrame !== "function") {
+    throw new TypeError("createSuspendedRaf: onFrame is required");
+  }
+
+  let rafId: number | null = null;
+  let running = false;
+  let destroyed = false;
+
+  const stopRaf = () => {
+    if (rafId != null) {
+      cancelAnimationFrame(rafId);
+      rafId = null;
+    }
+  };
+
+  const tick = (time: number) => {
+    rafId = null;
+    if (destroyed || !running || !gate.isActive) return;
+    onFrame(time);
+    if (!destroyed && running && gate.isActive) {
+      rafId = requestAnimationFrame(tick);
+    }
+  };
+
+  const sync = () => {
+    if (destroyed) return;
+    if (running && gate.isActive) {
+      if (rafId == null) {
+        rafId = requestAnimationFrame(tick);
+      }
+    } else {
+      stopRaf();
+    }
+  };
+
+  const gate = createVisibilityGate({
+    root,
+    rootMargin,
+    threshold,
+    observeTab,
+    observeOffscreen,
+    onChange: sync,
+  });
+
+  return {
+    /** Start (or resume) the loop when visibility allows. */
+    start() {
+      if (destroyed) return;
+      running = true;
+      sync();
+    },
+
+    /** Stop requesting frames (visibility listeners stay attached until destroy). */
+    stop() {
+      running = false;
+      stopRaf();
+    },
+
+    /** Whether the caller has started the loop (may still be paused by visibility). */
+    get isRunning() {
+      return running;
+    },
+
+    /** Whether a frame is currently allowed to schedule. */
+    get isActive() {
+      return gate.isActive;
+    },
+
+    /** Re-attach offscreen observer to a (new) root element. */
+    observe(nextRoot?: RafRoot) {
+      gate.observe(nextRoot);
+      sync();
+    },
+
+    /** Tear down listeners and cancel any pending frame. */
+    destroy() {
+      if (destroyed) return;
+      destroyed = true;
+      running = false;
+      stopRaf();
+      gate.destroy();
+    },
+  };
+}
+
+export {
+  createSuspendedRaf,
+  createVisibilityGate,
+  DEFAULT_ROOT_MARGIN,
+};
 
 const COUNT = 30; // at base extent; scales with it
 
@@ -172,6 +420,7 @@ function Strand({
   radius,
   autoplaySpeed,
   dragSensitivity,
+  scrollIntensity,
   inertiaDecay,
 }: {
   images: string[];
@@ -182,6 +431,7 @@ function Strand({
   radius: number;
   autoplaySpeed: number;
   dragSensitivity: number;
+  scrollIntensity: number;
   inertiaDecay: number;
 }) {
   const { gl } = useThree();
@@ -189,24 +439,41 @@ function Strand({
   const meshes = useRef<THREE.Mesh[]>([]);
 
   // Read live in the frame loop so slider changes apply without a remount.
-  const tuning = useRef({ autoplaySpeed, dragSensitivity, inertiaDecay });
-  useEffect(() => {
-    tuning.current = { autoplaySpeed, dragSensitivity, inertiaDecay };
-  }, [autoplaySpeed, dragSensitivity, inertiaDecay]);
+  const tuning = useRef({ autoplaySpeed, dragSensitivity, scrollIntensity, inertiaDecay });
+  tuning.current = { autoplaySpeed, dragSensitivity, scrollIntensity, inertiaDecay };
+
+  // Bitmaps decoded once per URL, reused when materials get recreated (e.g.
+  // count changing because a remixer prop like radius/turns/cardScale nudges
+  // the layout) so cards don't flash black and refetch on every tweak.
+  const bitmapCache = useRef<Map<string, ImageBitmap>>(new Map());
 
   const geometry = useMemo(
     () => new THREE.PlaneGeometry(layout.planeW, layout.planeH),
     [layout.planeW, layout.planeH]
   );
 
-  // Start black until decoded
+  // Start black until decoded, unless we already have a cached bitmap for
+  // this slot's image - then show it immediately instead of flashing black.
   const materials = useMemo(
     () =>
-      Array.from({ length: count }, () => {
+      Array.from({ length: count }, (_, i) => {
         const m = new THREE.MeshBasicMaterial({ side: THREE.DoubleSide });
-        m.color.setScalar(0);
+        const url = images[i % images.length];
+        const cached = url ? bitmapCache.current.get(url) : undefined;
+        if (cached) {
+          const texture = new THREE.Texture(cached);
+          texture.colorSpace = THREE.SRGBColorSpace;
+          texture.flipY = false;
+          coverFit(texture, cached.width, cached.height, layout.planeW / layout.planeH);
+          m.map = texture;
+          m.needsUpdate = true;
+          m.color.setScalar(1);
+        } else {
+          m.color.setScalar(0);
+        }
         return m;
       }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [count]
   );
 
@@ -220,6 +487,16 @@ function Strand({
     };
   }, [geometry, materials]);
 
+  // Close cached bitmaps only when the Strand itself unmounts, not when
+  // materials are recreated due to a prop-driven count change.
+  useEffect(() => {
+    const cache = bitmapCache.current;
+    return () => {
+      for (const bitmap of cache.values()) bitmap.close();
+      cache.clear();
+    };
+  }, []);
+
   useEffect(() => {
     if (!images.length) return;
     let cancelled = false;
@@ -230,6 +507,17 @@ function Strand({
       const url = images[i % images.length];
       // Far planes reveal first
       const order = count - 1 - i;
+
+      const cachedBitmap = url ? bitmapCache.current.get(url) : undefined;
+      if (cachedBitmap) {
+        // Already decoded (e.g. materials were recreated because a remixer
+        // prop shifted the card count) - reuse it instead of refetching, and
+        // show the card immediately instead of fading in from black.
+        const mesh = meshes.current[i];
+        if (mesh) mesh.visible = true;
+        material.color.setScalar(1);
+        return;
+      }
 
       // Revalidate images previously cached by non-CORS <img> requests.
       fetch(url, { mode: "cors", credentials: "omit", cache: "reload" })
@@ -249,6 +537,7 @@ function Strand({
             bitmap.close();
             return;
           }
+          bitmapCache.current.set(url, bitmap);
           const texture = new THREE.Texture(bitmap);
           texture.colorSpace = THREE.SRGBColorSpace;
           texture.flipY = false;
@@ -337,7 +626,7 @@ function Strand({
     const wheel = (e: WheelEvent) => {
       if (reduced) return;
       state.velocity = THREE.MathUtils.clamp(
-        state.velocity + e.deltaY * SCROLL_SENSITIVITY,
+        state.velocity + e.deltaY * SCROLL_SENSITIVITY * tuning.current.scrollIntensity,
         -INERTIA_MAX,
         INERTIA_MAX
       );
@@ -422,6 +711,8 @@ export interface HelixSliderProps {
   turns?: number;
   cardScale?: number;
   dragSensitivity?: number;
+  /** Multiplier for how far each wheel/trackpad scroll spins the helix. */
+  scrollIntensity?: number;
   inertiaDecay?: number;
   background?: string;
   className?: string;
@@ -435,6 +726,7 @@ export default function HelixSlider({
   turns = 3.3,
   cardScale = 1,
   dragSensitivity = 0.006,
+  scrollIntensity = 1,
   inertiaDecay = 2.2,
   background = "#0d0d0d",
   className,
@@ -511,6 +803,7 @@ export default function HelixSlider({
             radius={radius}
             autoplaySpeed={autoplaySpeed}
             dragSensitivity={dragSensitivity}
+            scrollIntensity={scrollIntensity}
             inertiaDecay={inertiaDecay}
           />
         </Suspense>

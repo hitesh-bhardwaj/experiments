@@ -7,6 +7,7 @@ import {
   FAQWrapper,
 } from "@/components/animated-faq";
 import DemoHeader from "@/components/preview-chrome/DemoHeader";
+import RegistryRemixerDemo from "@/components/remixer-panel/RegistryRemixerDemo";
 
 const faqItems = [
   {
@@ -54,24 +55,16 @@ const defaultOpenItems = faqItems
   .filter((item) => item.defaultOpen)
   .map((item) => item.id);
 
-export default function DemoContent() {
+export default function DemoContent({ registry }: { registry: any }) {
   return (
-    <>
-      <DemoHeader />
-
-      <section className="bg-black h-screen px-8 py-20 text-white">
-        <div className="max-w-5xl mx-auto text-center text-white mb-12">
-          <h1 className="text-[5.5vw] max-sm:text-[11vw] max-md:text-[8vw]">
-            Animated Faq
-          </h1>
-
-          <p className="mt-8 text-[1.2vw] max-sm:text-[4.5vw] max-md:mt-4 max-md:text-[3vw]">
-            Click on the FAQ triggers
-          </p>
-        </div>
-
+    <RegistryRemixerDemo
+      registry={registry}
+      render={(values: any) => (
         <div className="mx-auto max-w-4xl space-y-4">
-          <FAQGroup allowMultiple={false} defaultOpenItems={defaultOpenItems}>
+          <FAQGroup
+            allowMultiple={Boolean(values.allowMultiple)}
+            defaultOpenItems={defaultOpenItems}
+          >
             {faqItems.map((item) => (
               <FAQWrapper
                 key={item.id}
@@ -80,13 +73,13 @@ export default function DemoContent() {
                 titleClassName="text-[1.1rem] font-medium text-white"
                 iconSize={16}
                 iconStrokeWidth={2}
-                duration={0.5}
+                duration={Number(values.duration) || 0.5}
               >
                 <FAQTitle
                   className="pb-0"
-                  showIcon={true}
-                  iconPosition="right"
-                  iconMode="rotate"
+                  showIcon={Boolean(values.showIcon)}
+                  iconPosition={values.iconPosition === "left" ? "left" : "right"}
+                  iconMode={values.iconMode === "rotate-left-down" ? "rotate-left-down" : "rotate"}
                 >
                   {item.title}
                 </FAQTitle>
@@ -98,7 +91,27 @@ export default function DemoContent() {
             ))}
           </FAQGroup>
         </div>
-      </section>
-    </>
+      )}
+      copyCodeOptions={{ propsVariableName: "animatedFaqProps" }}
+    >
+      {({ effect }) => (
+        <>
+          <DemoHeader />
+          <section className="bg-black h-screen px-8 py-20 text-white">
+            <div className="max-w-5xl mx-auto text-center text-white mb-12">
+              <h1 className="text-[5.5vw] max-sm:text-[11vw] max-md:text-[8vw]">
+                Animated Faq
+              </h1>
+
+              <p className="mt-8 text-[1.2vw] max-sm:text-[4.5vw] max-md:mt-4 max-md:text-[3vw]">
+                Click on the FAQ triggers
+              </p>
+            </div>
+
+            {effect}
+          </section>
+        </>
+      )}
+    </RegistryRemixerDemo>
   );
 }

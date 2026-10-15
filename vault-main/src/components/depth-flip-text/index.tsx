@@ -43,7 +43,7 @@ const DepthFlipText = ({
   className = "",
   backgroundColor = "#f6f5f2",
   textColor = "#050505",
-  loop = false,
+  loop = true,
   holdDuration = 0.4,
   transitionDuration = 1.4,
   charStagger = 0.02,
@@ -287,7 +287,7 @@ interface PhraseProps {
 const Phrase = ({ ref, text, tone, secondary = false }: PhraseProps) => (
   <p
     ref={ref}
-    className={`m-0 w-full whitespace-nowrap max-md:whitespace-normal text-center  text-[6vw] max-md:text-[10vw] max-[1025px]:text-[8vw] font-medium  tracking-[-0.08em]  ${secondary ? "absolute inset-0 opacity-0" : "relative"}`}
+    className={`m-0 w-full whitespace-nowrap max-md:whitespace-normal text-center  text-[6vw] max-md:text-[10vw] max-lg:text-[8vw] font-medium  tracking-[-0.08em]  ${secondary ? "absolute inset-0 opacity-0" : "relative"}`}
     style={{ color: tone, lineHeight: LINE_HEIGHT }}
   >
     {text}

@@ -5,7 +5,6 @@
   "main": "index.tsx",
   "files": [
     "index.tsx",
-    "ParallaxFooter.tsx",
     "registry.json"
   ],
   "keywords": [

@@ -24,7 +24,7 @@ const OverflowTextRevealWrapper = ({ effectProps = {} }: OverflowTextRevealWrapp
   return (
     <ReactLenis root key={revealKey}>
       {/* SECTION 1 - direction: bottom (default) */}
-      <section className="relative h-screen flex flex-col pt-[20vh] max-[1025px]:pt-[45vh] max-md:pt-[4vh] max-[1025px]:justify-center max-[1025px]:px-5 overflow-hidden bg-[#0a0a0a]">
+      <section className="relative h-screen flex flex-col pt-[20vh] max-lg:pt-[45vh] max-md:pt-[4vh] max-lg:justify-center max-lg:px-5 overflow-hidden bg-[#0a0a0a]">
         <Image
           src="https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/h-15.jpg"
           alt="Nature"
@@ -40,7 +40,7 @@ const OverflowTextRevealWrapper = ({ effectProps = {} }: OverflowTextRevealWrapp
           <button
             type="button"
             onClick={() => setReplayKey((k) => k + 1)}
-            className=" w-fit border border-white/20 bg-white/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.2em] text-white/60 backdrop-blur"
+            className=" w-fit border border-white/20 bg-white/10 px-4 py-2 text-xs font-bold tracking-[0.08em] text-white/60 backdrop-blur"
           >
             Replay animation
           </button>
@@ -49,8 +49,8 @@ const OverflowTextRevealWrapper = ({ effectProps = {} }: OverflowTextRevealWrapp
 
         
           <OverflowTextReveal key={`heading-${revealKey}`} {...replayProps}>
-            <h1 className="text-8xl font-black text-white leading-[0.9] tracking-tighter uppercase max-sm:text-5xl">
-              Characters<br />Rise From<br />Below
+            <h1 className="text-8xl font-black text-white leading-[0.96] tracking-tighter max-sm:text-5xl">
+              Characters<br />rise from<br />below
             </h1>
           </OverflowTextReveal>
           <OverflowTextReveal key={`copy-${revealKey}`} {...replayProps} delay={(effectProps.delay ?? 0) + 0.1}>

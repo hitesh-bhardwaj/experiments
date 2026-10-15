@@ -75,7 +75,7 @@ export function SpotlightButton({
   const sizeClasses = {
     sm: "h-7 px-2.5 py-1 text-[10px]",
     md: "h-8.5 px-3.5 py-1.5 text-xs",
-    lg: "h-11 px-5 py-2 text-sm scale-[2.2] max-[1025px]:scale-[1.5]",
+    lg: "h-11 px-5 py-2 text-sm scale-[2.2] max-lg:scale-[1.5]",
   }[size];
   const reducedMotion = usePrefersReducedMotion();
   const instanceId = useId().replace(/[^a-zA-Z0-9]/g, "");

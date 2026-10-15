@@ -34,14 +34,6 @@
     {
       "path": "index.tsx",
       "target": "src/components/effects/animated-modal/index.tsx"
-    },
-    {
-      "path": "AnimatedModalContent.tsx",
-      "target": "src/components/effects/animated-modal/AnimatedModalContent.tsx"
-    },
-    {
-      "path": "ScrollablePopupContent.tsx",
-      "target": "src/components/effects/animated-modal/ScrollablePopupContent.tsx"
     }
   ],
   "props": [

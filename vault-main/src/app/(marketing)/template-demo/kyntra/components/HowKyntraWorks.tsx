@@ -145,17 +145,17 @@ export default function HowKyntraWorks() {
       className="kyntra-container relative w-full bg-white text-black"
     >
     
-      <div className="mx-auto flex max-w-400 flex-col gap-[2vw] max-[1025px]:gap-[8vw] text-center">
+      <div className="mx-auto flex max-w-400 flex-col gap-[2vw] max-lg:gap-[8vw] text-center">
         <ParaAnim
           as="h2"
-          className="font-helvetica-neue leading-[1.15] font-normal tracking-[-0.02em] max-[1025px]:text-[6vw] max-md:text-[8vw]"
+          className="font-helvetica-neue leading-[1.15] font-normal tracking-[-0.02em] max-lg:text-[6vw] max-md:text-[8vw]"
         >
           How Kyntra Works
         </ParaAnim>
 
         <ParaAnim
           as="p"
-          className="text-24 mx-auto tracking-wide w-[60vw] leading-[1.6] text-black max-[1025px]:max-w-full  max-[1025px]:w-full"
+          className="text-24 mx-auto tracking-wide w-[60vw] leading-[1.6] text-black max-lg:max-w-full  max-lg:w-full"
         >
           Kyntra Makes It Simple To Get Any Home Service Done In Just A Few
           Steps. First, You Tell Us What You Need By Choosing A Service Or
@@ -163,7 +163,7 @@ export default function HowKyntraWorks() {
         </ParaAnim>
       </div>
 
-      <div className="relative mx-auto mt-[5vw] max-[1025px]:mt-[5vh] flex w-full flex-col items-center">
+      <div className="relative mx-auto mt-[5vw] max-lg:mt-[5vh] flex w-full flex-col items-center">
         {STEPS.map((step, index) => (
           <div key={step.title} className="flex mb-[2vw] w-full flex-col items-center">
             <TimelineConnector
@@ -175,7 +175,7 @@ export default function HowKyntraWorks() {
               ref={(el) => {
                 if (el) stepRefs.current[index] = el;
               }}
-              className="mt-[2vw] mb-[1vw] max-[1025px]:mt-[6vw] max-[1025px]:mb-[4vw] space-y-[1vw] text-center max-[1025px]:space-y-[1vh]"
+              className="mt-[2vw] mb-[1vw] max-lg:mt-[6vw] max-lg:mb-[4vw] space-y-[1vw] text-center max-lg:space-y-[1vh]"
             >
               <h3 className="step-title font-helvetica-neue text-[1.65vw] font-normal max-md:text-[6vw]">
                 {step.title}

@@ -97,16 +97,6 @@
       "path": "index.tsx",
       "type": "registry:component",
       "target": "src/components/effects/depth-card-stack/index.tsx"
-    },
-    {
-      "path": "DepthCardStackComp.tsx",
-      "type": "registry:component",
-      "target": "src/components/effects/depth-card-stack/DepthCardStackComp.tsx"
-    },
-    {
-      "path": "SliderCard.tsx",
-      "type": "registry:component",
-      "target": "src/components/effects/depth-card-stack/SliderCard.tsx"
     }
   ]
 }

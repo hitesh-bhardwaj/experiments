@@ -1,10 +1,265 @@
+/* eslint-disable react-hooks/exhaustive-deps -- React Compiler / legacy-pattern rules: fixing risks changing animation timing (see eslint.config.mjs, issue #16); <img> kept for dynamic user-supplied sources. */
+// Built using Hyperiux Vault: https://vault.hyperiux.com
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
 import gsap from "gsap";
+import { useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
-import { prefersReducedMotion } from "@/lib/motion";
-import { createSuspendedRaf } from "./createSuspendedRaf";
+
+import Image from "next/image";
+const DEFAULT_ROOT_MARGIN = "256px";
+
+type RafRoot = Element | null | { current: Element | null } | (() => Element | null);
+
+function resolveElement(root: RafRoot): Element | null {
+  if (!root) return null;
+  if (typeof root === "function") return root() ?? null;
+  if (typeof root === "object" && "current" in root) return root.current ?? null;
+  return root;
+}
+
+interface VisibilityGateOptions {
+  root?: RafRoot;
+  rootMargin?: string;
+  threshold?: number;
+  observeTab?: boolean;
+  observeOffscreen?: boolean;
+  onChange?: (active: boolean) => void;
+}
+
+interface VisibilityGate {
+  readonly isActive: boolean;
+  observe: (nextRoot?: RafRoot) => void;
+  destroy: () => void;
+}
+
+function createVisibilityGate({
+  root = null,
+  rootMargin = DEFAULT_ROOT_MARGIN,
+  threshold = 0,
+  observeTab = true,
+  observeOffscreen = true,
+  onChange,
+}: VisibilityGateOptions = {}): VisibilityGate {
+  let tabVisible =
+    typeof document === "undefined" ? true : !document.hidden;
+  // Match border-beam: assume onscreen until the observer reports otherwise.
+  let onscreen = true;
+  let destroyed = false;
+  let observer: IntersectionObserver | null = null;
+
+  const isActive = () => {
+    if (destroyed) return false;
+    if (observeTab && !tabVisible) return false;
+    if (observeOffscreen && resolveElement(root) && !onscreen) return false;
+    return true;
+  };
+
+  let lastActive = isActive();
+
+  const emit = () => {
+    if (destroyed) return;
+    const next = isActive();
+    if (next === lastActive) return;
+    lastActive = next;
+    onChange?.(next);
+  };
+
+  const onVisibilityChange = () => {
+    tabVisible = !document.hidden;
+    emit();
+  };
+
+  if (observeTab && typeof document !== "undefined") {
+    document.addEventListener("visibilitychange", onVisibilityChange);
+  }
+
+  const bindObserver = () => {
+    if (!observeOffscreen || typeof IntersectionObserver === "undefined") {
+      return;
+    }
+
+    const el = resolveElement(root);
+    if (!el) return;
+
+    observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          onscreen = entry.isIntersecting;
+        }
+        emit();
+      },
+      { rootMargin, threshold },
+    );
+
+    observer.observe(el);
+  };
+
+  bindObserver();
+
+  return {
+    /** Whether the animation should currently run. */
+    get isActive() {
+      return isActive();
+    },
+
+    /**
+     * Re-bind IntersectionObserver after the root element mounts late
+     * (e.g. ref not ready on first call). Safe to call multiple times.
+     */
+    observe(nextRoot?: RafRoot) {
+      if (destroyed) return;
+      if (nextRoot != null) root = nextRoot;
+      if (observer) {
+        observer.disconnect();
+        observer = null;
+      }
+      onscreen = true;
+      bindObserver();
+      emit();
+    },
+
+    destroy() {
+      if (destroyed) return;
+      destroyed = true;
+      if (observeTab && typeof document !== "undefined") {
+        document.removeEventListener("visibilitychange", onVisibilityChange);
+      }
+      if (observer) {
+        observer.disconnect();
+        observer = null;
+      }
+    },
+  };
+}
+
+interface SuspendedRafOptions {
+  onFrame: (time: number) => void;
+  root?: RafRoot;
+  rootMargin?: string;
+  threshold?: number;
+  observeTab?: boolean;
+  observeOffscreen?: boolean;
+}
+
+interface SuspendedRaf {
+  start: () => void;
+  stop: () => void;
+  readonly isRunning: boolean;
+  readonly isActive: boolean;
+  observe: (nextRoot?: RafRoot) => void;
+  destroy: () => void;
+}
+
+/**
+ * Owns a requestAnimationFrame loop that auto-pauses when the tab is hidden
+ * or the root element is offscreen.
+ */
+function createSuspendedRaf({
+  onFrame,
+  root = null,
+  rootMargin = DEFAULT_ROOT_MARGIN,
+  threshold = 0,
+  observeTab = true,
+  observeOffscreen = true,
+}: SuspendedRafOptions): SuspendedRaf {
+  if (typeof onFrame !== "function") {
+    throw new TypeError("createSuspendedRaf: onFrame is required");
+  }
+
+  let rafId: number | null = null;
+  let running = false;
+  let destroyed = false;
+
+  const stopRaf = () => {
+    if (rafId != null) {
+      cancelAnimationFrame(rafId);
+      rafId = null;
+    }
+  };
+
+  const tick = (time: number) => {
+    rafId = null;
+    if (destroyed || !running || !gate.isActive) return;
+    onFrame(time);
+    if (!destroyed && running && gate.isActive) {
+      rafId = requestAnimationFrame(tick);
+    }
+  };
+
+  const sync = () => {
+    if (destroyed) return;
+    if (running && gate.isActive) {
+      if (rafId == null) {
+        rafId = requestAnimationFrame(tick);
+      }
+    } else {
+      stopRaf();
+    }
+  };
+
+  const gate = createVisibilityGate({
+    root,
+    rootMargin,
+    threshold,
+    observeTab,
+    observeOffscreen,
+    onChange: sync,
+  });
+
+  return {
+    /** Start (or resume) the loop when visibility allows. */
+    start() {
+      if (destroyed) return;
+      running = true;
+      sync();
+    },
+
+    /** Stop requesting frames (visibility listeners stay attached until destroy). */
+    stop() {
+      running = false;
+      stopRaf();
+    },
+
+    /** Whether the caller has started the loop (may still be paused by visibility). */
+    get isRunning() {
+      return running;
+    },
+
+    /** Whether a frame is currently allowed to schedule. */
+    get isActive() {
+      return gate.isActive;
+    },
+
+    /** Re-attach offscreen observer to a (new) root element. */
+    observe(nextRoot?: RafRoot) {
+      gate.observe(nextRoot);
+      sync();
+    },
+
+    /** Tear down listeners and cancel any pending frame. */
+    destroy() {
+      if (destroyed) return;
+      destroyed = true;
+      running = false;
+      stopRaf();
+      gate.destroy();
+    },
+  };
+}
+
+export {
+  createSuspendedRaf,
+  createVisibilityGate,
+  DEFAULT_ROOT_MARGIN,
+};
+
+// True when the user has asked the OS to minimise animation. Safe to call
+// during render - returns false on the server.
+function prefersReducedMotion() {
+  if (typeof window === "undefined") return false;
+  return window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches ?? false;
+}
 
 const ImageDistortionVertex = `
   varying vec2 vUv;
@@ -177,9 +432,7 @@ interface ScrollDistortionProps {
   rgbShift?: number;
   distortionScale?: number;
   transitionDuration?: number;
-  /** Fill the parent instead of the viewport. Slides follow the page scroll
-   *  (the box's progress through the viewport) instead of hijacking the wheel. */
-  contained?: boolean;
+  transitionEase?: string;
 }
 
 export default function ScrollDistortion({
@@ -188,8 +441,8 @@ export default function ScrollDistortion({
   rgbShift,
   distortionScale,
   transitionDuration,
+  transitionEase,
   shaderConfig = EMPTY_SHADER_CONFIG,
-  contained = false,
   displacementSrc = "https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/distortion-noise.jpg",
 }: ScrollDistortionProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -223,8 +476,6 @@ export default function ScrollDistortion({
     isTransitioningRef.current = false;
     wheelDeltaRef.current = 0;
     touchStartYRef.current = null;
-    textRefs.current = [];
-    imageRefs.current = [];
 
     Promise.all([
       ...sections.map((section) => loadCorsObjectUrl(section.src)),
@@ -248,8 +499,13 @@ export default function ScrollDistortion({
     return () => {
       isCancelled = true;
       nextObjectUrls.forEach((url) => URL.revokeObjectURL(url));
+      // Clear on cleanup, not on mount: clearing on mount wipes refs that were
+      // just attached, and memoized ref callbacks (React Compiler) never re-run
+      // to refill them, so the text could never be found or hidden.
+      textRefs.current = [];
+      imageRefs.current = [];
     };
-  }, [sections, displacementSrc]);
+  }, [sections]);
 
   const areImagesDecoded =
     objectUrls?.length === sections.length + 1 &&
@@ -286,6 +542,7 @@ export default function ScrollDistortion({
       ...(transitionDuration !== undefined
         ? { transitionDuration }
         : {}),
+      ...(transitionEase !== undefined ? { transitionEase } : {}),
       // Reduced motion: zero out the displacement/RGB-shift/scale warp -
       // the shader still runs the same u_progress tween, but with these at
       // 0 the distortion terms drop out and it's left with a plain
@@ -293,11 +550,8 @@ export default function ScrollDistortion({
       ...(reducedMotion ? { strength: 0, rgbShift: 0, scale: 0 } : {}),
     };
 
-    const getSize = () =>
-      contained
-        ? { w: containerElement.clientWidth || 1, h: containerElement.clientHeight || 1 }
-        : { w: window.innerWidth, h: window.innerHeight };
-    const { w: width, h: height } = getSize();
+    const width = window.innerWidth;
+    const height = window.innerHeight;
 
     const scene = new THREE.Scene();
 
@@ -408,7 +662,7 @@ export default function ScrollDistortion({
       textTimelineRef.current = null;
 
       gsap.killTweensOf(allChars);
-      gsap.set(containerElement.parentElement?.querySelector(".text-container") ?? [], { opacity: 1 });
+      gsap.set(".text-container", { opacity: 1 });
 
       // Reduced motion: no vertical slide at all - chars stay put, only
       // autoAlpha (opacity) ever changes.
@@ -658,7 +912,8 @@ export default function ScrollDistortion({
     setIsSceneReady(true);
 
     const onResize = () => {
-      const { w: nextWidth, h: nextHeight } = getSize();
+      const nextWidth = window.innerWidth;
+      const nextHeight = window.innerHeight;
 
       renderer.setSize(nextWidth, nextHeight);
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, MAX_PIXEL_RATIO));
@@ -675,39 +930,14 @@ export default function ScrollDistortion({
       material.uniforms.u_resolution.value.set(nextWidth, nextHeight);
     };
 
-    let resizeObserver: ResizeObserver | null = null;
-
-    // Embedded: the page scrolls normally; the slide is picked from how far the
-    // box has travelled through the viewport (entering at the bottom → first
-    // slide, leaving at the top → last).
-    const onPageScroll = () => {
-      const r = containerElement.getBoundingClientRect();
-      const vh = window.innerHeight;
-      const progress = Math.min(1, Math.max(0, (vh - r.top) / (vh + r.height)));
-      const index = Math.min(sections.length - 1, Math.floor(progress * sections.length));
-      if (index === targetIndexRef.current) return;
-      // Mid-transition, just retarget: the running tween hands off to it.
-      targetIndexRef.current = index;
-      if (!isTransitioningRef.current) transitionTo(index);
-    };
-
-    if (contained) {
-      resizeObserver = new ResizeObserver(onResize);
-      resizeObserver.observe(containerElement);
-      window.addEventListener("scroll", onPageScroll, { passive: true });
-      onPageScroll();
-    } else {
-      window.addEventListener("wheel", onWheel, { passive: false });
-      window.addEventListener("touchstart", onTouchStart, { passive: true });
-      window.addEventListener("touchmove", onTouchMove, { passive: true });
-      window.addEventListener("resize", onResize);
-    }
+    window.addEventListener("wheel", onWheel, { passive: false });
+    window.addEventListener("touchstart", onTouchStart, { passive: true });
+    window.addEventListener("touchmove", onTouchMove, { passive: true });
+    window.addEventListener("resize", onResize);
 
     const textRefGroups = textRefs.current;
 
     return () => {
-      resizeObserver?.disconnect();
-      window.removeEventListener("scroll", onPageScroll);
       window.removeEventListener("wheel", onWheel);
       window.removeEventListener("touchstart", onTouchStart);
       window.removeEventListener("touchmove", onTouchMove);
@@ -741,23 +971,16 @@ export default function ScrollDistortion({
     rgbShift,
     distortionScale,
     transitionDuration,
-    contained,
+    transitionEase,
   ]);
 
   return (
-    <section
-      className={
-        contained
-          ? "@container absolute inset-0 h-full w-full overflow-hidden bg-black"
-          : "fixed inset-0 h-screen w-screen overflow-hidden bg-black"
-      }
-    >
+    <section className="fixed inset-0 h-screen w-screen overflow-hidden bg-black">
       <div className="hidden">
         {objectUrls?.slice(0, sections.length).map((url, index) => (
           <div key={`${resolveImageSource(sections[index]?.src)}-${index}`}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              ref={(element) => {
+            <Image
+              ref={(element: HTMLImageElement | null) => {
                 imageRefs.current[index] = element;
 
                 if (element?.complete && element.naturalWidth > 0) {
@@ -769,14 +992,17 @@ export default function ScrollDistortion({
               src={url}
               onLoad={() => markImageDecoded(url)}
               alt="asset-image"
+              width={1200}
+              height={800}
+              loading="eager"
+              unoptimized
             />
           </div>
         ))}
 
         {objectUrls?.[sections.length] && (
-          /* eslint-disable-next-line @next/next/no-img-element */
-          <img
-            ref={(element) => {
+          <Image
+            ref={(element: HTMLImageElement | null) => {
               imageRefs.current[sections.length] = element;
 
               if (element?.complete && element.naturalWidth > 0) {
@@ -788,28 +1014,35 @@ export default function ScrollDistortion({
             src={objectUrls[sections.length]}
             onLoad={() => markImageDecoded(objectUrls[sections.length])}
             alt="asset-image"
+            width={1200}
+            height={800}
+            loading="eager"
+            unoptimized
           />
         )}
       </div>
 
       {(objectUrls?.[0] || sections[0]?.src) && (
-        /* eslint-disable-next-line @next/next/no-img-element */
-        <img
-          className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-300 ${isSceneReady ? "opacity-0" : "opacity-100"
-            }`}
+        <Image
+          className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-300 ${
+            isSceneReady ? "opacity-0" : "opacity-100"
+          }`}
           src={objectUrls?.[0] || resolveImageSource(sections[0].src)}
           alt="asset-image"
           decoding="async"
+          fill
+          loading="eager"
+          unoptimized
         />
       )}
 
       <div ref={containerRef} className="absolute inset-0 h-full w-full" />
-      {contained ? null : <h1 className="sr-only">Scroll Distortion</h1>}
+
       <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center overflow-hidden text-container opacity-0">
         {splitSections.map((section, sectionIndex) => (
-          <h2
+          <h1
             key={`${section.text}-${sectionIndex}`}
-            className={`absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 ${contained ? "text-[10cqw]" : "text-[10vw]"} leading-none text-white`}
+            className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 text-[10vw] leading-none text-white"
             aria-label={section.text}
           >
             {section.chars.map((char, charIndex) => (
@@ -819,7 +1052,7 @@ export default function ScrollDistortion({
                 aria-hidden="true"
               >
                 <span
-                  ref={(element) => {
+                  ref={(element: HTMLImageElement | null) => {
                     if (!textRefs.current[sectionIndex]) {
                       textRefs.current[sectionIndex] = [];
                     }
@@ -832,7 +1065,7 @@ export default function ScrollDistortion({
                 </span>
               </span>
             ))}
-          </h2>
+          </h1>
         ))}
       </div>
     </section>

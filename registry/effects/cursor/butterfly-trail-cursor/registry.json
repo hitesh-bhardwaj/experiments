@@ -38,10 +38,6 @@
     {
       "path": "index.tsx",
       "target": "src/components/effects/butterfly-trail-cursor/index.tsx"
-    },
-    {
-      "path": "createSuspendedRaf.ts",
-      "target": "src/components/effects/butterfly-trail-cursor/createSuspendedRaf.ts"
     }
   ],
   "props": [

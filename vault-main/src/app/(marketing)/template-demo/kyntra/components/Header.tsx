@@ -181,11 +181,11 @@ const Header: React.FC = () => {
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-50 px-[3vw] py-[1.1vw] transition-all duration-700 ease-out max-[1025px]:px-[5%] max-[1025px]:py-[5%] ${
+      className={`fixed inset-x-0 top-0 z-50 px-[3vw] py-[1.1vw] transition-all duration-700 ease-out max-lg:px-[5%] max-lg:py-[5%] ${
         !revealed
           ? "-translate-y-full"
           : hidden
-            ? "-translate-y-full max-[1025px]:translate-y-0"
+            ? "-translate-y-full max-lg:translate-y-0"
             : "translate-y-0"
       } ${isScrolled ? "bg-black/30  backdrop-blur-md" : ""}`}
     >
@@ -195,7 +195,7 @@ const Header: React.FC = () => {
           className="relative z-60 flex items-center"
           aria-label="Kyntra home"
         >
-          <div className="h-fit w-[8vw] max-[1025px]:w-[20vw] max-md:w-[26vw]">
+          <div className="h-fit w-[8vw] max-lg:w-[20vw] max-md:w-[26vw]">
             <Image
               src={kyntraLogo}
               alt="Kyntra"
@@ -206,7 +206,7 @@ const Header: React.FC = () => {
           </div>
         </Link>
 
-        <nav className="flex items-center gap-[3vw] max-[1025px]:hidden">
+        <nav className="flex items-center gap-[3vw] max-lg:hidden">
           {navLinks.map((link) => (
             <CharStaggerButton
               key={link.label}
@@ -220,7 +220,7 @@ const Header: React.FC = () => {
           ))}
         </nav>
 
-        <div className="max-[1025px]:hidden">
+        <div className="max-lg:hidden">
           <CharStaggerPrimaryButton
             data-mobile-menu-row
             text="Get Started"
@@ -244,7 +244,7 @@ const Header: React.FC = () => {
             menuOpen ? "Close navigation menu" : "Open navigation menu"
           }
           aria-expanded={menuOpen}
-          className="relative z-60 hidden h-[6vw] w-[7vw] shrink-0 items-center justify-center max-[1025px]:flex max-md:h-[8vw] max-md:w-[9vw]"
+          className="relative z-60 hidden h-[6vw] w-[7vw] shrink-0 items-center justify-center max-lg:flex max-md:h-[8vw] max-md:w-[9vw]"
         >
           <span className="relative block h-[3vw] w-[5.5vw] max-md:h-[4vw] max-md:w-[7vw]">
             <span
@@ -273,7 +273,7 @@ const Header: React.FC = () => {
       <div
         ref={mobileMenuRef}
         style={{ clipPath: CLOSED_CLIP, visibility: "hidden", opacity: 0 }}
-        className="fixed inset-0 z-50 hidden h-dvh bg-black px-[5%] pb-[5vw] pt-[28vw] max-[1025px]:block max-md:pt-[34vw]"
+        className="fixed inset-0 z-50 hidden h-dvh bg-black px-[5%] pb-[5vw] pt-[28vw] max-lg:block max-md:pt-[34vw]"
       >
         <nav className="flex h-full flex-col justify-between">
           <div className="flex flex-col gap-[5vw] max-md:gap-[7vw]">

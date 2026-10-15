@@ -15,7 +15,7 @@ export default function DemoContent({ registry }: { registry: any }) {
           <ScrambleLinkButton
             {...buttonProps}
             text={btnText}
-            className="text-[2vw] max-sm:text-[4.5vw]"
+            className="scale-150 text-[2vw] max-sm:text-[4.5vw]"
           />
         );
       }}

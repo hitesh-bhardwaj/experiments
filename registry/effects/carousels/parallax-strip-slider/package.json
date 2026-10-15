@@ -16,7 +16,6 @@
     "gsap": "*"
   },
   "dependencies": {
-    "@gsap/react": "*",
     "gsap": "*"
   }
 }

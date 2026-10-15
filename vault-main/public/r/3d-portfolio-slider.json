@@ -2,18 +2,24 @@
   "name": "3d-portfolio-slider",
   "type": "registry:component",
   "title": "3D Portfolio Slider",
-  "description": "Infinite scroll slider with a Three.ts WebGL fullscreen plane, cosine zoom distortion, a circular thumbnail ring, and GSAP text transitions",
+  "description": "Infinite scroll slider with a Three.js WebGL fullscreen plane, cosine zoom distortion, a circular thumbnail ring, and GSAP text transitions",
   "dependencies": [
-    "three",
     "gsap",
-    "lenis"
+    "lenis",
+    "three"
   ],
   "registryDependencies": [],
   "exportName": "PortfolioSlider3D",
   "exportKind": "default",
   "tier": "pro",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "changelog": [
+    {
+      "version": "1.0.2",
+      "date": "2026-09-18",
+      "summary": "Fix cover image being stretched by mapping the shader UVs to crop (object-cover) instead of stretching to the plane",
+      "breaking": false
+    },
     {
       "version": "1.0.1",
       "date": "2026-07-23",
@@ -84,16 +90,6 @@
       "path": "index.tsx",
       "type": "registry:component",
       "target": "src/components/effects/3d-portfolio-slider/index.tsx"
-    },
-    {
-      "path": "PortfolioSlider.tsx",
-      "type": "registry:component",
-      "target": "src/components/effects/3d-portfolio-slider/PortfolioSlider.tsx"
-    },
-    {
-      "path": "createSuspendedRaf.ts",
-      "type": "registry:component",
-      "target": "src/components/effects/3d-portfolio-slider/createSuspendedRaf.ts"
     }
   ]
 }

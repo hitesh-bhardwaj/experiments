@@ -35,26 +35,6 @@
     {
       "path": "index.tsx",
       "target": "src/components/effects/expanding-navbar/index.tsx"
-    },
-    {
-      "path": "ExpandingNavbarDesktop.tsx",
-      "target": "src/components/effects/expanding-navbar/ExpandingNavbarDesktop.tsx"
-    },
-    {
-      "path": "ExpandingNavbarMobile.tsx",
-      "target": "src/components/effects/expanding-navbar/ExpandingNavbarMobile.tsx"
-    },
-    {
-      "path": "HoverFillLink.tsx",
-      "target": "src/components/effects/expanding-navbar/HoverFillLink.tsx"
-    },
-    {
-      "path": "data.ts",
-      "target": "src/components/effects/expanding-navbar/data.ts"
-    },
-    {
-      "path": "useFocusTrap.ts",
-      "target": "src/components/effects/expanding-navbar/useFocusTrap.ts"
     }
   ],
   "props": [
@@ -102,6 +82,17 @@
       "type": "string",
       "default": "#ff5f00",
       "description": "Hover or active link accent color.",
+      "remixer": {
+        "control": "color",
+        "group": "style",
+        "groupTitle": "Style"
+      }
+    },
+    {
+      "name": "menuBackgroundColor",
+      "type": "string",
+      "default": "#111111",
+      "description": "Background color of the menu bar and expanded menu panels.",
       "remixer": {
         "control": "color",
         "group": "style",

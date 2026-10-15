@@ -179,15 +179,15 @@ const Gallery = () => {
 
   const renderColumn = (columnFeatures: GalleryFeature[]) => {
     return (
-      <div className="flex flex-col gap-[3vw] w-full max-[1025px]:gap-[4vw]">
+      <div className="flex flex-col gap-[3vw] w-full max-lg:gap-[4vw]">
         {columnFeatures.map((feature, index) => (
           <div
             key={index}
             className="cursor-pointer"
             onMouseEnter={() => handleImageHover(feature)}
           >
-            <div className="fadeup flex gap-[2vw]  items-center pb-[1vw] max-md:gap-[4vw] max-[1025px]:pb-[1.5vw]">
-              <div className="h-[2.6vw] w-[2.6vw] shrink-0 max-md:w-[9vw] max-md:h-[9vw] max-[1025px]:w-[3.5vw] max-[1025px]:h-[3.5vw]">
+            <div className="fadeup flex gap-[2vw]  items-center pb-[1vw] max-md:gap-[4vw] max-lg:pb-[1.5vw]">
+              <div className="h-[2.6vw] w-[2.6vw] shrink-0 max-md:w-[9vw] max-md:h-[9vw] max-lg:w-[3.5vw] max-lg:h-[3.5vw]">
                 <div className="w-full h-full relative">
                   <Image
                     quality={100}
@@ -199,7 +199,7 @@ const Gallery = () => {
                   />
                 </div>
               </div>
-              <h4 className="font-head uppercase text-[1.25vw] tracking-wide max-md:text-[3.8vw] max-[1025px]:text-[2.2vw] text-[#2B2B2B]">
+              <h4 className="font-head uppercase text-[1.25vw] tracking-wide max-md:text-[3.8vw] max-lg:text-[2.2vw] text-[#2B2B2B]">
                 {feature.name}
               </h4>
             </div>
@@ -211,21 +211,21 @@ const Gallery = () => {
   };
 
   return (
-    <section className="py-[5%] bg-[#E0D4C6] relative z-10 max-md:py-[10%] max-[1025px]:py-[7%]" ref={bodyRef}>
+    <section className="py-[5%] bg-[#E0D4C6] relative z-10 max-md:py-[10%] max-lg:py-[7%]" ref={bodyRef}>
       <div className="px-[5%] max-md:px-[6%]">
         <MaskTextReveal>
 
         <h2
           data-title-anim
-          className={`font-neue-montreal font-medium! text-[#1C1B1A] text-[3.8vw] leading-[1.2] max-[1025px]:text-[6.8vw] max-md:text-[8.8vw] mb-[2vw]`}
+          className={`font-neue-montreal font-medium! text-[#1C1B1A] text-[3.8vw] leading-[1.2] max-lg:text-[6.8vw] max-md:text-[8.8vw] mb-[2vw]`}
           >
           Core Features
         </h2>
           </MaskTextReveal>
 
-          <MaskTextReveal className="w-[40%] max-[1025px]:w-full">
+          <MaskTextReveal className="w-[40%] max-lg:w-full">
 
-        <p data-para-anim className=" max-md:py-[3vw] max-[1025px]:text-[3.5vw] max-md:text-[4.2vw] text-[1.25vw] text-[#1C1B1A] tracking-wide ">
+        <p data-para-anim className=" max-md:py-[3vw] max-lg:text-[3.5vw] max-md:text-[4.2vw] text-[1.25vw] text-[#1C1B1A] tracking-wide ">
           The interiors of Lumera Heights reflect a refined balance of modern luxury and functional elegance.
         </p>
           </MaskTextReveal>
@@ -233,10 +233,10 @@ const Gallery = () => {
           <FadeUp>
 
           
-        <div className="w-full mt-[6vw]  mb-[2vw] relative flex items-start justify-between gap-[3vw] max-[1025px]:flex-col max-md:gap-[4vw]">
-          <div className="w-[27%] my-auto max-[1025px]:w-full max-[1025px]:order-1">{renderColumn(leftFeatures)}</div>
+        <div className="w-full mt-[6vw]  mb-[2vw] relative flex items-start justify-between gap-[3vw] max-lg:flex-col max-md:gap-[4vw]">
+          <div className="w-[27%] my-auto max-lg:w-full max-lg:order-1">{renderColumn(leftFeatures)}</div>
 
-          <div className="w-[33%] h-[45vw] shrink-0 z-10 overflow-hidden relative fadeup max-[1025px]:static max-[1025px]:w-full max-md:w-full max-md:h-[120vw] max-[1025px]:h-[70vw] max-[1025px]:order-0">
+          <div className="w-[33%] h-[45vw] shrink-0 z-10 overflow-hidden relative fadeup max-lg:static max-lg:w-full max-md:w-full max-md:h-[120vw] max-lg:h-[70vw] max-lg:order-0">
             <div className="w-full h-full relative overflow-hidden" ref={previewContainerRef}>
               <Image
                 src={leftFeatures[0].image}
@@ -249,7 +249,7 @@ const Gallery = () => {
             </div>
           </div>
 
-          <div className="w-[27%] my-auto max-[1025px]:w-full max-[1025px]:order-2">{renderColumn(rightFeatures)}</div>
+          <div className="w-[27%] my-auto max-lg:w-full max-lg:order-2">{renderColumn(rightFeatures)}</div>
         </div>
         </FadeUp>
       </div>

@@ -20,16 +20,36 @@ interface PerspectiveTextRevealProps {
  stagger?: number;
  className?: string;
  scrub?: boolean;
+ /** Opacity the pieces start from before revealing (0-1). */
+ startOpacity?: number;
+ /** Which side the pieces swing in from. */
+ direction?: "top" | "bottom";
+ /** Animate per character, per word, or per line. */
+ splitBy?: "chars" | "words" | "lines";
+ /** Starting tilt around the X axis in degrees; its sign follows the direction. */
+ rotation?: number;
+ /** GSAP ease for the reveal. */
+ ease?: string;
+ /** Perspective distance in px - lower is a stronger 3D effect. */
+ perspective?: number;
 }
 
+const DEFAULT_TEXT = <p className="text-2xl">Perspective text tilts into place as it scrolls into view.</p>;
+
 export default function PerspectiveTextReveal({
- children,
+ children = DEFAULT_TEXT,
  animateOnScroll = true,
  delay = 0,
  duration = 0.8,
  stagger = 0.08,
  className = "",
  scrub = false,
+ startOpacity = 0,
+ direction = "top",
+ splitBy = "lines",
+ rotation = 70,
+ ease = "power3.out",
+ perspective = 800,
 }: PerspectiveTextRevealProps) {
  const containerRef = useRef<any>(null);
  const splitRefs = useRef<any[]>([]);
@@ -56,14 +76,20 @@ export default function PerspectiveTextReveal({
 
  ctx = gsap.context(() => {
  elements.forEach((element) => {
+ // Characters are split inside their words so a word never breaks
+ // across lines mid-animation.
  const split = SplitText.create(element, {
- type:"lines",
+ type: splitBy === "chars" ? "words,chars" : splitBy === "words" ? "words" : "lines",
  linesClass:"line++",
  reduceWhiteSpace: false,
  });
 
  splitRefs.current.push(split);
- linesRef.current.push(...split.lines);
+ const pieces = split[splitBy] ?? split.lines;
+ if (splitBy !== "lines") {
+ gsap.set(pieces, { display: "inline-block" });
+ }
+ linesRef.current.push(...pieces);
  });
 
  if (prefersReduced) {
@@ -94,12 +120,16 @@ export default function PerspectiveTextReveal({
  return;
  }
 
+ const fromBottom = direction === "bottom";
+
  gsap.set(linesRef.current, {
- yPercent: -100,
- rotateX: 70,
- opacity: 0,
- transformPerspective: 800,
- transformOrigin:"50% 100%",
+ yPercent: fromBottom ? 100 : -100,
+ rotateX: fromBottom ? -rotation : rotation,
+ opacity: Math.min(1, Math.max(0, startOpacity)),
+ transformPerspective: perspective,
+ // Hide the mirrored back of each piece while it rotates past 90deg.
+ backfaceVisibility: "hidden",
+ transformOrigin: fromBottom ? "50% 0%" : "50% 100%",
  willChange:"transform, opacity",
  });
 
@@ -111,7 +141,7 @@ export default function PerspectiveTextReveal({
  opacity: 1,
  duration,
  stagger,
- ease:"power3.out",
+ ease,
  delay,
  };
 
@@ -137,14 +167,14 @@ export default function PerspectiveTextReveal({
  if (ctx) ctx.revert();
  splitRefs.current.forEach((split) => split?.revert());
  };
- }, [animateOnScroll, delay, duration, scrub, stagger]);
+ }, [animateOnScroll, delay, duration, scrub, stagger, startOpacity, direction, splitBy, rotation, ease, perspective]);
 
  return (
  <div
  ref={containerRef}
  data-copy-wrapper="true"
  className={`opacity-0 ${className}`.trim()}
- style={{ perspective:"800px" }}
+ style={{ perspective: `${perspective}px` }}
  >
  {children}
  </div>

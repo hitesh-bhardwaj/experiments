@@ -2,7 +2,7 @@
   "name": "strip-slider",
   "type": "registry:component",
   "title": "Strip Slider",
-  "description": "WebGL image slider that splits each slide into vertical strips, transitioning with a staggered wave distortion using Three.ts shader materials and GSAP",
+  "description": "WebGL image slider that splits each slide into vertical strips, transitioning with a staggered wave distortion using Three.js shader materials and GSAP",
   "dependencies": [
     "three"
   ],
@@ -90,16 +90,6 @@
       "path": "index.tsx",
       "type": "registry:component",
       "target": "src/components/effects/strip-slider/index.tsx"
-    },
-    {
-      "path": "StripSliderComp.tsx",
-      "type": "registry:component",
-      "target": "src/components/effects/strip-slider/StripSliderComp.tsx"
-    },
-    {
-      "path": "createSuspendedRaf.ts",
-      "type": "registry:component",
-      "target": "src/components/effects/strip-slider/createSuspendedRaf.ts"
     }
   ]
 }

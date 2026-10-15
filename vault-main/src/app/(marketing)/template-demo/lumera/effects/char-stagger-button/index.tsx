@@ -176,11 +176,11 @@ export default function CharStaggerButton({
       onTouchStart={onTouchStart}
       onMouseDown={onMouseDown}
       style={mergedStyle}
-      className={`inline-flex items-center gap-2 no-underline transition-colors duration-500 ease-[cubic-bezier(0.625,0.05,0,1)] motion-reduce:transition-none max-[1025px]:motion-reduce:transition-none max-md:motion-reduce:transition-none ${className}`.trim()}
+      className={`inline-flex items-center gap-2 no-underline transition-colors duration-500 ease-[cubic-bezier(0.625,0.05,0,1)] motion-reduce:transition-none max-lg:motion-reduce:transition-none max-md:motion-reduce:transition-none ${className}`.trim()}
     >
       <div className="mt-[0.3vw]">
         <span className={["inline-block relative", showLine && "w-fit", lineClassName].filter(Boolean).join(" ")}>
-          <span ref={textRef} data-text={sourceText} className={`overflow-hidden relative inline-block leading-[1.2] max-[1025px]:text-[3vw]  ${textClassName}`.trim()}>
+          <span ref={textRef} data-text={sourceText} className={`overflow-hidden relative inline-block leading-[1.2] max-lg:text-[3vw]  ${textClassName}`.trim()}>
             {sourceText}
           </span>
 
@@ -206,20 +206,20 @@ export default function CharStaggerButton({
       {showArrow && Icon && (
         <div className={`relative flex size-[1.18em] items-center justify-start overflow-hidden ${iconClassName}`.trim()}>
           {iconVariant === "single" ? (
-            <Icon className="size-[1.18em] shrink-0 motion-reduce:transition-none max-[1025px]:motion-reduce:transition-none max-md:motion-reduce:transition-none" />
+            <Icon className="size-[1.18em] shrink-0 motion-reduce:transition-none max-lg:motion-reduce:transition-none max-md:motion-reduce:transition-none" />
           ) : (
             <>
               {/* The one already in flow - slides out to the right on
                   hover, handing off to the absolute one below sliding in
                   from the same off-screen position. */}
               <Icon
-                className={`size-[1.18em] shrink-0 transition-transform duration-500 ease-[cubic-bezier(0.625,0.05,0,1)] motion-reduce:transition-none max-[1025px]:motion-reduce:transition-none max-md:motion-reduce:transition-none ${
+                className={`size-[1.18em] shrink-0 transition-transform duration-500 ease-[cubic-bezier(0.625,0.05,0,1)] motion-reduce:transition-none max-lg:motion-reduce:transition-none max-md:motion-reduce:transition-none ${
                   isActive && !prefersReducedMotion ? "translate-x-full" : "translate-x-0"
                 }`}
               />
               <Icon
                 aria-hidden="true"
-                className={`absolute inset-0 size-[1.18em] shrink-0 transition-transform duration-500 ease-[cubic-bezier(0.625,0.05,0,1)] motion-reduce:transition-none max-[1025px]:motion-reduce:transition-none max-md:motion-reduce:transition-none ${
+                className={`absolute inset-0 size-[1.18em] shrink-0 transition-transform duration-500 ease-[cubic-bezier(0.625,0.05,0,1)] motion-reduce:transition-none max-lg:motion-reduce:transition-none max-md:motion-reduce:transition-none ${
                   isActive && !prefersReducedMotion ? "translate-x-0" : "-translate-x-full"
                 }`}
               />

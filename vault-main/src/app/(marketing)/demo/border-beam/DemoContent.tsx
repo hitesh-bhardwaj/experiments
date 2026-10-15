@@ -17,12 +17,12 @@ export default function DemoContent({ registry }: { registry: any }) {
         <>
           <DemoHeader />
           <main className="h-screen overflow-hidden bg-[#eef2f4] text-black">
-            <section className="relative box-border flex h-screen w-full px-8 pb-8 pt-[8vw] max-md:items-center max-md:justify-center max-[1025px]:items-center max-[1025px]:justify-center">
+            <section className="relative box-border flex h-screen w-full px-8 pb-8 pt-[8vw] max-md:items-center max-md:justify-center max-lg:items-center max-lg:justify-center">
               <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,rgba(15,23,42,0.16)_1px,transparent_0)] bg-[length:64px_64px]" />
-              <div className="relative z-10 grid h-full w-full grid-cols-[minmax(0,1fr)_minmax(0,1fr)] items-stretch gap-5 max-lg:grid-cols-1 max-md:h-[110vw] max-[1025px]:h-[60vw]">
+              <div className="relative z-10 grid h-full w-full grid-cols-[minmax(0,1fr)_minmax(0,1fr)] items-stretch gap-5 max-lg:grid-cols-1 max-md:h-[110vw] max-lg:h-[60vw]">
                 <div className="relative h-full min-h-0">{effect}</div>
 
-                <div className="grid h-full min-h-0 grid-rows-[1.28fr_1fr] gap-5 max-md:hidden max-[1025px]:hidden">
+                <div className="grid h-full min-h-0 grid-rows-[1.28fr_1fr] gap-5 max-md:hidden max-lg:hidden">
                   <article className="relative min-h-0 overflow-hidden rounded-[18px] bg-white p-6 shadow-[0_1px_0_rgba(15,23,42,0.04)]">
                     <p className="text-[0.8vw] font-semibold uppercase tracking-[0.16em] text-black/80">
                       World of hearing technology

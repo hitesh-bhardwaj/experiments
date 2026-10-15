@@ -128,11 +128,6 @@
       "path": "index.tsx",
       "type": "registry:component",
       "target": "src/components/effects/animated-tabs/index.tsx"
-    },
-    {
-      "path": "AnimatedTabsComp.tsx",
-      "type": "registry:component",
-      "target": "src/components/effects/animated-tabs/AnimatedTabsComp.tsx"
     }
   ]
 }

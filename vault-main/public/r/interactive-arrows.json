@@ -53,10 +53,10 @@
       "suggested": true
     },
     {
-      "name": "smoothing",
+      "name": "stiffness",
       "type": "number",
       "default": 0.12,
-      "description": "Motion smoothing for arrow response.",
+      "description": "How tightly arrows track the pointer. Higher is stiffer and snappier, lower is looser and smoother.",
       "suggested": true
     }
   ],
@@ -106,8 +106,8 @@
         "step": 1
       },
       {
-        "name": "smoothing",
-        "label": "Smoothing",
+        "name": "stiffness",
+        "label": "Stiffness",
         "type": "range",
         "group": "controls",
         "copyable": true,
@@ -122,46 +122,6 @@
       "path": "index.tsx",
       "type": "registry:component",
       "target": "src/components/effects/interactive-arrows/index.tsx"
-    },
-    {
-      "path": "arrows.tsx",
-      "type": "registry:component",
-      "target": "src/components/effects/interactive-arrows/arrows.tsx"
-    },
-    {
-      "path": "ArrowsLimit.tsx",
-      "type": "registry:component",
-      "target": "src/components/effects/interactive-arrows/ArrowsLimit.tsx"
-    },
-    {
-      "path": "ArrowsOpacity.tsx",
-      "type": "registry:component",
-      "target": "src/components/effects/interactive-arrows/ArrowsOpacity.tsx"
-    },
-    {
-      "path": "ArrowsPlay.tsx",
-      "type": "registry:component",
-      "target": "src/components/effects/interactive-arrows/ArrowsPlay.tsx"
-    },
-    {
-      "path": "lines.tsx",
-      "type": "registry:component",
-      "target": "src/components/effects/interactive-arrows/lines.tsx"
-    },
-    {
-      "path": "points.tsx",
-      "type": "registry:component",
-      "target": "src/components/effects/interactive-arrows/points.tsx"
-    },
-    {
-      "path": "createSuspendedRaf.ts",
-      "type": "registry:component",
-      "target": "src/components/effects/interactive-arrows/createSuspendedRaf.ts"
-    },
-    {
-      "path": "utils.ts",
-      "type": "registry:component",
-      "target": "src/components/effects/interactive-arrows/utils.ts"
     }
   ]
 }

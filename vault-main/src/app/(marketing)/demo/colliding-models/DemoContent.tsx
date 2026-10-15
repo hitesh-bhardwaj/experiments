@@ -13,16 +13,13 @@ export default function DemoContent({ registry }: { registry: any }) {
     >
       {({ effect }) => (
         <>
-          <DemoHeader />
-          <div className="fixed inset-0 h-screen w-screen bg-white flex flex-col overflow-hidden">
-            <div className="max-md:block w-[50%] mx-auto pt-24 max-md:mt-10 max-md:w-[80%] max-sm:w-[90%] max-sm:my-0">
-              <h1 className="text-3xl max-sm:text-2xl text-black text-center">
-                We build 3D visual experiences and interactive web worlds that help
-                bold brands stand apart
-              </h1>
-            </div>
-            {effect}
-          </div>
+          <DemoHeader
+            reducedMotionNote={{
+              title: "The models keep colliding.",
+              body: "Colliding Models runs a live physics simulation that reacts to cursor movement continuously. Since the motion is the entire effect, reduced motion can't be applied here.",
+            }}
+          />
+          {effect}
         </>
       )}
     </RegistryRemixerDemo>

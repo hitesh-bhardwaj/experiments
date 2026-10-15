@@ -21,7 +21,7 @@ const MaskTextWrapper = ({ effectProps = {} }: { effectProps?: Record<string, an
                 {["poster copy", "hero headlines", "launch pages", "story sections"].map((item) => (
                   <span
                     key={item}
-                    className="border border-white/25 px-4 py-2 text-xs font-black uppercase tracking-[0.2em] text-white/80 max-sm:text-[0.62rem]"
+                    className="border border-white/25 px-4 py-2 text-xs font-black tracking-[0.08em] text-white/80 max-sm:text-[0.62rem]"
                   >
                     {item}
                   </span>
@@ -29,7 +29,7 @@ const MaskTextWrapper = ({ effectProps = {} }: { effectProps?: Record<string, an
               </div>
 
               <MaskTextReveal key={replayKey} {...replayProps}>
-                <p className="text-[clamp(3rem,7vw,8rem)] max-md:text-[8vw] font-black uppercase leading-[0.86] text-white max-sm:text-[3.35rem]">
+                <p className="text-[clamp(3rem,7vw,8rem)] max-md:text-[8vw] font-black leading-[0.94] max-sm:text-[3.35rem]">
                   Hide the sentence until the screen asks for it.
                 </p>
               </MaskTextReveal>
@@ -44,7 +44,7 @@ const MaskTextWrapper = ({ effectProps = {} }: { effectProps?: Record<string, an
                 sizes="(max-width: 640px) 100vw, 42vw"
                 className="h-130 w-full object-cover saturate-150 max-sm:h-72"
               />
-              <div className="absolute left-7 top-7 max-w-64 bg-[#f8f2df] p-4 text-sm font-black uppercase leading-tight shadow-[6px_6px_0_#111111] max-sm:left-5 max-sm:top-5 max-sm:max-w-48 max-sm:text-[0.72rem]">
+              <div className="absolute left-7 top-7 max-w-64 bg-[#f8f2df] p-4 text-sm font-black leading-tight shadow-[6px_6px_0_#111111] max-sm:left-5 max-sm:top-5 max-sm:max-w-48 max-sm:text-[0.72rem]">
                 A reveal animation for headlines that need drama without losing readability.
               </div>
             </div>

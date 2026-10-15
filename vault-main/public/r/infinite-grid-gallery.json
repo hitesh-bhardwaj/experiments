@@ -118,21 +118,6 @@
       "path": "index.tsx",
       "type": "registry:component",
       "target": "src/components/effects/infinite-grid-gallery/index.tsx"
-    },
-    {
-      "path": "InfiniteGrid.tsx",
-      "type": "registry:component",
-      "target": "src/components/effects/infinite-grid-gallery/InfiniteGrid.tsx"
-    },
-    {
-      "path": "util.ts",
-      "type": "registry:component",
-      "target": "src/components/effects/infinite-grid-gallery/util.ts"
-    },
-    {
-      "path": "createSuspendedRaf.ts",
-      "type": "registry:component",
-      "target": "src/components/effects/infinite-grid-gallery/createSuspendedRaf.ts"
     }
   ]
 }

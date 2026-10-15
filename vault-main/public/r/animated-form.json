@@ -27,17 +27,6 @@
   ],
   "props": [
     {
-      "name": "accentColor",
-      "type": "color",
-      "default": "#111111",
-      "description": "Accent color for focus states, checkbox checks, and the submit button.",
-      "remixer": {
-        "control": "color",
-        "group": "style",
-        "groupTitle": "Style"
-      }
-    },
-    {
       "name": "backgroundColor",
       "type": "color",
       "default": "#ffffff",
@@ -126,41 +115,6 @@
       "path": "index.tsx",
       "type": "registry:component",
       "target": "src/components/effects/animated-form/index.tsx"
-    },
-    {
-      "path": "Button.tsx",
-      "type": "registry:component",
-      "target": "src/components/effects/animated-form/Button.tsx"
-    },
-    {
-      "path": "Checkbox.tsx",
-      "type": "registry:component",
-      "target": "src/components/effects/animated-form/Checkbox.tsx"
-    },
-    {
-      "path": "ContactForm.tsx",
-      "type": "registry:component",
-      "target": "src/components/effects/animated-form/ContactForm.tsx"
-    },
-    {
-      "path": "Input.tsx",
-      "type": "registry:component",
-      "target": "src/components/effects/animated-form/Input.tsx"
-    },
-    {
-      "path": "PhoneInput.tsx",
-      "type": "registry:component",
-      "target": "src/components/effects/animated-form/PhoneInput.tsx"
-    },
-    {
-      "path": "Select.tsx",
-      "type": "registry:component",
-      "target": "src/components/effects/animated-form/Select.tsx"
-    },
-    {
-      "path": "Textarea.tsx",
-      "type": "registry:component",
-      "target": "src/components/effects/animated-form/Textarea.tsx"
     }
   ]
 }

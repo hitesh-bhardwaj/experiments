@@ -4,10 +4,10 @@
   "title": "Mouse Pixelation",
   "description": "Three R3F WebGL mouse-reactive pixelation effects behind a version-switcher header. V1: GLSL pixel-circle shader with animated orbiting circles and GSAP scroll pin. V2: image texture with velocity-driven block displacement. V3: extruded pixel trail grid paired with a deforming bloom-lit cube that auto-cycles neon colors.",
   "dependencies": [
-    "three",
     "@react-three/fiber",
     "@react-three/postprocessing",
-    "gsap"
+    "gsap",
+    "three"
   ],
   "registryDependencies": [],
   "exportName": "MousePixelation",
@@ -30,45 +30,63 @@
   ],
   "props": [
     {
-      "name": "gridSize",
+      "name": "v1NumberOfGrids",
       "type": "number",
       "default": 35,
-      "description": "Controls the pixel/grid resolution across all three versions."
+      "description": "V1 · Pixel Circles: number of grid cells across the effect."
     },
     {
-      "name": "mouseInteraction",
-      "type": "boolean",
-      "default": true,
-      "description": "Enables cursor-driven pixel movement, trails, and cube rotation."
-    },
-    {
-      "name": "lerp",
+      "name": "v1Lerp",
       "type": "number",
       "default": 0.1,
-      "description": "Controls the smoothing amount for mouse-following motion."
+      "description": "V1 · Pixel Circles: smoothing of the mouse-following motion."
     },
     {
-      "name": "backgroundColor",
+      "name": "v1BackgroundColor",
       "type": "string",
       "default": "#000000",
-      "description": "Canvas background color for the V1 pixel-circle version."
+      "description": "V1 · Pixel Circles: canvas background color."
     },
     {
-      "name": "cubeSize",
+      "name": "v2NumberOfGrids",
       "type": "number",
-      "default": 1,
-      "description": "Scales the cube in the V3 enhanced pixel cube version."
+      "default": 35,
+      "description": "V2 · Pixel Shift: number of grid cells across the effect."
     },
     {
-      "name": "gridEmbossing",
+      "name": "v2Lerp",
+      "type": "number",
+      "default": 0.1,
+      "description": "V2 · Pixel Shift: smoothing of the mouse-following motion."
+    },
+    {
+      "name": "v3NumberOfGrids",
+      "type": "number",
+      "default": 35,
+      "description": "V3 · Pixel Cube: number of grid cells across the effect."
+    },
+    {
+      "name": "v3Lerp",
+      "type": "number",
+      "default": 0.1,
+      "description": "V3 · Pixel Cube: smoothing of the mouse-following motion."
+    },
+    {
+      "name": "v3CubeSize",
       "type": "number",
       "default": 1,
-      "description": "Controls the extruded grid depth in the V3 enhanced pixel cube version."
+      "description": "V3 · Pixel Cube: scale of the cube."
+    },
+    {
+      "name": "v3GridEmbossing",
+      "type": "number",
+      "default": 1,
+      "description": "V3 · Pixel Cube: depth of the extruded grid."
     }
   ],
   "remixer": {
     "enabled": true,
-    "defaultOpenGroupId": "content",
+    "defaultOpenGroupId": "v1",
     "layout": {
       "controlsButtonClassName": "right-4! top-25!"
     },
@@ -77,52 +95,91 @@
     },
     "controls": [
       {
-        "name": "gridSize",
-        "label": "Grid Size",
+        "name": "v1NumberOfGrids",
+        "label": "Number of Grids",
         "type": "range",
-        "group": "content",
+        "group": "v1",
         "min": 8,
         "max": 90,
-        "step": 1
+        "step": 1,
+        "groupTitle": "V1 · Pixel Circles"
       },
       {
-        "name": "mouseInteraction",
-        "label": "Mouse Interaction",
-        "type": "toggle",
-        "group": "content"
-      },
-      {
-        "name": "lerp",
+        "name": "v1Lerp",
         "label": "Lerp",
         "type": "range",
-        "group": "motion",
+        "group": "v1",
         "min": 0.01,
         "max": 0.6,
-        "step": 0.01
+        "step": 0.01,
+        "groupTitle": "V1 · Pixel Circles"
       },
       {
-        "name": "backgroundColor",
-        "label": "V1 Background",
+        "name": "v1BackgroundColor",
+        "label": "Background",
         "type": "color",
-        "group": "style"
+        "group": "v1",
+        "groupTitle": "V1 · Pixel Circles"
       },
       {
-        "name": "cubeSize",
-        "label": "V3 Cube Size",
+        "name": "v2NumberOfGrids",
+        "label": "Number of Grids",
         "type": "range",
-        "group": "style",
+        "group": "v2",
+        "min": 8,
+        "max": 90,
+        "step": 1,
+        "groupTitle": "V2 · Pixel Shift"
+      },
+      {
+        "name": "v2Lerp",
+        "label": "Lerp",
+        "type": "range",
+        "group": "v2",
+        "min": 0.01,
+        "max": 0.6,
+        "step": 0.01,
+        "groupTitle": "V2 · Pixel Shift"
+      },
+      {
+        "name": "v3NumberOfGrids",
+        "label": "Number of Grids",
+        "type": "range",
+        "group": "v3",
+        "min": 8,
+        "max": 90,
+        "step": 1,
+        "groupTitle": "V3 · Pixel Cube"
+      },
+      {
+        "name": "v3Lerp",
+        "label": "Lerp",
+        "type": "range",
+        "group": "v3",
+        "min": 0.01,
+        "max": 0.6,
+        "step": 0.01,
+        "groupTitle": "V3 · Pixel Cube"
+      },
+      {
+        "name": "v3CubeSize",
+        "label": "Cube Size",
+        "type": "range",
+        "group": "v3",
         "min": 0.5,
         "max": 2.2,
-        "step": 0.05
+        "step": 0.05,
+        "groupTitle": "V3 · Pixel Cube"
       },
       {
-        "name": "gridEmbossing",
-        "label": "V3 Grid Embossing",
+        "name": "v3GridEmbossing",
+        "label": "Grid Embossing",
         "type": "range",
-        "group": "style",
+        "group": "v3",
         "min": 0,
         "max": 2,
-        "step": 0.05
+        "step": 0.05,
+        "groupTitle": "V3 · Pixel Cube"
       }
     ]
   },
@@ -131,26 +188,6 @@
       "path": "index.tsx",
       "type": "registry:component",
       "target": "src/components/effects/mouse-pixelation/index.tsx"
-    },
-    {
-      "path": "EnhancedPixelCube.tsx",
-      "type": "registry:component",
-      "target": "src/components/effects/mouse-pixelation/EnhancedPixelCube.tsx"
-    },
-    {
-      "path": "PixelCircle.tsx",
-      "type": "registry:component",
-      "target": "src/components/effects/mouse-pixelation/PixelCircle.tsx"
-    },
-    {
-      "path": "PixelShift.tsx",
-      "type": "registry:component",
-      "target": "src/components/effects/mouse-pixelation/PixelShift.tsx"
-    },
-    {
-      "path": "createSuspendedRaf.ts",
-      "type": "registry:component",
-      "target": "src/components/effects/mouse-pixelation/createSuspendedRaf.ts"
     }
   ]
 }

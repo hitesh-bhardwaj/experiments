@@ -85,7 +85,7 @@ Then open **http://localhost:3000**.
   project-wide find/replace is the most reliable way to re-theme.
 - **Contact form** - `submitHandler` in `GetInTouchModal.tsx` currently
   logs to the console. Replace it with a real API call before shipping.
-- **Responsive breakpoints** - every section uses `max-[1025px]:` for
+- **Responsive breakpoints** - every section uses `max-lg:` for
   tablet and `max-md:` for mobile (Tailwind's default `md`, 768px). Keep
   any new markup consistent with that convention rather than introducing
   Tailwind's other default breakpoints.

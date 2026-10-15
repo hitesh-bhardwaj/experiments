@@ -1,7 +1,10 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState, type CSSProperties, useLayoutEffect } from "react";
-import { Check, ChevronDown, Copy, RotateCcw } from "lucide-react";
+import { ChevronDown, RotateCcw } from "lucide-react";
+import gsap from "gsap";
+import { CopyButtonContent } from "@/components/ui/CodeBlock";
+import { prefersReducedMotion } from "@/lib/motion";
 import styles from "./remixer-panel.module.css";
 import type { RemixerControl, RemixerOption, RemixerPanelProps } from "./types";
 
@@ -160,7 +163,7 @@ function ControlField({
   if (control.type === "checkbox" || control.type === "toggle") {
     return (
       <button type="button" onClick={() => onChange(!value)} className={`${styles.field} ${styles.toggleRow}`}>
-        <span className={styles.fieldLabel}>{control.id ?? control.label}</span>
+        <span className={styles.fieldLabel}>{control.label}</span>
         <span className={`${styles.checkboxOuter} ${value ? styles.checkboxSelected : ""}`}>
           <CheckTick />
         </span>
@@ -173,7 +176,7 @@ function ControlField({
     return (
       <div className={styles.field}>
         <div className={styles.fieldRow}>
-          <span className={styles.fieldLabel}>{control.id ?? control.label}</span>
+          <span className={styles.fieldLabel}>{control.label}</span>
           {/* Small swatch (opens the native picker) right beside the hex value. */}
           <span className={styles.colorValue}>
           <input
@@ -213,7 +216,7 @@ function ControlField({
     return (
       <div className={styles.field}>
         <div className={styles.fieldRow}>
-          <span className={styles.fieldLabel}>{control.id ?? control.label}</span>
+          <span className={styles.fieldLabel}>{control.label}</span>
           <span className={styles.fieldValue}>{displayValue}</span>
         </div>
         {control.description ? <p className={styles.fieldDescription}>{control.description}</p> : null}
@@ -246,7 +249,7 @@ function ControlField({
     return (
       <label className={styles.field}>
         <div className={styles.fieldRow}>
-          <span className={styles.fieldLabel}>{control.id ?? control.label}</span>
+          <span className={styles.fieldLabel}>{control.label}</span>
           <span className={styles.fieldValue}>{displayValue}</span>
         </div>
         {control.description ? <p className={styles.fieldDescription}>{control.description}</p> : null}
@@ -268,7 +271,7 @@ function ControlField({
     return (
       <label className={styles.field}>
         <div className={styles.fieldRow}>
-          <span className={styles.fieldLabel}>{control.id ?? control.label}</span>
+          <span className={styles.fieldLabel}>{control.label}</span>
           <span className={styles.fieldValue}>{displayValue}</span>
         </div>
         {control.description ? <p className={styles.fieldDescription}>{control.description}</p> : null}
@@ -282,7 +285,7 @@ function ControlField({
     return (
       <label className={styles.field}>
         <div className={styles.fieldRow}>
-          <span className={styles.fieldLabel}>{control.id ?? control.label}</span>
+          <span className={styles.fieldLabel}>{control.label}</span>
           <span className={styles.fieldValue}>{control.type}</span>
         </div>
         {control.description ? <p className={styles.fieldDescription}>{control.description}</p> : null}
@@ -306,7 +309,7 @@ function ControlField({
     return (
       <label className={styles.field}>
         <div className={styles.fieldRow}>
-          <span className={styles.fieldLabel}>{control.id ?? control.label}</span>
+          <span className={styles.fieldLabel}>{control.label}</span>
           <span className={styles.fieldValue}>{displayValue}</span>
         </div>
         {control.description ? <p className={styles.fieldDescription}>{control.description}</p> : null}
@@ -320,7 +323,7 @@ function ControlField({
   return (
     <label className={styles.field}>
       <div className={styles.fieldRow}>
-        <span className={styles.fieldLabel}>{control.id ?? control.label}</span>
+        <span className={styles.fieldLabel}>{control.label}</span>
         <input
           type="number"
           min={control.min}
@@ -345,22 +348,6 @@ function ControlField({
   );
 }
 
-// Light JSX colouring for the "Your props" block: tag, prop, value.
-function CodeLine({ line }: { line: string }) {
-  const tag = line.match(/^(\s*)(<\/?[\w.]+|\/>)(.*)$/);
-  if (tag) return <>{tag[1]}<span className={styles.codeTag}>{tag[2]}</span>{tag[3]}</>;
-  const prop = line.match(/^(\s*)([\w$]+)=(\{)?(.*?)(\})?$/);
-  if (prop) {
-    return (
-      <>
-        {prop[1]}<span className={styles.codeProp}>{prop[2]}</span>=
-        {prop[3]}<span className={prop[3] ? styles.codeValue : styles.codeString}>{prop[4]}</span>{prop[5]}
-      </>
-    );
-  }
-  return <>{line}</>;
-}
-
 export default function RemixerPanel({
   isExpanded,
   groups,
@@ -376,14 +363,26 @@ export default function RemixerPanel({
     defaultOpenGroupId ?? availableGroups[0]?.id ?? null,
   );
   const [copied, setCopied] = useState(false);
-  // Recomputed each render so it tracks every slider move.
-  const code = onCopyCode?.() ?? "";
+  const copiedTimerRef = useRef(0);
+  const resetIconRef = useRef<HTMLSpanElement | null>(null);
+  const canCopy = Boolean(onCopyCode);
+
+  useEffect(() => () => window.clearTimeout(copiedTimerRef.current), []);
 
   const handleCopy = async () => {
     if (!onCopyCode) return;
     await copyTextToClipboard(onCopyCode());
     setCopied(true);
-    window.setTimeout(() => setCopied(false), 1600);
+    window.clearTimeout(copiedTimerRef.current);
+    copiedTimerRef.current = window.setTimeout(() => setCopied(false), 1600);
+  };
+
+  // The reset icon spins back a full turn, like the demo bar's Replay.
+  const handleReset = () => {
+    onReset?.();
+    if (resetIconRef.current && !prefersReducedMotion()) {
+      gsap.fromTo(resetIconRef.current, { rotation: 0 }, { rotation: -360, duration: 0.7, ease: "expo.out", overwrite: true });
+    }
   };
 
   return (
@@ -428,31 +427,18 @@ export default function RemixerPanel({
             </section>
           );
         })}
-        {code ? (
-          <div className={styles.codeBlock}>
-            <div className={styles.codeHeader}>
-              <span className={styles.codeTitle}>Your props</span>
-              <button type="button" onClick={handleCopy} className={styles.codeCopy}>
-                {copied ? <Check className={styles.actionIcon} /> : <Copy className={styles.actionIcon} />}
-                <span>{copied ? "Copied" : "Copy"}</span>
-              </button>
-            </div>
-            <pre className={styles.codePre}>
-              <code>
-                {code.split("\n").map((line, index) => (
-                  <span key={index} className={styles.codeLine}>
-                    <CodeLine line={line} />
-                  </span>
-                ))}
-              </code>
-            </pre>
-          </div>
-        ) : null}
       </div>
       <div className={styles.footer}>
         <div className={styles.footerActions}>
-          <button type="button" onClick={onReset} className={styles.footerButton}>
-            <RotateCcw className={styles.actionIcon} />
+          {canCopy ? (
+            <button type="button" onClick={handleCopy} aria-label={copied ? "Props copied" : "Copy props"} className={`${styles.footerButton} ${copied ? styles.footerButtonDone : ""}`}>
+              <CopyButtonContent copied={copied} labelClassName={styles.footerButtonText} />
+            </button>
+          ) : null}
+          <button type="button" onClick={handleReset} className={styles.footerButton}>
+            <span ref={resetIconRef} className={styles.resetIcon}>
+              <RotateCcw className={styles.actionIcon} />
+            </span>
             <span className={styles.footerButtonText}>Reset</span>
           </button>
         </div>

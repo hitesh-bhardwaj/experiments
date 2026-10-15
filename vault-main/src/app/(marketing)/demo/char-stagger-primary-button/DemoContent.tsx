@@ -15,7 +15,7 @@ export default function DemoContent({ registry }: { registry: any }) {
           <CharStaggerPrimaryButton
             {...buttonProps}
             text={btnText}
-            bgClassName="rounded-full bg-[#ff6b00]"
+            bgClassName="rounded-full"
             className="text-[1.2vw] max-sm:text-[4.5vw]"
           />
         );

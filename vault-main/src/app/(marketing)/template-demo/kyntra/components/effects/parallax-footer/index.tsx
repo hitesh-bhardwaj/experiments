@@ -131,9 +131,9 @@ const ParallaxFooter = ({ footerBgColor = KYNTRA_PRIMARY }) => {
       footerClassName="text-white"
       footerStyle={{ backgroundColor: footerBgColor }}
     >
-      <div className="relative flex h-[80vh] w-full flex-col justify-between px-[5%] pt-[6vw] pb-[2vw] max-[1025px]:h-auto max-[1025px]:px-[7%] max-[1025px]:pt-[12vw] max-[1025px]:pb-0 max-md:pt-[16vw]">
+      <div className="relative flex h-[80vh] w-full flex-col justify-between px-[5%] pt-[6vw] pb-[2vw] max-lg:h-auto max-lg:px-[7%] max-lg:pt-[12vw] max-lg:pb-0 max-md:pt-[16vw]">
        
-        <div className="pointer-events-none absolute bottom-0 left-1/2 w-[22vw] -translate-x-1/2 max-[1025px]:static max-[1025px]:left-auto max-[1025px]:order-3 max-[1025px]:mt-[12vw] max-[1025px]:mb-0 max-[1025px]:w-[55vw] max-[1025px]:translate-x-0 max-[1025px]:self-center max-md:w-[72vw]">
+        <div className="pointer-events-none absolute bottom-0 left-1/2 w-[22vw] -translate-x-1/2 max-lg:static max-lg:left-auto max-lg:order-3 max-lg:mt-[12vw] max-lg:mb-0 max-lg:w-[55vw] max-lg:translate-x-0 max-lg:self-center max-md:w-[72vw]">
           <Image
             ref={footerImgRef}
             src={footerImg}
@@ -145,13 +145,13 @@ const ParallaxFooter = ({ footerBgColor = KYNTRA_PRIMARY }) => {
         </div>
 
         {/* Brand and link columns */}
-        <div className="relative flex justify-between gap-[4vw] max-[1025px]:order-1 max-[1025px]:flex-col max-[1025px]:gap-[12vw]">
+        <div className="relative flex justify-between gap-[4vw] max-lg:order-1 max-lg:flex-col max-lg:gap-[12vw]">
           {/* Brand column */}
-          <div className="flex w-[34vw] flex-col max-[1025px]:w-full">
+          <div className="flex w-[34vw] flex-col max-lg:w-full">
             <FadeUp
               watch={FOOTER_TRIGGER}
               delay={FOOTER_DELAY}
-              className="w-[20vw] max-[1025px]:w-[42vw] max-md:w-[50vw]"
+              className="w-[20vw] max-lg:w-[42vw] max-md:w-[50vw]"
             >
               <Image
                 src={klogo}
@@ -166,7 +166,7 @@ const ParallaxFooter = ({ footerBgColor = KYNTRA_PRIMARY }) => {
               as="p"
               watch={FOOTER_TRIGGER}
               delay={FOOTER_DELAY + 0.08}
-              className="text-24 mt-[2vw] w-[24vw] leading-normal text-white/90 max-[1025px]:mt-[4vw] max-[1025px]:w-[60vw] max-[1025px]:text-[2.8vw] max-md:w-[70%] max-md:text-[4vw]"
+              className="text-24 mt-[2vw] w-[24vw] leading-normal text-white/90 max-lg:mt-[4vw] max-lg:w-[60vw] max-lg:text-[2.8vw] max-md:w-[70%] max-md:text-[4vw]"
             >
               Home intelligence, maintenance and trusted services managed from
               one app.
@@ -175,7 +175,7 @@ const ParallaxFooter = ({ footerBgColor = KYNTRA_PRIMARY }) => {
             <FadeUp
               watch={FOOTER_TRIGGER}
               delay={FOOTER_DELAY + 0.16}
-              className="mt-[2.5vw] flex gap-[5vw] max-[1025px]:mt-[8vw] max-[1025px]:flex-col max-[1025px]:items-start max-[1025px]:gap-[3.5vw] max-md:gap-[4vw]"
+              className="mt-[2.5vw] flex gap-[5vw] max-lg:mt-[8vw] max-lg:flex-col max-lg:items-start max-lg:gap-[3.5vw] max-md:gap-[4vw]"
             >
               {/* Same components as the hero */}
               <AppleStoreButton
@@ -194,19 +194,19 @@ const ParallaxFooter = ({ footerBgColor = KYNTRA_PRIMARY }) => {
           </div>
 
           {/* Link columns */}
-          <div className="flex gap-[7vw] max-[1025px]:flex max-[1025px]:justify-between  max-[1025px]:w-full max-[1025px]:grid-cols-2 max-[1025px]:gap-x-[4vw] max-[1025px]:gap-y-0">
+          <div className="flex gap-[7vw] max-lg:flex max-lg:justify-between  max-lg:w-full max-lg:grid-cols-2 max-lg:gap-x-[4vw] max-lg:gap-y-0">
             <FooterLinkColumn title="Services" links={serviceLinks} />
             <FooterLinkColumn title="Connect" links={connectLinks} />
           </div>
         </div>
 
         {/* Bottom bar */}
-        <div className="relative flex items-end justify-between max-[1025px]:order-2 max-[1025px]:mt-[14vw] max-[1025px]:items-start">
+        <div className="relative flex items-end justify-between max-lg:order-2 max-lg:mt-[14vw] max-lg:items-start">
           <FadeUp
             as="p"
             watch={FOOTER_TRIGGER}
             delay={FOOTER_DELAY + 0.3}
-            className="text-22 text-white/90 max-[1025px]:text-[2.8vw] max-md:text-[4vw]"
+            className="text-22 text-white/90 max-lg:text-[2.8vw] max-md:text-[4vw]"
           >
             <Link
               href="https://vault.hyperiux.com/"
@@ -217,10 +217,10 @@ const ParallaxFooter = ({ footerBgColor = KYNTRA_PRIMARY }) => {
             </Link>{" "}
             2026 KYNTRA.{" "}
             {/* Wraps to a second line */}
-            <span className="hidden max-[1025px]:block">
+            <span className="hidden max-lg:block">
               All Rights Reserved.
             </span>
-            <span className="max-[1025px]:hidden">All Rights Reserved.</span>
+            <span className="max-lg:hidden">All Rights Reserved.</span>
           </FadeUp>
 
           <FadeUp watch={FOOTER_TRIGGER} delay={FOOTER_DELAY + 0.36}>
@@ -238,7 +238,7 @@ const ParallaxFooter = ({ footerBgColor = KYNTRA_PRIMARY }) => {
                 scrollToTop();
               }}
               className="text-white"
-              textClassName="font-aeonik-pro text-22 tracking-tight max-[1025px]:text-[2.6vw] max-md:text-[3.6vw]"
+              textClassName="font-aeonik-pro text-22 tracking-tight max-lg:text-[2.6vw] max-md:text-[3.6vw]"
               iconClassName="text-white max-md:hidden"
             />
           </FadeUp>
@@ -260,12 +260,12 @@ const FooterLinkColumn = ({
       as="span"
       watch={FOOTER_TRIGGER}
       delay={FOOTER_DELAY}
-      className="text-22 tracking-wide text-white max-[1025px]:text-[2.8vw] max-md:text-[5vw]!"
+      className="text-22 tracking-wide text-white max-lg:text-[2.8vw] max-md:text-[5vw]!"
     >
       {title.toUpperCase()}
     </FadeUp>
 
-    <div className="mt-[1.4vw] flex flex-col gap-[0.3vw] max-[1025px]:mt-[4vw] max-[1025px]:gap-[2.5vw]">
+    <div className="mt-[1.4vw] flex flex-col gap-[0.3vw] max-lg:mt-[4vw] max-lg:gap-[2.5vw]">
       {links.map((label, index) => (
         <FadeUp
           key={label}
@@ -277,7 +277,7 @@ const FooterLinkColumn = ({
             href="#"
             hoverColor="white"
             className="text-white"
-            textClassName="font-aeonik-pro text-22 tracking-wide max-[1025px]:text-[2.8vw] max-md:text-[4vw]"
+            textClassName="font-aeonik-pro text-22 tracking-wide max-lg:text-[2.8vw] max-md:text-[4vw]"
           />
         </FadeUp>
       ))}

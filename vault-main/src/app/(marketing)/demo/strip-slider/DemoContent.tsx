@@ -13,7 +13,12 @@ export default function DemoContent({ registry }: { registry: any }) {
     >
       {({ effect }) => (
         <>
-          <DemoHeader />
+          <DemoHeader
+            reducedMotionNote={{
+              title: "The strip keeps sliding.",
+              body: "Strip Slider ties its horizontal motion to scroll position via smooth-scroll physics. Since the animation is driven by scroll motion itself, it can't be reduced without removing the effect.",
+            }}
+          />
           {effect}
         </>
       )}

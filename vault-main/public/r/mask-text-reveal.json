@@ -91,6 +91,45 @@
         "group": "behavior",
         "groupTitle": "Behavior"
       }
+    },
+    {
+      "name": "maskAngle",
+      "type": "number",
+      "default": 150,
+      "description": "Angle of the wipe in degrees.",
+      "remixer": {
+        "control": "range",
+        "group": "style",
+        "groupTitle": "Style",
+        "min": 0,
+        "max": 360,
+        "step": 1
+      }
+    },
+    {
+      "name": "maskSoftness",
+      "type": "number",
+      "default": 33.3,
+      "description": "Softness of the wipe's edge, as a % of the gradient (0 = hard edge).",
+      "remixer": {
+        "control": "range",
+        "group": "style",
+        "groupTitle": "Style",
+        "min": 0,
+        "max": 66.6,
+        "step": 0.1
+      }
+    },
+    {
+      "name": "textColor",
+      "type": "string",
+      "default": "#ffffff",
+      "description": "Text color. Unset inherits from the surrounding text.",
+      "remixer": {
+        "control": "color",
+        "group": "style",
+        "groupTitle": "Style"
+      }
     }
   ],
   "remixer": {

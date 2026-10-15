@@ -40,7 +40,7 @@
     {
       "name": "circleColorBg",
       "type": "string",
-      "default": "#E76F2E",
+      "default": "#ff5f00",
       "description": "Reveal circle background color.",
       "remixer": {
         "control": "color",
@@ -118,11 +118,6 @@
       "path": "index.tsx",
       "type": "registry:component",
       "target": "src/components/effects/circle-text-reveal/index.tsx"
-    },
-    {
-      "path": "createSuspendedRaf.ts",
-      "type": "registry:component",
-      "target": "src/components/effects/circle-text-reveal/createSuspendedRaf.ts"
     }
   ]
 }

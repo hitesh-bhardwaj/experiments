@@ -175,7 +175,7 @@ const DotFillBtn = ({
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
             onPointerDown={handlePointerDown}
-            className={`group relative flex w-fit items-center justify-center gap-[0.9vw] h-[3.5vw] px-[2vw] rounded-full overflow-hidden whitespace-nowrap no-underline font-medium text-[1.5vw] transition-colors border-white/20! duration-500 motion-reduce:transition-none max-[1025px]:gap-[1.6vw] max-[1025px]:h-[8vw] max-[1025px]:px-[3.5vw] max-[1025px]:text-[3vw] max-[1025px]:font-normal max-[1025px]:motion-reduce:transition-none max-md:gap-[2.4vw] max-md:h-[12vw] max-md:px-[5vw] max-md:text-[4.2vw] max-md:motion-reduce:transition-none ${className}`}
+            className={`group relative flex w-fit items-center justify-center gap-[0.9vw] h-[3.5vw] px-[2vw] rounded-full overflow-hidden whitespace-nowrap no-underline font-medium text-[1.5vw] transition-colors border-white/20! duration-500 motion-reduce:transition-none max-lg:gap-[1.6vw] max-lg:h-[8vw] max-lg:px-[3.5vw] max-lg:text-[3vw] max-lg:font-normal max-lg:motion-reduce:transition-none max-md:gap-[2.4vw] max-md:h-[12vw] max-md:px-[5vw] max-md:text-[4.2vw] max-md:motion-reduce:transition-none ${className}`}
             style={{
                 background: bgColor,
                 color: hovered ? hoverTextColor : textColor,
@@ -184,11 +184,11 @@ const DotFillBtn = ({
             {/* Keep the dot and intrinsic button sizing in normal flow. */}
             <span
                 aria-hidden
-                className="relative z-10 flex shrink-0 items-center justify-center w-[0.5vw] h-[0.5vw] max-[1025px]:w-[1.5vw] max-[1025px]:h-[1.5vw] max-md:w-[2.3vw] max-md:h-[2.3vw]"
+                className="relative z-10 flex shrink-0 items-center justify-center w-[0.5vw] h-[0.5vw] max-lg:w-[1.5vw] max-lg:h-[1.5vw] max-md:w-[2.3vw] max-md:h-[2.3vw]"
                 style={{ marginTop: DOT_OPTICAL_OFFSET }}
             >
                 <span
-                    className="absolute inset-0 rounded-full transition-transform duration-400 ease-in-out motion-reduce:transition-none max-[1025px]:motion-reduce:transition-none max-md:motion-reduce:transition-none"
+                    className="absolute inset-0 rounded-full transition-transform duration-400 ease-in-out motion-reduce:transition-none max-lg:motion-reduce:transition-none max-md:motion-reduce:transition-none"
                     style={{
                         background: dotColor,
                         transform: hovered ? "scale(120)" : "scale(1)",
@@ -212,7 +212,7 @@ const DotFillBtn = ({
             </span>
             <span
                 aria-hidden="true"
-                className="block shrink-0 w-[0.5vw] max-[1025px]:w-[1.5vw] max-md:w-[2.3vw]"
+                className="block shrink-0 w-[0.5vw] max-lg:w-[1.5vw] max-md:w-[2.3vw]"
             />
         </Link>
     );

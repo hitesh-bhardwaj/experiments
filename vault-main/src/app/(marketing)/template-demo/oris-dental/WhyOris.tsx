@@ -25,8 +25,8 @@ const WHY_STATS = [
 
 export default function WhyOris() {
     return (
-        <section id="why-oris" className="min-h-screen max-[1025px]:min-h-0! oris-paddx py-[6vw]  max-[1025px]:py-12 max-[1025px]:pb-18! max-md:py-8 mt-[-6vw] max-[1025px]:mt-0  w-full">
-            <div className="h-full min-h-[85vh] max-[1025px]:min-h-0!  rounded-[1.8vw] max-[1025px]:rounded-2xl max-md:rounded-xl overflow-hidden mx-auto w-[90%] max-[1025px]:w-full relative ">
+        <section id="why-oris" className="min-h-screen max-lg:min-h-0! oris-paddx py-[6vw]  max-lg:py-12 max-lg:pb-18! max-md:py-8 mt-[-6vw] max-lg:mt-0  w-full">
+            <div className="h-full min-h-[85vh] max-lg:min-h-0!  rounded-[1.8vw] max-lg:rounded-2xl max-md:rounded-xl overflow-hidden mx-auto w-[90%] max-lg:w-full relative ">
                 <Image
                     alt="why-oris"
                     fill
@@ -37,8 +37,8 @@ export default function WhyOris() {
                 {/* Subtle dark gradient overlay for optimal contrast */}
                 <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/40 to-black/30 pointer-events-none" />
 
-                <div className="relative p-[4vw] max-[1025px]:p-8 max-md:p-6 text-white h-full min-h-[85vh] max-[1025px]:min-h-0 max-md:min-h-0 w-full flex flex-col items-start justify-between max-[1025px]:gap-12">
-                    <div className="space-y-[1vw] max-[1025px]:space-y-2 max-w-[40vw] max-[1025px]:max-w-[70vw] max-md:max-w-full">
+                <div className="relative p-[4vw] max-lg:p-8 max-md:p-6 text-white h-full min-h-[85vh] max-lg:min-h-0 max-md:min-h-0 w-full flex flex-col items-start justify-between max-lg:gap-12">
+                    <div className="space-y-[1vw] max-lg:space-y-2 max-w-[40vw] max-lg:max-w-[70vw] max-md:max-w-full">
                         <SplitTextLines as="h2" className="oris-text64 text-white leading-tight">
                             Why Choose Us
                         </SplitTextLines>
@@ -48,7 +48,7 @@ export default function WhyOris() {
                     </div>
 
                     {/* 4 Counter Columns with Divider Lines */}
-                    <div className="grid grid-cols-4 gap-[4vw] max-[1025px]:grid-cols-2 max-[1025px]:gap-6 max-md:grid-cols-2 max-md:gap-5 w-full pt-[4vw] max-[1025px]:pt-0">
+                    <div className="grid grid-cols-4 gap-[4vw] max-lg:grid-cols-2 max-lg:gap-6 max-md:grid-cols-2 max-md:gap-5 w-full pt-[4vw] max-lg:pt-0">
                         {WHY_STATS.map((stat, idx) => (
                             <div key={idx} className="flex flex-col">
                                 <SlotCounter
@@ -57,10 +57,10 @@ export default function WhyOris() {
                                     baseDelay={idx * 0.12}
                                     duration={1.6}
                                 />
-                                <div className="w-full h-[1px] bg-white/40 my-[1vw] max-[1025px]:my-2 max-md:my-2" />
+                                <div className="w-full h-[1px] bg-white/40 my-[1vw] max-lg:my-2 max-md:my-2" />
                                 <SplitTextLines
                                     as="p"
-                                    className="text-white/85 text-[1.1vw] max-[1025px]:text-sm max-md:text-xs font-normal leading-snug"
+                                    className="text-white/85 text-[1.1vw] max-lg:text-sm max-md:text-xs font-normal leading-snug"
                                     delay={idx * 0.06}
                                 >
                                     {stat.label}

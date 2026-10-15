@@ -4,6 +4,8 @@
 
 These standards are mandatory for every effect, component, and demo inside this project. The goal is to keep the codebase consistent, reusable, and easy to maintain.
 
+> **Scope.** This document covers **effects, their demos and the registry**. It does not cover the Vault site's own pages (homepage, pricing, community, blog, effects/templates listing and detail, docs, legal, dashboard, admin) or the shared site UI. Those follow [`STYLE_GUIDE.md`](../STYLE_GUIDE.md), which wins on any conflict: site pages use `max-lg:` (tablet, below 1025px) and `max-md:` (mobile, below 768px), the `type-*` scale, colour tokens and `cvw` units, and never `max-sm:`.
+
 ---
 
 # 1. Project Structure
@@ -47,7 +49,7 @@ Example
 
 ```jsx
 import EffectName from "@/components/effect-name"
-import DemoHeader from "@/components/WebsiteComps/DemoHeader"
+import DemoHeader from "@/components/preview-chrome/DemoHeader"
 import ScrollBottom from "@/components/WebsiteComps/ScrollBottom"
 import HeadAnim from "@/components/Animations/HeadAnim"
 import SplitLine from "@/components/WebsiteComps/SplitLine"
@@ -55,7 +57,7 @@ import SplitLine from "@/components/WebsiteComps/SplitLine"
 export default function Page() {
   return (
     <>
-      <DemoHeader logoColor="#FFFFFF" textColor="#ffffff" />
+      <DemoHeader />
       <EffectName />
       <ScrollBottom textColor="#ffffff" />
 
@@ -153,15 +155,15 @@ Keep rendering logic at the bottom.
 
 # 5. Responsive Design
 
-Desktop First only.
+Desktop First only. This section applies to **effects and demos**. Site pages use `max-lg:` and `max-md:` instead (see `STYLE_GUIDE.md`).
 
-Use
+For effects and demos use
 
 ```jsx
 max-md:
 ```
 
-for tablet.
+for the first step down (below 768px, the "tablet" step).
 
 Use
 
@@ -169,7 +171,7 @@ Use
 max-sm:
 ```
 
-for mobile.
+for the second step down (below 640px, mobile).
 
 Preferred
 
@@ -522,8 +524,8 @@ Before submitting an effect, verify:
 * No assets inside the component folder.
 * Only `.js` and `.jsx` files are used.
 * Desktop-first responsive design.
-* Mobile uses `max-sm:`.
-* Tablet uses `max-md:`.
+* Effects and demos: first step down uses `max-md:`, second step uses `max-sm:`.
+* Site pages are not covered here: they use `max-lg:` / `max-md:` (see `STYLE_GUIDE.md`).
 * Tailwind only.
 * No CSS files.
 * No duplicated code.

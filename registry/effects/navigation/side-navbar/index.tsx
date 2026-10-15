@@ -1,12 +1,247 @@
 // Built using Hyperiux Vault: https://vault.hyperiux.com
+"use client";
 
-"use client"
+import gsap from "gsap";
+import { useEffect, useRef, useState } from "react";
 
-import Link from "next/link";
-import { useState } from "react";
-import Menu, { NavLinkItem, SocialLinkItem } from "./Menu";
-import Image from "next/image";
+const LINK_LINE_BASE =
+  "relative w-fit after:content-[''] after:absolute after:inset-x-0 after:bottom-0 after:block after:h-px after:w-full after:origin-right after:scale-x-0 after:bg-current hover:after:origin-left hover:after:scale-x-100";
+const LINK_LINE_ANIMATED = `${LINK_LINE_BASE} after:transition-transform after:duration-500 after:ease-out`;
+const LINK_LINE_INSTANT = `${LINK_LINE_BASE} after:transition-none`;
 
+function useLinkLineClasses() {
+  const [reduce, setReduce] = useState(false);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia?.("(prefers-reduced-motion: reduce)");
+    if (!mediaQuery) return undefined;
+    const update = () => setReduce(mediaQuery.matches === true);
+    update();
+    mediaQuery.addEventListener?.("change", update);
+    return () => mediaQuery.removeEventListener?.("change", update);
+  }, []);
+
+  return reduce ? LINK_LINE_INSTANT : LINK_LINE_ANIMATED;
+}
+
+export interface NavLinkItem {
+  href: string;
+  text: string;
+  liClassName?: string;
+}
+
+export interface SocialLinkItem {
+  href: string;
+  text: string;
+}
+
+interface MenuLinkProps {
+  href: string;
+  text: string;
+  className?: string;
+}
+
+const MenuLink = ({ href, text, className = "" }: MenuLinkProps) => {
+  const lineClasses = useLinkLineClasses();
+
+  return (
+    <a aria-hidden href={href} className={`block w-fit leading-[1.2] font-medium ${className}`}>
+      <span className={`${lineClasses} block`}>{text}</span>
+    </a>
+  )
+}
+
+const NAV_LINKS: NavLinkItem[] = [
+  { href: "/", text: "Home", liClassName: "overflow-hidden max-lg:mb-[2vw] mb-[1vw]" },
+  { href: "#", text: "Read Article", liClassName: "overflow-hidden max-lg:mb-[2vw] mb-[1vw]" },
+  { href: "/effects", text: "Effects", liClassName: "overflow-hidden max-lg:mb-[2vw] mb-[1vw]" },
+  { href: "/pricing", text: "Pricing", liClassName: "overflow-hidden max-lg:mb-[2vw] mb-[1vw]" },
+  { href: "/docs", text: "Docs", liClassName: "overflow-hidden max-lg:mb-[2vw] mb-[1vw]" },
+
+];
+
+const SOCIAL_LINKS: SocialLinkItem[] = [
+  { href: "#", text: "Twitter / X" },
+  { href: "#", text: "LinkedIn" },
+  { href: "#", text: "GitHub" },
+  { href: "#", text: "Instagram" },
+];
+
+const SocialLink = ({ href, text }: SocialLinkItem) => {
+  const lineClasses = useLinkLineClasses();
+
+  return (
+  <li className="overflow-hidden">
+    <a
+      className="social-link flex items-center gap-[3px] max-md:gap-[2.5vw] group" href={href}>
+      <span className={lineClasses}>
+        {text}
+      </span>
+      <svg className="relative -rotate-[135deg] w-[1vw] h-[1vw] overflow-hidden max-md:w-[6vw] max-md:h-[6vw] max-lg:w-[3vw] max-lg:h-[3vw]" width="19" height="23" viewBox="0 0 19 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path className="origin-center -translate-y-[110%] scale-0 group-hover:translate-y-0 group-hover:scale-100 transition-all duration-500 ease-out" d="M9.44186 23C9.38605 22.9324 9.33953 22.8559 9.27442 22.7973C6.25116 19.8649 3.22791 16.9369 0.204652 14.009C0.139535 13.9459 0.0604662 13.8964 1.30208e-06 13.8468C0.576745 13.2973 1.12558 12.7748 1.66512 12.2613C3.82326 14.3514 6.01861 16.4775 8.2093 18.6036C8.23256 18.5901 8.26047 18.5811 8.28372 18.5676C8.28372 12.3829 8.28372 6.19369 8.28372 -4.68423e-07C9.09768 -4.32844e-07 9.87442 -3.98892e-07 10.6744 -3.63923e-07C10.6744 6.19369 10.6744 12.3784 10.6744 18.5901C12.893 16.4369 15.0884 14.3108 17.2651 12.2027C17.8465 12.7568 18.3907 13.2838 19 13.8739C18.9488 13.9009 18.8558 13.9324 18.7907 13.9955C15.7581 16.9279 12.7302 19.8649 9.70233 22.7973C9.64186 22.8559 9.5907 22.9324 9.53488 23C9.50698 23 9.47442 23 9.44186 23Z" fill="currentColor" />
+        <path className="origin-center group-hover:scale-0 group-hover:translate-y-[110%] transition-all duration-500 ease-out" d="M9.44186 23C9.38605 22.9324 9.33953 22.8559 9.27442 22.7973C6.25116 19.8649 3.22791 16.9369 0.204652 14.009C0.139535 13.9459 0.0604662 13.8964 1.30208e-06 13.8468C0.576745 13.2973 1.12558 12.7748 1.66512 12.2613C3.82326 14.3514 6.01861 16.4775 8.2093 18.6036C8.23256 18.5901 8.26047 18.5811 8.28372 18.5676C8.28372 12.3829 8.28372 6.19369 8.28372 -4.68423e-07C9.09768 -4.32844e-07 9.87442 -3.98892e-07 10.6744 -3.63923e-07C10.6744 6.19369 10.6744 12.3784 10.6744 18.5901C12.893 16.4369 15.0884 14.3108 17.2651 12.2027C17.8465 12.7568 18.3907 13.2838 19 13.8739C18.9488 13.9009 18.8558 13.9324 18.7907 13.9955C15.7581 16.9279 12.7302 19.8649 9.70233 22.7973C9.64186 22.8559 9.5907 22.9324 9.53488 23C9.50698 23 9.47442 23 9.44186 23Z" fill="currentColor" />
+      </svg>
+    </a>
+  </li>
+  );
+};
+
+interface MenuProps {
+  menuOpen: boolean;
+  navLinks?: NavLinkItem[];
+  socialLinks?: SocialLinkItem[];
+  panelWidth?: number | string;
+  openDuration?: number;
+  linksStagger?: number;
+  socialsStagger?: number;
+  linkColor?: string;
+  panelBackgroundColor?: string;
+  panelOpacity?: number;
+  panelBlur?: PanelBlur;
+}
+
+type PanelBlur = "none" | "sm" | "md" | "lg";
+
+const PANEL_BLUR_CLASSES: Record<PanelBlur, string> = {
+  none: "",
+  sm: "backdrop-blur-sm",
+  md: "backdrop-blur-md",
+  lg: "backdrop-blur-lg",
+};
+
+function Menu({
+  menuOpen,
+  navLinks = NAV_LINKS,
+  socialLinks = SOCIAL_LINKS,
+  panelWidth = 50,
+  openDuration = 0.5,
+  linksStagger = 0.05,
+  socialsStagger = 0.05,
+  linkColor = "#ffffff",
+  panelBackgroundColor = "#000000",
+  panelOpacity = 0.2,
+  panelBlur = "md",
+}: MenuProps) {
+  const resolvedPanelWidth = typeof panelWidth === "number" ? `${panelWidth}%` : panelWidth;
+  const menuRef = useRef<HTMLDivElement>(null);
+  const navRef = useRef<HTMLElement>(null);
+  const [serviceOpen, setServiceOpen] = useState(false);
+
+  useEffect(() => {
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const links = document.querySelectorAll(".link-anim");
+    const socialLinks = document.querySelectorAll(".social-link");
+
+    if (menuOpen) {
+      if (reduceMotion) {
+        gsap.killTweensOf([navRef.current, links, socialLinks]);
+        gsap.set(navRef.current, { left: 0, x: 0 });
+        gsap.set([...links, ...socialLinks], { clearProps: "all" });
+        return;
+      }
+
+      const tl = gsap.timeline()
+        .to(navRef.current, {
+          left: 0,
+          x: 0,
+          duration: openDuration,
+          ease: "power3.out",
+        });
+
+      tl.from(links, {
+        yPercent: 100,
+        duration: 1,
+        delay: -0.4,
+        ease: "power3.out",
+        stagger: linksStagger
+      })
+        .from(socialLinks, {
+          rotationZ: 5,
+          yPercent: 100,
+          duration: 1,
+          delay: -1,
+          stagger: socialsStagger,
+          ease: "power3.out",
+        });
+    } else {
+      if (reduceMotion) {
+        gsap.killTweensOf(navRef.current);
+        gsap.set(navRef.current, { left: "99px", x: "100%" });
+        setServiceOpen(false);
+        return;
+      }
+
+      gsap.timeline()
+        .to(navRef.current, {
+          left: "99px",
+          x: '100%',
+          duration: openDuration,
+          ease: "power3.out",
+          onComplete: () => {
+            setServiceOpen(false);
+          }
+        });
+    }
+  }, [menuOpen]);
+
+  useEffect(() => {
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const serviceLinks = document.querySelectorAll(".service-links li");
+    if (serviceOpen) {
+      gsap.to(serviceLinks, {
+        opacity: 1,
+        x: 0,
+        duration: reduceMotion ? 0 : 0.5,
+        stagger: reduceMotion ? 0 : 0.05,
+      })
+    } else {
+      gsap.to(serviceLinks, {
+        opacity: 0,
+        x: reduceMotion ? 0 : 50,
+        duration: reduceMotion ? 0 : 0.5,
+        stagger: reduceMotion ? 0 : {
+          each: 0.02, from: "end"
+        }
+      })
+    }
+  }, [serviceOpen]);
+
+  return (
+    <div ref={menuRef} className="fixed top-0 z-[199] left-0 right-0 bottom-0 flex items-start justify-end pointer-events-none">
+      <nav
+        ref={navRef}
+        style={{ '--panel-width': resolvedPanelWidth, backgroundColor: `color-mix(in srgb, ${panelBackgroundColor} ${Math.min(Math.max(panelOpacity, 0), 1) * 100}%, transparent)` } as React.CSSProperties}
+        className={`relative w-(--panel-width) pointer-events-auto translate-x-[100%] left-[99px] h-full ${PANEL_BLUR_CLASSES[panelBlur] ?? PANEL_BLUR_CLASSES.md} max-md:w-full max-lg:w-[70%]`}
+      >
+        <div data-lenis-prevent style={{ color: linkColor }} className="w-full h-full px-[5vw] pt-[5.5vw] pb-[3.5vw] relative flex flex-col justify-between items-start max-lg:justify-between max-lg:py-[15vw] max-md:pt-[25vw] max-md:pb-[10vw] overflow-y-auto">
+          <ul className="text-[4vw] font-display leading-[1.15] max-md:text-[11.5vw] max-lg:text-[6.5vw]">
+            {navLinks.map((link) => (
+              <li key={link.text} className={link.liClassName}>
+                <MenuLink className="link-anim" href={link.href} text={link.text} />
+              </li>
+            ))}
+          </ul>
+          <div className="w-full h-[1px] bg-current py-[0.1vw] my-[6vw] hidden max-md:block"></div>
+          <div className="text-[1.1vw] font-medium flex flex-col space-y-[0.5vw] max-md:text-[5vw] max-md:mb-[7vw] max-lg:text-[3vw]">
+            <div className="w-fit overflow-hidden">
+              <MenuLink
+                className="link-anim"
+                href="mailto:hello@hyperiux.com"
+                text="hello@hyperiux.com"
+              />
+            </div>
+
+          </div>
+          <ul className="flex justify-between items-center text-[1vw] font-medium uppercase w-[90%] max-md:flex-col max-md:items-start max-md:text-[4.5vw] max-md:gap-[1.5vw] max-lg:text-[3vw] max-lg:flex-wrap max-lg:items-start max-lg:gap-[2vw]">
+            {socialLinks.map((link) => (
+              <SocialLink key={link.text} href={link.href} text={link.text} />
+            ))}
+          </ul>
+        </div>
+      </nav>
+    </div>
+  );
+}
 
 const HAMBURGER_LINES = [
   {
@@ -29,7 +264,11 @@ const HAMBURGER_LINES = [
 interface SideNavbarProps {
   navLinks?: NavLinkItem[];
   socialLinks?: SocialLinkItem[];
-  panelWidth?: string;
+  panelWidth?: number | string;
+  linkColor?: string;
+  panelBackgroundColor?: string;
+  panelOpacity?: number;
+  panelBlur?: PanelBlur;
   openDuration?: number;
   linksStagger?: number;
   socialsStagger?: number;
@@ -39,6 +278,10 @@ const SideNavbar = ({
   navLinks,
   socialLinks,
   panelWidth,
+  linkColor,
+  panelBackgroundColor,
+  panelOpacity,
+  panelBlur,
   openDuration = 0.5,
   linksStagger = 0.05,
   socialsStagger = 0.05,
@@ -49,10 +292,8 @@ const SideNavbar = ({
   const handleMenuButtonClick = () => {
     setButtonDisabled(true);
 
-
     setMenuOpen((prevState) => {
       const newState = !prevState;
-
 
       return newState;
     });
@@ -67,9 +308,9 @@ const SideNavbar = ({
       <header
         className={`fixed top-0 w-full z-[200] transition-all duration-300`}
       >
-        <div className="w-full px-[4vw] pt-[2.2%] max-[1025px]:pt-[1%] flex justify-between items-center max-md:py-[4%]">
+        <div className="w-full px-[4vw] pt-[2.2%] max-lg:pt-[1%] flex justify-between items-center max-md:py-[4%]">
           <div className="w-fit overflow-hidden">
-            <Link prefetch={false} href="/" className="flex items-center gap-3 cursor-pointer">
+            <a href="/" className="flex items-center gap-3 cursor-pointer">
               <svg width="30" height="30" viewBox="0 0 58 65" fill="none" xmlns="http://www.w3.org/2000/svg" className={` transition-all duration-300 motion-reduce:transition-none`}>
                 <path d="M0 0H9.02977V28.5943H0V0Z" fill="#ffffff" />
                 <path d="M57.1895 64.7134H48.1597V36.1192H57.1895V64.7134Z" fill="#ffffff" />
@@ -98,16 +339,16 @@ const SideNavbar = ({
                   <rect x="6.62305" y="17.7585" width="28.8953" height="6.62183" fill="#ffffff" />
                 </svg>
               </div>
-            </Link>
+            </a>
           </div>
-          <div className="flex items-center gap-8 relative z-[205] max-[1025px]:gap-4 max-md:gap-0 max-md:items-start">
-            <div className="w-[3.5vw] mr-[-0.5%] h-[3.5vw] max-md:w-[12vw] max-md:h-[15vw] relative max-[1025px]:w-[8vw] max-[1025px]:h-[10vw] max-md:mr-[-5%]">
+          <div className="flex items-center gap-8 relative z-[205] max-lg:gap-4 max-md:gap-0 max-md:items-start">
+            <div className="w-[3.5vw] mr-[-0.5%] h-[3.5vw] max-md:w-[12vw] max-md:h-[15vw] relative max-lg:w-[8vw] max-lg:h-[10vw] max-md:mr-[-5%]">
               <button
                 id="header-hamburger"
                 disabled={buttonDisabled}
                 onClick={handleMenuButtonClick}
                 aria-label="Open Menu"
-                className="group cursor-pointer pointer-events-auto h-[3.5vw] transition-all fixed z-[200] w-[3.5vw] max-md:w-[12vw] max-md:h-[12vw] max-[1025px]:w-[8vw] max-[1025px]:h-[10vw]"
+                className="group cursor-pointer pointer-events-auto h-[3.5vw] transition-all fixed z-[200] w-[3.5vw] max-md:w-[12vw] max-md:h-[12vw] max-lg:w-[8vw] max-lg:h-[10vw]"
               >
                 <span
                   className={`absolute left-[5px] top-0 -z-10 block h-full w-full scale-[0.6] rounded-[60px] opacity-0 pointer-events-none  duration-300 ease-out group-hover:scale-90 group-hover:opacity-100 ${
@@ -137,12 +378,12 @@ const SideNavbar = ({
         </div>
       </header>
       <div className={`w-screen h-screen fixed inset-0 ${menuOpen ? "brightness-75 pointer-events-auto" : " "} transition-all duration-300 ease-out z-50`}>
-        <Image src={"https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/h-27.jpg"} alt="sidenavbar image" className="w-full h-full absolute duration-300 brightness-90 object-cover" width={1920} height={1080} />
-       <div className="w-full h-full flex flex-col justify-center items-center gap-[1.5vw] text-white relative z-1 duration-300 max-[1025px]:px-[10vw]">
-        <h1 className=" text-[5vw] max-md:text-[12vw] max-[1025px]:text-[7vw]">
+        <img src={"https://picsum.photos/seed/h27/1600/1200"} alt="sidenavbar image" className="w-full h-full absolute duration-300 brightness-90 object-cover" width={1920} height={1080} />
+       <div className="w-full h-full flex flex-col justify-center items-center gap-[1.5vw] text-white relative z-1 duration-300 max-lg:px-[10vw]">
+        <h1 className=" text-[5vw] max-md:text-[12vw] max-lg:text-[7vw]">
           Side Navbar
         </h1>
-        <p className="max-[1025px]:text-center">
+        <p className="max-lg:text-center">
           Click on the Hamburger to see the SideNavbar effect.
         </p>
 
@@ -153,6 +394,10 @@ const SideNavbar = ({
         navLinks={navLinks}
         socialLinks={socialLinks}
         panelWidth={panelWidth}
+        linkColor={linkColor}
+        panelBackgroundColor={panelBackgroundColor}
+        panelOpacity={panelOpacity}
+        panelBlur={panelBlur}
         openDuration={openDuration}
         linksStagger={linksStagger}
         socialsStagger={socialsStagger}

@@ -28,10 +28,6 @@
     {
       "path": "index.tsx",
       "target": "src/components/effects/parallax-footer/index.tsx"
-    },
-    {
-      "path": "ParallaxFooter.tsx",
-      "target": "src/components/effects/parallax-footer/ParallaxFooter.tsx"
     }
   ],
   "props": [

@@ -25,7 +25,7 @@
   ],
   "registryDependencies": [],
   "packageName": "@hyperiux/elevate-navbar",
-  "sourcePath": "vault-main/src/components/elevate-navbar",
+  "sourcePath": "apps/docs/src/components/elevate-navbar",
   "previewUrl": "/demo/elevate-navbar",
   "tier": "free",
   "subfolder": true,
@@ -114,10 +114,22 @@
         "group": "motion",
         "groupTitle": "Motion",
         "options": [
-          { "value": "power2.out", "label": "Power 2 Out" },
-          { "value": "power3.out", "label": "Power 3 Out" },
-          { "value": "power4.out", "label": "Power 4 Out" },
-          { "value": "expo.out", "label": "Expo Out" }
+          {
+            "value": "power2.out",
+            "label": "Power 2 Out"
+          },
+          {
+            "value": "power3.out",
+            "label": "Power 3 Out"
+          },
+          {
+            "value": "power4.out",
+            "label": "Power 4 Out"
+          },
+          {
+            "value": "expo.out",
+            "label": "Expo Out"
+          }
         ]
       }
     },
@@ -148,18 +160,6 @@
     {
       "path": "index.tsx",
       "target": "src/components/effects/elevate-navbar/index.tsx"
-    },
-    {
-      "path": "ElevateMobileNav.tsx",
-      "target": "src/components/effects/elevate-navbar/ElevateMobileNav.tsx"
-    },
-    {
-      "path": "ElevateDesktopNav.tsx",
-      "target": "src/components/effects/elevate-navbar/ElevateDesktopNav.tsx"
-    },
-    {
-      "path": "useFocusTrap.ts",
-      "target": "src/components/effects/elevate-navbar/useFocusTrap.ts"
     }
   ]
 }

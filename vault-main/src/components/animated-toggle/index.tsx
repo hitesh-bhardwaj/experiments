@@ -1,11 +1,164 @@
 // Built using Hyperiux Vault: https://vault.hyperiux.com
+"use client";
 
-"use client"
+import React, { useEffect, useState } from "react";
 
-import React, { useEffect, useState } from 'react'
-import { ChevronBird } from './ChevronBird'
-import Cross from './Cross'
-import Plus from './Plus'
+export interface ChevronBirdProps {
+    isActive?: boolean;
+    size?: number;
+    strokeWidth?: number;
+    prefersReducedMotion?: boolean;
+    duration?: number;
+    className?: string;
+}
+
+export const ChevronBird = ({
+    isActive = false,
+    size = 14,
+    strokeWidth = 10,
+    prefersReducedMotion = false,
+    duration = 0.32,
+    className = "mt-[0.25vw]",
+}: ChevronBirdProps) => {
+    return (
+        <div
+            className={className}
+            style={{ transitionDuration: prefersReducedMotion ? '0s' : `${duration}s` }}
+        >
+        <svg
+            viewBox="0 0 100 100"
+            width={size}
+            height={size}
+            fill="none"
+            aria-hidden="true"
+            style={{
+                transform:
+                    isActive ? 'translateY(-25%)' : 'translateY(0%)',
+                transition: prefersReducedMotion ? 'none' : `transform ${duration}s ease-in-out`,
+            }}
+        >
+            <g>
+                <path
+                    d="M10 50H50"
+                    stroke="currentColor"
+                    strokeWidth={strokeWidth}
+                    strokeLinecap="square"
+                    style={{
+                        transformBox: 'view-box',
+                        transformOrigin: '50px 50px',
+                        transform:
+                            isActive ? 'rotate(-42deg)' : 'rotate(42deg)',
+                        transition: prefersReducedMotion ? 'none' : `transform ${duration}s ease-in-out`,
+                    }}
+                />
+                <path
+                    d="M90 50H50"
+                    stroke="currentColor"
+                    strokeWidth={strokeWidth}
+                    strokeLinecap="square"
+                    style={{
+                        transformBox: 'view-box',
+                        transformOrigin: '50px 50px',
+                        transform:
+                            isActive ? 'rotate(42deg)' : 'rotate(-42deg)',
+                        transition: prefersReducedMotion ? 'none' : `transform ${duration}s ease-in-out`,
+                    }}
+                />
+            </g>
+        </svg>
+
+        </div>
+    );
+}
+
+export interface CrossProps {
+    isActive?: boolean;
+    isHovered?: boolean;
+    size?: number;
+    prefersReducedMotion?: boolean;
+    duration?: number;
+    className?: string;
+}
+
+const Cross = ({
+ isActive = false,
+ isHovered = false,
+ size = 24,
+ prefersReducedMotion = false,
+ duration = 0.32,
+ className ="",
+}: CrossProps) => {
+ const rotation = (isActive ? 315 : 180) + (!prefersReducedMotion && isHovered ? 180 : 0);
+
+ return (
+ <div
+ className={`flex items-center relative justify-center motion-reduce:transition-none ${className}`}
+ style={{
+  width: size,
+  height: size,
+  transform: `rotate(${rotation}deg)`,
+  transitionProperty: 'transform',
+  transitionDuration: prefersReducedMotion ? '0s' : `${duration}s`,
+  transitionTimingFunction: 'ease-in-out',
+ }}
+ >
+ <span
+ className='absolute block w-full h-0.5 bg-current transition-transform ease-in-out motion-reduce:transition-none'
+ style={{ transitionDuration: prefersReducedMotion ? '0s' : `${duration}s` }}
+ />
+ <span
+ className='absolute block w-full h-0.5 bg-current transition-transform rotate-90 ease-in-out motion-reduce:transition-none'
+ style={{ transitionDuration: prefersReducedMotion ? '0s' : `${duration}s` }}
+ />
+ </div>
+ );
+}
+
+export interface PlusProps {
+    isActive?: boolean;
+    isHovered?: boolean;
+    size?: number;
+    prefersReducedMotion?: boolean;
+    duration?: number;
+    className?: string;
+}
+
+const Plus = ({
+ isActive = false,
+ isHovered = false,
+ size = 24,
+ prefersReducedMotion = false,
+ duration = 0.32,
+ className ="",
+}: PlusProps) => {
+ const rotation = (isActive ? 180 : 0) + (!prefersReducedMotion && isHovered ? 180 : 0);
+
+ return (
+ <div
+ className={`flex items-center relative justify-center motion-reduce:transition-none ${className}`}
+ style={{
+  width: size,
+  height: size,
+  transform: `rotate(${rotation}deg)`,
+  transitionProperty: 'transform',
+  transitionDuration: prefersReducedMotion ? '0s' : `${duration}s`,
+  transitionTimingFunction: 'ease-in-out',
+ }}
+ >
+ <span
+ className='absolute block w-full h-0.5 bg-current transition-transform ease-in-out motion-reduce:transition-none'
+ style={{ transitionDuration: prefersReducedMotion ? '0s' : `${duration}s` }}
+ />
+ <span
+ className='absolute block w-full h-0.5 bg-current transition-transform ease-in-out motion-reduce:transition-none'
+ style={{
+   transform: isActive ?'rotate(180deg)' :'rotate(90deg)',
+   transitionDuration: prefersReducedMotion ? '0s' : `${duration}s`,
+ }}
+ />
+ </div>
+ );
+}
 
 const AnimatedToggle = ({
   size = 96,

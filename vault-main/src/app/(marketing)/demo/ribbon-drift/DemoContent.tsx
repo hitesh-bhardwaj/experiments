@@ -14,7 +14,12 @@ export default function DemoContent({ registry }: { registry: any }) {
     >
       {({ effect }) => (
         <>
-          <DemoHeader />
+          <DemoHeader
+            reducedMotionNote={{
+              title: "The ribbon keeps drifting.",
+              body: "Ribbon Drift ties its image reveal and text splits to scroll position. Since the animation is driven by scroll motion itself, it can't be reduced without removing the effect.",
+            }}
+          />
           {effect}
           <ScrollBottom textColor='text-[#111111]' />
         </>

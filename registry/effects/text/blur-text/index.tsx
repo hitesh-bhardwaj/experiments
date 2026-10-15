@@ -24,8 +24,12 @@ interface BlurTextProps {
   duration?: number;
   blur?: number;
   className?: string;
+  /** Text color. Unset inherits from the surrounding text. */
+  textColor?: string;
   variant?: BlurTextVariant;
   once?: boolean;
+  /** Margin around the viewport used for the in-view check, e.g. "0px" or "-100px". */
+  viewMargin?: string;
 }
 
 export default function BlurText({
@@ -34,11 +38,16 @@ export default function BlurText({
   duration = 0.5,
   blur = 10,
   className = "",
+  textColor,
   variant = "fade",
   once = false,
+  viewMargin = "0px",
 }: BlurTextProps) {
   const ref = useRef<HTMLSpanElement | null>(null);
-  const isInView = useInView(ref, { once, margin: "-100px" });
+  const isInView = useInView(ref, {
+    once,
+    margin: viewMargin as NonNullable<Parameters<typeof useInView>[1]>["margin"],
+  });
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(
     () =>
       typeof window !== "undefined" &&
@@ -72,7 +81,11 @@ export default function BlurText({
   const shownState = { opacity: 1, filter: "blur(0px)", x: 0, y: 0 };
 
   return (
-    <span ref={ref} className={className}>
+    <span
+      ref={ref}
+      className={className}
+      style={textColor ? { color: textColor } : undefined}
+    >
       {words.map((word, index) => (
         <motion.span
           key={`${animationKey}-${index}-${typeof word === "string" ? word : "node"}`}

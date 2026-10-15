@@ -4,20 +4,7 @@
 
 import { useEffect, useId, useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
 
-function usePrefersReducedMotion() {
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
-
-  useEffect(() => {
-    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const update = () => setPrefersReducedMotion(mediaQuery.matches);
-    update();
-    mediaQuery.addEventListener("change", update);
-    return () => mediaQuery.removeEventListener("change", update);
-  }, []);
-
-  return prefersReducedMotion;
-}
-
+import Image from "next/image";
 interface PixelateSvgFilterProps {
   id?: string;
   size?: number;
@@ -148,29 +135,26 @@ interface PixelatedImageEffectProps {
   imageClassName?: string;
   pixelSize?: number;
   duration?: number;
-  mouseReactivity?: number;
 }
 
 export default function PixelatedImageEffect({
   src = "https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/v-02.jpg",
   pixelSize = 16,
   duration = 0.25,
-  mouseReactivity = 1,
   imageClassName = "",
 }: PixelatedImageEffectProps) {
   const imageRef = useRef<HTMLDivElement | null>(null);
   const isTouching = useRef(false);
+  const pointerRatio = useRef<number | null>(null);
   const animationRef = useRef<number | null>(null);
   const [renderedPixelSize, setRenderedPixelSize] = useState(pixelSize);
   const [targetPixelSize, setTargetPixelSize] = useState(pixelSize);
   const [prevResolvedPixelSize, setPrevResolvedPixelSize] = useState(pixelSize);
   const pixelateFilterId = `pixelate-filter-${useId().replace(/:/g, "")}`;
-  const prefersReducedMotion = usePrefersReducedMotion();
   const fallbackSrc = "https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/v-02.jpg";
   const resolvedSrc = typeof src === "string" && src.trim() ? src.trim() : fallbackSrc;
   const resolvedPixelSize = Math.min(Math.max(Number(pixelSize) || 16, 1), 64);
   const resolvedDuration = Math.max(Number(duration) || 0, 0);
-  const resolvedMouseReactivity = Math.min(Math.max(Number(mouseReactivity) || 0, 0), 2);
 
   // Reset the animation target whenever the resolved pixelSize prop changes,
   // without clobbering the interactive target set by pointer movement below.
@@ -220,17 +204,28 @@ export default function PixelatedImageEffect({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [resolvedDuration, targetPixelSize]);
 
+  const computeTarget = (ratio: number) => {
+    // Left edge is clear (1), right edge is twice the baseline pixelSize, so
+    // the hover range follows the current prop values.
+    return Math.min(Math.max(1 + ratio * (resolvedPixelSize * 2 - 1), 1), 64);
+  };
+
   const updatePixel = (event: ReactPointerEvent<HTMLDivElement>) => {
     if (!imageRef.current) return;
 
     const rect = imageRef.current.getBoundingClientRect();
-    const x = event.clientX - rect.left;
-
-    const pointerPixelSize = Math.min(Math.max(x / 30, 1), 64);
-    const nextPixelSize =
-      resolvedPixelSize + (pointerPixelSize - resolvedPixelSize) * resolvedMouseReactivity;
-    setTargetPixelSize(Math.min(Math.max(nextPixelSize, 1), 64));
+    const ratio = Math.min(Math.max((event.clientX - rect.left) / rect.width, 0), 1);
+    pointerRatio.current = ratio;
+    setTargetPixelSize(computeTarget(ratio));
   };
+
+  // Re-apply the last pointer position when props change mid-hover so the
+  // effect immediately uses the new values instead of the stale target.
+  useEffect(() => {
+    if (pointerRatio.current === null) return;
+    setTargetPixelSize(computeTarget(pointerRatio.current));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [resolvedPixelSize]);
 
   const handlePointerDown = (event: ReactPointerEvent<HTMLDivElement>) => {
     isTouching.current = true;
@@ -246,14 +241,19 @@ export default function PixelatedImageEffect({
     isTouching.current = false;
   };
 
+  const handlePointerLeave = () => {
+    isTouching.current = false;
+    pointerRatio.current = null;
+  };
+
   return (
     <div className="relative flex h-dvh w-dvw pt-6 flex-col gap-15 items-center justify-center">
 
-      <h1 className="text-5xl text-center max-[1025px]:hidden w-[45%] mt-10">
+      <h1 className="text-5xl text-center max-lg:hidden w-[45%] mt-10">
         Move cursor left in the image block for a clear image, right for more pixelation.
       </h1>
 
-      <h2 className="hidden max-[1025px]:block  w-[60%] text-center mx-auto text-2xl">
+      <h2 className="hidden max-lg:block  w-[60%] text-center mx-auto text-2xl">
         Click left in image block for clear image, right for more pixelated
 
       </h2>
@@ -266,35 +266,22 @@ export default function PixelatedImageEffect({
 
       <div
         ref={imageRef}
-        className="relative h-[55vh] w-full max-md:max-w-[90%] overflow-hidden max-[1025px]:max-w-[90%] max-w-lg touch-none"
+        className="relative h-[55vh] w-full max-md:max-w-[90%] overflow-hidden max-lg:max-w-[90%] max-w-lg touch-none"
         style={{ filter: `url(#${pixelateFilterId})` }}
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
-        onPointerLeave={handlePointerUp}
+        onPointerLeave={handlePointerLeave}
       >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
+        <Image
           src={resolvedSrc}
           alt="pixelated-image"
           className={`object-cover absolute inset-0 ${imageClassName}`.trim()}
+          fill
+          sizes="100vw"
+          loading="eager"
         />
       </div>
-      {prefersReducedMotion && (
-        <div
-          aria-live="polite"
-          className="pointer-events-none fixed bottom-4 right-4 z-40 w-fit max-w-65 rounded-md border border-white/15 bg-white/5 p-3 text-center  backdrop-blur-sm max-[1025px]:hidden"
-        >
-          <h2 className="text-sm leading-none text-white">
-            The pixels keep shifting.
-          </h2>
-          <p className="mt-2 text-xs leading-5 text-white/65">
-            Pixelated Image Effect changes pixelation based on cursor
-            position in real time. Since the transition is driven entirely by
-            motion, reduced motion can&apos;t be applied here.
-          </p>
-        </div>
-      )}
     </div>
   );
 }

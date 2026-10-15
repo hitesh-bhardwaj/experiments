@@ -41,10 +41,6 @@
     {
       "path": "index.tsx",
       "target": "src/components/effects/helix-slider/index.tsx"
-    },
-    {
-      "path": "createSuspendedRaf.ts",
-      "target": "src/components/effects/helix-slider/createSuspendedRaf.ts"
     }
   ],
   "props": [
@@ -121,6 +117,21 @@
         "min": 0.002,
         "max": 0.02,
         "step": 0.001
+      }
+    },
+    {
+      "name": "scrollIntensity",
+      "type": "number",
+      "default": 1,
+      "description": "Multiplier for how far each wheel or trackpad scroll spins the helix.",
+      "remixer": {
+        "control": "range",
+        "group": "interaction",
+        "groupTitle": "Interaction",
+        "groupCollapsible": false,
+        "min": 0,
+        "max": 5,
+        "step": 0.1
       }
     },
     {

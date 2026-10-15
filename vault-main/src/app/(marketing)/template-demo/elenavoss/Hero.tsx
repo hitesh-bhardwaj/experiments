@@ -225,7 +225,7 @@ const Hero = () => {
         <section ref={heroSectionRef} className="relative w-screen h-[300vh]" id='hero'>
             <div
                 ref={heroContainerRef}
-                className="w-screen h-screen sticky top-0 flex justify-between items-center hero-container px-[4vw] z-2 max-[1025px]:px-[5vw]  max-[1025px]:items-start max-[1025px]:pt-[30vw] overflow-hidden"
+                className="w-screen h-screen sticky top-0 flex justify-between items-center hero-container px-[4vw] z-2 max-lg:px-[5vw]  max-lg:items-start max-lg:pt-[30vw] overflow-hidden"
                 style={{
                     backgroundColor: '#180d08',
                     backgroundImage: `
@@ -236,10 +236,10 @@ const Hero = () => {
                     `,
                 }}
             >
-                <div ref={heroTextRef} className='w-full h-fit flex justify-between max-[1025px]:flex-col max-[1025px]:gap-8'>
-                    <div className=' w-[45%] leading-30! max-[1025px]:w-[62%] max-md:w-full'>
+                <div ref={heroTextRef} className='w-full h-fit flex justify-between max-lg:flex-col max-lg:gap-8'>
+                    <div className=' w-[45%] leading-30! max-lg:w-[62%] max-md:w-full'>
                     <OverflowTextReveal stagger={0.015} start={startH1}>
-                    <h1 className='text-[7.5vw] text-white max-[1025px]:text-[12vw]  max-md:text-[15vw] leading-[1.1]!'>
+                    <h1 className='text-[7.5vw] text-white max-lg:text-[12vw]  max-md:text-[15vw] leading-[1.1]!'>
                         Visualise
                         Your Mind
                         in Motion
@@ -247,7 +247,7 @@ const Hero = () => {
                     </OverflowTextReveal>
 
                     </div>
-                    <div className='w-[10%] flex flex-col justify-between text-end text-[1.25vw] leading-[1.15] py-[2vw] max-[1025px]:w-[40%] max-[1025px]:text-[3.5vw] max-[1025px]:text-start max-[1025px]:flex-col-reverse  max-md:text-[4.5vw] max-md:gap-[7vw] max-[1025px]:gap-20 max-md:py-0'>
+                    <div className='w-[10%] flex flex-col justify-between text-end text-[1.25vw] leading-[1.15] py-[2vw] max-lg:w-[40%] max-lg:text-[3.5vw] max-lg:text-start max-lg:flex-col-reverse  max-md:text-[4.5vw] max-md:gap-[7vw] max-lg:gap-20 max-md:py-0'>
                         <OverflowTextReveal splitBy='lines' start={startSideText}>
                         <p className='text-white'>
                             Award winning Designs
@@ -267,7 +267,7 @@ const Hero = () => {
 
 
                 </div>
-                <div ref={imgRevealRef} className='absolute bottom-[-64%] left-1/2 translate-x-[-49.5%] size-[180%] max-[1025px]:w-full max-[1025px]:translate-x-[-40%] max-md:w-[160%] max-md:top-auto max-md:bottom-[-30%] max-md:h-auto max-md:translate-x-[-40%] hero-av-img hero-mask-reveal opacity-0'>
+                <div ref={imgRevealRef} className='absolute bottom-[-64%] left-1/2 translate-x-[-49.5%] size-[180%] max-lg:w-full max-lg:translate-x-[-40%] max-md:w-[160%] max-md:top-auto max-md:bottom-[-30%] max-md:h-auto max-md:translate-x-[-40%] hero-av-img hero-mask-reveal opacity-0'>
                     <div ref={heroAvImgRef} className='w-full h-full'>
                         <Image src={elenavossHeroImg} alt='hero-img' className='w-full h-full object-contain select-none pointer-events-none' draggable={false} loading="eager" fetchPriority="high" sizes="(max-width: 768px) 100vw, 1280px" quality={75} />
                     </div>
@@ -278,14 +278,14 @@ const Hero = () => {
                 <div className='w-full h-screen sticky top-0 px-[4vw] flex gap-[2.5vw] overflow-hidden'>
                     <div className='w-[50%] h-fit flex flex-col gap-[2.5vw] marquee-1'>
                         {(isMobileMarquee ? MOBILE_MARQUEE_IMAGES : DESKTOP_MARQUEE_1).map((img, i) => (
-                            <div key={i} className='w-full h-[27vw] max-[1025px]:h-[45vw] max-md:h-[55vw] overflow-hidden'>
+                            <div key={i} className='w-full h-[27vw] max-lg:h-[45vw] max-md:h-[55vw] overflow-hidden'>
                                 <Image src={img} alt='portfolio-img' width={700} height={500} className='w-full h-full overflow-hidden object-cover' />
                             </div>
                         ))}
                     </div>
                     <div className='w-[50%] h-fit flex flex-col gap-[2.5vw] marquee-2'>
                         {(isMobileMarquee ? MOBILE_MARQUEE_IMAGES : DESKTOP_MARQUEE_2).map((img, i) => (
-                            <div key={i} className='w-full h-[27vw] max-[1025px]:h-[45vw] max-md:h-[55vw] overflow-hidden'>
+                            <div key={i} className='w-full h-[27vw] max-lg:h-[45vw] max-md:h-[55vw] overflow-hidden'>
                                 <Image src={img} alt='portfolio-img' width={700} height={500} className='w-full h-full overflow-hidden object-cover' />
                             </div>
                         ))}

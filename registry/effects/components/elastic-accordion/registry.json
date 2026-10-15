@@ -46,7 +46,7 @@
       }
     },
     {
-      "name": "goo",
+      "name": "gooeyStrength",
       "type": "number",
       "default": 9,
       "description": "Strength of the gooey connection between question and answer.",

@@ -5,7 +5,6 @@
   "main": "index.tsx",
   "files": [
     "index.tsx",
-    "StickyContentComp.tsx",
     "registry.json"
   ],
   "keywords": [

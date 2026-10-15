@@ -49,21 +49,20 @@ export default function DemoContent({ registry }: { registry: any }) {
       registry={registry}
       render={(values: any) => (
         <CircularSlider
+          {...values}
           items={values.items?.length ? values.items : defaultItems}
-          title={values.title}
-          subtitle={values.subtitle}
-          backgroundColor={values.backgroundColor}
-          showBottomText={values.showBottomText}
-          gap={values.gap}
-          cardWidth={values.cardWidth}
-          cardHeight={values.cardHeight}
         />
       )}
       copyCodeOptions={{ propsVariableName: "circularSliderProps" }}
     >
       {({ effect }) => (
         <main className="min-h-screen text-white">
-          <DemoHeader />
+          <DemoHeader
+            reducedMotionNote={{
+              title: "This effect can't be reduced.",
+              body: "Reduced motion is enabled, but this effect relies on continuous scroll-driven rotation around the wheel, and can't be simplified to a fade without losing the effect entirely.",
+            }}
+          />
           {effect}
         </main>
       )}

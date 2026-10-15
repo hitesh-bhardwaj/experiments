@@ -5,8 +5,6 @@
   "main": "index.tsx",
   "files": [
     "index.tsx",
-    "NavigationButtons.tsx",
-    "TestimonialComp.tsx",
     "registry.json"
   ],
   "keywords": [

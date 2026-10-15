@@ -57,6 +57,7 @@ export interface ScrambleLinkButtonOwnProps {
   textClassName?: string;
   linkProps?: Partial<ComponentPropsWithoutRef<typeof Link>>;
   children?: ReactNode;
+  textColor?: string;
   hoverColor?: string;
   showLine?: boolean;
   lineClassName?: string;
@@ -78,6 +79,7 @@ export default function ScrambleLinkButton({
   textClassName = "",
   linkProps = {},
   children,
+  textColor = "",
   hoverColor = DEFAULT_HOVER_COLOR,
   showLine = false,
   lineClassName = "",
@@ -216,8 +218,8 @@ export default function ScrambleLinkButton({
       onPointerDown={handlePointerDown}
       onPointerUp={handlePointerUp}
       onPointerCancel={handlePointerCancel}
-      className={`group inline-flex items-center gap-2 cursor-pointer scale-150 text-[1.1vw] text-inherit no-underline transition-colors duration-350 ease-in-out motion-reduce:transition-none hover:text-(--scramble-hover-color) group-data-[pressed=true]:text-(--scramble-hover-color) max-[1025px]:text-[3vw] max-md:text-[4.2vw] ${className}`}
-      style={{ "--scramble-hover-color": hoverColor } as CSSProperties & Record<string, string>}
+      className={`group inline-flex w-fit items-center gap-2 cursor-pointer text-[1.1vw] ${textColor ? "text-(--scramble-text-color)" : "text-inherit"} no-underline transition-colors duration-350 ease-in-out motion-reduce:transition-none hover:text-(--scramble-hover-color) group-data-[pressed=true]:text-(--scramble-hover-color) max-lg:text-[3vw] max-md:text-[4.2vw] ${className}`}
+      style={{ "--scramble-hover-color": hoverColor, ...(textColor ? { "--scramble-text-color": textColor } : {}) } as CSSProperties & Record<string, string>}
     >
       <span className={innerClassName} style={activeLineStyle}>
         <span

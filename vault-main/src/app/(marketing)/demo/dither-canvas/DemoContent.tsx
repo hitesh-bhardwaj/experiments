@@ -13,7 +13,12 @@ export default function DemoContent({ registry }: { registry: any }) {
     >
       {({ effect }) => (
         <main className="relative min-h-screen w-screen overflow-hidden bg-black">
-          <DemoHeader />
+          <DemoHeader
+            reducedMotionNote={{
+              title: "This effect can't be reduced.",
+              body: "Reduced motion is enabled, but this effect is a continuous cursor-driven fluid distortion rendered every frame, and can't be simplified to a fade without losing the effect entirely.",
+            }}
+          />
           {effect}
         </main>
       )}

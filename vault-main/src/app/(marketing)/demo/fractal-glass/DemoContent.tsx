@@ -13,7 +13,12 @@ export default function DemoContent({ registry }: { registry: any }) {
     >
       {({ effect }) => (
         <main className="relative min-h-screen w-screen overflow-hidden bg-black text-white">
-          <DemoHeader />
+          <DemoHeader
+            reducedMotionNote={{
+              title: "The glass keeps shifting.",
+              body: "Fractal Glass distorts the image based on cursor and touch position in real time. Since the distortion is driven entirely by motion, reduced motion can't be applied here.",
+            }}
+          />
           {effect}
           <div className="absolute bottom-8 left-1/2 w-fit -translate-x-1/2 text-center max-md:hidden">
             Move the cursor left and right to see the fractal effect

@@ -1,153 +1,169 @@
 // Built using Hyperiux Vault: https://vault.hyperiux.com
-
 "use client";
 
-import { type CSSProperties, useEffect, useId, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
+import { useEffect, useId, useRef, useState } from "react";
+
+
+export function PixelateSvgFilter({
+ id ="pixelate-filter",
+ size: propSize = 16,
+}) {
+ const size = Math.max(2, propSize);
+ return (
+ <svg
+ aria-hidden="true"
+ className="pointer-events-none absolute h-0 w-0 overflow-hidden"
+ >
+ <defs>
+ <filter id={id} x="0" y="0" width="1" height="1">
+ <feConvolveMatrix
+ kernelMatrix="1 1 1
+ 1 1 1
+ 1 1 1"
+ result="AVG"
+ />
+
+ <feFlood x="1" y="1" width="1" height="1" />
+
+ <feComposite
+ operator="arithmetic"
+ k1="0"
+ k2="1"
+ k3="0"
+ k4="0"
+ width={size}
+ height={size}
+ />
+
+ <feTile result="TILE" />
+
+ <feComposite
+ in="AVG"
+ in2="TILE"
+ operator="in"
+ />
+
+ <feMorphology
+ operator="dilate"
+ radius={size / 2}
+ result="NORMAL"
+ />
+
+ </filter>
+ </defs>
+ </svg>
+ );
+}
 
 gsap.registerPlugin(ScrollTrigger);
 
 const DEFAULT_SRC =
-  "https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/v-01.jpg";
+    "https://picsum.photos/seed/v01/1600/1200";
 const DEFAULT_ALT = "Image";
 
-function PixelateSvgFilter({
-  id,
-  size,
-  crossLayers,
-}: {
-  id: string;
-  size: number;
-  crossLayers: boolean;
-}) {
-  return (
-    <svg aria-hidden="true" style={{ pointerEvents: "none", position: "absolute", height: 0, width: 0, overflow: "hidden" }}>
-      <defs>
-        <filter id={id} x="0" y="0" width="1" height="1">
-          <feConvolveMatrix kernelMatrix="1 1 1 1 1 1 1 1 1" result="AVG" />
-          <feFlood x="1" y="1" width="1" height="1" />
-          <feComposite operator="arithmetic" k1="0" k2="1" k3="0" k4="0" width={size} height={size} />
-          <feTile result="TILE" />
-          <feComposite in="AVG" in2="TILE" operator="in" />
-          <feMorphology operator="dilate" radius={size / 2} result="NORMAL" />
-
-          {crossLayers && (
-            <>
-              <feConvolveMatrix kernelMatrix="1 1 1 1 1 1 1 1 1" result="AVG" />
-              <feFlood x="1" y="1" width="1" height="1" />
-              <feComposite in2="SourceGraphic" operator="arithmetic" k1="0" k2="1" k3="0" k4="0" width={size / 2} height={size} />
-              <feTile result="TILE" />
-              <feComposite in="AVG" in2="TILE" operator="in" />
-              <feMorphology operator="dilate" radius={size / 2} result="FALLBACKX" />
-              <feConvolveMatrix kernelMatrix="1 1 1 1 1 1 1 1 1" result="AVG" />
-              <feFlood x="1" y="1" width="1" height="1" />
-              <feComposite in2="SourceGraphic" operator="arithmetic" k1="0" k2="1" k3="0" k4="0" width={size} height={size / 2} />
-              <feTile result="TILE" />
-              <feComposite in="AVG" in2="TILE" operator="in" />
-              <feMorphology operator="dilate" radius={size / 2} result="FALLBACKY" />
-
-              <feMerge>
-                <feMergeNode in="FALLBACKX" />
-                <feMergeNode in="FALLBACKY" />
-                <feMergeNode in="NORMAL" />
-              </feMerge>
-            </>
-          )}
-
-          {!crossLayers && <feMergeNode in="NORMAL" />}
-        </filter>
-      </defs>
-    </svg>
-  );
-}
-
 interface SVGPixelRevealProps {
-  src?: string;
-  alt?: string;
-  className?: string;
-  imageClassName?: string;
-  initialPixelSize?: number;
-  finalPixelSize?: number;
-  start?: string;
-  end?: string;
-  crossLayers?: boolean;
-  priority?: boolean;
-  intensity?: number;
-  style?: CSSProperties;
+    src?: string;
+    alt?: string;
+    className?: string;
+    imageClassName?: string;
+    initialPixelSize?: number;
+    finalPixelSize?: number;
+    start?: string;
+    end?: string;
+    priority?: boolean;
+    intensity?: number;
+    scrub?: boolean;
+    duration?: number;
 }
 
 export default function SVGPixelReveal({
-  src = DEFAULT_SRC,
-  alt = DEFAULT_ALT,
-  className = "h-[50vh] w-[50vw]",
-  imageClassName = "",
-  initialPixelSize: initialPixelSizeProp = 18,
-  finalPixelSize = 1,
-  start = "top 50%",
-  end = "bottom 35%",
-  crossLayers = true,
-  priority = false,
-  intensity,
-  style = {},
+    src = DEFAULT_SRC,
+    alt = DEFAULT_ALT,
+    className = "h-[50vh] w-[50vw]",
+    imageClassName = "",
+    intensity = 22,
+    priority = false,
+    scrub = true,
+    duration = 1.5,
 }: SVGPixelRevealProps) {
-  const containerRef = useRef<HTMLDivElement | null>(null);
-  const filterId = useId().replace(/:/g, "");
-  const initialPixelSize = Math.max(2, intensity ?? initialPixelSizeProp);
-  const [pixelSize, setPixelSize] = useState(initialPixelSize);
-  const shouldApplyFilter = pixelSize > finalPixelSize + 0.01;
+    const containerRef = useRef<HTMLDivElement | null>(null);
+    const filterId = useId().replace(/:/g, "");
+    const initialPixelSize = Math.max(2, intensity);
+    const finalPixelSize = 1;
+    const start = scrub ? "top 85%" : "top 70%";
+    const end = "bottom 40%";
+    const [pixelSize, setPixelSize] = useState(initialPixelSize);
+    const [prevInitialPixelSize, setPrevInitialPixelSize] = useState(initialPixelSize);
+    const shouldApplyFilter = pixelSize > finalPixelSize + 0.01;
 
-  useEffect(() => {
-    setPixelSize(initialPixelSize);
-  }, [initialPixelSize]);
+    if (initialPixelSize !== prevInitialPixelSize) {
+        setPrevInitialPixelSize(initialPixelSize);
+        setPixelSize(initialPixelSize);
+    }
 
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
+    useEffect(() => {
+        const container = containerRef.current;
 
-    const animatedState = { size: initialPixelSize };
+        if (!container) {
+            return undefined;
+        }
 
-    const tween = gsap.to(animatedState, {
-      size: finalPixelSize,
-      duration: 1.0,
-      ease: "none",
-      paused: true,
-      onUpdate: () => setPixelSize(animatedState.size),
-    });
+        const animatedState = { size: initialPixelSize };
 
-    const trigger = ScrollTrigger.create({
-      trigger: container,
-      start,
-      end,
-      animation: tween,
-      invalidateOnRefresh: true,
-    });
+        setPixelSize(initialPixelSize);
 
-    return () => { trigger.kill(); tween.kill(); };
-  }, [end, finalPixelSize, initialPixelSize, start]);
+        const tween = gsap.to(animatedState, {
+            size: finalPixelSize,
+            duration: scrub ? 1 : Math.max(0.1, duration),
+            ease: scrub ? "none" : "power2.out",
+            paused: true,
+            onUpdate: () => {
+                setPixelSize(animatedState.size);
+            },
+        });
 
-  return (
-    <div
-      ref={containerRef}
-      className={`relative ${className}`.trim()}
-      style={{ position: "relative", ...style }}
-    >
-      <PixelateSvgFilter id={filterId} size={pixelSize} crossLayers={crossLayers} />
-      <div
-        style={{
-          position: "relative", height: "100%", width: "100%", overflow: "hidden",
-          filter: shouldApplyFilter ? `url(#${filterId})` : undefined,
-        }}
-      >
-        <img
-          src={src}
-          alt={alt}
-          loading={priority ? "eager" : "lazy"}
-          fetchPriority={priority ? "high" : "auto"}
-          className={`h-full w-full object-cover ${imageClassName}`.trim()}
-          style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-        />
-      </div>
-    </div>
-  );
+        const trigger = scrub
+            ? ScrollTrigger.create({
+                  trigger: container,
+                  start,
+                  end,
+                  scrub: true,
+                  animation: tween,
+                  invalidateOnRefresh: true,
+              })
+            : ScrollTrigger.create({
+                  trigger: container,
+                  start,
+                  once: true,
+                  onEnter: () => tween.play(),
+              });
+
+        return () => {
+            trigger.kill();
+            tween.kill();
+        };
+    }, [end, finalPixelSize, initialPixelSize, start, scrub, duration]);
+
+    return (
+        <div ref={containerRef} className={`relative ${className}`}>
+            <PixelateSvgFilter
+                id={filterId}
+                size={pixelSize}
+            />
+
+            <div
+                className="relative h-full w-full overflow-hidden"
+                style={{ filter: shouldApplyFilter ? `url(#${filterId})` : undefined }}
+            >
+                <img
+                    src={src}
+                    alt={alt}
+                    className={`absolute inset-0 h-full w-full object-cover ${imageClassName}`.trim()}
+                />
+            </div>
+
+        </div>
+    );
 }

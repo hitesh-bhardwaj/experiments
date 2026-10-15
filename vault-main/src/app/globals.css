@@ -75,7 +75,7 @@ body {
   --radius-2xl: 40px;
   --radius-full: 100000px;
   /* Tablet breakpoint at 1025px (Tailwind's default lg is 1024px), so max-lg:
-     is exactly the old max-[1025px]: and 1024px iPads stay on tablet */
+     is exactly the old max-lg: and 1024px iPads stay on tablet */
   --breakpoint-lg: 1025px;
 }
 

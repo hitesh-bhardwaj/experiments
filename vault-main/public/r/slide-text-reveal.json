@@ -67,7 +67,7 @@
       }
     },
     {
-      "name": "speed",
+      "name": "horizontalOffset",
       "type": "number",
       "default": 20,
       "description": "Starting horizontal offset in pixels.",

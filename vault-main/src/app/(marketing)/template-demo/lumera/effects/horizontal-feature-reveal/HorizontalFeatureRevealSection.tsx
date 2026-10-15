@@ -374,22 +374,22 @@ export default function HorizontalFeatureRevealSection() {
   return (
     <section
       id={sectionId}
-      className="relative h-[850vh] bg-[#F3F3F3] text-[#1c1b1a] max-[1025px]:h-auto"
+      className="relative h-[850vh] bg-[#F3F3F3] text-[#1c1b1a] max-lg:h-auto"
     >
-      <div className="sticky top-0 h-screen overflow-hidden max-[1025px]:static max-[1025px]:h-auto">
+      <div className="sticky top-0 h-screen overflow-hidden max-lg:static max-lg:h-auto">
         <div
-          className="lumera-residence-track flex h-full w-fit gap-0  max-[1025px]:flex-col max-[1025px]:gap-[12vw]  max-[1025px]:pb-[15%]"
+          className="lumera-residence-track flex h-full w-fit gap-0  max-lg:flex-col max-lg:gap-[12vw]  max-lg:pb-[15%]"
           style={{ "--card-gap": "4vw" } as CSSProperties}
         >
           <div
             id={textFillId}
             ref={textFillSlideRef}
-            className="flex h-screen w-screen flex-none items-center justify-center overflow-hidden bg-white px-[5vw] max-[1025px]:h-auto max-[1025px]:w-full max-[1025px]:py-[20vh]"
+            className="flex h-screen w-screen flex-none items-center justify-center overflow-hidden bg-white px-[5vw] max-lg:h-auto max-lg:w-full max-lg:py-[20vh]"
           >
-            <div className="split__wrapper relative z-10 mx-auto w-[80%] max-[1025px]:w-[90%]">
+            <div className="split__wrapper relative z-10 mx-auto w-[80%] max-lg:w-[90%]">
               <h2
                 ref={textFillHeadingRef}
-                className="text-center text-[3.8vw] font-neue-montreal leading-[1.3] font-medium! text-[#1c1b1a] opacity-0 max-[1025px]:opacity-100 max-[1025px]:text-[5vw] max-md:text-[8.5vw] max-[1025px]:leading-[1.08]"
+                className="text-center text-[3.8vw] font-neue-montreal leading-[1.3] font-medium! text-[#1c1b1a] opacity-0 max-lg:opacity-100 max-lg:text-[5vw] max-md:text-[8.5vw] max-lg:leading-[1.08]"
               >
                 {TEXT_FILL_COPY}
               </h2>
@@ -402,53 +402,53 @@ export default function HorizontalFeatureRevealSection() {
             <CardTag
               key={item.number}
               {...(isMobile ? { as: "article" as const } : {})}
-              className="lumera-residence-card max-[1025px]:px-[6%]  flex h-screen w-[98vw] flex-none overflow-hidden rounded-none bg-[#F3F3F3] max-[1025px]:h-auto max-[1025px]:w-full max-[1025px]:flex-col"
+              className="lumera-residence-card max-lg:px-[6%]  flex h-screen w-[98vw] flex-none overflow-hidden rounded-none bg-[#F3F3F3] max-lg:h-auto max-lg:w-full max-lg:flex-col"
             >
-              <div className="h-full w-[42%] overflow-hidden max-md:h-[60vh] max-[1025px]:h-[60vh]  max-[1025px]:w-full max-[1025px]:rounded-[4vw]">
+              <div className="h-full w-[42%] overflow-hidden max-md:h-[60vh] max-lg:h-[60vh]  max-lg:w-full max-lg:rounded-[4vw]">
                 <Image
                   src={item.image}
                   alt={item.title}
                   width={1000}
                   height={1000}
                   quality={95}
-                  className="lumera-residence-image h-full w-full object-cover opacity-0 scale-[1.2] max-[1025px]:translate-x-0 max-[1025px]:scale-100 max-[1025px]:opacity-100"
+                  className="lumera-residence-image h-full w-full object-cover opacity-0 scale-[1.2] max-lg:translate-x-0 max-lg:scale-100 max-lg:opacity-100"
                 />
               </div>
 
-              <div className="flex  flex-col justify-between px-[3.5vw] py-[3.5vw] max-[1025px]:w-full max-[1025px]:px-0 max-[1025px]:pt-[7vw]">
+              <div className="flex  flex-col justify-between px-[3.5vw] py-[3.5vw] max-lg:w-full max-lg:px-0 max-lg:pt-[7vw]">
                 <div>
-                  <p className="lumera-residence-number text-[#1c1b1a] font-neue-montreal text-[5.8vw] font-medium! leading-none max-[1025px]:text-[7vw]  opacity-0 max-md:text-[12vw] max-[1025px]:opacity-100">
+                  <p className="lumera-residence-number text-[#1c1b1a] font-neue-montreal text-[5.8vw] font-medium! leading-none max-lg:text-[7vw]  opacity-0 max-md:text-[12vw] max-lg:opacity-100">
                     {item.number}
                   </p>
 
-                  <h3 className="lumera-residence-title mt-[2vw] max-[1025px]:text-[5vw] font-neue-montreal text-[3.8vw] font-medium!  leading-[1.2] text-[#1c1b1a] tracking-tighter opacity-0 max-[1025px]:mt-[5vw] max-[1025px]:max-w-full max-md:text-[7vw] max-[1025px]:opacity-100">
+                  <h3 className="lumera-residence-title mt-[2vw] max-lg:text-[5vw] font-neue-montreal text-[3.8vw] font-medium!  leading-[1.2] text-[#1c1b1a] tracking-tighter opacity-0 max-lg:mt-[5vw] max-lg:max-w-full max-md:text-[7vw] max-lg:opacity-100">
                     {item.title}
                   </h3>
 
-                  <p className="lumera-residence-copy mt-[3vw] max-w-[38vw] text-[1.25vw] leading-[1.6] text-[#1c1b1a] opacity-0 max-[1025px]:mt-[6vw] max-[1025px]:max-w-full max-[1025px]:text-[3vw] max-md:text-[4vw] max-[1025px]:opacity-100">
+                  <p className="lumera-residence-copy mt-[3vw] max-w-[38vw] text-[1.25vw] leading-[1.6] text-[#1c1b1a] opacity-0 max-lg:mt-[6vw] max-lg:max-w-full max-lg:text-[3vw] max-md:text-[4vw] max-lg:opacity-100">
                     {item.description}
                   </p>
 
-                  <div className="mt-[2.2vw] grid grid-cols-4 max-[1025px]:mt-[7vw] max-[1025px]:grid-cols-2">
+                  <div className="mt-[2.2vw] grid grid-cols-4 max-lg:mt-[7vw] max-lg:grid-cols-2">
                     {item.stats.map((stat, index) => (
                       <div
                         key={`${item.number}-${stat.label}`}
-                        className={`lumera-residence-stat w-[14vw] max-[1025px]:w-[45vw] relative py-[0.95vw] opacity-0 max-[1025px]:py-[4vw] max-[1025px]:opacity-100 ${
+                        className={`lumera-residence-stat w-[14vw] max-lg:w-[45vw] relative py-[0.95vw] opacity-0 max-lg:py-[4vw] max-lg:opacity-100 ${
                           index === 0 ? "pr-[2vw]" : "pl-[2vw] pr-[1.2vw]"
                         } ${
                           index === item.stats.length - 1 ? "pr-0" : ""
-                        } max-[1025px]:px-0`}
+                        } max-lg:px-0`}
                       >
                         {index !== 0 ? (
                           <span
                             aria-hidden="true"
-                            className="absolute left-0 top-1/2 h-[6vw] w-px -translate-y-1/2 bg-[#DADADA] max-[1025px]:hidden"
+                            className="absolute left-0 top-1/2 h-[6vw] w-px -translate-y-1/2 bg-[#DADADA] max-lg:hidden"
                           />
                         ) : null}
-                        <p className="text-[1.45vw] font-medium! leading-none tracking-[-0.04em] max-[1025px]:text-[3.5vw] max-md:text-[5vw]">
+                        <p className="text-[1.45vw] font-medium! leading-none tracking-[-0.04em] max-lg:text-[3.5vw] max-md:text-[5vw]">
                           {stat.value}
                         </p>
-                        <p className="mt-[0.8vw] text-[1.25vw] text-black max-[1025px]:mt-[1.8vw] max-[1025px]:text-[2.5vw] max-md:text-[3.2vw]">
+                        <p className="mt-[0.8vw] text-[1.25vw] text-black max-lg:mt-[1.8vw] max-lg:text-[2.5vw] max-md:text-[3.2vw]">
                           {stat.label}
                         </p>
                       </div>
@@ -456,15 +456,15 @@ export default function HorizontalFeatureRevealSection() {
                   </div>
                 </div>
 
-                <div className="mt-[1vw] flex flex-col items-start justify-between gap-[2vw] max-md:flex-wrap max-[1025px]:mt-[8vw] max-[1025px]:flex-col max-[1025px]:items-start">
+                <div className="mt-[1vw] flex flex-col items-start justify-between gap-[2vw] max-md:flex-wrap max-lg:mt-[8vw] max-lg:flex-col max-lg:items-start">
 
-                  <div className="flex max-md:flex-gap gap-[1vw] max-[1025px]:gap-[3vw]">
+                  <div className="flex max-md:flex-gap gap-[1vw] max-lg:gap-[3vw]">
                     {item.thumbnails.map((thumb, index) => (
                      
                       <div
                         
                         key={`${item.number}-thumb-${index}`}
-                        className="overflow-hidden h-[6.2vw] w-[6.2vw]  rounded-md bg-[#ddd4ca] max-[1025px]:rounded-[4vw] group max-[1025px]:h-[20vw] max-[1025px]:w-[20vw]"
+                        className="overflow-hidden h-[6.2vw] w-[6.2vw]  rounded-md bg-[#ddd4ca] max-lg:rounded-[4vw] group max-lg:h-[20vw] max-lg:w-[20vw]"
                         >
                         <Image
                           src={thumb}
@@ -485,8 +485,8 @@ export default function HorizontalFeatureRevealSection() {
                     href="#"
                     
                     hoverColor="#1c1b1a"
-                    className="lumera-residence-cta gap-[1vw]  pb-[0.6vw] text-[#1c1b1a] opacity-0 transition-opacity max-[1025px]:pb-[1.8vw] max-[1025px]:pt-[4vw] max-[1025px]:opacity-100"
-                    textClassName="font-neue-montreal text-[1.2vw] leading-none max-[1025px]:text-[6vw]"
+                    className="lumera-residence-cta gap-[1vw]  pb-[0.6vw] text-[#1c1b1a] opacity-0 transition-opacity max-lg:pb-[1.8vw] max-lg:pt-[4vw] max-lg:opacity-100"
+                    textClassName="font-neue-montreal text-[1.2vw] leading-none max-lg:text-[6vw]"
                   />
                 </div>
               </div>

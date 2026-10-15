@@ -225,7 +225,7 @@ tl.fromTo(
               <br />
               with motion, interaction, and depth.
             </h1>
-            <p ref={ideaTextRef} className='text-[#242424] max-[1025px]:w-[20vw] max-md:w-[45vw] absolute top-1/2 left-1/2 text-center -translate-x-1/2 -translate-y-1/2 leading-[1.1] max-[1025px]:text-[5vw] text-[2.2vw]'>Need immersive UI?<br /> Hyperiux makes it <br /> move.</p>
+            <p ref={ideaTextRef} className='text-[#242424] max-lg:w-[20vw] max-md:w-[45vw] absolute top-1/2 left-1/2 text-center -translate-x-1/2 -translate-y-1/2 leading-[1.1] max-lg:text-[5vw] text-[2.2vw]'>Need immersive UI?<br /> Hyperiux makes it <br /> move.</p>
           </div>
 
           {/* Corner Boxes */}
@@ -242,7 +242,7 @@ tl.fromTo(
           {floatingWords.map((word, i) => (
             <div
               key={i}
-              className={`floating-word-${i} z-300 absolute opacity-0 px-4 py-1 font-bold text-sm max-[1025px]:text-[2vw] max-md:text-[2.5vw] uppercase tracking-wider ${word.color}`}
+              className={`floating-word-${i} z-300 absolute opacity-0 px-4 py-1 font-bold text-sm max-lg:text-[2vw] max-md:text-[2.5vw] uppercase tracking-wider ${word.color}`}
             >
               <p className='mix-blend-difference text-white'> {word.text}</p>
             </div>

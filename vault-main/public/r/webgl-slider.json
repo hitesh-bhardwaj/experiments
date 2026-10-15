@@ -4,9 +4,9 @@
   "title": "WebGL Slider",
   "description": "Scroll-driven WebGL image slider with fold distortion, hover interaction, and Lenis + GSAP snap behavior.",
   "dependencies": [
-    "three",
     "gsap",
-    "lenis"
+    "lenis",
+    "three"
   ],
   "registryDependencies": [],
   "exportName": "WebGLSlider",
@@ -112,11 +112,6 @@
       "path": "index.tsx",
       "type": "registry:component",
       "target": "src/components/effects/webgl-slider/index.tsx"
-    },
-    {
-      "path": "WebGLSliderComp.tsx",
-      "type": "registry:component",
-      "target": "src/components/effects/webgl-slider/WebGLSliderComp.tsx"
     }
   ]
 }

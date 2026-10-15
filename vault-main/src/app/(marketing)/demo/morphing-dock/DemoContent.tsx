@@ -39,13 +39,13 @@ export default function DemoContent({ registry }: { registry: RegistryLike }) {
                   text="Read Article"
                   href="/effects/navigation/morphing-dock"
                   variant="outline2"
-                  className="border-white max-md:w-[60vw]"
+                  className="border-white max-md:w-[65vw]"
                 />
                 <Button
                   text="Explore All Effects"
                   href="/effects"
                   variant="outline2"
-                  className="border-white max-md:w-[60vw]"
+                  className="border-white max-md:w-[65vw]"
                 />
               </div>
             </div>

@@ -1,9 +1,7 @@
 // Built using Hyperiux Vault: https://vault.hyperiux.com
-
 "use client";
 
 import type { MouseEvent as ReactMouseEvent, ReactNode } from "react";
-import Link from "next/link";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import gsap from "gsap";
 import { CustomEase } from "gsap/CustomEase";
@@ -70,44 +68,44 @@ interface NavItem {
 const NAV_ITEMS: NavItem[] = [
   {
     label: "Effects",
-    href: "",
+    href: "#",
     key: "effects",
     items: [
-      { label: "Text", href: "" },
-      { label: "Navigation", href: "" },
-      { label: "Buttons", href: "" },
-      { label: "Transitions", href: "" },
-      { label: "Backgrounds", href: "" },
+      { label: "Text", href: "#" },
+      { label: "Navigation", href: "#" },
+      { label: "Buttons", href: "#" },
+      { label: "Transitions", href: "#" },
+      { label: "Backgrounds", href: "#" },
     ],
   },
   {
     label: "Components",
-    href: "",
+    href: "#",
     key: "components",
     items: [
-      { label: "Carousels", href: "" },
-      { label: "Cursor", href: "" },
-      { label: "Loaders", href: "" },
-      { label: "Scroll", href: "" },
-      { label: "WebGL", href: "" },
+      { label: "Carousels", href: "#" },
+      { label: "Cursor", href: "#" },
+      { label: "Loaders", href: "#" },
+      { label: "Scroll", href: "#" },
+      { label: "WebGL", href: "#" },
     ],
   },
-  { label: "Docs", href: "" },
-  { label: "Pricing", href: "" },
-  { label: "Home", href: "" },
+  { label: "Docs", href: "#" },
+  { label: "Pricing", href: "#" },
+  { label: "Home", href: "#" },
 ];
 
 const SUB_LINKS: SubItem[] = [
-  { label: "All Effects", href: "" },
-  { label: "Documentation", href: "" },
-  { label: "Pricing", href: "" },
+  { label: "All Effects", href: "#" },
+  { label: "Documentation", href: "#" },
+  { label: "Pricing", href: "#" },
 ];
 
 const SOCIALS: SubItem[] = [
-  { label: "GitHub", href: "" },
-  { label: "X", href: "" },
-  { label: "LinkedIn", href: "" },
-  { label: "Instagram", href: "" },
+  { label: "GitHub", href: "#" },
+  { label: "X", href: "#" },
+  { label: "LinkedIn", href: "#" },
+  { label: "Instagram", href: "#" },
 ];
 
 const CONTACT_EMAIL = "hello@hyperiux.com";
@@ -153,7 +151,7 @@ const PROPERTY_REGISTRATION = `
 `;
 
 const inert = (href: string) => (e: ReactMouseEvent) => {
-  if (!href) e.preventDefault();
+  if (!href || href === "#") e.preventDefault();
 };
 
 const CaretIcon = () => (
@@ -169,27 +167,16 @@ const CaretIcon = () => (
 );
 
 export interface PerspectiveShiftMenuProps {
-  /** Opening and closing speed multiplier. Higher values animate faster. */
   animationSpeed?: number;
-  /** How far the page rotates away, in degrees. 0 slides without tilting. */
   tiltAngle?: number;
-  /** Delay between nav links as they enter, in seconds. */
   linkStagger?: number;
-  /** Delay between characters on link hover, in seconds. */
   charStagger?: number;
-  /** Nav column width, in vw. */
   panelWidth?: number;
-  /** Sub-drawer width, in vw. */
   drawerWidth?: number;
-  /** Nav column and sub-drawer surface color. */
   panelColor?: string;
-  /** Links, headings, and menu icon color. */
   textColor?: string;
-  /** The void behind the page as it tilts away. */
   voidColor?: string;
-  /** How strongly the receded page is dimmed, 0 to 1. */
   dimOpacity?: number;
-  /** The page content. It sits inside the surface that tilts away on open. */
   children?: ReactNode;
 }
 
@@ -222,7 +209,6 @@ const PerspectiveShiftMenu = ({
   const openTl = useRef<gsap.core.Timeline | null>(null);
   const closeTl = useRef<gsap.core.Timeline | null>(null);
   const drawerTl = useRef<gsap.core.Timeline | null>(null);
-  const accTl = useRef<gsap.core.Timeline | null>(null);
 
   const phaseRef = useRef<Phase>("closed");
   const drawerOpen = useRef(false);
@@ -254,6 +240,10 @@ const PerspectiveShiftMenu = ({
       const labels = gsap.utils.toArray<HTMLElement>("[data-shift-label]", surfaceEl);
       const links = gsap.utils.toArray<HTMLElement>("[data-shift-link]", surfaceEl);
       const sublinks = gsap.utils.toArray<HTMLElement>("[data-shift-sublink]", surfaceEl);
+      const carets = gsap.utils.toArray<HTMLElement>("[data-shift-caret]", surfaceEl);
+
+      const caretFor = (label: HTMLElement) =>
+        label.closest("[data-shift-link]")?.querySelector<HTMLElement>("[data-shift-caret]") ?? null;
 
       const isMobile = () => window.matchMedia("(max-width: 767px)").matches;
       const canHover = () => window.matchMedia("(hover: hover)").matches;
@@ -333,7 +323,7 @@ const PerspectiveShiftMenu = ({
         if (!panel) return;
         const items = accItems(panel);
 
-        accTl.current?.kill();
+        gsap.killTweensOf([panel, ...items]);
         const tl = timeline({ defaults: { ease: EASE_OUT_NAME } });
 
         gsap.set(panel, { height: "auto" });
@@ -344,6 +334,7 @@ const PerspectiveShiftMenu = ({
         tl.to(panel, {
           height: target,
           duration: beat(ACC_SPAN),
+          ease: EASE_IN_OUT_NAME,
           onComplete: () => gsap.set(panel, { height: "auto" }),
         }, 0);
         tl.to(items, {
@@ -353,23 +344,21 @@ const PerspectiveShiftMenu = ({
           stagger: reduced ? RM_STAGGER : ACC_STAGGER,
           overwrite: "auto",
         }, beat(0.08));
-
-        accTl.current = tl;
       };
 
       const closeAcc = (key: string | null) => {
         const panel = key ? accFor(key) : null;
         if (!panel) return;
-        accTl.current?.kill();
+        const items = accItems(panel);
+        gsap.killTweensOf([panel, ...items]);
         const tl = timeline({ defaults: { ease: EASE_IN_OUT_NAME } });
-        tl.to(accItems(panel), {
+        tl.to(items, {
           autoAlpha: 0,
           y: reduced ? 0 : -6,
           duration: beat(ACC_ITEM * 0.6),
           overwrite: "auto",
         }, 0);
-        tl.to(panel, { height: 0, duration: beat(ACC_SPAN * 0.8) }, beat(0.04));
-        accTl.current = tl;
+        tl.to(panel, { height: 0, duration: beat(ACC_SPAN), ease: EASE_IN_OUT_NAME }, 0);
       };
 
       const resetAcc = () => {
@@ -475,12 +464,22 @@ const PerspectiveShiftMenu = ({
         }
 
         labels.forEach((el, i) => {
+          const at = linksStart + i * stagger;
           tl.to(el, {
             autoAlpha: 1,
             xPercent: 0,
             duration: beat(0.52),
             overwrite: "auto",
-          }, linksStart + i * stagger);
+          }, at);
+          const caret = caretFor(el);
+          if (caret) {
+            tl.to(caret, {
+              autoAlpha: 1,
+              xPercent: 0,
+              duration: beat(0.52),
+              overwrite: "auto",
+            }, at);
+          }
         });
 
         if (links.length) {
@@ -722,19 +721,34 @@ const PerspectiveShiftMenu = ({
               gsap.killTweensOf(labels);
               gsap.set(labels, { x: 0 });
             }
+            if (carets.length) {
+              gsap.killTweensOf(carets);
+              gsap.set(carets, { x: 0 });
+            }
             setPhaseState("closed");
             unlockScroll();
           },
         });
 
         labels.forEach((el, i) => {
+          const at = (reduced ? 0.008 : 0.025) * i;
           tl.to(el, {
             autoAlpha: 0,
             xPercent: reduced ? RM_OFFSET : -18,
             duration: beat(LINK_OUT),
             ease: "power2.in",
             overwrite: "auto",
-          }, (reduced ? 0.008 : 0.025) * i);
+          }, at);
+          const caret = caretFor(el);
+          if (caret) {
+            tl.to(caret, {
+              autoAlpha: 0,
+              xPercent: reduced ? RM_OFFSET : -18,
+              duration: beat(LINK_OUT),
+              ease: "power2.in",
+              overwrite: "auto",
+            }, at);
+          }
         });
 
         if (sublinks.length) {
@@ -799,6 +813,11 @@ const PerspectiveShiftMenu = ({
       gsap.set(dimEl, { opacity: 0 });
       gsap.set(surfaceEl, { x: reduced ? RM_SLIDE : "-100%" });
       gsap.set(labels, {
+        autoAlpha: 0,
+        xPercent: reduced ? RM_OFFSET : -18,
+        force3D: true,
+      });
+      gsap.set(carets, {
         autoAlpha: 0,
         xPercent: reduced ? RM_OFFSET : -18,
         force3D: true,
@@ -931,23 +950,125 @@ const PerspectiveShiftMenu = ({
     <>
       <style>{PROPERTY_REGISTRATION}</style>
 
-      {/* Header: fixed sibling, so it stays put while the page scrolls and
-          is outside the perspective/transform context that would break it. */}
-      <header className="pointer-events-none fixed inset-x-0 top-0 z-300 flex items-center justify-between px-[2vw] backdrop-blur-sm max-[1025px]:p-[3vw] max-md:p-[5vw] py-1">
-        <Link
-          href=""
-          onClick={inert("")}
-          aria-label="Hyperiux"
-          style={lit ? { ["--shift-ink" as string]: textColor } : undefined}
-          className={`pointer-events-auto block text-[1.1vw] font-medium tracking-[-0.02em] transition-[color,opacity] duration-400 ease-out max-[1025px]:text-[2vw] max-md:text-[4vw] ${
-            lit ? "text-(--shift-ink)/90" : "text-white"
-          } ${lit ? "max-md:pointer-events-none max-md:opacity-0" : ""}`}
+      <header className="pointer-events-none fixed inset-x-0 top-0 z-300 flex items-center justify-between px-[2vw] backdrop-blur-sm max-lg:p-[3vw] max-md:p-[5vw] py-4">
+        <a
+          href="/"
+          className={`flex items-center gap-3 cursor-pointer ${lit?"text-black":"text-white"}`}
         >
-          HYPERIUX
-        </Link>
+          <svg
+            width="30"
+            height="30"
+            viewBox="0 0 58 65"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            className={` transition-all duration-300 ease-in-out motion-reduce:transition-none size-10 max-md:size-8  `}
+          >
+            <path d="M0 0H9.02977V28.5943H0V0Z" fill="#ffffff" className="fill-current" />
+            <path
+              d="M57.1895 64.7134H48.1597V36.1192H57.1895V64.7134Z"
+              fill="#ffffff" className="fill-current"
+            />
+            <path
+              d="M0.0195312 36.1192V64.7135H9.0493V42.139L21.5405 37.4737V28.7449L0.0195312 36.1192Z"
+              fill="#ffffff" className="fill-current"
+            />
+            <path
+              d="M48.1777 22.5746V0.00012207H57.3579V28.5944L34.332 37.8697V28.5944L48.1777 22.5746Z"
+              fill="#ffffff" className="fill-current"
+            />
+            <path
+              d="M21.9912 29.0459L28.4868 26.8346C28.8573 26.7085 29.2624 26.7316 29.6161 26.8992L34.7834 29.3469M21.9912 29.0459L28.1616 32.2063M21.9912 29.0459V37.1727L28.1616 40.0321M34.7834 29.3469L28.1616 32.2063M34.7834 29.3469C34.7834 32.3443 34.7834 34.1753 34.7834 37.1727L28.1616 40.0321M28.1616 32.2063V40.0321"
+              stroke="#ffffff"
+              className="stroke-current"
+              strokeWidth="0.902977"
+            />
+          </svg>
 
-        {/* Closed: an outlined page next to a hidden column. Open: the page
-            tilts away on its right edge while the column slides in. */}
+          <div className="flex  items-center gap-2 w-full h-full">
+            <svg
+              width="156"
+              height="45"
+              viewBox="0 0 351 43"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              className={`transition-all duration-300 ease-in-out motion-reduce:transition-none`}
+            >
+              <path
+                d="M315.441 6.10352e-05H306.862L320.055 15.9603L324.019 21.0695L306.862 42.139H315.591L332.597 21.0695L328.555 15.9603L315.441 6.10352e-05Z"
+                fill="#ffffff" className="fill-current"
+              />
+              <path
+                d="M350.055 6.10352e-05H341.326L332.598 10.6853L336.962 15.9527L350.055 6.10352e-05Z"
+                fill="#ffffff" className="fill-current"
+              />
+              <path
+                d="M349.905 42.139L341.176 42.139L332.598 31.7548L336.962 26.3369L349.905 42.139Z"
+                fill="#ffffff" className="fill-current"
+              />
+              <path
+                d="M264.874 6.10352e-05H258.252V34.0122L269.088 42.139H289.555L300.391 34.0122V6.10352e-05H293.769V29.9349C293.769 30.4164 293.539 30.8688 293.149 31.152L287.543 35.2293C287.286 35.4164 286.976 35.5172 286.658 35.5172H271.985C271.667 35.5172 271.357 35.4164 271.1 35.2293L265.494 31.152C265.104 30.8688 264.874 30.4164 264.874 29.9349V6.10352e-05Z"
+                fill="#ffffff" className="fill-current"
+              />
+              <rect
+                x="244.406"
+                y="6.10352e-05"
+                width="6.62183"
+                height="42.1389"
+                fill="#ffffff" className="fill-current"
+              />
+              <path
+                d="M195.043 0.000183105H228.002V6.62202H201.665V42.2896H195.043V0.000183105Z"
+                fill="#ffffff" className="fill-current"
+              />
+              <path
+                d="M233.269 24.0796L237.182 18.1404V6.62202V0.000183105H195.043V6.62202H230.56V15.8023L225.594 24.0796H233.269Z"
+                fill="#ffffff" className="fill-current"
+              />
+              <path
+                d="M221.078 17.7586H201.664V24.3804H217.466L229.205 42.139H237.163L221.078 17.7586Z"
+                fill="#ffffff" className="fill-current"
+              />
+              <path
+                d="M182.401 24.3804V17.7585H162.235L153.205 27.9923H162.084L165.245 24.3804H182.401Z"
+                fill="#ffffff" className="fill-current"
+              />
+              <path
+                d="M158.322 0H188.421V6.62183H161.031L152.904 15.9526V35.5171H188.421V42.1389H146.282V12.0397L158.322 0Z"
+                fill="#ffffff" className="fill-current"
+              />
+              <rect
+                x="97.5234"
+                y="17.7585"
+                width="6.62183"
+                height="24.3804"
+                fill="#ffffff" className="fill-current"
+              />
+              <path
+                d="M139.662 0H97.5234V6.62183H133.041V17.7586H111.15L104.534 24.3804H133.643L139.662 18.0595V0Z"
+                fill="#ffffff" className="fill-current"
+              />
+              <path
+                d="M55.3826 10.8357L55.3826 0H48.7607L48.7607 14.8991L66.5754 24.2299L66.5193 42.1389H73.1411V24.2299L90.8997 14.7486V0H84.2779V10.8357L69.8302 18.4786L55.3826 10.8357Z"
+                fill="#ffffff" className="fill-current"
+              />
+              <rect width="6.62183" height="42.1389" fill="#ffffff" className="fill-current" />
+              <rect
+                x="35.5166"
+                width="6.62183"
+                height="42.1389"
+                fill="#ffffff" className="fill-current"
+              />
+              <rect
+                x="6.62305"
+                y="17.7585"
+                width="28.8953"
+                height="6.62183"
+                fill="#ffffff" className="fill-current"
+              />
+            </svg>
+          </div>
+        </a>
+
         <button
           type="button"
           ref={triggerRef}
@@ -958,12 +1079,8 @@ const PerspectiveShiftMenu = ({
           className="group/glyph pointer-events-auto relative z-301 flex h-11 w-11 cursor-pointer items-center justify-center border-none bg-transparent p-0"
         >
    
-          {/* The spin lives on this wrapper, never on the bars: GSAP owns each
-              bar's own transform, and a Tailwind rotate on the same element
-              would be overwritten mid-tween. Only the open state spins, so the
-              cross turns while the hamburger stays put. */}
           <span
-            className={`relative block h-[1.2vw] w-[1.7vw] transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none max-[1025px]:h-[2.4vw] max-[1025px]:w-[3.4vw] max-md:h-[4vw] max-md:w-[5.6vw] ${
+            className={`relative block h-[1.2vw] w-[1.7vw] transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none max-lg:h-[2.4vw] max-lg:w-[3.4vw] max-md:h-[4vw] max-md:w-[5.6vw] ${
               lit ? "group-hover/glyph:rotate-90 group-focus-visible/glyph:rotate-90" : ""
             }`}
             aria-hidden="true"
@@ -971,21 +1088,21 @@ const PerspectiveShiftMenu = ({
             <span
               ref={glyphTopRef}
               style={lit ? { ["--shift-ink" as string]: textColor } : undefined}
-              className={`absolute top-1/2 left-0 block h-[0.15vw] w-full origin-center bg-white transition-colors duration-350 max-[1025px]:h-[0.3vw] max-md:h-[0.5vw] ${
+              className={`absolute top-1/2 left-0 block h-[0.15vw] w-full origin-center bg-white transition-colors duration-350 max-lg:h-[0.3vw] max-md:h-[0.5vw] ${
                 lit ? "max-md:bg-(--shift-ink)" : ""
               }`}
             />
             <span
               ref={glyphMidRef}
               style={lit ? { ["--shift-ink" as string]: textColor } : undefined}
-              className={`absolute top-1/2 left-0 block h-[0.15vw] w-full origin-center bg-white transition-colors duration-350 max-[1025px]:h-[0.3vw] max-md:h-[0.5vw] ${
+              className={`absolute top-1/2 left-0 block h-[0.15vw] w-full origin-center bg-white transition-colors duration-350 max-lg:h-[0.3vw] max-md:h-[0.5vw] ${
                 lit ? "max-md:bg-(--shift-ink)" : ""
               }`}
             />
             <span
               ref={glyphBotRef}
               style={lit ? { ["--shift-ink" as string]: textColor } : undefined}
-              className={`absolute top-1/2 left-0 block h-[0.15vw] w-full origin-center bg-white transition-colors duration-350 max-[1025px]:h-[0.3vw] max-md:h-[0.5vw] ${
+              className={`absolute top-1/2 left-0 block h-[0.15vw] w-full origin-center bg-white transition-colors duration-350 max-lg:h-[0.3vw] max-md:h-[0.5vw] ${
                 lit ? "max-md:bg-(--shift-ink)" : ""
               }`}
             />
@@ -998,8 +1115,6 @@ const PerspectiveShiftMenu = ({
         style={{ backgroundColor: voidColor }}
         className="relative w-full overflow-hidden perspective-distant perspective-origin-[50%_40%]"
       >
-        {/* The page. Its content is whatever the consumer passes as children;
-            it is this surface that tilts away when the menu opens. */}
         <div
           ref={pageRef}
           className="relative w-full origin-right overflow-hidden bg-[#e8e6e1] will-change-transform"
@@ -1009,7 +1124,6 @@ const PerspectiveShiftMenu = ({
 
       </div>
 
-        {/* Dim overlay between the receded page and the nav column */}
         <div
           ref={dimRef}
           aria-hidden="true"
@@ -1019,7 +1133,6 @@ const PerspectiveShiftMenu = ({
           }`}
         />
 
-        {/* Nav column */}
         <div
           id="perspective-shift-surface"
           ref={surfaceRef}
@@ -1027,7 +1140,7 @@ const PerspectiveShiftMenu = ({
           aria-modal="true"
           aria-label="Site navigation"
           style={{ ["--shift-panel" as string]: `${panelWidth}vw`, ["--shift-drawer" as string]: `${drawerWidth}vw`, backgroundColor: panelColor, color: textColor }}
-          className="invisible fixed top-0 left-0 z-200 flex h-screen w-(--shift-panel) flex-col justify-between px-[2.1vw] py-[5.2vw] max-[1025px]:w-[38vw] max-[1025px]:px-[3vw] max-[1025px]:py-[7vw] max-md:w-full max-md:px-[5vw] max-md:py-[12vw]"
+          className="invisible fixed top-0 left-0 z-200 flex h-screen w-(--shift-panel) flex-col justify-between px-[2.1vw] py-[5.2vw] max-lg:w-[38vw] max-lg:px-[3vw] max-lg:py-[7vw] max-md:w-full max-md:px-[5vw] max-md:py-[12vw]"
         >
           <nav
             aria-label="Main navigation"
@@ -1044,7 +1157,7 @@ const PerspectiveShiftMenu = ({
                 const label = (
                   <span
                     data-shift-label
-                    className="group/row w-fit text-[2.2vw] max-[1025px]:text-[4vw] max-md:text-[7vw] leading-[1.2] font-light tracking-[-0.03em] text-current transition-colors duration-250"
+                    className="group/row w-fit text-[2.2vw] max-lg:text-[4vw] max-md:text-[7vw] leading-[1.2] font-light tracking-[-0.03em] text-current transition-colors duration-250"
                   >
                     <span className="sr-only">{item.label}</span>
                     <CharRoll text={item.label} stagger={charStagger} reduced={reducedMotion} />
@@ -1053,8 +1166,9 @@ const PerspectiveShiftMenu = ({
 
                 const caret = (
                   <span
+                    data-shift-caret
                     aria-hidden="true"
-                    className={`h-4 w-4 ml-1 shrink-0 transition-colors duration-300 ${
+                    className={`h-4 w-4 ml-1 mt-2 shrink-0 transition-colors duration-300 ${
                       expanded ? "text-current" : "text-current/45"
                     }`}
                   >
@@ -1083,7 +1197,7 @@ const PerspectiveShiftMenu = ({
                         {caret}
                       </button>
                     ) : (
-                      <Link
+                      <a
                         href={item.href}
                         onClick={inert(item.href)}
                         data-shift-link
@@ -1091,12 +1205,12 @@ const PerspectiveShiftMenu = ({
                       >
                         <span
                           data-shift-label
-                          className="group/row w-fit text-[2.4vw] max-[1025px]:text-[4vw] max-md:text-[7vw] leading-[1.2] font-light tracking-[-0.03em] text-current transition-colors duration-250"
+                          className="group/row w-fit text-[2.4vw] max-lg:text-[4vw] max-md:text-[7vw] leading-[1.2] font-light tracking-[-0.03em] text-current transition-colors duration-250"
                         >
                           <span className="sr-only">{item.label}</span>
                           <CharRoll text={item.label} stagger={charStagger} reduced={reducedMotion} />
                         </span>
-                      </Link>
+                      </a>
                     )}
 
                     {isParent && (
@@ -1105,17 +1219,17 @@ const PerspectiveShiftMenu = ({
                         className="hidden h-0 overflow-hidden max-md:block"
                         aria-hidden={!expanded}
                       >
-                        <ul className="m-0 flex list-none flex-col gap-2 p-0 pb-[4vw]">
+                        <ul className="m-0 flex max-h-[32vh] list-none flex-col gap-2 overflow-y-auto overscroll-contain p-0 pb-[4vw]">
                           {item.items?.map((sub) => (
                             <li key={sub.label}>
-                              <Link
+                              <a
                                 href={sub.href}
                                 onClick={inert(sub.href)}
                                 data-shift-acc-item
                                 className="group/sub block w-fit  text-[3.8vw] leading-[1.2] font-light tracking-[-0.01em] text-current/50 no-underline transition-colors duration-250 hover:text-current"
                               >
                                 {sub.label}
-                              </Link>
+                              </a>
                             </li>
                           ))}
                         </ul>
@@ -1129,29 +1243,29 @@ const PerspectiveShiftMenu = ({
             <ul className="mt-5 mb-auto flex list-none flex-col gap-1 p-0">
               {SUB_LINKS.map((link) => (
                 <li key={link.label}>
-                  <Link
+                  <a
                     href={link.href}
                     onClick={inert(link.href)}
                     data-shift-sublink
                     className="block py-0.5 text-[0.8rem] font-light tracking-[0.04em] text-current/45 no-underline transition-colors duration-220 hover:text-current"
                   >
                     {link.label}
-                  </Link>
+                  </a>
                 </li>
               ))}
             </ul>
           </nav>
 
           <div ref={metaRef} className="mt-auto flex flex-col gap-1.5 opacity-0">
-            <Link
+            <a
               href={`mailto:${CONTACT_EMAIL}`}
               className="text-[0.75rem] font-normal tracking-wider text-current/70 no-underline"
             >
               {CONTACT_EMAIL}
-            </Link>
+            </a>
             <span className="flex gap-3">
               {SOCIALS.map((s) => (
-                <Link
+                <a
                   key={s.label}
                   href={s.href}
                   onClick={inert(s.href)}
@@ -1160,19 +1274,18 @@ const PerspectiveShiftMenu = ({
                   className="text-[0.7rem] font-normal tracking-[0.06em] text-current/45 uppercase no-underline transition-colors duration-220 hover:text-current"
                 >
                   {s.label}
-                </Link>
+                </a>
               ))}
             </span>
           </div>
         </div>
 
-        {/* Drawer: a second column that slides out from behind the nav column */}
         <div
           id="perspective-shift-subpanel"
           ref={subpanelRef}
           aria-hidden="true"
           style={{ ["--shift-panel" as string]: `${panelWidth}vw`, ["--shift-drawer" as string]: `${drawerWidth}vw`, backgroundColor: panelColor, color: textColor }}
-          className="invisible fixed top-0 left-(--shift-panel) z-150 flex h-screen w-(--shift-drawer) flex-col justify-start px-[2.1vw] py-[5.2vw] before:pointer-events-none before:absolute before:inset-y-0 before:left-0 before:w-px before:origin-bottom before:bg-current/12 before:transform-[scaleY(var(--shift-seam,0))] before:content-[''] max-[1025px]:left-[38vw] max-[1025px]:w-[30vw] max-[1025px]:px-[3vw] max-[1025px]:py-[7vw] max-md:left-0 max-md:z-210 max-md:w-full max-md:px-[5vw] max-md:py-[12vw]"
+          className="invisible fixed top-0 left-(--shift-panel) z-150 flex h-screen w-(--shift-drawer) flex-col justify-start px-[2.1vw] py-[5.2vw] before:pointer-events-none before:absolute before:inset-y-0 before:left-0 before:w-px before:origin-bottom before:bg-current/12 before:transform-[scaleY(var(--shift-seam,0))] before:content-[''] max-lg:left-[38vw] max-lg:w-[30vw] max-lg:px-[3vw] max-lg:py-[7vw] max-md:left-0 max-md:z-210 max-md:w-full max-md:px-[5vw] max-md:py-[12vw]"
         >
           <button
             type="button"
@@ -1203,7 +1316,7 @@ const PerspectiveShiftMenu = ({
                 <ul data-shift-subitems className="m-0 list-none p-0">
                   {item.items?.map((sub) => (
                     <li key={sub.label} className="relative last:*:after:content-none">
-                      <Link
+                      <a
                         href={sub.href}
                         onClick={inert(sub.href)}
                         className="group/sub relative block py-3 no-underline after:absolute after:inset-x-0 after:bottom-0 after:h-px after:origin-left after:bg-current/8 after:transform-[scaleX(var(--shift-rule,0))] after:content-['']"
@@ -1214,7 +1327,7 @@ const PerspectiveShiftMenu = ({
                         >
                           {sub.label}
                         </span>
-                      </Link>
+                      </a>
                     </li>
                   ))}
                 </ul>

@@ -5,10 +5,6 @@
   "main": "index.tsx",
   "files": [
     "index.tsx",
-    "PixelScrollCanvas.tsx",
-    "content.ts",
-    "pixel-transition.ts",
-    "createSuspendedRaf.ts",
     "registry.json"
   ],
   "keywords": [
@@ -17,7 +13,7 @@
   ],
   "dependencies": {
     "gsap": "*",
-    "three": "*",
-    "lenis": "*"
+    "lenis": "*",
+    "three": "*"
   }
 }

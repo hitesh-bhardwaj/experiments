@@ -336,7 +336,7 @@ export default function InfiniteCarouselComp({
       <div
         ref={stageRef}
         /* A touch taller than the centre slide so its border never clips. */
-        className={`relative h-[30vw] w-full overflow-hidden transition-opacity duration-500 max-[1024px]:h-[47vw] max-md:h-[73vw] ${
+        className={`relative h-[30vw] w-full overflow-hidden transition-opacity duration-500 max-lg:h-[47vw] max-md:h-[73vw] ${
           draggable ? "cursor-grab active:cursor-grabbing" : ""
         } ${ready ? "opacity-100" : "opacity-0"}`}
       >
@@ -376,7 +376,7 @@ export default function InfiniteCarouselComp({
             type="button"
             aria-label="Previous slide"
             onClick={() => step(-1)}
-            className="absolute  bottom-[-53%] group left-[calc(50%-2vw)] z-200 flex size-[3vw] -translate-x-1/2 -translate-y-1/2 items-center border border-black justify-center rounded-full text-black   transition-colors  max-[1024px]:left-[calc(50%-6vw)] max-md:left-[calc(50%-8vw)] max-[1024px]:bottom-[-70%] max-md:bottom-[-60%] max-[1024px]:size-[6vw]  max-md:size-[11vw]"
+            className="absolute  bottom-[-53%] group left-[calc(50%-2vw)] z-200 flex size-[3vw] -translate-x-1/2 -translate-y-1/2 items-center border border-black justify-center rounded-full text-black   transition-colors  max-lg:left-[calc(50%-6vw)] max-md:left-[calc(50%-8vw)] max-lg:bottom-[-70%] max-md:bottom-[-60%] max-lg:size-[6vw]  max-md:size-[11vw]"
           >
             <svg
               className="size-4 relative group-hover:text-white duration-300 ease-in-out"
@@ -407,7 +407,7 @@ export default function InfiniteCarouselComp({
             type="button"
             aria-label="Next slide"
             onClick={() => step(1)}
-            className="absolute bottom-[-53%] group border border-black left-[calc(50%-1vw)] z-200 flex size-[3vw] translate-x-1/2 -translate-y-1/2  items-center justify-center rounded-full  text-black transition-colors max-[1024px]:left-[calc(50%-3vw)] max-[1024px]:bottom-[-70%] max-md:bottom-[-60%]  max-md:left-[calc(50%-5vw)]  max-[1024px]:size-[6vw]  max-md:size-[11vw]"
+            className="absolute bottom-[-53%] group border border-black left-[calc(50%-1vw)] z-200 flex size-[3vw] translate-x-1/2 -translate-y-1/2  items-center justify-center rounded-full  text-black transition-colors max-lg:left-[calc(50%-3vw)] max-lg:bottom-[-70%] max-md:bottom-[-60%]  max-md:left-[calc(50%-5vw)]  max-lg:size-[6vw]  max-md:size-[11vw]"
           >
             <svg
               className="size-4 relative group-hover:text-white duration-300 ease-in-out"

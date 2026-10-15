@@ -13,7 +13,12 @@ export default function DemoContent({ registry }: { registry: any }) {
     >
       {({ effect }) => (
         <>
-          <DemoHeader />
+          <DemoHeader
+            reducedMotionNote={{
+              title: "The image keeps drifting.",
+              body: "Inertia Image moves with simulated momentum from your cursor or touch. Because the physics is the effect, reduced motion can't be honored here.",
+            }}
+          />
           {effect}
         </>
       )}

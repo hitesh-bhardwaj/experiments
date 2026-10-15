@@ -86,13 +86,13 @@ const Highlights = () => {
 
   return (
     <>
-      <section className="pb-[7%] pt-[5%] space-y-[6vw]! max-[1025px]:space-y-[12vw]! overflow-hidden max-md:py-[15%]" id="highlights">
+      <section className="pb-[7%] pt-[5%] space-y-[6vw]! max-lg:space-y-[12vw]! overflow-hidden max-md:py-[15%]" id="highlights">
         <div className={`px-[5%] max-md:px-[6%] flex flex-col gap-[1.5vw]`}>
           <MaskTextReveal>
 
           <h2
             data-para-anim
-            className="font-neue-montreal font-medium! text-[#1C1B1A] text-[3.8vw] leading-[1.2] max-[1025px]:text-[6.8vw] max-md:text-[8.8vw]"
+            className="font-neue-montreal font-medium! text-[#1C1B1A] text-[3.8vw] leading-[1.2] max-lg:text-[6.8vw] max-md:text-[8.8vw]"
             >
             Nearby Highlights
           </h2>
@@ -106,14 +106,14 @@ const Highlights = () => {
         <div className="">
           <SmoothInfiniteCarousel
             config={carouselConfig}
-            wrapperClassName="fadeup pl-[5%] pr-[5%] pb-[1vw] gap-[1.2vw] max-[1025px]:gap-[8vw]"
+            wrapperClassName="fadeup pl-[5%] pr-[5%] pb-[1vw] gap-[1.2vw] max-lg:gap-[8vw]"
             itemClassName="cursor-grab active:cursor-grabbing"
             onReady={handleReady}
           >
             {highlightPlaces.map((place, index) => (
               <div
                 key={index}
-                className="relative h-[27vw] w-[40vw] shrink-0 overflow-hidden rounded-lg max-[1025px]:h-[50vw] max-[1025px]:w-[78vw] max-md:h-[62vw] max-md:w-[84vw]"
+                className="relative h-[27vw] w-[40vw] shrink-0 overflow-hidden rounded-lg max-lg:h-[50vw] max-lg:w-[78vw] max-md:h-[62vw] max-md:w-[84vw]"
               >
                 <Image
                   src={place.img}
@@ -136,7 +136,7 @@ const Highlights = () => {
             ))}
           </SmoothInfiniteCarousel>
           <div
-            className="relative overflow-hidden rounded-full bg-[#e5e5e5] mt-[3.6vw] mx-[5%] h-[0.4vw] w-[90%] max-[1025px]:h-[1.5vw] max-md:mt-[7vw] max-md:w-[90vw]"
+            className="relative overflow-hidden rounded-full bg-[#e5e5e5] mt-[3.6vw] mx-[5%] h-[0.4vw] w-[90%] max-lg:h-[1.5vw] max-md:mt-[7vw] max-md:w-[90vw]"
             aria-hidden="true"
           >
             <div

@@ -4,13 +4,11 @@
   "title": "Progressive Bloom Valley",
   "description": "WebGL particle valley flythrough with scroll-driven camera path, proximity bloom, magnetic flower interaction, film grain, and edge blur post-processing",
   "dependencies": [
-    "@react-three/fiber",
     "@react-three/drei",
+    "@react-three/fiber",
     "@react-three/postprocessing",
-    "three",
     "postprocessing",
-    "gsap",
-    "lucide-react"
+    "three"
   ],
   "registryDependencies": [],
   "exportName": "ProgressiveBloomValley",
@@ -116,61 +114,6 @@
       "path": "index.tsx",
       "type": "registry:component",
       "target": "src/components/effects/progressive-bloom-valley/index.tsx"
-    },
-    {
-      "path": "CameraRig.tsx",
-      "type": "registry:component",
-      "target": "src/components/effects/progressive-bloom-valley/CameraRig.tsx"
-    },
-    {
-      "path": "CircularText.tsx",
-      "type": "registry:component",
-      "target": "src/components/effects/progressive-bloom-valley/CircularText.tsx"
-    },
-    {
-      "path": "EdgeBlurEffect.tsx",
-      "type": "registry:component",
-      "target": "src/components/effects/progressive-bloom-valley/EdgeBlurEffect.tsx"
-    },
-    {
-      "path": "ExperienceComp.tsx",
-      "type": "registry:component",
-      "target": "src/components/effects/progressive-bloom-valley/ExperienceComp.tsx"
-    },
-    {
-      "path": "FilmGrainEffect.tsx",
-      "type": "registry:component",
-      "target": "src/components/effects/progressive-bloom-valley/FilmGrainEffect.tsx"
-    },
-    {
-      "path": "Flower.tsx",
-      "type": "registry:component",
-      "target": "src/components/effects/progressive-bloom-valley/Flower.tsx"
-    },
-    {
-      "path": "prefersReducedMotion.ts",
-      "type": "registry:component",
-      "target": "src/components/effects/progressive-bloom-valley/prefersReducedMotion.ts"
-    },
-    {
-      "path": "useInput.ts",
-      "type": "registry:component",
-      "target": "src/components/effects/progressive-bloom-valley/useInput.ts"
-    },
-    {
-      "path": "useValleyData.ts",
-      "type": "registry:component",
-      "target": "src/components/effects/progressive-bloom-valley/useValleyData.ts"
-    },
-    {
-      "path": "createSuspendedRaf.ts",
-      "type": "registry:component",
-      "target": "src/components/effects/progressive-bloom-valley/createSuspendedRaf.ts"
-    },
-    {
-      "path": "shaders.tsx",
-      "type": "registry:component",
-      "target": "src/components/effects/progressive-bloom-valley/shaders.ts"
     }
   ]
 }

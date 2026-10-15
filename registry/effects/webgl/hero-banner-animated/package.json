@@ -5,11 +5,6 @@
   "main": "index.tsx",
   "files": [
     "index.tsx",
-    "CustomGrainNoise.tsx",
-    "EdgeBlurEffect.tsx",
-    "RoomModel.tsx",
-    "VideoUI.tsx",
-    "createSuspendedRaf.ts",
     "registry.json"
   ],
   "keywords": [
@@ -17,13 +12,13 @@
     "hyperiux"
   ],
   "dependencies": {
-    "@react-three/fiber": "*",
     "@react-three/drei": "*",
+    "@react-three/fiber": "*",
     "@react-three/postprocessing": "*",
-    "postprocessing": "*",
     "gsap": "*",
-    "three": "*",
+    "lucide-react": "*",
     "motion": "*",
-    "lucide-react": "*"
+    "postprocessing": "*",
+    "three": "*"
   }
 }

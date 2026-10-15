@@ -34,10 +34,6 @@
     {
       "path": "index.tsx",
       "target": "src/components/effects/cards-runway/index.tsx"
-    },
-    {
-      "path": "CardsRunway.tsx",
-      "target": "src/components/effects/cards-runway/CardsRunway.tsx"
     }
   ],
   "props": [
@@ -64,17 +60,151 @@
       }
     },
     {
-      "name": "speed",
-      "type": "number",
-      "default": 1,
-      "description": "Playback speed multiplier for the runway motion.",
+      "name": "textColor",
+      "type": "color",
+      "default": "#ffffff",
+      "description": "Color of the card text.",
       "remixer": {
-        "control": "range",
+        "control": "color",
+        "group": "style",
+        "groupTitle": "Style"
+      }
+    },
+    {
+      "name": "ease",
+      "type": "string",
+      "default": "power1.out",
+      "description": "GSAP ease for the cards popping up into place.",
+      "remixer": {
+        "control": "select",
         "group": "motion",
         "groupTitle": "Motion",
-        "min": 0.2,
-        "max": 3,
-        "step": 0.05
+        "options": [
+          {
+            "value": "none",
+            "label": "Linear (none)"
+          },
+          {
+            "value": "power1.in",
+            "label": "Power 1 In"
+          },
+          {
+            "value": "power1.out",
+            "label": "Power 1 Out"
+          },
+          {
+            "value": "power1.inOut",
+            "label": "Power 1 In Out"
+          },
+          {
+            "value": "power2.in",
+            "label": "Power 2 In"
+          },
+          {
+            "value": "power2.out",
+            "label": "Power 2 Out"
+          },
+          {
+            "value": "power2.inOut",
+            "label": "Power 2 In Out"
+          },
+          {
+            "value": "power3.in",
+            "label": "Power 3 In"
+          },
+          {
+            "value": "power3.out",
+            "label": "Power 3 Out"
+          },
+          {
+            "value": "power3.inOut",
+            "label": "Power 3 In Out"
+          },
+          {
+            "value": "power4.in",
+            "label": "Power 4 In"
+          },
+          {
+            "value": "power4.out",
+            "label": "Power 4 Out"
+          },
+          {
+            "value": "power4.inOut",
+            "label": "Power 4 In Out"
+          },
+          {
+            "value": "back.in",
+            "label": "Back In"
+          },
+          {
+            "value": "back.out",
+            "label": "Back Out"
+          },
+          {
+            "value": "back.inOut",
+            "label": "Back In Out"
+          },
+          {
+            "value": "bounce.in",
+            "label": "Bounce In"
+          },
+          {
+            "value": "bounce.out",
+            "label": "Bounce Out"
+          },
+          {
+            "value": "bounce.inOut",
+            "label": "Bounce In Out"
+          },
+          {
+            "value": "circ.in",
+            "label": "Circ In"
+          },
+          {
+            "value": "circ.out",
+            "label": "Circ Out"
+          },
+          {
+            "value": "circ.inOut",
+            "label": "Circ In Out"
+          },
+          {
+            "value": "elastic.in",
+            "label": "Elastic In"
+          },
+          {
+            "value": "elastic.out",
+            "label": "Elastic Out"
+          },
+          {
+            "value": "elastic.inOut",
+            "label": "Elastic In Out"
+          },
+          {
+            "value": "expo.in",
+            "label": "Expo In"
+          },
+          {
+            "value": "expo.out",
+            "label": "Expo Out"
+          },
+          {
+            "value": "expo.inOut",
+            "label": "Expo In Out"
+          },
+          {
+            "value": "sine.in",
+            "label": "Sine In"
+          },
+          {
+            "value": "sine.out",
+            "label": "Sine Out"
+          },
+          {
+            "value": "sine.inOut",
+            "label": "Sine In Out"
+          }
+        ]
       }
     },
     {
@@ -89,20 +219,6 @@
         "min": 0,
         "max": 160,
         "step": 1
-      }
-    },
-    {
-      "name": "perspective",
-      "type": "number",
-      "default": 900,
-      "description": "Perspective depth applied to the runway track.",
-      "remixer": {
-        "control": "range",
-        "group": "motion",
-        "groupTitle": "Motion",
-        "min": 0,
-        "max": 2000,
-        "step": 25
       }
     }
   ],

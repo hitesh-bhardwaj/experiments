@@ -15,6 +15,10 @@ interface PageFlipTransitionProps {
   children?: ReactNode
   duration?: number
   bgColor?: string
+  /** Color of the loading blocks shown during the flip. */
+  loaderColor?: string
+  /** Direction the page flips across the screen. */
+  direction?: 'left-to-right' | 'right-to-left'
   config?: { strokeColor?: string; strokeWidth?: number; duration?: number }
 }
 
@@ -22,7 +26,16 @@ export default function PageFlipTransition({
   children,
   duration = 0.9,
   bgColor = '#ff5f00',
+  loaderColor = '#000000',
+  direction = 'left-to-right',
 }: PageFlipTransitionProps) {
+  // left-to-right: exit pivots on the bottom-left corner, enter on the
+  // bottom-right. right-to-left mirrors the corners and rotation signs.
+  const ltr = direction !== 'right-to-left'
+  const sign = ltr ? 1 : -1
+  const exitOrigin = ltr ? 'bottom left' : 'bottom right'
+  const enterOrigin = ltr ? 'bottom right' : 'bottom left'
+
   const wrapperRef = useRef<HTMLDivElement | null>(null)
   const exitOverlayRef = useRef<HTMLDivElement | null>(null)
   const enterOverlayRef = useRef<HTMLDivElement | null>(null)
@@ -32,21 +45,21 @@ export default function PageFlipTransition({
   useEffect(() => {
     // EXIT overlay: hidden - folded off-screen to the left (-90deg from bottom-left)
     gsap.set(exitOverlayRef.current, {
-      rotation: -90,
-      transformOrigin: 'bottom left',
+      rotation: -90 * sign,
+      transformOrigin: exitOrigin,
     })
 
     // ENTER overlay: hidden - folded off-screen (-90deg from bottom-right)
     gsap.set(enterOverlayRef.current, {
-      rotation: -90,
-      transformOrigin: 'bottom right',
+      rotation: -90 * sign,
+      transformOrigin: enterOrigin,
     })
 
     // Boxes hidden initially
     gsap.set((boxesRef.current as HTMLDivElement).children, { scaleY: 0 })
 
     requestAnimationFrame(() => setMounted(true))
-  }, [])
+  }, [sign, exitOrigin, enterOrigin])
 
   return (
     <TransitionRouter
@@ -55,8 +68,8 @@ export default function PageFlipTransition({
         const tl = gsap.timeline({ onComplete: next })
 
         if (prefersReducedMotion()) {
-          tl.set(exitOverlayRef.current, { rotation: -90, transformOrigin: 'bottom left' }, 0)
-          tl.set(enterOverlayRef.current, { rotation: -90, transformOrigin: 'bottom right' }, 0)
+          tl.set(exitOverlayRef.current, { rotation: -90 * sign, transformOrigin: exitOrigin }, 0)
+          tl.set(enterOverlayRef.current, { rotation: -90 * sign, transformOrigin: enterOrigin }, 0)
           tl.set((boxesRef.current as HTMLDivElement).children, { scaleY: 0 }, 0)
           tl.to(wrapperRef.current, { opacity: 0, duration: 0.25, ease: 'power1.out' }, 0)
           return () => tl.kill()
@@ -71,13 +84,13 @@ export default function PageFlipTransition({
         }, 0)
 
         // Keep enter overlay hidden during exit
-        tl.set(enterOverlayRef.current, { rotation: -90, transformOrigin: 'bottom right' }, 0)
+        tl.set(enterOverlayRef.current, { rotation: -90 * sign, transformOrigin: enterOrigin }, 0)
 
         // EXIT: bottom-left origin, -90deg → 0deg
         tl.fromTo(
           exitOverlayRef.current,
-          { rotation: -90, transformOrigin: 'bottom left' },
-          { rotation: 0, transformOrigin: 'bottom left', duration, ease: 'power3.inOut' },
+          { rotation: -90 * sign, transformOrigin: exitOrigin },
+          { rotation: 0, transformOrigin: exitOrigin, duration, ease: 'power3.inOut' },
           0
         )
 
@@ -101,8 +114,8 @@ export default function PageFlipTransition({
         })
 
         if (prefersReducedMotion()) {
-          tl.set(exitOverlayRef.current, { rotation: -90, transformOrigin: 'bottom left' }, 0)
-          tl.set(enterOverlayRef.current, { rotation: -90, transformOrigin: 'bottom right' }, 0)
+          tl.set(exitOverlayRef.current, { rotation: -90 * sign, transformOrigin: exitOrigin }, 0)
+          tl.set(enterOverlayRef.current, { rotation: -90 * sign, transformOrigin: enterOrigin }, 0)
           tl.set((boxesRef.current as HTMLDivElement).children, { scaleY: 0 }, 0)
           tl.fromTo(wrapperRef.current,
             { opacity: 0 },
@@ -113,10 +126,10 @@ export default function PageFlipTransition({
         }
 
         // Snap exit overlay away
-        tl.set(exitOverlayRef.current, { rotation: -90, transformOrigin: 'bottom left' }, 0)
+        tl.set(exitOverlayRef.current, { rotation: -90 * sign, transformOrigin: exitOrigin }, 0)
 
         // Snap enter overlay flat (covering screen)
-        tl.set(enterOverlayRef.current, { rotation: 0, transformOrigin: 'bottom right' }, 0)
+        tl.set(enterOverlayRef.current, { rotation: 0, transformOrigin: enterOrigin }, 0)
 
         // Boxes scale down from top first
         tl.to((boxesRef.current as HTMLDivElement).children, {
@@ -137,8 +150,8 @@ export default function PageFlipTransition({
         // ENTER: bottom-right origin, 0deg → +90deg (clockwise)
         tl.fromTo(
           enterOverlayRef.current,
-          { rotation: 0, transformOrigin: 'bottom right' },
-          { rotation: 90, transformOrigin: 'bottom right', duration, ease: 'power3.inOut' },
+          { rotation: 0, transformOrigin: enterOrigin },
+          { rotation: 90 * sign, transformOrigin: enterOrigin, duration, ease: 'power3.inOut' },
           0.3
         )
 
@@ -148,11 +161,11 @@ export default function PageFlipTransition({
       {/* EXIT overlay - bottom-left anchor */}
       <div
         ref={exitOverlayRef}
-        className="fixed bottom-0 left-0 pointer-events-none"
+        className={`fixed bottom-0 pointer-events-none ${ltr ? 'left-0' : 'right-0'}`}
         style={{
           width: '150vmax',
           height: '150vmax',
-          transformOrigin: 'bottom left',
+          transformOrigin: exitOrigin,
           zIndex: 9999,
           opacity: mounted ? 1 : 0,
           backgroundColor: bgColor,
@@ -163,11 +176,11 @@ export default function PageFlipTransition({
       {/* ENTER overlay - bottom-right anchor */}
       <div
         ref={enterOverlayRef}
-        className="fixed bottom-0 right-0 pointer-events-none"
+        className={`fixed bottom-0 pointer-events-none ${ltr ? 'right-0' : 'left-0'}`}
         style={{
           width: '150vmax',
           height: '150vmax',
-          transformOrigin: 'bottom right',
+          transformOrigin: enterOrigin,
           zIndex: 9998,
           opacity: mounted ? 1 : 0,
           backgroundColor: bgColor,
@@ -181,10 +194,10 @@ export default function PageFlipTransition({
         style={{ zIndex: 10000 }}
       >
         <div ref={boxesRef} className="flex gap-2">
-          <span className="block w-4 h-7 bg-black scale-y-0" />
-          <span className="block w-4 h-7 bg-black scale-y-0" />
-          <span className="block w-4 h-7 bg-black scale-y-0" />
-          <span className="block w-4 h-7 bg-black scale-y-0" />
+          <span className="block w-4 h-7 scale-y-0" style={{ backgroundColor: loaderColor }} />
+          <span className="block w-4 h-7 scale-y-0" style={{ backgroundColor: loaderColor }} />
+          <span className="block w-4 h-7 scale-y-0" style={{ backgroundColor: loaderColor }} />
+          <span className="block w-4 h-7 scale-y-0" style={{ backgroundColor: loaderColor }} />
         </div>
       </div>
 

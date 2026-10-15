@@ -42,16 +42,16 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
         font-aeonik-pro text-[1.05vw] tracking-tight text-black
         transition-all duration-300 hover:scale-[0.97] active:scale-95
         disabled:cursor-not-allowed disabled:opacity-70
-        max-[1025px]:gap-[3vw] max-[1025px]:px-[8vw] max-[1025px]:py-[3.6vw] max-[1025px]:text-[3.2vw]
+        max-lg:gap-[3vw] max-lg:px-[8vw] max-lg:py-[3.6vw] max-lg:text-[3.2vw]
         max-md:w-full max-md:text-[4vw]
         ${className}
       `}
       {...rest}
     >
       {isLoading ? (
-        <span className="flex items-center gap-[0.6vw] max-[1025px]:gap-[2vw]">
+        <span className="flex items-center gap-[0.6vw] max-lg:gap-[2vw]">
           <svg
-            className="h-[1vw] w-[1vw] animate-spin max-[1025px]:h-[3.4vw] max-[1025px]:w-[3.4vw]"
+            className="h-[1vw] w-[1vw] animate-spin max-lg:h-[3.4vw] max-lg:w-[3.4vw]"
             viewBox="0 0 24 24"
             fill="none"
           >
@@ -83,7 +83,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
               strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"
-              className="h-[1.1vw] w-[1.1vw] transition-transform duration-300 group-hover:translate-x-[0.25vw] max-[1025px]:h-[3.6vw] max-[1025px]:w-[3.6vw]"
+              className="h-[1.1vw] w-[1.1vw] transition-transform duration-300 group-hover:translate-x-[0.25vw] max-lg:h-[3.6vw] max-lg:w-[3.6vw]"
             >
               <path d="M5 12h14" />
               <path d="m12 5 7 7-7 7" />

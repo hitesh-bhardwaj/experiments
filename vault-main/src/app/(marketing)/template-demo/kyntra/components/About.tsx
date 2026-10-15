@@ -94,17 +94,17 @@ const About = () => {
 
   return (
     <section id='kyntra-about' className="kyntra-container  relative w-full h-full overflow-hidden bg-white text-black">
-      <div className="mx-auto flex max-w-400 py-[4vh] items-start justify-between gap-[6vw] max-[1025px]:flex-col max-[1025px]:gap-[6vw]">
+      <div className="mx-auto flex max-w-400 py-[4vh] items-start justify-between gap-[6vw] max-lg:flex-col max-lg:gap-[6vw]">
         <ParaAnim
           as="h2"
-          className="font-helvetica-neue w-[35vw] max-[1025px]:w-full leading-[1.15] font-normal tracking-[-0.02em] "
+          className="font-helvetica-neue w-[35vw] max-lg:w-full leading-[1.15] font-normal tracking-[-0.02em] "
         >
           Everything You Need For a Better Home &amp; Lifestyle
         </ParaAnim>
 
         <ParaAnim
           as="p"
-          className="text-24 w-[33vw] max-[1025px]:w-full leading-[1.6] tracking-wide text-black/80 text-right max-[1025px]:text-left"
+          className="text-24 w-[33vw] max-lg:w-full leading-[1.6] tracking-wide text-black/80 text-right max-lg:text-left"
         >
           Kyntra gives every home a memory keeping repairs, warranties, maintenance and service history connected, so each future decision starts with context instead of from scratch.
         </ParaAnim>
@@ -112,7 +112,7 @@ const About = () => {
 
       <div
         ref={clusterRef}
-        className="relative mx-auto mt-[10vw] flex max-w-400 items-start justify-center gap-[3vw] max-[1025px]:mt-[10vw] max-[1025px]:flex-col max-[1025px]:items-center max-[1025px]:gap-[8vw]"
+        className="relative mx-auto mt-[10vw] flex max-w-400 items-start justify-center gap-[3vw] max-lg:mt-[10vw] max-lg:flex-col max-lg:items-center max-lg:gap-[8vw]"
       >
       
         <Image
@@ -120,12 +120,12 @@ const About = () => {
           src={aboutLine}
           alt="kyntra"
           aria-hidden
-          className="pointer-events-none absolute top-[70%] left-1/2 w-screen max-w-none -translate-x-1/2 -translate-y-1/2 opacity-0 select-none max-[1025px]:hidden"
+          className="pointer-events-none absolute top-[70%] left-1/2 w-screen max-w-none -translate-x-1/2 -translate-y-1/2 opacity-0 select-none max-lg:hidden"
         />
 
         <div
           ref={leftRef}
-          className="relative w-[22vw] opacity-0 max-[1025px]:w-[90%]"
+          className="relative w-[22vw] opacity-0 max-lg:w-[90%]"
         >
           <Image
             src={aboutPhone1}
@@ -136,7 +136,7 @@ const About = () => {
 
         <div
           ref={midRef}
-          className="z-10 w-[22vw] opacity-0 max-[1025px]:w-[90%]"
+          className="z-10 w-[22vw] opacity-0 max-lg:w-[90%]"
         >
           <Image
             src={aboutPhone2}
@@ -147,7 +147,7 @@ const About = () => {
 
         <div
           ref={rightRef}
-          className="relative w-[22vw] opacity-0 max-[1025px]:w-[90%]"
+          className="relative w-[22vw] opacity-0 max-lg:w-[90%]"
         >
           <Image
             src={aboutPhone3}

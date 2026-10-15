@@ -31,7 +31,7 @@ export default function DemoContent({
     <RegistryRemixerDemo
       registry={registry}
       render={(values) => (
-        <main className="h-dvh w-full bg-black">
+        <main className=" w-full bg-black">
           <ParallaxStripSlider
             slides={SLIDES}
             clueText="Click either side and watch the next strip cut through."

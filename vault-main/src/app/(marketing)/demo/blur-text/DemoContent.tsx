@@ -75,7 +75,7 @@ const Page = ({ registry }: any) => {
                               once={false}
                               variant="fade"
                               {...values}
-                              className="block text-6xl font-black uppercase leading-none tracking-tight sm:text-7xl lg:text-8xl"
+                              className="block text-6xl font-black leading-none tracking-tight sm:text-7xl lg:text-8xl"
                            >
                               Blur should feel like a stage entrance, not a loading state.
                            </BlurText>

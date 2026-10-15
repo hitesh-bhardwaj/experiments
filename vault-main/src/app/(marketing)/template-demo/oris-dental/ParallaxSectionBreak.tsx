@@ -29,7 +29,7 @@ export default function ParallaxSectionBreak() {
         <section
             id="parallax"
             ref={sectionRef}
-            className="h-screen max-[1025px]:max-h-[80vh] w-full flex items-center justify-center relative overflow-hidden"
+            className="h-screen max-lg:max-h-[80vh] w-full flex items-center justify-center relative overflow-hidden"
         >
             <div
                 ref={imageRef}

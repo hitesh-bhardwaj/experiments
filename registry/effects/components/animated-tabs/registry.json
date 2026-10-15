@@ -20,10 +20,6 @@
     {
       "path": "index.tsx",
       "target": "src/components/effects/animated-tabs/index.tsx"
-    },
-    {
-      "path": "AnimatedTabsComp.tsx",
-      "target": "src/components/effects/animated-tabs/AnimatedTabsComp.tsx"
     }
   ],
   "changelog": [

@@ -124,21 +124,6 @@
       "path": "index.tsx",
       "type": "registry:component",
       "target": "src/components/effects/draggable-canvas/index.tsx"
-    },
-    {
-      "path": "DragCursor.tsx",
-      "type": "registry:component",
-      "target": "src/components/effects/draggable-canvas/DragCursor.tsx"
-    },
-    {
-      "path": "MaskedContainer.tsx",
-      "type": "registry:component",
-      "target": "src/components/effects/draggable-canvas/MaskedContainer.tsx"
-    },
-    {
-      "path": "createSuspendedRaf.ts",
-      "type": "registry:component",
-      "target": "src/components/effects/draggable-canvas/createSuspendedRaf.ts"
     }
   ]
 }

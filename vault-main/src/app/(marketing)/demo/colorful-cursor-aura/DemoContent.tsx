@@ -13,7 +13,12 @@ export default function DemoContent({ registry }: { registry: any }) {
     >
       {({ effect }) => (
         <>
-          <DemoHeader />
+          <DemoHeader
+            reducedMotionNote={{
+              title: "The aura keeps glowing.",
+              body: "Colorful Cursor Aura renders continuously shifting color driven by cursor movement. The motion is the entire effect, so it can't be reduced.",
+            }}
+          />
           {effect}
         </>
       )}

@@ -1,23 +1,7 @@
 "use client";
 
-/**
- * DemoHeader: the live-preview control bar for every demo page.
- *
- *   · a floating glass bar at the top: ← back to the effect page · Free/Pro badge · Desktop / Tablet / Phone
- *     · Replay · Reduced motion · Props · Shortcuts · Copy props
- *   · the bar tucks away after ~3s idle and a "Controls" tag drops in on a cord (sways); click it
- *     to bring the bar back
- *   · Props opens a draggable side panel with the registry's RemixerPanel
- *   · Tablet / Phone show the page in a real device-sized iframe (media queries fire), scaled to fit
- *   · Reduced motion makes matchMedia('(prefers-reduced-motion: reduce)') match, then replays
- *   · one floating tooltip (with the key hint) for every control, a toast, and a shortcuts sheet
- *
- * Styling is Tailwind; every animation is GSAP. Inside RegistryRemixerDemo it reads the
- * registry, props and replay from context, so a page only needs `<DemoHeader />`. Outside it,
- * pass `title` / `tier` / `onReplay` directly (Props and Copy are hidden without a registry).
- */
 
-import { createContext, useContext, useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { createContext, useContext, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -50,6 +34,8 @@ const BTN =
   "aria-checked:bg-primary aria-checked:text-black aria-checked:shadow-[inset_0_0_0_1px_rgba(255,107,0,.45)] " +
   "aria-pressed:bg-primary aria-pressed:text-black aria-pressed:shadow-[inset_0_0_0_1px_rgba(255,107,0,.45)] " +
   "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F4F4F4]";
+// Bar buttons sit above the shared hover pill (see movePill), so they drop BTN's own hover background.
+const BAR_BTN = `relative z-1 ${BTN.replace("hover:bg-[rgba(244,244,244,.08)] ", "")}`;
 const SEP = "mx-1 h-5.5 w-px bg-[rgba(244,244,244,.1)] max-md:hidden";
 
 /* ---------- icons ---------- */
@@ -105,8 +91,8 @@ function Icon({ name }) {
 
 const DEVICE_BUTTONS = [
   { id: "full", label: "Desktop, full width", tip: "Desktop", key: "1" },
-  { id: "tablet", label: "Tablet", tip: "Tablet · 820 × 1180", key: "2" },
-  { id: "phone", label: "Phone", tip: "Phone · 390 × 844", key: "3" },
+  { id: "tablet", label: "Tablet", tip: "Tablet", key: "2" },
+  { id: "phone", label: "Phone", tip: "Phone", key: "3" },
 ];
 const DEVICE_KEYS = { 1: "full", 2: "tablet", 3: "phone" };
 // Device previews are desktop-only; the same range as Tailwind's `max-lg:`.
@@ -170,13 +156,6 @@ export default function DemoHeader(props) {
     if (embedded) readEmbed();
   }, [embedded]);
 
-  // Embedded (the effect page's preview iframe): links must not open inside the iframe,
-  // or a demo's "Effects" / article links would load the whole site in there - and that
-  // page's own preview again, nesting it. Our own pages outside this demo open in the
-  // main window; other sites in a new tab. Window capture phase - ahead of document
-  // listeners such as a demo's page-transition router, which would otherwise take the
-  // click and navigate the iframe client-side - and stopImmediatePropagation, so
-  // nothing else acts on it.
   useEffect(() => {
     if (!embedded) return undefined;
     const demoRoot = location.pathname.split("/").slice(0, 3).join("/"); // /demo/<slug>
@@ -204,7 +183,7 @@ export default function DemoHeader(props) {
   return createPortal(<PreviewBar {...props} />, document.body);
 }
 
-function PreviewBar({ title: titleProp, tier: tierProp, backHref: backHrefProp, onReplay: onReplayProp, shortcuts = [], idleMs = IDLE_MS, startOpen = false }) {
+function PreviewBar({ title: titleProp, tier: tierProp, backHref: backHrefProp, onReplay: onReplayProp, shortcuts = [], idleMs = IDLE_MS, startOpen = false, reducedMotionNote }) {
   const demo = useContext(DemoHeaderContext);
   const pathname = usePathname();
   const demoSlug = demoSlugFrom(pathname);
@@ -222,10 +201,15 @@ function PreviewBar({ title: titleProp, tier: tierProp, backHref: backHrefProp, 
 
   const [dev, setDevState] = useState("full");
   const [rm, setRm] = useState(false);
+  // The visitor's own OS setting (not the preview toggle): an effect-specific note
+  // shows for it too, so they know why the effect does or doesn't hold still.
+  // PreviewBar only renders in the browser (DemoHeader returns null on the server).
+  const [osReducedMotion] = useState(() => prefersReducedMotion());
   const [panelOpen, setPanelOpen] = useState(startOpen && hasProps);
   const [keysOpen, setKeysOpen] = useState(false);
   const [away, setAway] = useState(false);
-  const [dims, setDims] = useState("");
+  // roll: switching device sizes rolls the label; plain resizes just update it.
+  const [dims, setDims] = useState({ text: "", roll: false });
   const [toast, setToast] = useState("");
   const [dragging, setDragging] = useState(false);
   const [copyHovered, setCopyHovered] = useState(false);
@@ -243,7 +227,15 @@ function PreviewBar({ title: titleProp, tier: tierProp, backHref: backHrefProp, 
   const tipRef = useRef(null);
   const tipTextRef = useRef(null);
   const tipKeyRef = useRef(null);
+  const tipInnerRef = useRef(null);
+  const tipShownRef = useRef(false);
+  const tipLastXRef = useRef(0);
+  const pillRef = useRef(null);
+  const pillOnRef = useRef(false);
   const toastRef = useRef(null);
+  const dimsInRef = useRef(null);
+  const dimsOutRef = useRef(null);
+  const dimsShownRef = useRef("");
   const replayIconRef = useRef(null);
 
   // State that timers and document listeners read
@@ -258,7 +250,7 @@ function PreviewBar({ title: titleProp, tier: tierProp, backHref: backHrefProp, 
   const dragRef = useRef(null);
   const tipCurRef = useRef(null);
   const hangTlRef = useRef(null);
-  const timers = useRef({ idle: 0, toast: 0, tip: 0 });
+  const timers = useRef({ idle: 0, toast: 0, tip: 0, tipHide: 0 });
   const api = useRef(null);
 
   const note = (i) => {
@@ -292,7 +284,7 @@ function PreviewBar({ title: titleProp, tier: tierProp, backHref: backHrefProp, 
     if (animate) gsap.to(frameRef.current, { ...size, duration: 0.9, ease: EASE, overwrite: "auto" });
     else gsap.set(frameRef.current, size);
     gsap.set(iframeRef.current, { width: d[0], height: d[1], scale: s, transformOrigin: "0 0" });
-    setDims(`${d[0]} × ${d[1]}${s < 1 ? ` · shown at ${Math.round(s * 100)}%` : ""}`);
+    setDims({ text: `${d[0]} × ${d[1]}${s < 1 ? ` · shown at ${Math.round(s * 100)}%` : ""}`, roll: !!animate });
   }
 
   function loadFrame() {
@@ -316,6 +308,26 @@ function PreviewBar({ title: titleProp, tier: tierProp, backHref: backHrefProp, 
     note(v === "full" ? 4 : v === "tablet" ? 2 : 0);
   }
 
+  useLayoutEffect(() => {
+    const inEl = dimsInRef.current;
+    const outEl = dimsOutRef.current;
+    const prev = dimsShownRef.current;
+    dimsShownRef.current = dims.text;
+    if (!inEl || !outEl) return undefined;
+    inEl.textContent = dims.text;
+    if (!dims.roll || !prev || prev === dims.text || prefersReducedMotion()) {
+      gsap.set(inEl, { yPercent: 0, autoAlpha: 1 });
+      gsap.set(outEl, { autoAlpha: 0 });
+      return undefined;
+    }
+    outEl.textContent = prev;
+    const tl = gsap
+      .timeline({ defaults: { duration: 0.5, ease: "power3.inOut", overwrite: true } })
+      .fromTo(outEl, { yPercent: 0, autoAlpha: 1 }, { yPercent: -100, autoAlpha: 0 }, 0)
+      .fromTo(inEl, { yPercent: 100, autoAlpha: 0 }, { yPercent: 0, autoAlpha: 1 }, 0.05);
+    return () => tl.kill();
+  }, [dims]);
+
   /* ---------- replay / reduced motion ---------- */
   function replay() {
     if (!onReplay) return;
@@ -330,7 +342,8 @@ function PreviewBar({ title: titleProp, tier: tierProp, backHref: backHrefProp, 
     simulateReducedMotion(v);
     rmRef.current = v;
     setRm(v);
-    showToast(v ? "Previewing reduced motion." : "Full motion restored.");
+    // An effect-specific note already confirms the switch; the toast would cover it.
+    if (!(v && reducedMotionNote)) showToast(v ? "Previewing reduced motion." : "Full motion restored.");
     replay();
   }
 
@@ -428,37 +441,103 @@ function PreviewBar({ title: titleProp, tier: tierProp, backHref: backHrefProp, 
     }
   }
 
-  /* ---------- tooltips: one floating element, hover + keyboard focus ---------- */
+  /* ---------- tooltips: one floating element, hover + keyboard focus ----------
+     Like the effect-card tooltip: once open it glides to the next button, morphs to the
+     new label's size, and the label slides in from the side the pointer came from. */
   function showTip(el) {
     const tip = tipRef.current;
+    if (!tip) return;
+    clearTimeout(timers.current.tipHide);
+    const gliding = tipShownRef.current && tipCurRef.current && tipCurRef.current !== el;
+    if (tipShownRef.current && tipCurRef.current === el) return;
     tipCurRef.current = el;
+
+    // Measure the new label at its natural size, then morph from the old size.
+    const fromW = tip.offsetWidth;
+    const fromH = tip.offsetHeight;
+    gsap.killTweensOf(tip, "width,height");
+    gsap.set(tip, { clearProps: "width,height" });
     tipTextRef.current.textContent = el.dataset.tip;
     tipKeyRef.current.textContent = el.dataset.key ?? "";
     tipKeyRef.current.hidden = !el.dataset.key;
-    const r = el.getBoundingClientRect();
     const tw = tip.offsetWidth;
     const th = tip.offsetHeight;
-    const x = Math.max(10, Math.min(innerWidth - tw - 10, r.left + r.width / 2 - tw / 2));
+
+    const r = el.getBoundingClientRect();
+    const cx = r.left + r.width / 2;
+    const x = Math.max(10, Math.min(innerWidth - tw - 10, cx - tw / 2));
     let y = r.bottom + 10;
     if (y + th > innerHeight - 10) y = r.top - th - 10;
-    gsap.set(tip, { left: x, top: y });
-    gsap.to(tip, { autoAlpha: 1, y: 0, duration: 0.35, ease: EASE, overwrite: true });
+    const reduce = prefersReducedMotion();
+
+    if (gliding && !reduce) {
+      const dir = cx >= tipLastXRef.current ? 1 : -1;
+      gsap.fromTo(tip, { width: fromW, height: fromH }, { width: tw, height: th, duration: 0.35, ease: EASE, clearProps: "width,height" });
+      gsap.to(tip, { left: x, top: y, autoAlpha: 1, y: 0, scale: 1, duration: 0.45, ease: EASE, overwrite: "auto" });
+      // The new label waits until the box has nearly reached its new size, so the morph never clips it.
+      gsap.fromTo(tipInnerRef.current, { x: dir * 10, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: 0.28, delay: 0.16, ease: "power2.out", overwrite: true });
+    } else {
+      gsap.set(tip, { left: x, top: y, transformOrigin: y > r.bottom ? "50% 0%" : "50% 100%" });
+      gsap.set(tipInnerRef.current, { x: 0, autoAlpha: 1 });
+      gsap.fromTo(
+        tip,
+        { autoAlpha: 0, y: y > r.bottom ? -6 : 6, scale: 0.85 },
+        { autoAlpha: 1, y: 0, scale: 1, duration: reduce ? 0 : 0.4, ease: "back.out(1.7)", overwrite: "auto" }
+      );
+    }
+    tipLastXRef.current = cx;
+    tipShownRef.current = true;
   }
+  // A short grace period, so moving to the neighbouring button glides instead of closing and reopening.
   function hideTip() {
     clearTimeout(timers.current.tip);
-    tipCurRef.current = null;
-    if (tipRef.current) gsap.to(tipRef.current, { autoAlpha: 0, y: -4, duration: 0.2, overwrite: true });
+    clearTimeout(timers.current.tipHide);
+    timers.current.tipHide = setTimeout(() => {
+      tipCurRef.current = null;
+      tipShownRef.current = false;
+      if (tipRef.current) gsap.to(tipRef.current, { autoAlpha: 0, y: -4, scale: 0.95, duration: 0.2, overwrite: "auto" });
+    }, 90);
   }
   function onTipOver(e) {
     const el = e.target.closest?.("[data-tip]");
-    if (el === tipCurRef.current) return;
+    if (el === tipCurRef.current) {
+      clearTimeout(timers.current.tipHide);
+      return;
+    }
     clearTimeout(timers.current.tip);
     if (!el) hideTip();
+    else if (tipShownRef.current) showTip(el);
     else timers.current.tip = setTimeout(() => showTip(el), 140);
   }
   function onTipFocus(e) {
     const el = e.target.closest?.("[data-tip]");
     if (el && el.matches(":focus-visible")) showTip(el);
+  }
+
+  /* ---------- hover pill: one highlight that slides between the bar's buttons ---------- */
+  function movePill(el) {
+    const pill = pillRef.current;
+    const bar = barRef.current;
+    if (!pill || !bar || !el || !bar.contains(el) || el.offsetWidth === 0) return;
+    const br = bar.getBoundingClientRect();
+    const r = el.getBoundingClientRect();
+    const box = { x: r.left - br.left, y: r.top - br.top, width: r.width, height: r.height };
+    const reduce = prefersReducedMotion();
+    if (!pillOnRef.current) {
+      gsap.set(pill, box);
+      gsap.fromTo(pill, { autoAlpha: 0, scale: 0.8 }, { autoAlpha: 1, scale: 1, duration: reduce ? 0 : 0.3, ease: EASE, overwrite: "auto" });
+    } else {
+      gsap.to(pill, { ...box, autoAlpha: 1, scale: 1, duration: reduce ? 0 : 0.45, ease: EASE, overwrite: "auto" });
+    }
+    pillOnRef.current = true;
+  }
+  function hidePill() {
+    pillOnRef.current = false;
+    if (pillRef.current) gsap.to(pillRef.current, { autoAlpha: 0, scale: 0.9, duration: 0.25, ease: "power2.out", overwrite: "auto" });
+  }
+  function pressPill() {
+    if (!pillOnRef.current || prefersReducedMotion()) return;
+    gsap.fromTo(pillRef.current, { scale: 0.9 }, { scale: 1, duration: 0.45, ease: "back.out(3)" });
   }
 
   // Timers and document listeners always call the latest render's handlers.
@@ -628,33 +707,44 @@ function PreviewBar({ title: titleProp, tier: tierProp, backHref: backHrefProp, 
             className="absolute top-0 left-0 border-0 bg-white"
           />
         </div>
-        <p className={`${LABEL} absolute bottom-5 left-1/2 -translate-x-1/2 text-[#6a6a6a]`}>{dims}</p>
+        {/* The new size rolls up into place as the old one rolls out (useLayoutEffect above). */}
+        <p className={`${LABEL} absolute bottom-5 left-1/2 -translate-x-1/2 overflow-y-clip whitespace-nowrap text-[#6a6a6a]`}>
+          <span ref={dimsInRef} className="block" />
+          <span ref={dimsOutRef} aria-hidden="true" className="invisible absolute top-0 left-1/2 block w-max -translate-x-1/2 opacity-0" />
+        </p>
       </div>
 
       {/* bar */}
-      <div className="pointer-events-none fixed inset-x-0 top-4 z-100 flex justify-center max-lg:top-3 max-md:top-2.5">
+      <div className="pointer-events-none fixed inset-x-0 top-4 z-9020 flex justify-center max-lg:top-3 max-md:top-2.5">
         <header
           ref={barRef}
           inert={away}
           aria-hidden={away || undefined}
           onPointerEnter={wake}
-          onFocus={wake}
-          className="pointer-events-auto flex items-center gap-1.5 whitespace-nowrap bg-[rgba(18,18,18,.78)] p-1.5 shadow-[inset_0_0_0_1px_rgba(244,244,244,.1),0_20px_60px_-20px_rgba(0,0,0,.7)] backdrop-blur-[18px] backdrop-saturate-[1.4]"
+          onFocus={(e) => {
+            wake();
+            if (e.target.matches?.(":focus-visible")) movePill(e.target.closest("a,button"));
+          }}
+          onPointerOver={(e) => movePill(e.target.closest?.("a,button"))}
+          onPointerLeave={hidePill}
+          onPointerDown={pressPill}
+          className="pointer-events-auto relative flex items-center gap-1.5 whitespace-nowrap bg-[rgba(18,18,18,.78)] p-1.5 shadow-[inset_0_0_0_1px_rgba(244,244,244,.1),0_20px_60px_-20px_rgba(0,0,0,.7)] backdrop-blur-[18px] backdrop-saturate-[1.4]"
         >
-          <Link href={backHref} aria-label={`Back to ${title}`} data-tip="Back to the effect page" className={BTN}>
+          <span ref={pillRef} aria-hidden="true" className="pointer-events-none invisible absolute top-0 left-0 z-0 bg-[rgba(244,244,244,.08)] opacity-0" />
+          <Link href={backHref} aria-label={`Back to ${title}`} data-tip="Back" className={BAR_BTN}>
             <Icon name="back" />
-            <span className="text-[15px] -mt-0.75 text-[#f1f1f1] max-md:hidden">{title}</span>
+            <span className="text-[15px] -mt-0.75 text-[#f1f1f1] max-lg:max-w-[50vw] max-lg:truncate">{title}</span>
           </Link>
 
           <span
-            className={`mr-1.5 ml-0.5 inline-flex h-6 items-center px-2.25 text-[1vw] max-md:hidden ${
+            className={`mr-1.5 ml-0.5 inline-flex h-6 items-center px-2.25 text-[1vw] max-lg:hidden ${
               tier === "pro" ? "bg-[#FF6B00] text-[#141414]" : "bg-[rgba(244,244,244,.9)] text-[#1D1D1D]"
             }`}
           >
             {tier === "pro" ? "Pro" : "Free"}
           </span>
 
-          <span className={SEP} aria-hidden="true" />
+          <span className={`${SEP} max-lg:hidden`} aria-hidden="true" />
 
           <div role="radiogroup" aria-label="Preview size" className="flex gap-1 max-lg:hidden">
             {DEVICE_BUTTONS.map((d) => (
@@ -667,7 +757,7 @@ function PreviewBar({ title: titleProp, tier: tierProp, backHref: backHrefProp, 
                 data-tip={d.tip}
                 data-key={d.key}
                 onClick={() => setDev(d.id)}
-                className={BTN}
+                className={BAR_BTN}
               >
                 <Icon name={d.id} />
               </button>
@@ -677,7 +767,7 @@ function PreviewBar({ title: titleProp, tier: tierProp, backHref: backHrefProp, 
           <span className={`${SEP} max-lg:hidden`} aria-hidden="true" />
 
           {onReplay ? (
-            <button type="button" aria-label="Replay the animation" data-tip="Replay the animation" data-key="R" onClick={replay} className={BTN}>
+            <button type="button" aria-label="Replay the animation" data-tip="Replay" data-key="R" onClick={replay} className={`${BAR_BTN} max-lg:hidden`}>
               <span ref={replayIconRef} className="inline-flex">
                 <Icon name="replay" />
               </span>
@@ -687,10 +777,10 @@ function PreviewBar({ title: titleProp, tier: tierProp, backHref: backHrefProp, 
             type="button"
             aria-pressed={rm}
             aria-label="Preview reduced motion"
-            data-tip="Preview reduced motion"
+            data-tip="Reduced motion"
             data-key="M"
             onClick={() => setReducedMotion(!rmRef.current)}
-            className={BTN}
+            className={BAR_BTN}
           >
             <Icon name="rm" />
           </button>
@@ -699,10 +789,10 @@ function PreviewBar({ title: titleProp, tier: tierProp, backHref: backHrefProp, 
               type="button"
               aria-pressed={panelOpen}
               aria-label="Edit props"
-              data-tip="Edit props"
+              data-tip="Props"
               data-key="P"
               onClick={() => setPanel(!panelOpenRef.current)}
-              className={BTN}
+              className={`${BAR_BTN} max-lg:hidden`}
             >
               <Icon name="props" />
             </button>
@@ -711,10 +801,10 @@ function PreviewBar({ title: titleProp, tier: tierProp, backHref: backHrefProp, 
             type="button"
             aria-pressed={keysOpen}
             aria-label="Keyboard shortcuts"
-            data-tip="Keyboard shortcuts"
+            data-tip="Shortcuts"
             data-key="?"
             onClick={() => toggleKeys()}
-            className={`${BTN} max-lg:hidden`}
+            className={`${BAR_BTN} max-lg:hidden`}
           >
             <Icon name="keys" />
           </button>
@@ -794,7 +884,7 @@ function PreviewBar({ title: titleProp, tier: tierProp, backHref: backHrefProp, 
           data-lenis-prevent
           data-lenis-prevent-wheel
           data-lenis-prevent-touch
-          className="fixed top-19.5 right-10 z-9021 max-lg:top-17.5 max-lg:right-6 max-md:top-16 flex h-fit max-h-[calc(100vh-94px)] min-h-80 w-[20vw] max-lg:w-[min(344px,calc(100vw-32px))] flex-col overflow-hidden bg-[#111] shadow-[inset_0_0_0_1px_rgba(244,244,244,.08),0_30px_80px_-20px_#000]"
+          className="fixed top-19.5 right-10 z-9021 max-lg:top-17.5 max-lg:right-6 max-md:top-16 flex h-[min(600px,calc(100vh-94px))] w-[20vw] max-lg:w-[min(344px,calc(100vw-32px))] flex-col overflow-hidden bg-[#111] shadow-[inset_0_0_0_1px_rgba(244,244,244,.08),0_30px_80px_-20px_#000]"
         >
           <div
             data-tip="Drag to move"
@@ -806,12 +896,17 @@ function PreviewBar({ title: titleProp, tier: tierProp, backHref: backHrefProp, 
           >
             {/* Same heading as the effect page's Playground panel. */}
             <p className="text-[1.1vw] tracking-normal text-white max-lg:text-[1.6vw] max-md:text-[3.3vw]">Tune the Real Props</p>
-            <button type="button" aria-label="Close props" onClick={() => setPanel(false)} className={BTN}>
-              ✕
+            <button type="button" aria-label="Close props" onClick={() => setPanel(false)} className={`group ${BTN}`}>
+              {/* Turns a quarter on hover. */}
+              <span aria-hidden="true" className="inline-block transition-transform duration-500 ease-[cubic-bezier(.16,1,.3,1)] group-hover:rotate-90 group-focus-visible:rotate-90 motion-reduce:transition-none">
+                ✕
+              </span>
             </button>
           </div>
-          {/* the app's RemixerPanel fills the body edge to edge */}
-          <div className="min-h-0 flex-auto overflow-y-auto overscroll-contain scrollbar-none *:animate-none! *:bg-transparent! [&::-webkit-scrollbar]:hidden">
+          {/* The app's RemixerPanel fills the rest edge to edge: the panel height is fixed, so
+              opening or closing a group never moves the Copy / Reset footer; only the controls
+              between the header and the footer scroll. */}
+          <div className="flex min-h-0 flex-1 flex-col overflow-hidden overscroll-contain *:animate-none! *:bg-transparent! [&>aside]:h-full">
             {/* compact: the same tight panel as the effect page's Playground. */}
             <RemixerPanel
               compact
@@ -853,13 +948,22 @@ function PreviewBar({ title: titleProp, tier: tierProp, backHref: backHrefProp, 
         </dl>
       </div>
 
-      {/* reduced-motion note */}
-      {rm ? (
+      {/* reduced-motion note: the effect's own note when the demo passes one, else the generic line */}
+      {reducedMotionNote && (rm || osReducedMotion) ? (
+        <div
+          role="status"
+          className="fixed right-5 bottom-5 z-9018 m-0 flex w-max max-w-[min(90vw,26rem)] flex-col gap-1.5 bg-[#1D1D1D] px-4 py-3 text-[#F4F4F4] shadow-[0_0_0_1px_rgba(244,244,244,.14),0_16px_40px_-12px_rgba(0,0,0,.6)] max-md:right-4 max-md:bottom-4"
+        >
+          <p className="m-0 flex items-center gap-2.5 text-sm font-medium">
+            <i aria-hidden="true" className="size-2 shrink-0 rounded-full bg-[#FF6B00]" />
+            {reducedMotionNote.title}
+          </p>
+          <p className="m-0 text-xs leading-5 text-[#F4F4F4]/70">{reducedMotionNote.body}</p>
+        </div>
+      ) : rm ? (
         <p
           role="status"
-          className={`fixed left-1/2 z-9018 m-0 flex -translate-x-1/2 items-center gap-2.5 bg-[#1D1D1D] px-4 py-2.5 text-sm font-medium text-[#F4F4F4] shadow-[0_0_0_1px_rgba(244,244,244,.14),0_16px_40px_-12px_rgba(0,0,0,.6)] ${
-            dev === "full" ? "bottom-5" : "top-19.5"
-          }`}
+          className="fixed right-5 bottom-5 z-9018 m-0 flex items-center gap-2.5 bg-[#1D1D1D] px-4 py-2.5 text-sm font-medium text-[#F4F4F4] shadow-[0_0_0_1px_rgba(244,244,244,.14),0_16px_40px_-12px_rgba(0,0,0,.6)] max-md:right-4 max-md:bottom-4"
         >
           <i aria-hidden="true" className="size-2 rounded-full bg-[#FF6B00]" />
           Reduced motion on: effects skip their travel
@@ -871,13 +975,15 @@ function PreviewBar({ title: titleProp, tier: tierProp, backHref: backHrefProp, 
         ref={tipRef}
         role="tooltip"
         aria-hidden="true"
-        className="pointer-events-none invisible fixed top-0 left-0 z-9040 flex max-w-70 items-center gap-2.5 bg-[#2B2B2B] px-3 py-1.5 text-xs leading-[1.4] font-medium text-white opacity-0 shadow-[0_10px_15px_-3px_rgba(0,0,0,.1),0_4px_6px_-4px_rgba(0,0,0,.1)]"
+        className="pointer-events-none invisible fixed top-0 left-0 z-9040 overflow-hidden whitespace-nowrap bg-[#2B2B2B] px-3 py-1.5 text-xs leading-[1.4] font-medium text-white opacity-0 shadow-[0_10px_15px_-3px_rgba(0,0,0,.1),0_4px_6px_-4px_rgba(0,0,0,.1)]"
       >
-        <span ref={tipTextRef} />
+        <div ref={tipInnerRef} className="flex w-max items-center gap-2.5 whitespace-nowrap">
+        <span ref={tipTextRef} className="whitespace-nowrap" />
         <kbd
           ref={tipKeyRef}
           className={`${CODE_FONT} grid h-5.5 min-w-5.5 shrink-0 place-items-center bg-white/10 px-1.5 text-[11px] leading-none font-semibold text-white`}
         />
+        </div>
       </div>
 
       {/* toast */}

@@ -5,8 +5,6 @@
   "main": "index.tsx",
   "files": [
     "index.tsx",
-    "HoverSliderComp.tsx",
-    "createSuspendedRaf.ts",
     "registry.json"
   ],
   "keywords": [
@@ -14,7 +12,7 @@
     "hyperiux"
   ],
   "dependencies": {
-    "three": "*",
-    "gsap": "*"
+    "gsap": "*",
+    "three": "*"
   }
 }

@@ -17,7 +17,7 @@ export default function DemoContent({ registry }: { registry: any }) {
         <LenisSmoothScroll />
           <DemoHeader />
           {effect}
-          <span className="pointer-events-none fixed bottom-[3vw] left-[3vw] z-10 select-none text-[1.1vw] text-white/75 max-[1025px]:bottom-[4vw] max-[1025px]:left-[4vw] max-[1025px]:text-[1.8vw] max-md:bottom-[5vw] max-md:left-[5vw] max-md:text-[3.2vw]">
+          <span className="pointer-events-none fixed bottom-[3vw] left-[3vw] z-10 select-none text-[1.1vw] text-white/75 max-lg:bottom-[4vw] max-lg:left-[4vw] max-lg:text-[1.8vw] max-md:bottom-[5vw] max-md:left-[5vw] max-md:text-[3.2vw]">
             Drag to explore
           </span>
         </>

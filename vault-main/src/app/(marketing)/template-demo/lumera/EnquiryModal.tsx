@@ -154,7 +154,7 @@ export const EnquiryModalProvider: React.FC<{ children: React.ReactNode }> = ({ 
       {children}
       {enquiryMounted && (
         <div
-          className="fixed inset-0 z-100 flex items-center justify-center px-[5%] py-[5vw] max-[1025px]:items-start max-[1025px]:overflow-y-auto max-[1025px]:py-[10vw]"
+          className="fixed inset-0 z-100 flex items-center justify-center px-[5%] py-[5vw] max-lg:items-start max-lg:overflow-y-auto max-lg:py-[10vw]"
           role="dialog"
           aria-modal="true"
           aria-label="Lumera enquiry form"
@@ -174,15 +174,15 @@ export const EnquiryModalProvider: React.FC<{ children: React.ReactNode }> = ({ 
           <div
             ref={panelRef}
             style={{ opacity: 0, transform: `scale(${PANEL_CLOSED_SCALE})` }}
-            className="relative h-[85vh] max-md:h-[80vh] w-full max-w-[42vw] overflow-y-auto rounded-[1.4vw] bg-[white] p-[2vw] shadow-2xl will-change-[transform,opacity] max-[1025px]:max-w-[86vw] max-[1025px]:rounded-[4vw] max-[1025px]:p-[5vw] max-md:max-w-[92vw] max-md:p-[6vw]"
+            className="relative h-[85vh] max-md:h-[80vh] w-full max-w-[42vw] overflow-y-auto rounded-[1.4vw] bg-[white] p-[2vw] shadow-2xl will-change-[transform,opacity] max-lg:max-w-[86vw] max-lg:rounded-[4vw] max-lg:p-[5vw] max-md:max-w-[92vw] max-md:p-[6vw]"
           >
             <button
               type="button"
               aria-label="Close enquiry form"
               onClick={closeEnquiryModal}
-              className="sticky left-full top-0 z-10 flex h-[2.8vw] w-[2.8vw] items-center justify-center rounded-full bg-[#1c1b1a] text-white transition-transform duration-300 hover:rotate-180 max-[1025px]:h-[9vw] max-[1025px]:w-[9vw]"
+              className="sticky left-full top-0 z-10 flex h-[2.8vw] w-[2.8vw] items-center justify-center rounded-full bg-[#1c1b1a] text-white transition-transform duration-300 hover:rotate-180 max-lg:h-[9vw] max-lg:w-[9vw]"
             >
-              <X className="h-[1.2vw] w-[1.2vw] max-[1025px]:h-[4vw] max-[1025px]:w-[4vw]" strokeWidth={1.8} />
+              <X className="h-[1.2vw] w-[1.2vw] max-lg:h-[4vw] max-lg:w-[4vw]" strokeWidth={1.8} />
             </button>
             <AnimatedForm />
           </div>

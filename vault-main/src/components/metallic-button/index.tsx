@@ -823,10 +823,13 @@ export function MetallicButton({
     }
 
     if (buttonRef.current && !reducedMotion) {
+     
       const rect = buttonRef.current.getBoundingClientRect();
+      const scaleX = rect.width / buttonRef.current.offsetWidth || 1;
+      const scaleY = rect.height / buttonRef.current.offsetHeight || 1;
       const ripple = {
-        x: e.clientX - rect.left,
-        y: e.clientY - rect.top,
+        x: (e.clientX - rect.left) / scaleX,
+        y: (e.clientY - rect.top) / scaleY,
         id: rippleId.current++,
       };
 

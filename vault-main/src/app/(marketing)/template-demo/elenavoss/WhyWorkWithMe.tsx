@@ -84,24 +84,24 @@ const WhyWorkWithMe = () => {
 
   return (
     <section
-      className="relative w-screen bg-[#070707] text-white pt-[25vw] pb-[10vw] max-[1025px]:pt-[65vw] "
+      className="relative w-screen bg-[#070707] text-white pt-[25vw] pb-[10vw] max-lg:pt-[65vw] "
       id="work-with-me"
     >
       <div className="text-center mb-[5vw] max-md:mb-[10vw]">
         <OverflowTextReveal stagger={0.015}>
-          <h2 className="text-[5.5vw] max-[1025px]:text-[7vw] max-md:text-[9vw]">
+          <h2 className="text-[5.5vw] max-lg:text-[7vw] max-md:text-[9vw]">
             Why Work With Me?
           </h2>
         </OverflowTextReveal>
 
         <OverflowTextReveal splitBy="lines">
-          <p className="text-[1.25vw] text-white mt-[1.5vw] max-[1025px]:text-[2.5vw] max-md:text-[4.5vw] max-md:mt-[2vw]">
+          <p className="text-[1.25vw] text-white mt-[1.5vw] max-lg:text-[2.5vw] max-md:text-[4.5vw] max-md:mt-[2vw]">
             Fast-track your Digital Projects
           </p>
         </OverflowTextReveal>
       </div>
 
-      <div className="grid grid-cols-3 max-[1025px]:grid-cols-1 ">
+      <div className="grid grid-cols-3 max-lg:grid-cols-1 ">
         {REASONS.map((reason, index) => {
           const Icon = reason.icon;
           return (
@@ -109,20 +109,20 @@ const WhyWorkWithMe = () => {
               key={reason.title}
               onMouseEnter={() => handleEnter(index)}
               onMouseLeave={() => handleLeave(index)}
-              className={`relative px-[4vw] pt-[2vw] pb-[3vw] h-[32vw] flex flex-col justify-between work-card max-[1025px]:h-auto max-[1025px]:py-[6vw] max-[1025px]:px-[5vw] `}
+              className={`relative px-[4vw] pt-[2vw] pb-[3vw] h-[32vw] flex flex-col justify-between work-card max-lg:h-auto max-lg:py-[6vw] max-lg:px-[5vw] `}
             >
               <div>
                 <Icon
                   size={50}
                   color={ORANGE}
                   strokeWidth={1.5}
-                  className="mb-[2.5vw] max-[1025px]:mb-[4vw]"
+                  className="mb-[2.5vw] max-lg:mb-[4vw]"
                 />
 
-                <h3 className="text-[2vw] font-normal mb-[2.5vw] max-[1025px]:text-[4.2vw] max-md:text-[5.8vw] max-[1025px]:mb-[2vw]">
+                <h3 className="text-[2vw] font-normal mb-[2.5vw] max-lg:text-[4.2vw] max-md:text-[5.8vw] max-lg:mb-[2vw]">
                   {reason.title}
                 </h3>
-                <p className="text-[1.25vw] leading-normal text-white/80 max-[1025px]:text-[2.8vw] max-md:text-[4vw]">
+                <p className="text-[1.25vw] leading-normal text-white/80 max-lg:text-[2.8vw] max-md:text-[4vw]">
                   {reason.description}
                 </p>
               </div>

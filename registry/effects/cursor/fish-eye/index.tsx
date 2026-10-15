@@ -1,16 +1,261 @@
 // Built using Hyperiux Vault: https://vault.hyperiux.com
+"use client";
 
-'use client'
+import { useTexture } from "@react-three/drei";
+import { Canvas, useFrame, useThree, type ThreeEvent } from "@react-three/fiber";
+import React, { Suspense, useEffect, useMemo, useRef, useState } from "react";
+import { add, length, mul, oneMinus, sub, texture, uniform, uv } from "three/tsl";
+import * as THREE from "three/webgpu";
 
-import React, { useEffect, useMemo, useRef, useState } from 'react'
-import { Canvas, useFrame, useThree, type ThreeEvent } from '@react-three/fiber'
-import { useTexture } from '@react-three/drei'
-import * as THREE from 'three/webgpu'
-import { texture, uv, uniform, sub, length, mul, add, oneMinus } from 'three/tsl'
-import { createVisibilityGate } from './createSuspendedRaf'
+const DEFAULT_ROOT_MARGIN = "256px";
+
+type RafRoot = Element | null | { current: Element | null } | (() => Element | null);
+
+function resolveElement(root: RafRoot): Element | null {
+  if (!root) return null;
+  if (typeof root === "function") return root() ?? null;
+  if (typeof root === "object" && "current" in root) return root.current ?? null;
+  return root;
+}
+
+interface VisibilityGateOptions {
+  root?: RafRoot;
+  rootMargin?: string;
+  threshold?: number;
+  observeTab?: boolean;
+  observeOffscreen?: boolean;
+  onChange?: (active: boolean) => void;
+}
+
+interface VisibilityGate {
+  readonly isActive: boolean;
+  observe: (nextRoot?: RafRoot) => void;
+  destroy: () => void;
+}
+
+function createVisibilityGate({
+  root = null,
+  rootMargin = DEFAULT_ROOT_MARGIN,
+  threshold = 0,
+  observeTab = true,
+  observeOffscreen = true,
+  onChange,
+}: VisibilityGateOptions = {}): VisibilityGate {
+  let tabVisible =
+    typeof document === "undefined" ? true : !document.hidden;
+  // Match border-beam: assume onscreen until the observer reports otherwise.
+  let onscreen = true;
+  let destroyed = false;
+  let observer: IntersectionObserver | null = null;
+
+  const isActive = () => {
+    if (destroyed) return false;
+    if (observeTab && !tabVisible) return false;
+    if (observeOffscreen && resolveElement(root) && !onscreen) return false;
+    return true;
+  };
+
+  let lastActive = isActive();
+
+  const emit = () => {
+    if (destroyed) return;
+    const next = isActive();
+    if (next === lastActive) return;
+    lastActive = next;
+    onChange?.(next);
+  };
+
+  const onVisibilityChange = () => {
+    tabVisible = !document.hidden;
+    emit();
+  };
+
+  if (observeTab && typeof document !== "undefined") {
+    document.addEventListener("visibilitychange", onVisibilityChange);
+  }
+
+  const bindObserver = () => {
+    if (!observeOffscreen || typeof IntersectionObserver === "undefined") {
+      return;
+    }
+
+    const el = resolveElement(root);
+    if (!el) return;
+
+    observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          onscreen = entry.isIntersecting;
+        }
+        emit();
+      },
+      { rootMargin, threshold },
+    );
+
+    observer.observe(el);
+  };
+
+  bindObserver();
+
+  return {
+    /** Whether the animation should currently run. */
+    get isActive() {
+      return isActive();
+    },
+
+    /**
+     * Re-bind IntersectionObserver after the root element mounts late
+     * (e.g. ref not ready on first call). Safe to call multiple times.
+     */
+    observe(nextRoot?: RafRoot) {
+      if (destroyed) return;
+      if (nextRoot != null) root = nextRoot;
+      if (observer) {
+        observer.disconnect();
+        observer = null;
+      }
+      onscreen = true;
+      bindObserver();
+      emit();
+    },
+
+    destroy() {
+      if (destroyed) return;
+      destroyed = true;
+      if (observeTab && typeof document !== "undefined") {
+        document.removeEventListener("visibilitychange", onVisibilityChange);
+      }
+      if (observer) {
+        observer.disconnect();
+        observer = null;
+      }
+    },
+  };
+}
+
+interface SuspendedRafOptions {
+  onFrame: (time: number) => void;
+  root?: RafRoot;
+  rootMargin?: string;
+  threshold?: number;
+  observeTab?: boolean;
+  observeOffscreen?: boolean;
+}
+
+interface SuspendedRaf {
+  start: () => void;
+  stop: () => void;
+  readonly isRunning: boolean;
+  readonly isActive: boolean;
+  observe: (nextRoot?: RafRoot) => void;
+  destroy: () => void;
+}
+
+/**
+ * Owns a requestAnimationFrame loop that auto-pauses when the tab is hidden
+ * or the root element is offscreen.
+ */
+function createSuspendedRaf({
+  onFrame,
+  root = null,
+  rootMargin = DEFAULT_ROOT_MARGIN,
+  threshold = 0,
+  observeTab = true,
+  observeOffscreen = true,
+}: SuspendedRafOptions): SuspendedRaf {
+  if (typeof onFrame !== "function") {
+    throw new TypeError("createSuspendedRaf: onFrame is required");
+  }
+
+  let rafId: number | null = null;
+  let running = false;
+  let destroyed = false;
+
+  const stopRaf = () => {
+    if (rafId != null) {
+      cancelAnimationFrame(rafId);
+      rafId = null;
+    }
+  };
+
+  const tick = (time: number) => {
+    rafId = null;
+    if (destroyed || !running || !gate.isActive) return;
+    onFrame(time);
+    if (!destroyed && running && gate.isActive) {
+      rafId = requestAnimationFrame(tick);
+    }
+  };
+
+  const sync = () => {
+    if (destroyed) return;
+    if (running && gate.isActive) {
+      if (rafId == null) {
+        rafId = requestAnimationFrame(tick);
+      }
+    } else {
+      stopRaf();
+    }
+  };
+
+  const gate = createVisibilityGate({
+    root,
+    rootMargin,
+    threshold,
+    observeTab,
+    observeOffscreen,
+    onChange: sync,
+  });
+
+  return {
+    /** Start (or resume) the loop when visibility allows. */
+    start() {
+      if (destroyed) return;
+      running = true;
+      sync();
+    },
+
+    /** Stop requesting frames (visibility listeners stay attached until destroy). */
+    stop() {
+      running = false;
+      stopRaf();
+    },
+
+    /** Whether the caller has started the loop (may still be paused by visibility). */
+    get isRunning() {
+      return running;
+    },
+
+    /** Whether a frame is currently allowed to schedule. */
+    get isActive() {
+      return gate.isActive;
+    },
+
+    /** Re-attach offscreen observer to a (new) root element. */
+    observe(nextRoot?: RafRoot) {
+      gate.observe(nextRoot);
+      sync();
+    },
+
+    /** Tear down listeners and cancel any pending frame. */
+    destroy() {
+      if (destroyed) return;
+      destroyed = true;
+      running = false;
+      stopRaf();
+      gate.destroy();
+    },
+  };
+}
+
+export {
+  createSuspendedRaf,
+  createVisibilityGate,
+  DEFAULT_ROOT_MARGIN,
+};
 
 const DEFAULT_IMAGE_SRC =
-  'https://pub-8abee449136941f5b0a1cd2c014534e9.r2.dev/vault-listing-images/assets-images/v-05.jpg'
+  'https://picsum.photos/seed/v05/1600/1200'
 
 const damp = (current: number, target: number, lambda: number, delta: number) =>
   current + (target - current) * (1 - Math.exp(-lambda * delta))
@@ -18,20 +263,6 @@ const damp = (current: number, target: number, lambda: number, delta: number) =>
 const durationToDamp = (duration: number) => {
   const seconds = Math.max(Number(duration) || 0, 0)
   return seconds === 0 ? 1000 : 1 / seconds
-}
-
-function usePrefersReducedMotion() {
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
-
-  useEffect(() => {
-    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
-    const update = () => setPrefersReducedMotion(mediaQuery.matches)
-    update()
-    mediaQuery.addEventListener('change', update)
-    return () => mediaQuery.removeEventListener('change', update)
-  }, [])
-
-  return prefersReducedMotion
 }
 
 function loadCorsObjectUrl(src: string): Promise<string> {
@@ -182,6 +413,22 @@ interface FishEyeProps {
   mouseInteractive?: boolean
 }
 
+// Module-level so the identity is stable: R3F re-creates the renderer (and
+// suspends <Canvas>) whenever the `gl` prop changes between renders.
+async function createRenderer({ canvas }: { canvas: HTMLCanvasElement | OffscreenCanvas }) {
+  const renderer = new THREE.WebGPURenderer({
+    canvas: canvas as HTMLCanvasElement,
+    antialias: true,
+  })
+
+  renderer.outputColorSpace = THREE.SRGBColorSpace
+  renderer.toneMapping = THREE.NoToneMapping
+  // Wait for the backend before R3F starts rendering / uploading textures.
+  await renderer.init()
+
+  return renderer
+}
+
 export default function FishEye({
   bulgeEffect = 1,
   duration = 0.125,
@@ -192,7 +439,6 @@ export default function FishEye({
   const [frameloop, setFrameloop] = useState<'always' | 'never'>('always')
   const [objectUrl, setObjectUrl] = useState<string | null>(null)
   const [isMobile, setIsMobile] = useState(false)
-  const prefersReducedMotion = usePrefersReducedMotion()
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(pointer: coarse)')
@@ -206,14 +452,22 @@ export default function FishEye({
     if (isMobile) return undefined
 
     let url: string | null = null
+    let cancelled = false
     loadCorsObjectUrl(DEFAULT_IMAGE_SRC)
       .then((u) => {
+        // Strict Mode runs this effect twice; drop the stale load so the
+        // texture src never swaps (which re-suspends and flashes the image).
+        if (cancelled) {
+          URL.revokeObjectURL(u)
+          return
+        }
         url = u
         setObjectUrl(u)
       })
       .catch((err) => console.warn('FishEye texture load failed:', err))
 
     return () => {
+      cancelled = true
       if (url) URL.revokeObjectURL(url)
     }
   }, [isMobile])
@@ -232,6 +486,7 @@ export default function FishEye({
   return (
     <div ref={rootRef} className="h-full w-fit">
       {objectUrl ? (
+        <Suspense fallback={null}>
         <Canvas
           dpr={[1, 2]}
           camera={{ position: [0, 0, 5], fov: 45 }}
@@ -241,18 +496,7 @@ export default function FishEye({
             pointerEvents: isMobile ? 'none' : 'auto',
             touchAction: isMobile ? 'none' : 'auto',
           }}
-          gl={({ canvas }: any) => {
-            const renderer = new THREE.WebGPURenderer({
-              canvas,
-              antialias: true,
-            })
-
-            renderer.outputColorSpace = THREE.SRGBColorSpace
-            renderer.toneMapping = THREE.NoToneMapping
-            renderer.init()
-
-            return renderer
-          }}
+          gl={createRenderer as unknown as React.ComponentProps<typeof Canvas>['gl']}
         >
           <ImageNodeMaterial
             src={objectUrl}
@@ -263,22 +507,8 @@ export default function FishEye({
             mouseInteractive={mouseInteractive}
           />
         </Canvas>
+        </Suspense>
       ) : null}
-      {prefersReducedMotion && (
-        <div
-          aria-live="polite"
-          className="pointer-events-none fixed bottom-8 left-20 z-40 w-fit max-w-[30vw] rounded-md border border-black/10 bg-white p-3 text-center max-md:hidden"
-        >
-          <h2 className="text-sm leading-none text-black">
-            The lens keeps bending.
-          </h2>
-          <p className="mt-2 text-xs leading-5 text-black">
-            Fish Eye distorts the image as your cursor moves across it.
-            Since the warp is driven entirely by motion, there&apos;s no
-            reduced motion version to fall back on.
-          </p>
-        </div>
-      )}
     </div>
   )
 }

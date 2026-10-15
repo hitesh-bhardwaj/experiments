@@ -102,7 +102,7 @@ export default function KyntraFaq() {
       <div className="mx-auto max-w-400">
         <ParaAnim
           as="h2"
-          className="font-helvetica-neue mb-[4vw] leading-[1.15] font-normal tracking-[-0.02em] max-[1025px]:mb-[8vw] max-[1025px]:text-[6vw] max-md:text-[8vw]"
+          className="font-helvetica-neue mb-[4vw] leading-[1.15] font-normal tracking-[-0.02em] max-lg:mb-[8vw] max-lg:text-[6vw] max-md:text-[8vw]"
         >
           Frequently Asked Questions
         </ParaAnim>
@@ -113,9 +113,9 @@ export default function KyntraFaq() {
               key={item.id}
               itemId={item.id}
               className="group relative rounded-lg  transition-[padding,color] duration-500 ease-[cubic-bezier(0.215,0.61,0.355,1)] aria-expanded:py-3 has-[+[aria-expanded=true]]:[&_[data-line-draw]]:opacity-0 max-md:rounded-[4.5vw]"
-              titleClassName="relative z-2 font-helvetica-neue text-[1.6vw] font-normal text-black transition-colors duration-500 ease-[cubic-bezier(0.215,0.61,0.355,1)] group-aria-expanded:text-white max-[1025px]:text-[3.4vw] max-md:text-[5vw]"
+              titleClassName="relative z-2 font-helvetica-neue text-[1.6vw] font-normal text-black transition-colors duration-500 ease-[cubic-bezier(0.215,0.61,0.355,1)] group-aria-expanded:text-white max-lg:text-[3.4vw] max-md:text-[5vw]"
               contentClassName="relative z-2"
-              iconClassName="flex h-[2.4vw] w-[2.4vw] items-center justify-center rounded-full bg-kyntra-primary text-white transition-colors duration-500 max-md:h-[9vw] max-md:w-[9vw] max-[1025px]:h-[6vw] max-[1025px]:w-[6vw]"
+              iconClassName="flex h-[2.4vw] w-[2.4vw] items-center justify-center rounded-full bg-kyntra-primary text-white transition-colors duration-500 max-md:h-[9vw] max-md:w-[9vw] max-lg:h-[6vw] max-lg:w-[6vw]"
               iconSize={18}
               iconStrokeWidth={1.8}
               duration={0.5}
@@ -133,13 +133,13 @@ export default function KyntraFaq() {
                 className="absolute right-[1.3vw] bottom-0 left-[1.3vw] z-2 h-px bg-black transition-opacity duration-300 group-aria-expanded:opacity-0 max-md:right-0 max-md:left-0"
               />
               <FAQTitle
-                className="gap-[2vw] pl-6 text-[1.65vw] max-[1025px]:text-[5vw] max-md:text-[6vw]! py-[1.6vw] pr-[1.4vw]  text-left max-md:py-[5vw] max-md:pr-[5vw] max-md:pl-[5vw] max-[1025px]:py-[3vw] max-[1025px]:pr-[3vw] max-[1025px]:pl-[3vw]"
+                className="gap-[2vw] pl-6 text-[1.65vw] max-lg:text-[5vw] max-md:text-[6vw]! py-[1.6vw] pr-[1.4vw]  text-left max-md:py-[5vw] max-md:pr-[5vw] max-md:pl-[5vw] max-lg:py-[3vw] max-lg:pr-[3vw] max-lg:pl-[3vw]"
                 iconMode="plus"
               >
                 <FadeUp>{item.title}</FadeUp>
               </FAQTitle>
 
-              <FAQContent className="w-[70%] pl-7 space-y-[1vw] pr-[2vw] pb-[1.8vw]  text-22 leading-[1.6] font-normal text-white/90 max-md:w-[90%] max-md:space-y-[4vw] max-md:pr-[6vw] max-md:pb-[6vw] max-md:pl-[5vw] max-md:text-[4vw] max-[1025px]:w-[90%] max-[1025px]:pr-[4vw] max-[1025px]:pb-[3vw] max-[1025px]:pl-[3vw] max-[1025px]:text-[2.7vw]">
+              <FAQContent className="w-[70%] pl-7 space-y-[1vw] pr-[2vw] pb-[1.8vw]  text-22 leading-[1.6] font-normal text-white/90 max-md:w-[90%] max-md:space-y-[4vw] max-md:pr-[6vw] max-md:pb-[6vw] max-md:pl-[5vw] max-md:text-[4vw] max-lg:w-[90%] max-lg:pr-[4vw] max-lg:pb-[3vw] max-lg:pl-[3vw] max-lg:text-[2.7vw]">
                 <FadeUp>{item.content}</FadeUp>
               </FAQContent>
             </FAQWrapper>

@@ -74,21 +74,21 @@ const About = () => {
   const activeSlide = aboutSlides[activeIndex] ?? aboutSlides[CENTER_SLIDE_INDEX];
 
   return (
-    <section className="overflow-hidden bg-[#E0D4C6] h-[84vw] max-[1025px]:h-[170vw] max-md:h-[220vw]" id="about">
-      <div className={` py-[5%]  pt-[10%] max-md:pt-[20%]   max-[1025px]:py-[15%]`}>
-        <div className="w-full px-[5%] max-md:px-[6%] flex justify-between max-[1025px]:flex-col max-[1025px]:gap-[8vw]">
-          <MaskTextReveal className="w-[50%] max-md:w-[90%] max-[1025px]:w-[90%]">
+    <section className="overflow-hidden bg-[#E0D4C6] h-[84vw] max-lg:h-[170vw] max-md:h-[220vw]" id="about">
+      <div className={` py-[5%]  pt-[10%] max-md:pt-[20%]   max-lg:py-[15%]`}>
+        <div className="w-full px-[5%] max-md:px-[6%] flex justify-between max-lg:flex-col max-lg:gap-[8vw]">
+          <MaskTextReveal className="w-[50%] max-md:w-[90%] max-lg:w-[90%]">
 
           <h2
             data-para-anim
-            className={`w-full   font-neue-montreal text-[3.8vw] font-medium! leading-[1.2]  max-md:text-[8vw] text-[#1c1b1a] mt-[-1vw]  max-[1025px]:text-[8vw]`}
+            className={`w-full   font-neue-montreal text-[3.8vw] font-medium! leading-[1.2]  max-md:text-[8vw] text-[#1c1b1a] mt-[-1vw]  max-lg:text-[8vw]`}
             >
             Real Estate,
             <br />
             Considered Differently
           </h2>
             </MaskTextReveal>
-          <div className="w-[40%] space-y-[1.5vw] text-[#1c1b1a] text-[1.25vw] max-md:text-[3.5vw] max-[1025px]:text-[3vw] max-[1025px]:w-full">
+          <div className="w-[40%] space-y-[1.5vw] text-[#1c1b1a] text-[1.25vw] max-md:text-[3.5vw] max-lg:text-[3vw] max-lg:w-full">
           <MaskTextReveal>
 
             <p data-para-anim>We believe finding the right home begins with understanding how you want to live.</p>
@@ -116,7 +116,7 @@ const About = () => {
             draggable
           />
 
-          <div data-para-anim className="mx-auto mt-[1vw] max-md:mt-[5vw] max-w-[24vw] text-center max-[1025px]:max-w-[80vw] max-md:space-y-[2vw]">
+          <div data-para-anim className="mx-auto mt-[1vw] max-md:mt-[5vw] max-w-[24vw] text-center max-lg:max-w-[80vw] max-md:space-y-[2vw]">
             <AnimatePresence mode="wait" initial={false}>
               <motion.div
                 key={activeIndex}
@@ -125,10 +125,10 @@ const About = () => {
                 exit={reducedMotion ? undefined : { opacity: 0 }}
                 transition={{ duration: reducedMotion ? 0 : 0.35, ease: [0.22, 1, 0.36, 1] }}
               >
-                <p className={`font-neue-montreal text-[2.3vw] leading-[1.2] font-medium max-md:text-[5vw] text-[#1c1b1a] max-[1025px]:text-[5vw]`}>
+                <p className={`font-neue-montreal text-[2.3vw] leading-[1.2] font-medium max-md:text-[5vw] text-[#1c1b1a] max-lg:text-[5vw]`}>
                   {activeSlide.title}
                 </p>
-                <p className="mt-[1vw] w-[90%] text-center mx-auto text-[1.01vw] text-[#1C1B1A] max-[1025px]:text-[2.5vw] max-md:text-[3vw]">
+                <p className="mt-[1vw] w-[90%] text-center mx-auto text-[1.01vw] text-[#1C1B1A] max-lg:text-[2.5vw] max-md:text-[3vw]">
                   {activeSlide.description}
                 </p>
               </motion.div>

@@ -6,13 +6,11 @@
   "description": "WebGL particle valley flythrough with scroll-driven camera path, proximity bloom, magnetic flower interaction, film grain, and edge blur post-processing",
   "category": "webgl",
   "dependencies": [
-    "@react-three/fiber",
     "@react-three/drei",
+    "@react-three/fiber",
     "@react-three/postprocessing",
-    "three",
     "postprocessing",
-    "gsap",
-    "lucide-react"
+    "three"
   ],
   "registryDependencies": [],
   "previewUrl": "/demo/progressive-bloom-valley",
@@ -26,50 +24,6 @@
     {
       "path": "index.tsx",
       "target": "src/components/effects/progressive-bloom-valley/index.tsx"
-    },
-    {
-      "path": "CameraRig.tsx",
-      "target": "src/components/effects/progressive-bloom-valley/CameraRig.tsx"
-    },
-    {
-      "path": "CircularText.tsx",
-      "target": "src/components/effects/progressive-bloom-valley/CircularText.tsx"
-    },
-    {
-      "path": "EdgeBlurEffect.tsx",
-      "target": "src/components/effects/progressive-bloom-valley/EdgeBlurEffect.tsx"
-    },
-    {
-      "path": "ExperienceComp.tsx",
-      "target": "src/components/effects/progressive-bloom-valley/ExperienceComp.tsx"
-    },
-    {
-      "path": "FilmGrainEffect.tsx",
-      "target": "src/components/effects/progressive-bloom-valley/FilmGrainEffect.tsx"
-    },
-    {
-      "path": "Flower.tsx",
-      "target": "src/components/effects/progressive-bloom-valley/Flower.tsx"
-    },
-    {
-      "path": "useInput.ts",
-      "target": "src/components/effects/progressive-bloom-valley/useInput.ts"
-    },
-    {
-      "path": "useValleyData.ts",
-      "target": "src/components/effects/progressive-bloom-valley/useValleyData.ts"
-    },
-    {
-      "path": "shaders.tsx",
-      "target": "src/components/effects/progressive-bloom-valley/shaders.ts"
-    },
-    {
-      "path": "createSuspendedRaf.ts",
-      "target": "src/components/effects/progressive-bloom-valley/createSuspendedRaf.ts"
-    },
-    {
-      "path": "prefersReducedMotion.ts",
-      "target": "src/components/effects/progressive-bloom-valley/prefersReducedMotion.ts"
     }
   ],
   "changelog": [

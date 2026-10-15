@@ -35,10 +35,6 @@
     {
       "path": "index.tsx",
       "target": "src/components/effects/parallax-gallery/index.tsx"
-    },
-    {
-      "path": "ParallaxGallery.tsx",
-      "target": "src/components/effects/parallax-gallery/ParallaxGallery.tsx"
     }
   ],
   "props": [

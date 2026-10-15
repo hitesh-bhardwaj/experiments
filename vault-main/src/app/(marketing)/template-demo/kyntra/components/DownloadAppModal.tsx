@@ -185,10 +185,10 @@ const DownloadAppModal: React.FC<DownloadAppModalProps> = ({
         aria-label="Close"
         onClick={onClose}
         // Margins; GSAP owns the transform
-        className="group absolute top-1/2 right-[38vw] z-10 mt-[-1.6vw] mr-[-1.6vw] flex size-[4vw] items-center justify-center rounded-full bg-white text-black shadow-[0_2px_12px_rgba(0,0,0,0.18)] max-[1025px]:right-[62vw] max-[1025px]:mt-[-4vw] max-[1025px]:mr-[-4vw] max-[1025px]:h-[8vw] max-[1025px]:w-[8vw] max-md:right-[88vw] max-md:mt-[-5.5vw] max-md:mr-[-5.5vw] max-md:h-[11vw] max-md:w-[11vw]"
+        className="group absolute top-1/2 right-[38vw] z-10 mt-[-1.6vw] mr-[-1.6vw] flex size-[4vw] items-center justify-center rounded-full bg-white text-black shadow-[0_2px_12px_rgba(0,0,0,0.18)] max-lg:right-[62vw] max-lg:mt-[-4vw] max-lg:mr-[-4vw] max-lg:h-[8vw] max-lg:w-[8vw] max-md:right-[88vw] max-md:mt-[-5.5vw] max-md:mr-[-5.5vw] max-md:h-[11vw] max-md:w-[11vw]"
       >
         <X
-          className="size-[2.2vw] transition-transform duration-300 group-hover:rotate-90 max-[1025px]:h-[3.2vw] max-[1025px]:w-[3.2vw] max-md:h-[4.5vw] max-md:w-[4.5vw]"
+          className="size-[2.2vw] transition-transform duration-300 group-hover:rotate-90 max-lg:h-[3.2vw] max-lg:w-[3.2vw] max-md:h-[4.5vw] max-md:w-[4.5vw]"
           strokeWidth={2}
         />
       </button>
@@ -196,9 +196,9 @@ const DownloadAppModal: React.FC<DownloadAppModalProps> = ({
       {/* Full-height panel, right edge */}
       <div
         ref={panelRef}
-        className="relative flex h-full p-3 w-[36vw] flex-col bg-white will-change-transform max-[1025px]:w-[62vw] max-md:w-[88vw]"
+        className="relative flex h-full p-3 w-[36vw] flex-col bg-white will-change-transform max-lg:w-[62vw] max-md:w-[88vw]"
       >
-        <div ref={contentRef} className="flex w-full max-[1025px]:flex-1 flex-col justify-center">
+        <div ref={contentRef} className="flex w-full max-lg:flex-1 flex-col justify-center">
           <Image
             data-modal-item
             src={ctaScan}
@@ -206,7 +206,7 @@ const DownloadAppModal: React.FC<DownloadAppModalProps> = ({
             className="w-full"
           />
 
-          <div className="flex flex-col items-center gap-[1.2vw] pt-[8vh] w-[85%] mx-auto text-center max-[1025px]:gap-[2vw] max-[1025px]:px-[5vw] max-[1025px]:py-[4vw] max-md:gap-[3vw] max-md:px-[7vw] max-md:py-[6vw]">
+          <div className="flex flex-col items-center gap-[1.2vw] pt-[8vh] w-[85%] mx-auto text-center max-lg:gap-[2vw] max-lg:px-[5vw] max-lg:py-[4vw] max-md:gap-[3vw] max-md:px-[7vw] max-md:py-[6vw]">
             {/* Type scale carries its own steps */}
             <h3
               data-modal-item

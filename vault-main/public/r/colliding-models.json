@@ -4,12 +4,12 @@
   "title": "Colliding Models",
   "description": "Physics-driven colliding 3D connectors with transmission material and postprocessing, built with R3F + Rapier.",
   "dependencies": [
-    "three",
-    "@react-three/fiber",
     "@react-three/drei",
-    "@react-three/rapier",
+    "@react-three/fiber",
     "@react-three/postprocessing",
-    "maath"
+    "@react-three/rapier",
+    "maath",
+    "three"
   ],
   "registryDependencies": [],
   "exportName": "CollidingModels",
@@ -32,17 +32,16 @@
   ],
   "props": [
     {
+      "name": "geometry",
+      "type": "string",
+      "default": "model",
+      "description": "Shape of the colliding pieces: the Hyperiux logo model or a built-in geometry."
+    },
+    {
       "name": "connectorCount",
       "type": "number",
       "default": 8,
       "description": "Number of connecting shapes or joints.",
-      "suggested": true
-    },
-    {
-      "name": "gravity",
-      "type": "number",
-      "default": 0,
-      "description": "Physics gravity strength.",
       "suggested": true
     },
     {
@@ -58,6 +57,18 @@
       "default": "#141518",
       "description": "Canvas background color.",
       "suggested": true
+    },
+    {
+      "name": "returnToPosition",
+      "type": "boolean",
+      "default": true,
+      "description": "Pull pieces back to the cluster after the cursor knocks them away."
+    },
+    {
+      "name": "returnSpeed",
+      "type": "number",
+      "default": 1,
+      "description": "How quickly knocked pieces come back to the cluster."
     }
   ],
   "remixer": {
@@ -72,6 +83,31 @@
     },
     "controls": [
       {
+        "name": "geometry",
+        "label": "Geometry",
+        "type": "select",
+        "group": "controls",
+        "copyable": true,
+        "options": [
+          {
+            "value": "model",
+            "label": "Hyperiux Model"
+          },
+          {
+            "value": "sphere",
+            "label": "Sphere"
+          },
+          {
+            "value": "torus",
+            "label": "Torus"
+          },
+          {
+            "value": "icosahedron",
+            "label": "Icosahedron"
+          }
+        ]
+      },
+      {
         "name": "connectorCount",
         "label": "Connector Count",
         "type": "range",
@@ -80,16 +116,6 @@
         "min": 0,
         "max": 24,
         "step": 1
-      },
-      {
-        "name": "gravity",
-        "label": "Gravity",
-        "type": "range",
-        "group": "controls",
-        "copyable": true,
-        "min": 0,
-        "max": 10,
-        "step": 0.1
       },
       {
         "name": "modelScale",
@@ -107,6 +133,27 @@
         "type": "color",
         "group": "style",
         "copyable": true
+      },
+      {
+        "name": "returnToPosition",
+        "label": "Return To Position",
+        "type": "toggle",
+        "group": "controls",
+        "copyable": true
+      },
+      {
+        "name": "returnSpeed",
+        "label": "Return Speed",
+        "type": "range",
+        "group": "controls",
+        "copyable": true,
+        "min": 0.1,
+        "max": 5,
+        "step": 0.05,
+        "visibleWhen": {
+          "name": "returnToPosition",
+          "eq": true
+        }
       }
     ]
   },
@@ -115,11 +162,6 @@
       "path": "index.tsx",
       "type": "registry:component",
       "target": "src/components/effects/colliding-models/index.tsx"
-    },
-    {
-      "path": "createSuspendedRaf.ts",
-      "type": "registry:component",
-      "target": "src/components/effects/colliding-models/createSuspendedRaf.ts"
     }
   ]
 }

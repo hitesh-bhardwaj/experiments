@@ -5,9 +5,6 @@
   "main": "index.tsx",
   "files": [
     "index.tsx",
-    "LinesLoading.tsx",
-    "CenterLinesLoading.tsx",
-    "utils.ts",
     "registry.json"
   ],
   "keywords": [

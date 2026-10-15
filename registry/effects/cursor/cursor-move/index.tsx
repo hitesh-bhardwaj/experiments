@@ -1,35 +1,29 @@
 // Built using Hyperiux Vault: https://vault.hyperiux.com
-
 'use client'
-
 import { useRef, useState, useEffect, type ReactNode, type RefObject, type CSSProperties, type ElementType } from "react";
-const CURSOR_MOVE_FONT_FAMILY =
-  'var(--cursor-move-font-family, Inter, ui-sans-serif, system-ui, sans-serif)';
+import { Inter } from "next/font/google";
+
+// Inter is a variable font exposing a `wght` axis, which the cursor-driven
+// weight morph below animates. It's loaded here so the component is fully
+// self-contained - no font setup is required in layout.js, globals.css, or
+// the page that renders it.
+const cursorMoveFont = Inter({ subsets: ["latin"], display: "swap" });
 
 const DESKTOP_CURSOR_MOVE_QUERY = "(min-width: 1025px) and (pointer: fine)";
-
-function usePrefersReducedMotion() {
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
-
-  useEffect(() => {
-    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const update = () => setPrefersReducedMotion(mediaQuery.matches);
-    update();
-    mediaQuery.addEventListener("change", update);
-    return () => mediaQuery.removeEventListener("change", update);
-  }, []);
-
-  return prefersReducedMotion;
-}
 
 function mapRange(value: number, inMin: number, inMax: number, outMin: number, outMax: number) {
   const clamped = Math.min(Math.max(value, inMin), inMax);
   return outMin + ((clamped - inMin) / (inMax - inMin)) * (outMax - outMin);
 }
 
-function clampNumber(value: number | undefined, min: number, max: number, fallback: number): number {
+function clampNumber(value: number, min: number, max: number, fallback: number) {
   const numericValue = Number(value);
-  return Number.isFinite(numericValue) ? Math.min(max, Math.max(min, numericValue)) : fallback;
+
+  if (!Number.isFinite(numericValue)) {
+    return fallback;
+  }
+
+  return Math.min(max, Math.max(min, numericValue));
 }
 
 function useMousePosition(containerRef?: RefObject<HTMLElement | null>, lerp = 0.2) {
@@ -60,7 +54,15 @@ function useMousePosition(containerRef?: RefObject<HTMLElement | null>, lerp = 0
     const el = containerRef?.current;
     if (!el) return;
     const rect = el.getBoundingClientRect();
-    targetRef.current = { x: rect.width / 2, y: rect.height / 2, width: rect.width, height: rect.height };
+    const centeredPosition = {
+      x: rect.width / 2,
+      y: rect.height / 2,
+      width: rect.width,
+      height: rect.height,
+    };
+
+    targetRef.current = centeredPosition;
+
     setPos((prev) => ({
       x: isDesktop ? prev.x : rect.width / 2,
       y: isDesktop ? prev.y : rect.height / 2,
@@ -99,21 +101,46 @@ function useMousePosition(containerRef?: RefObject<HTMLElement | null>, lerp = 0
 
     const smoothToTarget = () => {
       const target = targetRef.current;
-      setPos((previous) => ({
-        x: Math.abs(target.x - previous.x) < 0.05 ? target.x : previous.x + (target.x - previous.x) * safeLerp,
-        y: Math.abs(target.y - previous.y) < 0.05 ? target.y : previous.y + (target.y - previous.y) * safeLerp,
-        width: target.width,
-        height: target.height,
-      }));
+
+      setPos((prev) => {
+        const nextX = prev.x + (target.x - prev.x) * safeLerp;
+        const nextY = prev.y + (target.y - prev.y) * safeLerp;
+        const shouldSnap =
+          Math.abs(target.x - nextX) < 0.05 && Math.abs(target.y - nextY) < 0.05;
+        const resolvedX = shouldSnap ? target.x : nextX;
+        const resolvedY = shouldSnap ? target.y : nextY;
+
+        if (
+          prev.x === resolvedX &&
+          prev.y === resolvedY &&
+          prev.width === target.width &&
+          prev.height === target.height
+        ) {
+          return prev;
+        }
+
+        return {
+          x: resolvedX,
+          y: resolvedY,
+          width: target.width,
+          height: target.height,
+        };
+      });
+
       smoothingFrameId = requestAnimationFrame(smoothToTarget);
     };
+
     smoothingFrameId = requestAnimationFrame(smoothToTarget);
 
     let ro: ResizeObserver | undefined;
     if (typeof ResizeObserver !== "undefined") {
       ro = new ResizeObserver(() => {
         const nextRect = el.getBoundingClientRect();
-        targetRef.current = { ...targetRef.current, width: nextRect.width, height: nextRect.height };
+        targetRef.current = {
+          ...targetRef.current,
+          width: nextRect.width,
+          height: nextRect.height,
+        };
         setPos((prev) => ({
           x: prev.x,
           y: prev.y,
@@ -152,6 +179,7 @@ interface VariableFontAndCursorProps {
   transformOrigin?: string;
   skewXRange?: { min: number, max: number };
   lerp?: number;
+  color?: string;
 }
 
 function VariableFontAndCursor({
@@ -166,6 +194,7 @@ function VariableFontAndCursor({
   transformOrigin = "bottom",
   skewXRange = { min: 0, max: -20 },
   lerp = 0.2,
+  color,
 }: VariableFontAndCursorProps) {
   const { x, y, width, height, isDesktop } = useMousePosition(containerRef, lerp);
 
@@ -188,11 +217,11 @@ function VariableFontAndCursor({
       className={className}
       style={{
         fontVariationSettings,
-        fontFamily: CURSOR_MOVE_FONT_FAMILY,
         transform: `skewX(${skewX}deg)`,
         transition,
         transformOrigin,
         display: "inline-block",
+        ...(color ? { color } : {}),
       }}
     >
       {children}
@@ -229,10 +258,13 @@ interface CursorMoveProps {
   variableTextTransition?: string;
   variableTextTransformOrigin?: string;
   skewXRange?: { min: number, max: number };
+  lerp?: number;
   showCoordinates?: boolean;
   coordinatesClassName?: string;
   coordinatesTextClassName?: string;
-  lerp?: number;
+  textColor?: string;
+  crosshairColor?: string;
+  cursorDotColor?: string;
 }
 
 export default function CursorMove({
@@ -258,7 +290,7 @@ export default function CursorMove({
   cursorDotStyle = {},
   text = "hello!",
   textWrapperClassName = "flex items-center justify-center w-full h-full",
-  textClassName = "text-9xl max-[1025px]:text-6xl max-md:text-5xl text-orange-500 select-none leading-none",
+  textClassName = "text-9xl max-lg:text-6xl max-md:text-5xl text-orange-500 select-none leading-none",
   textAs = "span",
   fontVariationMapping = {
     y: { name: "wght", min: 100, max: 900 },
@@ -266,14 +298,16 @@ export default function CursorMove({
   variableTextTransition = "transform 0.05s linear",
   variableTextTransformOrigin = "bottom",
   skewXRange = { min: 0, max: -20 },
+  lerp = 0.2,
   showCoordinates = true,
   coordinatesClassName = "absolute bottom-8 left-8 flex flex-col font-mono",
-  coordinatesTextClassName = "text-xs max-[1025px]:text-sm text-white/40 tabular-nums",
-  lerp = 0.2,
+  coordinatesTextClassName = "text-xs max-lg:text-sm text-white/40 tabular-nums",
+  textColor,
+  crosshairColor,
+  cursorDotColor,
 }: CursorMoveProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const { x, y, isDesktop } = useMousePosition(containerRef, lerp);
-  const prefersReducedMotion = usePrefersReducedMotion();
 
   const isPatternCrosshair = crosshairVariant === "dotted" || crosshairVariant === "dashed";
   const patternLength =
@@ -285,7 +319,13 @@ export default function CursorMove({
       ? Math.max(0, Number(crosshairDashedGap) || 0)
       : Math.max(0, Number(crosshairDottedGap) || 0);
   const patternPeriod = patternLength + patternGap;
+  // crosshairColor (a hex) overrides the class/variant colors; it is drawn at
+  // 20% strength to keep the same subtle look as the defaults.
+  const crosshairTint = crosshairColor
+    ? `color-mix(in srgb, ${crosshairColor} 20%, transparent)`
+    : undefined;
   const patternColor =
+    crosshairTint ||
     (crosshairVariant === "dashed" ? crosshairDashedColor : crosshairDottedColor) ||
     "rgba(255,255,255,0.2)";
 
@@ -308,6 +348,7 @@ export default function CursorMove({
               backgroundImage: isPatternCrosshair
                 ? `repeating-linear-gradient(to bottom, ${patternColor} 0, ${patternColor} ${patternLength}px, transparent ${patternLength}px, transparent ${patternPeriod}px)`
                 : undefined,
+              ...(!isPatternCrosshair && crosshairTint ? { backgroundColor: crosshairTint } : {}),
             }}
           />
           <div
@@ -322,6 +363,7 @@ export default function CursorMove({
               backgroundImage: isPatternCrosshair
                 ? `repeating-linear-gradient(to right, ${patternColor} 0, ${patternColor} ${patternLength}px, transparent ${patternLength}px, transparent ${patternPeriod}px)`
                 : undefined,
+              ...(!isPatternCrosshair && crosshairTint ? { backgroundColor: crosshairTint } : {}),
             }}
           />
         </>
@@ -330,7 +372,13 @@ export default function CursorMove({
       {showCursorDot && isDesktop ? (
         <div
           className={`absolute pointer-events-none z-20 ${cursorDotClassName}`}
-          style={{ left: x, top: y, transform: "translate(-50%, -50%)", ...cursorDotStyle }}
+          style={{
+            left: x,
+            top: y,
+            transform: "translate(-50%, -50%)",
+            ...(cursorDotColor ? { backgroundColor: cursorDotColor } : {}),
+            ...cursorDotStyle,
+          }}
         />
       ) : null}
 
@@ -338,12 +386,13 @@ export default function CursorMove({
         <VariableFontAndCursor
           containerRef={containerRef}
           fontVariationMapping={fontVariationMapping}
-          className={textClassName}
+          className={`${cursorMoveFont.className} ${textClassName}`}
           as={textAs}
           transition={variableTextTransition}
           transformOrigin={variableTextTransformOrigin}
           skewXRange={skewXRange}
           lerp={lerp}
+          color={textColor}
         >
           {text}
         </VariableFontAndCursor>
@@ -356,21 +405,6 @@ export default function CursorMove({
         </div>
       ) : null}
 
-      {prefersReducedMotion && (
-        <div
-          aria-live="polite"
-          className="pointer-events-none fixed bottom-4 right-4 z-40 w-fit max-w-65 rounded-md border border-white/15 bg-white/5 p-3 text-center backdrop-blur-sm max-[1025px]:hidden"
-        >
-          <h2 className="text-sm leading-none text-white">
-            The letters keep bending.
-          </h2>
-          <p className="mt-2 text-xs leading-5 text-white/65">
-            Cursor Move warps text and tracks coordinates live as you move
-            the cursor. The animation is the interaction itself, so it
-            can&apos;t be reduced.
-          </p>
-        </div>
-      )}
     </div>
   );
 }

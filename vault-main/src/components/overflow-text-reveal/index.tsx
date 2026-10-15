@@ -30,6 +30,16 @@ interface OverflowTextRevealProps {
   className?: string;
   scrub?: boolean;
   direction?: OverflowTextRevealDirection;
+  /** Animate per character, per word, or per line - each is masked. */
+  splitBy?: "chars" | "words" | "lines";
+  /** Opacity each piece starts from (0-1). */
+  startOpacity?: number;
+  /** Starting tilt in degrees; its sign follows the direction. */
+  startRotation?: number;
+  duration?: number;
+  stagger?: number;
+  /** GSAP ease for the reveal. */
+  ease?: string;
 }
 
 export default function OverflowTextReveal({
@@ -39,6 +49,12 @@ export default function OverflowTextReveal({
   className = "",
   scrub = false,
   direction = "bottom",
+  splitBy = "words",
+  startOpacity = 0,
+  startRotation = 8,
+  duration = 0.5,
+  stagger = 0.03,
+  ease = "power3.out",
 }: OverflowTextRevealProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const splitRefs = useRef<any[]>([]);
@@ -66,8 +82,9 @@ export default function OverflowTextReveal({
       ctx = gsap.context(() => {
         elements.forEach((element) => {
           const split = SplitText.create(element, {
-            type: "lines,chars",
-            mask: "chars",
+            type:
+              splitBy === "lines" ? "lines" : splitBy === "words" ? "lines,words" : "lines,chars",
+            mask: splitBy,
             charsClass: "char++",
             reduceWhiteSpace: false,
           });
@@ -80,7 +97,7 @@ export default function OverflowTextReveal({
           });
 
           splitRefs.current.push(split);
-          charsRef.current.push(...(split.chars as HTMLElement[]));
+          charsRef.current.push(...((split[splitBy] ?? split.chars) as HTMLElement[]));
         });
 
         if (prefersReduced) {
@@ -119,7 +136,8 @@ export default function OverflowTextReveal({
 
         const fromProps = {
           ...initialProps,
-          opacity: 0,
+          rotate: Math.sign(initialProps.rotate) * startRotation,
+          opacity: Math.min(1, Math.max(0, startOpacity)),
           willChange: "transform",
         };
 
@@ -128,9 +146,9 @@ export default function OverflowTextReveal({
           xPercent: 0,
           rotate: 0,
           opacity: 1,
-          duration: 0.5,
-          stagger: 0.03,
-          ease: "power3.out",
+          duration,
+          stagger,
+          ease,
           delay,
         };
 
@@ -156,7 +174,7 @@ export default function OverflowTextReveal({
       if (ctx) ctx.revert();
       splitRefs.current.forEach((split) => split?.revert());
     };
-  }, [animateOnScroll, delay, scrub, direction]);
+  }, [animateOnScroll, delay, scrub, direction, splitBy, startOpacity, startRotation, duration, stagger, ease]);
 
   return (
     <div ref={containerRef} data-copy-wrapper="true" className={`opacity-0 ${className}`}>

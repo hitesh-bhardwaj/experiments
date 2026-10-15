@@ -34,14 +34,6 @@
     {
       "path": "index.tsx",
       "target": "src/components/effects/text-hover/index.tsx"
-    },
-    {
-      "path": "TextHoverComp.tsx",
-      "target": "src/components/effects/text-hover/TextHoverComp.tsx"
-    },
-    {
-      "path": "createSuspendedRaf.ts",
-      "target": "src/components/effects/text-hover/createSuspendedRaf.ts"
     }
   ],
   "props": [

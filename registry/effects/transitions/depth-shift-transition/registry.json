@@ -34,35 +34,67 @@
       "type": "string",
       "default": "#0b0b0c",
       "description": "Background color behind the transitioning pages.",
-      "remixer": { "control": "color", "group": "surface", "groupTitle": "Surface" }
+      "remixer": {
+        "control": "color",
+        "group": "surface",
+        "groupTitle": "Surface"
+      }
     },
     {
       "name": "duration",
       "type": "number",
       "default": 0.65,
       "description": "Duration of the exit phase. Enter timing scales with this value.",
-      "remixer": { "control": "range", "group": "motion", "groupTitle": "Motion", "min": 0.25, "max": 2, "step": 0.05 }
+      "remixer": {
+        "control": "range",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "min": 0.25,
+        "max": 2,
+        "step": 0.05
+      }
     },
     {
       "name": "exitOffsetX",
       "type": "number",
       "default": 20,
       "description": "Horizontal offset applied to the outgoing page during desktop transitions.",
-      "remixer": { "control": "range", "group": "exit", "groupTitle": "Exit Motion", "min": -60, "max": 60, "step": 1 }
+      "remixer": {
+        "control": "range",
+        "group": "exit",
+        "groupTitle": "Exit Motion",
+        "min": -60,
+        "max": 60,
+        "step": 1
+      }
     },
     {
       "name": "exitOffsetY",
       "type": "number",
       "default": 30,
       "description": "Vertical offset applied to the outgoing page during desktop transitions.",
-      "remixer": { "control": "range", "group": "exit", "groupTitle": "Exit Motion", "min": -80, "max": 80, "step": 1 }
+      "remixer": {
+        "control": "range",
+        "group": "exit",
+        "groupTitle": "Exit Motion",
+        "min": -80,
+        "max": 80,
+        "step": 1
+      }
     },
     {
       "name": "exitRotate",
       "type": "number",
       "default": 3,
       "description": "Rotation applied to the outgoing page as it recedes.",
-      "remixer": { "control": "range", "group": "exit", "groupTitle": "Exit Motion", "min": -12, "max": 12, "step": 0.5 }
+      "remixer": {
+        "control": "range",
+        "group": "exit",
+        "groupTitle": "Exit Motion",
+        "min": -12,
+        "max": 12,
+        "step": 0.5
+      }
     }
   ],
   "remixer": {
@@ -72,7 +104,9 @@
       "buttonClassName": "right-4! top-25!",
       "panelClassName": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
     },
-    "copyCode": { "includeOnlyPublicProps": true }
+    "copyCode": {
+      "includeOnlyPublicProps": true
+    }
   },
   "files": [
     {

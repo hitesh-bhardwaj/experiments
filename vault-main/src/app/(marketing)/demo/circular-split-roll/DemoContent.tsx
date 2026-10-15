@@ -14,7 +14,12 @@ export default function DemoContent({ registry }: { registry: any }) {
     >
       {({ effect }) => (
         <>
-          <DemoHeader />
+          <DemoHeader
+            reducedMotionNote={{
+              title: "This effect can't be reduced.",
+              body: "Reduced motion is enabled, but this effect relies on continuous rotation around a circular path as you scroll, and can't be simplified to a fade without losing the effect entirely.",
+            }}
+          />
           <div className="max-md:block flex flex-col justify-center items-center gap-[2vw] text-center max-sm:pt-[18vw] pt-[10vw] sr-only">
             <h1 className="text-[7vw] max-sm:text-[11vw]">
               Circular Split Roll

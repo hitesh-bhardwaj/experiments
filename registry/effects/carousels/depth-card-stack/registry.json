@@ -21,14 +21,6 @@
     {
       "path": "index.tsx",
       "target": "src/components/effects/depth-card-stack/index.tsx"
-    },
-    {
-      "path": "DepthCardStackComp.tsx",
-      "target": "src/components/effects/depth-card-stack/DepthCardStackComp.tsx"
-    },
-    {
-      "path": "SliderCard.tsx",
-      "target": "src/components/effects/depth-card-stack/SliderCard.tsx"
     }
   ],
   "changelog": [

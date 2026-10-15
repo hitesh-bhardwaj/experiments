@@ -19,20 +19,20 @@ export default function page() {
       <div className="relative z-10 space-y-8   mx-auto text-center text-white">
         {/* Heading */}
         <SplitLine>
-          <h1 className="text-[7vw] max-md:text-[9vw]">Hyperiux Vault</h1>
+          <h1 className="text-[5vw] max-md:text-[9vw]">Hyperiux Vault</h1>
         </SplitLine>
 
         <SplitLine>
-          <p className="text-balance text-[1.4vw] w-[80%]  mx-auto leading-[1.3] max-[1025px]:w-full max-[1025px]:mx-auto max-md:text-[4.5vw] max-[1025px]:text-[3vw]">
+          <p className="text-balance text-[1.4vw]  mx-auto leading-[1.3] max-lg:w-full max-lg:mx-auto max-md:text-[4.5vw] max-lg:text-[3vw]">
             You&apos;ve just seen Depth Shift Transition, now if you want to see it again click on the &quot;click&nbsp;here&quot; button.
           </p>
         </SplitLine>
 
         <FadeUp className="mt-12" delay={1}>
-          <div className="mt-12 flex gap-4 max-md:flex-col max-[1025px]:items-center justify-center">
+          <div className="mt-12 flex gap-4 max-md:flex-col max-lg:items-center justify-center">
             <CharStaggerPrimaryButton
               bgClassName="bg-[#111111] rounded-md block"
-              textClassName="font-medium text-[1.3vw] max-[1025px]:text-[2.5vw] max-sm:text-[4vw]"
+              textClassName="font-medium text-[1.3vw] max-lg:text-[2.5vw] max-sm:text-[4vw]"
               btnClassName="h-[3.5vw]"
               text={"Click here"}
               href={"/demo/depth-shift-transition"}

@@ -15,7 +15,7 @@ export default function DemoContent({ registry }: { registry: RegistryLike }) {
     >
       {({ values, effect }) => (
         <main
-          className="relative h-screen w-full pt-28 md:pb-[8vw]"
+          className="relative h-screen w-full overflow-hidden pt-28 md:pb-[8vw]"
           style={{ backgroundColor: values.bgColor as string }}
         >
           <DemoHeader />
@@ -28,7 +28,7 @@ export default function DemoContent({ registry }: { registry: RegistryLike }) {
           <SplitLine
             as="p"
             start="top 120%"
-            className="absolute py-1.5 px-4 border border-black rounded-xl bottom-[4%] left-1/2 -translate-x-1/2 text-center text-[#101010]"
+            className="absolute z-500 bg-white/80 backdrop-blur-md py-1.5 px-4 border border-black rounded-xl bottom-[4%] left-1/2 -translate-x-1/2 text-center text-black"
           >
             Click on the FAQ triggers
           </SplitLine>

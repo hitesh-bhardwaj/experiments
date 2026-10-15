@@ -26,7 +26,7 @@ export default function page() {
 
           {/* Subtext */}
           <SplitLine>
-            <p className="mt-2 text-[1.4vw] max-md:text-[4.5vw] max-[1025px]:text-[3vw]">
+            <p className="mt-2 text-[1.4vw] max-md:text-[4.5vw] max-lg:text-[3vw]">
               Click on the button to see the transition
             </p>
           </SplitLine>
@@ -35,7 +35,7 @@ export default function page() {
           <FadeUp className="mt-12" delay={1}>
             <CharStaggerPrimaryButton
               bgClassName="bg-[#111111] rounded-md block"
-              textClassName="font-medium text-[1.3vw] max-[1025px]:text-[2.5vw] max-sm:text-[4vw]"
+              textClassName="font-medium text-[1.3vw] max-lg:text-[2.5vw] max-sm:text-[4vw]"
               btnClassName="h-[3.5vw]"
               text={"Click here"}
               href={"/demo/aperture-transition/page2"}

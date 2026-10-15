@@ -5,9 +5,6 @@
   "main": "index.tsx",
   "files": [
     "index.tsx",
-    "CustomNavbar.tsx",
-    "FullscreenNav.tsx",
-    "useFocusTrap.ts",
     "registry.json"
   ],
   "keywords": [

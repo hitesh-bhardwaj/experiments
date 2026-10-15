@@ -55,6 +55,7 @@ const VERTICAL_OUTGOING_DURATION = DURATION * 0.45;
 const TEXT_Z = 60;
 
 export interface DimensionalSwitchSliderProps {
+  className?: string;
   infinite?: boolean;
   ease?: string;
   textColor?: string;
@@ -69,10 +70,11 @@ export interface DimensionalSwitchSliderProps {
 }
 
 const DimensionalSwitchSlider = ({
+  className = "",
   infinite = true,
   ease = DEFAULT_EASE,
   textColor = "#ffffff",
-  cardClassName = "max-md:w-[85vw]! max-md:h-[75vw]! max-[1024px]:w-[85vw]! max-[1024px]:h-[55vw]!",
+  cardClassName = "max-md:w-[85vw]! max-md:h-[75vw]! max-lg:w-[85vw]! max-lg:h-[55vw]!",
   cardWidth = 680,
   cardHeight = 460,
   direction = "horizontal",
@@ -293,7 +295,7 @@ const DimensionalSwitchSlider = ({
   return (
     <>
       <div
-        className="flex flex-col items-center justify-center w-full h-full gap-4"
+        className={`relative flex flex-col items-center justify-center w-full h-screen overflow-hidden gap-4 ${className}`}
       >
         <div
           className={`dimensional-card relative ${cardClassName}`}
@@ -330,7 +332,7 @@ const DimensionalSwitchSlider = ({
           </div>
         </div>
         <div
-          className="absolute inset-0 z-10 flex items-center justify-center w-[60%] h-[25vw] max-md:w-[90%] max-md:h-[100vw] max-[1024px]:w-[90%] max-[1024px]:h-[60vw]  top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 max-md:text-[10vw]! max-[1024px]:text-[8vw]! "
+          className="absolute inset-0 z-10 flex items-center justify-center w-[60%] h-[25vw] max-md:w-[90%] max-md:h-[100vw] max-lg:w-[90%] max-lg:h-[60vw]  top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 max-md:text-[10vw]! max-lg:text-[8vw]! "
           style={{ perspective: "1000px", fontSize: resolvedTextSize }}
         >
           <div
@@ -349,13 +351,13 @@ const DimensionalSwitchSlider = ({
           </div>
         </div>
 
-        <div className="flex gap-4 z-10  absolute bottom-8 max-md:bottom-40 max-[1024px]:bottom-32">
+        <div className="flex gap-4 z-10  absolute bottom-8 max-md:bottom-40 max-lg:bottom-32">
           <button
             type="button"
             onClick={() => switchTo("prev")}
             aria-label="Previous"
             disabled={!infinite && currentIndex === 0}
-            className="flex h-12 w-12 max-[1024px]:h-20 max-[1024px]:w-20 max-md:h-16 max-md:w-16 items-center justify-center rounded-full border border-white/20 bg-transparent text-white backdrop-blur-[10px] transition-colors duration-300 ease-in-out hover:bg-[#ff5f00] disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent"
+            className="flex h-12 w-12 max-lg:h-20 max-lg:w-20 max-md:h-16 max-md:w-16 items-center justify-center rounded-full border border-white/40 bg-black/50 text-white backdrop-blur-[10px] transition-colors duration-300 ease-in-out hover:bg-[#ff5f00] disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-black/50"
           >
             <ArrowLeft />
           </button>
@@ -364,13 +366,13 @@ const DimensionalSwitchSlider = ({
             onClick={() => switchTo("next")}
             aria-label="Next"
             disabled={!infinite && currentIndex === ITEMS.length - 1}
-            className="flex h-12 w-12 max-[1024px]:h-20 max-[1024px]:w-20 max-md:h-16 max-md:w-16 items-center justify-center rounded-full border border-white/20 bg-transparent text-white backdrop-blur-[10px] transition-colors duration-300 ease-in-out hover:bg-[#ff5f00] disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent"
+            className="flex h-12 w-12 max-lg:h-20 max-lg:w-20 max-md:h-16 max-md:w-16 items-center justify-center rounded-full border border-white/40 bg-black/50 text-white backdrop-blur-[10px] transition-colors duration-300 ease-in-out hover:bg-[#ff5f00] disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-black/50"
           >
             <ArrowRight />
           </button>
         </div>
 
-        <div className="flex gap-2 z-10 absolute bottom-30 max-[1024px]:bottom-64">
+        <div className="flex gap-2 z-10 absolute bottom-30 max-lg:bottom-64">
           {ITEMS.map((item, idx) => (
             <button
               key={item.text}
@@ -378,10 +380,10 @@ const DimensionalSwitchSlider = ({
               onClick={() => goToIndex(idx)}
               aria-label={`Go to ${item.text}`}
               aria-current={idx === currentIndex}
-              className={`h-2 max-[1024px]:h-4 max-md:h-3 rounded-full transition-all duration-300 ease-in-out ${
+              className={`h-2 max-lg:h-4 max-md:h-3 rounded-full transition-all duration-300 ease-in-out ${
                 idx === currentIndex
-                  ? "w-6 max-[1024px]:w-8  bg-[#ff5f00]"
-                  : "w-2 max-[1024px]:w-4 max-md:w-3 bg-white/30 hover:bg-white/50"
+                  ? "w-6 max-lg:w-8  bg-[#ff5f00]"
+                  : "w-2 max-lg:w-4 max-md:w-3 bg-black/40 ring-1 ring-white/40 hover:bg-black/60"
               }`}
             />
           ))}

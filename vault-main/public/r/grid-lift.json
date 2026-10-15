@@ -273,11 +273,6 @@
       "path": "index.tsx",
       "type": "registry:component",
       "target": "src/components/effects/grid-lift/index.tsx"
-    },
-    {
-      "path": "createSuspendedRaf.ts",
-      "type": "registry:component",
-      "target": "src/components/effects/grid-lift/createSuspendedRaf.ts"
     }
   ]
 }

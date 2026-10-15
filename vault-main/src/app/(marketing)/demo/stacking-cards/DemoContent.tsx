@@ -17,6 +17,7 @@ export default function DemoContent({ registry }: { registry: any }) {
           {effect}
         </>
       )}
+
     </RegistryRemixerDemo>
   );
 }

@@ -71,18 +71,18 @@ const Header: React.FC = () => {
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-50 px-[5%] pt-[1vw] pb-[1vw] transform transition-all ease-in-out duration-500 max-[1025px]:px-[5%] max-[1025px]:py-[4%] ${
-        !revealed ? "-translate-y-full" : hidden ? "-translate-y-full max-[1025px]:translate-y-0" : "translate-y-0"
+      className={`fixed inset-x-0 top-0 z-50 px-[5%] pt-[1vw] pb-[1vw] transform transition-all ease-in-out duration-500 max-lg:px-[5%] max-lg:py-[4%] ${
+        !revealed ? "-translate-y-full" : hidden ? "-translate-y-full max-lg:translate-y-0" : "translate-y-0"
       } ${isScrolled ? "bg-black/20 backdrop-blur-md shadow-md" : ""} `}
     >
       <div className="flex items-center justify-between">
-        <Link href="/templates/lumera" className="relative z-60 flex items-center gap-[0.6vw] max-[1025px]:gap-[2vw]">
+        <Link href="/templates/lumera" className="relative z-60 flex items-center gap-[0.6vw] max-lg:gap-[2vw]">
           <div className="h-fit w-40 max-md:w-30">
             <Image src={lumeraLogo} alt="Lumera" className="h-full w-full object-contain" />
           </div>
         </Link>
 
-        <nav className="flex items-center gap-[3vw] max-[1025px]:hidden">
+        <nav className="flex items-center gap-[3vw] max-lg:hidden">
           {navLinks.map((link) => (
             <CharStaggerButton
               key={link.label}
@@ -96,7 +96,7 @@ const Header: React.FC = () => {
           ))}
         </nav>
 
-        <div className="max-[1025px]:hidden ">
+        <div className="max-lg:hidden ">
           <PrimaryButton
             link="#footer"
             btnText="Enquire Now"
@@ -113,7 +113,7 @@ const Header: React.FC = () => {
           onClick={() => setMenuOpen((open) => !open)}
           aria-label={menuOpen ? "Close navigation menu" : "Open navigation menu"}
           aria-expanded={menuOpen}
-          className="relative z-60 hidden h-[6vw] w-[7vw] shrink-0 items-center justify-center max-[1025px]:flex max-md:h-[8vw] max-md:w-[9vw]"
+          className="relative z-60 hidden h-[6vw] w-[7vw] shrink-0 items-center justify-center max-lg:flex max-md:h-[8vw] max-md:w-[9vw]"
         >
           <span className="relative block h-[3vw] w-[5.5vw] max-md:h-[4vw] max-md:w-[7vw]">
             <span
@@ -131,7 +131,7 @@ const Header: React.FC = () => {
       </div>
 
       <div
-        className={`fixed inset-0 z-50 hidden h-dvh bg-[#1c1b1a] px-[5%] pb-[5vw] pt-[28vw] transition-transform duration-500 max-[1025px]:block max-md:py-[34vw] ${
+        className={`fixed inset-0 z-50 hidden h-dvh bg-[#1c1b1a] px-[5%] pb-[5vw] pt-[28vw] transition-transform duration-500 max-lg:block max-md:py-[34vw] ${
           menuOpen ? "translate-y-0" : "-translate-y-full"
         }`}
       >

@@ -456,17 +456,17 @@ const DottedTrail = ({
 			const followEase = Math.min(Math.max(settings.followSpeed, 0.02), 1)
 
 			// Ramped fade once still
-			let idleFade = 0.0
+			let idleFadeAmount = 0.0
 			if (settings.fadeOnIdle && pointerInside && lastMoved > 0) {
 				const still = performance.now() - lastMoved - Math.max(0, settings.idleDelay)
 				const span = Math.max(1, settings.idleFade)
 				const x = Math.min(Math.max(still / span, 0), 1)
 				// Smootherstep, soft both ends
-				idleFade = x * x * x * (x * (x * 6 - 15) + 10)
+				idleFadeAmount = x * x * x * (x * (x * 6 - 15) + 10)
 			}
 
 			presence += (targetPresence - presence) * 0.08
-			presence = Math.min(presence, 1 - idleFade)
+			presence = Math.min(presence, 1 - idleFadeAmount)
 			eased.x += (pointer.x - eased.x) * followEase
 			eased.y += (pointer.y - eased.y) * followEase
 

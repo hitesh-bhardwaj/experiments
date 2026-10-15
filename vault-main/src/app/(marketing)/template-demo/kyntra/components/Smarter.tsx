@@ -275,7 +275,7 @@ export default function Smarter() {
         onMouseEnter={(e) => animateTexture(e, true)}
         onMouseMove={moveTexture}
         onMouseLeave={(e) => animateTexture(e, false)}
-        className="relative flex aspect-440/477 max-[1025px]:aspect-auto max-[1025px]:h-[45vh] max-md:h-[100vw] w-[28vw] shrink-0 flex-col overflow-hidden rounded-xl p-[2vw] max-[1025px]:p-[4vw] select-none will-change-transform max-[1025px]:w-[50vw] max-md:w-[76vw] max-md:rounded-3xl max-md:p-6"
+        className="relative flex aspect-440/477 max-lg:aspect-auto max-lg:h-[45vh] max-md:h-[100vw] w-[28vw] shrink-0 flex-col overflow-hidden rounded-xl p-[2vw] max-lg:p-[4vw] select-none will-change-transform max-lg:w-[50vw] max-md:w-[76vw] max-md:rounded-3xl max-md:p-6"
         style={{
           backgroundColor: isPrimary ? KYNTRA_PRIMARY : "#0d0d0d",
           border: isPrimary ? "none" : "1px solid rgba(255,255,255,0.25)",
@@ -303,21 +303,21 @@ export default function Smarter() {
         />
 
         {/* Fixed icon zone aligns headings */}
-        <div className="relative z-10 flex h-[45%] max-[1025px]:h-[40%] shrink-0 items-start">
+        <div className="relative z-10 flex h-[45%] max-lg:h-[40%] shrink-0 items-start">
           <Image
             src={card.icon}
             alt="kyntra"
             aria-hidden
-            className="h-[3vw] w-[3vw] object-contain max-[1025px]:h-[5.5vw] max-[1025px]:w-[5.5vw] max-md:h-[12vw] max-md:w-[12vw]"
+            className="h-[3vw] w-[3vw] object-contain max-lg:h-[5.5vw] max-lg:w-[5.5vw] max-md:h-[12vw] max-md:w-[12vw]"
           />
         </div>
 
         <div className="relative z-10 flex flex-1 flex-col gap-[1.8vw] max-md:gap-6">
-          <h3 className="font-helvetica-neue text-44 leading-[1.15] font-normal tracking-tight whitespace-pre-line text-white max-[1025px]:text-[4vw] max-md:text-[7vw]">
+          <h3 className="font-helvetica-neue text-44 leading-[1.15] font-normal tracking-tight whitespace-pre-line text-white max-lg:text-[4vw] max-md:text-[7vw]">
             {card.title}
           </h3>
 
-          <p className="max-w-[96%] text-22 tracking-wide leading-[1.3] font-normal text-white max-[1025px]:text-[2.5vw] max-md:text-[3.6vw]">
+          <p className="max-w-[96%] text-22 tracking-wide leading-[1.3] font-normal text-white max-lg:text-[2.5vw] max-md:text-[3.6vw]">
             {card.description}
           </p>
         </div>
@@ -330,7 +330,7 @@ export default function Smarter() {
       id="smarter"
       ref={sectionRef}
       className={`relative z-10 w-full bg-white ${
-        reducedMotion ? "" : "mt-[-20vh] max-[1025px]:mt-0 max-md:mt-[-8vh]"
+        reducedMotion ? "" : "mt-[-20vh] max-lg:mt-0 max-md:mt-[-8vh]"
       }`}
     >
       {/* Scroll range for the pinned sweep */}
@@ -339,22 +339,22 @@ export default function Smarter() {
         className={`relative ${reducedMotion ? "h-screen" : "h-[190vh]"}`}
       >
         <div
-          className={`flex h-screen w-full flex-col justify-center gap-[4vw] max-[1025px]:gap-[6vw] max-md:gap-10 ${
+          className={`flex h-screen w-full flex-col justify-center gap-[4vw] max-lg:gap-[6vw] max-md:gap-10 ${
             reducedMotion ? "" : "sticky top-0 overflow-hidden"
           }`}
         >
-          <div className="mx-auto flex w-full max-w-400 shrink-0 flex-col gap-[2vw] px-[5%] max-[1025px]:px-[7%] max-md:gap-8">
+          <div className="mx-auto flex w-full max-w-400 shrink-0 flex-col gap-[2vw] px-[5%] max-lg:px-[7%] max-md:gap-8">
             <ParaAnim
               as="h2"
-              className="font-helvetica-neue w-[60%] max-[1025px]:w-full leading-[1.1] font-normal tracking-[-0.02em] whitespace-pre-line text-black "
+              className="font-helvetica-neue w-[60%] max-lg:w-full leading-[1.1] font-normal tracking-[-0.02em] whitespace-pre-line text-black "
             >
               Every Visit Makes Kyntra Smarter About your Home
             </ParaAnim>
 
-            <div className="flex items-center justify-between gap-[4vw] max-[1025px]:flex-col max-[1025px]:items-start max-[1025px]:gap-6">
+            <div className="flex items-center justify-between gap-[4vw] max-lg:flex-col max-lg:items-start max-lg:gap-6">
               <ParaAnim
                 as="p"
-                className="text-24 max-w-[40vw] leading-normal  text-black max-[1025px]:max-w-full max-[1025px]:text-[2.6vw] max-md:text-[4vw]"
+                className="text-24 max-w-[40vw] leading-normal  text-black max-lg:max-w-full max-lg:text-[2.6vw] max-md:text-[4vw]"
               >Kyntra keeps your appliances, repairs, warranties and maintenance history together so every future job starts with context.
               </ParaAnim>
             </div>
@@ -371,7 +371,7 @@ export default function Smarter() {
             >
               <div
                 ref={trackRef}
-                className="flex w-max shrink-0 gap-[1.9vw] px-[5%] max-[1025px]:gap-[4.4vw] max-[1025px]:px-[7%] max-md:gap-[7vw] max-md:px-[9%]"
+                className="flex w-max shrink-0 gap-[1.9vw] px-[5%] max-lg:gap-[4.4vw] max-lg:px-[7%] max-md:gap-[7vw] max-md:px-[9%]"
               >
                 {cards}
               </div>
@@ -379,7 +379,7 @@ export default function Smarter() {
           ) : (
             <div
               ref={trackRef}
-              className="flex w-max shrink-0 gap-[1.9vw] px-[5%] max-[1025px]:gap-[4.4vw] max-[1025px]:px-[7%] max-md:gap-[7vw] max-md:px-[9%] will-change-transform"
+              className="flex w-max shrink-0 gap-[1.9vw] px-[5%] max-lg:gap-[4.4vw] max-lg:px-[7%] max-md:gap-[7vw] max-md:px-[9%] will-change-transform"
             >
               {cards}
             </div>

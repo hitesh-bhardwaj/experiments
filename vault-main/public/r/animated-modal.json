@@ -154,16 +154,6 @@
       "path": "index.tsx",
       "type": "registry:component",
       "target": "src/components/effects/animated-modal/index.tsx"
-    },
-    {
-      "path": "AnimatedModalContent.tsx",
-      "type": "registry:component",
-      "target": "src/components/effects/animated-modal/AnimatedModalContent.tsx"
-    },
-    {
-      "path": "ScrollablePopupContent.tsx",
-      "type": "registry:component",
-      "target": "src/components/effects/animated-modal/ScrollablePopupContent.tsx"
     }
   ]
 }

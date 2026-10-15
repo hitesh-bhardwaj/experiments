@@ -34,14 +34,6 @@
     {
       "path": "index.tsx",
       "target": "src/components/effects/draggable-marquee/index.tsx"
-    },
-    {
-      "path": "DraggableMarqueeComp.tsx",
-      "target": "src/components/effects/draggable-marquee/DraggableMarqueeComp.tsx"
-    },
-    {
-      "path": "createSuspendedRaf.ts",
-      "target": "src/components/effects/draggable-marquee/createSuspendedRaf.ts"
     }
   ],
   "props": [
@@ -88,7 +80,7 @@
       "name": "throwFriction",
       "type": "number",
       "default": 0.975,
-      "description": "Momentum decay rate per frame after a drag release \u2014 closer to 1 coasts longer.",
+      "description": "Momentum decay rate per frame after a drag release - closer to 1 coasts longer.",
       "remixer": {
         "control": "range",
         "group": "motion",

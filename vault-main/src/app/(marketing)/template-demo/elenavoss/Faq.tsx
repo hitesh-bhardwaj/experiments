@@ -95,9 +95,9 @@ const Faq = () => {
   }, [prefersReducedMotion]);
 
   return (
-    <section className="w-screen py-[6vw] px-[10vw] relative bg-[#070707] text-white max-[1025px]:px-[5vw]">
+    <section className="w-screen py-[6vw] px-[10vw] relative bg-[#070707] text-white max-lg:px-[5vw]">
       <OverflowTextReveal stagger={0.015}>
-        <h2 className="text-[5.5vw] text-center mb-[6vw] max-[1025px]:text-[7vw] max-md:text-[9vw]">
+        <h2 className="text-[5.5vw] text-center mb-[6vw] max-lg:text-[7vw] max-md:text-[9vw]">
           Frequently Asked Questions
         </h2>
       </OverflowTextReveal>
@@ -124,12 +124,12 @@ const Faq = () => {
                                     wrapper around its children, so the row layout (question
                                     left, icon right) needs its own flex container here. */}
                 <div className="flex items-center justify-between gap-6 w-full max-md:gap-4">
-                  <span className="text-[1.5vw] font-normal max-[1025px]:text-[2.6vw] max-md:text-[4.2vw]">
+                  <span className="text-[1.5vw] font-normal max-lg:text-[2.6vw] max-md:text-[4.2vw]">
                     {item.question}
                   </span>
 
                   <div
-                    className={`relative shrink-0 size-14 rounded-full overflow-hidden flex items-center justify-center transition-colors duration-300 ease-out border border-white/20 max-[1025px]:size-11 max-md:size-9 `}
+                    className={`relative shrink-0 size-14 rounded-full overflow-hidden flex items-center justify-center transition-colors duration-300 ease-out border border-white/20 max-lg:size-11 max-md:size-9 `}
                   >
                     {/* Always-horizontal bar (the "-"), plus a second bar
                                             that rotates between vertical (forming a "+" when
@@ -148,8 +148,8 @@ const Faq = () => {
                 </div>
               </FAQTitle>
 
-              <FAQContent className="pt-4 pr-[3vw] w-[80%] max-[1025px]:w-full max-[1025px]:pr-0 max-md:w-full max-md:pr-0">
-                <p className="text-[1.25vw] leading-[1.6] text-white/80 max-[1025px]:text-[2.2vw] max-md:text-[3.8vw]">
+              <FAQContent className="pt-4 pr-[3vw] w-[80%] max-lg:w-full max-lg:pr-0 max-md:w-full max-md:pr-0">
+                <p className="text-[1.25vw] leading-[1.6] text-white/80 max-lg:text-[2.2vw] max-md:text-[3.8vw]">
                   {item.answer}
                 </p>
               </FAQContent>

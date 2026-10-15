@@ -14,25 +14,6 @@ if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger, SplitText);
 }
 
-/**
- * @typedef {Object} TextFillAnimationProps
- * @property {string} [text]
- * @property {string} [textColor]
- * @property {string} [primaryColor]
- * @property {string} [dimColor]
- * @property {string} [backgroundColor]
- * @property {string} [className]
- * @property {string} [id]
- * @property {string} [textSize]
- * @property {string} [textWidth]
- * @property {string} [containerClassName]
- * @property {string} [mobileTextSize]
- * @property {string} [mobileTextWidth]
- * @property {string} [tabletTextSize]
- * @property {string} [tabletTextWidth]
- */
-
-/** @param {TextFillAnimationProps} props */
 export default function TextFillAnimation({
   text = "Design systems should feel effortless, not like you're fighting your own components every time you build.",
   textColor = '#111111',
@@ -48,6 +29,9 @@ export default function TextFillAnimation({
   mobileTextWidth = '95%',
   tabletTextSize = '6.5vw',
   tabletTextWidth = '88%',
+  duration = 0.4,
+  stagger = 0.05,
+  fillWidth = 1,
 }: any) {
   // State and refs
   const sectionRef = useRef<any>(null);
@@ -55,6 +39,7 @@ export default function TextFillAnimation({
 
   // Effects
   useEffect(() => {
+    const fillBandDuration = Math.max(0.1, fillWidth) * 0.5;
     const styleId = `${TEXT_REVEAL_STYLE_PREFIX}${id}`;
     const styleElement = document.createElement('style');
 
@@ -67,12 +52,12 @@ export default function TextFillAnimation({
       }
 
       #${id} .split__wrapper ${SPLIT_CHARACTER_SELECTOR} {
-        transition: color .4s;
+        transition: color ${fillBandDuration * 0.8}s;
         color: ${dimColor};
       }
 
       #${id} .split__wrapper ${SPLIT_CHARACTER_SELECTOR}.show {
-        animation: color-transition-${id} .5s;
+        animation: color-transition-${id} ${fillBandDuration}s;
         color: ${textColor};
       }
 
@@ -149,8 +134,8 @@ export default function TextFillAnimation({
             characters,
             {
               className: 'split-chars show',
-              duration: 0.4,
-              stagger: 0.05,
+              duration,
+              stagger,
               ease: 'power2.inOut',
             },
             0
@@ -168,10 +153,13 @@ export default function TextFillAnimation({
     };
   }, [
     dimColor,
+    duration,
+    fillWidth,
     id,
     mobileTextSize,
     mobileTextWidth,
     primaryColor,
+    stagger,
     tabletTextSize,
     tabletTextWidth,
     textColor,
@@ -189,23 +177,24 @@ export default function TextFillAnimation({
     >
       <div className="sticky top-0 flex h-screen items-center justify-center overflow-x-hidden">
         <div className="absolute left-1/2 top-1/2 h-[70vh] w-[70vh] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#ff6b00]/5 blur-3xl" />
-        <div className="absolute bottom-[6vh] left-[5vw] max-w-55">
-          <p className="text-sm leading-relaxed text-black/35 max-[1025px]:text-lg max-md:text-sm">
+
+        <div className="absolute bottom-[6vh] left-[5vw] max-w-55 max-md:bottom-[9vh]">
+          <p className="text-sm leading-relaxed text-black/35 max-lg:text-lg max-md:text-sm">
             Less friction.
             <br />
             More building.
           </p>
         </div>
 
-        <div className="absolute bottom-[6vh] right-[5vw] text-right">
+        <div className="absolute bottom-[6vh] right-[5vw] text-right max-md:bottom-[9vh]">
           <div className="space-y-1">
-            <p className="text-sm text-black/35 max-[1025px]:text-lg max-md:text-sm">
+            <p className="text-sm text-black/35 max-lg:text-lg max-md:text-sm">
               Systems
             </p>
-            <p className="text-sm text-black/35 max-[1025px]:text-lg max-md:text-sm">
+            <p className="text-sm text-black/35 max-lg:text-lg max-md:text-sm">
               Motion
             </p>
-            <p className="text-sm text-black/35 max-[1025px]:text-lg max-md:text-sm">
+            <p className="text-sm text-black/35 max-lg:text-lg max-md:text-sm">
               Clarity
             </p>
           </div>

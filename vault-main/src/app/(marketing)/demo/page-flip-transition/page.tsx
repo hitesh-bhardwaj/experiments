@@ -15,7 +15,7 @@ export default function page() {
 
         <SplitLine>
 
-        <p className="mt-8 text-[1.4vw] max-[1025px]:text-[3vw] max-md:text-[4.5vw]">
+        <p className="mt-8 text-[1.4vw] max-lg:text-[3vw] max-md:text-[4.5vw]">
           Click on the button to see the transition
         </p>
         </SplitLine>

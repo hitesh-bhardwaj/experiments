@@ -515,7 +515,7 @@ const GsapFlipCard = ({
             </div>
           )}
 
-          <div ref={contentRef} className="max-[1025px]:pb-[3vh]">
+          <div ref={contentRef} className="max-lg:pb-[3vh]">
             <h2
               data-card-text
               className="h-[19vw] py-1  max-md:h-[17.85vw] overflow- text-[7vw]  max-md:text-[8.5vw] leading-[1.2] m-0 font-normal tracking-[-0.02em]"

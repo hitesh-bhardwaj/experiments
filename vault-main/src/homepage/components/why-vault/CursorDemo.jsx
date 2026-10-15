@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { useCssVar } from "@/lib/useCssVar";
 
-const ButterflyTrailCursor = dynamic(() => import("@/components/butterfly-trail-cursor"), {
+const ButterflyTrailCursor = dynamic(() => import("@/homepage/components/why-vault/effects/butterfly-trail-cursor"), {
     ssr: false,
 });
 

@@ -59,11 +59,6 @@
       "path": "index.tsx",
       "type": "registry:component",
       "target": "src/components/effects/parallax-footer/index.tsx"
-    },
-    {
-      "path": "ParallaxFooter.tsx",
-      "type": "registry:component",
-      "target": "src/components/effects/parallax-footer/ParallaxFooter.tsx"
     }
   ]
 }

@@ -110,16 +110,6 @@
       "path": "index.tsx",
       "type": "registry:component",
       "target": "src/components/effects/noise-ripple-cursor/index.tsx"
-    },
-    {
-      "path": "2dCanvasTracker.tsx",
-      "type": "registry:component",
-      "target": "src/components/effects/noise-ripple-cursor/2dCanvasTracker.ts"
-    },
-    {
-      "path": "createSuspendedRaf.ts",
-      "type": "registry:component",
-      "target": "src/components/effects/noise-ripple-cursor/createSuspendedRaf.ts"
     }
   ]
 }

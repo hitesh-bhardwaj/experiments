@@ -68,11 +68,6 @@
       "path": "index.tsx",
       "type": "registry:component",
       "target": "src/components/effects/scroll-stack/index.tsx"
-    },
-    {
-      "path": "ScrollStackComp.tsx",
-      "type": "registry:component",
-      "target": "src/components/effects/scroll-stack/ScrollStackComp.tsx"
     }
   ]
 }

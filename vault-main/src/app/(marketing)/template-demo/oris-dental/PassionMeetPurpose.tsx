@@ -138,7 +138,7 @@ export default function PassionMeetPurpose() {
             {/* Desktop Sticky Scroll Runway */}
             <div
                 ref={runwayRef}
-                className="w-full h-[220vh] max-[1025px]:hidden relative"
+                className="w-full h-[220vh] max-lg:hidden relative"
             >
                 <div className="sticky top-0 h-screen w-full flex flex-col justify-center items-center oris-paddx overflow-hidden">
                     {/* Header */}
@@ -201,7 +201,7 @@ export default function PassionMeetPurpose() {
             </div>
 
             {/* Mobile & Tablet Fallback Section */}
-            <div className="hidden max-[1025px]:flex max-[1025px]:flex-col max-[1025px]:items-center max-[1025px]:gap-10 oris-paddx py-20 max-md:py-14">
+            <div className="hidden max-lg:flex max-lg:flex-col max-lg:items-center max-lg:gap-10 oris-paddx py-20 max-md:py-14">
                 {/* Header */}
                 <div className="flex flex-col items-center text-center mx-auto">
                     <h2 className="text-[6vw] max-md:text-[7.5vw] font-normal leading-[1.15]">

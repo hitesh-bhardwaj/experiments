@@ -5,8 +5,6 @@
   "main": "index.tsx",
   "files": [
     "index.tsx",
-    "webgl-context-recovery.ts",
-    "createSuspendedRaf.ts",
     "registry.json"
   ],
   "keywords": [

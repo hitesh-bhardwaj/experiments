@@ -105,7 +105,7 @@ const Features = () => {
   return (
     <section id="features" className="kyntra-container w-full bg-white text-black">
       <div className="mx-auto pb-0 max-w-400">
-        <div className="max-w-[46vw] max-[1025px]:max-w-full">
+        <div className="max-w-[46vw] max-lg:max-w-full">
           <ParaAnim
             as="h2"
             className="font-helvetica-neue leading-[1.12] font-normal tracking-[-0.02em] "
@@ -114,7 +114,7 @@ const Features = () => {
           </ParaAnim>
           <ParaAnim
             as="p"
-            className="text-24 max-[1025px]:pb-[7vh] mt-[1.6vw] max-[1025px]:mt-[6vw] max-w-[30vw] tracking-wide leading-normal text-black max-[1025px]:max-w-full "
+            className="text-24 max-lg:pb-[7vh] mt-[1.6vw] max-lg:mt-[6vw] max-w-[30vw] tracking-wide leading-normal text-black max-lg:max-w-full "
           >
             The more Kyntra understands your property, the easier it becomes to manage everything around it.
           </ParaAnim>

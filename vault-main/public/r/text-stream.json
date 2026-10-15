@@ -41,7 +41,7 @@
       }
     },
     {
-      "name": "stagger",
+      "name": "verticalSpacing",
       "type": "number",
       "default": 0.08,
       "description": "Vertical spacing between streamed lines.",
@@ -115,16 +115,6 @@
       "path": "index.tsx",
       "type": "registry:component",
       "target": "src/components/effects/text-stream/index.tsx"
-    },
-    {
-      "path": "hooks.ts",
-      "type": "registry:component",
-      "target": "src/components/effects/text-stream/hooks.ts"
-    },
-    {
-      "path": "TextStreamComp.tsx",
-      "type": "registry:component",
-      "target": "src/components/effects/text-stream/TextStreamComp.tsx"
     }
   ]
 }

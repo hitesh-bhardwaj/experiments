@@ -34,18 +34,6 @@
     {
       "path": "index.tsx",
       "target": "src/components/effects/draggable-canvas/index.tsx"
-    },
-    {
-      "path": "DragCursor.tsx",
-      "target": "src/components/effects/draggable-canvas/DragCursor.tsx"
-    },
-    {
-      "path": "MaskedContainer.tsx",
-      "target": "src/components/effects/draggable-canvas/MaskedContainer.tsx"
-    },
-    {
-      "path": "createSuspendedRaf.ts",
-      "target": "src/components/effects/draggable-canvas/createSuspendedRaf.ts"
     }
   ],
   "props": [

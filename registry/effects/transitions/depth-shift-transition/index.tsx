@@ -1,15 +1,17 @@
 // Built using Hyperiux Vault: https://vault.hyperiux.com
-
 'use client'
+import { useSyncExternalStore } from "react";
 
 
 import { TransitionRouter } from 'next-transition-router'
 import React, { useRef } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+
 function prefersReducedMotion() {
-  if (typeof window === 'undefined') return false
-  return window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches ?? false
+  if (typeof window === "undefined") return false;
+
+  return window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches ?? false;
 }
 
 gsap.registerPlugin(ScrollTrigger)

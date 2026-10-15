@@ -27,6 +27,12 @@ interface GlitchyTextProps {
   replayDelay?: number;
   baseTextColor?: string;
   glitchColor?: string;
+  /** Delay between consecutive characters in seconds. */
+  stagger?: number;
+  /** Duration of each character's slide in seconds. */
+  duration?: number;
+  /** GSAP ease for the slide. */
+  ease?: string;
 }
 
 const GlitchyText = ({
@@ -34,6 +40,9 @@ const GlitchyText = ({
   replayDelay = 0.2,
   baseTextColor = "#ffffff",
   glitchColor = "#eab308",
+  stagger = 0.025,
+  duration = 0.6,
+  ease = "power2.inOut",
 }: GlitchyTextProps) => {
   const rootRef = useRef<any>(null);
   const splitRef = useRef<any>({});
@@ -95,9 +104,9 @@ const GlitchyText = ({
     const tl = gsap.timeline({
       delay,
       defaults: {
-        duration: 0.6,
-        ease: "power2.inOut",
-        stagger: 0.025,
+        duration,
+        ease,
+        stagger,
       },
     });
 
@@ -134,7 +143,7 @@ const GlitchyText = ({
       },
       0.23
     );
-  }, [prefersReducedMotion]);
+  }, [prefersReducedMotion, duration, ease, stagger]);
 
   const handleReplay = () => {
     if (isDisabled) return;
@@ -158,9 +167,7 @@ const GlitchyText = ({
       linesClass: "lines",
     });
 
-    let split2: GsapSplitText | undefined;
-    let split3: GsapSplitText | undefined;
-    let split4: GsapSplitText | undefined;
+    let split2: GsapSplitText | undefined, split3: GsapSplitText | undefined, split4: GsapSplitText | undefined;
 
     if (!prefersReducedMotion) {
       split2 = SplitText.create(text2Ref.current, {

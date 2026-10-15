@@ -2,16 +2,13 @@
 "use client";
 
 import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
-import Image from "next/image";
 import gsap from "gsap";
-import { useGSAP } from "@gsap/react";
 import { SplitText } from "gsap/SplitText";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(SplitText);
 }
 
-// Animation timing
 const STRIP_COUNT = 12;
 const REVEAL_DURATION = 0.5;
 const STRIP_STAGGER = 0.04;
@@ -30,54 +27,48 @@ type Slide = {
 };
 
 type ParallaxStripSliderProps = {
-  /** Slides to cycle through. Defaults to a built-in sample set. */
   slides?: Slide[];
   className?: string;
-  /** Number of vertical strips in the wipe reveal. */
   stripCount?: number;
-  /** Duration of each strip's clip-path wipe, in seconds. */
   revealDuration?: number;
-  /** Delay between consecutive strips, in seconds. */
   stripStagger?: number;
-  /** Starting scale of the incoming image (Ken-Burns zoom). */
   zoomFrom?: number;
-  /** Duration of the image zoom settle, in seconds. */
   zoomDuration?: number;
-  /** Auto-advance slides on a timer. */
   autoplay?: boolean;
-  /** Show the top progress bar. */
   showProgressBar?: boolean;
-  /** Show the numeric slide counter. */
   showCounter?: boolean;
-  /** Enable the click-to-navigate overlay and its circular cursor (left half = prev, right half = next). */
   showControls?: boolean;
-  /** Show the hint pill telling the viewer to click either side to navigate. */
+  mobNavButton?: boolean;
   showClue?: boolean;
-  /** Text shown in the hint pill. */
   clueText?: string;
-  /** Color of the progress bar fill, caption text, and control borders. */
   accentColor?: string;
 };
 
 const DEFAULT_SLIDES: Slide[] = [
-  {
-    src: "https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=1600&q=80",
-    title: "Fire",
-    chapter: "Collection 01",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1520975954732-35dd22299614?auto=format&fit=crop&w=1600&q=80",
-    title: "Allure",
-    chapter: "Collection 02",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&w=1600&q=80",
-    title: "Ember",
-    chapter: "Collection 03",
-  },
+  { src: "https://picsum.photos/seed/strip1/1600/1200", title: "Fire", chapter: "Collection 01" },
+  { src: "https://picsum.photos/seed/strip2/1600/1200", title: "Allure", chapter: "Collection 02" },
+  { src: "https://picsum.photos/seed/strip3/1600/1200", title: "Ember", chapter: "Collection 03" },
 ];
 
 type TransitionDirection = "next" | "prev";
+
+const readyImages = new Map<string, Promise<void>>();
+
+function preloadImage(src: string): Promise<void> {
+  const cached = readyImages.get(src);
+  if (cached) return cached;
+  const task = new Promise<void>((resolve) => {
+    const img = new window.Image();
+    img.decoding = "async";
+    img.onload = () => {
+      (img.decode ? img.decode() : Promise.resolve()).then(resolve, resolve);
+    };
+    img.onerror = () => resolve();
+    img.src = src;
+  });
+  readyImages.set(src, task);
+  return task;
+}
 
 function prefersReducedMotion() {
   return window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches ?? false;
@@ -95,6 +86,7 @@ export default function ParallaxStripSlider({
   showProgressBar = true,
   showCounter = true,
   showControls = true,
+  mobNavButton = true,
   showClue = true,
   clueText = "Click either side and watch the next strip cut through.",
   accentColor = "#ffffff",
@@ -110,13 +102,12 @@ export default function ParallaxStripSlider({
   const counterRef = useRef<HTMLSpanElement>(null);
   const counterNumRef = useRef<HTMLSpanElement>(null);
   const progressRef = useRef<HTMLDivElement>(null);
-  const stripsRef = useRef<HTMLDivElement[]>([]);
-  const zoomRef = useRef<HTMLDivElement[]>([]);
+  const stripsRef = useRef<(HTMLDivElement | null)[]>([]);
+  const zoomRef = useRef<(HTMLDivElement | null)[]>([]);
   const isAnimating = useRef(false);
   const isFirstCaption = useRef(true);
   const splitRef = useRef<SplitText | null>(null);
 
-  // Circular click-to-navigate cursor.
   const cursorRef = useRef<HTMLDivElement>(null);
   const line1Ref = useRef<HTMLSpanElement>(null);
   const line2Ref = useRef<HTMLSpanElement>(null);
@@ -125,15 +116,27 @@ export default function ParallaxStripSlider({
   const pos = useRef({ x: 0, y: 0 });
 
   const total = slides.length;
+  const isMounted = useRef(true);
+
+  useEffect(() => {
+    isMounted.current = true;
+    slides.forEach((slide) => void preloadImage(slide.src));
+    return () => {
+      isMounted.current = false;
+    };
+  }, [slides]);
 
   const goTo = useCallback(
     (next: number, transitionDirection: TransitionDirection) => {
       if (isAnimating.current || next === current || total < 2) return;
       isAnimating.current = true;
-      setDirection(transitionDirection);
-      setIncoming(next);
+      preloadImage(slides[next].src).then(() => {
+        if (!isMounted.current) return;
+        setDirection(transitionDirection);
+        setIncoming(next);
+      });
     },
-    [current, total]
+    [current, total, slides]
   );
 
   const onNext = useCallback(
@@ -145,8 +148,6 @@ export default function ParallaxStripSlider({
     [current, total, goTo]
   );
 
-  // Auto-advance on a timer; pauses while a transition is mid-flight and when
-  // reduced motion is requested.
   useEffect(() => {
     if (!autoplay || total < 2) return;
     if (typeof window !== "undefined" && prefersReducedMotion()) return;
@@ -156,36 +157,38 @@ export default function ParallaxStripSlider({
     return () => window.clearInterval(id);
   }, [autoplay, total, onNext]);
 
-  // Wipe + zoom + progress on slide change.
-  useGSAP(
+  useLayoutEffect(
     () => {
       if (incoming === null) return;
 
-      const strips = stripsRef.current.slice(0, stripCount).filter(Boolean);
-      const zooms = zoomRef.current.slice(0, stripCount).filter(Boolean);
-      if (!strips.length) return;
-      const isPrevious = direction === "prev";
-      const orderedStrips = isPrevious ? [...strips].reverse() : strips;
-
-      // Reduced motion: swap without the reveal.
-      if (prefersReducedMotion()) {
-        setCaption(incoming);
-        setCurrent(incoming);
-        setIncoming(null);
-        isAnimating.current = false;
-        return;
-      }
-
-      const settle = () => {
-        setCaption(incoming);
+      const settleState = (withCaption = true) => {
+        if (withCaption) setCaption(incoming);
         setCurrent(incoming);
         setIncoming(null);
         isAnimating.current = false;
       };
 
-      const tl = gsap.timeline({ onComplete: settle });
+      const strips = stripsRef.current
+        .slice(0, stripCount)
+        .filter((el): el is HTMLDivElement => Boolean(el?.isConnected));
+      const zooms = zoomRef.current
+        .slice(0, stripCount)
+        .filter((el): el is HTMLDivElement => Boolean(el?.isConnected));
 
-      // Reverse stagger + clip origin when moving backward.
+      if (strips.length < stripCount) {
+        settleState();
+        return;
+      }
+      const isPrevious = direction === "prev";
+      const orderedStrips = isPrevious ? [...strips].reverse() : strips;
+
+      if (prefersReducedMotion()) {
+        settleState();
+        return;
+      }
+
+      const tl = gsap.timeline({ onComplete: () => settleState(false) });
+
       tl.fromTo(
         orderedStrips,
         { clipPath: isPrevious ? "inset(0 0 0 100%)" : "inset(0 100% 0 0)" },
@@ -209,7 +212,6 @@ export default function ParallaxStripSlider({
         0
       );
 
-      // Bar slides toward the incoming fill.
       if (progressRef.current) {
         tl.to(
           progressRef.current,
@@ -222,7 +224,6 @@ export default function ParallaxStripSlider({
         );
       }
 
-      // Outgoing caption texts fade out under the strips.
       const outgoing = [
         captionRef.current,
         titleRef.current,
@@ -239,20 +240,24 @@ export default function ParallaxStripSlider({
           },
           0.15
         );
-        tl.add(() => setCaption(incoming), 0.5);
       }
+      tl.add(() => setCaption(incoming), outgoing.length ? 0.5 : 0);
+
+      return () => {
+        const wasActive = tl.isActive();
+        tl.kill();
+        if (wasActive) isAnimating.current = false;
+      };
     },
-    { dependencies: [incoming, direction, stripCount, revealDuration, stripStagger, zoomFrom, zoomDuration], scope: rootRef }
+    [incoming, direction, stripCount, revealDuration, stripStagger, zoomFrom, zoomDuration, total]
   );
 
-  // Revert the split before React commits the new title.
   useLayoutEffect(() => {
     splitRef.current?.revert();
     splitRef.current = null;
   }, [caption]);
 
-  // Incoming caption reveal: title chars, chapter fade, counter number.
-  useGSAP(
+  useLayoutEffect(
     () => {
       if (isFirstCaption.current) {
         isFirstCaption.current = false;
@@ -260,7 +265,6 @@ export default function ParallaxStripSlider({
       }
       if (!captionRef.current || !titleRef.current) return;
 
-      // Snap back what the outgoing tween hid.
       gsap.set([captionRef.current, titleRef.current], { autoAlpha: 1, y: 0 });
 
       if (prefersReducedMotion()) {
@@ -271,19 +275,16 @@ export default function ParallaxStripSlider({
         return;
       }
 
-      // Chars only - no line/mask wrappers that shift metrics.
       const split = new SplitText(titleRef.current, { type: "chars" });
       splitRef.current = split;
 
       const tl = gsap.timeline({
-        // Restore plain <h2> once the reveal is done.
         onComplete: () => {
           split.revert();
           if (splitRef.current === split) splitRef.current = null;
         },
       });
 
-      // Title: char stagger up from below the clip.
       tl.from(
         split.chars,
         {
@@ -295,7 +296,6 @@ export default function ParallaxStripSlider({
         0
       );
 
-      // Chapter: fade only.
       if (chapterRef.current) {
         tl.fromTo(
           chapterRef.current,
@@ -305,7 +305,6 @@ export default function ParallaxStripSlider({
         );
       }
 
-      // Counter: fade block, lift just the number.
       if (counterRef.current) {
         tl.fromTo(
           counterRef.current,
@@ -325,21 +324,27 @@ export default function ParallaxStripSlider({
           0
         );
       }
+
+      return () => {
+        if (splitRef.current !== split) return;
+        tl.kill();
+        split.revert();
+        splitRef.current = null;
+      };
     },
-    { dependencies: [caption], scope: rootRef }
+    [caption]
   );
 
-  // Drop the last live split on unmount.
-  useGSAP(
+  useEffect(
     () => () => {
       splitRef.current?.revert();
       splitRef.current = null;
     },
-    { scope: rootRef }
+    []
   );
 
-  // Circular cursor: smooth follow + arrow that flips with the pointer side.
-  // Mirrors the clip-path-slider interaction (0.12 lerp, power3 eases).
+  const RIGHT_ARROW_X = -1;
+
   useEffect(() => {
     if (!showControls) return;
     const cursor = cursorRef.current;
@@ -354,7 +359,7 @@ export default function ParallaxStripSlider({
       yPercent: -50,
       y: -1.5,
       rotation: 45,
-      x: 0,
+      x: RIGHT_ARROW_X,
     });
     gsap.set(l2, {
       transformOrigin: "100% 50%",
@@ -362,7 +367,7 @@ export default function ParallaxStripSlider({
       yPercent: -50,
       y: 1.5,
       rotation: -45,
-      x: 0,
+      x: RIGHT_ARROW_X,
     });
 
     let currentSide: "left" | "right" = "right";
@@ -424,8 +429,8 @@ export default function ParallaxStripSlider({
           gsap.to(l1, { rotation: 135, x: "-1vw", duration: 0.35, ease: "power3.inOut" });
           gsap.to(l2, { rotation: -135, x: "-1vw", duration: 0.35, ease: "power3.inOut" });
         } else {
-          gsap.to(l1, { rotation: 45, x: 4, duration: 0.35, ease: "power3.inOut" });
-          gsap.to(l2, { rotation: -45, x: 4, duration: 0.35, ease: "power3.inOut" });
+          gsap.to(l1, { rotation: 45, x: RIGHT_ARROW_X, duration: 0.35, ease: "power3.inOut" });
+          gsap.to(l2, { rotation: -45, x: RIGHT_ARROW_X, duration: 0.35, ease: "power3.inOut" });
         }
       }
     };
@@ -453,18 +458,16 @@ export default function ParallaxStripSlider({
       <div
         key={i}
         ref={(el) => {
-          if (el) stripsRef.current[i] = el;
+          stripsRef.current[i] = el;
         }}
         className="absolute inset-y-0 overflow-hidden"
         style={{
           left: `${i * width}%`,
           width: `${width}%`,
-          // Cover the seam between neighbours.
           marginLeft: i === 0 ? 0 : "-0.5px",
           paddingLeft: i === 0 ? 0 : "0.5px",
         }}
       >
-        {/* Full-width image pulled back by this strip's offset. */}
         <div
           className="absolute inset-y-0"
           style={{
@@ -474,17 +477,17 @@ export default function ParallaxStripSlider({
         >
           <div
             ref={(el) => {
-              if (el) zoomRef.current[i] = el;
+              zoomRef.current[i] = el;
             }}
             className="relative h-full w-full will-change-transform"
           >
-            <Image
+            <img
               src={slide.src}
               alt="slide images"
               fill
               sizes="100vw"
               draggable={false}
-              className="object-cover select-none"
+              className="absolute inset-0 h-full w-full object-cover select-none"
             />
           </div>
         </div>
@@ -497,27 +500,21 @@ export default function ParallaxStripSlider({
   return (
     <div
       ref={rootRef}
-      className={`parallax-strip-slider relative h-full w-full overflow-hidden bg-black ${className}`}
+      className={`parallax-strip-slider relative h-screen w-full overflow-hidden bg-black ${className}`}
     >
-      {/* Outgoing slide, revealed away underneath. */}
       <div className="absolute inset-0">
-        <Image
+        <img
           src={slides[current].src}
           alt={slides[current].title}
-          fill
-          priority
-          sizes="100vw"
           draggable={false}
-          className="object-cover select-none"
+          className="absolute inset-0 h-full w-full object-cover select-none"
         />
       </div>
 
-      {/* Incoming slide, mounted only during a transition. */}
       {incoming !== null && (
         <div className="absolute inset-0">{renderStrips(slides[incoming])}</div>
       )}
 
-      {/* Click-to-navigate overlay: left half steps back, right half advances. */}
       {showControls && total > 1 && (
         <div
           className="absolute inset-0 z-20"
@@ -532,11 +529,9 @@ export default function ParallaxStripSlider({
         />
       )}
 
-      {/* Top progress bar, floating over the image. Pushed clear of the fixed
-          demo header. */}
       {showProgressBar && (
         <div
-          className="pointer-events-none absolute inset-x-10 top-20 z-10 h-px max-[1025px]:top-28"
+          className="pointer-events-none absolute inset-x-10 top-20 z-10 h-px max-lg:top-28"
           style={{ backgroundColor: `${accentColor}33` }}
         >
           <div
@@ -550,10 +545,9 @@ export default function ParallaxStripSlider({
         </div>
       )}
 
-      {/* Top-left label */}
       <div
         ref={captionRef}
-        className="pointer-events-none absolute inset-x-0 top-0 px-10 pb-10 pt-24 max-[1025px]:pt-32"
+        className="pointer-events-none absolute inset-x-0 top-0 px-10 pb-10 pt-24 max-lg:pt-32"
       >
         <span
           ref={chapterRef}
@@ -565,31 +559,56 @@ export default function ParallaxStripSlider({
         </span>
       </div>
 
-      {/* Bottom bar: three fixed thirds on one line; on mobile it stacks with
-          the title + counter above and the controls below. */}
-      <div className="absolute inset-x-0 bottom-0 flex items-end px-10 pb-10 max-[1025px]:flex-col max-[1025px]:items-stretch max-[1025px]:gap-6 max-md:pb-32">
-        <h2
-          ref={titleRef}
-          className="pointer-events-none w-1/3 shrink-0 overflow-hidden text-8xl leading-none flex items-end max-[1025px]:order-1 max-[1025px]:w-full"
-          style={{
-            fontFamily: '"Instrument Serif", Georgia, serif',
-            color: accentColor,
-          }}
-        >
-          {activeSlide.title}
-        </h2>
+      <div className="absolute inset-x-0 bottom-0 flex items-end px-10 pb-10 max-lg:flex-col max-lg:items-stretch max-lg:gap-6 max-lg:pb-36 max-md:pb-32">
+        <div className="contents max-lg:order-1 max-lg:flex max-lg:flex-col max-lg:items-center max-lg:gap-6">
+          <h2
+            ref={titleRef}
+            className="pointer-events-none w-1/3 shrink-0 overflow-hidden text-8xl leading-none flex items-end max-lg:w-full max-lg:justify-center max-lg:text-center"
+            style={{
+              fontFamily: '"Instrument Serif", Georgia, serif',
+              color: accentColor,
+            }}
+          >
+            {activeSlide.title}
+          </h2>
 
-        {/* Middle third keeps its width so the counter stays pinned to the
-            right. On mobile the spacer collapses. */}
-        <div aria-hidden className="w-1/3 shrink-0 max-[1025px]:hidden" />
+          {showControls && mobNavButton && total > 1 && (
+            <div className="relative z-30 hidden shrink-0 gap-3 max-lg:flex max-md:gap-2">
+              {(["prev", "next"] as const).map((dir) => (
+                <button
+                  key={dir}
+                  type="button"
+                  aria-label={dir === "prev" ? "Previous slide" : "Next slide"}
+                  onClick={dir === "prev" ? onPrev : onNext}
+                  className="flex size-18 items-center justify-center rounded-full max-md:size-14"
+                  style={{ backgroundColor: accentColor }}
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#000000"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="size-6"
+                    aria-hidden="true"
+                  >
+                    <path d={dir === "prev" ? "M14.5 6l-6 6 6 6" : "M9.5 6l6 6-6 6"} />
+                  </svg>
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div aria-hidden className="w-1/3 shrink-0 max-lg:hidden" />
 
         {showCounter && (
           <span
             ref={counterRef}
-            className="pointer-events-none flex w-1/3 pb-5 shrink-0 h-full items-center pt-5! justify-end text-xs max-[1025px]:order-2 max-[1025px]:h-auto max-[1025px]:w-full max-[1025px]:justify-start max-[1025px]:p-0 max-md:order-first max-md:justify-end"
+            className="pointer-events-none flex w-1/3 pb-5 shrink-0 h-full items-center pt-5! justify-end text-xs max-lg:order-2 max-lg:h-auto max-lg:w-full max-lg:justify-start max-lg:p-0 max-md:order-first max-md:justify-end"
             style={{ color: `${accentColor}b3` }}
           >
-            {/* Fixed-width clip so the number can lift in without reflow. */}
             <span className="inline-block w-[2ch] overflow-hidden text-right">
               <span ref={counterNumRef} className="inline-block">
                 {String(caption + 1).padStart(2, "0")}
@@ -600,11 +619,10 @@ export default function ParallaxStripSlider({
         )}
       </div>
 
-      {/* Circular nav cursor - follows the pointer, arrow flips per side. */}
       {showControls && total > 1 && (
         <div
           ref={cursorRef}
-          className="pointer-events-none fixed left-0 top-0 z-100 max-[1025px]:hidden"
+          className="pointer-events-none fixed left-0 top-0 z-100 max-lg:hidden"
         >
           <div
             className="flex size-15 items-center justify-center rounded-full"
@@ -628,7 +646,7 @@ export default function ParallaxStripSlider({
 
 
       {showClue && clueText && total > 1 && (
-        <p className="pointer-events-none absolute bottom-8 left-1/2 z-50 -translate-x-1/2 rounded-full border border-white/15 bg-black/35 px-6 py-3 text-center font-mono text-sm leading-relaxed text-white/80 backdrop-blur-md max-md:bottom-6 max-md:w-[70%] max-md:text-sm max-[1025px]:text-base">
+        <p className="pointer-events-none absolute bottom-8 left-1/2 z-50 -translate-x-1/2 rounded-full border border-white/15 bg-black/35 px-6 py-3 text-center font-mono text-sm leading-relaxed text-white/80 backdrop-blur-md max-md:bottom-6 max-md:w-[70%] max-md:text-sm max-lg:text-base">
           {clueText}
         </p>
       )}

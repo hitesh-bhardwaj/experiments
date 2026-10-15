@@ -22,13 +22,16 @@
   "props": [
     {
       "name": "panelWidth",
-      "type": "string",
-      "default": "50%",
-      "description": "Width of the sliding menu panel.",
+      "type": "number",
+      "default": 50,
+      "description": "Width of the sliding menu panel as a percentage of the viewport on desktop.",
       "remixer": {
-        "control": "text",
+        "control": "range",
         "group": "layout",
-        "groupTitle": "Layout"
+        "groupTitle": "Layout",
+        "min": 30,
+        "max": 100,
+        "step": 1
       }
     },
     {
@@ -72,6 +75,71 @@
         "max": 0.3,
         "step": 0.01
       }
+    },
+    {
+      "name": "linkColor",
+      "type": "string",
+      "default": "#ffffff",
+      "description": "Color of the menu links, socials and divider.",
+      "remixer": {
+        "control": "color",
+        "group": "style",
+        "groupTitle": "Style"
+      }
+    },
+    {
+      "name": "panelBackgroundColor",
+      "type": "string",
+      "default": "#000000",
+      "description": "Background color of the sliding menu panel (opacity is set separately).",
+      "remixer": {
+        "control": "color",
+        "group": "style",
+        "groupTitle": "Style"
+      }
+    },
+    {
+      "name": "panelOpacity",
+      "type": "number",
+      "default": 0.2,
+      "description": "Opacity of the panel background color.",
+      "remixer": {
+        "control": "range",
+        "group": "style",
+        "groupTitle": "Style",
+        "min": 0,
+        "max": 1,
+        "step": 0.05
+      }
+    },
+    {
+      "name": "panelBlur",
+      "type": "string",
+      "default": "md",
+      "description": "Backdrop blur strength behind the panel.",
+      "remixer": {
+        "control": "select",
+        "group": "style",
+        "groupTitle": "Style",
+        "options": [
+          {
+            "value": "none",
+            "label": "None"
+          },
+          {
+            "value": "sm",
+            "label": "Small"
+          },
+          {
+            "value": "md",
+            "label": "Medium"
+          },
+          {
+            "value": "lg",
+            "label": "Large"
+          }
+        ]
+      }
     }
   ],
   "remixer": {
@@ -91,11 +159,6 @@
       "path": "index.tsx",
       "type": "registry:component",
       "target": "src/components/effects/side-navbar/index.tsx"
-    },
-    {
-      "path": "Menu.tsx",
-      "type": "registry:component",
-      "target": "src/components/effects/side-navbar/Menu.tsx"
     }
   ]
 }

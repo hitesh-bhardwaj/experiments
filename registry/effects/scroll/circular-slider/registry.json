@@ -21,10 +21,6 @@
     {
       "path": "index.tsx",
       "target": "src/components/effects/circular-slider/index.tsx"
-    },
-    {
-      "path": "CircularSliderComp.tsx",
-      "target": "src/components/effects/circular-slider/CircularSliderComp.tsx"
     }
   ],
   "changelog": [
@@ -61,17 +57,6 @@
       "description": "Supporting text shown below the rotating carousel."
     },
     {
-      "name": "backgroundColor",
-      "type": "string",
-      "default": "#111111",
-      "description": "Background color for the full component section.",
-      "remixer": {
-        "control": "color",
-        "group": "layout",
-        "groupTitle": "Layout"
-      }
-    },
-    {
       "name": "showBottomText",
       "type": "boolean",
       "default": true,
@@ -80,6 +65,20 @@
         "control": "checkbox",
         "group": "layout",
         "groupTitle": "Layout"
+      }
+    },
+    {
+      "name": "verticalOffset",
+      "type": "number",
+      "default": 0,
+      "description": "Moves the whole slider wheel up (negative) or down (positive), in vh.",
+      "remixer": {
+        "control": "range",
+        "group": "layout",
+        "groupTitle": "Layout",
+        "min": -60,
+        "max": 40,
+        "step": 1
       }
     },
     {
@@ -123,6 +122,218 @@
         "max": 520,
         "step": 4
       }
+    },
+    {
+      "name": "cardColorCount",
+      "type": "number",
+      "default": 5,
+      "description": "How many card background colors to cycle through the cards (1 to the number of cards).",
+      "remixer": {
+        "control": "range",
+        "group": "cardColors",
+        "groupTitle": "Card Colors",
+        "min": 1,
+        "max": 6,
+        "step": 1
+      }
+    },
+    {
+      "name": "cardColor1",
+      "label": "Card Color 1",
+      "type": "string",
+      "default": "#655A7C",
+      "description": "Card background color 1.",
+      "remixer": {
+        "control": "color",
+        "group": "cardColors",
+        "groupTitle": "Card Colors"
+      }
+    },
+    {
+      "name": "cardColor2",
+      "label": "Card Color 2",
+      "type": "string",
+      "default": "#AB92BF",
+      "description": "Card background color 2.",
+      "remixer": {
+        "control": "color",
+        "group": "cardColors",
+        "groupTitle": "Card Colors",
+        "visibleWhen": {
+          "name": "cardColorCount",
+          "gte": 2
+        }
+      }
+    },
+    {
+      "name": "cardColor3",
+      "label": "Card Color 3",
+      "type": "string",
+      "default": "#AFC1D6",
+      "description": "Card background color 3.",
+      "remixer": {
+        "control": "color",
+        "group": "cardColors",
+        "groupTitle": "Card Colors",
+        "visibleWhen": {
+          "name": "cardColorCount",
+          "gte": 3
+        }
+      }
+    },
+    {
+      "name": "cardColor4",
+      "label": "Card Color 4",
+      "type": "string",
+      "default": "#CEF9F2",
+      "description": "Card background color 4.",
+      "remixer": {
+        "control": "color",
+        "group": "cardColors",
+        "groupTitle": "Card Colors",
+        "visibleWhen": {
+          "name": "cardColorCount",
+          "gte": 4
+        }
+      }
+    },
+    {
+      "name": "cardColor5",
+      "label": "Card Color 5",
+      "type": "string",
+      "default": "#D6CA98",
+      "description": "Card background color 5.",
+      "remixer": {
+        "control": "color",
+        "group": "cardColors",
+        "groupTitle": "Card Colors",
+        "visibleWhen": {
+          "name": "cardColorCount",
+          "gte": 5
+        }
+      }
+    },
+    {
+      "name": "cardColor6",
+      "label": "Card Color 6",
+      "type": "string",
+      "default": "#F2B5A7",
+      "description": "Card background color 6.",
+      "remixer": {
+        "control": "color",
+        "group": "cardColors",
+        "groupTitle": "Card Colors",
+        "visibleWhen": {
+          "name": "cardColorCount",
+          "gte": 6
+        }
+      }
+    },
+    {
+      "name": "textColorCount",
+      "type": "number",
+      "default": 5,
+      "description": "How many card text colors to cycle through the cards (1 to the number of cards).",
+      "remixer": {
+        "control": "range",
+        "group": "textColors",
+        "groupTitle": "Text Colors",
+        "min": 1,
+        "max": 6,
+        "step": 1
+      }
+    },
+    {
+      "name": "textColor1",
+      "label": "Text Color 1",
+      "type": "string",
+      "default": "#2A2433",
+      "description": "Card text color 1.",
+      "remixer": {
+        "control": "color",
+        "group": "textColors",
+        "groupTitle": "Text Colors"
+      }
+    },
+    {
+      "name": "textColor2",
+      "label": "Text Color 2",
+      "type": "string",
+      "default": "#3D2E50",
+      "description": "Card text color 2.",
+      "remixer": {
+        "control": "color",
+        "group": "textColors",
+        "groupTitle": "Text Colors",
+        "visibleWhen": {
+          "name": "textColorCount",
+          "gte": 2
+        }
+      }
+    },
+    {
+      "name": "textColor3",
+      "label": "Text Color 3",
+      "type": "string",
+      "default": "#2C3E52",
+      "description": "Card text color 3.",
+      "remixer": {
+        "control": "color",
+        "group": "textColors",
+        "groupTitle": "Text Colors",
+        "visibleWhen": {
+          "name": "textColorCount",
+          "gte": 3
+        }
+      }
+    },
+    {
+      "name": "textColor4",
+      "label": "Text Color 4",
+      "type": "string",
+      "default": "#1A5C53",
+      "description": "Card text color 4.",
+      "remixer": {
+        "control": "color",
+        "group": "textColors",
+        "groupTitle": "Text Colors",
+        "visibleWhen": {
+          "name": "textColorCount",
+          "gte": 4
+        }
+      }
+    },
+    {
+      "name": "textColor5",
+      "label": "Text Color 5",
+      "type": "string",
+      "default": "#4A3F1A",
+      "description": "Card text color 5.",
+      "remixer": {
+        "control": "color",
+        "group": "textColors",
+        "groupTitle": "Text Colors",
+        "visibleWhen": {
+          "name": "textColorCount",
+          "gte": 5
+        }
+      }
+    },
+    {
+      "name": "textColor6",
+      "label": "Text Color 6",
+      "type": "string",
+      "default": "#5C2A1F",
+      "description": "Card text color 6.",
+      "remixer": {
+        "control": "color",
+        "group": "textColors",
+        "groupTitle": "Text Colors",
+        "visibleWhen": {
+          "name": "textColorCount",
+          "gte": 6
+        }
+      }
     }
   ],
   "remixer": {
@@ -133,52 +344,6 @@
     },
     "panel": {
       "className": "right-0! top-[132px]! h-[calc(100%-132px)]! w-[344px]!"
-    },
-    "controls": [
-      {
-        "name": "backgroundColor",
-        "label": "Background Color",
-        "type": "color",
-        "group": "layout",
-        "copyable": true
-      },
-      {
-        "name": "showBottomText",
-        "label": "Show Bottom Text",
-        "type": "checkbox",
-        "group": "layout",
-        "copyable": true
-      },
-      {
-        "name": "gap",
-        "label": "Gap",
-        "type": "range",
-        "group": "layout",
-        "copyable": true,
-        "min": 0,
-        "max": 120,
-        "step": 1
-      },
-      {
-        "name": "cardWidth",
-        "label": "Card Width",
-        "type": "range",
-        "group": "layout",
-        "copyable": true,
-        "min": 220,
-        "max": 420,
-        "step": 4
-      },
-      {
-        "name": "cardHeight",
-        "label": "Card Height",
-        "type": "range",
-        "group": "layout",
-        "copyable": true,
-        "min": 240,
-        "max": 520,
-        "step": 4
-      }
-    ]
+    }
   }
 }

@@ -29,7 +29,7 @@ const CTA = () => {
   return (
     <section
       id="cta"
-      className={`relative flex h-screen max-[1025px]:h-[70vh] w-full flex-col items-center justify-center px-[5%] text-black transition-colors duration-300 ease-in-out ${
+      className={`relative flex h-screen max-lg:h-[70vh] w-full flex-col items-center justify-center px-[5%] text-black transition-colors duration-300 ease-in-out ${
         panelActive ? "bg-kyntra-primary" : "bg-[#f5f5f5]"
       }`}
     >
@@ -57,14 +57,14 @@ const CTA = () => {
             hoverColor="#ffffff"
             staggerStep={0.006}
             onClick={openModal}
-            className="w-[45vw] justify-center rounded-full bg-black py-[2.5vw] text-center max-[1025px]:hidden"
+            className="w-[45vw] justify-center rounded-full bg-black py-[2.5vw] text-center max-lg:hidden"
             textClassName=" text-44 leading-[1.1] font-normal tracking-[-0.02em] text-white"
           />
 
           <Link
             href="#"
             onClick={openModal}
-            className="hidden w-[80vw] rounded-full bg-black px-[6vw] py-[7vw] text-center text-[5vw] leading-tight font-normal tracking-[-0.02em] text-white max-[1025px]:block max-md:w-[85vw] max-md:py-[4vw] max-md:text-[7vw]"
+            className="hidden w-[80vw] rounded-full bg-black px-[6vw] py-[7vw] text-center text-[5vw] leading-tight font-normal tracking-[-0.02em] text-white max-lg:block max-md:w-[85vw] max-md:py-[4vw] max-md:text-[7vw]"
           >
             Download Kyntra App
           </Link>
@@ -75,7 +75,7 @@ const CTA = () => {
         as="p"
         delay={0.15}
         // Copy flips white with the panel
-        className={`text-24 mt-[2vw] transition-colors duration-300 ease-in-out max-[1025px]:mt-[5vw] max-[1025px]:max-w-[62%] max-[1025px]:text-center max-[1025px]:text-[2.9vw] max-md:mt-[6vw] max-md:max-w-[72%] max-md:text-[4.2vw] ${
+        className={`text-24 mt-[2vw] transition-colors duration-300 ease-in-out max-lg:mt-[5vw] max-lg:max-w-[62%] max-lg:text-center max-lg:text-[2.9vw] max-md:mt-[6vw] max-md:max-w-[72%] max-md:text-[4.2vw] ${
           panelActive ? "text-white" : "text-black"
         }`}
       >

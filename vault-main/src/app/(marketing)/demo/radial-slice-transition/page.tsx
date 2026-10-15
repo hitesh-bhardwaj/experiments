@@ -12,13 +12,13 @@ export default function page() {
 
         <HeadAnim>
 
-        <h1 className="text-[7vw] max-md:text-[9vw]">Radial Slice Transition</h1>
+        <h1 className="text-[5vw] max-md:text-[9vw]">Radial Slice Transition</h1>
         </HeadAnim>
 
 
         <SplitLine>
 
-        <p className="mt-8 text-[1.4vw] max-[1025px]:text-[3vw] max-md:text-[4.5vw]">
+        <p className="mt-8 text-[1.4vw] max-lg:text-[3vw] max-md:text-[4.5vw]">
           Click on the button to see the transition
         </p>
         </SplitLine>

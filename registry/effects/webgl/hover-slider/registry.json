@@ -6,8 +6,8 @@
   "description": "WebGL-powered list where hovering a row reveals a vertically-scrolling image stack with circular-arc curvature, velocity-based elastic snap, and GSAP-driven fade/curve transitions.",
   "category": "webgl",
   "dependencies": [
-    "three",
-    "gsap"
+    "gsap",
+    "three"
   ],
   "registryDependencies": [],
   "previewUrl": "/demo/hover-slider",
@@ -21,14 +21,6 @@
     {
       "path": "index.tsx",
       "target": "src/components/effects/hover-slider/index.tsx"
-    },
-    {
-      "path": "HoverSliderComp.tsx",
-      "target": "src/components/effects/hover-slider/HoverSliderComp.tsx"
-    },
-    {
-      "path": "createSuspendedRaf.ts",
-      "target": "src/components/effects/hover-slider/createSuspendedRaf.ts"
     }
   ],
   "changelog": [

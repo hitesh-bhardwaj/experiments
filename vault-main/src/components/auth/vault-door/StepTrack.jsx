@@ -10,6 +10,12 @@ const EASE = [0.65, 0, 0.35, 1];
 const DURATION = 0.45;
 // A step enters from the right and leaves to the left going forward; the reverse going back.
 // 110%: fully past the window's padding, so nothing of the waiting step peeks in.
+// The step number rolls like a counter: forward it rolls up, on Back it rolls down.
+const ROLL = {
+  enter: (direction) => ({ y: direction > 0 ? "100%" : "-100%", opacity: 0 }),
+  center: { y: "0%", opacity: 1 },
+  exit: (direction) => ({ y: direction > 0 ? "-100%" : "100%", opacity: 0 }),
+};
 const SLIDE = {
   enter: (direction) => ({ x: direction > 0 ? "110%" : "-110%", opacity: 0 }),
   center: { x: "0%", opacity: 1 },
@@ -40,7 +46,30 @@ export function StepTrack({ stepIndex, total, direction, stepKey, onBack, busy =
             <ButtonArrowIcon className="size-[calc(var(--cvw)*1)] -scale-x-100 transition-transform duration-300 group-hover:-translate-x-1 max-lg:size-4" />
           </button>
           <span className="text24 font-aeonik tracking-[-.02em] text-primary" aria-live="polite">
-            {padStep(step)} / {padStep(total)}
+            <span className="sr-only">
+              {padStep(step)} / {padStep(total)}
+            </span>
+            <span aria-hidden="true" className="inline-flex items-baseline">
+              {/* overflow-hidden clips the roll to one line; the invisible copy keeps the width */}
+              <span className="relative inline-block overflow-hidden leading-[1.15]">
+                <span className="invisible">{padStep(step)}</span>
+                <AnimatePresence initial={false} custom={direction} mode="popLayout">
+                  <motion.span
+                    key={step}
+                    custom={direction}
+                    variants={ROLL}
+                    initial="enter"
+                    animate="center"
+                    exit="exit"
+                    transition={{ duration: 0.45, ease: EASE }}
+                    className="absolute inset-0 block"
+                  >
+                    {padStep(step)}
+                  </motion.span>
+                </AnimatePresence>
+              </span>
+              <span className="whitespace-pre"> / {padStep(total)}</span>
+            </span>
           </span>
         </div>
 

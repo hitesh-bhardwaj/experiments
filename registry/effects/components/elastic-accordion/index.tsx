@@ -47,7 +47,7 @@ export interface ElasticAccordionProps {
   multiple?: boolean;
   duration?: number;
   stagger?: number;
-  goo?: number;
+  gooeyStrength?: number;
   ease?: string;
   bgColor?: string;
   panelColor?: string;
@@ -86,9 +86,9 @@ const DEFAULT_ITEMS: ElasticAccordionItem[] = [
 
 interface Row {
   el: HTMLDivElement;
-  gooEl: HTMLDivElement;
-  gooTrigger: HTMLDivElement;
-  gooPanel: HTMLDivElement;
+  gooeyEl: HTMLDivElement;
+  gooeyTrigger: HTMLDivElement;
+  gooeyPanel: HTMLDivElement;
   crisp: HTMLDivElement;
   panelCrisp: HTMLDivElement;
   trigger: HTMLButtonElement;
@@ -98,7 +98,7 @@ interface Row {
   icon: SVGSVGElement;
   filterId: string;
   blurEl: SVGFEGaussianBlurElement | null;
-  goo: { std: number };
+  gooey: { std: number };
   isOpen: boolean;
   triggerH: number;
   innerH: number;
@@ -114,7 +114,7 @@ const ElasticAccordion: React.FC<ElasticAccordionProps> = ({
   multiple = false,
   duration = 0.8,
   stagger = 0.05,
-  goo = 9,
+  gooeyStrength = 9,
   ease = "elastic.out(1,0.82)",
   bgColor = "#ebebe9",
   panelColor = "#101010",
@@ -136,9 +136,9 @@ const ElasticAccordion: React.FC<ElasticAccordionProps> = ({
         if (!el) return;
         const q = <T extends Element>(sel: string) =>
           el.querySelector(sel) as T | null;
-        const gooEl = q<HTMLDivElement>("[data-fx-blob]");
-        const gooTrigger = q<HTMLDivElement>(".flx_blob_head");
-        const gooPanel = q<HTMLDivElement>(".flx_blob_drawer");
+        const gooeyEl = q<HTMLDivElement>("[data-fx-blob]");
+        const gooeyTrigger = q<HTMLDivElement>(".flx_blob_head");
+        const gooeyPanel = q<HTMLDivElement>(".flx_blob_drawer");
         const crisp = q<HTMLDivElement>(".flx_head_solid");
         const panelCrisp = q<HTMLDivElement>(".flx_drawer_solid");
         const trigger = q<HTMLButtonElement>("[data-fx-head]");
@@ -147,9 +147,9 @@ const ElasticAccordion: React.FC<ElasticAccordionProps> = ({
         const answer = q<HTMLParagraphElement>("[data-fx-body]");
         const icon = q<SVGSVGElement>("[data-fx-mark]");
         if (
-          !gooEl ||
-          !gooTrigger ||
-          !gooPanel ||
+          !gooeyEl ||
+          !gooeyTrigger ||
+          !gooeyPanel ||
           !crisp ||
           !panelCrisp ||
           !trigger ||
@@ -162,9 +162,9 @@ const ElasticAccordion: React.FC<ElasticAccordionProps> = ({
         }
         rowsRef.current[i] = {
           el,
-          gooEl,
-          gooTrigger,
-          gooPanel,
+          gooeyEl,
+          gooeyTrigger,
+          gooeyPanel,
           crisp,
           panelCrisp,
           trigger,
@@ -174,7 +174,7 @@ const ElasticAccordion: React.FC<ElasticAccordionProps> = ({
           icon,
           filterId: `flx-blob-${uid}-${i}`,
           blurEl: null,
-          goo: { std: 0 },
+          gooey: { std: 0 },
           isOpen: false,
           triggerH: 0,
           innerH: 0,
@@ -194,7 +194,7 @@ const ElasticAccordion: React.FC<ElasticAccordionProps> = ({
     const rows = rowsRef.current.filter(Boolean);
     if (!rows.length) return;
 
-    const shapeEase = ease.indexOf("elastic") === 0 ? "fluidGlide" : ease;
+    const closeEase = ease.indexOf("elastic") === 0 ? "fluidSwing" : ease;
     let dur = duration;
     let stag = stagger;
 
@@ -205,10 +205,10 @@ const ElasticAccordion: React.FC<ElasticAccordionProps> = ({
     });
 
     const setFilter = (r: Row, on: boolean) => {
-      r.gooEl.style.filter = on ? `url(#${r.filterId})` : "none";
+      r.gooeyEl.style.filter = on ? `url(#${r.filterId})` : "none";
     };
     const applyBlur = (r: Row) => {
-      r.blurEl?.setAttribute("stdDeviation", String(r.goo.std));
+      r.blurEl?.setAttribute("stdDeviation", String(r.gooey.std));
     };
     const measure = (r: Row) => {
       r.triggerH = r.trigger.offsetHeight;
@@ -216,7 +216,7 @@ const ElasticAccordion: React.FC<ElasticAccordionProps> = ({
       r.rowW = r.el.offsetWidth;
     };
     const setClosedShape = (r: Row) => {
-      gsap.set([r.gooPanel, r.panelCrisp], {
+      gsap.set([r.gooeyPanel, r.panelCrisp], {
         x: 4,
         y: 4,
         width: r.rowW - 8,
@@ -225,7 +225,7 @@ const ElasticAccordion: React.FC<ElasticAccordionProps> = ({
       });
     };
     const setTriggerShape = (r: Row) => {
-      gsap.set([r.gooTrigger, r.crisp], {
+      gsap.set([r.gooeyTrigger, r.crisp], {
         height: r.triggerH,
         borderRadius:
           window.innerWidth <= MOBILE_BREAKPOINT
@@ -245,12 +245,12 @@ const ElasticAccordion: React.FC<ElasticAccordionProps> = ({
         r.tl = null;
       }
       gsap.killTweensOf([
-        r.gooPanel,
+        r.gooeyPanel,
         r.panelCrisp,
         r.panel,
         r.el,
         r.icon,
-        r.goo,
+        r.gooey,
         r.answer,
       ]);
     };
@@ -291,38 +291,41 @@ const ElasticAccordion: React.FC<ElasticAccordionProps> = ({
       r.isOpen = false;
       setA11y(r, false);
       killRow(r);
-      const d = 0.65 * dur;
+      const d = 0.8 * dur;
       setFilter(r, true);
       r.tl = gsap.timeline({ defaults: { force3D: true } });
+      // Mirror of open(): the blur builds while the drawer is still apart so
+      // a gooey bridge forms first, the drawer then eases in (slow start, soft
+      // landing) and the blur only releases once it has fully merged.
       r.tl
-        .to(r.goo, {
-          std: goo,
-          duration: 0.3 * d,
-          ease: "power1.in",
+        .to(r.gooey, {
+          std: gooeyStrength,
+          duration: 0.2 * d,
+          ease: "power2.out",
           onUpdate: () => applyBlur(r),
         }, 0)
-        .to([r.gooPanel, r.panelCrisp], {
+        .to([r.gooeyPanel, r.panelCrisp], {
           x: 4,
           y: 4,
           width: r.rowW - 8,
           height: r.triggerH - 8,
           duration: d,
-          ease: shapeEase,
+          ease: closeEase,
         }, 0)
-        .to(r.panel, { height: 0, duration: d, ease: shapeEase }, 0)
-        .to(r.el, { marginTop: 0, duration: d, ease: shapeEase }, 0)
+        .to(r.panel, { height: 0, duration: d, ease: closeEase }, 0)
+        .to(r.el, { marginTop: 0, duration: d, ease: closeEase }, 0)
         .to(r.icon, { rotation: 0, duration: 0.5, ease: "fluidSwing" }, 0)
-        .to(r.answer, { autoAlpha: 0, duration: 0.15, ease: "power2.out" }, 0)
-        .to(r.goo, {
+        .to(r.answer, { autoAlpha: 0, duration: 0.2 * d, ease: "power2.out" }, 0)
+        .to(r.gooey, {
           std: 0,
-          duration: 0.3 * d,
-          ease: "power1.out",
+          duration: 0.25 * d,
+          ease: "power1.inOut",
           onUpdate: () => applyBlur(r),
           onComplete: () => {
             setFilter(r, false);
             clearSplit(r);
           },
-        }, 0.7 * d);
+        }, 0.75 * d);
     };
 
     const open = (r: Row) => {
@@ -332,11 +335,11 @@ const ElasticAccordion: React.FC<ElasticAccordionProps> = ({
       killRow(r);
       const panelH = PAIR_GAP + r.innerH + OPEN_MARGIN;
       setFilter(r, true);
-      r.goo.std = goo;
+      r.gooey.std = gooeyStrength;
       applyBlur(r);
       r.tl = gsap.timeline({ defaults: { force3D: true } });
       r.tl
-        .to([r.gooPanel, r.panelCrisp], {
+        .to([r.gooeyPanel, r.panelCrisp], {
           x: 0,
           y: r.triggerH + PAIR_GAP,
           width: r.rowW,
@@ -347,7 +350,7 @@ const ElasticAccordion: React.FC<ElasticAccordionProps> = ({
         .to(r.panel, { height: panelH, duration: dur, ease }, 0)
         .to(r.el, { marginTop: OPEN_MARGIN, duration: dur, ease }, 0)
         .to(r.icon, { rotation: 135, duration: 0.5, ease: "fluidSwing" }, 0)
-        .to(r.goo, {
+        .to(r.gooey, {
           std: 0,
           duration: 0.25 * dur,
           ease: "power1.in",
@@ -393,7 +396,7 @@ const ElasticAccordion: React.FC<ElasticAccordionProps> = ({
       r.isOpen = isOpen;
       setA11y(r, isOpen);
       if (isOpen) {
-        gsap.set([r.gooPanel, r.panelCrisp], {
+        gsap.set([r.gooeyPanel, r.panelCrisp], {
           x: 0,
           y: r.triggerH + PAIR_GAP,
           width: r.rowW,
@@ -433,7 +436,7 @@ const ElasticAccordion: React.FC<ElasticAccordionProps> = ({
           measure(r);
           setTriggerShape(r);
           if (r.isOpen) {
-            gsap.set([r.gooPanel, r.panelCrisp], {
+            gsap.set([r.gooeyPanel, r.panelCrisp], {
               x: 0,
               y: r.triggerH + PAIR_GAP,
               width: r.rowW,
@@ -482,16 +485,16 @@ const ElasticAccordion: React.FC<ElasticAccordionProps> = ({
         clearSplit(r);
       });
     };
-  }, [items, startOpen, multiple, duration, stagger, goo, ease, collect]);
+  }, [items, startOpen, multiple, duration, stagger, gooeyStrength, ease, collect]);
 
   return (
     <div
-      className={`relative flex h-fit w-full items-center justify-center box-border p-10 max-[1025px]:p-8 max-md:p-5 antialiased ${className}`}
+      className={`relative flex h-fit w-full items-center justify-center box-border p-10 max-lg:p-8 max-md:p-5 antialiased ${className}`}
       style={{ backgroundColor: bgColor, fontFamily: '"Switzer", -apple-system, BlinkMacSystemFont, sans-serif' }}
     >
       <style>{LINE_STYLE}</style>
       <div
-        className="relative w-full max-w-140 max-[1025px]:max-w-[92vw] max-md:max-w-full"
+        className="relative w-full max-w-140 max-lg:max-w-[92vw] max-md:max-w-full"
         ref={stageRef}
       >
         <svg
@@ -551,7 +554,7 @@ const ElasticAccordion: React.FC<ElasticAccordionProps> = ({
                 </div>
 
                 <button
-                  className="flx_head relative z-4 flex w-full min-h-14 cursor-pointer items-center gap-3.5 border-0 bg-transparent py-4 px-5.5 text-left box-border font-[inherit] outline-none max-[1025px]:min-h-16 max-[1025px]:gap-4 max-[1025px]:py-[2vw] max-[1025px]:px-[2.5vw] max-md:min-h-14 max-md:gap-3 max-md:py-[4vw] max-md:px-[5vw] focus-visible:outline-2 focus-visible:outline-[#fd551d] focus-visible:outline-offset-2 focus-visible:rounded-full"
+                  className="flx_head relative z-4 flex w-full min-h-14 cursor-pointer items-center gap-3.5 border-0 bg-transparent py-4 px-5.5 text-left box-border font-[inherit] outline-none max-lg:min-h-16 max-lg:gap-4 max-lg:py-[2vw] max-lg:px-[2.5vw] max-md:min-h-14 max-md:gap-3 max-md:py-[4vw] max-md:px-[5vw] focus-visible:outline-2 focus-visible:outline-[#fd551d] focus-visible:outline-offset-2 focus-visible:rounded-full"
                   style={{ color: textColor }}
                   data-fx-head
                   id={tid}
@@ -560,19 +563,19 @@ const ElasticAccordion: React.FC<ElasticAccordionProps> = ({
                   type="button"
                 >
                   <span
-                    className="block max-md:hidden shrink-0 min-w-6 text-xs max-[1025px]:text-[1.4vw] font-medium"
+                    className="block max-md:hidden shrink-0 min-w-6 text-xs max-lg:text-[1.4vw] font-medium"
                     style={{ color: textColor, opacity: 0.55 }}
                   >
                     {String(i + 1).padStart(2, "0")}
                   </span>
                   <span
-                    className="flex-1 text-base max-[1025px]:text-[2.5vw]  max-md:text-[4.2vw] leading-snug tracking-tight"
+                    className="flex-1 text-base max-lg:text-[2.5vw]  max-md:text-[4.2vw] leading-snug tracking-tight"
                     style={{ color: textColor, fontWeight: 380 }}
                   >
                     {item.question}
                   </span>
                   <svg
-                    className="flx_mark size-4 max-[1025px]:size-5 max-md:size-5 shrink-0 origin-center will-change-transform"
+                    className="flx_mark size-4 max-lg:size-5 max-md:size-5 shrink-0 origin-center will-change-transform"
                     style={{ color: textColor, opacity: 0.78 }}
                     data-fx-mark
                     viewBox="0 0 16 16"
@@ -613,9 +616,9 @@ const ElasticAccordion: React.FC<ElasticAccordionProps> = ({
                   aria-labelledby={tid}
                   aria-hidden="true"
                 >
-                  <div className="flx_drawer_pad mt-2.5 px-5.5 py-5 max-[1025px]:px-[6vw] max-[1025px]:py-[2.2vw] max-md:px-[5vw] max-md:py-[4.5vw]">
+                  <div className="flx_drawer_pad mt-2.5 px-5.5 py-5 max-lg:px-[6vw] max-lg:py-[2.2vw] max-md:px-[5vw] max-md:py-[4.5vw]">
                     <p
-                      className="flx_body m-0 text-sm max-[1025px]:text-[2vw] max-md:text-[3.8vw] leading-relaxed tracking-tight"
+                      className="flx_body m-0 text-sm max-lg:text-[2vw] max-md:text-[3.8vw] leading-relaxed tracking-tight"
                       style={{ color: textColor, opacity: 0.78, fontWeight: 380 }}
                       data-fx-body
                       aria-label={item.answer}

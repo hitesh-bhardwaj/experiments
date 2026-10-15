@@ -13,7 +13,12 @@ export default function DemoContent({ registry }: { registry: any }) {
     >
       {({ effect }) => (
         <>
-          <DemoHeader />
+          <DemoHeader
+            reducedMotionNote={{
+              title: "The pixels keep shifting.",
+              body: "Pixelated Image Effect changes pixelation based on cursor position in real time. Since the transition is driven entirely by motion, reduced motion can't be applied here.",
+            }}
+          />
           {effect}
         </>
       )}

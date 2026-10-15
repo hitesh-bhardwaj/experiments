@@ -312,10 +312,10 @@ const Awards = () => {
       className="relative w-screen bg-[#070707] text-white py-[7vw]"
       id="awards"
     >
-      <div className="w-screen flex items-center px-[4vw] gap-[4vw]  max-[1025px]:px-[5vw]">
+      <div className="w-screen flex items-center px-[4vw] gap-[4vw]  max-lg:px-[5vw]">
         <div className="w-full">
           <OverflowTextReveal stagger={0.015}>
-            <h2 className="text-[5.5vw] leading-[1.2]  mb-[4vw] max-[1025px]:text-[7vw] max-md:text-[9vw]">
+            <h2 className="text-[5.5vw] leading-[1.2]  mb-[4vw] max-lg:text-[7vw] max-md:text-[9vw]">
               Awards and Industry
               <br />
               Recognition
@@ -344,11 +344,11 @@ const Awards = () => {
                 >
                   <OverflowTextReveal splitBy="lines">
 
-                  <h3 className="text-[1.8vw] font-normal max-[1025px]:text-[3.4vw] max-md:text-[5.5vw]">{item.title}</h3>
+                  <h3 className="text-[1.8vw] font-normal max-lg:text-[3.4vw] max-md:text-[5.5vw]">{item.title}</h3>
                   </OverflowTextReveal>
                   <OverflowTextReveal splitBy="lines">
 
-                  <p className="text-[1.25vw] tracking-wide text-white/30 mt-3 max-[1025px]:text-[2.2vw] max-md:text-[3.6vw]">
+                  <p className="text-[1.25vw] tracking-wide text-white/30 mt-3 max-lg:text-[2.2vw] max-md:text-[3.6vw]">
                     {item.meta}
                   </p>
                   </OverflowTextReveal>
@@ -372,7 +372,7 @@ const Awards = () => {
             hidden and the list takes the full row instead. */}
         <div
           ref={imageContainerRef}
-          className="w-[40vw] flex justify-center absolute right-[10%] pointer-events-none opacity-0 max-[1025px]:hidden image-container"
+          className="w-[40vw] flex justify-center absolute right-[10%] pointer-events-none opacity-0 max-lg:hidden image-container"
         >
           <div
             ref={containerRef}

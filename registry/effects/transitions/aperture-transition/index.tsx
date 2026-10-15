@@ -1,5 +1,4 @@
 // Built using Hyperiux Vault: https://vault.hyperiux.com
-
 'use client'
 import { useSyncExternalStore } from "react";
 
@@ -30,10 +29,22 @@ function isCompactViewport() {
   return window.innerWidth < 1025
 }
 
-function clipInset(offset: number, direction: 'top' | 'bottom') {
-  return direction === 'top'
-    ? `inset(0% 0% ${offset}vh 0%)`
-    : `inset(${offset}vh 0% 0% 0%)`
+type RevealDirection = 'top' | 'bottom' | 'left' | 'right'
+
+// The inset is eaten from the side the reveal travels away from, so the
+// unit follows the axis: vh while the edge moves vertically, vw while it
+// moves horizontally.
+function clipInset(offset: number, direction: RevealDirection) {
+  switch (direction) {
+    case 'top':
+      return `inset(0% 0% ${offset}vh 0%)`
+    case 'left':
+      return `inset(0% ${offset}vw 0% 0%)`
+    case 'right':
+      return `inset(0% 0% 0% ${offset}vw)`
+    default:
+      return `inset(${offset}vh 0% 0% 0%)`
+  }
 }
 
 interface ApertureTransitionProps {
@@ -43,7 +54,7 @@ interface ApertureTransitionProps {
 
   duration?: number
 
-  revealDirection?: 'top' | 'bottom'
+  revealDirection?: RevealDirection
 
   bgColor?: string
 

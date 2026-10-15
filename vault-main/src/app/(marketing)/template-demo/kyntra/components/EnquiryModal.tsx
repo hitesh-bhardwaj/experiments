@@ -149,7 +149,7 @@ const EnquiryModal: React.FC<EnquiryModalProps> = ({
 
   return createPortal(
     <div
-      className="kyntra-page fixed inset-0 z-100 flex items-center justify-center max-[1025px]:py-[10vw]"
+      className="kyntra-page fixed inset-0 z-100 flex items-center justify-center max-lg:py-[10vw]"
       role="dialog"
       aria-modal="true"
       aria-label={ariaLabel}
@@ -167,25 +167,25 @@ const EnquiryModal: React.FC<EnquiryModalProps> = ({
       <div
         ref={panelRef}
         style={{ opacity: 0, transform: `scale(${PANEL_CLOSED_SCALE})` }}
-        className="relative mt-[5vw] pt-2 h-[75vh] w-[90vw] overflow-hidden rounded-[1.6vw] border border-[#88888880] px-[3vw] bg-[#0b1020]/10 backdrop-blur-2xl will-change-[transform,opacity] max-[1025px]:mt-[10vw] max-[1025px]:max-w-[90vw] max-[1025px]:rounded-[5vw] max-md:max-w-[92vw]"
+        className="relative mt-[5vw] pt-2 h-[75vh] w-[90vw] overflow-hidden rounded-[1.6vw] border border-[#88888880] px-[3vw] bg-[#0b1020]/10 backdrop-blur-2xl will-change-[transform,opacity] max-lg:mt-[10vw] max-lg:max-w-[90vw] max-lg:rounded-[5vw] max-md:max-w-[92vw]"
       >
         <div
           data-lenis-prevent
-          className="h-full w-full overflow-y-auto overflow-x-hidden p-[2vw] max-[1025px]:p-[7vw]"
+          className="h-full w-full overflow-y-auto overflow-x-hidden p-[2vw] max-lg:p-[7vw]"
         >
           <button
             type="button"
             aria-label="Close enquiry form"
             onClick={onClose}
-            className="sticky left-full top-0 z-20 flex h-[3vw] w-[3vw] shrink-0 items-center justify-center rounded-full border border-white/30 bg-white/10 text-white backdrop-blur-md transition-all duration-300 hover:rotate-90  max-[1025px]:h-[10vw] max-[1025px]:w-[10vw]"
+            className="sticky left-full top-0 z-20 flex h-[3vw] w-[3vw] shrink-0 items-center justify-center rounded-full border border-white/30 bg-white/10 text-white backdrop-blur-md transition-all duration-300 hover:rotate-90  max-lg:h-[10vw] max-lg:w-[10vw]"
           >
             <X
-              className="h-[1.3vw] w-[1.3vw] max-[1025px]:h-[4.5vw] max-[1025px]:w-[4.5vw]"
+              className="h-[1.3vw] w-[1.3vw] max-lg:h-[4.5vw] max-lg:w-[4.5vw]"
               strokeWidth={1.5}
             />
           </button>
 
-          <div className="  max-[1025px]:mt-[-5vw]">
+          <div className="  max-lg:mt-[-5vw]">
             <AnimatedForm />
           </div>
         </div>

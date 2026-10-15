@@ -83,11 +83,148 @@
       "description": "Duration of each image distortion transition.",
       "remixer": {
         "control": "range",
-        "group": "shader",
-        "groupTitle": "Shader",
+        "group": "motion",
+        "groupTitle": "Motion",
         "min": 0.2,
         "max": 2.5,
         "step": 0.05
+      }
+    },
+    {
+      "name": "transitionEase",
+      "type": "string",
+      "default": "power3.inOut",
+      "description": "GSAP ease used by each image distortion transition.",
+      "remixer": {
+        "control": "select",
+        "group": "motion",
+        "groupTitle": "Motion",
+        "options": [
+          {
+            "value": "none",
+            "label": "Linear (none)"
+          },
+          {
+            "value": "power1.in",
+            "label": "Power 1 In"
+          },
+          {
+            "value": "power1.out",
+            "label": "Power 1 Out"
+          },
+          {
+            "value": "power1.inOut",
+            "label": "Power 1 In Out"
+          },
+          {
+            "value": "power2.in",
+            "label": "Power 2 In"
+          },
+          {
+            "value": "power2.out",
+            "label": "Power 2 Out"
+          },
+          {
+            "value": "power2.inOut",
+            "label": "Power 2 In Out"
+          },
+          {
+            "value": "power3.in",
+            "label": "Power 3 In"
+          },
+          {
+            "value": "power3.out",
+            "label": "Power 3 Out"
+          },
+          {
+            "value": "power3.inOut",
+            "label": "Power 3 In Out"
+          },
+          {
+            "value": "power4.in",
+            "label": "Power 4 In"
+          },
+          {
+            "value": "power4.out",
+            "label": "Power 4 Out"
+          },
+          {
+            "value": "power4.inOut",
+            "label": "Power 4 In Out"
+          },
+          {
+            "value": "back.in",
+            "label": "Back In"
+          },
+          {
+            "value": "back.out",
+            "label": "Back Out"
+          },
+          {
+            "value": "back.inOut",
+            "label": "Back In Out"
+          },
+          {
+            "value": "bounce.in",
+            "label": "Bounce In"
+          },
+          {
+            "value": "bounce.out",
+            "label": "Bounce Out"
+          },
+          {
+            "value": "bounce.inOut",
+            "label": "Bounce In Out"
+          },
+          {
+            "value": "circ.in",
+            "label": "Circ In"
+          },
+          {
+            "value": "circ.out",
+            "label": "Circ Out"
+          },
+          {
+            "value": "circ.inOut",
+            "label": "Circ In Out"
+          },
+          {
+            "value": "elastic.in",
+            "label": "Elastic In"
+          },
+          {
+            "value": "elastic.out",
+            "label": "Elastic Out"
+          },
+          {
+            "value": "elastic.inOut",
+            "label": "Elastic In Out"
+          },
+          {
+            "value": "expo.in",
+            "label": "Expo In"
+          },
+          {
+            "value": "expo.out",
+            "label": "Expo Out"
+          },
+          {
+            "value": "expo.inOut",
+            "label": "Expo In Out"
+          },
+          {
+            "value": "sine.in",
+            "label": "Sine In"
+          },
+          {
+            "value": "sine.out",
+            "label": "Sine Out"
+          },
+          {
+            "value": "sine.inOut",
+            "label": "Sine In Out"
+          }
+        ]
       }
     }
   ],
@@ -106,10 +243,6 @@
     {
       "path": "index.tsx",
       "target": "src/components/effects/scroll-distortion/index.tsx"
-    },
-    {
-      "path": "createSuspendedRaf.ts",
-      "target": "src/components/effects/scroll-distortion/createSuspendedRaf.ts"
     }
   ]
 }

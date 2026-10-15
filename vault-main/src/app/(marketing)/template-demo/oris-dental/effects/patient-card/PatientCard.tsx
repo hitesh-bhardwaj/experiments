@@ -111,10 +111,10 @@ export default function PatientCard({
     return (
         <div
             ref={cardRef}
-            className={`w-[62%] max-[1025px]:w-full h-fit rounded-[2vw] bg-white p-[2vw] max-[1025px]:p-5 flex flex-col max-[1025px]:flex-row! justify-between border border-white/60 relative z-10 will-change-transform ${className}`}
+            className={`w-[62%] max-lg:w-full h-fit rounded-[2vw] bg-white p-[2vw] max-lg:p-5 flex flex-col max-lg:flex-row! justify-between border border-white/60 relative z-10 will-change-transform ${className}`}
         >
             {/* Top Text Content */}
-            <div className='mb-[2vw] max-[1025px]:mb-3'>
+            <div className='mb-[2vw] max-lg:mb-3'>
                 <h3 className="text-oris-secondary oris-text48 font-medium!  tracking-tight">
                     {title}
                 </h3>
@@ -124,9 +124,9 @@ export default function PatientCard({
             </div>
 
             {/* Bottom Content with Avatar Stack & Right Text */}
-            <div className="flex items-center justify-between max-[1025px]:justify-end max-[1025px]:w-fit w-full">
+            <div className="flex items-center justify-between max-lg:justify-end max-lg:w-fit w-full">
                 {/* Overlapping Avatar Stack */}
-                <div className="flex items-center space-x-[-0.8vw] max-[1025px]:space-x-[-8px]">
+                <div className="flex items-center space-x-[-0.8vw] max-lg:space-x-[-8px]">
                     {avatars.map((item, idx) => {
                         const name = typeof item === 'string' ? `Patient ${idx + 1}` : item.name
                         const src = typeof item === 'string' ? item : item.src
@@ -151,13 +151,13 @@ export default function PatientCard({
                                     // in next.config ahead of time, which a
                                     // reusable effect component can't assume.
                                     unoptimized
-                                    className="w-[3.2vw] h-[3.2vw] max-[1025px]:w-10 max-[1025px]:h-10 rounded-full object-cover border-[0.18vw] max-[1025px]:border-2 border-white shadow-sm select-none relative transition-all duration-300 ease-out group-hover/avatar:scale-115 group-hover/avatar:shadow-md cursor-pointer"
+                                    className="w-[3.2vw] h-[3.2vw] max-lg:w-10 max-lg:h-10 rounded-full object-cover border-[0.18vw] max-lg:border-2 border-white shadow-sm select-none relative transition-all duration-300 ease-out group-hover/avatar:scale-115 group-hover/avatar:shadow-md cursor-pointer"
                                 />
 
                                 {/* Bottom Tooltip */}
-                                <div className="absolute top-full mt-2 left-1/2 -translate-x-1/2 opacity-0 -translate-y-1 group-hover/avatar:opacity-100 group-hover/avatar:translate-y-0 pointer-events-none transition-all duration-200 ease-out z-40 whitespace-nowrap bg-[#13314a] text-white text-[0.7vw] max-[1025px]:text-[11px] max-[1025px]:text-[10px] font-medium py-1 px-2.5 rounded-md shadow-lg shadow-black/20 flex flex-col items-center">
+                                <div className="absolute top-full mt-2 left-1/2 -translate-x-1/2 opacity-0 -translate-y-1 group-hover/avatar:opacity-100 group-hover/avatar:translate-y-0 pointer-events-none transition-all duration-200 ease-out z-40 whitespace-nowrap bg-[#13314a] text-white text-[0.7vw] max-lg:text-[11px] max-lg:text-[10px] font-medium py-1 px-2.5 rounded-md shadow-lg shadow-black/20 flex flex-col items-center">
                                     {/* Tooltip arrow pointing up */}
-                                    <div className="absolute top-[-.2vw] max-[1025px]:-top-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-[#13314a] rotate-45" />
+                                    <div className="absolute top-[-.2vw] max-lg:-top-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-[#13314a] rotate-45" />
                                     <span>{name}</span>
                                 </div>
                             </div>
@@ -166,7 +166,7 @@ export default function PatientCard({
                 </div>
 
                 {/* Right Text */}
-                <div className=" max-[1025px]:hidden  text-black/30 text-[1.05vw] max-[1025px]:text-xs font-normal">
+                <div className=" max-lg:hidden  text-black/30 text-[1.05vw] max-lg:text-xs font-normal">
                    Trusted by 5,000+<br/> happy patients
                 </div>
             </div>

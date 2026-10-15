@@ -193,7 +193,7 @@ const Portfolio = () => {
 
   return (
     <section
-      className={`relative w-screen h-[360vh] text-white ${prefersReducedMotion ? "pt-[8vw]" : "pt-[8vw] max-[1025px]:pt-[30vw]"}`}
+      className={`relative w-screen h-[360vh] text-white ${prefersReducedMotion ? "pt-[8vw]" : "pt-[8vw] max-lg:pt-[30vw]"}`}
       id="portfolio"
     >
       <div
@@ -201,15 +201,15 @@ const Portfolio = () => {
         className="w-full h-[50vh]  absolute top-0 left-0 z-2 bg-linear-to-r from-[#F16B0D] to-[#E61416] circle-clip will-change-[clip-path]"
       />
 
-      <div className="w-screen h-screen sticky top-0 z-3 flex flex-col items-center justify-center px-[4vw] gap-[5vw] overflow-hidden bg-linear-to-r from-[#F16B0D] to-[#E61416] max-md:gap-[15vw] max-[1025px]:gap-12 max-[1025px]:px-[5vw]">
+      <div className="w-screen h-screen sticky top-0 z-3 flex flex-col items-center justify-center px-[4vw] gap-[5vw] overflow-hidden bg-linear-to-r from-[#F16B0D] to-[#E61416] max-md:gap-[15vw] max-lg:gap-12 max-lg:px-[5vw]">
         <OverflowTextReveal stagger={0.015}>
-          <h2 className="text-[5.5vw] text-center max-[1025px]:text-[6.5vw] max-md:text-[9vw]">
+          <h2 className="text-[5.5vw] text-center max-lg:text-[6.5vw] max-md:text-[9vw]">
             Award Winning Work
           </h2>
         </OverflowTextReveal>
 
-        <div className="w-full flex items-center gap-[4vw] max-[1025px]:flex-col max-md:gap-[15vw] max-[1025px]:items-start max-[1025px]:gap-16">
-          <div className="w-[32%] relative max-md:w-full max-[1025px]:w-[50%]">
+        <div className="w-full flex items-center gap-[4vw] max-lg:flex-col max-md:gap-[15vw] max-lg:items-start max-lg:gap-16">
+          <div className="w-[32%] relative max-md:w-full max-lg:w-[50%]">
             {/* top stays 3.5vw (= ROW_HEIGHT_VW / 2) at every breakpoint - it
                             only depends on the first row's own height, which never
                             changes. Height does need to vary per breakpoint though: it has
@@ -223,13 +223,13 @@ const Portfolio = () => {
                             literal strings in source for its scanner to generate CSS for
                             them - update these by hand if ROW_HEIGHT_VW, item count, or the
                             row gaps below ever change. */}
-            <div className="absolute left-1 bg-white/20 top-[2.5vw] max-[1025px]:top-[1vw] h-[21vw] max-[1025px]:h-[33vw] max-md:h-[62vw] w-px " />
+            <div className="absolute left-1 bg-white/20 top-[2.5vw] max-lg:top-[1vw] h-[21vw] max-lg:h-[33vw] max-md:h-[62vw] w-px " />
             <div
               ref={lineFillRef}
-              className="absolute left-1 bg-white origin-top top-[2.5vw] max-[1025px]:top-[1vw] h-[21vw] max-[1025px]:h-[33vw] max-md:h-[62vw] w-px "
+              className="absolute left-1 bg-white origin-top top-[2.5vw] max-lg:top-[1vw] h-[21vw] max-lg:h-[33vw] max-md:h-[62vw] w-px "
             />
 
-            <div className="flex flex-col max-[1025px]:gap-[4vw] max-md:gap-[14vw]">
+            <div className="flex flex-col max-lg:gap-[4vw] max-md:gap-[14vw]">
               {PORTFOLIO_ITEMS.map((item, i) => (
                 <div
                   key={item.name}
@@ -240,13 +240,13 @@ const Portfolio = () => {
                     ref={(el) => {
                       dotRefs.current[i] = el;
                     }}
-                    className="w-[10px] h-[10px] mt-[-1.5vw] bg-[#F06A0E] rounded-full border shrink-0 max-md:mt-[-7vw] max-[1025px]:mt-[-4vw]"
+                    className="w-[10px] h-[10px] mt-[-1.5vw] bg-[#F06A0E] rounded-full border shrink-0 max-md:mt-[-7vw] max-lg:mt-[-4vw]"
                   />
                   <div>
-                    <h3 className="text-[1.5vw] font-normal max-[1025px]:text-[3.5vw] max-md:text-[5.5vw]">
+                    <h3 className="text-[1.5vw] font-normal max-lg:text-[3.5vw] max-md:text-[5.5vw]">
                       {item.name}
                     </h3>
-                    <p className="text-[1vw] max-[1025px]:text-[2.5vw] max-md:text-[4.2vw]">
+                    <p className="text-[1vw] max-lg:text-[2.5vw] max-md:text-[4.2vw]">
                       {item.tags.join("  •  ")}
                     </p>
                   </div>
@@ -255,14 +255,14 @@ const Portfolio = () => {
             </div>
           </div>
 
-          <div className="w-full h-[38vw] relative rounded-xl overflow-hidden max-[1025px]:w-full max-[1025px]:h-[52vw] max-[1025px]:rounded-lg  ">
+          <div className="w-full h-[38vw] relative rounded-xl overflow-hidden max-lg:w-full max-lg:h-[52vw] max-lg:rounded-lg  ">
             {PORTFOLIO_ITEMS.map((item, i) => (
               <div
                 key={item.name}
                 ref={(el) => {
                   cardRefs.current[i] = el;
                 }}
-                className="absolute inset-0 bg-[#F4EFE9] flex items-center justify-center  rounded-xl overflow-hidden max-[1025px]:rounded-lg"
+                className="absolute inset-0 bg-[#F4EFE9] flex items-center justify-center  rounded-xl overflow-hidden max-lg:rounded-lg"
                 style={{ zIndex: i + 1 }}
               >
                 <Image
@@ -277,8 +277,8 @@ const Portfolio = () => {
           </div>
         </div>
       </div>
-      <div className="absolute w-screen h-[60vh] bottom-[-10%] left-0 overflow-hidden max-[1025px]:bottom-[-13%]">
-        <div className="w-[115%] h-[40vh]  absolute bottom-[35%] left-[-7.5%] z-2 bg-linear-to-r from-[#F16B0D] to-[#E61416] blur-2xl max-[1025px]:bottom-[50%] max-[1025px]:w-[120%] max-[1025px]:left-[-10%] max-[1025px]:blur-lg" />
+      <div className="absolute w-screen h-[60vh] bottom-[-10%] left-0 overflow-hidden max-lg:bottom-[-13%]">
+        <div className="w-[115%] h-[40vh]  absolute bottom-[35%] left-[-7.5%] z-2 bg-linear-to-r from-[#F16B0D] to-[#E61416] blur-2xl max-lg:bottom-[50%] max-lg:w-[120%] max-lg:left-[-10%] max-lg:blur-lg" />
       </div>
     </section>
   );

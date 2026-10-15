@@ -132,10 +132,10 @@ export default function DentalTreatments({
       className="w-full bg-white h-fit relative z-10 pt-[6vw] pb-[2vw] max-md:pb-0"
     >
       {/* Header Section */}
-      <div className="oris-paddx mb-[7vw] max-[1025px]:mb-[10vw] max-md:mb-[12vw]">
+      <div className="oris-paddx mb-[7vw] max-lg:mb-[10vw] max-md:mb-[12vw]">
         <SplitTextLines
           as="h2"
-          className="text-[4.2vw] max-[1025px]:text-[6vw] max-md:text-[7.5vw]"
+          className="text-[4.2vw] max-lg:text-[6vw] max-md:text-[7.5vw]"
         >
           Dental Care Treatments
         </SplitTextLines>
@@ -150,8 +150,8 @@ export default function DentalTreatments({
         style={{ height: `${cards.length * 50}svh` }}
         className="w-full motion-reduce:h-auto"
       >
-        <div className="w-full oris-paddx sticky top-[5vw] max-[1025px]:top-0 h-screen max-[1025px]:h-[100svh] max-md:top-[13%] max-[1025px]:flex max-[1025px]:items-center max-md:items-start max-[1025px]:justify-center motion-reduce:static motion-reduce:h-auto">
-          <div className="relative w-full h-full max-[1025px]:h-[74svh] max-md:h-[76svh] motion-reduce:h-auto">
+        <div className="w-full oris-paddx sticky top-[5vw] max-lg:top-0 h-screen max-lg:h-[100svh] max-md:top-[13%] max-lg:flex max-lg:items-center max-md:items-start max-lg:justify-center motion-reduce:static motion-reduce:h-auto">
+          <div className="relative w-full h-full max-lg:h-[74svh] max-md:h-[76svh] motion-reduce:h-auto">
             {cards.map((item, index) => (
               <div
                 key={item.id}
@@ -176,22 +176,22 @@ export default function DentalTreatments({
                 className={`absolute inset-x-0 ${
                   index === 0
                     ? "top-0"
-                    : "max-[1025px]:top-[var(--top-tablet)] max-md:top-[var(--top-mobile)] translate-y-[110vh]"
-                } motion-reduce:static motion-reduce:translate-y-0 motion-reduce:mb-[25vw] h-[35vw] max-[1025px]:h-full rounded-[2.2vw] max-[1025px]:rounded-[24px] py-[1.4vw] pb-[2.8vw] px-[2.8vw] max-[1025px]:p-[4.5vw] max-md:p-[5vw] flex flex-row max-[1025px]:flex-col items-center max-[1025px]:items-start justify-between gap-[3vw] max-[1025px]:gap-[2.5vw] border border-white/10`}
+                    : "max-lg:top-[var(--top-tablet)] max-md:top-[var(--top-mobile)] translate-y-[110vh]"
+                } motion-reduce:static motion-reduce:translate-y-0 motion-reduce:mb-[25vw] h-[35vw] max-lg:h-full rounded-[2.2vw] max-lg:rounded-[24px] py-[1.4vw] pb-[2.8vw] px-[2.8vw] max-lg:p-[4.5vw] max-md:p-[5vw] flex flex-row max-lg:flex-col items-center max-lg:items-start justify-between gap-[3vw] max-lg:gap-[2.5vw] border border-white/10`}
               >
                 {/* Left: Title, Tags & Description */}
-                <div className="flex flex-col justify-between h-full flex-1 max-[1025px]:h-auto max-[1025px]:gap-[2.5vw]">
+                <div className="flex flex-col justify-between h-full flex-1 max-lg:h-auto max-lg:gap-[2.5vw]">
                   {/* Top: Title & Tags */}
                   <div>
-                    <h3 className="text-white w-full text-[3.8vw] max-[1025px]:text-[5.5vw] max-md:text-[7vw] leading-[1.15]! whitespace-pre-line">
+                    <h3 className="text-white w-full text-[3.8vw] max-lg:text-[5.5vw] max-md:text-[7vw] leading-[1.15]! whitespace-pre-line">
                       {item.title}
                     </h3>
-                    <div className="flex flex-wrap items-center gap-[0.6vw] max-[1025px]:gap-[1.5vw] text-white oris-text22 mt-[1.2vw] max-[1025px]:mt-[2vw]">
+                    <div className="flex flex-wrap items-center gap-[0.6vw] max-lg:gap-[1.5vw] text-white oris-text22 mt-[1.2vw] max-lg:mt-[2vw]">
                       {item.tags.map((tag, tagIdx) => (
                         <React.Fragment key={tagIdx}>
                           <span>{tag}</span>
                           {tagIdx < item.tags.length - 1 && (
-                            <span className="w-[0.3vw] h-[0.3vw] max-[1025px]:w-[1vw] max-[1025px]:h-[1vw] rounded-full bg-white inline-block" />
+                            <span className="w-[0.3vw] h-[0.3vw] max-lg:w-[1vw] max-lg:h-[1vw] rounded-full bg-white inline-block" />
                           )}
                         </React.Fragment>
                       ))}
@@ -200,7 +200,7 @@ export default function DentalTreatments({
 
                   {/* Bottom: Description */}
                   <div>
-                    <p className="text-white oris-text32 max-w-[55vw] pb-[3vw] max-[1025px]:pb-0 max-[1025px]:max-w-full">
+                    <p className="text-white oris-text32 max-w-[55vw] pb-[3vw] max-lg:pb-0 max-lg:max-w-full">
                       {item.description}
                     </p>
                   </div>
@@ -208,7 +208,7 @@ export default function DentalTreatments({
 
                 {/* Right: Image Card */}
                 {item.image && (
-                  <div className="relative w-[24vw] h-[26vw] max-[1025px]:w-full max-[1025px]:h-[30svh] max-md:h-[30svh] rounded-[1.6vw] max-[1025px]:rounded-xl overflow-hidden shrink-0 shadow-lg">
+                  <div className="relative w-[24vw] h-[26vw] max-lg:w-full max-lg:h-[30svh] max-md:h-[30svh] rounded-[1.6vw] max-lg:rounded-xl overflow-hidden shrink-0 shadow-lg">
                     <Image
                       src={item.image}
                       alt={item.title}

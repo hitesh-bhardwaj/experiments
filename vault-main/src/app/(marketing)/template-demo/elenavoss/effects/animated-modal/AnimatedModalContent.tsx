@@ -226,7 +226,7 @@ const AnimatedModalContent = ({
             min-w-10 min-h-10
 
             top-[1.5vw] right-[1.5vw] w-[3vw] h-[3vw]
-            max-[1025px]:top-8 max-[1025px]:right-8 max-[1025px]:w-14 max-[1025px]:h-14
+            max-lg:top-8 max-lg:right-8 max-lg:w-14 max-lg:h-14
             max-md:top-4 max-md:right-4 max-md:w-10 max-md:h-10
 
             ${closeButtonClassName}
@@ -255,7 +255,7 @@ const AnimatedModalContent = ({
           will-change-[transform,opacity]
           px-0
 
-          max-[1025px]:px-0
+          max-lg:px-0
           max-md:justify-center max-md:px-0
 
           ${contentClassName}

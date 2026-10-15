@@ -13,7 +13,12 @@ export default function DemoContent({ registry }: { registry: any }) {
     >
       {({ effect }) => (
         <>
-          <DemoHeader />
+          <DemoHeader
+            reducedMotionNote={{
+              title: "The arrows keep turning.",
+              body: "Each arrow reorients toward your cursor continuously. That motion is the entire effect, so it can't be scaled back for reduced motion preferences.",
+            }}
+          />
           {effect}
         </>
       )}

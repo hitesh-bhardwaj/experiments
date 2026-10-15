@@ -13,7 +13,12 @@ export default function DemoContent({ registry }: { registry: any }) {
     >
       {({ effect, values }: any) => (
         <>
-          <DemoHeader />
+          <DemoHeader
+            reducedMotionNote={{
+              title: "The rope keeps swinging.",
+              body: "Rope Cursor is a live trail of your cursor's movement. The motion is the entire effect, so it can't be swapped for a reduced motion alternative.",
+            }}
+          />
           <div className="h-screen w-full bg-[#F1EADE] overflow-hidden" style={{ color: values.ropeColor }}>
             {effect}
             <div className="flex items-center max-md:hidden justify-center flex-col h-full pointer-events-none">

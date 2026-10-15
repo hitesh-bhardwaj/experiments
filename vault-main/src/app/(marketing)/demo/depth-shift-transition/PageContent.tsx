@@ -16,11 +16,11 @@ export default function PageContent() {
 
       <div className="relative z-10 mx-auto max-w-5xl text-center text-white">
         <SplitLine>
-          <h1 className="text-[7vw] max-md:text-[9vw]">Depth Shift Transition</h1>
+          <h1 className="text-[5vw] max-md:text-[9vw]">Depth Shift Transition</h1>
         </SplitLine>
 
         <SplitLine>
-          <p className="mt-2 text-[1.4vw] max-[1025px]:text-[3vw] max-md:text-[4.5vw]">
+          <p className="mt-2 text-[1.4vw] max-lg:text-[3vw] max-md:text-[4.5vw]">
             Click on the button to see the transition
           </p>
         </SplitLine>
@@ -28,7 +28,7 @@ export default function PageContent() {
         <FadeUp className="mt-12" delay={1}>
           <CharStaggerPrimaryButton
             bgClassName="bg-[#111111] rounded-md block"
-            textClassName="font-medium text-[1.3vw] max-[1025px]:text-[2.5vw] max-sm:text-[4vw]"
+            textClassName="font-medium text-[1.3vw] max-lg:text-[2.5vw] max-sm:text-[4vw]"
             btnClassName="h-[3.5vw]"
             text={"Click here"}
             href="/demo/depth-shift-transition/page2"

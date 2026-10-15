@@ -25,7 +25,12 @@ export default function DemoContent({ registry }: { registry: any }) {
       {({ effect }) => (
         <>
           <LenisSmoothScroll />
-          <DemoHeader />
+          <DemoHeader
+            reducedMotionNote={{
+              title: "This effect can't be reduced.",
+              body: "Reduced motion is enabled, but this effect relies on a continuous scroll-driven transition from pixelated to sharp, and can't be simplified to a fade without losing the effect entirely.",
+            }}
+          />
           <main className="h-full bg-neutral-950 text-white">
             <section className="flex min-h-[40vh] max-sm:h-[30vh] items-center justify-center px-6">
               <div className="w-fit text-center space-y-[1vw]">
@@ -45,6 +50,8 @@ export default function DemoContent({ registry }: { registry: any }) {
             <section className="flex min-h-[50vh] max-sm:min-h-[70vh] items-center justify-center px-6 py-20">
               {effect}
             </section>
+
+            <section aria-hidden="true" className="h-[70vh]" />
           </main>
         </>
       )}

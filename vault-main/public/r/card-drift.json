@@ -126,11 +126,6 @@
       "path": "index.tsx",
       "type": "registry:component",
       "target": "src/components/effects/card-drift/index.tsx"
-    },
-    {
-      "path": "CardDriftComp.tsx",
-      "type": "registry:component",
-      "target": "src/components/effects/card-drift/CardDriftComp.tsx"
     }
   ]
 }

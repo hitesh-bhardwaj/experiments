@@ -70,7 +70,7 @@
       }
     },
     {
-      "name": "speed",
+      "name": "horizontalOffset",
       "type": "number",
       "default": 20,
       "description": "Starting horizontal offset in pixels.",
@@ -133,8 +133,9 @@
   "files": [
     {
       "path": "index.tsx",
-      "type": "registry:component",
       "target": "src/components/effects/slide-text-reveal/index.tsx"
     }
-  ]
+  ],
+  "importPath": "@/components/effects/slide-text-reveal",
+  "target": "src/components/effects/slide-text-reveal"
 }

@@ -74,6 +74,14 @@
           {
             "value": "top",
             "label": "Top"
+          },
+          {
+            "value": "left",
+            "label": "Left"
+          },
+          {
+            "value": "right",
+            "label": "Right"
           }
         ]
       }

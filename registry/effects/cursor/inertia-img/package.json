@@ -5,7 +5,6 @@
   "main": "index.tsx",
   "files": [
     "index.tsx",
-    "InertiaImgComp.tsx",
     "registry.json"
   ],
   "keywords": [

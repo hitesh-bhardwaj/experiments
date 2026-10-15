@@ -13,7 +13,12 @@ export default function DemoContent({ registry }: { registry: any }) {
     >
       {({ effect }) => (
         <>
-          <DemoHeader />
+          <DemoHeader
+            reducedMotionNote={{
+              title: "The grid keeps lifting.",
+              body: "Grid Lift raises the mask grid wherever your cursor drifts, in real time. Since the motion is the entire effect, reduced motion can't be applied here.",
+            }}
+          />
           {effect}
         </>
       )}

@@ -5,7 +5,6 @@
   "main": "index.tsx",
   "files": [
     "index.tsx",
-    "WebGLSliderComp.tsx",
     "registry.json"
   ],
   "keywords": [
@@ -13,8 +12,8 @@
     "hyperiux"
   ],
   "dependencies": {
-    "three": "*",
     "gsap": "*",
-    "lenis": "*"
+    "lenis": "*",
+    "three": "*"
   }
 }

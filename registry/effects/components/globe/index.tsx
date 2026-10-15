@@ -1,3 +1,4 @@
+// Built using Hyperiux Vault: https://vault.hyperiux.com
 "use client";
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import gsap from "gsap";
@@ -866,13 +867,13 @@ export default function Globe({ autoConnect = false, autoRotate = true, rotation
     const activeStore = STORES[activeIndex];
     return (<section ref={sectionRef} className={`relative flex h-screen w-full flex-col overflow-hidden bg-[#101010] px-10 pb-10 pt-28 text-[#fffaf2] max-md:gap-4 max-md:px-5 max-md:pb-5 max-md:pt-24 ${className}`}>
       
-      <div ref={stageRef} className="pointer-events-none absolute inset-0 bottom-23 flex items-center justify-center max-[1025px]:relative max-[1025px]:inset-auto max-[1025px]:order-2 max-[1025px]:aspect-square max-[1025px]:w-full">
+      <div ref={stageRef} className="pointer-events-none absolute inset-0 bottom-23 flex items-center justify-center max-lg:relative max-lg:inset-auto max-lg:order-2 max-lg:aspect-square max-lg:w-full">
         <canvas ref={canvasRef} aria-hidden="true" className={`pointer-events-auto h-full w-full touch-none ${enableDrag ? "cursor-grab active:cursor-grabbing" : "cursor-default"}`}/>
         <div ref={tipLayerRef} className="pointer-events-none absolute inset-0">
           {STORES.map((store, index) => (<button key={store.name} ref={(node) => {
                 if (node)
                     tipsRef.current[index] = node;
-            }} type="button" onClick={() => flyTo(index)} aria-label={`Show ${store.name}`} className={`absolute left-0 top-0 rounded-lg px-2.5 py-1.5 text-[0.8vw] font-medium leading-tight tracking-tight whitespace-nowrap backdrop-blur-md transition-colors duration-300 max-[1025px]:text-[1.4vw] max-md:text-[2.6vw] ${index === activeIndex
+            }} type="button" onClick={() => flyTo(index)} aria-label={`Show ${store.name}`} className={`absolute left-0 top-0 rounded-lg px-2.5 py-1.5 text-[0.8vw] font-medium leading-tight tracking-tight whitespace-nowrap backdrop-blur-md transition-colors duration-300 max-lg:text-[1.4vw] max-md:text-[2.6vw] ${index === activeIndex
                 ? "bg-[#fffaf2] text-[#101010]"
                 : "bg-[#fffaf2]/10 text-[#fffaf2]"}`}>
               {store.name}
@@ -881,25 +882,25 @@ export default function Globe({ autoConnect = false, autoRotate = true, rotation
       </div>
 
       
-      <div className="z-3 flex items-start justify-between gap-6 max-[1025px]:order-1">
+      <div className="z-3 flex items-start justify-between gap-6 max-lg:order-1">
         {children}
       </div>
 
       
-      <div className="flex-1 max-[1025px]:hidden"/>
+      <div className="flex-1 max-lg:hidden"/>
 
       
-      <div className="z-3 flex items-center justify-between gap-6 max-[1025px]:order-3 max-[1025px]:w-full max-[1025px]:gap-4 max-[1025px]:pt-10 max-[1025px]:flex-col">
-        <div className="flex flex-1 items-center justify-center text-center text-[1vw] font-medium tracking-tight text-[#fffaf2]/55 max-[1025px]:order-1 max-[1025px]:flex-none max-[1025px]:text-[2.5vw] max-md:text-[3.5vw]">
+      <div className="z-3 flex items-center justify-between gap-6 max-lg:order-3 max-lg:w-full max-lg:gap-4 max-lg:pt-10 max-lg:flex-col">
+        <div className="flex flex-1 items-center justify-center text-center text-[1vw] font-medium tracking-tight text-[#fffaf2]/55 max-lg:order-1 max-lg:flex-none max-lg:text-[2.5vw] max-md:text-[3.5vw]">
           {STORES.length} offices
         </div>
 
-        <div className="flex flex-1 items-center justify-center max-[1025px]:order-2 max-[1025px]:flex-none">
+        <div className="flex flex-1 items-center justify-center max-lg:order-2 max-lg:flex-none">
         <div className="flex shrink-0 items-center gap-3.5 rounded-full bg-[#fffaf2]/10 p-1.5 backdrop-blur-md">
         <button type="button" onClick={() => step(-1)} aria-label="Previous region" className="grid h-10 w-10 place-items-center rounded-full bg-[#fffaf2]/8 transition-colors duration-200 hover:bg-[#fffaf2]/20">
           <ChevronLeft className="h-4 w-4" strokeWidth={1.5}/>
         </button>
-        <span aria-live="polite" className="relative h-[1.2em] w-[112px] overflow-hidden text-center text-[0.85vw] font-medium tracking-tight text-[#fffaf2]/78 max-[1025px]:text-[2.2vw] max-md:text-[3.8vw]">
+        <span aria-live="polite" className="relative h-[1.2em] w-[112px] overflow-hidden text-center text-[0.85vw] font-medium tracking-tight text-[#fffaf2]/78 max-lg:text-[2.2vw] max-md:text-[3.8vw]">
           <span className="sr-only">{activeStore.name}</span>
           {STORES.map((store, index) => (<span key={store.name} ref={(node) => {
                 sliderLabelsRef.current[index] = node;
@@ -913,7 +914,7 @@ export default function Globe({ autoConnect = false, autoRotate = true, rotation
         </div>
         </div>
 
-        <div className="flex flex-1 items-center justify-center max-[1025px]:hidden">
+        <div className="flex flex-1 items-center justify-center max-lg:hidden">
           <div role="group" aria-label="Map projection" className="isolate relative flex shrink-0 items-center rounded-md bg-[#fffaf2]/10 p-1 backdrop-blur-md">
             <span aria-hidden="true" className={`absolute left-1 top-1 z-0 h-10 w-18 rounded-md bg-[#fffaf2] transition-transform duration-300 ease-out motion-reduce:transition-none ${(hoveredProjection ?? (isFlat ? "map" : "globe")) === "globe"
             ? "translate-x-18"

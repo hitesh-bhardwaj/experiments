@@ -68,7 +68,7 @@ const SWIPE_THRESHOLD = 100;
 // are positioned against, everything below it shifts too. Sized to hold the
 // longest quote at each breakpoint, with the content centred inside so the
 // shorter ones sit balanced rather than top-aligned against empty space.
-const CARD_HEIGHT = "h-[30vw] max-[1025px]:h-[52vw] max-md:h-[95vw]";
+const CARD_HEIGHT = "h-[30vw] max-lg:h-[52vw] max-md:h-[95vw]";
 
 type SwipeDirection = "next" | "prev";
 
@@ -94,18 +94,18 @@ const TestimonialCard = ({
           onSwipe("next");
         }
       }}
-      className="pt-[8vw] pb-[4vw] px-[6vw] w-full h-full flex flex-col items-center justify-center gap-[2.5vw] text-center max-[1025px]:pt-[14vw] max-[1025px]:px-[8vw] max-[1025px]:gap-[4vw] max-md:pt-[22vw] max-md:px-[7vw] max-md:pb-[8vw] max-md:gap-[6vw]"
+      className="pt-[8vw] pb-[4vw] px-[6vw] w-full h-full flex flex-col items-center justify-center gap-[2.5vw] text-center max-lg:pt-[14vw] max-lg:px-[8vw] max-lg:gap-[4vw] max-md:pt-[22vw] max-md:px-[7vw] max-md:pb-[8vw] max-md:gap-[6vw]"
     >
       <div className="flex flex-col gap-[0.4vw] max-md:gap-2">
-        <p className="text-[2.6vw] text-[#ff6b00] max-[1025px]:text-[4vw] max-md:text-[6vw]">
+        <p className="text-[2.6vw] text-[#ff6b00] max-lg:text-[4vw] max-md:text-[6vw]">
           {item.name}
         </p>
-        <p className="text-[1.145vw] text-white max-[1025px]:text-[2.2vw] max-md:text-[3.6vw]">
+        <p className="text-[1.145vw] text-white max-lg:text-[2.2vw] max-md:text-[3.6vw]">
           {item.role}
         </p>
       </div>
 
-      <p className="text-[1.145vw] leading-[1.6] text-white/70 w-[82%] max-[1025px]:text-[2.2vw] max-[1025px]:w-full max-md:text-[3.6vw]">
+      <p className="text-[1.145vw] leading-[1.6] text-white/70 w-[82%] max-lg:text-[2.2vw] max-lg:w-full max-md:text-[3.6vw]">
         &ldquo;{item.quote}&rdquo;
       </p>
     </motion.div>
@@ -171,20 +171,20 @@ const Testimonials = () => {
   return (
     <section
       ref={sectionRef}
-      className="w-screen bg-[#070707] py-[7vw] px-[4vw] max-[1025px]:px-[5vw] max-[1025px]:py-[12vw]"
+      className="w-screen bg-[#070707] py-[7vw] px-[4vw] max-lg:px-[5vw] max-lg:py-[12vw]"
       id="testimonials"
     >
-      <div className="w-full flex flex-col gap-[6vw] max-[1025px]:gap-[12vw]">
-        <div className="w-[65%] mx-auto max-[1025px]:w-full">
+      <div className="w-full flex flex-col gap-[6vw] max-lg:gap-[12vw]">
+        <div className="w-[65%] mx-auto max-lg:w-full">
           <OverflowTextReveal stagger={0.015}>
-            <h2 className="text-[5.2vw] leading-[1.2]! text-center max-[1025px]:text-[7vw] max-md:text-[9vw]">
+            <h2 className="text-[5.2vw] leading-[1.2]! text-center max-lg:text-[7vw] max-md:text-[9vw]">
               Don&apos;t Take It from Us, Take It from Our Clients
             </h2>
           </OverflowTextReveal>
         </div>
 
         <div className="relative max-md:mt-10">
-          <div className={`testimonial-fade opacity-0 relative w-3/5 mx-auto rounded-[2vw] border border-white/10 bg-white/5 overflow-hidden max-[1025px]:w-full max-[1025px]:rounded-[5vw] ${CARD_HEIGHT}`}>
+          <div className={`testimonial-fade opacity-0 relative w-3/5 mx-auto rounded-[2vw] border border-white/10 bg-white/5 overflow-hidden max-lg:w-full max-lg:rounded-[5vw] ${CARD_HEIGHT}`}>
             {/* mode="wait" so the outgoing card finishes before the next
                 one enters - crossfading them overlaps two blocks of centred
                 text and reads as a flicker. */}
@@ -233,7 +233,7 @@ const Testimonials = () => {
                   // two overlapping circles meet, instead of flickering
                   // between both.
                   style={{ order, zIndex: isActive ? 10 : total - Math.abs(order) }}
-                  className={`w-[5vw] h-[5vw] rounded-full overflow-hidden [clip-path:circle(50%)] cursor-pointer max-[1025px]:w-[9vw] max-[1025px]:h-[9vw] max-md:w-[12vw] max-md:h-[12vw] ${
+                  className={`w-[5vw] h-[5vw] rounded-full overflow-hidden [clip-path:circle(50%)] cursor-pointer max-lg:w-[9vw] max-lg:h-[9vw] max-md:w-[12vw] max-md:h-[12vw] ${
                     isActive
                       ? "bg-linear-to-r from-[#F16B0D] to-[#E61416] p-[0.3vw] mx-[2vw] max-md:mx-[4vw]"
                       : // Thumbs left of active pull toward it via -mr, thumbs

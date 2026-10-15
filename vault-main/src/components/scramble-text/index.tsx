@@ -17,6 +17,7 @@ const ScrambleText = ({
   speed = 0.6,
   charType = 'uppercase',
   textSize,
+  initialOpacity = 0,
   textColor = '#111111',
   align = 'left',
   start = 'top 85%',
@@ -28,8 +29,11 @@ const ScrambleText = ({
  const elRef = useRef<any>(null);
  const splitRef = useRef<any>(null);
  const tlRef = useRef<any>(null);
+ // Scales with the viewport but stays readable on phones and capped on
+ // very wide screens.
  const resolvedFontSize =
- typeof textSize === 'number' ? `${textSize}vw` : undefined;
+ typeof textSize === 'number' ? `clamp(2rem, ${textSize}vw, 9rem)` : undefined;
+ const startOpacity = Math.min(1, Math.max(0, Number(initialOpacity) || 0));
 
  const alignClass =
  align ==='right'
@@ -68,7 +72,7 @@ const ScrambleText = ({
  window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
  if (prefersReduced) {
- gsap.set(el, { opacity: 0, y: REDUCED_MOTION_Y_OFFSET });
+ gsap.set(el, { opacity: startOpacity, y: REDUCED_MOTION_Y_OFFSET });
 
  const tl = gsap.timeline({ paused: true });
  tlRef.current = tl;
@@ -118,7 +122,8 @@ const ScrambleText = ({
  el.removeAttribute('aria-label');
  chars.forEach((c) => c.removeAttribute('aria-label'));
 
- gsap.set(chars, { opacity: 0 });
+ gsap.set(chars, { opacity: startOpacity });
+ gsap.set(el, { opacity: startOpacity > 0 ? 1 : 0 });
 
  const originals = chars.map((c) => c.textContent ||'');
 
@@ -133,9 +138,11 @@ const ScrambleText = ({
 
  tlRef.current = tl;
 
+ // With a starting opacity above 0 the paragraph is already visible
+ // (the chars carry the dimming); otherwise it fades in as before.
  tl.fromTo(
  el,
- { opacity: 0 },
+ { opacity: startOpacity > 0 ? 1 : 0 },
  { opacity: 1, duration: 0.4, ease:'power1.out' }
  );
 
@@ -172,18 +179,12 @@ const ScrambleText = ({
 '>-0.2'
  );
 
- const trigger = ScrollTrigger.create({
+ ScrollTrigger.create({
  trigger: el,
  start,
  once: true,
  onEnter: () => tl.play(),
  });
-
- const rect = el.getBoundingClientRect();
- if (rect.top < window.innerHeight && rect.bottom > 0 && tl.progress() === 0) {
- tl.play(0);
- trigger.kill();
- }
  }, elRef);
 
  return () => ctx.revert();
@@ -203,7 +204,7 @@ const ScrambleText = ({
  tlRef.current?.kill();
  splitRef.current?.revert();
  };
- }, [speed, charType, start, duration, stagger]);
+ }, [speed, charType, start, duration, stagger, startOpacity]);
 
  return (
  <div className="relative w-full">

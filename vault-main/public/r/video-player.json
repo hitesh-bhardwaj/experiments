@@ -112,11 +112,6 @@
       "path": "index.tsx",
       "type": "registry:component",
       "target": "src/components/effects/video-player/index.tsx"
-    },
-    {
-      "path": "VideoPlayerComp.tsx",
-      "type": "registry:component",
-      "target": "src/components/effects/video-player/VideoPlayerComp.tsx"
     }
   ]
 }

@@ -91,21 +91,6 @@
       "path": "index.tsx",
       "type": "registry:component",
       "target": "src/components/effects/animated-toggle/index.tsx"
-    },
-    {
-      "path": "ChevronBird.tsx",
-      "type": "registry:component",
-      "target": "src/components/effects/animated-toggle/ChevronBird.tsx"
-    },
-    {
-      "path": "Cross.tsx",
-      "type": "registry:component",
-      "target": "src/components/effects/animated-toggle/Cross.tsx"
-    },
-    {
-      "path": "Plus.tsx",
-      "type": "registry:component",
-      "target": "src/components/effects/animated-toggle/Plus.tsx"
     }
   ]
 }

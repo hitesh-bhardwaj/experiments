@@ -4,8 +4,8 @@
   "title": "Grid Tunnel",
   "description": "Infinite 3D image tunnel built with React Three Fiber, procedural wireframe chunks, and inertial wheel-driven camera motion.",
   "dependencies": [
-    "@react-three/fiber",
     "@react-three/drei",
+    "@react-three/fiber",
     "three"
   ],
   "registryDependencies": [],
@@ -29,11 +29,17 @@
   ],
   "props": [
     {
-      "name": "gridSize",
+      "name": "numberOfGrids",
       "type": "number",
       "default": 24,
-      "description": "Tunnel grid density.",
+      "description": "Number of grid cells (density of the tunnel grid).",
       "suggested": true
+    },
+    {
+      "name": "shape",
+      "type": "string",
+      "default": "rectangle",
+      "description": "Tunnel cross-section: rectangle or circle (the images curve with the circular walls)."
     },
     {
       "name": "speed",
@@ -76,14 +82,30 @@
     },
     "controls": [
       {
-        "name": "gridSize",
-        "label": "Grid Size",
+        "name": "numberOfGrids",
+        "label": "Number of Grids",
         "type": "range",
         "group": "content",
         "copyable": true,
         "min": 6,
         "max": 48,
         "step": 1
+      },
+      {
+        "name": "shape",
+        "label": "Shape",
+        "type": "select",
+        "group": "content",
+        "options": [
+          {
+            "value": "rectangle",
+            "label": "Rectangle"
+          },
+          {
+            "value": "circle",
+            "label": "Circle"
+          }
+        ]
       },
       {
         "name": "speed",
@@ -126,16 +148,6 @@
       "path": "index.tsx",
       "type": "registry:component",
       "target": "src/components/effects/grid-tunnel/index.tsx"
-    },
-    {
-      "path": "GridTunnelComp.tsx",
-      "type": "registry:component",
-      "target": "src/components/effects/grid-tunnel/GridTunnelComp.tsx"
-    },
-    {
-      "path": "createSuspendedRaf.ts",
-      "type": "registry:component",
-      "target": "src/components/effects/grid-tunnel/createSuspendedRaf.ts"
     }
   ]
 }

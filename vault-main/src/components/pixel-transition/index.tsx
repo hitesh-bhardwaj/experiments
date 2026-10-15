@@ -1,8 +1,8 @@
 'use client'
 
-import { TransitionRouter } from'next-transition-router'
-import { useEffect, useRef, type ReactNode } from'react'
-import gsap from'gsap'
+import { TransitionRouter } from "next-transition-router";
+import { useEffect, useRef, type ReactNode } from "react";
+import gsap from "gsap";
 import { prefersReducedMotion } from '@/lib/motion'
 
 const COLS = 30

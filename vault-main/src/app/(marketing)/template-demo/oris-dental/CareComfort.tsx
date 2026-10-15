@@ -158,16 +158,16 @@ export default function CareComfort() {
       className="w-full bg-white relative z-10 py-[7vw] max-md:py-16 overflow-hidden text-oris-secondary"
     >
       {/* Top Header: Title on Left, Detailed Paragraph on Right */}
-      <div className="oris-paddx mb-[5vw] max-md:mb-8 flex justify-between items-start max-[1025px]:flex-col max-[1025px]:gap-6">
+      <div className="oris-paddx mb-[5vw] max-md:mb-8 flex justify-between items-start max-lg:flex-col max-lg:gap-6">
         {/* Left Heading */}
-        <div className="w-[50%] max-[1025px]:max-w-full">
-          <SplitTextLines as="h2" className="text-[4.2vw] max-md:w-[90vw] max-[1025px]:text-[6vw] max-md:text-[7.5vw]">
+        <div className="w-[50%] max-lg:max-w-full">
+          <SplitTextLines as="h2" className="text-[4.2vw] max-md:w-[90vw] max-lg:text-[6vw] max-md:text-[7.5vw]">
             Care Designed for Your{"\n"}Lasting Comfort
           </SplitTextLines>
         </div>
 
         {/* Right Paragraph */}
-        <div className="max-w-[37vw] max-[1025px]:max-w-full text-right max-[1025px]:text-left pt-[0.6vw] max-[1025px]:pt-0">
+        <div className="max-w-[37vw] max-lg:max-w-full text-right max-lg:text-left pt-[0.6vw] max-lg:pt-0">
           <SplitTextLines as="p" className="oris-text22" delay={0.15}>
             We provide thoughtful dental treatments that help patients understand
             their options, feel comfortable during appointments, and leave with
@@ -192,14 +192,14 @@ export default function CareComfort() {
             lerpFactor: 0.12,
             dragSensitivity: 0.005,
           }}
-          wrapperClassName="py-2 pl-[2.05vw] max-[1025px]:pl-[3.7vw] max-md:pl-[3vw]"
-          itemClassName="px-[0.95vw] max-[1025px]:px-[1.3vw] max-md:px-[2vw]"
+          wrapperClassName="py-2 pl-[2.05vw] max-lg:pl-[3.7vw] max-md:pl-[3vw]"
+          itemClassName="px-[0.95vw] max-lg:px-[1.3vw] max-md:px-[2vw]"
         >
           {CAROUSEL_CARDS.map((card, idx) => (
             <div
               key={`${card.id}-${idx}`}
               aria-hidden={idx >= CARE_CARDS.length}
-              className={`care-card-anim w-[28vw] max-[1025px]:w-[50vw] max-md:w-[76vw] aspect-[440/477] rounded-xl max-md:rounded-3xl px-[1.8vw] pt-[1.8vw] pb-[5vw] max-md:px-6 max-md:pt-6 max-md:pb-8 flex flex-col justify-end gap-[2.4vw] max-md:gap-6 relative  select-none will-change-transform ${card.bgClassName}`}
+              className={`care-card-anim w-[28vw] max-lg:w-[50vw] max-md:w-[76vw] aspect-[440/477] rounded-xl max-md:rounded-3xl px-[1.8vw] pt-[1.8vw] pb-[5vw] max-md:px-6 max-md:pt-6 max-md:pb-8 flex flex-col justify-end gap-[2.4vw] max-md:gap-6 relative  select-none will-change-transform ${card.bgClassName}`}
             >
               {/* Interactive Dots on Mouse Move */}
               <DotsCanvas
@@ -214,12 +214,12 @@ export default function CareComfort() {
               />
 
               {/* Card Title */}
-              <h3 className="relative z-10 text-white text-[2.4vw] max-[1025px]:text-[4vw] max-md:text-[7vw] font-normal leading-[1.15] whitespace-pre-line tracking-tight">
+              <h3 className="relative z-10 text-white text-[2.4vw] max-lg:text-[4vw] max-md:text-[7vw] font-normal leading-[1.15] whitespace-pre-line tracking-tight">
                 {card.title}
               </h3>
 
               {/* Card Description */}
-              <p className="relative z-10 text-white/85 oris-text22 max-[1025px]:text-[2.5vw] max-md:text-[3.6vw] leading-[1.3] max-w-[96%] font-normal">
+              <p className="relative z-10 text-white/85 oris-text22 max-lg:text-[2.5vw] max-md:text-[3.6vw] leading-[1.3] max-w-[96%] font-normal">
                 {card.description}
               </p>
             </div>
@@ -230,13 +230,13 @@ export default function CareComfort() {
       {/* Bottom Controls: Circular Navigation Buttons with Actual Arrows */}
       <div
         ref={controlsRef}
-        className="oris-paddx mt-[3vw] max-md:mt-6 max-[1025px]:mx-auto max-[1025px]:justify-center flex items-center justify-end gap-[0.8vw] max-[1025px]:gap-3"
+        className="oris-paddx mt-[3vw] max-md:mt-6 max-lg:mx-auto max-lg:justify-center flex items-center justify-end gap-[0.8vw] max-lg:gap-3"
       >
         <CircularButton
           onClick={() => carouselRef.current?.goToPrev()}
           ariaLabel="Previous slide"
           bgClassName="oris-bg-primary"
-          className="size-[3.4vw] min-w-11 min-h-11 max-md:size-12 max-[1025px]:size-18"
+          className="size-[3.4vw] min-w-11 min-h-11 max-md:size-12 max-lg:size-18"
         >
           <svg
             width="20"
@@ -247,7 +247,7 @@ export default function CareComfort() {
             strokeWidth="1.8"
             strokeLinecap="round"
             strokeLinejoin="round"
-            className="w-[1.2vw] h-[1.2vw] max-[1025px]:w-5 max-[1025px]:h-5 transition-colors duration-300"
+            className="w-[1.2vw] h-[1.2vw] max-lg:w-5 max-lg:h-5 transition-colors duration-300"
           >
             <line x1="19" y1="12" x2="5" y2="12" />
             <polyline points="12 19 5 12 12 5" />
@@ -258,7 +258,7 @@ export default function CareComfort() {
           onClick={() => carouselRef.current?.goToNext()}
           ariaLabel="Next slide"
           bgClassName="oris-bg-primary"
-          className="size-[3.4vw] min-w-11 min-h-11 max-md:size-12 max-[1025px]:size-18"
+          className="size-[3.4vw] min-w-11 min-h-11 max-md:size-12 max-lg:size-18"
         >
           <svg
             width="20"
@@ -269,7 +269,7 @@ export default function CareComfort() {
             strokeWidth="1.8"
             strokeLinecap="round"
             strokeLinejoin="round"
-            className="w-[1.2vw] h-[1.2vw] max-[1025px]:w-5 max-[1025px]:h-5 transition-colors duration-300"
+            className="w-[1.2vw] h-[1.2vw] max-lg:w-5 max-lg:h-5 transition-colors duration-300"
           >
             <line x1="5" y1="12" x2="19" y2="12" />
             <polyline points="12 5 19 12 12 19" />

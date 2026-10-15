@@ -13,7 +13,12 @@ export default function DemoContent({ registry }: { registry: any }) {
     >
       {({ effect }) => (
         <>
-          <DemoHeader />
+          <DemoHeader
+            reducedMotionNote={{
+              title: "The lens keeps tracking.",
+              body: "Liquid Glass Cursor magnifies and refracts whatever your cursor passes over. Since the lens is driven entirely by cursor motion, there's no reduced motion version to fall back on.",
+            }}
+          />
           {effect}
         </>
       )}

@@ -143,11 +143,6 @@
       "path": "index.tsx",
       "type": "registry:component",
       "target": "src/components/effects/coffee-bean-cursor/index.tsx"
-    },
-    {
-      "path": "createSuspendedRaf.ts",
-      "type": "registry:component",
-      "target": "src/components/effects/coffee-bean-cursor/createSuspendedRaf.ts"
     }
   ]
 }

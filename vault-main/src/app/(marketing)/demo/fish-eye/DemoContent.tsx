@@ -28,16 +28,21 @@ export default function DemoContent({ registry }: { registry: any }) {
     >
       {({ effect }) => (
         <>
-          <DemoHeader />
+          <DemoHeader
+            reducedMotionNote={{
+              title: "The lens keeps bending.",
+              body: "Fish Eye distorts the image as your cursor moves across it. Since the warp is driven entirely by motion, there's no reduced motion version to fall back on.",
+            }}
+          />
           <LenisSmoothScroll />
 
           <div className="h-screen w-full bg-zinc-200 max-md:p-[20vw] max-sm:p-[10vw] max-md:flex-col flex items-start p-[5vw] pt-[6.5vw] justify-between max-md:justify-center max-md:gap-[10vw] max-md:items-center">
-            <h1 className="absolute bottom-[8vw] left-[5vw] max-md:left-[2vw] max-sm:top-[18vw] max-md:top-[8vh] max-sm:right-[5vw] text-black text-[7vw] max-md:text-[7vw] max-sm:text-[12vw] leading-none font-bold">
+            <h1 className="absolute bottom-[10vw] left-[5vw] max-md:left-[2vw] max-sm:top-[18vw] max-md:top-[8vh] max-sm:right-[5vw] text-black text-[7vw] max-md:text-[7vw] max-sm:text-[12vw] leading-none font-bold">
               FISH EYE
             </h1>
 
-            <h2 className="absolute top-[5vw] text-right max-sm:top-[85vh] max-md:top-[85vh] max-sm:right-[5vw] right-[5vw] max-md:w-full text-black max-sm:text-[12vw] max-md:text-[7vw] text-[7vw] leading-none font-bold max-sm:hidden">
-              WITH <br />
+            <h2 className="absolute bottom-[2vw] left-[5vw] max-sm:top-[85vh] max-md:top-[85vh] max-sm:right-[5vw] right-[5vw] max-md:w-full text-black max-sm:text-[12vw] max-md:text-[7vw] text-[7vw] leading-none font-bold max-sm:hidden">
+              WITH
               <span className="text-red-500"> TSL </span>
             </h2>
 

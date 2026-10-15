@@ -106,8 +106,8 @@
   },
   {
     "name": "@hyperiux/infinite-carousel",
-    "version": "1.0.1",
-    "tarball": "registry/dist/hyperiux-infinite-carousel-1.0.1.tgz"
+    "version": "1.0.2",
+    "tarball": "registry/dist/hyperiux-infinite-carousel-1.0.2.tgz"
   },
   {
     "name": "@hyperiux/orbit-flip-slider",
@@ -381,8 +381,8 @@
   },
   {
     "name": "@hyperiux/circular-split-roll",
-    "version": "1.0.1",
-    "tarball": "registry/dist/hyperiux-circular-split-roll-1.0.1.tgz"
+    "version": "1.0.2",
+    "tarball": "registry/dist/hyperiux-circular-split-roll-1.0.2.tgz"
   },
   {
     "name": "@hyperiux/grid-scale",
@@ -666,8 +666,8 @@
   },
   {
     "name": "@hyperiux/3d-portfolio-slider",
-    "version": "1.0.1",
-    "tarball": "registry/dist/hyperiux-3d-portfolio-slider-1.0.1.tgz"
+    "version": "1.0.2",
+    "tarball": "registry/dist/hyperiux-3d-portfolio-slider-1.0.2.tgz"
   },
   {
     "name": "@hyperiux/book-flip",

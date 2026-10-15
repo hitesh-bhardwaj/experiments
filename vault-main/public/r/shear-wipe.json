@@ -23,71 +23,45 @@
     {
       "name": "componentsTextColor",
       "type": "string",
-      "default": "text-[#0D47A1]",
-      "description": "Tailwind text color class for the Components panel copy.",
+      "default": "#0D47A1",
+      "description": "Text color for the Components panel.",
       "remixer": {
-        "control": "select",
+        "control": "color",
         "group": "components",
-        "groupTitle": "Components Panel",
-        "options": [
-          {
-            "value": "text-[#0D47A1]",
-            "label": "Royal Blue"
-          },
-          {
-            "value": "text-white",
-            "label": "White"
-          },
-          {
-            "value": "text-black",
-            "label": "Black"
-          },
-          {
-            "value": "text-[#EA580C]",
-            "label": "Orange"
-          },
-          {
-            "value": "text-[#166534]",
-            "label": "Forest"
-          },
-          {
-            "value": "text-[#7C3AED]",
-            "label": "Violet"
-          }
-        ]
+        "groupTitle": "Components Panel"
+      }
+    },
+    {
+      "name": "componentsBackgroundColor",
+      "type": "string",
+      "default": "#E3F2FD",
+      "description": "Background color for the Components panel.",
+      "remixer": {
+        "control": "color",
+        "group": "components",
+        "groupTitle": "Components Panel"
       }
     },
     {
       "name": "showcaseTextColor",
       "type": "string",
-      "default": "text-white",
-      "description": "Tailwind text color class for the Showcase panel copy.",
+      "default": "#ffffff",
+      "description": "Text color for the Showcase panel.",
       "remixer": {
-        "control": "select",
+        "control": "color",
         "group": "showcase",
-        "groupTitle": "Showcase Panel",
-        "options": [
-          {
-            "value": "text-white",
-            "label": "White"
-          },
-          {
-            "value": "text-black",
-            "label": "Black"
-          },
-          {
-            "value": "text-[#EA580C]",
-            "label": "Orange"
-          },
-          {
-            "value": "text-[#166534]",
-            "label": "Forest"
-          },
-          {
-            "value": "text-[#7C3AED]",
-            "label": "Violet"
-          }
-        ]
+        "groupTitle": "Showcase Panel"
+      }
+    },
+    {
+      "name": "showcaseBackgroundColor",
+      "type": "string",
+      "default": "#0D47A1",
+      "description": "Background color for the Showcase panel.",
+      "remixer": {
+        "control": "color",
+        "group": "showcase",
+        "groupTitle": "Showcase Panel"
       }
     },
     {
@@ -121,11 +95,6 @@
       "path": "index.tsx",
       "type": "registry:component",
       "target": "src/components/effects/shear-wipe/index.tsx"
-    },
-    {
-      "path": "ShearWipeComp.tsx",
-      "type": "registry:component",
-      "target": "src/components/effects/shear-wipe/ShearWipeComp.tsx"
     }
   ]
 }

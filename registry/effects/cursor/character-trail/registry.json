@@ -32,14 +32,6 @@
     {
       "path": "index.tsx",
       "target": "src/components/effects/character-trail/index.tsx"
-    },
-    {
-      "path": "CharacterTrailComp.tsx",
-      "target": "src/components/effects/character-trail/CharacterTrailComp.tsx"
-    },
-    {
-      "path": "createSuspendedRaf.ts",
-      "target": "src/components/effects/character-trail/createSuspendedRaf.ts"
     }
   ],
   "props": [
@@ -69,6 +61,97 @@
       "type": "string",
       "default": "#ffffff",
       "description": "Trail character color.",
+      "suggested": true
+    },
+    {
+      "name": "colorCount",
+      "type": "number",
+      "default": 6,
+      "description": "How many of the colors below the trail cycles through (1-6).",
+      "suggested": true
+    },
+    {
+      "name": "color1",
+      "type": "string",
+      "default": "#1a1a2e",
+      "description": "Hex code for trail color 1.",
+      "suggested": true
+    },
+    {
+      "name": "color2",
+      "type": "string",
+      "default": "#c8f752",
+      "description": "Hex code for trail color 2.",
+      "suggested": true
+    },
+    {
+      "name": "color3",
+      "type": "string",
+      "default": "#7D4E57",
+      "description": "Hex code for trail color 3.",
+      "suggested": true
+    },
+    {
+      "name": "color4",
+      "type": "string",
+      "default": "#5c3d8f",
+      "description": "Hex code for trail color 4.",
+      "suggested": true
+    },
+    {
+      "name": "color5",
+      "type": "string",
+      "default": "#2d2d2d",
+      "description": "Hex code for trail color 5.",
+      "suggested": true
+    },
+    {
+      "name": "color6",
+      "type": "string",
+      "default": "#c3dfe0",
+      "description": "Hex code for trail color 6.",
+      "suggested": true
+    },
+    {
+      "name": "textColor1",
+      "type": "string",
+      "default": "#ffffff",
+      "description": "Hex code for the text on trail color 1.",
+      "suggested": true
+    },
+    {
+      "name": "textColor2",
+      "type": "string",
+      "default": "#1a1a2e",
+      "description": "Hex code for the text on trail color 2.",
+      "suggested": true
+    },
+    {
+      "name": "textColor3",
+      "type": "string",
+      "default": "#ffffff",
+      "description": "Hex code for the text on trail color 3.",
+      "suggested": true
+    },
+    {
+      "name": "textColor4",
+      "type": "string",
+      "default": "#ffffff",
+      "description": "Hex code for the text on trail color 4.",
+      "suggested": true
+    },
+    {
+      "name": "textColor5",
+      "type": "string",
+      "default": "#ffffff",
+      "description": "Hex code for the text on trail color 5.",
+      "suggested": true
+    },
+    {
+      "name": "textColor6",
+      "type": "string",
+      "default": "#1a1a2e",
+      "description": "Hex code for the text on trail color 6.",
       "suggested": true
     },
     {
@@ -123,7 +206,142 @@
         "label": "Text Color",
         "type": "color",
         "group": "style",
+        "copyable": true,
+        "enabled": false
+      },
+      {
+        "name": "colorCount",
+        "label": "Number of Colors",
+        "type": "range",
+        "group": "colors",
+        "copyable": true,
+        "min": 1,
+        "max": 6,
+        "step": 1
+      },
+      {
+        "name": "color1",
+        "label": "Color 1",
+        "type": "color",
+        "group": "colors",
         "copyable": true
+      },
+      {
+        "name": "textColor1",
+        "label": "Text Color 1",
+        "type": "color",
+        "group": "colors",
+        "copyable": true
+      },
+      {
+        "name": "color2",
+        "label": "Color 2",
+        "type": "color",
+        "group": "colors",
+        "copyable": true,
+        "visibleWhen": {
+          "name": "colorCount",
+          "gte": 2
+        }
+      },
+      {
+        "name": "textColor2",
+        "label": "Text Color 2",
+        "type": "color",
+        "group": "colors",
+        "copyable": true,
+        "visibleWhen": {
+          "name": "colorCount",
+          "gte": 2
+        }
+      },
+      {
+        "name": "color3",
+        "label": "Color 3",
+        "type": "color",
+        "group": "colors",
+        "copyable": true,
+        "visibleWhen": {
+          "name": "colorCount",
+          "gte": 3
+        }
+      },
+      {
+        "name": "textColor3",
+        "label": "Text Color 3",
+        "type": "color",
+        "group": "colors",
+        "copyable": true,
+        "visibleWhen": {
+          "name": "colorCount",
+          "gte": 3
+        }
+      },
+      {
+        "name": "color4",
+        "label": "Color 4",
+        "type": "color",
+        "group": "colors",
+        "copyable": true,
+        "visibleWhen": {
+          "name": "colorCount",
+          "gte": 4
+        }
+      },
+      {
+        "name": "textColor4",
+        "label": "Text Color 4",
+        "type": "color",
+        "group": "colors",
+        "copyable": true,
+        "visibleWhen": {
+          "name": "colorCount",
+          "gte": 4
+        }
+      },
+      {
+        "name": "color5",
+        "label": "Color 5",
+        "type": "color",
+        "group": "colors",
+        "copyable": true,
+        "visibleWhen": {
+          "name": "colorCount",
+          "gte": 5
+        }
+      },
+      {
+        "name": "textColor5",
+        "label": "Text Color 5",
+        "type": "color",
+        "group": "colors",
+        "copyable": true,
+        "visibleWhen": {
+          "name": "colorCount",
+          "gte": 5
+        }
+      },
+      {
+        "name": "color6",
+        "label": "Color 6",
+        "type": "color",
+        "group": "colors",
+        "copyable": true,
+        "visibleWhen": {
+          "name": "colorCount",
+          "gte": 6
+        }
+      },
+      {
+        "name": "textColor6",
+        "label": "Text Color 6",
+        "type": "color",
+        "group": "colors",
+        "copyable": true,
+        "visibleWhen": {
+          "name": "colorCount",
+          "gte": 6
+        }
       },
       {
         "name": "fadeDuration",

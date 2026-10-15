@@ -283,7 +283,7 @@ plane.material.uniforms.uZoom.value = targetZoom;
  <div
  ref={textContainerRef}
  data-active-text={items[0].description}
- className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white text-lg uppercase tracking-[0.2em] z-20 pointer-events-none mix-blend-difference overflow-hidden h-7.5 w-50 max-[1025px]:h-9 max-[1025px]:w-70 max-[1025px]:text-xl max-md:h-12 max-md:w-[84vw] max-md:text-base"
+ className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white text-lg uppercase tracking-[0.2em] z-20 pointer-events-none mix-blend-difference overflow-hidden h-7.5 w-50 max-lg:h-9 max-lg:w-70 max-lg:text-xl max-md:h-12 max-md:w-[84vw] max-md:text-base"
  >
  <div ref={activeTextRef} className="absolute w-full h-full flex items-center justify-center">
  {items[0].description}
@@ -297,7 +297,7 @@ plane.material.uniforms.uZoom.value = targetZoom;
  return (
  <div
  key={i}
- className="absolute h-9 w-7 -ml-3.5 -mt-4.5 max-[1025px]:h-12 max-[1025px]:w-9 max-[1025px]:-ml-4.5 max-[1025px]:-mt-6 max-md:h-9 max-md:w-7 max-md:-ml-3.5 max-md:-mt-4.5"
+ className="absolute h-9 w-7 -ml-3.5 -mt-4.5 max-lg:h-12 max-lg:w-9 max-lg:-ml-4.5 max-lg:-mt-6 max-md:h-9 max-md:w-7 max-md:-ml-3.5 max-md:-mt-4.5"
  style={{
 transform: `rotate(${angle}deg) translateY(var(--radius, -35vh)) rotate(calc(-${angle}deg - var(--rotation, 0deg)))`
 }}

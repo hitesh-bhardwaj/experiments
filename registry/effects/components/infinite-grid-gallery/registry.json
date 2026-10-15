@@ -20,18 +20,6 @@
     {
       "path": "index.tsx",
       "target": "src/components/effects/infinite-grid-gallery/index.tsx"
-    },
-    {
-      "path": "InfiniteGrid.tsx",
-      "target": "src/components/effects/infinite-grid-gallery/InfiniteGrid.tsx"
-    },
-    {
-      "path": "util.ts",
-      "target": "src/components/effects/infinite-grid-gallery/util.ts"
-    },
-    {
-      "path": "createSuspendedRaf.ts",
-      "target": "src/components/effects/infinite-grid-gallery/createSuspendedRaf.ts"
     }
   ],
   "changelog": [

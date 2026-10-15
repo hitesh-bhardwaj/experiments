@@ -4,10 +4,10 @@
   "title": "Book Flip",
   "description": "3D interactive book viewer with realistic page flips, built with React Three Fiber and Drei.",
   "dependencies": [
-    "three",
-    "@react-three/fiber",
     "@react-three/drei",
-    "maath"
+    "@react-three/fiber",
+    "maath",
+    "three"
   ],
   "registryDependencies": [],
   "exportName": "BookFlip",
@@ -82,36 +82,6 @@
       "path": "index.tsx",
       "type": "registry:component",
       "target": "src/components/effects/book-flip/index.tsx"
-    },
-    {
-      "path": "Book.tsx",
-      "type": "registry:component",
-      "target": "src/components/effects/book-flip/Book.tsx"
-    },
-    {
-      "path": "BookFlip.tsx",
-      "type": "registry:component",
-      "target": "src/components/effects/book-flip/BookFlip.tsx"
-    },
-    {
-      "path": "Experience.tsx",
-      "type": "registry:component",
-      "target": "src/components/effects/book-flip/Experience.tsx"
-    },
-    {
-      "path": "UI.tsx",
-      "type": "registry:component",
-      "target": "src/components/effects/book-flip/UI.tsx"
-    },
-    {
-      "path": "createSuspendedRaf.ts",
-      "type": "registry:component",
-      "target": "src/components/effects/book-flip/createSuspendedRaf.ts"
-    },
-    {
-      "path": "PageContext.tsx",
-      "type": "registry:component",
-      "target": "src/components/effects/book-flip/PageContext.tsx"
     }
   ]
 }

@@ -5,9 +5,6 @@
   "main": "index.tsx",
   "files": [
     "index.tsx",
-    "ElevateMobileNav.tsx",
-    "ElevateDesktopNav.tsx",
-    "useFocusTrap.ts",
     "registry.json"
   ],
   "keywords": [

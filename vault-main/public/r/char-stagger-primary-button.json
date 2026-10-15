@@ -34,7 +34,8 @@
       "remixer": {
         "control": "text",
         "group": "content",
-        "groupTitle": "Content"
+        "groupTitle": "Content",
+        "enabled": false
       }
     },
     {
@@ -56,6 +57,17 @@
       "type": "color",
       "default": "#ffffff",
       "description": "Text color while hovered.",
+      "remixer": {
+        "control": "color",
+        "group": "appearance",
+        "groupTitle": "Appearance"
+      }
+    },
+    {
+      "name": "bgColor",
+      "type": "color",
+      "default": "#ff6b00",
+      "description": "Background color of the button.",
       "remixer": {
         "control": "color",
         "group": "appearance",

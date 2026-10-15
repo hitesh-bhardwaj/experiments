@@ -44,6 +44,17 @@
       }
     },
     {
+      "name": "textColor",
+      "type": "color",
+      "default": "#f97316",
+      "description": "Color of the cursor-reactive text.",
+      "remixer": {
+        "control": "color",
+        "group": "style",
+        "groupTitle": "Style"
+      }
+    },
+    {
       "name": "showCrosshair",
       "type": "boolean",
       "default": true,
@@ -86,6 +97,28 @@
       "description": "Shows the small cursor dot.",
       "remixer": {
         "control": "checkbox",
+        "group": "crosshair",
+        "groupTitle": "Crosshair"
+      }
+    },
+    {
+      "name": "crosshairColor",
+      "type": "color",
+      "default": "#ffffff",
+      "description": "Crosshair line color (drawn at 20% strength).",
+      "remixer": {
+        "control": "color",
+        "group": "crosshair",
+        "groupTitle": "Crosshair"
+      }
+    },
+    {
+      "name": "cursorDotColor",
+      "type": "color",
+      "default": "#f97316",
+      "description": "Color of the small cursor dot.",
+      "remixer": {
+        "control": "color",
         "group": "crosshair",
         "groupTitle": "Crosshair"
       }

@@ -76,7 +76,7 @@ export function SpotlightButton({
   const sizeClasses = {
     sm: "h-7 px-2.5 py-1 text-[10px]",
     md: "h-8.5 px-3.5 py-1.5 text-xs",
-    lg: "h-11 px-5 py-2 text-sm scale-[2.2]",
+    lg: "h-11 px-5 py-2 text-sm scale-[2.2] max-lg:scale-[1.5]",
   }[size];
   const reducedMotion = usePrefersReducedMotion();
   const instanceId = useId().replace(/[^a-zA-Z0-9]/g, "");
@@ -217,7 +217,7 @@ export function SpotlightButton({
       <style>{css}</style>
       <button
         type="button"
-        className={`spotlight-button-${instanceId} group/spotlight-button relative flex overflow-hidden ${sizeClasses} cursor-pointer items-center justify-center gap-1.5 rounded-full border-[1.5px] border-transparent bg-transparent font-bold outline-offset-4 ${className}`}
+        className={`spotlight-button-${instanceId} group/spotlight-button relative flex w-fit overflow-hidden ${sizeClasses} cursor-pointer items-center justify-center gap-1.5 rounded-full border-[1.5px] border-transparent bg-transparent font-bold outline-offset-4 ${className}`}
         data-reduced-motion={reducedMotion ? "true" : undefined}
         {...props}
 

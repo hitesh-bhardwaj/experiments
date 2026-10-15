@@ -270,7 +270,7 @@ export default function ContactForm({
  <div className="w-full flex flex-col gap-[2vw]">
  <form
  autoComplete="off"
- className="space-y-[1vw] max-[1025px]:space-y-[3.5vw]"
+ className="space-y-[1vw] max-lg:space-y-[3.5vw]"
  onSubmit={handleSubmit}
  >
  {fields.map((field, index) => (
@@ -284,7 +284,7 @@ export default function ContactForm({
  </div>
  ))}
 
- <div className="relative flex items-center justify-start pt-[0.8vw] max-[1025px]:pt-[3vw]" style={{ zIndex: 0 }}>
+ <div className="relative flex items-center justify-start pt-[0.8vw] max-lg:pt-[3vw]" style={{ zIndex: 0 }}>
  {/* Renders an anchor; cannot self-submit */}
  <button ref={submitRef} type="submit" className="hidden" aria-hidden="true" tabIndex={-1} />
  <CharStaggerPrimaryButton
@@ -297,7 +297,7 @@ export default function ContactForm({
  }}
  hoverColor="#000000"
  showArrow
- className={`rounded-full bg-white px-[1.8vw] py-[0.7vw] text-black max-[1025px]:px-[6vw] max-[1025px]:py-[3vw] ${
+ className={`rounded-full bg-white px-[1.8vw] py-[0.7vw] text-black max-lg:px-[6vw] max-lg:py-[3vw] ${
  isLoading ? "pointer-events-none opacity-70" : ""
  }`}
  textClassName="font-aeonik-pro text-22 tracking-tight"
@@ -306,10 +306,10 @@ export default function ContactForm({
  </div>
 
  {submitted && (
- <p className="mt-[0.6vw] font-aeonik-pro text-[0.9vw] text-green-400 max-[1025px]:mt-[2vw] max-[1025px]:text-[2.8vw] max-md:text-[3.4vw]">{successMessage}</p>
+ <p className="mt-[0.6vw] font-aeonik-pro text-[0.9vw] text-green-400 max-lg:mt-[2vw] max-lg:text-[2.8vw] max-md:text-[3.4vw]">{successMessage}</p>
  )}
  {failed && (
- <p className="mt-[0.6vw] font-aeonik-pro text-[0.9vw] text-red-400 max-[1025px]:mt-[2vw] max-[1025px]:text-[2.8vw] max-md:text-[3.4vw]">{errorMessage}</p>
+ <p className="mt-[0.6vw] font-aeonik-pro text-[0.9vw] text-red-400 max-lg:mt-[2vw] max-lg:text-[2.8vw] max-md:text-[3.4vw]">{errorMessage}</p>
  )}
  </form>
  </div>

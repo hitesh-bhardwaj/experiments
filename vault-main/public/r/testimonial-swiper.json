@@ -35,7 +35,8 @@
       "remixer": {
         "control": "color",
         "group": "style",
-        "groupTitle": "Style"
+        "groupTitle": "Style",
+        "enabled": false
       }
     },
     {
@@ -105,16 +106,6 @@
       "path": "index.tsx",
       "type": "registry:component",
       "target": "src/components/effects/testimonial-swiper/index.tsx"
-    },
-    {
-      "path": "NavigationButtons.tsx",
-      "type": "registry:component",
-      "target": "src/components/effects/testimonial-swiper/NavigationButtons.tsx"
-    },
-    {
-      "path": "TestimonialComp.tsx",
-      "type": "registry:component",
-      "target": "src/components/effects/testimonial-swiper/TestimonialComp.tsx"
     }
   ]
 }

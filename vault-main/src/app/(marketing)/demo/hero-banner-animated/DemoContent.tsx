@@ -13,7 +13,12 @@ export default function DemoContent({ registry }: { registry: any }) {
     >
       {({ effect }) => (
         <>
-          <DemoHeader />
+          <DemoHeader
+            reducedMotionNote={{
+              title: "The light keeps tracking.",
+              body: "Hero Banner Animated moves light with your cursor in real time and zooms the scene on click. Since that tracking motion is continuous, reduced motion can't be applied here.",
+            }}
+          />
           {effect}
         </>
       )}

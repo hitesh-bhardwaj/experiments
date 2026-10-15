@@ -2,8 +2,18 @@
   "name": "dot-fill-button",
   "version": "1.1.0",
   "changelog": [
-    { "version": "1.1.0", "date": "2026-07-21", "summary": "Added prefers-reduced-motion support: character stagger delay is skipped when the user has reduced motion enabled", "breaking": false },
-    { "version": "1.0.0", "date": "2026-06-04", "summary": "Initial release", "breaking": false }
+    {
+      "version": "1.1.0",
+      "date": "2026-07-21",
+      "summary": "Added prefers-reduced-motion support: character stagger delay is skipped when the user has reduced motion enabled",
+      "breaking": false
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-06-04",
+      "summary": "Initial release",
+      "breaking": false
+    }
   ],
   "type": "registry:component",
   "title": "Dot Fill Button",
@@ -27,7 +37,8 @@
       "remixer": {
         "control": "text",
         "group": "content",
-        "groupTitle": "Content"
+        "groupTitle": "Content",
+        "enabled": false
       }
     },
     {

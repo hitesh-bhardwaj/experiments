@@ -491,7 +491,7 @@ const UnfoldNavbar = ({
         } as React.CSSProperties
       }
 
-      className="group/unfold pointer-events-none absolute inset-0 text-[#111] [--un-closed:72px] [--un-radius-closed:36px] [--un-pad:24px] [--un-gap:24px] [--un-tile-w:408px] [--un-index-w:288px] [--un-open-h:min(620px,94vh)] [--un-open-w:calc(var(--un-gutter)+var(--un-gap)*2+var(--un-index-w)+var(--un-tile-w)+var(--un-pad)+var(--un-slack))] max-[1025px]:[--un-open-w:min(780px,calc(100vw-48px))] max-[1025px]:[--un-open-h:min(620px,calc(100dvh-48px))] max-md:[--un-open-w:calc(100vw-32px)] max-md:[--un-open-h:min(620px,calc(100dvh-32px))] max-[1025px]:[--un-closed:52px] max-[1025px]:[--un-radius-closed:26px] max-[1025px]:[--un-gap:20px] max-[1025px]:[--un-pad:20px] max-[1025px]:[--un-index-w:236px] max-[1025px]:[--un-tile-w:300px] max-md:[--un-closed:44px] max-md:[--un-radius-closed:22px] max-md:[--un-gap:16px] max-md:[--un-pad:16px]"
+      className="group/unfold pointer-events-none absolute inset-0 text-[#111] [--un-closed:72px] [--un-radius-closed:36px] [--un-pad:24px] [--un-gap:24px] [--un-tile-w:408px] [--un-index-w:288px] [--un-open-h:min(620px,94vh)] [--un-open-w:calc(var(--un-gutter)+var(--un-gap)*2+var(--un-index-w)+var(--un-tile-w)+var(--un-pad)+var(--un-slack))] max-lg:[--un-open-w:min(780px,calc(100vw-48px))] max-lg:[--un-open-h:min(620px,calc(100dvh-48px))] max-md:[--un-open-w:calc(100vw-32px)] max-md:[--un-open-h:min(620px,calc(100dvh-32px))] max-lg:[--un-closed:52px] max-lg:[--un-radius-closed:26px] max-lg:[--un-gap:20px] max-lg:[--un-pad:20px] max-lg:[--un-index-w:236px] max-lg:[--un-tile-w:300px] max-md:[--un-closed:44px] max-md:[--un-radius-closed:22px] max-md:[--un-gap:16px] max-md:[--un-pad:16px]"
     >
 
       <div
@@ -524,7 +524,7 @@ const UnfoldNavbar = ({
         className={`pointer-events-auto fixed z-200 ${
           position
             ? ""
-            : "top-1/2 left-20 -translate-y-1/2 max-[1025px]:left-6 max-md:left-4"
+            : "top-1/2 left-20 -translate-y-1/2 max-lg:left-6 max-md:left-4"
         }`}
       >
         <div
@@ -539,10 +539,10 @@ const UnfoldNavbar = ({
             aria-controls="unfold-surface"
             aria-label={isOpen ? "Close navigation" : "Open navigation"}
 
-            className="absolute top-1/2 left-9 z-2 flex h-11 w-11 -translate-x-1/2 -translate-y-1/2 cursor-pointer items-center justify-center border-none bg-transparent p-0 text-(--un-text) focus-visible:rounded-lg duration-300 ease-in-out hover:scale-[0.8] max-[1025px]:left-6.5 max-[1025px]:h-9 max-[1025px]:w-9 max-md:left-5.5 max-md:h-8 max-md:w-8"
+            className="absolute top-1/2 left-9 z-2 flex h-11 w-11 -translate-x-1/2 -translate-y-1/2 cursor-pointer items-center justify-center border-none bg-transparent p-0 text-(--un-text) focus-visible:rounded-lg duration-300 ease-in-out hover:scale-[0.8] max-lg:left-6.5 max-lg:h-9 max-lg:w-9 max-md:left-5.5 max-md:h-8 max-md:w-8"
           >
 
-            <svg viewBox="0 0 24 24" fill="none" aria-hidden className="h-12 w-12 overflow-visible max-[1025px]:h-9 max-[1025px]:w-9 max-md:h-7 max-md:w-7">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden className="h-12 w-12 overflow-visible max-lg:h-9 max-lg:w-9 max-md:h-7 max-md:w-7">
 
               <rect data-tick="0" x="4" y="11.1" width="16" height="1.8" rx="0.9" fill="currentColor" />
               <rect data-tick="1" x="4" y="11.1" width="16" height="1.8" rx="0.9" fill="currentColor" />
@@ -554,14 +554,14 @@ const UnfoldNavbar = ({
             id="unfold-surface"
             aria-label="Site navigation"
 
-            className="invisible absolute top-0 left-0 box-border flex h-(--un-open-h) w-(--un-open-w) py-6 pr-[calc(var(--un-gutter)+1.5rem)] pl-0 max-[1025px]:py-5 max-[1025px]:pr-5 max-md:overflow-y-auto max-md:py-4 max-md:pr-4"
+            className="invisible absolute top-0 left-0 box-border flex h-(--un-open-h) w-(--un-open-w) py-6 pr-[calc(var(--un-gutter)+1.5rem)] pl-0 max-lg:py-5 max-lg:pr-5 max-md:overflow-y-auto max-md:py-4 max-md:pr-4"
           >
 
             <div aria-hidden className="relative w-(--un-gutter) flex-none">
               <span className="absolute inset-y-0 right-0 w-px bg-white/12" />
             </div>
 
-            <div className="flex min-w-0 flex-1 gap-6 pl-6 max-[1025px]:gap-5 max-[1025px]:pl-5 max-md:flex-col max-md:gap-4.5 max-md:pl-3">
+            <div className="flex min-w-0 flex-1 gap-6 pl-6 max-lg:gap-5 max-lg:pl-5 max-md:flex-col max-md:gap-4.5 max-md:pl-3">
               <nav
                 aria-label="Site navigation"
                 className="group/index flex w-(--un-index-w) min-w-0 flex-none flex-col justify-center max-md:min-h-0 max-md:w-full max-md:flex-1 max-md:justify-start"
@@ -591,7 +591,7 @@ const UnfoldNavbar = ({
                         api.current?.close();
                       }}
                         data-label
-                        className="flex-1 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#fd551d] whitespace-nowrap text-[40px] leading-[1.08] font-light tracking-[-0.03em] text-(--un-text) transition-colors group-data-[dim-links=true]/unfold:group-hover/index:group-[:not(:hover)]/row:text-(--un-muted) group-hover/row:text-(--un-text) max-[1025px]:text-[32px] max-md:text-[clamp(24px,7.2vw,30px)]"
+                        className="flex-1 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#fd551d] whitespace-nowrap text-[40px] leading-[1.08] font-light tracking-[-0.03em] text-(--un-text) transition-colors group-data-[dim-links=true]/unfold:group-hover/index:group-[:not(:hover)]/row:text-(--un-muted) group-hover/row:text-(--un-text) max-lg:text-[32px] max-md:text-[clamp(24px,7.2vw,30px)]"
                       >
                         {item.label}
                       </LinkHover>
@@ -617,14 +617,14 @@ const UnfoldNavbar = ({
                 </div>
               </nav>
 
-              {showFeature && <a
+              {showFeature && <Link
                 href={featureHref}
                 onClick={(e) => {
                   if (featureHref === "#") e.preventDefault();
                 }}
                 onMouseEnter={onTileEnter}
                 onMouseLeave={onTileLeave}
-                className="group/tile flex w-(--un-tile-w) flex-none flex-col no-underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#fd551d] max-[1025px]:min-w-0 max-[1025px]:flex-1 max-md:order-first max-md:min-h-0 max-md:w-full max-md:flex-1"
+                className="group/tile flex w-(--un-tile-w) flex-none flex-col no-underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#fd551d] max-lg:min-w-0 max-lg:flex-1 max-md:order-first max-md:min-h-0 max-md:w-full max-md:flex-1"
               >
                 <span className="relative min-h-0 w-full flex-1 overflow-hidden rounded-lg max-md:min-h-30">
                   <span ref={tileImgRef} className="absolute inset-0 block h-full w-full">
@@ -657,7 +657,7 @@ const UnfoldNavbar = ({
                 >
                   {featureCaption}
                 </span>
-              </a>}
+              </Link>}
             </div>
           </div>
         </div>

@@ -27,10 +27,10 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(function Textare
               has-[+textarea:not(:placeholder-shown)]:top-[0.7vw]
               has-[+textarea:not(:placeholder-shown)]:text-[0.75vw]
               has-[+textarea:not(:placeholder-shown)]:text-white
-              max-[1025px]:left-[5vw] max-[1025px]:top-[4vw] max-[1025px]:text-[3.2vw]
-              max-[1025px]:group-focus-within:top-[2.2vw] max-[1025px]:group-focus-within:text-[2.4vw]
-              max-[1025px]:has-[+textarea:not(:placeholder-shown)]:top-[2.2vw]
-              max-[1025px]:has-[+textarea:not(:placeholder-shown)]:text-[2.4vw]
+              max-lg:left-[5vw] max-lg:top-[4vw] max-lg:text-[3.2vw]
+              max-lg:group-focus-within:top-[2.2vw] max-lg:group-focus-within:text-[2.4vw]
+              max-lg:has-[+textarea:not(:placeholder-shown)]:top-[2.2vw]
+              max-lg:has-[+textarea:not(:placeholder-shown)]:text-[2.4vw]
               max-md:text-[4vw]
             "
           >
@@ -47,7 +47,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(function Textare
             px-[1.6vw] pb-[1.2vw] pt-[2.4vw] font-aeonik-pro text-[1.05vw]
             text-white outline-none transition-colors duration-300
             hover:border-white/40 focus:border-white/60
-            max-[1025px]:rounded-[2.5vw] max-[1025px]:px-[5vw] max-[1025px]:pb-[4vw] max-[1025px]:pt-[7vw] max-[1025px]:text-[3.2vw]
+            max-lg:rounded-[2.5vw] max-lg:px-[5vw] max-lg:pb-[4vw] max-lg:pt-[7vw] max-lg:text-[3.2vw]
             max-md:text-[4vw]
             ${error ? "border-red-400/70 focus:border-red-400" : ""}
             ${className}
@@ -60,7 +60,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(function Textare
       {error && (
         <p
           id={`${id}-error`}
-          className="ml-[1.4vw] mt-[0.4vw] font-aeonik-pro text-[0.8vw] text-red-400 max-[1025px]:ml-[5vw] max-[1025px]:mt-[1.5vw] max-[1025px]:text-[2.6vw] max-md:text-[3.2vw]"
+          className="ml-[1.4vw] mt-[0.4vw] font-aeonik-pro text-[0.8vw] text-red-400 max-lg:ml-[5vw] max-lg:mt-[1.5vw] max-lg:text-[2.6vw] max-md:text-[3.2vw]"
         >
           {error}
         </p>

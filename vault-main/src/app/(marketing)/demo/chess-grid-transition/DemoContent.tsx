@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import ChessGridTransition from "@/components/chess-grid-transition/ChessGridTransition";
+import ChessGridTransition from "@/components/chess-grid-transition";
 import RegistryRemixerDemo from "@/components/remixer-panel/RegistryRemixerDemo";
 import type { RegistryLike } from "@/components/remixer-panel/types";
 import DemoHeader from "@/components/preview-chrome/DemoHeader";

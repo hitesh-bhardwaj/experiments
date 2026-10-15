@@ -61,7 +61,7 @@ const Footer = () => {
   return (
     <>
       <footer
-        className="relative overflow-hidden px-[4vw] pt-[10vw] max-[1025px]:px-[5vw] max-md:pt-[20vw]"
+        className="relative overflow-hidden px-[4vw] pt-[10vw] max-lg:px-[5vw] max-md:pt-[20vw]"
         id="footer"
         ref={footerRef}
       >
@@ -75,23 +75,23 @@ const Footer = () => {
         />
         <div className="relative z-[1]">
           <div
-            className="rounded-4xl bg-black/5 border border-white/30 backdrop-blur-2xl px-12 py-12 flex flex-col gap-20 justify-between max-[1025px]:flex-col max-[1025px]:items-center max-[1025px]:gap-10 max-[1025px]:px-8 max-[1025px]:py-15 max-md:px-6 max-md:gap-8"
+            className="rounded-4xl bg-black/5 border border-white/30 backdrop-blur-2xl px-12 py-12 flex flex-col gap-20 justify-between max-lg:flex-col max-lg:items-center max-lg:gap-10 max-lg:px-8 max-lg:py-15 max-md:px-6 max-md:gap-8"
             ref={footerGlassRef}
           >
             {/* Logo and Contact Info */}
 
-            <div className="flex  justify-between items-start gap-24 footer-content max-[1025px]:gap-10 max-md:gap-16 max-[1025px]:flex-col-reverse max-[1025px]:items-center">
+            <div className="flex  justify-between items-start gap-24 footer-content max-lg:gap-10 max-md:gap-16 max-lg:flex-col-reverse max-lg:items-center">
               <Image
                 src={ElenaVossLogo}
                 width={338}
                 height={172}
                 alt="Logo"
                 loading="lazy"
-                className="w-[22vw] max-[1025px]:w-[34vw] max-md:w-[46vw]"
+                className="w-[22vw] max-lg:w-[34vw] max-md:w-[46vw]"
               />
 
-              <div className="flex flex-col gap-[2vw] items-end max-[1025px]:items-center max-[1025px]:text-center max-md:gap-[7vw]">
-                <p className="text-[3.4vw] text-end w-[75%] leading-[1.15] max-[1025px]:text-[5vw] max-[1025px]:w-full max-[1025px]:text-center max-md:text-[7.5vw] ">
+              <div className="flex flex-col gap-[2vw] items-end max-lg:items-center max-lg:text-center max-md:gap-[7vw]">
+                <p className="text-[3.4vw] text-end w-[75%] leading-[1.15] max-lg:text-[5vw] max-lg:w-full max-lg:text-center max-md:text-[7.5vw] ">
                   Ready to Bring Your Vision to Life?
                 </p>
                 <DotFillBtn
@@ -101,7 +101,7 @@ const Footer = () => {
                     e.preventDefault();
                     openModal();
                   }}
-                  textClassName="font-normal text-[1.15vw] max-[1025px]:text-[3vw] max-md:text-[4.2vw]"
+                  textClassName="font-normal text-[1.15vw] max-lg:text-[3vw] max-md:text-[4.2vw]"
                   bgColor="#ffffff"
                   dotColor="#070707"
                   hoverTextColor="#ffffff"
@@ -110,12 +110,12 @@ const Footer = () => {
               </div>
             </div>
 
-            <div className="flex w-full items-end justify-between gap-36 h-auto  footer-content max-[1025px]:w-full max-[1025px]:items-center max-[1025px]:text-center max-[1025px]:gap-10 max-md:gap-10 max-[1025px]:flex-col ">
+            <div className="flex w-full items-end justify-between gap-36 h-auto  footer-content max-lg:w-full max-lg:items-center max-lg:text-center max-lg:gap-10 max-md:gap-10 max-lg:flex-col ">
               <div className=" w-fit text-foreground">
-                <h6 className="uppercase mb-5 text-[1.25vw] max-[1025px]:text-[2.4vw] max-md:text-[4vw]">
+                <h6 className="uppercase mb-5 text-[1.25vw] max-lg:text-[2.4vw] max-md:text-[4vw]">
                   Reach Out
                 </h6>
-                <ul className="space-y-2 text-[1.25vw] max-[1025px]:text-[2.4vw] max-md:text-[4vw]">
+                <ul className="space-y-2 text-[1.25vw] max-lg:text-[2.4vw] max-md:text-[4vw]">
                   <li className="under-multi-parent">
                     <a
                       href="tel:+1 (415) 309-8274"

@@ -439,7 +439,7 @@ export default function SpiralGallery() {
         <section
             ref={sectionRef}
             id="spiral-images"
-            className="relative w-full max-[1025px]:hidden  z-50"
+            className="relative w-full max-lg:hidden  z-50"
             style={{ height: SECTION_HEIGHT }}
         >
             <div

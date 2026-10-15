@@ -13,7 +13,12 @@ export default function DemoContent({ registry }: { registry: any }) {
     >
       {({ effect }) => (
         <>
-          <DemoHeader />
+          <DemoHeader
+            reducedMotionNote={{
+              title: "This effect can't be reduced.",
+              body: "Reduced motion is enabled, but this effect is a continuous ambient dot-grid animation with cursor-driven distortion, and can't be simplified to a fade without losing the effect entirely.",
+            }}
+          />
           {effect}
         </>
       )}

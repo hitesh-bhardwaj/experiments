@@ -129,11 +129,6 @@
       "path": "index.tsx",
       "type": "registry:component",
       "target": "src/components/effects/butterfly-trail-cursor/index.tsx"
-    },
-    {
-      "path": "createSuspendedRaf.ts",
-      "type": "registry:component",
-      "target": "src/components/effects/butterfly-trail-cursor/createSuspendedRaf.ts"
     }
   ]
 }

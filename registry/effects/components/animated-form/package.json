@@ -5,13 +5,6 @@
   "main": "index.tsx",
   "files": [
     "index.tsx",
-    "Button.tsx",
-    "Checkbox.tsx",
-    "ContactForm.tsx",
-    "Input.tsx",
-    "PhoneInput.tsx",
-    "Select.tsx",
-    "Textarea.tsx",
     "registry.json"
   ],
   "keywords": [

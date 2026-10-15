@@ -92,17 +92,17 @@ const ShowCase = () => {
   return (
     <section
       id="showcase"
-      className="py-[10%]  relative z-5 max-[1025px]:pb-[15%]"
+      className="py-[10%]  relative z-5 max-lg:pb-[15%]"
       data-scroll
       data-scroll-speed={isMobile ? undefined : "-0.3"}
     >
       <div className={`px-[5%] h-full relative`}>
-        <div className="flex w-full gap-[10vw] max-[1025px]:flex-col">
-          <MaskTextReveal className="w-[50%] max-[1025px]:w-full">
+        <div className="flex w-full gap-[10vw] max-lg:flex-col">
+          <MaskTextReveal className="w-[50%] max-lg:w-full">
 
           <h2
             data-para-anim
-            className={` text-[#1C1B1A] font-neue-montreal font-medium! text-[3.8vw] leading-[1.2]  max-[1025px]:text-[6.8vw] max-md:text-[8.8vw] max-[1025px]:w-full`}
+            className={` text-[#1C1B1A] font-neue-montreal font-medium! text-[3.8vw] leading-[1.2]  max-lg:text-[6.8vw] max-md:text-[8.8vw] max-lg:w-full`}
             >
             At the Heart of
             <br />
@@ -111,7 +111,7 @@ const ShowCase = () => {
             </MaskTextReveal>
 
            
-          <div className="w-[40vw] h-[22vw] overflow-hidden rounded-full video-block absolute right-[10%] rtl:left-[10%] rtl:right-auto max-[1025px]:w-[90vw] max-[1025px]:h-[50vw] max-[1025px]:static max-[1025px]:rounded-[4vw]">
+          <div className="w-[40vw] h-[22vw] overflow-hidden rounded-full video-block absolute right-[10%] rtl:left-[10%] rtl:right-auto max-lg:w-[90vw] max-lg:h-[50vw] max-lg:static max-lg:rounded-[4vw]">
             <video
               ref={videoRef}
               poster={showcasePoster.src}
@@ -121,18 +121,18 @@ const ShowCase = () => {
               className="w-full h-full object-cover object-center"
             ></video>
             <div
-              className={`inner-detail absolute bottom-[8%] left-1/2 translate-x-[-50%] z-6 flex items-center gap-[2vw] rounded-full bg-black/30 backdrop-blur-[10px] px-[2.2vw] py-[1.2vw] opacity-0 max-[1025px]:static max-[1025px]:mt-[4vw] max-[1025px]:w-fit max-[1025px]:flex-wrap max-[1025px]:gap-[3vw] max-[1025px]:px-[5vw] max-[1025px]:py-[4vw] max-[1025px]:opacity-100 max-md:opacity-100`}
+              className={`inner-detail absolute bottom-[8%] left-1/2 translate-x-[-50%] z-6 flex items-center gap-[2vw] rounded-full bg-black/30 backdrop-blur-[10px] px-[2.2vw] py-[1.2vw] opacity-0 max-lg:static max-lg:mt-[4vw] max-lg:w-fit max-lg:flex-wrap max-lg:gap-[3vw] max-lg:px-[5vw] max-lg:py-[4vw] max-lg:opacity-100 max-md:opacity-100`}
             >
-              <p data-para-anim className="text-[1.1vw] leading-tight text-white max-[1025px]:text-[3vw]">
+              <p data-para-anim className="text-[1.1vw] leading-tight text-white max-lg:text-[3vw]">
                 Nearby
                 <br />
                 Landmarks:
               </p>
-              <div className="flex items-center  gap-[2vw] max-[1025px]:flex-wrap max-[1025px]:gap-[3vw]">
+              <div className="flex items-center  gap-[2vw] max-lg:flex-wrap max-lg:gap-[3vw]">
                 {nearbyLandmarks.map((landmark, index) => (
                   <React.Fragment key={landmark}>
-                    {index !== 0 && <span className="h-[1.4vw] w-px shrink-0 bg-white/40 max-[1025px]:hidden" />}
-                    <p data-para-anim className="whitespace-nowrap text-[1.1vw] text-white max-[1025px]:text-[3vw]">
+                    {index !== 0 && <span className="h-[1.4vw] w-px shrink-0 bg-white/40 max-lg:hidden" />}
+                    <p data-para-anim className="whitespace-nowrap text-[1.1vw] text-white max-lg:text-[3vw]">
                       {landmark}
                     </p>
                   </React.Fragment>
@@ -143,10 +143,10 @@ const ShowCase = () => {
 
         </div>
 
-        <div className="w-full h-full mt-[48vw] flex justify-end max-[1025px]:mt-[7vw]">
-          <MaskTextReveal className="w-[40%] max-[1025px]:w-full">
+        <div className="w-full h-full mt-[48vw] flex justify-end max-lg:mt-[7vw]">
+          <MaskTextReveal className="w-[40%] max-lg:w-full">
 
-          <p data-para-anim className=" max-md:text-[4.2vw] max-[1025px]:text-[3vw] mr-[5vw] text-[1.2vw] text-black  tracking-wide">
+          <p data-para-anim className=" max-md:text-[4.2vw] max-lg:text-[3vw] mr-[5vw] text-[1.2vw] text-black  tracking-wide">
             Perfectly located in one of Dubai&apos;s most prestigious districts, Lumera Heights offers unmatched access to culture, business, and lifestyle destinations.
           </p>
           </MaskTextReveal>

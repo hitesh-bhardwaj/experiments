@@ -1,18 +1,15 @@
 // Built using Hyperiux Vault: https://vault.hyperiux.com
-
 'use client'
-
-import { useEffect, useId, useRef } from 'react'
+import { useEffect, useId, useRef, useSyncExternalStore } from "react";
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-gsap.registerPlugin(ScrollTrigger)
 
-// True when the user has asked the OS to minimise animation. Safe to call
-// during render - returns false on the server.
 function prefersReducedMotion() {
-  if (typeof window === 'undefined') return false
-  return window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches ?? false
+  if (typeof window === "undefined") return false;
+
+  return window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches ?? false;
 }
+gsap.registerPlugin(ScrollTrigger)
 
 const floatingWords = [
   { text: 'MOTION', color: 'bg-sky-300', start: { top: '6%', left: '10%', xPercent: -50, yPercent: -50 } },
@@ -57,8 +54,8 @@ export default function GridScale({
 }) {
   const uid = useId().replace(/:/g, "");
   const sectionId = `grid-scale-${uid}`;
-  const centeredTextRef = useRef(/** @type {HTMLParagraphElement|null} */ (null));
-  const ideaTextRef = useRef(/** @type {HTMLParagraphElement|null} */ (null));
+  const centeredTextRef = useRef(null);
+  const ideaTextRef = useRef(null);
 
   useEffect(() => {
     const isMobile = window.innerWidth < 640
@@ -229,12 +226,12 @@ tl.fromTo(
             className="clip-path flex items-center justify-center z-200 absolute top-0 left-0 w-full h-screen"
             style={{ backgroundColor: panelColor }}
           >
-            <p ref={centeredTextRef} className='text-[#242424] opacity-0 w-[60vw] text-center leading-[1.1] text-[3.5vw] max-md:text-[4.5vw]'>
+            <h1 ref={centeredTextRef} className='text-[#242424] opacity-0 w-[60vw] text-center leading-[1.1] text-[3.5vw] max-md:text-[4.5vw]'>
               Building futuristic interfaces
               <br />
               with motion, interaction, and depth.
-            </p>
-            <p ref={ideaTextRef} className='text-[#242424] max-[1025px]:w-[20vw] absolute top-1/2 left-1/2 text-center -translate-x-1/2 -translate-y-1/2 leading-[1.1] max-[1025px]:text-[5vw] text-[2.2vw]'>Need immersive UI?<br /> Hyperiux makes it <br /> move.</p>
+            </h1>
+            <p ref={ideaTextRef} className='text-[#242424] max-lg:w-[20vw] max-md:w-[45vw] absolute top-1/2 left-1/2 text-center -translate-x-1/2 -translate-y-1/2 leading-[1.1] max-lg:text-[5vw] text-[2.2vw]'>Need immersive UI?<br /> Hyperiux makes it <br /> move.</p>
           </div>
 
           {/* Corner Boxes */}
@@ -251,7 +248,7 @@ tl.fromTo(
           {floatingWords.map((word, i) => (
             <div
               key={i}
-              className={`floating-word-${i} z-300 absolute opacity-0 px-4 py-1 font-bold text-sm max-[1025px]:text-[2vw] max-md:text-[2.5vw] uppercase tracking-wider ${word.color}`}
+              className={`floating-word-${i} z-300 absolute opacity-0 px-4 py-1 font-bold text-sm max-lg:text-[2vw] max-md:text-[2.5vw] uppercase tracking-wider ${word.color}`}
             >
               <p className='mix-blend-difference text-white'> {word.text}</p>
             </div>

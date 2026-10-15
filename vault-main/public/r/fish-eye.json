@@ -2,10 +2,10 @@
   "name": "fish-eye",
   "type": "registry:component",
   "title": "Fish Eye",
-  "description": "WebGPU fish-eye lens distortion on images using Three.ts TSL node materials with smooth cursor tracking",
+  "description": "WebGPU fish-eye lens distortion on images using Three.js TSL node materials with smooth cursor tracking",
   "dependencies": [
-    "@react-three/fiber",
     "@react-three/drei",
+    "@react-three/fiber",
     "three"
   ],
   "registryDependencies": [],
@@ -98,11 +98,6 @@
       "path": "index.tsx",
       "type": "registry:component",
       "target": "src/components/effects/fish-eye/index.tsx"
-    },
-    {
-      "path": "createSuspendedRaf.ts",
-      "type": "registry:component",
-      "target": "src/components/effects/fish-eye/createSuspendedRaf.ts"
     }
   ]
 }

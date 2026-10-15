@@ -47,7 +47,7 @@ function CloseButton({ onClick }: { onClick: () => void }) {
       type="button"
       onClick={onClick}
       aria-label="Close"
-      className="relative shrink-0 size-14 rounded-full overflow-hidden flex items-center justify-center  cursor-pointer max-[1025px]:size-11 max-md:size-9 group"
+      className="relative shrink-0 size-14 rounded-full overflow-hidden flex items-center justify-center  cursor-pointer max-lg:size-11 max-md:size-9 group"
     >
       <div className="absolute inset-0 w-full h-full bg-linear-to-r from-[#F16B0D] to-[#E61416]" />
       <span className="absolute h-0.5 z-2 w-4 rounded-full bg-white rotate-45 max-md:w-3 group-hover:rotate-225 duration-500 ease-in-out" />
@@ -82,17 +82,17 @@ export function GetInTouchModalProvider({ children }: { children: ReactNode }) {
         ariaLabelledby="get-in-touch-modal-title"
         contentClassName="justify-center px-[4vw] max-md:px-4"
       >
-        <div className="relative w-full max-w-[75vw] h-[75vh] overflow-y-auto rounded-[2vw] bg-white/5 backdrop-blur-lg border border-white/10 text-white p-[3vw] max-[1025px]:max-w-[85vw] max-[1025px]:p-8 max-md:max-w-full max-md:p-6 max-md:rounded-3xl">
-          <div className="absolute top-[2vw] right-[2vw] max-[1025px]:top-6 max-[1025px]:right-6 max-md:top-4 max-md:right-4">
+        <div className="relative w-full max-w-[75vw] h-[75vh] overflow-y-auto rounded-[2vw] bg-white/5 backdrop-blur-lg border border-white/10 text-white p-[3vw] max-lg:max-w-[85vw] max-lg:p-8 max-md:max-w-full max-md:p-6 max-md:rounded-3xl">
+          <div className="absolute top-[2vw] right-[2vw] max-lg:top-6 max-lg:right-6 max-md:top-4 max-md:right-4">
             <CloseButton onClick={closeModal} />
           </div>
 
-          <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)] gap-[3vw] items-start max-[1025px]:grid-cols-1 max-[1025px]:gap-8 pt-[4vw]">
+          <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)] gap-[3vw] items-start max-lg:grid-cols-1 max-lg:gap-8 pt-[4vw]">
             <div>
-              <h2 id="get-in-touch-modal-title" className="text-[4.8vw] leading-[1.1]! max-[1025px]:text-[5vw] max-md:text-[8vw]">
+              <h2 id="get-in-touch-modal-title" className="text-[4.8vw] leading-[1.1]! max-lg:text-[5vw] max-md:text-[8vw]">
                 Get in Touch
               </h2>
-              <p className="mt-[1vw] text-[1.1vw] text-white max-[1025px]:text-[2.4vw] max-md:text-[4vw]">
+              <p className="mt-[1vw] text-[1.1vw] text-white max-lg:text-[2.4vw] max-md:text-[4vw]">
                 Drop me a message
               </p>
             </div>

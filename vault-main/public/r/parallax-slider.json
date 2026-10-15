@@ -27,17 +27,6 @@
   ],
   "props": [
     {
-      "name": "bgColor",
-      "type": "color",
-      "default": "#111111",
-      "description": "Slider background color.",
-      "remixer": {
-        "control": "color",
-        "group": "style",
-        "groupTitle": "Style"
-      }
-    },
-    {
       "name": "parallaxAmount",
       "type": "number",
       "default": 25,

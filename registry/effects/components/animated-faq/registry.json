@@ -113,10 +113,6 @@
     {
       "path": "index.tsx",
       "target": "src/components/effects/animated-faq/index.tsx"
-    },
-    {
-      "path": "AnimatedFaqComp.tsx",
-      "target": "src/components/effects/animated-faq/AnimatedFaqComp.tsx"
     }
   ],
   "changelog": [

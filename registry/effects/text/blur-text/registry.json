@@ -115,6 +115,17 @@
         "group": "behavior",
         "groupTitle": "Behavior"
       }
+    },
+    {
+      "name": "textColor",
+      "type": "string",
+      "default": "#111111",
+      "description": "Text color. Unset inherits from the surrounding text.",
+      "remixer": {
+        "control": "color",
+        "group": "style",
+        "groupTitle": "Style"
+      }
     }
   ],
   "remixer": {
@@ -131,8 +142,9 @@
   "files": [
     {
       "path": "index.tsx",
-      "type": "registry:component",
       "target": "src/components/effects/blur-text/index.tsx"
     }
-  ]
+  ],
+  "importPath": "@/components/effects/blur-text",
+  "target": "src/components/effects/blur-text"
 }

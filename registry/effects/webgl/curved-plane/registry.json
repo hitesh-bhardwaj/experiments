@@ -3,7 +3,7 @@
   "version": "1.0.1",
   "type": "registry:component",
   "title": "Curved Plane",
-  "description": "Three.ts WebGL horizontal image carousel with a custom GLSL shader that curves the plane edges on drag and scroll. Images fade toward the edges and deform proportionally to interaction velocity. Supports drag, touch, scroll, and inertia momentum.",
+  "description": "Three.js WebGL horizontal image carousel with a custom GLSL shader that curves the plane edges on drag and scroll. Images fade toward the edges and deform proportionally to interaction velocity. Supports drag, touch, scroll, and inertia momentum.",
   "category": "webgl",
   "dependencies": [
     "three"
@@ -102,18 +102,6 @@
     {
       "path": "index.tsx",
       "target": "src/components/effects/curved-plane/index.tsx"
-    },
-    {
-      "path": "CurvedSwiperHorizontal.tsx",
-      "target": "src/components/effects/curved-plane/CurvedSwiperHorizontal.tsx"
-    },
-    {
-      "path": "CurvedSwiperVertical.tsx",
-      "target": "src/components/effects/curved-plane/CurvedSwiperVertical.tsx"
-    },
-    {
-      "path": "createSuspendedRaf.ts",
-      "target": "src/components/effects/curved-plane/createSuspendedRaf.ts"
     }
   ],
   "changelog": [

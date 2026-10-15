@@ -15,7 +15,12 @@ export default function DemoContent({ registry }: { registry: any }) {
     >
       {({ effect }) => (
         <main className="h-screen w-screen relative bg-[#211951] text-[#826fffaa]">
-          <DemoHeader />
+          <DemoHeader
+            reducedMotionNote={{
+              title: "The crosshair keeps tracking.",
+              body: "Full Screen Crosshair follows your cursor continuously across the screen. Since tracking motion is the entire effect, reduced motion can't be applied here.",
+            }}
+          />
           {effect}
           <HeadAnim>
             <h1 className="w-full h-full flex items-center justify-center text-center text-[3.5vw] font-medium max-md:text-[6.5vw]">

@@ -1,8 +1,259 @@
+// Built using Hyperiux Vault: https://vault.hyperiux.com
 "use client";
 
 import { useEffect, useRef } from "react";
-import { createSuspendedRaf } from "./createSuspendedRaf";
 
+const DEFAULT_ROOT_MARGIN = "256px";
+
+type RafRoot = Element | null | { current: Element | null } | (() => Element | null);
+
+function resolveElement(root: RafRoot): Element | null {
+  if (!root) return null;
+  if (typeof root === "function") return root() ?? null;
+  if (typeof root === "object" && "current" in root) return root.current ?? null;
+  return root;
+}
+
+interface VisibilityGateOptions {
+  root?: RafRoot;
+  rootMargin?: string;
+  threshold?: number;
+  observeTab?: boolean;
+  observeOffscreen?: boolean;
+  onChange?: (active: boolean) => void;
+}
+
+interface VisibilityGate {
+  readonly isActive: boolean;
+  observe: (nextRoot?: RafRoot) => void;
+  destroy: () => void;
+}
+
+function createVisibilityGate({
+  root = null,
+  rootMargin = DEFAULT_ROOT_MARGIN,
+  threshold = 0,
+  observeTab = true,
+  observeOffscreen = true,
+  onChange,
+}: VisibilityGateOptions = {}): VisibilityGate {
+  let tabVisible =
+    typeof document === "undefined" ? true : !document.hidden;
+  // Match border-beam: assume onscreen until the observer reports otherwise.
+  let onscreen = true;
+  let destroyed = false;
+  let observer: IntersectionObserver | null = null;
+
+  const isActive = () => {
+    if (destroyed) return false;
+    if (observeTab && !tabVisible) return false;
+    if (observeOffscreen && resolveElement(root) && !onscreen) return false;
+    return true;
+  };
+
+  let lastActive = isActive();
+
+  const emit = () => {
+    if (destroyed) return;
+    const next = isActive();
+    if (next === lastActive) return;
+    lastActive = next;
+    onChange?.(next);
+  };
+
+  const onVisibilityChange = () => {
+    tabVisible = !document.hidden;
+    emit();
+  };
+
+  if (observeTab && typeof document !== "undefined") {
+    document.addEventListener("visibilitychange", onVisibilityChange);
+  }
+
+  const bindObserver = () => {
+    if (!observeOffscreen || typeof IntersectionObserver === "undefined") {
+      return;
+    }
+
+    const el = resolveElement(root);
+    if (!el) return;
+
+    observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          onscreen = entry.isIntersecting;
+        }
+        emit();
+      },
+      { rootMargin, threshold },
+    );
+
+    observer.observe(el);
+  };
+
+  bindObserver();
+
+  return {
+    /** Whether the animation should currently run. */
+    get isActive() {
+      return isActive();
+    },
+
+    /**
+     * Re-bind IntersectionObserver after the root element mounts late
+     * (e.g. ref not ready on first call). Safe to call multiple times.
+     */
+    observe(nextRoot?: RafRoot) {
+      if (destroyed) return;
+      if (nextRoot != null) root = nextRoot;
+      if (observer) {
+        observer.disconnect();
+        observer = null;
+      }
+      onscreen = true;
+      bindObserver();
+      emit();
+    },
+
+    destroy() {
+      if (destroyed) return;
+      destroyed = true;
+      if (observeTab && typeof document !== "undefined") {
+        document.removeEventListener("visibilitychange", onVisibilityChange);
+      }
+      if (observer) {
+        observer.disconnect();
+        observer = null;
+      }
+    },
+  };
+}
+
+interface SuspendedRafOptions {
+  onFrame: (time: number) => void;
+  root?: RafRoot;
+  rootMargin?: string;
+  threshold?: number;
+  observeTab?: boolean;
+  observeOffscreen?: boolean;
+}
+
+interface SuspendedRaf {
+  start: () => void;
+  stop: () => void;
+  readonly isRunning: boolean;
+  readonly isActive: boolean;
+  observe: (nextRoot?: RafRoot) => void;
+  destroy: () => void;
+}
+
+/**
+ * Owns a requestAnimationFrame loop that auto-pauses when the tab is hidden
+ * or the root element is offscreen.
+ */
+function createSuspendedRaf({
+  onFrame,
+  root = null,
+  rootMargin = DEFAULT_ROOT_MARGIN,
+  threshold = 0,
+  observeTab = true,
+  observeOffscreen = true,
+}: SuspendedRafOptions): SuspendedRaf {
+  if (typeof onFrame !== "function") {
+    throw new TypeError("createSuspendedRaf: onFrame is required");
+  }
+
+  let rafId: number | null = null;
+  let running = false;
+  let destroyed = false;
+
+  const stopRaf = () => {
+    if (rafId != null) {
+      cancelAnimationFrame(rafId);
+      rafId = null;
+    }
+  };
+
+  const tick = (time: number) => {
+    rafId = null;
+    if (destroyed || !running || !gate.isActive) return;
+    onFrame(time);
+    if (!destroyed && running && gate.isActive) {
+      rafId = requestAnimationFrame(tick);
+    }
+  };
+
+  const sync = () => {
+    if (destroyed) return;
+    if (running && gate.isActive) {
+      if (rafId == null) {
+        rafId = requestAnimationFrame(tick);
+      }
+    } else {
+      stopRaf();
+    }
+  };
+
+  const gate = createVisibilityGate({
+    root,
+    rootMargin,
+    threshold,
+    observeTab,
+    observeOffscreen,
+    onChange: sync,
+  });
+
+  return {
+    /** Start (or resume) the loop when visibility allows. */
+    start() {
+      if (destroyed) return;
+      running = true;
+      sync();
+    },
+
+    /** Stop requesting frames (visibility listeners stay attached until destroy). */
+    stop() {
+      running = false;
+      stopRaf();
+    },
+
+    /** Whether the caller has started the loop (may still be paused by visibility). */
+    get isRunning() {
+      return running;
+    },
+
+    /** Whether a frame is currently allowed to schedule. */
+    get isActive() {
+      return gate.isActive;
+    },
+
+    /** Re-attach offscreen observer to a (new) root element. */
+    observe(nextRoot?: RafRoot) {
+      gate.observe(nextRoot);
+      sync();
+    },
+
+    /** Tear down listeners and cancel any pending frame. */
+    destroy() {
+      if (destroyed) return;
+      destroyed = true;
+      running = false;
+      stopRaf();
+      gate.destroy();
+    },
+  };
+}
+
+export {
+  createSuspendedRaf,
+  createVisibilityGate,
+  DEFAULT_ROOT_MARGIN,
+};
+
+
+// React hook form, for JSX output that depends on the preference (not just
+// the imperative reduceMotion flag already used inside the draw loop below).
+// Safe to call during render - returns false on the server.
 const DEFAULT_SPACING = 24;
 const DEFAULT_BASE_RADIUS = 7.2;
 const DEFAULT_MOUSE_RADIUS = 380;
@@ -13,10 +264,10 @@ const DEFAULT_TRAIL_FADE_MS = 1200;
 const RANDOM_TIME = 0.6;
 const COLLECT_TIME = 1.1;
 const SHAPE_HOLD_TIME = 1.2;
+const GRAY_DISPERSE_TIME = 0.9; // trail lingers ~2s
 
-const TOTAL_CYCLE_TIME = RANDOM_TIME + COLLECT_TIME + SHAPE_HOLD_TIME;
+const TOTAL_CYCLE_TIME = RANDOM_TIME + COLLECT_TIME + SHAPE_HOLD_TIME + GRAY_DISPERSE_TIME;
 const TOTAL_SHAPES = 5;
-
 
 const lerp = (a: number, b: number, t: number): number => a + (b - a) * t;
 const clamp01 = (v: number): number => Math.max(0, Math.min(1, v));
@@ -24,7 +275,6 @@ const smoothstep = (e0: number, e1: number, v: number): number => {
   const t = clamp01((v - e0) / (e1 - e0));
   return t * t * (3 - 2 * t);
 };
-
 
 const getStarStrength = (x: number, y: number, time: number, width: number, height: number): number => {
   const cx = width / 2;
@@ -51,7 +301,7 @@ const getSquareStrength = (x: number, y: number, width: number, height: number):
 
   const rx = (x - cx) / scale;
   const ry = (y - cy) / scale;
-  const d = Math.max(Math.abs(rx), Math.abs(ry));
+  const d  = Math.max(Math.abs(rx), Math.abs(ry));
 
   return clamp01(1 - smoothstep(0.78, 0.82, d));
 };
@@ -75,9 +325,9 @@ const getPlusStrength = (x: number, y: number, width: number, height: number): n
   const ry = (y - cy) / scale;
 
   const thickness = 0.18;
-  const length = 0.75;
+  const length    = 0.75;
 
-  const vertical = Math.abs(rx) < thickness && Math.abs(ry) < length;
+  const vertical   = Math.abs(rx) < thickness && Math.abs(ry) < length;
   const horizontal = Math.abs(ry) < thickness && Math.abs(rx) < length;
 
   const d = Math.min(
@@ -155,7 +405,7 @@ export default function DottedGrid({
   mobileHint = "Works best on desktop",
   className = "",
 }: DottedGridProps) {
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const canvasRef  = useRef<HTMLCanvasElement | null>(null);
   const patternRef = useRef<{ currentShapeIndex: number; transitionStartTime: number | null }>({
     currentShapeIndex: 0,
     transitionStartTime: null,
@@ -177,9 +427,6 @@ export default function DottedGrid({
   });
 
   useEffect(() => {
-    patternRef.current.transitionStartTime = null;
-    patternRef.current.currentShapeIndex = 0;
-
     const canvas = canvasRef.current as HTMLCanvasElement;
     const ctx = canvas.getContext("2d", { alpha: false }) as CanvasRenderingContext2D;
 
@@ -199,7 +446,6 @@ export default function DottedGrid({
         patternRef.current.transitionStartTime = null;
       }
     };
-
 
     const createDots = () => {
       dots = [];
@@ -223,15 +469,14 @@ export default function DottedGrid({
 
     const resize = () => {
       const rect = canvas.getBoundingClientRect();
-      width = rect.width;
+      width  = rect.width;
       height = rect.height;
-      dpr = Math.min(window.devicePixelRatio || 1, 2);
-      canvas.width = Math.floor(width * dpr);
+      dpr    = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width  = Math.floor(width * dpr);
       canvas.height = Math.floor(height * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       createDots();
     };
-
 
     const handlePointerMove = (e: PointerEvent) => {
       const rect = canvas.getBoundingClientRect();
@@ -239,7 +484,7 @@ export default function DottedGrid({
       const y = e.clientY - rect.top;
       mouseRef.current.targetX = x;
       mouseRef.current.targetY = y;
-      mouseRef.current.active = true;
+      mouseRef.current.active  = true;
       mouseRef.current.trail.push({ x, y, t: performance.now() });
 
       if (mouseRef.current.trail.length > trailLength) {
@@ -298,16 +543,20 @@ export default function DottedGrid({
         return { shapeStrength, randomStrength: 0, grayDisperseStrength: 0 };
       }
 
-      return { shapeStrength, randomStrength: 0, grayDisperseStrength: 0 };
+      const eased = smoothstep(0, 1, (cyclePosition - RANDOM_TIME - COLLECT_TIME - SHAPE_HOLD_TIME) / GRAY_DISPERSE_TIME);
+      return {
+        shapeStrength: shapeStrength * (1 - eased),
+        randomStrength: eased,
+        grayDisperseStrength: eased,
+      };
     };
-
 
     const drawDot = (x: number, y: number, radius: number, brightness: number, grayDisperseStrength: number, trailStrength: number, mouseStrength: number) => {
       const mouseFade = mouseStrength * mouseStrength * 0.72;
       const trailFade = trailStrength * 0.38;
       const alpha = clamp01((0.28 + brightness * 0.72) - mouseFade - trailFade);
 
-      const normalL = 16 + brightness * 78;
+      const normalL   = 16 + brightness * 78;
       const disperseL = 12 + brightness * 58 + grayDisperseStrength * 22;
       const lightness = lerp(normalL, disperseL, grayDisperseStrength);
 
@@ -316,7 +565,7 @@ export default function DottedGrid({
       const trailLift = trailStrength * 38 * (1 - trailStrength * 0.55);
 
       const finalLightness = clamp01((lightness - mouseDark + mouseLift + trailLift) / 100) * 100;
-      const saturation = trailStrength * trailStrength * 16;
+      const saturation     = trailStrength * trailStrength * 16;
 
       ctx.beginPath();
       ctx.fillStyle = `hsla(210, ${saturation}%, ${finalLightness}%, ${alpha})`;
@@ -324,104 +573,102 @@ export default function DottedGrid({
       ctx.fill();
     };
 
-
     const loop = createSuspendedRaf({
       root: canvas,
       onFrame: (ms) => {
-      const time = ms * 0.001;
-      const mouse = mouseRef.current;
-      const now = performance.now();
+        const time = ms * 0.001;
+        const mouse = mouseRef.current;
+        const now = performance.now();
 
-      // Lagging cursor effect
-      mouse.x = lerp(mouse.x, mouse.targetX, 0.12);
-      mouse.y = lerp(mouse.y, mouse.targetY, 0.12);
+        // Lagging cursor effect
+        mouse.x = lerp(mouse.x, mouse.targetX, 0.12);
+        mouse.y = lerp(mouse.y, mouse.targetY, 0.12);
 
         ctx.fillStyle = backgroundColor;
-      ctx.fillRect(0, 0, width, height);
+        ctx.fillRect(0, 0, width, height);
 
-      for (const dot of dots) {
-        if (reduceMotion) {
-          const shapeStrength = getRawShapeStrength(
-            patternRef.current.currentShapeIndex,
-            dot.x,
-            dot.y,
-            0,
-            width,
-            height
-          );
-          const brightness = clamp01(0.16 + shapeStrength * 0.84);
-          const radius = baseRadius + shapeStrength * 1.25;
-          drawDot(dot.x, dot.y, radius, brightness, 0, 0, 0);
-          continue;
-        }
-
-        const { shapeStrength, randomStrength, grayDisperseStrength } = getShapeData(dot.x, dot.y, time);
-
-        dot.currentShapeStrength = lerp(dot.currentShapeStrength, shapeStrength, 0.12);
-        dot.currentRandomStrength = lerp(dot.currentRandomStrength, randomStrength, 0.14);
-        dot.currentGrayDisperseStrength = lerp(dot.currentGrayDisperseStrength, grayDisperseStrength, 0.14);
-
-        // Cursor head influence
-        let targetMouseStrength = 0;
-        if (mouse.active) {
-          const dx = dot.x - mouse.x;
-          const dy = dot.y - mouse.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < mouseRadius) {
-            const norm = dist / mouseRadius;
-            targetMouseStrength = (1 - norm) * (1 - norm) * (1 - norm);
+        for (const dot of dots) {
+          if (reduceMotion) {
+            const shapeStrength = getRawShapeStrength(
+              patternRef.current.currentShapeIndex,
+              dot.x,
+              dot.y,
+              0,
+              width,
+              height
+            );
+            const brightness = clamp01(0.16 + shapeStrength * 0.84);
+            const radius = baseRadius + shapeStrength * 1.25;
+            drawDot(dot.x, dot.y, radius, brightness, 0, 0, 0);
+            continue;
           }
-        }
-        dot.currentMouseStrength = lerp(dot.currentMouseStrength, targetMouseStrength, 0.12);
 
-        // Trail influence
-        let targetTrailStrength = 0;
-        for (let i = 0; i < mouse.trail.length; i++) {
-          const pt = mouse.trail[i];
-          const age = (now - pt.t) / trailFadeMs;
-          if (age >= 1) continue;
+          const { shapeStrength, randomStrength, grayDisperseStrength } = getShapeData(dot.x, dot.y, time);
 
-          const ageFade = (1 - age) * (1 - age) * (1 - age);
-          const positionFade = (i + 1) / mouse.trail.length;
-          const fade = ageFade * positionFade;
+          dot.currentShapeStrength = lerp(dot.currentShapeStrength, shapeStrength, 0.12);
+          dot.currentRandomStrength = lerp(dot.currentRandomStrength, randomStrength, 0.14);
+          dot.currentGrayDisperseStrength = lerp(dot.currentGrayDisperseStrength, grayDisperseStrength, 0.14);
 
-          const dx = dot.x - pt.x;
-          const dy = dot.y - pt.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-
-          if (dist < trailRadius) {
-            const proximity = 1 - smoothstep(0, 1, dist / trailRadius);
-            const softProximity = proximity * proximity * proximity;
-            targetTrailStrength = Math.max(targetTrailStrength, softProximity * fade);
+          // Cursor head influence
+          let targetMouseStrength = 0;
+          if (mouse.active) {
+            const dx = dot.x - mouse.x;
+            const dy = dot.y - mouse.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < mouseRadius) {
+              const norm = dist / mouseRadius;
+              targetMouseStrength = (1 - norm) * (1 - norm) * (1 - norm);
+            }
           }
+          dot.currentMouseStrength = lerp(dot.currentMouseStrength, targetMouseStrength, 0.12);
+
+          // Trail influence
+          let targetTrailStrength = 0;
+          for (let i = 0; i < mouse.trail.length; i++) {
+            const pt = mouse.trail[i];
+            const age = (now - pt.t) / trailFadeMs;
+            if (age >= 1) continue;
+
+            const ageFade = (1 - age) * (1 - age) * (1 - age);
+            const positionFade = (i + 1) / mouse.trail.length;
+            const fade = ageFade * positionFade;
+
+            const dx = dot.x - pt.x;
+            const dy = dot.y - pt.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+
+            if (dist < trailRadius) {
+              const proximity = 1 - smoothstep(0, 1, dist / trailRadius);
+              const softProximity = proximity * proximity * proximity;
+              targetTrailStrength = Math.max(targetTrailStrength, softProximity * fade);
+            }
+          }
+          dot.currentTrailStrength = lerp(dot.currentTrailStrength, targetTrailStrength, 0.08);
+
+          const randomBlink = Math.sin(
+            time * (1.2 + dot.speed * 1.2) + dot.phase + dot.randomOffset + dot.x * 0.02 + dot.y * 0.016
+          ) ** 2;
+
+          const softPulse = Math.sin(time * 1.4 + dot.phase + dot.x * 0.015) ** 2;
+
+          const stableBrightness = clamp01(0.16 + dot.currentShapeStrength * 0.84 + softPulse * 0.02);
+          const randomBrightness = clamp01(0.16 + randomBlink * 0.18);
+          const brightness = lerp(stableBrightness, randomBrightness, dot.currentRandomStrength);
+
+          const grayDisperseBlink = clamp01(dot.currentGrayDisperseStrength * (0.45 + randomBlink * 0.55));
+
+          // Scale modification based on mouse proximity and trail history
+          const mouseShrink = 1 - dot.currentMouseStrength * 0.75;
+          const trailShrink = 1 - dot.currentTrailStrength * 0.65;
+
+          const stableRadius = baseRadius + dot.currentShapeStrength * 1.25;
+          const randomRadius = baseRadius + randomBlink * 0.35;
+          const radius = lerp(stableRadius, randomRadius, dot.currentRandomStrength) * mouseShrink * trailShrink;
+
+          drawDot(dot.x, dot.y, radius, brightness, grayDisperseBlink, dot.currentTrailStrength, dot.currentMouseStrength);
         }
-        dot.currentTrailStrength = lerp(dot.currentTrailStrength, targetTrailStrength, 0.08);
-
-        const randomBlink = Math.sin(
-          time * (1.2 + dot.speed * 1.2) + dot.phase + dot.randomOffset + dot.x * 0.02 + dot.y * 0.016
-        ) ** 2;
-
-        const softPulse = Math.sin(time * 1.4 + dot.phase + dot.x * 0.015) ** 2;
-
-        const stableBrightness = clamp01(0.16 + dot.currentShapeStrength * 0.84 + softPulse * 0.02);
-        const randomBrightness = clamp01(0.16 + randomBlink * 0.18);
-        const brightness = lerp(stableBrightness, randomBrightness, dot.currentRandomStrength);
-
-        const grayDisperseBlink = clamp01(dot.currentGrayDisperseStrength * (0.45 + randomBlink * 0.55));
-
-        // Scale modification based on mouse proximity and trail history
-        const mouseShrink = 1 - dot.currentMouseStrength * 0.75;
-        const trailShrink = 1 - dot.currentTrailStrength * 0.65;
-
-        const stableRadius = baseRadius + dot.currentShapeStrength * 1.25;
-        const randomRadius = baseRadius + randomBlink * 0.35;
-        const radius = lerp(stableRadius, randomRadius, dot.currentRandomStrength) * mouseShrink * trailShrink;
-
-        drawDot(dot.x, dot.y, radius, brightness, grayDisperseBlink, dot.currentTrailStrength, dot.currentMouseStrength);
-      }
       },
     });
-
 
     resize();
     window.addEventListener("resize", resize);
@@ -442,7 +689,7 @@ export default function DottedGrid({
   }, [baseRadius, backgroundColor, mouseRadius, spacing, trailFadeMs, trailLength, trailRadius]);
 
   return (
-    <section className="relative h-screen w-full overflow-hidden bg-black">
+    <section className={`relative h-screen w-full overflow-hidden bg-black ${className}`}>
       <canvas
         ref={canvasRef}
         className="block h-full w-full cursor-pointer touch-none bg-black"
@@ -450,14 +697,15 @@ export default function DottedGrid({
       <div className="pointer-events-none absolute inset-0 bg-linear-to-b from-white/4 via-transparent to-black/40" />
       <div className="pointer-events-none absolute inset-0 shadow-[inset_0_0_140px_rgba(0,0,0,0.95)]" />
       {showDesktopHint ? (
-        <div className="max-sm:hidden fixed bottom-15 left-1/2 -translate-x-1/2 z-50 p-4 rounded-2xl bg-white/10 backdrop-blur-md text-white text-center text-md pointer-events-none">
+        <div className="max-lg:hidden fixed bottom-15 left-1/2 -translate-x-1/2 z-50 p-4 rounded-2xl bg-white/10 backdrop-blur-md text-white text-center text-md pointer-events-none">
           {desktopHint}
         </div>
       ) : null}
-      <div className="hidden max-sm:flex fixed bottom-20 left-1/2 -translate-x-1/2 z-50 px-4 py-2 rounded-full bg-white/10 backdrop-blur-md text-white text-center text-sm pointer-events-none">
+      <div className="hidden max-lg:flex fixed bottom-20 left-1/2 -translate-x-1/2 z-50 px-4 py-2 rounded-full bg-white/10 backdrop-blur-md text-white text-center text-sm leading-tight pointer-events-none">
         {mobileHint} <br />
         Here, tap & drag to explore
       </div>
+
     </section>
   );
 }

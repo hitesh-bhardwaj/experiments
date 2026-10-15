@@ -18,7 +18,7 @@ export default function DemoContent({ registry }: { registry: any }) {
           {effect}
           <main className="flex h-screen items-center justify-center bg-white max-sm:px-[7vw] text-center">
             <div className="max-w-5xl mx-auto text-center text-black">
-              <h1 className="text-[7vw] max-md:w-[90%] max-md:mx-auto max-sm:text-[9vw]">
+              <h1 className="text-[5vw] max-md:w-[90%] max-md:mx-auto max-sm:text-[9vw]">
                 Immersive Full Screen Navigation
               </h1>
 
@@ -29,7 +29,7 @@ export default function DemoContent({ registry }: { registry: any }) {
               <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4 max-sm:text-[4.5vw] max-md:text-[3vw]">
                 <button className="rounded-full max-sm:min-w-[45vw] bg-black text-white font-medium">
                   <Link href="/effects/navigation/immersive-full-screen-nav" className="px-7 py-3 block w-full">
-                    Get Started
+                    Read Article
                   </Link>
                 </button>
 

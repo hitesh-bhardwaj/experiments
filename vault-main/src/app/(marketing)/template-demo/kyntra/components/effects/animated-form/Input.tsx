@@ -31,7 +31,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
               group-focus-within:opacity-40
               has-[+input:not(:placeholder-shown)]:opacity-0
               group-focus-within:has-[+input:not(:placeholder-shown)]:opacity-0
-              max-[1025px]:left-[5vw] max-[1025px]:text-[3.2vw]
+              max-lg:left-[5vw] max-lg:text-[3.2vw]
               max-md:text-[4vw]
             "
           >
@@ -44,11 +44,11 @@ const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
           type={type}
           placeholder={placeholder ?? " "}
           className={`
-            h-[3.6vw] w-full rounded-[0.8vw] border border-white/25 bg-white/5 max-[1025px]:rounded-[2.5vw]
+            h-[3.6vw] w-full rounded-[0.8vw] border border-white/25 bg-white/5 max-lg:rounded-[2.5vw]
             pl-[1.6vw] pr-[1.6vw] font-aeonik-pro text-[1.05vw]
             text-white outline-none transition-colors duration-300
             hover:border-white/40 focus:border-white/60
-            max-[1025px]:h-[12vw] max-[1025px]:pl-[5vw] max-[1025px]:pr-[5vw] max-[1025px]:text-[3.2vw]
+            max-lg:h-[12vw] max-lg:pl-[5vw] max-lg:pr-[5vw] max-lg:text-[3.2vw]
             max-md:h-[14vw] max-md:text-[4vw]
             ${error ? "border-red-400/70 focus:border-red-400" : ""}
             ${className}
@@ -61,7 +61,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
       {error && (
         <p
           id={`${inputId}-error`}
-          className="ml-[1.4vw] mt-[0.4vw] font-aeonik-pro text-[0.8vw] text-red-400 max-[1025px]:ml-[5vw] max-[1025px]:mt-[1.5vw] max-[1025px]:text-[2.6vw] max-md:text-[3.2vw]"
+          className="ml-[1.4vw] mt-[0.4vw] font-aeonik-pro text-[0.8vw] text-red-400 max-lg:ml-[5vw] max-lg:mt-[1.5vw] max-lg:text-[2.6vw] max-md:text-[3.2vw]"
         >
           {error}
         </p>
