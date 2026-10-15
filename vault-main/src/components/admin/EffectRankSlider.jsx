@@ -4,21 +4,14 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { getEffectHref } from "@/lib/categories";
-import { resolveMediaUrl, resizeR2ImageUrl, resolveEffectVideoUrl } from "@/lib/media";
+import { LISTING_IMAGE, resolveMediaUrl, resolveEffectVideoUrl } from "@/lib/media";
 import { ArrowIcon } from "@/components/WebsiteComps/Icons";
 
-const COVER_WIDTH = 900;
-const COVER_HEIGHT = 600;
 const CARD_SIZES = "(max-width: 767px) 70vw, (max-width: 1279px) 38vw, 26vw";
 const CARD_GAP_PX = 24; // matches the slider's gap-6
 
 function resolveCoverImage(effect) {
-  const resolved = resolveMediaUrl(effect?.coverImage, {
-    defaultDirectory: "vault-listing-images",
-    defaultExtension: "png",
-  });
-  if (!resolved) return null;
-  return resizeR2ImageUrl(resolved, { width: COVER_WIDTH, height: COVER_HEIGHT });
+  return resolveMediaUrl(effect?.coverImage, LISTING_IMAGE);
 }
 
 // Purpose-built for the admin Activity page's "Top saved/copied effects"

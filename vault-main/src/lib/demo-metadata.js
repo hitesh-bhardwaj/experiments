@@ -1,6 +1,6 @@
 import { getAllSanityEffectEntries } from "@/lib/sanity";
 import { createPageMetadata } from "@/lib/seo-metadata";
-import { resolveOgImageUrl } from "@/lib/media";
+import { LISTING_IMAGE, resolveOgImageUrl } from "@/lib/media";
 import { getPublicEffectBySlug } from "@/lib/registry";
 
 function titleizeSlug(value = "") {
@@ -27,10 +27,7 @@ export async function getDemoPageMetadata(effectSlug, options = {}) {
   const detailPath = entry?.categorySlug
     ? `/effects/${entry.categorySlug}/${effectSlug}`
     : `/demo/${effectSlug}`;
-  const image = resolveOgImageUrl(entry?.coverImage || effectSlug, {
-    defaultDirectory: "vault-listing-images",
-    defaultExtension: "png",
-  }) || "/seo/homepage.png";
+  const image = resolveOgImageUrl(entry?.coverImage || effectSlug, LISTING_IMAGE) || "/seo/homepage.png";
 
   if (!entry?.categorySlug) {
     return createPageMetadata({

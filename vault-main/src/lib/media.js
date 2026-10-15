@@ -3,6 +3,11 @@ import { homepage } from "./util";
 const DEFAULT_R2_ORIGIN =
   process.env.NEXT_PUBLIC_DEV_URL || "";
 
+// Effect cover images in R2: vault-listing-images/<name>.jpg, Full HD
+// (1920px wide) JPEGs. r2.dev serves files as they are - it can't resize -
+// so these are stored at the size the site needs instead of 3K PNGs.
+export const LISTING_IMAGE = { defaultDirectory: "vault-listing-images", defaultExtension: "jpg" };
+
 export function resolveMediaUrl(
   rawMediaUrl,
   { defaultDirectory, defaultExtension } = {}
@@ -78,22 +83,6 @@ export function resolveDirectR2MediaUrl(
   return `${DEFAULT_R2_ORIGIN.replace(/\/+$/, "")}/${mediaPath}`;
 }
 
-export function resizeR2ImageUrl(
-  imageUrl,
-  { width = 1200, height = 630 } = {}
-) {
-  if (!imageUrl) return null;
-
-  try {
-    const url = new URL(imageUrl);
-    url.searchParams.set("width", String(width));
-    url.searchParams.set("height", String(height));
-    return url.toString();
-  } catch {
-    return imageUrl;
-  }
-}
-
 export function resolveOgImageUrl(
   rawMediaUrl,
   { defaultDirectory, defaultExtension } = {}
@@ -103,14 +92,5 @@ export function resolveOgImageUrl(
     defaultExtension,
   });
 
-  if (!resolvedUrl) return null;
-
-  try {
-    return resizeR2ImageUrl(resolvedUrl, {
-      width: 1200,
-      height: 630,
-    });
-  } catch {
-    return resolvedUrl;
-  }
+  return resolvedUrl || null;
 }

@@ -9,7 +9,7 @@ import { ArrowUpRight, Download, Eye, Heart, Lock } from "lucide-react";
 import { getEffectHref, getEffectPreviewHref, getQuickCategoryLabel, resolveEffectCategoryId } from "@/lib/categories";
 import { Tooltip } from "@/components/ui/Tooltip";
 import { CopyButtonContent } from "@/components/ui/CodeBlock";
-import { resolveEffectVideoUrl, resolveMediaUrl, resizeR2ImageUrl } from "@/lib/media";
+import { LISTING_IMAGE, resolveEffectVideoUrl, resolveMediaUrl } from "@/lib/media";
 import { useAutoplayPreviewVideo } from "@/hooks/useAutoplayPreviewVideo";
 import { twMerge } from "tailwind-merge";
 import { T11, T12, T14, T18 } from "../templates/tokens";
@@ -47,10 +47,9 @@ export const effectCategoryLabel = (effect) => getQuickCategoryLabel(resolveEffe
 export function resolveCover(effect) {
   const raw = effect?.coverImage || effect?.imageSrc;
   if (!raw || raw === "/assets/img/image01.webp" || raw === "image01") return null;
-  const resolved = resolveMediaUrl(raw, { defaultDirectory: "vault-listing-images", defaultExtension: "png" });
+  const resolved = resolveMediaUrl(raw, LISTING_IMAGE);
   if (!resolved || resolved === "/assets/img/image01.webp") return null;
-  if (resolved.startsWith("/")) return resolved;
-  return resizeR2ImageUrl(resolved, { width: 1200, height: 675 });
+  return resolved;
 }
 
 // `className` overrides the default size (tailwind-merge), e.g. the drawer's button-height badge.

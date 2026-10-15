@@ -20,7 +20,7 @@ import { getEffectCategoryBySlug } from "@/lib/categories";
 import { EffectDetailContent } from "../effect-detail";
 import { BreadcrumbsJSONLD, FAQJSONLD, WebpageJsonLd } from "@/lib/json-ld";
 import { createPageMetadata } from "@/lib/seo-metadata";
-import { resolveOgImageUrl } from "@/lib/media";
+import { LISTING_IMAGE, resolveOgImageUrl } from "@/lib/media";
 import { getEffectInstallCounts } from "@/lib/cli-install-stats";
 
 // Mirrors effect-detail.jsx's isCodeOnlyBlock - a Sanity portable-text block
@@ -106,10 +106,7 @@ function getEffectPageMetadata(effect, content, slug, effectSlug) {
     content?.summary ||
     effect?.description;
   const image =
-    resolveOgImageUrl(content?.coverImage || effect?.coverImage || effectSlug, {
-      defaultDirectory: "vault-listing-images",
-      defaultExtension: "png",
-    }) || "/seo/homepage.png";
+    resolveOgImageUrl(content?.coverImage || effect?.coverImage || effectSlug, LISTING_IMAGE) || "/seo/homepage.png";
 
   return createPageMetadata({
     title,

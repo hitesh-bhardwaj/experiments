@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { getEffectHref, getEffectPreviewHref } from "@/lib/categories";
-import { resolveEffectVideoUrl, resolveMediaUrl, resizeR2ImageUrl } from "@/lib/media";
+import { LISTING_IMAGE, resolveEffectVideoUrl, resolveMediaUrl } from "@/lib/media";
 import { useAutoplayPreviewVideo } from "@/hooks/useAutoplayPreviewVideo";
 import { Download, Eye, Heart } from "lucide-react";
 import { Tooltip } from "@/components/ui/Tooltip";
@@ -35,25 +35,15 @@ function formatInstallCount(value) {
 const VAULT_GRID_SIZES =
   "(max-width: 639px) calc(100vw - 56px), (max-width: 1025px) calc(100vw - 64px), 30vw";
 
-const LISTING_COVER_WIDTH = 1200;
-const LISTING_COVER_HEIGHT = 675;
 
 function resolveEffectCoverImage(effect) {
   const raw = effect?.coverImage || effect?.imageSrc;
   if (!raw || raw === "/assets/img/image01.webp" || raw === "image01") return null;
 
-  const resolved = resolveMediaUrl(raw, {
-    defaultDirectory: "vault-listing-images",
-    defaultExtension: "png",
-  });
+  const resolved = resolveMediaUrl(raw, LISTING_IMAGE);
 
   if (!resolved || resolved === "/assets/img/image01.webp") return null;
-  if (resolved.startsWith("/")) return resolved;
-
-  return resizeR2ImageUrl(resolved, {
-    width: LISTING_COVER_WIDTH,
-    height: LISTING_COVER_HEIGHT,
-  });
+  return resolved;
 }
 
 export function EffectCard({

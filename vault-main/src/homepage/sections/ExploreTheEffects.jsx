@@ -10,7 +10,7 @@ import LinkButton from "@/components/WebsiteComps/LinkButton";
 import { useInteraction } from "@/homepage/components/InteractionProvider";
 import { prefersReducedMotion } from "@/lib/motion";
 import Image from "next/image";
-import { resolveEffectVideoUrl, resolveMediaUrl } from "@/lib/media";
+import { LISTING_IMAGE, resolveEffectVideoUrl, resolveMediaUrl } from "@/lib/media";
 
 gsap.registerPlugin(useGSAP);
 
@@ -19,12 +19,12 @@ const POSTER_NAME = { "milky-way": "milkyway" };
 
 function effectMedia(slug, categorySlug) {
     const image =
-        resolveMediaUrl(POSTER_NAME[slug] || slug, { defaultDirectory: "vault-listing-images", defaultExtension: "png" }) ||
+        resolveMediaUrl(POSTER_NAME[slug] || slug, LISTING_IMAGE) ||
         `/homepage-v3/imgs/${slug}.webp`;
     return {
         video: resolveEffectVideoUrl({ videoUrl: `${slug}.mp4`, categorySlug, effectSlug: slug }),
-        // R2 serves the original full-size PNG (2-4MB) and ignores size params, so the
-        // poster is rendered with next/image: resized, WebP/AVIF, cached a year
+        // R2 serves a Full HD JPEG and can't resize, so the poster is rendered
+        // with next/image: resized, WebP/AVIF, cached a year
         poster: image,
         href: `/effects/${categorySlug}/${slug}`,
     };
