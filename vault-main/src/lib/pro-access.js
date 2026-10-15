@@ -236,7 +236,10 @@ export async function recordInvoice({ clerkUserId, subscription, payment }) {
     status: "paid",
     billing_interval: getBillingInterval(subscription?.plan_id),
     plan_label: getPlanLabel(subscription?.plan_id),
-    is_test: false,
+    // A test-mode payment can only come through a server running Razorpay test keys
+    // (local / preview). Those environments share this database, so without this every
+    // test checkout landed here as real, paid revenue. Live keys (production) -> false.
+    is_test: (process.env.RAZORPAY_KEY_ID || "").startsWith("rzp_test_"),
   };
 
   if (subscription?.short_url) {

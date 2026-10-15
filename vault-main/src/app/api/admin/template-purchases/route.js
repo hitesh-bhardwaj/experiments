@@ -30,11 +30,8 @@ export async function GET(request) {
     const templateFilter = searchParams.get("template") || "all";
     const limit = Math.min(parseInt(searchParams.get("limit") || "20", 10), 100);
     const offset = parseInt(searchParams.get("offset") || "0", 10);
-    // range/from/to are all optional - omitted entirely by
-    // dashboard/admin/invoicing (which wants "every purchase, ever"),
-    // passed by dashboard/admin/activity's TemplatePurchasesPanel so this
-    // table stays in step with that page's date-range picker instead of
-    // always showing all-time totals regardless of what's selected.
+    // range/from/to are all optional - without them it's every purchase, ever;
+    // the admin Invoicing page passes its date filter.
     const { startISO, endISO } = resolveDateBounds({
       range: searchParams.get("range"),
       from: searchParams.get("from"),
@@ -65,8 +62,15 @@ export async function GET(request) {
         query.range(offset, offset + limit - 1),
         // Stats always reflect every purchase in the same window,
         // independent of the current page/template filter, so the top-line
-        // numbers don't shift while paging.
-        scoped(supabase.from("template_purchases").select("amount, currency")),
+        // numbers don't shift while paging. Revenue only: paid purchases -
+        // not refunded ones, and not credit redemptions (no money changes hands).
+        scoped(
+          supabase
+            .from("template_purchases")
+            .select("amount, currency")
+            .eq("status", "paid")
+            .or("source.is.null,source.neq.credit")
+        ),
       ]);
 
     if (pageError || statsError) {

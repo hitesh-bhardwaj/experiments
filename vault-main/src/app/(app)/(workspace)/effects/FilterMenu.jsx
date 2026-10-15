@@ -27,6 +27,9 @@ export function FilterMenu({
   alignRight = false,
   // "light" restyles the trigger and panel for light surfaces (the v4 listing sheet).
   tone = "dark",
+  // Light tone, opt-in: a fixed width class (e.g. "w-44") for the trigger, which the
+  // open panel then matches exactly (the dashboard's dropdown filters).
+  widthClassName,
   // Dark tone only: replaces the trigger's default padding / text size (e.g. to match nearby chips).
   triggerClassName,
   // Dark tone only: replaces the trigger's resting (no filter chosen) colours.
@@ -111,8 +114,8 @@ export function FilterMenu({
         if (rect) {
           setMenuPos(
             alignRight
-              ? { top: rect.bottom + 8, right: Math.max(16, window.innerWidth - rect.right) }
-              : { top: rect.bottom + 8, left: rect.left },
+              ? { top: rect.bottom + 8, right: Math.max(16, window.innerWidth - rect.right), width: widthClassName ? rect.width : undefined }
+              : { top: rect.bottom + 8, left: rect.left, width: widthClassName ? rect.width : undefined },
           );
         }
       } else {
@@ -144,12 +147,13 @@ export function FilterMenu({
             top: menuPos.top,
             left: menuPos.left,
             right: menuPos.right,
+            width: menuPos.width,
           }
           : undefined
       }
       className={[
         light
-          ? "space-y-1.5 min-w-44 border border-black/10 bg-foreground p-1.5 shadow-[0_calc(var(--cvw)*1.4)_calc(var(--cvw)*2.8)_calc(var(--cvw)*-1.4)_color-mix(in_srgb,black_35%,transparent)]"
+          ? `space-y-1.5 ${widthClassName ? "w-full min-w-0" : "min-w-44"} border border-black/10 bg-foreground p-1.5 shadow-[0_calc(var(--cvw)*1.4)_calc(var(--cvw)*2.8)_calc(var(--cvw)*-1.4)_color-mix(in_srgb,black_35%,transparent)]`
           : "space-y-1.5 min-w-44 border border-white/10 bg-black/20  p-1.5",
         menuPos ? "fixed z-9999" : "absolute left-0 top-[calc(100%+calc(var(--cvw)*0.5))] z-30",
         panelClassName,
@@ -203,7 +207,7 @@ export function FilterMenu({
   ) : null;
 
   return (
-    <div ref={menuRef} className="relative shrink-0">
+    <div ref={menuRef} className={`relative shrink-0 ${light && widthClassName ? widthClassName : ""}`}>
       <button
         ref={buttonRef}
         type="button"
@@ -213,7 +217,7 @@ export function FilterMenu({
         aria-label="Filter effects"
         className={
           light
-            ? `relative flex h-9.5 cursor-pointer items-center justify-center gap-2 px-4 ${T14} transition-colors duration-300 ${activeFilter
+            ? `relative flex h-9.5 cursor-pointer items-center ${widthClassName ? "w-full justify-between" : "justify-center"} gap-2 px-4 ${T14} transition-colors duration-300 ${activeFilter
               ? "bg-primary text-background"
               : "bg-foreground text-ink ring-1 ring-inset ring-black/10 transition-shadow hover:ring-primary"
             }`
@@ -229,7 +233,8 @@ export function FilterMenu({
       >
         {variant === "label" ? (
           <>
-            <span className="leading-none">{getLabel(categoryFilter)}</span>
+            {/* A truncated label hides overflow, so it needs a full line height or the descenders (g, y) get clipped */}
+            <span className={widthClassName ? "min-w-0 truncate leading-normal" : "leading-none"}>{getLabel(categoryFilter)}</span>
             <ChevronDown
               className={`h-4 w-4 shrink-0 transition-transform duration-200 ${open ? "rotate-180" : ""
                 }`}

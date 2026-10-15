@@ -21,7 +21,7 @@ const SUBSCRIPTION_COLUMNS =
 // this product's current scale; a real SQL-side aggregate (or mirroring
 // role into Supabase) would be needed past this many matching users.
 const BROAD_FETCH_CAP = 2000;
-const SORT_OPTIONS = new Set(["copies", "installs", "saves"]);
+const SORT_OPTIONS = new Set(["copies", "cli", "mcp", "saves"]);
 const ROLE_OPTIONS = new Set(["admin", "super_admin", "user"]);
 
 function countByUser(rows) {
@@ -37,26 +37,27 @@ function countByUser(rows) {
 // Detail page, not scoped to the table's own joined-date filter (that
 // filter is about who's in the list, not how much of the site's history
 // counts).
-// "Copies" means the website's copy button specifically (source='web'),
-// same convention as everywhere else "copies" is used (Overview's Total
-// Copies, the per-user page, "Top users by copies"). "Installs" is
-// unscoped by source (web/CLI/MCP combined) - same as the per-user page's
-// "Installed Effects" and the Overview's "Top installed effects" - so it's
-// always >= copies, since every web copy is itself an install_unlocks row.
+// Per-user effect activity, split by where it happened (install_unlocks.source):
+//   copies - the website's copy buttons (source='web'), the same "copies" as the
+//            Overview's Total Copies and the per-user page
+//   cli    - `npx hyperiux add` (source='cli')
+//   mcp    - the Hyperiux MCP (source='mcp')
+// plus saves (wishlisted_effects). Shown as "Copies / CLI / MCP | Saves".
 async function countsForIds(ids) {
   if (!ids.length) {
-    return { copiesById: new Map(), installsById: new Map(), savesById: new Map() };
+    return { copiesById: new Map(), cliById: new Map(), mcpById: new Map(), savesById: new Map() };
   }
 
-  const [{ data: copyRows }, { data: installRows }, { data: saveRows }] = await Promise.all([
-    supabase.from("install_unlocks").select("clerk_user_id").eq("source", "web").in("clerk_user_id", ids),
-    supabase.from("install_unlocks").select("clerk_user_id").in("clerk_user_id", ids),
+  const [{ data: unlockRows }, { data: saveRows }] = await Promise.all([
+    supabase.from("install_unlocks").select("clerk_user_id, source").in("clerk_user_id", ids),
     supabase.from("wishlisted_effects").select("clerk_user_id").in("clerk_user_id", ids),
   ]);
 
+  const rows = unlockRows || [];
   return {
-    copiesById: countByUser(copyRows || []),
-    installsById: countByUser(installRows || []),
+    copiesById: countByUser(rows.filter((r) => r.source === "web")),
+    cliById: countByUser(rows.filter((r) => r.source === "cli")),
+    mcpById: countByUser(rows.filter((r) => r.source === "mcp")),
     savesById: countByUser(saveRows || []),
   };
 }
@@ -84,7 +85,7 @@ function roleFilterMatches(clerkUser, roleFilter) {
   return role === roleFilter;
 }
 
-function shapeUser(clerkUser, sub, viewerIsSuperAdmin, copiesById, installsById, savesById) {
+function shapeUser(clerkUser, sub, viewerIsSuperAdmin, { copiesById, cliById, mcpById, savesById }) {
   const role = getRole(clerkUser);
 
   const base = {
@@ -97,7 +98,8 @@ function shapeUser(clerkUser, sub, viewerIsSuperAdmin, copiesById, installsById,
     role,
     isAdmin: role !== null,
     copiesCount: copiesById.get(clerkUser.id) || 0,
-    installsCount: installsById.get(clerkUser.id) || 0,
+    cliCount: cliById.get(clerkUser.id) || 0,
+    mcpCount: mcpById.get(clerkUser.id) || 0,
     savesCount: savesById.get(clerkUser.id) || 0,
   };
 
@@ -182,7 +184,7 @@ export async function GET(request) {
       const { data: clerkUsers, totalCount } = await clerk.users.getUserList(clerkParams);
       const ids = clerkUsers.map((u) => u.id);
 
-      const [{ data: subRows }, { copiesById, installsById, savesById }] = await Promise.all([
+      const [{ data: subRows }, counts] = await Promise.all([
         ids.length
           ? supabase.from("subscriptions").select(SUBSCRIPTION_COLUMNS).in("clerk_user_id", ids)
           : Promise.resolve({ data: [] }),
@@ -191,7 +193,7 @@ export async function GET(request) {
       const subMap = Object.fromEntries((subRows || []).map((s) => [s.clerk_user_id, s]));
 
       let users = clerkUsers.map((u) =>
-        shapeUser(u, subMap[u.id], viewerIsSuperAdmin, copiesById, installsById, savesById)
+        shapeUser(u, subMap[u.id], viewerIsSuperAdmin, counts)
       );
 
       // Plan and role can't be pushed into Clerk's query (plan lives only
@@ -212,7 +214,7 @@ export async function GET(request) {
     }
 
     // No search text. Role lives only in Clerk, and "Most Copies"/"Most
-    // Installs"/"Most Saves" sort by a count that lives outside
+    // CLI"/"Most MCP"/"Most Saves" sort by a count that lives outside
     // `subscriptions` entirely - none of these can be expressed as a
     // Supabase `.eq()`/`.order()`. Whenever either is active, pull every
     // matching subscription row up to the fetch cap, resolve all of their
@@ -260,9 +262,9 @@ export async function GET(request) {
 
       if (sortBy !== "newest") {
         const ids = combined.map((c) => c.sub.clerk_user_id).filter(Boolean);
-        const { copiesById, installsById, savesById } = await countsForIds(ids);
+        const counts = await countsForIds(ids);
         const countMap =
-          sortBy === "copies" ? copiesById : sortBy === "installs" ? installsById : savesById;
+          sortBy === "copies" ? counts.copiesById : sortBy === "cli" ? counts.cliById : sortBy === "mcp" ? counts.mcpById : counts.savesById;
 
         combined.sort(
           (a, b) => (countMap.get(b.sub.clerk_user_id) || 0) - (countMap.get(a.sub.clerk_user_id) || 0)
@@ -271,10 +273,10 @@ export async function GET(request) {
 
       const pageCombined = combined.slice(offset, offset + limit);
       const pageIds = pageCombined.map((c) => c.sub.clerk_user_id).filter(Boolean);
-      const { copiesById, installsById, savesById } = await countsForIds(pageIds);
+      const counts = await countsForIds(pageIds);
 
       const users = pageCombined.map(({ sub, clerkUser }) =>
-        shapeUser(clerkUser, sub, viewerIsSuperAdmin, copiesById, installsById, savesById)
+        shapeUser(clerkUser, sub, viewerIsSuperAdmin, counts)
       );
 
       return NextResponse.json({ users, total: totalCount });
@@ -304,7 +306,7 @@ export async function GET(request) {
 
     const clerkUserIds = (subscriptions || []).map((s) => s.clerk_user_id).filter(Boolean);
 
-    const [clerkUsers, { copiesById, installsById, savesById }] = await Promise.all([
+    const [clerkUsers, counts] = await Promise.all([
       getClerkUsersByIds(clerk, clerkUserIds),
       countsForIds(clerkUserIds),
     ]);
@@ -317,7 +319,7 @@ export async function GET(request) {
       // crashing the whole page.
       const clerkUser = clerkMap[sub.clerk_user_id] || fallbackClerkUser(sub.clerk_user_id);
 
-      return shapeUser(clerkUser, sub, viewerIsSuperAdmin, copiesById, installsById, savesById);
+      return shapeUser(clerkUser, sub, viewerIsSuperAdmin, counts);
     });
 
     return NextResponse.json({ users, total: count || 0 });

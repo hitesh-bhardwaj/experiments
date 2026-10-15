@@ -10,7 +10,6 @@ import { useGSAP } from "@gsap/react";
 import { AnimatePresence, motion } from "motion/react";
 import { Search, X } from "lucide-react";
 import { AppVaultHeader } from "@/components/layout/AppVaultHeader";
-import { useVaultLayout } from "@/components/layout/VaultLayout";
 import {
   effectCategories,
   effectsOverviewContent,
@@ -26,10 +25,12 @@ import { sortEffects } from "@/lib/effect-sort";
 import FAQ from "@/homepage/sections/FAQ";
 import Button from "@/homepage/components/Button";
 import { FilterMenu } from "./FilterMenu";
+import { useGridColumns } from "@/hooks/useGridColumns";
+import { COLUMN_ITEMS, SlidingSegment } from "@/components/ui/SlidingSegment";
 import { usePromiseValue } from "@/lib/usePromiseValue";
 import { useUserPlan } from "@/lib/useUserPlan";
-import { DISPLAY, EffectCard, LABEL } from "./EffectCard";
-import { GUTTER, T11, T13, T14, T15, T16, T20 } from "../templates/tokens";
+import { CARD_LAYOUT_TRANSITION, DISPLAY, EffectCard, LABEL } from "./EffectCard";
+import { EFFECT_GRID, EFFECT_GRID_COLS, GUTTER, LIGHT_CHIP, LIGHT_CHIP_OFF, LIGHT_CHIP_ON, T11, T13, T14, T15, T16, T20 } from "../templates/tokens";
 import { Modal, useEffectCardActions } from "./useEffectCardActions";
 import { PreviewDrawer } from "./PreviewDrawer";
 import { CustomAnimationCta } from "./CustomAnimationCta";
@@ -37,7 +38,6 @@ import { SliderArrowButton } from "@/components/ui/SliderArrowButton";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import HeadAnim from "@/components/Animations/HeadAnim";
 import Copy from "@/components/Animations/Copy";
-import { MEDIA } from "@/lib/breakpoints";
 import RollNumber from "@/components/Pricing/exploded/RollNumber";
 import RollText from "@/components/Pricing/exploded/RollText";
 
@@ -62,58 +62,17 @@ const TIERS = [
   { id: "pro", label: "Pro" },
 ];
 // Card widths for 2 / 3 per row, net of the grid's 2.5vw gaps (one gap per row for 2, two for 3)
-const GRID_COLS = { 2: "w-[calc((100%-2.5vw)/2)]", 3: "w-[calc((100%-5vw)/3)]" };
-// Two- and three-pane window icons for the column switch.
-const COLUMN_ICONS = {
-  2: (
-    <>
-      <rect x="3.5" y="4.5" width="7.5" height="15" />
-      <rect x="13" y="4.5" width="7.5" height="15" />
-    </>
-  ),
-  3: (
-    <>
-      <rect x="2.5" y="4.5" width="5" height="15" />
-      <rect x="9.5" y="4.5" width="5" height="15" />
-      <rect x="16.5" y="4.5" width="5" height="15" />
-    </>
-  ),
-};
-const COLUMN_ITEMS = [2, 3].map((n) => ({
-  id: n,
-  ariaLabel: `${n} cards per row`,
-  label: (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" className="size-4" aria-hidden="true">
-      {COLUMN_ICONS[n]}
-    </svg>
-  ),
-}));
-// Same card layout animation as the /effects grid.
-const CARD_LAYOUT_TRANSITION = { layout: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } };
 
 /* ---------- class tokens ---------- */
 // The standard section wrapper: capped width + page gutter (GUTTER, shared with templates)
 const WRAP = GUTTER;
 
-const CHIP =
-  `inline-flex h-8 shrink-0 cursor-pointer items-center gap-[calc(var(--cvw)*0.5)] px-3 ${T13} transition-[background-color,color,box-shadow] duration-500 max-md:gap-[2vw]`;
-const CHIP_OFF = "text-black/60 ring-1 ring-inset ring-black/10 hover:text-ink hover:ring-primary";
-const CHIP_ON = "bg-primary text-background";
 
 
 // Active filter chips: scale + fade in/out, the rest slide into place
 const FILTER_SPRING = { type: "spring", stiffness: 500, damping: 35, mass: 0.8 };
 
 const countWord = (n) => (n === 1 ? "Effect" : "Effects");
-
-function readStoredCols() {
-  try {
-    const stored = Number(window.localStorage.getItem(COLS_KEY));
-    return stored === 2 ? 2 : 3;
-  } catch {
-    return 3;
-  }
-}
 
 const TIER_SCOPES = ["free", "pro"];
 
@@ -196,7 +155,9 @@ export function EffectsListing({
   const [chosenSort, setSort] = useState(() => (SORTS[searchParams.get("sort")] ? searchParams.get("sort") : "trend"));
   // "Free first" only means something across both tiers - it falls back to the default once a single tier is picked.
   const sort = tier !== "all" && chosenSort === "free-first" ? "trend" : chosenSort;
-  const [cols, setCols] = useState(3);
+  // 2 / 3 per row, in step with the sidebar (picking 3 closes it); the cards animate
+  // to their new slots through motion's `layout` (see the grid below)
+  const { cols, shownCols, chooseCols } = useGridColumns(COLS_KEY);
   const [shown, setShown] = useState(PAGE);
   const [drawerEffect, setDrawerEffect] = useState(null);
   const [upgradeDismissed, setUpgradeDismissed] = useState(false);
@@ -285,58 +246,6 @@ export function EffectsListing({
     setCategory(null);
     setQuery("");
   }, []);
-
-  /* ---------- columns ⇄ sidebar (same behaviour as /effects) ---------- */
-  // 3 per row only fits with the sidebar closed: picking 3 closes it, and opening
-  // the sidebar drops the grid back to 2. The cards animate to their new slots
-  // through motion's `layout` (see the grid below), exactly like /effects.
-  const { isSidebarOpen, toggleSidebar } = useVaultLayout();
-
-  // Going to 3 with the sidebar open: close the sidebar first and switch the grid once
-  // it has finished (its width transition is 300ms). Doing both at once had the cards'
-  // layout animation aim at slots the widening container then moved - a visible jump.
-  // The toggle itself shows the choice straight away (pendingCols).
-  const [pendingCols, setPendingCols] = useState(null);
-  const colsTimerRef = useRef(0);
-  useEffect(() => () => clearTimeout(colsTimerRef.current), []);
-
-  const chooseCols = (n) => {
-    clearTimeout(colsTimerRef.current);
-    if (n === 3 && isSidebarOpen && !window.matchMedia(MEDIA.tablet).matches) {
-      setPendingCols(3);
-      toggleSidebar(false);
-      colsTimerRef.current = setTimeout(() => {
-        setCols(3);
-        setPendingCols(null);
-      }, 340);
-    } else {
-      setPendingCols(null);
-      setCols(n);
-      if (n === 3) toggleSidebar(false);
-    }
-    try {
-      window.localStorage.setItem(COLS_KEY, String(n));
-    } catch {
-      /* storage unavailable */
-    }
-  };
-
-  // Restore the column choice after hydration (localStorage isn't on the server).
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setCols(readStoredCols());
-  }, []);
-
-  // Opening the sidebar from anywhere drops 3 per row to 2. Only reacts to the
-  // sidebar itself, so it never fights the column switch above.
-  useEffect(() => {
-    if (!isSidebarOpen) return;
-    // ...including a switch to 3 that was still waiting for the sidebar to close.
-    clearTimeout(colsTimerRef.current);
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setPendingCols(null);
-    setCols((c) => (c === 3 ? 2 : c));
-  }, [isSidebarOpen]);
 
   // Any filter change starts the grid over from the first page.
   useEffect(() => {
@@ -658,7 +567,7 @@ export function EffectsListing({
                 aria-pressed={featured}
                 onClick={() => setFeatured((v) => !v)}
                 className={`inline-flex h-9.5 cursor-pointer items-center px-4 ${T14} transition-[background-color,color,box-shadow] duration-500 ${
-                  featured ? CHIP_ON : `bg-foreground ${CHIP_OFF}`
+                  featured ? LIGHT_CHIP_ON : `bg-foreground ${LIGHT_CHIP_OFF}`
                 }`}
               >
                 Featured
@@ -678,7 +587,7 @@ export function EffectsListing({
               <SlidingSegment
                 label="Columns"
                 items={COLUMN_ITEMS}
-                value={pendingCols ?? cols}
+                value={shownCols}
                 onChange={chooseCols}
                 itemClassName="w-8.5"
                 className="max-lg:hidden"
@@ -707,7 +616,7 @@ export function EffectsListing({
                     type="button"
                     aria-pressed={active}
                     onClick={() => !active && selectCategory(c.id)}
-                    className={`${CHIP} ${active ? CHIP_ON : CHIP_OFF}`}
+                    className={`${LIGHT_CHIP} ${active ? LIGHT_CHIP_ON : LIGHT_CHIP_OFF}`}
                   >
                     {inner}
                   </button>
@@ -779,9 +688,9 @@ export function EffectsListing({
               </button>
             </div>
           ) : (
-            <div ref={gridRef} className="flex flex-wrap gap-[2.5vw] gap-y-8">
+            <div ref={gridRef} className={EFFECT_GRID}>
               {visible.map((effect, index) => (
-                <motion.div key={effect.name} layout transition={CARD_LAYOUT_TRANSITION} className={`${GRID_COLS[cols]} max-lg:w-[calc((100%-2.5vw)/2)] max-md:w-full`}>
+                <motion.div key={effect.name} layout transition={CARD_LAYOUT_TRANSITION} className={EFFECT_GRID_COLS[cols]}>
                   <EffectCard {...cardProps(effect, index)} tagClassName="border-black/20" />
                 </motion.div>
               ))}
@@ -865,40 +774,6 @@ export function EffectsListing({
   );
 }
 
-/**
- * A segmented control whose dark active block slides to the chosen option.
- * Every option shares `itemClassName`'s width, so the block can travel by
- * whole steps of (its own width + the 2px gap).
- */
-function SlidingSegment({ label, items, value, onChange, itemClassName, className = "" }) {
-  const index = Math.max(0, items.findIndex((item) => item.id === value));
-  return (
-    <div role="group" aria-label={label} className={`relative flex gap-0.5 bg-foreground p-0.75 ring-1 ring-inset ring-black/10 ${className}`}>
-      <span
-        aria-hidden="true"
-        className={`pointer-events-none absolute top-0.75 bottom-0.75 left-0.75 bg-ink transition-transform duration-500 ease-[cubic-bezier(.16,1,.3,1)] ${itemClassName}`}
-        style={{ transform: `translateX(calc(${index} * (100% + 2px)))` }}
-      />
-      {items.map((item) => {
-        const active = item.id === value;
-        return (
-          <button
-            key={item.id}
-            type="button"
-            aria-pressed={active}
-            aria-label={item.ariaLabel}
-            onClick={() => onChange(item.id)}
-            className={`relative z-1 flex h-8 cursor-pointer items-center justify-center ${T14} transition-colors duration-500 ${itemClassName} ${
-              active ? "text-light" : "text-black/60 hover:text-ink"
-            }`}
-          >
-            {item.label}
-          </button>
-        );
-      })}
-    </div>
-  );
-}
 
 // A category name with its last word in the animated brand gradient ("Text <Animations>").
 function HeroTitle({ name = "" }) {

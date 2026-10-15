@@ -270,8 +270,27 @@ export async function getInstallLimitDecision({
 
   if (!identity.isAnonymous) {
     if (identity.isAdmin) {
-      // Admins bypass entirely - no claim, no ledger row, matches the
-      // existing copy-usage/effect-access precedent of never metering them.
+      // Admins aren't metered - no claim, no ledger row, matches the existing
+      // copy-usage/effect-access precedent. The install is still logged (plan
+      // "admin"), so the admin's own dashboard Usage tab has a history to show.
+      await logInstallEvent({
+        identity_key: identity.identityKey,
+        clerk_user_id: identity.clerkUserId ?? null,
+        device_id: deviceId ?? null,
+        ip_hash: null,
+        effect_slug: effectSlug,
+        effect_tier: effectTier ?? null,
+        source,
+        plan: "admin",
+        decision: "allowed",
+        reason: "admin",
+        enforced: isEnforced(),
+        would_have_denied: false,
+        cli_version: telemetryDisabled ? null : cliVersion ?? null,
+        mcp_version: telemetryDisabled ? null : mcpVersion ?? null,
+        user_agent: telemetryDisabled ? null : userAgent ?? null,
+        anonymous_project_id: telemetryDisabled ? null : anonymousProjectId ?? null,
+      });
       return decision("admin", { allowed: true, identityKey: identity.identityKey, plan: "admin", tier: "admin", limit: null });
     }
 

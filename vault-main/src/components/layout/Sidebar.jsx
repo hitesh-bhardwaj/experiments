@@ -5,6 +5,7 @@ import gsap from "gsap";
 import { AnimatePresence, motion } from "motion/react";
 import Image from "next/image";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { SidebarPlanCard } from "./SidebarPlanCard";
 import { ChevronRight, PanelLeft } from "lucide-react";
 import { effectCategories, getEffectCategoryHref } from "@/lib/categories";
 import { getFeaturedEffects } from "@/lib/featured-effects";
@@ -198,6 +199,8 @@ export function Sidebar({
     : DEFAULT_LEGAL_LINKS;
 
   const lastPathSegment = getLastPathSegment(pathname);
+  // /dashboard/{username}/…: whose dashboard this is (for the plan card), else null
+  const dashboardUser = pathname?.startsWith("/dashboard/") ? pathname.split("/")[2] || null : null;
 
   const categoryNavigationItems = useMemo(
     () => [
@@ -887,6 +890,22 @@ export function Sidebar({
             onMouseEnter={() => setHoveredSidebarKey("mcp")}
           />
         </nav>
+
+        {/* Dashboard pages: the plan card, at the foot. Always mounted (its data loads once),
+            it fades in once the sidebar has opened and out as it closes; its content keeps the
+            open sidebar's width, so it never squashes while the sidebar slides. */}
+        {dashboardUser && (
+          <div
+            aria-hidden={!isExpanded}
+            className={`w-full shrink-0 overflow-hidden pr-2 pt-3 transition-[opacity,visibility] ${
+              isExpanded ? "visible opacity-100 delay-200 duration-300" : "invisible opacity-0 duration-150"
+            }`}
+          >
+            <div className="w-[calc(20vw-1.5vw)]">
+              <SidebarPlanCard username={dashboardUser} />
+            </div>
+          </div>
+        )}
       </div>
     </aside>
   );

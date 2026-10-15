@@ -43,10 +43,12 @@ function trimToWords(label, maxWords) {
  * URL-driven breadcrumb. `/` is Home; each path segment is a crumb.
  *
  * @param {number} [maxWords] - clip the final crumb to this many words.
+ * @param {{label: string, href: string}[]} [items] - crumbs to show instead of the URL's
+ *   (e.g. the dashboard, whose URL carries a user ID).
  */
-export function Breadcrumb({ className = "", lastItemClassName = "", maxWords }) {
+export function Breadcrumb({ className = "", lastItemClassName = "", maxWords, items: givenItems }) {
   const pathname = usePathname();
-  const items = itemsFromPathname(pathname);
+  const items = givenItems || itemsFromPathname(pathname);
 
   return (
     <nav

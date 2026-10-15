@@ -44,6 +44,7 @@ vi.mock("@/lib/sanity", () => ({
 function makeListQuery(getResult) {
   const query = {
     order: vi.fn(() => query),
+    or: vi.fn(() => query),
     gte: vi.fn(() => query),
     lt: vi.fn(() => query),
     then: (resolve) => resolve(getResult()),

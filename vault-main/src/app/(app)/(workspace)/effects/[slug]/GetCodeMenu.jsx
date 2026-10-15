@@ -288,7 +288,8 @@ export default function GetCodeMenu({
   const copyLocalText = async (key, text) => {
     startCopy(key);
     let allowed = null;
-    const textPromise = requestCopy().then((ok) => {
+    // `key` is "cli" or "mcp": what this copy counts as
+    const textPromise = requestCopy(key).then((ok) => {
       allowed = ok;
       if (!ok) throw new Error("copy-denied");
       return text;

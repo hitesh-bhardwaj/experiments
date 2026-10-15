@@ -1,126 +1,164 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { useUser } from "@clerk/nextjs";
 import { ArrowLeft } from "lucide-react";
 import { useAdminRole } from "@/lib/useAdminRole";
-import Button, { BUTTON_SIZE } from "@/homepage/components/Button";
+import { getDashboardPreview } from "@/lib/dev/dashboardPreview";
+import { BUTTON_SIZE } from "@/homepage/components/Button";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import { AppVaultHeader as VaultHeader } from "@/components/layout/AppVaultHeader";
+import { DarkSegment } from "@/components/ui/DarkSegment";
+import { ADMIN_TABS, USER_TABS, activeTab, dashboardPath, isAdminPath } from "./dashboardRoutes";
+import { DashboardProvider, HERO_ASIDE_ID } from "./DashboardContext";
 
-const BASE_TABS = [
-  { label: "Overview", href: "/dashboard" },
-  { label: "Saved Effects", href: "/dashboard/saved" },
-  { label: "My Templates", href: "/dashboard/templates" },
-  { label: "Usage", href: "/dashboard/usage" },
-  { label: "Invoicing", href: "/dashboard/invoicing" },
-  { label: "Settings", href: "/dashboard/settings" },
+// Each tab's header: the heading (its last words orange) and the line under it.
+// Overview's heading is the greeting, built in the shell.
+const HEROES = {
+  saved: ["Saved", "Effects.", "Your shortlist, ready when you are."],
+  templates: ["My", "Templates.", "Purchased or redeemed. Download them any time."],
+  usage: ["", "Usage.", "Your daily installs and every effect you’ve taken."],
+  invoicing: ["", "Invoicing.", "Your plan, payments and receipts in one place."],
+  settings: ["", "Settings.", "Your profile, sign-in and privacy."],
+  activity: ["", "Activity.", "Site-wide usage, delivery, and who’s driving it."],
+  users: ["", "Users.", "Everyone with a Vault account, and what they’re doing with it."],
+  "admin-invoicing": ["", "Invoicing.", "Every payment across subscriptions and templates."],
+};
+
+// Invoicing is personal billing - an admin account has none, so the user view hides it.
+const ADMIN_HIDDEN_TABS = new Set(["invoicing"]);
+
+function greeting(hour) {
+  if (hour < 12) return "Good Morning";
+  if (hour < 18) return "Good Afternoon";
+  return "Good Evening";
+}
+
+const VIEWS = [
+  { id: "user", label: "User" },
+  { id: "admin", label: "Admin" },
 ];
 
-// Admin-only, gated by dashboard/admin/layout.js's requireAdmin() check
-// regardless of this tab list - hiding them here is a nav nicety, not the
-// actual access control.
-const ADMIN_TABS = [
-  { label: "User Management", href: "/dashboard/admin" },
-  { label: "Activity", href: "/dashboard/admin/activity" },
-];
+// The tabs: standard button size, orange when current
+const TAB = `inline-flex shrink-0 items-center px-3.5 ${BUTTON_SIZE} transition-[background-color,color,box-shadow] duration-500 backdrop-blur-lg ring-1 ring-inset ring-foreground/10 hover:ring-primary/60 max-md:px-4 max-md:py-2.5 max-md:text-sm`;
+const TAB_ON = "bg-primary text-background";
+const TAB_OFF = "bg-foreground/5 text-foreground/80 ring-1 ring-inset ring-foreground/15 hover:text-foreground hover:ring-primary/60";
 
-// Payment detail across every user is a step up from what a regular admin
-// can already see - restricted to super admins both here and (the real
-// gate) in api/admin/invoices/route.js's assertSuperAdmin() check.
-const SUPER_ADMIN_TABS = [{ label: "Invoicing", href: "/dashboard/admin/invoicing" }];
-
-// Invoicing is a customer-account concept (personal billing) - an admin has
-// none, so surfacing it would just show empty/irrelevant state instead of
-// being hidden outright. Usage isn't hidden: admins can still copy/install
-// effects (just without a daily limit), and the main dashboard's Copied/
-// Installed Effects tiles link here for every account, admins included.
-const ADMIN_HIDDEN_TABS = new Set(["/dashboard/invoicing"]);
-
-// Tabs already restyled for the light content sheet below the hero. The rest still use
-// dark styles, so they stay on the dark background until they're restyled too.
-const LIGHT_SHEET_ROUTES = new Set(["/dashboard"]);
-
-export function DashboardShell({ children, totalEffects = 0, effects = [] }) {
+/**
+ * The dashboard frame for /dashboard/{username}/…: the site's vault header, back +
+ * breadcrumb, the tab's header (heading, line, and a slot on the right the tab fills with
+ * DashboardHeroAside), the tab row, then the tab on a light sheet (restyled tabs) or on the
+ * dark page (the rest, until they're restyled).
+ *
+ * Admins get a View as User / Admin slider at the end of the tab row; Admin swaps the tabs
+ * for Activity, Users and (super admins) Invoicing under /dashboard/{username}/admin.
+ */
+export function DashboardShell({ username, effects = [], catalog = [], children }) {
   const pathname = usePathname();
   const router = useRouter();
-  const { isAdmin, isSuperAdmin } = useAdminRole();
+  const { user } = useUser();
+  const role = useAdminRole();
 
-  const visibleBaseTabs = isAdmin
-    ? BASE_TABS.filter((tab) => !ADMIN_HIDDEN_TABS.has(tab.href))
-    : BASE_TABS;
-  const tabs = isAdmin
-    ? [...visibleBaseTabs, ...ADMIN_TABS, ...(isSuperAdmin ? SUPER_ADMIN_TABS : [])]
-    : visibleBaseTabs;
+  // The development preview (no session) stands in for a super admin with "admin".
+  const [preview, setPreview] = useState(null);
+  const [hour, setHour] = useState(null);
+  useEffect(() => {
+    // Read after mount: the cookie and the clock differ between server and browser.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setPreview(getDashboardPreview());
+    setHour(new Date().getHours());
+  }, []);
+  const isAdmin = role.isAdmin || preview === "admin";
+  const isSuperAdmin = role.isSuperAdmin || preview === "admin";
 
-  // Longest-matching href wins, so a nested route (e.g. /dashboard/admin/activity)
-  // lights up only its own tab instead of also lighting up an ancestor tab
-  // whose href is a strict prefix of it (e.g. /dashboard/admin, User Management).
-  const activeTabHref = tabs
-    .filter((tab) =>
-      tab.href === "/dashboard" ? pathname === tab.href : pathname.startsWith(tab.href)
-    )
-    .sort((a, b) => b.href.length - a.href.length)[0]?.href;
+  const adminView = isAdminPath(username, pathname);
+  // The slider moves as soon as it's clicked, not when the next page arrives
+  const [viewClick, setViewClick] = useState(null);
+  const view = viewClick?.from === pathname ? viewClick.view : adminView ? "admin" : "user";
+  const switchView = (next) => {
+    if (next === view) return;
+    setViewClick({ view: next, from: pathname });
+    router.push(dashboardPath(username, next === "admin" ? "admin/activity" : ""));
+  };
+  const tabs = adminView
+    ? ADMIN_TABS.filter((tab) => !tab.superAdmin || isSuperAdmin)
+    : USER_TABS.filter((tab) => !(isAdmin && ADMIN_HIDDEN_TABS.has(tab.key)));
+  const current = activeTab(adminView ? ADMIN_TABS : USER_TABS, username, pathname);
 
-  const lightSheet = LIGHT_SHEET_ROUTES.has(pathname);
+  const firstName = user?.firstName || "there";
+  const [lead, accent, line] =
+    !current || current.key === "overview"
+      ? [`${hour === null ? "Welcome back" : greeting(hour)},`, `${firstName}.`, "Your vault is open. Here’s everything at a glance."]
+      : HEROES[current.key];
+
+  const crumbs = [
+    { label: "Home", href: "/" },
+    { label: "Dashboard", href: dashboardPath(username) },
+    ...(adminView ? [{ label: "Admin", href: dashboardPath(username, "admin") }] : []),
+    ...(current && current.key !== "overview" ? [{ label: current.label, href: dashboardPath(username, current.sub) }] : []),
+  ];
 
   return (
-    <div className="min-h-screen text-foreground">
-      {/* Mobile/tablet only (mobileOnly) - desktop has the workspace sidebar, the back
-          button and the tabs below. */}
-      <VaultHeader mobileOnly showSearch totalEffects={totalEffects} effects={effects} />
+    <DashboardProvider username={username} catalog={catalog} isAdmin={isAdmin} isSuperAdmin={isSuperAdmin}>
+      {/* As tall as the workspace layout's min-h-[200vh] wrapper, so a short tab's light
+          sheet still reaches the bottom of the page */}
+      <div className="flex min-h-[200vh] flex-col text-foreground">
+        <VaultHeader showSearch totalEffects={effects.length} effects={effects} />
 
-      <section id="dashboard" className={`mx-auto w-full section-x flex flex-col gap-[3vw] pt-32 max-lg:gap-10 max-lg:pt-32 max-md:gap-8 max-md:pt-28 ${lightSheet ? "pb-[3vw] max-lg:pb-10 max-md:pb-8" : "pb-[3vw]"}`}>
-        {/* hero: back + breadcrumb, then the heading with Browse Effects beside it */}
-        <header className="flex flex-col gap-[1.6vw] max-lg:gap-6">
-          <div className="flex items-center gap-4">
+        <section id="dashboard" className="section-x flex w-full flex-col gap-[calc(var(--cvw)*3)] pt-32 pb-[calc(var(--cvw)*3)] max-lg:gap-10 max-lg:pb-10 max-md:gap-8 max-md:pt-28 max-md:pb-8">
+          {/* back + breadcrumb */}
+          <div className="flex min-w-0 items-center gap-4">
             <button
               type="button"
               onClick={() => router.back()}
               aria-label="Go back"
-              className="grid size-(--vault-ctl-h) shrink-0 cursor-pointer place-items-center text-foreground/70 ring-1 ring-inset ring-foreground/20 transition-colors duration-300 hover:bg-primary hover:text-background hover:ring-primary"
+              className="grid size-(--vault-ctl-h) shrink-0 cursor-pointer place-items-center text-foreground/80 ring-1 ring-inset ring-foreground/20 backdrop-blur-lg duration-300 hover:bg-primary hover:text-background hover:ring-primary"
             >
               <ArrowLeft className="size-4" aria-hidden="true" />
             </button>
-            <Breadcrumb />
+            <Breadcrumb items={crumbs} />
           </div>
 
-          <div className="flex items-end justify-between gap-[3vw] max-lg:flex-col max-lg:items-start max-lg:gap-6">
-            <div className="flex flex-col gap-[1vw] max-lg:gap-3">
+          {/* the tab's header: heading and line on the left, the tab's own figure on the right */}
+          <header className="flex items-end justify-between gap-[calc(var(--cvw)*3)] max-lg:flex-col max-lg:items-start max-lg:gap-6">
+            <div className="flex min-w-0 flex-col gap-(--cvw) max-lg:gap-3">
               <h1 className="type-display">
-                Your <span className="gradient-text-animate">dashboard.</span>
+                {lead && `${lead} `}
+                <span className="gradient-text-animate">{accent}</span>
               </h1>
-              <p className="type-body-lg text-foreground/70">Your plan, saved effects, usage and billing, in one place.</p>
+              <p className="type-body-lg text-foreground/80">{line}</p>
             </div>
-            <Button href="/effects" text="Browse Effects" />
-          </div>
-        </header>
+            <div id={HERO_ASIDE_ID} className="flex shrink-0 items-end empty:hidden" />
+          </header>
 
-        {/* tabs: standard button size, orange when current */}
-        <nav aria-label="Dashboard" className="flex flex-wrap gap-1.5">
-          {tabs.map((tab) => {
-            const active = tab.href === activeTabHref;
-            return (
-              <Link
-                key={tab.href}
-                href={tab.href}
-                aria-current={active ? "page" : undefined}
-                className={`inline-flex shrink-0 items-center px-3.5 ${BUTTON_SIZE} transition-[background-color,color,box-shadow] duration-500 ${
-                  active ? "bg-primary text-background" : "bg-foreground/5 text-foreground/80 ring-1 ring-inset ring-foreground/15 hover:text-foreground hover:ring-primary/60"
-                }`}
-              >
-                {tab.label}
-              </Link>
-            );
-          })}
-        </nav>
+          {/* tabs, then (admins) the User / Admin switch at the end of the row */}
+          <nav aria-label="Dashboard" className="flex flex-wrap items-center gap-1.5">
+            {tabs.map((tab) => {
+              const active = tab.key === current?.key;
+              return (
+                <Link key={tab.key} href={dashboardPath(username, tab.sub)} aria-current={active ? "page" : undefined} className={`${TAB} ${active ? TAB_ON : TAB_OFF}`}>
+                  {tab.label}
+                </Link>
+              );
+            })}
 
-      </section>
+            {isAdmin && (
+              <div className="ml-auto flex items-center gap-3 max-md:ml-0 max-md:w-full">
+                <span className="type-label text-foreground/80">View as</span>
+                <DarkSegment buttonSize label="Dashboard view" items={VIEWS} value={view} onChange={switchView} itemClassName="w-[calc(var(--cvw)*6)] max-lg:w-20" />
+              </div>
+            )}
+          </nav>
+        </section>
 
-      {/* the content: a full-width light sheet (white cards on it) for restyled tabs */}
-      <div id="dashboard-content" className={lightSheet ? "bg-light text-ink" : ""}>
-        <div className={`mx-auto w-full section-x ${lightSheet ? "py-[4vw] max-lg:py-12 max-md:py-10" : "pb-[7%]"}`}>{children}</div>
+        {/* the tab: a full-width light sheet (white cards on it) for restyled tabs - no hover or
+            movement sounds there, like every light section */}
+        <div id="dashboard-content" data-sound-flow={current?.light ? "off" : undefined} data-sound-hover={current?.light ? "off" : undefined} className={`flex-1 ${current?.light ? "bg-light text-ink" : ""}`}>
+          <div className={`section-x w-full ${current?.light ? "py-[calc(var(--cvw)*3)] max-lg:py-12 max-md:py-10" : "pb-[7%]"}`}>{children}</div>
+        </div>
       </div>
-    </div>
+    </DashboardProvider>
   );
 }

@@ -211,7 +211,7 @@ export async function GET(request, { params }) {
         // metadata is either a Sanity entry (categorySlug) or a registry
         // entry (categories[]) - checking both covers whichever shape it
         // actually is, same as resolveEffectSummary() in the overview
-        // route. Needed so EffectRankSlider's card links (getEffectHref)
+        // route. Needed so the per-user page's effect links (getEffectHref)
         // land on the right category instead of silently defaulting to
         // "components".
         categorySlug: metadata?.categorySlug || metadata?.categories?.[0] || null,
@@ -319,7 +319,7 @@ export async function GET(request, { params }) {
         // Name is never blank in the UI: falls back to the email's
         // local-part, capitalized - same convention as displayName() in
         // dashboard/admin/page.js and resolveDisplayName() in
-        // InstallActivityTab.js - rather than a generic "Unnamed user"
+        // the Activity page's feed - rather than a generic "Unnamed user"
         // placeholder when Clerk has no first/last name on file (invited
         // accounts that completed sign-up through Clerk's own hosted widget
         // without ever being asked for one, mainly).

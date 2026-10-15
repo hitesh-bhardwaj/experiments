@@ -47,3 +47,25 @@ export const cardReveal = (index) => ({
   viewport: { once: true, margin: "0px 0px -10% 0px" },
   transition: { duration: 1.2, ease: [0.165, 0.84, 0.44, 1], delay: (index % 2) * 0.12 },
 });
+
+// Filter chips on light surfaces (the effects listing's categories, the dashboard's filters)
+export const LIGHT_CHIP = `inline-flex h-8 shrink-0 cursor-pointer items-center gap-[calc(var(--cvw)*0.5)] px-3 ${T13} transition-[background-color,color,box-shadow] duration-500 max-md:gap-[2vw]`;
+export const LIGHT_CHIP_OFF = "text-black/60 ring-1 ring-inset ring-black/10 hover:text-ink hover:ring-primary";
+export const LIGHT_CHIP_ON = "bg-primary text-background";
+
+// The catalogue filter (templates listing, dashboard's My Templates)
+export const CATALOGUES = [
+  { id: "all", label: "All" },
+  { id: "selected", label: "Selected" },
+  { id: "full", label: "Pro+ Only" },
+];
+
+// The listing grids, shared with the dashboard's saved effects and templates: effect cards
+// 2 or 3 a row (2 on tablets, 1 on phones), template cards 2 a row (1 on phones)
+export const EFFECT_GRID = "flex flex-wrap gap-[2.5vw] gap-y-8";
+export const EFFECT_GRID_COLS = {
+  2: "w-[calc((100%-2.5vw)/2)] max-lg:w-[calc((100%-2.5vw)/2)] max-md:w-full",
+  3: "w-[calc((100%-5vw)/3)] max-lg:w-[calc((100%-2.5vw)/2)] max-md:w-full",
+};
+export const TEMPLATE_GRID = "flex flex-wrap gap-[2.5vw] max-md:gap-y-[12vw]";
+export const TEMPLATE_CARD_WIDTH = "w-[calc((100%-2.5vw)/2)] max-md:w-full";

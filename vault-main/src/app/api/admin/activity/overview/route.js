@@ -109,7 +109,9 @@ export async function GET(request) {
       // (USD and INR orders both land here - see create-order/route.js),
       // so summing raw amounts across rows would add unlike units. A
       // purchase count avoids that without needing currency conversion.
-      scoped(supabase.from("template_purchases").select("created_at")),
+      // Sales per template too (the Templates table): paid only, and not credit
+      // redemptions, which move no money
+      scoped(supabase.from("template_purchases").select("created_at, template_slug, status, source")),
       getAllSanityEffectEntries(),
       // Scoped to the same window as everything else on this page (view
       // rows carry their own created_at) - unlike /templates' own all-time
@@ -217,6 +219,21 @@ export async function GET(request) {
 
     const totalViews = Object.values(templateViewCounts).reduce((sum, count) => sum + count, 0);
 
+    const templateSales = {};
+    for (const row of templatePurchaseRows || []) {
+      if (row.status !== "paid" || row.source === "credit") continue;
+      templateSales[row.template_slug] = (templateSales[row.template_slug] || 0) + 1;
+    }
+
+    // Every template: views and sales in the window
+    const templateStats = TEMPLATES.map((template) => ({
+      slug: template.slug,
+      title: template.title,
+      category: template.category,
+      views: templateViewCounts[template.slug] || 0,
+      sales: templateSales[template.slug] || 0,
+    })).sort((a, b) => b.views - a.views || b.sales - a.sales);
+
     const topViewedTemplates = TEMPLATES.map((template) => ({
       ...template,
       viewCount: templateViewCounts[template.slug] || 0,
@@ -267,6 +284,7 @@ export async function GET(request) {
       topCopiedEffects,
       topInstalledEffects,
       topViewedTemplates,
+      templateStats,
     });
   } catch (error) {
     console.error("ADMIN_ACTIVITY_OVERVIEW_ERROR:", error);

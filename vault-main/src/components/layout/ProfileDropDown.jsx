@@ -5,6 +5,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useUser, useClerk } from "@clerk/nextjs";
 import { User } from "lucide-react";
+import { dashboardPath } from "@/components/Dashboard/dashboardRoutes";
+import { dashboardUsername } from "@/lib/user-slug";
 
 export default function ProfileDropdown({
   savedCount = 0,
@@ -110,7 +112,7 @@ export default function ProfileDropdown({
           <div className="p-2">
             <Link
               prefetch={false}
-              href="/dashboard"
+              href={dashboardPath(dashboardUsername(user))}
               className="group relative isolate block px-4 py-3 transition"
             >
               <span
@@ -122,7 +124,7 @@ export default function ProfileDropdown({
 
             <Link
               prefetch={false}
-              href="/dashboard/saved"
+              href={dashboardPath(dashboardUsername(user), "saved")}
               className="group relative isolate flex items-center justify-between px-4 py-3 transition"
             >
               <span
@@ -139,7 +141,7 @@ export default function ProfileDropdown({
             {!isAdmin && (
               <Link
                 prefetch={false}
-                href="/dashboard/usage"
+                href={dashboardPath(dashboardUsername(user), "usage")}
                 className="group relative isolate flex items-center justify-between px-4 py-3 transition"
               >
                 <span
@@ -160,7 +162,7 @@ export default function ProfileDropdown({
 
                 <Link
                   prefetch={false}
-                  href="/dashboard/admin/activity"
+                  href={dashboardPath(dashboardUsername(user), "admin/activity")}
                   className="group relative isolate block px-4 py-3 transition"
                 >
                   <span
@@ -172,7 +174,7 @@ export default function ProfileDropdown({
 
                 <Link
                   prefetch={false}
-                  href="/dashboard/admin"
+                  href={dashboardPath(dashboardUsername(user), "admin/users")}
                   className="group relative isolate block px-4 py-3 transition"
                 >
                   <span
@@ -184,7 +186,7 @@ export default function ProfileDropdown({
 
                 <Link
                   prefetch={false}
-                  href="/dashboard/admin/invoicing"
+                  href={dashboardPath(dashboardUsername(user), "admin/invoicing")}
                   className="group relative isolate block px-4 py-3 transition"
                 >
                   <span
@@ -198,7 +200,7 @@ export default function ProfileDropdown({
 
             <Link
               prefetch={false}
-              href="/dashboard/settings"
+              href={dashboardPath(dashboardUsername(user), "settings")}
               className="group relative isolate block px-4 py-3 transition"
             >
               <span

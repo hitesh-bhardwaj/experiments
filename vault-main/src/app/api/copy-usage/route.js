@@ -57,7 +57,10 @@ export async function POST(request) {
     return NextResponse.json({ allowed: false, signedIn: false }, { status: 401 });
   }
 
-  const { effectSlug } = await request.json().catch(() => ({}));
+  const { effectSlug, source } = await request.json().catch(() => ({}));
+  // What was copied: code from the site ("web", the default), or a command or prompt
+  // for the CLI ("cli") / an AI editor over MCP ("mcp") - copying one counts as that install
+  const surface = ["web", "cli", "mcp"].includes(source) ? source : "web";
 
   if (!effectSlug || typeof effectSlug !== "string") {
     return NextResponse.json({ allowed: false, error: "Missing effectSlug." }, { status: 400 });
@@ -65,7 +68,7 @@ export async function POST(request) {
 
   const result = await getInstallLimitDecision({
     effectSlug,
-    source: "web",
+    source: surface,
     clerkUserId: userId,
   });
 

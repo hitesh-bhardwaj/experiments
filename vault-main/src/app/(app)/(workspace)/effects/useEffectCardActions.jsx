@@ -112,8 +112,9 @@ export function useEffectCardActions({ userPlan = "free", signInRedirect = "/eff
 
   // One request per effect at a time (fast double clicks share it)
   const pendingClaims = useRef(new Map());
+  // `source`: what the copy counts as - "cli" for the `npx hyperiux add` command
   const claimInstall = useCallback(
-    (slug) => {
+    (slug, source = "web") => {
       // Copied earlier today: free, even at the limit
       if (usage?.isAdmin || usage?.effectSlugs?.includes(slug)) return Promise.resolve({ allowed: true, data: usage });
       // Limit used up: the same message as everywhere else, no request
@@ -126,7 +127,7 @@ export function useEffectCardActions({ userPlan = "free", signInRedirect = "/eff
           const res = await fetch("/api/copy-usage", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ effectSlug: slug }),
+            body: JSON.stringify({ effectSlug: slug, source }),
           });
           const data = await res.json();
           setUsage(data);
@@ -169,7 +170,8 @@ export function useEffectCardActions({ userPlan = "free", signInRedirect = "/eff
         write.catch(() => {});
       }
 
-      const { allowed, data, failed } = await claimInstall(effect.name);
+      // The install command: a CLI install, not a website copy
+      const { allowed, data, failed } = await claimInstall(effect.name, "cli");
       if (!allowed) {
         drop(new Error("not allowed"));
         if (failed || !data) {

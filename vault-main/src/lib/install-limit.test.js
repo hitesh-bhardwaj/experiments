@@ -101,7 +101,7 @@ describe("getInstallLimitDecision", () => {
     expect(insertedEvents).toHaveLength(0);
   });
 
-  it("bypasses admins entirely - no claim, no ledger row", async () => {
+  it("never meters admins - no claim, no ledger row, but logs the install for their usage tab", async () => {
     adminUser = { id: "admin_1", publicMetadata: { role: "admin" } };
 
     const result = await getInstallLimitDecision({
@@ -114,7 +114,8 @@ describe("getInstallLimitDecision", () => {
     expect(result.reason).toBe("admin");
     expect(result.plan).toBe("admin");
     expect(supabaseMock.rpc).not.toHaveBeenCalled();
-    expect(insertedEvents).toHaveLength(0);
+    expect(insertedEvents).toHaveLength(1);
+    expect(insertedEvents[0]).toMatchObject({ clerk_user_id: "admin_1", effect_slug: "any-effect", plan: "admin", decision: "allowed", reason: "admin" });
   });
 
   describe("signed-in free user (limit 3)", () => {

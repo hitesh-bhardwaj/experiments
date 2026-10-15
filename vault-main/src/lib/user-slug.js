@@ -23,3 +23,24 @@ export function buildUserActivitySlug({ name, email }) {
 
   return base ? slugify(base) : "user";
 }
+
+// The tab names under /dashboard; a username equal to one would be read as the old
+// ID-less tab URL (proxy.js), so it gets "-user" on the end.
+const RESERVED = new Set(["saved", "templates", "usage", "invoicing", "settings", "admin"]);
+
+/**
+ * The name in a dashboard URL, /dashboard/{username}: the account's Clerk username, or
+ * its full name, or its email before "@" (slugified). Takes a Clerk user from the
+ * browser (useUser) or the server (currentUser). Only ever compared with the signed-in
+ * account's own, so two accounts sharing one is harmless.
+ */
+export function dashboardUsername(user) {
+  if (!user) return "";
+  const email =
+    user.primaryEmailAddress?.emailAddress ||
+    user.emailAddresses?.find((address) => address.id === user.primaryEmailAddressId)?.emailAddress ||
+    user.emailAddresses?.[0]?.emailAddress;
+  const name = [user.firstName, user.lastName].filter(Boolean).join(" ");
+  const slug = slugify(user.username || name || email?.split("@")[0] || "") || "me";
+  return RESERVED.has(slug) ? `${slug}-user` : slug;
+}

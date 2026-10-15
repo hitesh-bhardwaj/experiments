@@ -43,6 +43,10 @@ import { SliderArrowButton, SliderNav } from "@/components/ui/SliderArrowButton"
 import EffectStage from "./EffectStage";
 import { PLANS } from "@/lib/plans";
 
+// What a code block's copy counts as: a `hyperiux add` command (in any package manager)
+// is a CLI install; anything else is code copied from the site
+const copySource = (code) => (/\bhyperiux\s+add\b/.test(String(code || "")) ? "cli" : "web");
+
 // Why the code on this page is withheld ({ reason, tier } from the server, see
 // [effectSlug]/page.js) - read by LockedCodePlaceholder for its wording and button
 // reason / tier: why the code is withheld (server-decided). onSignIn opens the page's
@@ -909,7 +913,7 @@ function SanityBodyBlock({ block, isLocked: lockedProp = false }) {
           filename={block.filename}
           copyLocked={copyLimitLocked}
           selectable={copySelectable}
-          onBeforeCopy={requestCopy}
+          onBeforeCopy={() => requestCopy(copySource(block.code))}
           lockedCtaHref={lockedCtaHref}
           lockedCtaLabel={lockedCtaLabel}
         />
@@ -1166,7 +1170,7 @@ function PortableTextBlock({ block, isLocked: lockedProp = false }) {
           language={inferCodeLanguage(code)}
           copyLocked={copyLimitLocked}
           selectable={copySelectable}
-          onBeforeCopy={requestCopy}
+          onBeforeCopy={() => requestCopy(copySource(code))}
           lockedCtaHref={lockedCtaHref}
           lockedCtaLabel={lockedCtaLabel}
         />

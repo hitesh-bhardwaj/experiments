@@ -1,5 +1,7 @@
-import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { clerkClient, clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
+import { DEV_PREVIEW_USERNAME } from "@/lib/dev/dashboardPreview";
+import { dashboardUsername } from "@/lib/user-slug";
 
 const isProtectedRoute = createRouteMatcher([
   "/dashboard(.*)",
@@ -31,9 +33,38 @@ const isDevDashboardPreview = (request) =>
   request.nextUrl.pathname.startsWith("/dashboard") &&
   Boolean(request.cookies.get("vault-dev-preview")?.value);
 
+// Dashboard URLs carry the account's username (/dashboard/{username}/{tab}, see
+// lib/user-slug). The old name-less ones (bookmarks, emails, checkout's successHref) go
+// to the same tab under the signed-in account's name; the old admin root was User
+// Management, now admin/users. A wrong name is the [username] layout's job.
+const LEGACY_DASHBOARD = /^\/dashboard(?:\/(saved|templates|usage|invoicing|settings|admin)(\/.*)?)?\/?$/;
+
+function legacyDashboardPath(pathname, username) {
+  const legacy = pathname.match(LEGACY_DASHBOARD);
+  if (!legacy) return null;
+  const [, tab, rest = ""] = legacy;
+  const sub = !tab ? "" : tab === "admin" && !rest ? "/admin/users" : `/${tab}${rest}`;
+  return `/dashboard/${username}${sub}`;
+}
+
 const withClerk = clerkMiddleware(async (auth, request) => {
-  if (isProtectedRoute(request) && !isDevDashboardPreview(request)) {
+  const preview = isDevDashboardPreview(request);
+  if (isProtectedRoute(request) && !preview) {
     await auth.protect();
+  }
+
+  if (LEGACY_DASHBOARD.test(request.nextUrl.pathname)) {
+    // Only these old URLs need the name, so only they pay for the user lookup
+    let username = preview ? DEV_PREVIEW_USERNAME : null;
+    if (!username) {
+      const { userId } = await auth();
+      if (userId) username = dashboardUsername(await (await clerkClient()).users.getUser(userId));
+    }
+    if (username) {
+      const url = request.nextUrl.clone();
+      url.pathname = legacyDashboardPath(request.nextUrl.pathname, username);
+      return NextResponse.redirect(url);
+    }
   }
 });
 

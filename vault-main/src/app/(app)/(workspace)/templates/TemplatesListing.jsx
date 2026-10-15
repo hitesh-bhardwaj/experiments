@@ -20,7 +20,9 @@ import { FilterMenu } from "../effects/FilterMenu";
 import { useTemplateViewCounts } from "./useTemplateViewCounts";
 import { TemplatePreviewDrawer } from "./TemplatePreviewDrawer";
 import { useTemplatePurchase } from "./useTemplatePurchase";
-import { DISPLAY, GUTTER, LABEL, PRICE, T11, T14, T16, cardReveal, catalogueOf, priceOf } from "./tokens";
+import { CATALOGUES, TEMPLATE_CARD_WIDTH, TEMPLATE_GRID, DISPLAY, GUTTER, LABEL, PRICE, T11, T14, T16, cardReveal, catalogueOf, priceOf } from "./tokens";
+import { DarkSegment } from "@/components/ui/DarkSegment";
+import { CARD_LAYOUT_TRANSITION } from "../effects/EffectCard";
 import { PLANS, getCreditsPerYear } from "@/lib/plans";
 import { isLighthouseOrHeadless, isSoftwareRenderer } from "@/lib/audit";
 
@@ -42,12 +44,6 @@ const VIEWS = [
   { id: "corr", label: "Corridor" },
   { id: "grid", label: "Grid" },
 ];
-const CATALOGUES = [
-  { id: "all", label: "All" },
-  { id: "selected", label: "Selected" },
-  { id: "full", label: "Pro+ Only" },
-];
-const CARD_LAYOUT_TRANSITION = { layout: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } };
 
 // Compact filter chips (T14 text); the ring is inset, so it adds no height
 const CHIP = `inline-flex shrink-0 cursor-pointer items-center px-3 py-1.5 max-md:py-3 ${T14} backdrop-blur-lg transition-[background-color,color,box-shadow] duration-500`;
@@ -260,9 +256,9 @@ export function TemplatesListing({ templates: baseTemplates = [], description = 
               </button>
             </div>
           ) : (
-            <div className="flex flex-wrap gap-[2.5vw] max-md:gap-y-[12vw]">
+            <div className={TEMPLATE_GRID}>
               {filtered.map((template, index) => (
-                <motion.div key={template.slug} layout transition={CARD_LAYOUT_TRANSITION} className="w-[calc((100%-2.5vw)/2)] max-md:w-full">
+                <motion.div key={template.slug} layout transition={CARD_LAYOUT_TRANSITION} className={TEMPLATE_CARD_WIDTH}>
                   <motion.div {...cardReveal(index)}>
                     <TemplateCard
                       template={template}
@@ -372,34 +368,3 @@ function CreditRow({ figure, caption, title, dark = false, children }) {
   );
 }
 
-/** Segmented control for the dark hero: an orange block slides to the chosen option. */
-function DarkSegment({ label, items, value, onChange, itemClassName }) {
-  const index = Math.max(0, items.findIndex((item) => item.id === value));
-  return (
-    <div role="radiogroup" aria-label={label} className="relative flex gap-0.5 bg-foreground/6 p-0.75 ring-1 ring-inset ring-foreground/8 backdrop-blur-lg">
-      <span
-        aria-hidden="true"
-        className={`pointer-events-none absolute top-0.75 bottom-0.75 left-0.75 bg-primary transition-transform duration-700 ease-[cubic-bezier(.16,1,.3,1)] ${itemClassName}`}
-        style={{ transform: `translateX(calc(${index} * (100% + 2px)))` }}
-      />
-      {items.map((item) => {
-        const active = item.id === value;
-        return (
-          <button
-            key={item.id}
-            type="button"
-            role="radio"
-            aria-checked={active}
-            onClick={() => onChange(item.id)}
-            // Button height overall: Button's padding minus the 3px (p-0.75) the track adds
-            className={`relative z-1 flex cursor-pointer items-center justify-center py-[calc(0.375rem-3px)] ${T14} transition-colors duration-500 max-md:py-[calc(0.75rem-3px)] ${itemClassName} ${
-              active ? "text-background" : "text-foreground/60 hover:text-foreground"
-            }`}
-          >
-            {item.label}
-          </button>
-        );
-      })}
-    </div>
-  );
-}

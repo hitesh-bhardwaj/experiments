@@ -40,6 +40,9 @@ export const ACTION_SLIDE =
 // slightly more opaque fill instead.
 export const CARD_BTN = twMerge(ICON_BTN, "backdrop-blur-none bg-background/85");
 
+// How cards glide to their new slots when a grid re-flows (column switch, filters):
+// motion's `layout`, on the effects listing and the dashboard's saved effects.
+export const CARD_LAYOUT_TRANSITION = { layout: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } };
 export const isNewEffect = (effect) => !!effect?.addedAt && Date.now() - effect.addedAt < NEW_WINDOW_MS;
 export const installCommand = (effect) => `npx hyperiux add ${effect.name}`;
 export const effectCategoryLabel = (effect) => getQuickCategoryLabel(resolveEffectCategoryId(effect) || "components");

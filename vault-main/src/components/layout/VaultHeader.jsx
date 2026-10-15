@@ -28,12 +28,12 @@ import Image from "next/image";
 import { ChevronRight, User as UserIcon } from "lucide-react";
 import { HyperiuxLogo } from "@/utils/Icons";
 import { effectCategories, getEffectCategoryHref } from "@/lib/categories";
-import { WISHLIST_CHANGED_EVENT } from "@/lib/wishlistEvents";
 import { prefersReducedMotion } from "@/lib/motion";
 import { markScrollToPricingCards } from "@/lib/pricingScrollIntent";
 import Button from "@/homepage/components/Button";
 import SoundToggle from "@/homepage/components/SoundToggle";
 import { useHideOnScrollDown } from "./useHideOnScrollDown";
+import { useAccountSummary } from "./useAccountSummary";
 
 const useIsoLayoutEffect =
   typeof window === "undefined" ? useEffect : useLayoutEffect;
@@ -131,8 +131,7 @@ export function VaultHeader({
   mobileOnly = false,
 }) {
   const [openTrigger, setOpenTrigger] = useState(0);
-  const [wishlistCount, setWishlistCount] = useState(0);
-  const [usage, setUsage] = useState(null);
+  const { wishlistCount, usage } = useAccountSummary(isSignedIn);
   const [isScrolled, setIsScrolled] = useState(false);
 
   const [open, setOpen] = useState(false);
@@ -148,62 +147,6 @@ export function VaultHeader({
 
   const pathname = usePathname();
   const [routeShown, setRouteShown] = useState(pathname);
-
-  useEffect(() => {
-    if (!isSignedIn) return;
-
-    async function loadWishlistCount() {
-      try {
-        const res = await fetch("/api/wishlist");
-
-        if (!res.ok) return;
-
-        const data = await res.json();
-
-        setWishlistCount(data.length);
-      } catch (err) {
-        console.error(err);
-      }
-    }
-
-    loadWishlistCount();
-  }, [isSignedIn]);
-
-  useEffect(() => {
-    if (!isSignedIn) return;
-
-    async function loadUsage() {
-      try {
-        const res = await fetch("/api/copy-usage");
-
-        if (!res.ok) return;
-
-        const data = await res.json();
-
-        setUsage(data);
-      } catch (err) {
-        console.error(err);
-      }
-    }
-
-    loadUsage();
-  }, [isSignedIn]);
-
-  useEffect(() => {
-    if (!isSignedIn) return;
-
-    const handleWishlistChanged = (e) => {
-      setWishlistCount((count) =>
-        e.detail?.saved ? count + 1 : Math.max(0, count - 1)
-      );
-    };
-
-    window.addEventListener(WISHLIST_CHANGED_EVENT, handleWishlistChanged);
-
-    return () => {
-      window.removeEventListener(WISHLIST_CHANGED_EVENT, handleWishlistChanged);
-    };
-  }, [isSignedIn]);
 
   useEffect(() => {
     const handleScroll = () => {

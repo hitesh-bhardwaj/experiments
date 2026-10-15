@@ -1,7 +1,7 @@
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
-import { getUserPlan } from "@/lib/subscription";
+import { getUserPlanInfo } from "@/lib/subscription";
 import { isAdminUser } from "@/lib/admin";
 import { getTemplateBySlug } from "@/lib/mock-templates";
 
@@ -12,7 +12,7 @@ export async function GET() {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const [user, plan] = await Promise.all([currentUser(), getUserPlan(userId)]);
+  const [user, { plan, tier }] = await Promise.all([currentUser(), getUserPlanInfo(userId)]);
 
   // Admins have no personal billing to review - their Pro-equivalent access
   // (if any) isn't a paid subscription, so there's nothing to list here.
@@ -20,6 +20,7 @@ export async function GET() {
     return NextResponse.json({
       isAdmin: true,
       plan,
+      tier,
       subscription: null,
       invoices: [],
       templatePurchases: [],
@@ -45,10 +46,9 @@ export async function GET() {
         "id,amount,currency,status,billing_interval,plan_label,invoice_url,is_test,razorpay_payment_id,created_at"
       )
       .eq("clerk_user_id", userId)
-      // Real purchases only - recordInvoice() in @/lib/pro-access always
-      // sets is_test: false for actual webhook-driven invoices, so this
-      // excludes any rows left over from the (now-removed) test-invoice
-      // generator without needing a data migration to clean them up.
+      // Real purchases only - recordInvoice() in @/lib/pro-access marks payments
+      // taken with Razorpay test keys (local / preview) as is_test, and the old
+      // test-invoice generator's rows are flagged too.
       .eq("is_test", false)
       .order("created_at", { ascending: false }),
 
@@ -91,6 +91,7 @@ export async function GET() {
   return NextResponse.json({
     isAdmin: false,
     plan,
+    tier,
     subscription: subscriptionRow || null,
     invoices: invoiceRows || [],
     templatePurchases,

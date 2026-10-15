@@ -7,6 +7,12 @@ import { getEffectMetadata } from "@/lib/registry";
 import { getAllSanityEffectEntries, buildEffectsFromSanity } from "@/lib/sanity";
 import { getLimitForTier } from "@/lib/install-limit";
 
+// The dashboard's Usage tab: today's count against the daily limit, and every effect
+// taken (newest first) for its table and chart.
+
+// How much history the table (and its chart) gets
+const MAX_EVENTS = 500;
+
 function todayUTC() {
   return new Date().toISOString().slice(0, 10);
 }
@@ -26,74 +32,43 @@ export async function GET() {
   const isAdmin = isAdminUser(user);
   const limit = getLimitForTier(tier, { isAdmin });
 
-  // Same source the vault listing (and, at save-time, the Saved Effects
-  // page) uses for cover/video assets - registry.json has neither field, so
-  // reading it directly here left cards with no poster/video.
-  const sanityEffectsBySlug = new Map(
-    buildEffectsFromSanity(sanityEntries).map((effect) => [effect.name, effect])
-  );
+  const titles = new Map(buildEffectsFromSanity(sanityEntries).map((effect) => [effect.name, effect.title]));
+  const titleOf = (slug) => titles.get(slug) || getEffectMetadata(slug)?.title || slug;
 
-  // install_unlocks is the shared ledger across web/CLI/MCP (Installation-
-  // SyncUp.md Stage 1) - copy_usage_effects was the web-only predecessor and
-  // no longer receives new rows as of the copy-usage route's migration, so
-  // reading it here would silently go stale.
-  const [{ data: todayRows, error: todayError }, { data: allRows, error: allError }] =
-    await Promise.all([
-      supabase
-        .from("install_unlocks")
-        .select("effect_slug")
+  // Members: install_unlocks, the ledger shared across web/CLI/MCP - one row per (UTC
+  // day, effect), which is what the daily limit counts. Admins are never metered, so
+  // they have no ledger rows; their installs are logged in install_events instead
+  // (plan "admin", see lib/install-limit).
+  const { data: rows, error } = isAdmin
+    ? await supabase
+        .from("install_events")
+        .select("effect_slug, source, occurred_at")
         .eq("clerk_user_id", userId)
-        .eq("usage_date", todayUTC()),
-
-      supabase
+        .eq("plan", "admin")
+        .order("occurred_at", { ascending: false })
+        .limit(MAX_EVENTS)
+    : await supabase
         .from("install_unlocks")
-        .select("effect_slug, usage_date, source")
+        .select("effect_slug, source, usage_date, first_unlocked_at")
         .eq("clerk_user_id", userId)
-        .order("usage_date", { ascending: false }),
-    ]);
+        .order("first_unlocked_at", { ascending: false })
+        .limit(MAX_EVENTS);
 
-  if (todayError || allError) {
-    console.error("DASHBOARD_INSTALL_UNLOCKS_ERROR:", todayError || allError);
-
-    return NextResponse.json(
-      { error: "Failed to load copy usage" },
-      { status: 500 }
-    );
+  if (error) {
+    console.error("DASHBOARD_USAGE_ERROR:", error);
+    return NextResponse.json({ error: "Failed to load usage" }, { status: 500 });
   }
 
-  const count = (todayRows || []).length;
-  const remaining = isAdmin ? null : Math.max(0, limit - count);
+  const events = (rows || []).map((row) => ({
+    name: row.effect_slug,
+    title: titleOf(row.effect_slug),
+    source: row.source || "web",
+    at: row.occurred_at || row.first_unlocked_at || row.usage_date,
+  }));
 
-  // install_unlocks has one row per (day, effect) - dedupe to the most
-  // recent unlock per effect since rows are already ordered newest-first.
-  const seenSlugs = new Set();
-  const copiedEffects = [];
-
-  for (const row of allRows || []) {
-    if (seenSlugs.has(row.effect_slug)) continue;
-    seenSlugs.add(row.effect_slug);
-
-    const metadata = sanityEffectsBySlug.get(row.effect_slug) || getEffectMetadata(row.effect_slug);
-    if (!metadata) continue;
-
-    copiedEffects.push({
-      name: row.effect_slug,
-      title: metadata.title || row.effect_slug,
-      category: metadata.category,
-      categories: metadata.categories,
-      categorySlug: metadata.categorySlug,
-      // Fall back to the same <slug>.png / <slug>.mp4 convention
-      // mergeRegistryWithSanity uses when Sanity has no explicit asset.
-      coverImage: metadata.coverImage || row.effect_slug,
-      videoUrl: metadata.videoUrl || `${row.effect_slug}.mp4`,
-      tier: metadata.tier || "free",
-      lastCopiedAt: row.usage_date,
-      // Most recent unlock's source, since rows are ordered newest-first and
-      // an effect can be re-unlocked on a later day from a different surface
-      // (e.g. copied on the website, then later `hyperiux add`-ed too).
-      source: row.source || null,
-    });
-  }
+  // Unique effects today (UTC), against the limit
+  const today = todayUTC();
+  const count = new Set(events.filter((event) => String(event.at).slice(0, 10) === today).map((event) => event.name)).size;
 
   return NextResponse.json({
     plan,
@@ -101,7 +76,7 @@ export async function GET() {
     isAdmin,
     limit,
     count,
-    remaining,
-    copiedEffects,
+    remaining: isAdmin ? null : Math.max(0, limit - count),
+    events,
   });
 }

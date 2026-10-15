@@ -30,6 +30,11 @@ export default function LinkButton({
   target,
   className = "",
   showArrow = false,
+  // With showArrow: the arrow points right and slides in sideways (opt-in; the default
+  // arrow points down and slides vertically).
+  arrowRight = false,
+  // The text colour; light surfaces pass a dark one (e.g. "text-ink").
+  colorClassName = "text-white",
   shimmer = false,
   shimmerBaseColor = "#979797",
   shimmerColor = "#ffffff",
@@ -126,6 +131,7 @@ export default function LinkButton({
     onClick?.(e);
   };
 
+  // Spans only inside the link (no divs), so it can sit inside a sentence's <p>.
   return (
     <Link
       {...props}
@@ -134,12 +140,12 @@ export default function LinkButton({
       prefetch={props.prefetch ?? prefetchFor(href)}
       target={resolvedTarget}
       rel={isExternal ? "noopener noreferrer" : undefined}
-      className={`relative text-white group w-fit inline-block pb-1 ${className}`}
+      className={`relative ${colorClassName} group w-fit inline-block pb-1 ${className}`}
       onMouseEnter={handleEnter}
       onMouseLeave={handleLeave}
       onClick={handleClick}
     >
-      <div className="flex items-center gap-[0.5vw] max-lg:gap-2 w-fit cursor-pointer">
+      <span className="flex items-center gap-[0.5vw] max-lg:gap-2 w-fit cursor-pointer">
         <span className="relative">
           <span className="relative overflow-hidden inline-flex h-[1.4em]">
             <span
@@ -156,31 +162,40 @@ export default function LinkButton({
             </span>
           </span>
           {underline ? (
-            <div
+            <span
               ref={underlineRef}
               className={`absolute left-0 top-full h-px w-full bg-current ${underlineClassName}`}
             />
           ) : null}
         </span>
 
-        {showArrow && (
-          <div className="size-2.5 overflow-hidden mt-0.5">
-            <div className="size-2.5 relative transition-transform duration-300 group-hover:translate-y-0 translate-y-[-120%] shrink-0">
+        {showArrow && arrowRight && (
+          <span className="block size-2.5 overflow-hidden mt-0.5">
+            <span className="block size-2.5 relative -translate-x-[120%] transition-transform duration-300 group-hover:translate-x-0 shrink-0">
+              <ArrowSVG className="-rotate-90 w-full h-full" />
+              <ArrowSVG className="size-2.5 -rotate-90 absolute top-0 left-[120%]" />
+            </span>
+          </span>
+        )}
+
+        {showArrow && !arrowRight && (
+          <span className="block size-2.5 overflow-hidden mt-0.5">
+            <span className="block size-2.5 relative transition-transform duration-300 group-hover:translate-y-0 translate-y-[-120%] shrink-0">
               <ArrowSVG className="w-full h-full" />
               <ArrowSVG className="size-2.5 opacity-60 absolute bottom-[-120%]" />
-            </div>
-          </div>
+            </span>
+          </span>
         )}
 
         {tilted && (
-          <div className="size-2.5 overflow-hidden mt-0.5">
-            <div className="size-2.5 relative transition-transform duration-300 group-hover:-translate-y-full group-hover:translate-x-full shrink-0">
+          <span className="block size-2.5 overflow-hidden mt-0.5">
+            <span className="block size-2.5 relative transition-transform duration-300 group-hover:-translate-y-full group-hover:translate-x-full shrink-0">
               <ArrowSVG className="rotate-[-135deg] w-full h-full" />
               <ArrowSVG className="size-2.5 rotate-[-135deg] absolute -bottom-full -left-full" />
-            </div>
-          </div>
+            </span>
+          </span>
         )}
-      </div>
+      </span>
     </Link>
   );
 }

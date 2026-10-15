@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Calendar as CalendarIcon, ChevronLeft, ChevronRight } from "lucide-react";
+import { Calendar as CalendarIcon, ChevronLeft, ChevronRight, X } from "lucide-react";
+import { T14 } from "@/app/(app)/(workspace)/templates/tokens";
 
 // Same shadcn "range date picker" pattern (trigger button showing the
 // formatted range -> popover with a month grid, click a start day then an
@@ -15,6 +16,39 @@ import { Calendar as CalendarIcon, ChevronLeft, ChevronRight } from "lucide-reac
 // this replaces already produced - a drop-in swap, no parent/API changes.
 
 const WEEKDAY_LABELS = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
+
+// The admin pages' dark look, and a light one for the dashboard's light sheet (the
+// trigger matches the effects listing's filter buttons there)
+const TONES = {
+  dark: {
+    trigger: "border border-white/10 bg-white/5 px-3 py-3.5 text-sm text-white hover:border-white/25 focus:border-white/25",
+    clear: "border border-white/10 bg-white/5 text-white/50 hover:text-white",
+    icon: "text-white/50",
+    value: "text-white",
+    placeholder: "text-white/40",
+    panel: "border border-white/10 bg-[#1a1a1a]",
+    nav: "text-white/50 hover:bg-white/10 hover:text-white",
+    month: "text-white",
+    weekday: "text-white/40",
+    edge: "bg-[#ff5f00] text-black font-medium",
+    between: "bg-white/10 text-white",
+    day: "text-white/70 hover:bg-white/10",
+  },
+  light: {
+    trigger: `h-9.5 bg-foreground px-4 ${T14} text-black/60 ring-1 ring-inset ring-black/10 hover:text-ink hover:ring-primary`,
+    clear: "h-9.5 bg-foreground text-black/60 ring-1 ring-inset ring-black/10 hover:text-ink hover:ring-primary",
+    icon: "text-black/40",
+    value: "text-ink",
+    placeholder: "",
+    panel: "bg-foreground text-ink shadow-xl ring-1 ring-inset ring-black/10",
+    nav: "text-black/60 hover:bg-black/5 hover:text-ink",
+    month: "text-ink",
+    weekday: "text-black/40",
+    edge: "bg-primary text-background",
+    between: "bg-primary/10 text-ink",
+    day: "text-black/60 hover:bg-black/5 hover:text-ink",
+  },
+};
 
 function toDateString(date) {
   const year = date.getFullYear();
@@ -58,18 +92,18 @@ function buildMonthGrid(monthDate) {
   return cells;
 }
 
-function MonthGrid({ monthDate, from, to, hoverDate, onSelectDay, onHoverDay }) {
+function MonthGrid({ monthDate, from, to, hoverDate, onSelectDay, onHoverDay, tone }) {
   const cells = buildMonthGrid(monthDate);
 
   return (
     <div className="w-64 shrink-0">
-      <p className="mb-3 text-center text-sm font-medium text-white">
+      <p className={`mb-3 text-center text-sm font-medium ${tone.month}`}>
         {monthDate.toLocaleDateString("en-US", { month: "long", year: "numeric" })}
       </p>
 
       <div className="grid grid-cols-7 gap-y-1">
         {WEEKDAY_LABELS.map((label) => (
-          <div key={label} className="flex h-8 items-center justify-center text-[11px] font-medium text-white/40">
+          <div key={label} className={`flex h-8 items-center justify-center text-[11px] font-medium ${tone.weekday}`}>
             {label}
           </div>
         ))}
@@ -89,11 +123,7 @@ function MonthGrid({ monthDate, from, to, hoverDate, onSelectDay, onHoverDay }) 
               onClick={() => onSelectDay(date)}
               onMouseEnter={() => onHoverDay(date)}
               className={`flex h-8 w-8 items-center justify-center justify-self-center text-xs transition-colors ${
-                isStart || isEnd
-                  ? "bg-[#ff5f00] text-black font-medium"
-                  : inRange
-                    ? "bg-white/10 text-white"
-                    : "text-white/70 hover:bg-white/10"
+                isStart || isEnd ? tone.edge : inRange ? tone.between : tone.day
               }`}
             >
               {date.getDate()}
@@ -105,7 +135,12 @@ function MonthGrid({ monthDate, from, to, hoverDate, onSelectDay, onHoverDay }) 
   );
 }
 
-export function DateRangeCalendarPicker({ from, to, onFromChange, onToChange }) {
+/**
+ * `tone`: "dark" (admin pages) or "light". `placeholder` labels the trigger before a
+ * range is picked; with `onClear`, a picked range gets an × that clears it.
+ */
+export function DateRangeCalendarPicker({ from, to, onFromChange, onToChange, tone: toneName = "dark", placeholder = "Pick a date range", onClear }) {
+  const tone = TONES[toneName];
   const [open, setOpen] = useState(false);
   const [hoverDate, setHoverDate] = useState(null);
   const rootRef = useRef(null);
@@ -161,32 +196,37 @@ export function DateRangeCalendarPicker({ from, to, onFromChange, onToChange }) 
     setOpen(false);
   }
 
-  const label = fromDate ? (toDate ? `${formatDisplayDate(fromDate)} - ${formatDisplayDate(toDate)}` : formatDisplayDate(fromDate)) : "Pick a date range";
+  const label = fromDate ? (toDate ? `${formatDisplayDate(fromDate)} - ${formatDisplayDate(toDate)}` : formatDisplayDate(fromDate)) : placeholder;
 
   return (
-    <div ref={rootRef} className="relative inline-block">
+    <div ref={rootRef} className="relative inline-flex">
       <button
         type="button"
         onClick={() => setOpen((isOpen) => !isOpen)}
         aria-haspopup="dialog"
         aria-expanded={open}
-        className="flex items-center gap-2 border border-white/10 bg-white/5 px-3 py-3.5 text-sm text-white outline-none transition hover:border-white/25 focus:border-white/25"
+        className={`flex cursor-pointer items-center gap-2 outline-none transition ${tone.trigger}`}
       >
-        <CalendarIcon className="h-3.5 w-3.5 text-white/50" />
-        <span className={fromDate ? "text-white" : "text-white/40"}>{label}</span>
+        <CalendarIcon className={`h-3.5 w-3.5 ${tone.icon}`} />
+        <span className={fromDate ? tone.value : tone.placeholder}>{label}</span>
       </button>
+      {onClear && fromDate && (
+        <button type="button" onClick={onClear} aria-label="Clear the date range" className={`grid w-9.5 cursor-pointer place-items-center transition ${tone.clear}`}>
+          <X className="size-3.5" aria-hidden="true" />
+        </button>
+      )}
 
       {open && (
         <div
           role="dialog"
           onMouseLeave={() => setHoverDate(null)}
-          className="absolute right-0 z-30 mt-2 border border-white/10 bg-[#1a1a1a] p-4"
+          className={`absolute top-full right-0 z-30 mt-2 p-4 ${tone.panel}`}
         >
           <button
             type="button"
             onClick={() => shiftMonth(-1)}
             aria-label="Previous month"
-            className="absolute left-4 top-4 flex h-6 w-6 items-center justify-center text-white/50 transition hover:bg-white/10 hover:text-white"
+            className={`absolute left-4 top-4 flex h-6 w-6 items-center justify-center transition ${tone.nav}`}
           >
             <ChevronLeft className="h-4 w-4" />
           </button>
@@ -194,7 +234,7 @@ export function DateRangeCalendarPicker({ from, to, onFromChange, onToChange }) 
             type="button"
             onClick={() => shiftMonth(1)}
             aria-label="Next month"
-            className="absolute right-4 top-4 flex h-6 w-6 items-center justify-center text-white/50 transition hover:bg-white/10 hover:text-white"
+            className={`absolute right-4 top-4 flex h-6 w-6 items-center justify-center transition ${tone.nav}`}
           >
             <ChevronRight className="h-4 w-4" />
           </button>
@@ -206,6 +246,7 @@ export function DateRangeCalendarPicker({ from, to, onFromChange, onToChange }) 
             hoverDate={hoverDate}
             onSelectDay={handleSelectDay}
             onHoverDay={setHoverDate}
+            tone={tone}
           />
         </div>
       )}

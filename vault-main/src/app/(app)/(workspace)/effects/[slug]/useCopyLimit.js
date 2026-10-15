@@ -77,7 +77,9 @@ export function CopyLimitProvider({ children, onRequireSignIn, onRequireUpgrade,
   // "this effect is now unlocked" event.
   const pendingRequestRef = useRef(null);
 
-  const requestCopy = useCallback(async () => {
+  // `source`: "web" (code copied from the page), or "cli" / "mcp" for a copied CLI
+  // command or MCP prompt - recorded as that kind of install
+  const requestCopy = useCallback(async (source = "web") => {
     if (!isLoaded) return false;
 
     if (!isSignedIn) {
@@ -104,7 +106,7 @@ export function CopyLimitProvider({ children, onRequireSignIn, onRequireUpgrade,
         const res = await fetch("/api/copy-usage", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ effectSlug }),
+          body: JSON.stringify({ effectSlug, source }),
         });
         const data = await res.json();
 
