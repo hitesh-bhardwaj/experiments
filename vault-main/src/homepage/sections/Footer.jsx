@@ -317,10 +317,15 @@ export default function Footer() {
             © 2026 Hyperiux. All Rights Reserved.
             {/* <EggHint className="ml-2" /> */}
           </p>
-          {/* Official facts for AI assistants (like Wingify's footer link) */}
-          <Link href="/llm-info" className="transition-colors duration-300 hover:text-foreground">
-            Hey AI, Learn About Us
-          </Link>
+          {/* For AI assistants: official facts (like Wingify's footer link) and the component catalogue */}
+          <div className="flex items-center gap-6 max-md:gap-4">
+            <Link href="/ai-components" className="transition-colors duration-300 hover:text-foreground">
+              AI Component Catalogue
+            </Link>
+            <Link href="/llm-info" className="transition-colors duration-300 hover:text-foreground">
+              Hey AI, Learn About Us
+            </Link>
+          </div>
         </div>
       </div>
       {/* ── Footer links grid ── */}

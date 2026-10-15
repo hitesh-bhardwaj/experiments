@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 // Segments whose label isn't just the slug with spaces
-const SEGMENT_LABELS = { "llm-info": "LLM Info" };
+const SEGMENT_LABELS = { "llm-info": "LLM Info", "ai-components": "AI Components" };
 
 function formatSegmentLabel(segment) {
   return SEGMENT_LABELS[segment] ?? segment.replace(/-/g, " ");

@@ -1,8 +1,11 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { FREE_EFFECTS, FREE_LABEL, PRO_EFFECTS, TOTAL_EFFECTS, TOTAL_LABEL } from "./library-counts";
+
+vi.mock("@/lib/sanity", () => ({ getAllSanityEffectGuides: vi.fn(), getSanityBlogEntries: vi.fn() }));
+const { buildAiCatalogue, toLlmsTxt } = await import("./ai-catalogue");
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const appRoot = path.resolve(__dirname, "../..");
@@ -28,9 +31,10 @@ describe("library counts", () => {
     expect(TOTAL_LABEL).toBe(`${Math.floor(TOTAL_EFFECTS / 10) * 10}+`);
   });
 
-  // llms.txt is a static file, so it can't import the constants - check it instead.
-  it("match public/llms.txt", () => {
-    const llms = fs.readFileSync(path.join(appRoot, "public/llms.txt"), "utf8");
+  // /llms.txt is generated from the registry (lib/ai-catalogue); check what it says
+  it("match the generated /llms.txt", () => {
+    const registryItems = readJson(path.join(appRoot, "public/r/index.json")).items;
+    const llms = toLlmsTxt(buildAiCatalogue({ registryItems }));
     expect(llms).toContain(`${TOTAL_EFFECTS} effects (${FREE_EFFECTS} free, ${PRO_EFFECTS} Pro)`);
   });
 

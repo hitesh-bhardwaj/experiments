@@ -272,6 +272,48 @@ export async function getAllSanityEffectEntries() {
   }
 }
 
+// Every effect's written guide for /ai-components, /ai-components.json and
+// /llms.txt: summary, SEO description, FAQ and the body's text sections, plus
+// short code blocks only. The body's "Component Code" block is the effect's full
+// source (paid source for Pro effects), so code over a few KB is never fetched
+// here, and lib/ai-catalogue keeps only the "Usage Code" snippet.
+export async function getAllSanityEffectGuides() {
+  if (!isSanityConfigured()) return []
+
+  try {
+    const client = getSanityClient()
+
+    const entries = await client.fetch(
+      `*[_type == "effectContent" && defined(categorySlug) && defined(effectSlug) && !(_id in path("drafts.**"))]
+        | order(orderRank asc, addedAt desc, _createdAt asc){
+        categorySlug,
+        effectSlug,
+        title,
+        summary,
+        tier,
+        tags,
+        relatedEffectNames,
+        "seoDescription": seo.description,
+        "faq": body[_type == "effectFaqAccordion"][0].items[]{question, answer},
+        "body": body[_type in ["block", "effectCodeBlock"]]{
+          _type,
+          style,
+          "text": select(_type == "block" => pt::text(@)),
+          "code": select(_type == "effectCodeBlock" && length(code) <= 4000 => code)
+        }
+      }`,
+      {},
+      SANITY_EFFECT_FETCH_OPTIONS
+    )
+
+    return entries || []
+  } catch (error) {
+    console.warn('Sanity effect guides could not be loaded:', error?.message || error)
+
+    return []
+  }
+}
+
 // --- Blog ---
 // Same pattern as getSanityEffectContent/getAllSanityEffectEntries above:
 // never throws, falls back to null/[] with a console.warn so a Sanity outage
