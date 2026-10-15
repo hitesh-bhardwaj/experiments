@@ -39,9 +39,32 @@ const allowedIframeSources = [
   "https://checkout.razorpay.com",
 ].join(" ");
 
+// Who may put vault pages in an iframe: the vault itself (effect and template
+// previews) and our own domains. Stops other sites framing the dashboard or
+// billing pages to trick clicks (security audit M2).
+const allowedFrameAncestors = ["'self'", "https://hyperiux.com", "https://*.hyperiux.com"].join(" ");
+
+// Hosts next/image may fetch and resize. Anything else is refused, so
+// /_next/image can't be used to fetch arbitrary URLs (security audit M2).
+// Add a host here before rendering its images with next/image.
+const remoteImageHosts = [
+  "pub-8abee449136941f5b0a1cd2c014534e9.r2.dev", // R2 media bucket
+  "h1r7ltksnzlh2a5c.public.blob.vercel-storage.com", // Vercel Blob
+  "cdn.sanity.io", // blog and CMS images
+  "img.clerk.com", // profile pictures
+  "images.clerk.dev",
+  "vault.hyperiux.com",
+  "images.unsplash.com", // effect demo placeholders
+  "picsum.photos",
+  "fastly.picsum.photos",
+];
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   allowedDevOrigins: ["local.vault.hyperiux.com"],
+
+  // No X-Powered-By: Next.js banner (audit L13)
+  poweredByHeader: false,
 
   outputFileTracingRoot: monorepoRoot,
 
@@ -61,8 +84,18 @@ const nextConfig = {
         headers: [
           {
             key: "Content-Security-Policy",
-            value: `frame-src ${allowedIframeSources};`,
+            value: [
+              `frame-src ${allowedIframeSources}`,
+              `frame-ancestors ${allowedFrameAncestors}`,
+              "object-src 'none'",
+              "base-uri 'self'",
+            ].join("; "),
           },
+          // Older browsers that don't read frame-ancestors
+          { key: "X-Frame-Options", value: "SAMEORIGIN" },
+          { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains" },
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
         ],
       },
     ];
@@ -164,12 +197,7 @@ const nextConfig = {
     // response is never actually stale. A year removes the "uncached asset"
     // SEO/perf flag with no correctness downside.
     minimumCacheTTL: 31536000,
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "**",
-      },
-    ],
+    remotePatterns: remoteImageHosts.map((hostname) => ({ protocol: "https", hostname })),
   },
 
   webpack(config) {

@@ -170,7 +170,7 @@ describe.skipIf(!BASE)(`black-box probes against ${BASE}`, () => {
       }
     });
 
-    it.fails("[M2] the image optimizer refuses arbitrary remote hosts", async () => {
+    it("[M2] the image optimizer refuses arbitrary remote hosts", async () => {
       const res = await req(`/_next/image?url=${encodeURIComponent("https://example.com/favicon.ico")}&w=64&q=75`);
       expect(res.status).toBe(400);
     });
@@ -179,20 +179,20 @@ describe.skipIf(!BASE)(`black-box probes against ${BASE}`, () => {
   describe("response headers (M2)", () => {
     const headersOf = async (path) => (await req(path)).headers;
 
-    it.fails("[M2] pages can't be framed by other origins", async () => {
+    it("[M2] pages can't be framed by other origins", async () => {
       const h = await headersOf("/effects");
       const csp = h.get("content-security-policy") || "";
       expect(/frame-ancestors/.test(csp) || /deny|sameorigin/i.test(h.get("x-frame-options") || "")).toBe(true);
     });
 
-    it.fails("[M2] nosniff and a referrer policy are set", async () => {
+    it("[M2] nosniff and a referrer policy are set", async () => {
       const h = await headersOf("/");
       expect(h.get("x-content-type-options")).toBe("nosniff");
       expect(h.get("referrer-policy")).toBeTruthy();
     });
 
     // Next sends X-Powered-By: Next.js unless poweredByHeader: false.
-    it.fails("[L13] no framework version banner", async () => {
+    it("[L13] no framework version banner", async () => {
       const h = await headersOf("/");
       expect(h.get("x-powered-by")).toBeNull();
     });

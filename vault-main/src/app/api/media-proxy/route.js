@@ -2,6 +2,11 @@ const ALLOWED_HOSTS = new Set([
   "pub-8abee449136941f5b0a1cd2c014534e9.r2.dev",
 ]);
 
+// Only media types are passed through. Anything else (an .html or .svg that
+// ended up in the bucket) is sent as a download, never rendered as a page on
+// the vault's own origin (security audit M2).
+const SAFE_CONTENT_TYPE = /^(video\/[\w.+-]+|audio\/[\w.+-]+|image\/(png|jpeg|webp|avif|gif))(\s*;.*)?$/i;
+
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
   const source = searchParams.get("url");
@@ -46,11 +51,14 @@ export async function GET(request) {
     );
   }
 
-  const contentType =
-    response.headers.get("content-type") || "application/octet-stream";
+  const upstreamType = response.headers.get("content-type") || "";
+  const contentType = SAFE_CONTENT_TYPE.test(upstreamType)
+    ? upstreamType
+    : "application/octet-stream";
 
   const responseHeaders = {
     "content-type": contentType,
+    "x-content-type-options": "nosniff",
     "cache-control": "public, max-age=86400, s-maxage=86400",
     "access-control-allow-origin": "*",
     "cross-origin-resource-policy": "cross-origin",

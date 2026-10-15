@@ -29,27 +29,27 @@ describe("global response headers", () => {
     expect(csp).not.toMatch(/frame-src[^;]*\*(\s|;|$)/);
   });
 
-  it.fails("[M2] clickjacking protection: CSP frame-ancestors or X-Frame-Options", async () => {
+  it("[M2] clickjacking protection: CSP frame-ancestors or X-Frame-Options", async () => {
     const h = await headersFor("/dashboard/settings");
     const csp = h["content-security-policy"] || "";
     expect(/frame-ancestors\s+('none'|'self')/.test(csp) || /^(deny|sameorigin)$/i.test(h["x-frame-options"] || "")).toBe(true);
   });
 
-  it.fails("[M2] HSTS with a long max-age", async () => {
+  it("[M2] HSTS with a long max-age", async () => {
     const hsts = (await headersFor("/"))["strict-transport-security"] || "";
     const maxAge = Number(/max-age=(\d+)/.exec(hsts)?.[1] || 0);
     expect(maxAge).toBeGreaterThanOrEqual(15552000); // 180 days
   });
 
-  it.fails("[M2] X-Content-Type-Options: nosniff", async () => {
+  it("[M2] X-Content-Type-Options: nosniff", async () => {
     expect((await headersFor("/api/media-proxy"))["x-content-type-options"]).toBe("nosniff");
   });
 
-  it.fails("[M2] a Referrer-Policy that doesn't leak full URLs cross-origin", async () => {
+  it("[M2] a Referrer-Policy that doesn't leak full URLs cross-origin", async () => {
     expect((await headersFor("/"))["referrer-policy"] || "").toMatch(/^(strict-origin-when-cross-origin|strict-origin|same-origin|no-referrer)$/);
   });
 
-  it.fails("[M2] CSP restricts object-src and base-uri", async () => {
+  it("[M2] CSP restricts object-src and base-uri", async () => {
     const csp = (await headersFor("/"))["content-security-policy"] || "";
     expect(csp).toMatch(/object-src\s+'none'/);
     expect(csp).toMatch(/base-uri\s+('self'|'none')/);
@@ -59,7 +59,7 @@ describe("global response headers", () => {
 describe("image optimizer", () => {
   // remotePatterns hostname "**" makes /_next/image a fetch-anything proxy:
   // bandwidth/cost abuse and a limited SSRF from Vercel's network.
-  it.fails("[M2] next/image only fetches from an explicit host allowlist", () => {
+  it("[M2] next/image only fetches from an explicit host allowlist", () => {
     const patterns = nextConfig.images?.remotePatterns || [];
     expect(patterns.some((p) => p.hostname === "**" || p.hostname === "*")).toBe(false);
   });
@@ -100,7 +100,7 @@ describe("media proxy", () => {
   // The upstream content-type is passed straight through with ACAO "*"
   // and no nosniff. An .html/.svg object in the bucket would render as a
   // document on vault.hyperiux.com (stored XSS on the app origin).
-  it.fails("[M2] never serves active content (html/svg/xml) from the app origin", async () => {
+  it("[M2] never serves active content (html/svg/xml) from the app origin", async () => {
     for (const type of ["text/html", "image/svg+xml", "application/xhtml+xml", "text/xml"]) {
       stubUpstream(type, "<script>alert(1)</script>");
       const res = await proxy(ALLOWED);
