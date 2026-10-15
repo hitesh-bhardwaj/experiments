@@ -14,7 +14,7 @@ import { CustomAnimationFormTrigger } from "@/components/WebsiteComps/modals/Cus
  * at 90% of the viewport) - with motion, since the listing doesn't run useFadeUp and
  * swaps its content in place.
  */
-export function CustomAnimationCta({ cta, sectionRef, className = "" }) {
+export function CustomAnimationCta({ cta, sectionRef, className = "", headingClassName = "type-h1" }) {
   if (!cta || !(cta.heading || cta.buttonText)) return null;
 
   return (
@@ -27,7 +27,7 @@ export function CustomAnimationCta({ cta, sectionRef, className = "" }) {
       className={`mx-auto flex w-full items-start justify-between gap-[calc(var(--cvw)*2)] bg-ink px-[calc(var(--cvw)*2.8)] py-[calc(var(--cvw)*3.3)] text-light max-lg:px-[3vw] max-md:flex-col max-md:gap-[6vw] max-md:px-[7vw] max-md:py-[10vw] ${className}`}
     >
       <div className="flex w-[60%] flex-col gap-4 max-md:w-full">
-        {cta.heading && <h2 className="type-h1">{cta.heading}</h2>}
+        {cta.heading && <h2 className={headingClassName}>{cta.heading}</h2>}
         {cta.description && <p className="type-body-lg max-w-3xl text-foreground/80">{cta.description}</p>}
       </div>
       {cta.buttonText && (

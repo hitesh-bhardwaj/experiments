@@ -289,12 +289,12 @@ export function PreviewDrawer({
           </div>
         )}
         <div className="flex flex-col gap-6">
-          {/* Tier sits beside the name at its usual small size. */}
+          {/* Pro tag beside the name (free effects carry none, as on the cards). */}
           <div className="flex flex-wrap items-center gap-3">
             <h2 id="v4-drawer-title" className="type-h2">
               {shown.title}
             </h2>
-            <TierBadge tier={shown.tier} />
+            {shown.tier === "pro" && <TierBadge tier="pro" />}
           </div>
 
           {shown.description && (

@@ -699,7 +699,7 @@ export function Sidebar({
                       }`}
                     >
                       {isActive && (
-                        <span className="absolute -left-5 h-2 w-2 animate-pulse rounded-full bg-primary" />
+                        <span className="absolute -left-5 size-1.5 animate-pulse bg-primary" />
                       )}
 
                       <span className="flex min-w-0 items-center truncate">
@@ -779,7 +779,7 @@ export function Sidebar({
                       }`}
                     >
                       {isActive && (
-                        <span className="absolute -left-5 h-2 w-2 animate-pulse rounded-full bg-primary" />
+                        <span className="absolute -left-5 size-1.5 animate-pulse bg-primary" />
                       )}
 
                       {link.label}
@@ -836,7 +836,7 @@ export function Sidebar({
                       }`}
                     >
                       {isActive && (
-                        <span className="absolute -left-5 h-2 w-2 animate-pulse rounded-full bg-primary" />
+                        <span className="absolute -left-5 size-1.5 animate-pulse bg-primary" />
                       )}
 
                       {link.label}

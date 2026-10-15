@@ -22,7 +22,7 @@ import {
 } from "./loader-scene";
 import { lockScroll, resetScrollTop, useScrollLockLenis } from "./scroll-lock";
 import { MEDIA } from "@/lib/breakpoints";
-import { ButtonChrome, buttonClassName } from "@/homepage/components/Button";
+import LinkButton from "@/components/WebsiteComps/LinkButton";
 
 // ── Build: the rings follow real loading ─────────────────────────────────────
 // The pace is the counter's roll (ROLL / STAGGER below), so the rings never
@@ -119,7 +119,6 @@ export default function Loader() {
   const imageLoadedRef = useRef(false);
   const enterRef = useRef(null);
   const enterBtnRef = useRef(null);
-  const [enterHovered, setEnterHovered] = useState(false);
   // Decided once per mount: Strict Mode re-runs the effect below, and by then
   // markLoaderPlayed() has already written the session flag, so a fresh check
   // would skip the loader every time in dev
@@ -136,7 +135,7 @@ export default function Loader() {
       if (shown) return;
       shown = true;
       gsap.fromTo(enterBtnRef.current, { xPercent: -50, y: 10 }, { autoAlpha: 1, xPercent: -50, y: 0, duration: 0.6, ease: "power2.out" });
-      enterBtnRef.current?.querySelector("button")?.focus({ preventScroll: true });
+      enterBtnRef.current?.querySelector("a")?.focus({ preventScroll: true });
     };
     enterRef.current = () => {
       gsap.to(enterBtnRef.current, { autoAlpha: 0, xPercent: -50, y: 10, duration: 0.4, ease: "power2.in" });
@@ -446,18 +445,18 @@ export default function Loader() {
           {/* Sits just under the counter, so the counter itself stays centred */}
           <div
             ref={enterBtnRef}
-            className="invisible absolute top-full left-1/2 flex w-max -translate-x-1/2 translate-y-2.5 pt-[2.5vw] opacity-0 max-lg:pt-[5vw] max-md:pt-[8vw]"
+            className="invisible absolute top-full left-1/2 flex w-max justify-center text-center pt-[2.5vw] opacity-0 max-lg:pt-[5vw] max-md:pt-[8vw]"
           >
-            <button
-              type="button"
+            <LinkButton
+              href="#"
+              text="Enter the Vault"
               onClick={() => enterRef.current?.()}
-              onPointerEnter={() => setEnterHovered(true)}
-              onPointerLeave={() => setEnterHovered(false)}
               data-sound-kind="primary"
-              className={buttonClassName()}
-            >
-              <ButtonChrome label="Enter the Vault" hovered={enterHovered} />
-            </button>
+              underline
+              tilted={false}
+              underlineClassName="mt-0"
+              className="mx-auto cursor-pointer type-body text-foreground transition-colors duration-300 hover:text-primary"
+            />
           </div>
         </div>
       </div>

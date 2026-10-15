@@ -514,7 +514,7 @@ export function EffectDetailContent({
                 <div className="flex h-full w-full flex-col gap-[calc(var(--cvw)*2)]">
                   {faqItems.length > 0 && <FAQ faqItems={faqItems} translateTop={false} bgClassName="bg-light" />}
                   <div className="mx-auto w-full section-x">
-                    <CustomAnimationCta cta={safeContent?.ctaBanner} sectionRef={ctaSectionRef} />
+                    <CustomAnimationCta cta={safeContent?.ctaBanner} sectionRef={ctaSectionRef} headingClassName="type-h1 text-[calc(var(--cvw)*3.6)] max-lg:text-[5.5vw] max-md:text-[min(11vw,46px)]" />
                   </div>
                 </div>
 
@@ -526,7 +526,7 @@ export function EffectDetailContent({
                   >
                     <div className="flex items-center justify-between gap-[calc(var(--cvw)*1.4)] max-lg:flex-col max-lg:gap-[5vw]">
                       <HeadAnim rotate={0}>
-                        <h2 className="type-h1 text-center text-ink">
+                        <h2 className="type-h1 text-[calc(var(--cvw)*3.6)] max-lg:text-[5.5vw] max-md:text-[min(11vw,46px)] text-center text-ink">
                           Related Effects
                         </h2>
                       </HeadAnim>
