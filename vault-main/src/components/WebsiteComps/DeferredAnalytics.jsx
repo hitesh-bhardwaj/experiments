@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Script from "next/script";
 import { isLighthouseOrHeadless, isSoftwareRenderer } from "@/lib/audit";
 
-// Tracking / session-recording scripts (Microsoft Clarity, OpenPanel, reb2b)
+// Tracking / session-recording scripts (Microsoft Clarity, reb2b)
 // keep the network continuously busy for lab audits. Skip under headless/audit
 // agents - including PSI's desktop crawler (plain Chrome UA, no webdriver),
 // caught via software WebGL renderer. Real visitors unchanged visually.
@@ -35,14 +35,6 @@ export default function DeferredAnalytics() {
           __html: `(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","xg3k9tc0gm");`,
         }}
       />
-      <Script
-        id="openpanel-init"
-        strategy="afterInteractive"
-        dangerouslySetInnerHTML={{
-          __html: `window.op=window.op||function(){var n=[];return new Proxy(function(){arguments.length&&n.push([].slice.call(arguments))},{get:function(t,r){return"q"===r?n:function(){n.push([r].concat([].slice.call(arguments)))}},has:function(t,r){return"q"===r}})}();window.op('init',{clientId:'45f34339-5b18-484e-a126-a77b7d470584',trackScreenViews:true,trackOutgoingLinks:true,trackAttributes:true});`,
-        }}
-      />
-      <Script src="https://openpanel.dev/op1.js" strategy="afterInteractive" />
       <Script
         id="rb2b"
         strategy="lazyOnload"

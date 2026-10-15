@@ -23,6 +23,8 @@
     "build:registry": "node scripts/build-registry.js",
     "build:registry:dist": "node scripts/build-registry-dist.js",
     "test": "vitest run",
+    "test:security": "vitest run security",
+    "test:security:blackbox": "vitest run security/blackbox security/database",
     "test:concurrency": "vitest run src/lib/founding-slots.concurrency.test.js src/lib/install-limit.concurrency.test.js",
     "component:new": "node scripts/component-workflow.mjs new",
     "component:sync": "node scripts/component-workflow.mjs sync",

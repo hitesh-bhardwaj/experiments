@@ -1,6 +1,6 @@
 import "server-only";
 import { supabase } from "@/lib/supabase";
-import { razorpay } from "@/lib/razorpay";
+import { razorpay, withRazorpayRetry } from "@/lib/razorpay";
 import { ACTIVE_PRO_STATUSES } from "@/lib/subscription";
 
 // Upgrading Pro -> Pro+ starts a new Razorpay subscription and cancels the
@@ -23,7 +23,20 @@ export async function shouldApplySubscriptionEvent({ clerkUserId, subscription, 
   if (error) throw error;
 
   const currentId = data?.razorpay_subscription_id;
-  if (!currentId || currentId === subscription?.id) return true;
+  if (!currentId) return true;
+
+  const rowIsLivePro = data.plan === "pro" && ACTIVE_PRO_STATUSES.includes(data.status);
+
+  if (currentId === subscription?.id) {
+    if (kind === "end" || rowIsLivePro) return true;
+
+    // A start event for a subscription the row says has ended. Razorpay
+    // redelivers events late and out of order, so this can be a stale
+    // "charged" arriving after "cancelled" - it must not re-grant Pro
+    // (security audit H3). A real comeback (a halted payment going through,
+    // a paused plan resuming) shows as live on Razorpay.
+    return isLiveOnRazorpay(subscription.id);
+  }
 
   // Another subscription is the current one: this one was replaced
   if (kind === "end") return false;
@@ -31,9 +44,20 @@ export async function shouldApplySubscriptionEvent({ clerkUserId, subscription, 
   // The upgrade's new subscription, arriving before verify-payment switched the row
   if (subscription?.notes?.replaces_subscription_id === currentId) return true;
 
-  // A fresh subscription after the old one ended (re-subscribing) is fine;
-  // a stray event while another subscription is live is not
-  return !(data.plan === "pro" && ACTIVE_PRO_STATUSES.includes(data.status));
+  // A stray event while another subscription is live is never applied
+  if (rowIsLivePro) return false;
+
+  // A fresh subscription after the old one ended (re-subscribing), or a late
+  // event from an older subscription - only Razorpay knows which
+  return isLiveOnRazorpay(subscription?.id);
+}
+
+// Razorpay's current status, not the snapshot in the event payload. Throws on
+// a Razorpay error, so the webhook answers non-200 and the event is retried.
+async function isLiveOnRazorpay(subscriptionId) {
+  if (!subscriptionId) return false;
+  const live = await withRazorpayRetry(() => razorpay.subscriptions.fetch(subscriptionId));
+  return ACTIVE_PRO_STATUSES.includes(live?.status);
 }
 
 // Cancels the subscription an upgrade replaced, right away (not at the end of

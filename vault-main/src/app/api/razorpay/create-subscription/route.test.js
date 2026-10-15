@@ -23,6 +23,10 @@ vi.mock("@/lib/supabase", () => ({
 let upgradeQuote = null;
 vi.mock("@/lib/upgrade", () => ({ getUpgradeQuote: vi.fn(async () => upgradeQuote) }));
 
+// Currency comes from the visitor's country, not the request body
+let visitorCurrency = "USD";
+vi.mock("@/lib/visitor-country", () => ({ getVisitorCurrency: async () => visitorCurrency }));
+
 process.env.RAZORPAY_PLAN_PRO_QUARTERLY_USD = "plan_pro_q_usd";
 process.env.RAZORPAY_PLAN_PRO_YEARLY_INR = "plan_pro_y_inr";
 process.env.RAZORPAY_PLAN_PLUS_YEARLY_USD = "plan_plus_y_usd";
@@ -44,6 +48,7 @@ describe("POST /api/razorpay/create-subscription", () => {
     auth.mockResolvedValue({ userId: "user_1" });
     subscriptionRow = null;
     upgradeQuote = null;
+    visitorCurrency = "USD";
   });
 
   it("401s when signed out", async () => {
@@ -56,6 +61,12 @@ describe("POST /api/razorpay/create-subscription", () => {
     expect((await POST(makeRequest({ tier: "pro", interval: "lifetime" }))).status).toBe(400);
     expect((await POST(makeRequest({ tier: "enterprise", interval: "yearly" }))).status).toBe(400);
     expect((await POST(makeRequest({ plan: "monthly" }))).status).toBe(400);
+  });
+
+  it("ignores a currency in the request body", async () => {
+    createMock.mockResolvedValue({ id: "sub_3" });
+    await POST(makeRequest({ tier: "pro", interval: "quarterly", currency: "INR" }));
+    expect(createMock.mock.calls[0][0].plan_id).toBe("plan_pro_q_usd");
   });
 
   it("Pro quarterly USD subscribes to that plan_id with the tier in the notes", async () => {
@@ -76,7 +87,9 @@ describe("POST /api/razorpay/create-subscription", () => {
 
   it("Pro yearly INR and Pro+ yearly USD pick their own plan_ids", async () => {
     createMock.mockResolvedValue({ id: "sub_2" });
-    await POST(makeRequest({ tier: "pro", interval: "yearly", currency: "INR" }));
+    visitorCurrency = "INR";
+    await POST(makeRequest({ tier: "pro", interval: "yearly" }));
+    visitorCurrency = "USD";
     await POST(makeRequest({ tier: "pro_plus", interval: "yearly" }));
 
     expect(createMock.mock.calls[0][0].plan_id).toBe("plan_pro_y_inr");
@@ -84,7 +97,8 @@ describe("POST /api/razorpay/create-subscription", () => {
   });
 
   it("503s when that plan isn't set in env", async () => {
-    const res = await POST(makeRequest({ tier: "pro_plus", interval: "quarterly", currency: "INR" }));
+    visitorCurrency = "INR";
+    const res = await POST(makeRequest({ tier: "pro_plus", interval: "quarterly" }));
     expect(res.status).toBe(503);
     expect((await res.json()).reason).toBe("plan_not_configured");
     expect(createMock).not.toHaveBeenCalled();

@@ -106,7 +106,7 @@ export default function PrivacyPolicy() {
         </DocsListItem>
         <DocsListItem>
           Analytics - to understand how visitors use the Service, including pages viewed,
-          traffic sources, and general behavior, using Google Analytics and Openpanel.dev.
+          traffic sources, and general behavior, using Google Analytics.
         </DocsListItem>
         <DocsListItem>
           Visitor identification - we use RB2B, a website visitor identification tool.
@@ -236,8 +236,8 @@ export default function PrivacyPolicy() {
           billing and card details directly; we do not store your full card number.
         </DocsListItem>
         <DocsListItem>
-          Analytics and visitor identification providers: Google Analytics, Openpanel.dev,
-          and RB2B, as described in Section 2.
+          Analytics and visitor identification providers: Google Analytics and RB2B, as
+          described in Section 2.
         </DocsListItem>
         <DocsListItem>
           Email delivery provider: Resend - to send newsletters and transactional email.

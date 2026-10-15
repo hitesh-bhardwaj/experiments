@@ -41,6 +41,16 @@ const effectSlugAliasMap = new Map(
   )
 );
 
+// Real effect slugs are lowercase words joined by hyphens. registry.js builds
+// file paths from these values, so anything else - dots, slashes, encoded
+// traversal like "..%2F..%2Fpackage" - is never treated as an effect
+// (security audit M5).
+const SAFE_SLUG = /^[a-z0-9][a-z0-9-]{0,100}$/;
+
+export function isSafeEffectSlug(slug) {
+  return typeof slug === "string" && SAFE_SLUG.test(slug);
+}
+
 function normalizeSlug(slug) {
   if (!slug) return slug;
 
@@ -74,5 +84,5 @@ export function getEffectSlugAliases(slug) {
     ...(group?.aliases || []),
     normalizedSlug,
     slug,
-  ].filter((value, index, values) => value && values.indexOf(value) === index);
+  ].filter((value, index, values) => isSafeEffectSlug(value) && values.indexOf(value) === index);
 }

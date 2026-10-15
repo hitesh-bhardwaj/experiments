@@ -14,6 +14,7 @@ const fetchSub = vi.fn();
 const cancelSub = vi.fn();
 vi.mock("@/lib/razorpay", () => ({
   razorpay: { subscriptions: { fetch: (...a) => fetchSub(...a), cancel: (...a) => cancelSub(...a) } },
+  withRazorpayRetry: (call) => call(),
 }));
 
 const { shouldApplySubscriptionEvent, cancelReplacedSubscription } = await import("./subscription-events.js");
@@ -42,7 +43,20 @@ describe("shouldApplySubscriptionEvent", () => {
 
   it("lets a fresh subscription in once the old one has ended", async () => {
     row = { razorpay_subscription_id: "sub_old", plan: "free", status: "cancelled" };
+    fetchSub.mockResolvedValue({ status: "active" });
     expect(await apply({ id: "sub_new" }, "start")).toBe(true);
+  });
+
+  it("asks Razorpay before a start event revives an ended subscription", async () => {
+    row = { razorpay_subscription_id: "sub_a", plan: "free", status: "cancelled" };
+    fetchSub.mockResolvedValue({ status: "cancelled" });
+    expect(await apply({ id: "sub_a", status: "active" }, "start")).toBe(false);
+    expect(await apply({ id: "sub_older", status: "active" }, "start")).toBe(false);
+
+    // A halted subscription whose retried payment went through
+    row = { razorpay_subscription_id: "sub_a", plan: "free", status: "halted" };
+    fetchSub.mockResolvedValue({ status: "active" });
+    expect(await apply({ id: "sub_a" }, "start")).toBe(true);
   });
 });
 

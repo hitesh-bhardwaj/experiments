@@ -37,8 +37,11 @@ export default defineConfig({
   },
   test: {
     environment: "node",
-    include: ["src/**/*.test.js", "src/**/*.test.jsx"],
-    environmentMatchGlobs: [["src/**/*.test.jsx", "jsdom"]],
+    include: ["src/**/*.test.js", "src/**/*.test.jsx", "security/**/*.test.js", "security/**/*.test.jsx"],
+    environmentMatchGlobs: [
+      ["src/**/*.test.jsx", "jsdom"],
+      ["security/**/*.test.jsx", "jsdom"],
+    ],
     setupFiles: ["./test/setup/effects-dom-mocks.js"],
   },
   resolve: {

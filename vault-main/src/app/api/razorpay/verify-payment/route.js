@@ -6,6 +6,7 @@ import { markUserProFromSubscription, recordInvoice } from "@/lib/pro-access";
 import { grantCreditsForCharge } from "@/lib/template-credits";
 import { cancelReplacedSubscription } from "@/lib/subscription-events";
 import { recordTemplatePurchase } from "@/lib/template-purchases";
+import { ACTIVE_PRO_STATUSES } from "@/lib/subscription";
 
 function isValidSignature(payload, signature) {
   const expected = Buffer.from(
@@ -20,6 +21,16 @@ function isValidSignature(payload, signature) {
     expected.length === received.length &&
     crypto.timingSafeEqual(expected, received)
   );
+}
+
+// Right after checkout Razorpay can still report a just-paid subscription as
+// "created" for a moment. Re-fetch briefly so a real payment isn't refused.
+async function fetchSettledSubscription(subscriptionId, { attempts = 3, delayMs = 1000 } = {}) {
+  for (let attempt = 1; ; attempt++) {
+    const subscription = await withRazorpayRetry(() => razorpay.subscriptions.fetch(subscriptionId));
+    if (subscription?.status !== "created" || attempt >= attempts) return subscription;
+    await new Promise((resolve) => setTimeout(resolve, delayMs));
+  }
 }
 
 export async function POST(req) {
@@ -76,14 +87,21 @@ export async function POST(req) {
     }
 
     if (razorpay_subscription_id) {
-      const subscription = await withRazorpayRetry(() =>
-        razorpay.subscriptions.fetch(razorpay_subscription_id)
-      );
+      const subscription = await fetchSettledSubscription(razorpay_subscription_id);
 
       if (subscription?.notes?.clerk_user_id !== userId) {
         return NextResponse.json(
           { error: "Subscription does not belong to this user" },
           { status: 403 }
+        );
+      }
+
+      // A valid proof stays valid forever, so re-posting an old one must not
+      // re-grant a subscription that has since been cancelled (audit H3)
+      if (!ACTIVE_PRO_STATUSES.includes(subscription?.status)) {
+        return NextResponse.json(
+          { error: "This subscription isn't active", reason: "subscription_not_active" },
+          { status: 409 }
         );
       }
 
@@ -152,6 +170,14 @@ export async function POST(req) {
         return NextResponse.json(
           { error: "Invoice does not belong to this user" },
           { status: 403 }
+        );
+      }
+
+      // Razorpay signs every invoice status, not just "paid" (audit H3)
+      if (invoice?.status !== "paid") {
+        return NextResponse.json(
+          { error: "This invoice hasn't been paid", reason: "invoice_not_paid" },
+          { status: 409 }
         );
       }
 

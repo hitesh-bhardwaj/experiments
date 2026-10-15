@@ -18,6 +18,13 @@ const PRIVATE_REGISTRY_CANDIDATES = [
   path.join(process.cwd(), "vault-main/registry/effects"), // legacy fallback
 ];
 
+// Backstop for M5: getEffectSlugAliases() only returns safe slugs, but a
+// slug-built path must still never land outside its registry root.
+function isInsideRoot(root, candidate) {
+  const relative = path.relative(root, candidate);
+  return Boolean(relative) && !relative.startsWith("..") && !path.isAbsolute(relative);
+}
+
 function readJson(filePath) {
   return JSON.parse(fs.readFileSync(filePath, "utf-8"));
 }
@@ -90,8 +97,12 @@ const findPrivateRegistryPath = cache(function findPrivateRegistryPath(slug) {
     return null;
   }
 
-  const categories = fs.readdirSync(privateRoot);
   const slugAliases = getEffectSlugAliases(slug);
+
+  // Not a valid effect slug, so it can't match a directory or registry name
+  if (slugAliases.length === 0) return null;
+
+  const categories = fs.readdirSync(privateRoot);
 
   for (const category of categories) {
     const categoryPath = path.join(privateRoot, category);
@@ -104,7 +115,7 @@ const findPrivateRegistryPath = cache(function findPrivateRegistryPath(slug) {
       const effectDir = path.join(categoryPath, slugAlias);
       const registryPath = path.join(effectDir, "registry.json");
 
-      if (fs.existsSync(registryPath)) {
+      if (isInsideRoot(categoryPath, effectDir) && fs.existsSync(registryPath)) {
         return {
           effectDir,
           registryPath,
@@ -321,7 +332,7 @@ export function getPublicEffectBySlug(slug) {
   for (const slugAlias of getEffectSlugAliases(slug)) {
     const publicEffectPath = path.join(PUBLIC_REGISTRY_PATH, `${slugAlias}.json`);
 
-    if (fs.existsSync(publicEffectPath)) {
+    if (isInsideRoot(PUBLIC_REGISTRY_PATH, publicEffectPath) && fs.existsSync(publicEffectPath)) {
       return readJson(publicEffectPath);
     }
   }

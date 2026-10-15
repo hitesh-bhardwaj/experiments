@@ -1,6 +1,7 @@
 import "server-only";
 import { Resend } from "resend";
 import { supabase } from "@/lib/supabase";
+import { isOneTimeCodeEmail, redactEmailLogRow } from "@/lib/email-redaction";
 
 if (!process.env.RESEND_API_KEY) {
   throw new Error("Missing RESEND_API_KEY");
@@ -41,12 +42,15 @@ export async function sendEmail({ to, subject, html, text, react, emailType = "t
     if (react) {
       payload.react = react;
       if (text) payload.text = text;
-      // Render to HTML for logging if possible
-      try {
-        const { render } = await import("@react-email/render");
-        loggedHtml = await render(react);
-      } catch {
-        loggedHtml = null;
+      // Render to HTML for logging if possible. Code-bearing emails are never
+      // logged with their body, so don't bother rendering those.
+      if (!isOneTimeCodeEmail(emailType)) {
+        try {
+          const { render } = await import("@react-email/render");
+          loggedHtml = await render(react);
+        } catch {
+          loggedHtml = null;
+        }
       }
     } else {
       if (html) payload.html = html;
@@ -66,19 +70,22 @@ export async function sendEmail({ to, subject, html, text, react, emailType = "t
     console.error("RESEND_SEND_EXCEPTION:", errorMessage);
   }
 
-  // Log to Supabase asynchronously - never block the caller on this
+  // Log to Supabase asynchronously - never block the caller on this.
+  // One-time codes are masked before they reach the log (audit H1).
   supabase
     .from("sent_emails")
-    .insert({
-      ...(id ? { id } : {}),
-      recipient_email: to,
-      subject,
-      html_content: loggedHtml,
-      text_content: text || null,
-      email_type: emailType,
-      status,
-      error_message: errorMessage,
-    })
+    .insert(
+      redactEmailLogRow({
+        ...(id ? { id } : {}),
+        recipient_email: to,
+        subject,
+        html_content: loggedHtml,
+        text_content: text || null,
+        email_type: emailType,
+        status,
+        error_message: errorMessage,
+      })
+    )
     .then(({ error: logError }) => {
       if (logError) console.error("SENT_EMAIL_LOG_ERROR:", logError.message);
     });

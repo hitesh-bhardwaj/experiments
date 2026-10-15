@@ -6,6 +6,7 @@ import { ACTIVE_PRO_STATUSES } from "@/lib/subscription";
 import { isValidInterval, isValidTier } from "@/lib/plans";
 import { getRazorpayPlanId } from "@/lib/plans.server";
 import { getUpgradeQuote } from "@/lib/upgrade";
+import { getVisitorCurrency } from "@/lib/visitor-country";
 
 // Starts a Pro or Pro+ subscription, billed quarterly or yearly, in USD or
 // INR - or upgrades a current subscriber (see below). Plan IDs come from
@@ -51,7 +52,10 @@ export async function POST(req) {
     const body = await req.json().catch(() => ({}));
     const tier = body?.tier;
     const interval = body?.interval;
-    const currency = body?.currency === "INR" ? "INR" : "USD";
+    // Decided by the visitor's country, the same way the checkout page picks
+    // the price it shows - never by the request body, or anyone could send
+    // currency: "INR" and pay Indian prices from anywhere (security audit H2)
+    const currency = await getVisitorCurrency();
 
     if (!isValidTier(tier) || !isValidInterval(interval)) {
       return NextResponse.json(
@@ -157,6 +161,7 @@ export async function POST(req) {
       planId,
       keyId: process.env.RAZORPAY_KEY_ID,
       founding: false,
+      currency: upgrade ? upgrade.currency : currency,
       upgrade: upgrade
         ? { charge: upgrade.charge, credit: upgrade.credit, currency: upgrade.currency, renewsAt: upgrade.renewsAt }
         : null,

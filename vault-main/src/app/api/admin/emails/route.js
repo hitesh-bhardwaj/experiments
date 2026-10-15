@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { clerkClient } from "@clerk/nextjs/server";
 import { supabase } from "@/lib/supabase";
 import { assertAdmin } from "@/lib/admin";
+import { redactEmailLogRow } from "@/lib/email-redaction";
 
 // Resend's status column only tells us the invite email was delivered -
 // it says nothing about whether the invitation itself is still pending,
@@ -41,14 +42,15 @@ export async function GET(request) {
     if (id) {
       const { data, error } = await supabase
         .from("sent_emails")
-        .select("*")
+        .select("id, recipient_email, subject, email_type, status, error_message, sent_at, html_content, text_content")
         .eq("id", id)
         .maybeSingle();
 
       if (error) return NextResponse.json({ error: error.message }, { status: 500 });
       if (!data) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
-      return NextResponse.json(data);
+      // Rows logged before codes were masked at write time still hold them
+      return NextResponse.json(redactEmailLogRow(data));
     }
 
     // List with filters
@@ -99,7 +101,7 @@ export async function GET(request) {
       ? await getInvitationStatusByEmail()
       : new Map();
 
-    const emails = (data || []).map((row) => {
+    const emails = (data || []).map(redactEmailLogRow).map((row) => {
       if (row.email_type !== "invitations") return row;
 
       return {
