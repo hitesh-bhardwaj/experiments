@@ -172,12 +172,7 @@ function ProLockOverlay({ onUpgrade }) {
 export default function GetCodeMenu({
   effectSlug,
   effectTitle,
-  isLocked = false,
-  // The server already found today's limit used up (and this effect not one
-  // of today's) - true before the browser's own usage check has loaded
-  serverLimitReached = false,
-  // The visitor's plan as the server saw it, for the limit message until usage loads
-  lockTier = null,
+  effectTier = "pro",
   align = "right",
   className = "",
   triggerClassName = "",
@@ -195,6 +190,10 @@ export default function GetCodeMenu({
     usage,
     requestCopy,
   } = useCopyLimit();
+  // A Pro effect without Pro, from the visitor's usage once it's loaded. Only
+  // shapes the menu - /api/effects/[slug]/copy checks sign-in, plan and the
+  // daily limit again on every request (a 403 there opens the upgrade modal).
+  const isLocked = effectTier !== "free" && Boolean(usage) && !usage.isAdmin && usage.plan !== "pro";
   const [open, setOpen] = useState(false);
   const [view, setView] = useState("menu"); // "menu" | "mcp"
   // null | { key, phase: "copying" | "copied" } - drives the trigger label.
@@ -387,13 +386,8 @@ export default function GetCodeMenu({
     }
     // Today's limit is used up (and this effect isn't one of today's): no
     // menu, just the limit message for the visitor's plan
-    if ((isLimitReached || serverLimitReached) && !isLocked) {
-      const knownUsage = usage ?? {
-        plan: lockTier === "pro" || lockTier === "pro_plus" ? "pro" : "free",
-        tier: lockTier,
-        isAdmin: lockTier === "admin",
-      };
-      showToast(getLimitNudge(knownUsage));
+    if (isLimitReached && !isLocked && usage) {
+      showToast(getLimitNudge(usage));
       return;
     }
     window.clearTimeout(statusTimerRef.current);

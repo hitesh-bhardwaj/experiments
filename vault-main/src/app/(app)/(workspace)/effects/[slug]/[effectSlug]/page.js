@@ -1,10 +1,8 @@
 import { notFound, permanentRedirect } from "next/navigation";
-import { auth } from "@clerk/nextjs/server";
 
 import {
   getAllPrivateEffects,
   getEffectMetadata,
-  getEffectSource,
   getEffectTierCounts,
 } from "@/lib/registry";
 
@@ -14,60 +12,13 @@ import {
   buildEffectsFromSanity,
   getEffectsByCategoryFromSanity,
 } from "@/lib/sanity";
-import { getUnlockedEffectSlugsToday, resolveSignedInIdentity } from "@/lib/install-limit";
-import { getEffectAccessDecision } from "@/lib/effect-access";
 import { getEffectCategoryBySlug } from "@/lib/categories";
+import { shapeEffectBody } from "@/lib/effect-body";
 import { EffectDetailContent } from "../effect-detail";
 import { BreadcrumbsJSONLD, FAQJSONLD, WebpageJsonLd } from "@/lib/json-ld";
 import { createPageMetadata } from "@/lib/seo-metadata";
 import { LISTING_IMAGE, resolveOgImageUrl } from "@/lib/media";
 import { getEffectInstallCounts } from "@/lib/cli-install-stats";
-
-// Mirrors effect-detail.jsx's isCodeOnlyBlock - a Sanity portable-text block
-// whose only content is a single "code"-marked span (used for freeform code
-// snippets outside of explicit effectCodeBlock entries).
-function isCodeOnlyBlock(block) {
-  const children = block?.children || [];
-
-  if (!children.length) return false;
-
-  return children.every(
-    (child) => child?._type === "span" && (child.marks || []).includes("code")
-  );
-}
-
-// Sanity content.body can carry full Pro source two ways: explicit
-// effectCodeBlock entries (block.code) and "code-only" portable-text blocks
-// (block.children[].text). effect-detail.jsx already gates which component
-// renders based on isLocked, but that only controls the UI - the underlying
-// block data still gets passed to the client component and serialized into
-// the page's RSC payload regardless. Strip the actual code text server-side
-// when locked, so it's never present in what reaches the browser at all.
-function redactLockedBody(body, isLocked) {
-  if (!isLocked || !Array.isArray(body)) return body;
-
-  return body.map((block) => {
-    // Blocks nested in others (a callout's content) are stripped the same way
-    if (Array.isArray(block?.content)) {
-      block = { ...block, content: redactLockedBody(block.content, isLocked) };
-    }
-
-    if (block?._type === "effectCodeBlock") {
-      // Both versions of the source: tsxCode is the TypeScript one
-      const { code, tsxCode, ...rest } = block;
-      return rest;
-    }
-
-    if (block?._type === "block" && isCodeOnlyBlock(block)) {
-      return {
-        ...block,
-        children: block.children.map((child) => ({ ...child, text: "" })),
-      };
-    }
-
-    return block;
-  });
-}
 
 function getFallbackContent(effect, effectSlug) {
   if (!effect) return null;
@@ -158,7 +109,7 @@ function getSanityFaqs(content) {
 // component actually renders it, so an unauthenticated visitor could read
 // Pro effect source straight out of view-source even though the UI shows a
 // lock screen. The rendered "Source Code" section is driven entirely by
-// Sanity content blocks (which already gate on isLocked) - this raw
+// Sanity content blocks (shapeEffectBody keeps only the usage snippet) - this raw
 // registry content isn't used on this page at all, only by the
 // separately-authenticated CLI download route.
 function stripFileContent(effect) {
@@ -221,12 +172,18 @@ export async function generateMetadata({ params }) {
   return getEffectPageMetadata(effect, content, slug, effectSlug);
 }
 
+// ISR, like the listing pages: rebuilt in the background at most once a
+// minute (the install-count cache), Sanity content cleared on publish via
+// /api/revalidate. The page is the same for every visitor - there's no auth()
+// here, which would make every request dynamic. The page shows the usage
+// snippet only; sign-in, plan and the daily limit are checked by the "Get
+// code" menu (/api/effects/[slug]/copy).
+export const revalidate = 60;
+
 export default async function EffectPage({ params }) {
   const { slug, effectSlug } = await params;
 
-  // Metadata only - no Pro source content read yet. Auth/plan is resolved
-  // from this before we ever touch source file bytes, so an unauthorized
-  // request never has Pro source attached to its response payload.
+  // Metadata only - registry file contents are never read for this page.
   const effectMeta = getEffectMetadata(effectSlug);
   const content =
     (await getSanityEffectContent(slug, effectSlug)) ||
@@ -258,42 +215,10 @@ export default async function EffectPage({ params }) {
     }
   }
 
-  // Started now so the Sanity list loads alongside the access check below.
-  const sanityEntriesPromise = getAllSanityEffectEntries();
-  const { userId } = await auth();
+  const sanityEntries = await getAllSanityEffectEntries();
   const effectTier = content.tier ?? effectMeta?.tier ?? "pro";
+  const effect = effectMeta;
 
-  // access is the per-effect gating decision, shared with the CLI and legacy
-  // web API routes - see docs/effect-access.md. It decides whether the Pro
-  // source is sent at all, so it is the one value this page waits for.
-  const access = await getEffectAccessDecision({ effectTier, clerkUserId: userId });
-  const isLocked = !access.allowed;
-
-  // Why this page's code is withheld, if it is - decided here, never in the
-  // browser, so the real source only ever reaches people allowed to copy it:
-  //   "sign-in" - signed out
-  //   "pro"     - a Pro effect without Pro
-  //   "limit"   - today's install limit is used up and this effect isn't one
-  //               of today's (effects copied today stay open)
-  let codeLock = null;
-  let lockTier = null;
-  if (!userId) {
-    codeLock = "sign-in";
-  } else if (isLocked) {
-    codeLock = "pro";
-  } else {
-    const identity = await resolveSignedInIdentity(userId);
-    lockTier = identity.tier;
-    if (!identity.isAdmin && identity.limit != null) {
-      const unlockedToday = await getUnlockedEffectSlugsToday({ clerkUserId: userId });
-      if (!unlockedToday.includes(effectSlug) && unlockedToday.length >= identity.limit) codeLock = "limit";
-    }
-  }
-
-  // Only attach Pro source content once the requester is confirmed authorized.
-  const effect = isLocked ? effectMeta : getEffectSource(effectSlug);
-
-  const sanityEntries = await sanityEntriesPromise;
   const allEffects = buildEffectsFromSanity(sanityEntries);
   const categoriesMap = getEffectsByCategoryFromSanity(sanityEntries);
 
@@ -338,14 +263,14 @@ export default async function EffectPage({ params }) {
   const pageMetadata = getEffectPageMetadata(effect, content, slug, effectSlug);
   const faqItems = getSanityFaqs(content);
 
-  // Only the object actually sent to the client needs redaction - FAQ/SEO
+  // Only the object actually sent to the client is redacted - FAQ/SEO
   // extraction above already ran against the full `content`.
   // jsxCode / tsxCode are the effect's full source (the Sanity query takes
   // every field). The page never needs them - the "Get code" menu fetches
   // source from /api/effects/[slug]/copy, which checks access and the daily
   // limit - so they're dropped for everyone.
   const { jsxCode: _jsx, tsxCode: _tsx, ...publicContent } = content;
-  const clientContent = { ...publicContent, body: redactLockedBody(content.body, Boolean(codeLock)) };
+  const clientContent = { ...publicContent, body: shapeEffectBody(content.body) };
 
   return (
     <>
@@ -361,9 +286,7 @@ export default async function EffectPage({ params }) {
         installCounts={installCountsPromise}
         effectCounts={effectCounts}
         totalEffects={sanityEntries.length}
-        isLocked={isLocked}
-        codeLock={codeLock}
-        lockTier={lockTier}
+        effectTier={effectTier}
         searchEffects={globalSearchEffects}
       />
     </>

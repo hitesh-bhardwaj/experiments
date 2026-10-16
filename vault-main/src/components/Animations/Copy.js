@@ -6,6 +6,7 @@ import { SplitText } from "gsap/SplitText";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { shouldSkipSidebarDocsAnimation } from "@/lib/sidebar-navigation";
 import { prefersReducedMotion } from "@/lib/motion";
+import { keepServerPaint, useFromServerHtml } from "./serverPaint";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(SplitText, ScrollTrigger);
@@ -25,6 +26,7 @@ export default function Copy({
   const tweenRef = useRef(null);
   const triggerRef = useRef(null);
   const runIdRef = useRef(0);
+  const fromServerHtml = useFromServerHtml();
 
   useIsomorphicLayoutEffect(() => {
     const container = containerRef.current;
@@ -32,6 +34,8 @@ export default function Copy({
     if (!container) return;
 
     const runId = ++runIdRef.current;
+
+    if (keepServerPaint({ runId, fromServerHtml, element: container })) return;
 
     tweenRef.current?.kill();
     triggerRef.current?.kill();
@@ -198,10 +202,6 @@ export default function Copy({
         else if (childRef) childRef.current = node;
         containerRef.current = node;
       },
-      style: {
-        ...child.props.style,
-        opacity: 0,
-      },
     });
   }
 
@@ -209,7 +209,7 @@ export default function Copy({
     <div
       ref={containerRef}
       data-copy-wrapper="true"
-      style={{ opacity: 0 }}
+     
     >
       {children}
     </div>

@@ -10,8 +10,6 @@ import {
   useCallback,
   Suspense,
   forwardRef,
-  createContext,
-  useContext,
 } from "react";
 import Image from "next/image";
 import { useRouter, usePathname } from "next/navigation";
@@ -33,25 +31,12 @@ import { resolveEffectVideoUrl} from "@/lib/media";
 import HeadAnim from "@/components/Animations/HeadAnim";
 import Copy from "@/components/Animations/Copy";
 import { useFadeUp, useLineAnim } from "@/components/Animations/gsapAnimations";
-import { LockKeyhole } from "lucide-react";
-import { CopyLimitProvider, useCopyLimit } from "./useCopyLimit";
+import { CopyLimitProvider } from "./useCopyLimit";
 import GetCodeMenu from "./GetCodeMenu";
 import UpgradeToProModal from "./UpgradeToProModal";
 import { SignInRequiredModal } from "@/components/ui/SignInRequiredModal";
-import Button from "@/homepage/components/Button";
 import { SliderArrowButton, SliderNav } from "@/components/ui/SliderArrowButton";
 import EffectStage from "./EffectStage";
-import { PLANS } from "@/lib/plans";
-
-// What a code block's copy counts as: a `hyperiux add` command (in any package manager)
-// is a CLI install; anything else is code copied from the site
-const copySource = (code) => (/\bhyperiux\s+add\b/.test(String(code || "")) ? "cli" : "web");
-
-// Why the code on this page is withheld ({ reason, tier } from the server, see
-// [effectSlug]/page.js) - read by LockedCodePlaceholder for its wording and button
-// reason / tier: why the code is withheld (server-decided). onSignIn opens the page's
-// sign-in modal, so a locked block's "Sign in" doesn't leave the page.
-const CodeLockContext = createContext({ reason: null, tier: null, onSignIn: null });
 
 function formatEffectDate(value) {
   if (!value) return null;
@@ -175,10 +160,7 @@ export function EffectDetailContent({
   content,
   relatedEffects: baseRelatedEffects = [],
   installCounts: installCountsSource = null,
-  isLocked = false,
-  // Server-decided: "sign-in" | "pro" | "limit" | null (code shown)
-  codeLock = null,
-  lockTier = null,
+  effectTier = "pro",
   searchEffects: baseSearchEffects = [],
 }) {
   // Install counts arrive as a promise (Supabase): related cards show a skeleton until it lands.
@@ -482,7 +464,7 @@ export function EffectDetailContent({
                   effect={effect}
                   title={pageTitle}
                   previewHref={previewHref}
-                  getCode={<GetCodeMenu effectSlug={slug} effectTitle={pageTitle || safeEffect.title} isLocked={isLocked} serverLimitReached={codeLock === "limit"} lockTier={lockTier} />}
+                  getCode={<GetCodeMenu effectSlug={slug} effectTitle={pageTitle || safeEffect.title} effectTier={effectTier} />}
                 />
               </section>
               </div>
@@ -493,16 +475,13 @@ export function EffectDetailContent({
                 {/* blog-theme-light: blog.css prose in its light colours on this white section */}
                 <section id="effect-content" className="mx-auto w-full section-x blog-theme-light relative flex items-start gap-[calc(var(--cvw)*3)] pt-[calc(var(--cvw)*5.5)] pb-6 max-lg:flex-col max-md:pt-[15vw]">
                   <div className="flex min-w-0 flex-1 flex-col max-lg:w-full">
-                    <CodeLockContext.Provider value={{ reason: codeLock, tier: lockTier, onSignIn: () => setShowSignInToCopyModal(true) }}>
                     <EffectDynamicContent
                       ref={contentRef}
                       content={safeContent}
-                      isLocked={Boolean(codeLock) || isLocked}
                       effectProps={effect?.props}
                       effectRemixerControls={effect?.remixer?.controls}
                       changelog={safeEffect.changelog}
                     />
-                    </CodeLockContext.Provider>
                   </div>
 
                   <aside className="docs-sheet bg-transparent! sticky top-1/2 flex h-fit w-[22%] shrink-0 -translate-y-1/2 justify-end max-lg:hidden">
@@ -621,7 +600,7 @@ export function EffectDetailContent({
 }
 
 const EffectDynamicContent = forwardRef(function EffectDynamicContent(
-  { content, isLocked = false, effectProps, effectRemixerControls, changelog = [] },
+  { content, effectProps, effectRemixerControls, changelog = [] },
   ref
 ) {
   if (!content) return null;
@@ -633,7 +612,6 @@ const EffectDynamicContent = forwardRef(function EffectDynamicContent(
     >
       <SanityBodyRenderer
         body={content.body}
-        isLocked={isLocked}
         effectProps={effectProps}
         effectRemixerControls={effectRemixerControls}
         changelog={changelog}
@@ -724,7 +702,6 @@ function EffectChangelogSection({ changelog = [] }) {
 
 function SanityBodyRenderer({
   body = [],
-  isLocked = false,
   effectProps,
   effectRemixerControls,
   changelog = [],
@@ -769,7 +746,7 @@ function SanityBodyRenderer({
               {showPropsTable && block._type === "effectFaqAccordion" && (
                 <EffectPropsTable props={remixableProps} />
               )}
-              <SanityBodyBlock block={block} isLocked={isLocked} />
+              <SanityBodyBlock block={block} />
             </Fragment>
           );
         })}
@@ -834,22 +811,11 @@ function EffectPropsTable({ props = [] }) {
   );
 }
 
-function SanityBodyBlock({ block, isLocked: lockedProp = false }) {
-  // The server's lock reaches every block, however deeply nested (callouts too)
-  const serverLock = useContext(CodeLockContext).reason;
-  const isLocked = lockedProp || Boolean(serverLock);
-  const {
-    isLocked: copyLimitLocked,
-    selectable: copySelectable,
-    requestCopy,
-    lockedCtaHref,
-    lockedCtaLabel,
-  } = useCopyLimit();
-
+function SanityBodyBlock({ block }) {
   if (!block) return null;
 
   if (block._type === "block") {
-    return <PortableTextBlock block={block} isLocked={isLocked} />;
+    return <PortableTextBlock block={block} />;
   }
 
   if (block._type === "listGroup") {
@@ -892,28 +858,19 @@ function SanityBodyBlock({ block, isLocked: lockedProp = false }) {
     );
   }
 
+  // Only the usage snippet shows (page.js marks it public and strips any other
+  // code). Getting the component's code is the "Get code" menu's job - it checks
+  // sign-in, plan and the daily limit.
   if (block._type === "effectCodeBlock") {
-    if (isLocked) {
-      return (
-        <LockedCodePlaceholder
-          filename={block.filename}
-          language={block.language || "jsx"}
-        />
-      );
-    }
+    if (!block.isPublic || !block.code) return null;
 
     return (
       <div className="fadeup">
         <CodeBlock
-          code={normalizeCodeString(block.code || "")}
+          code={normalizeCodeString(block.code)}
           tsxCode={block.tsxCode ? normalizeCodeString(block.tsxCode) : undefined}
           language={block.language || "jsx"}
           filename={block.filename}
-          copyLocked={copyLimitLocked}
-          selectable={copySelectable}
-          onBeforeCopy={() => requestCopy(copySource(block.code))}
-          lockedCtaHref={lockedCtaHref}
-          lockedCtaLabel={lockedCtaLabel}
         />
       </div>
     );
@@ -1000,7 +957,7 @@ function SanityBodyBlock({ block, isLocked: lockedProp = false }) {
         {shouldRenderAsCardGrid ? (
           <CalloutCardGrid body={block.content || []} />
         ) : (
-          <SanityBodyRenderer body={block.content || []} isLocked={isLocked} />
+          <SanityBodyRenderer body={block.content || []} />
         )}
       </section>
     );
@@ -1027,136 +984,9 @@ function CalloutCardGrid({ body = [] }) {
   );
 }
 
-// Wording and button for each reason the code is withheld
-function lockCopy(reason, tier, pathname) {
-  if (reason === "sign-in") {
-    return {
-      title: "Sign in to see the code.",
-      subtitle: "Free effects need a free account; Pro effects need a plan.",
-      cta: { text: "Sign In", href: `/sign-in?redirect_url=${encodeURIComponent(pathname)}` },
-    };
-  }
-  if (reason === "limit") {
-    if (tier === "pro") {
-      return {
-        title: "You've used today's installs.",
-        subtitle: `Pro includes ${PLANS.pro.installsPerDay} a day. Pro+ gives you ${PLANS.pro_plus.installsPerDay}, or come back tomorrow.`,
-        cta: { text: "Upgrade to Pro+", href: "/pricing#plans" },
-      };
-    }
-    if (tier === "pro_plus") {
-      return {
-        title: "You've used today's installs.",
-        subtitle: `Pro+ includes ${PLANS.pro_plus.installsPerDay} a day. Your installs reset tomorrow.`,
-        cta: null,
-      };
-    }
-    return {
-      title: "You've used today's installs.",
-      subtitle: `Pro gives you ${PLANS.pro.installsPerDay} a day and Pro+ ${PLANS.pro_plus.installsPerDay}, or come back tomorrow.`,
-      cta: { text: "Upgrade to Pro", href: "/pricing#plans" },
-    };
-  }
-  return {
-    title: "This is a Pro Effect.",
-    subtitle: "You can preview it now. Upgrade to Pro for instant install access.",
-    cta: { text: "Upgrade to Pro", href: "/pricing#plans" },
-  };
-}
-
-// Sample code under a lock: the real source never reaches the browser when
-// this shows (the server strips it), so there's nothing to uncover in inspect.
-function LockedCodePlaceholder() {
-  const pathname = usePathname();
-  const { reason, tier, onSignIn } = useContext(CodeLockContext);
-  const copy = lockCopy(reason || "pro", tier, pathname);
-  // Signed out: "Sign in" opens the sign-in modal (the page link stays as the fallback)
-  const signInHere = reason === "sign-in" && onSignIn;
-  const teaserLines = [
-    "const premiumSnippet = unlock({ technique: 'inspect-element-jutsu' });",
-    "if (devtools.open) throw new Error('nice try, detective');",
-    "console.log('inspect will not work every time, boss');",
-    "const fallbackPlan = subscribe({ reason: 'time saved > ego' });",
-    "return 'blurred until your Pro arc begins';",
-  ];
-
-  // Stays a dark code panel (like the code blocks) on the white article.
-  return (
-    <section className="fadeup relative min-h-[40vh] max-md:min-h-[40vh] max-lg:min-h-[30vh] overflow-hidden border border-white/30 bg-background">
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 "
-      />
-      <div aria-hidden="true" className="absolute inset-0 overflow-hidden">
-
-        <div className="absolute left-2 top-0 max-lg:top-3 max-lg:left-3 max-md:top-5 max-md:left-0 px-6 py-5 text-[11px] leading-6 text-white max-md:text-[10px]">
-          {teaserLines.map((line, index) => (
-            <p
-              key={`${line}-${index}`}
-              className="whitespace-nowrap  blur-md select-none"
-            >
-              <span className="mr-3 text-primary">
-                {String(index + 1).padStart(2, "0")}
-              </span>
-              {line}
-            </p>
-          ))}
-          <p className="mt-4 whitespace-nowrap blur-md  text-[#9ad0ff]/25 select-none">
-            {"// inspect won't work every time... time to subscribe ;)"}
-          </p>
-          <p className="whitespace-nowrap blur-md  text-[#b7ffb0]/25 select-none">
-            {"export default function AccessDenied() {}"}
-          </p>
-        </div>
-      </div>
-
-      <div className="relative z-10 min-h-[40vh] max-md:min-h-[40vh] max-lg:min-h-[30vh] flex   flex-col items-center justify-center gap-2  bg-white/5 px-8 py-10 text-center  max-md:px-6">
-        <LockKeyhole className="size-12 text-white" strokeWidth={1.2} />
-
-        <div className="flex flex-col items-center gap-0">
-          <h3 className="type-h2 text-foreground">
-            {copy.title}
-          </h3>
-
-          <p className="type-small max-w-xs text-foreground/80">
-            {copy.subtitle}
-          </p>
-        </div>
-
-        {copy.cta && (
-          <div className="flex flex-wrap items-center pt-3 max-lg:pt-6 justify-center gap-3">
-            <Button
-              text={copy.cta.text}
-              variant="orange"
-              href={copy.cta.href}
-              preventDefault={Boolean(signInHere)}
-              onClick={signInHere ? onSignIn : undefined}
-              className="shrink-0 text-black!"
-            />
-          </div>
-        )}
-
-
-      </div>
-    </section>
-  );
-}
-
-function PortableTextBlock({ block, isLocked: lockedProp = false }) {
-  const serverLock = useContext(CodeLockContext).reason;
-  const isLocked = lockedProp || Boolean(serverLock);
-  const {
-    isLocked: copyLimitLocked,
-    selectable: copySelectable,
-    requestCopy,
-    lockedCtaHref,
-    lockedCtaLabel,
-  } = useCopyLimit();
-
+function PortableTextBlock({ block }) {
   if (isCodeOnlyBlock(block)) {
-    // Locked first: the server blanks locked code, so it would read as empty
-    if (isLocked) return <LockedCodePlaceholder />;
-
+    // Blank unless it's under the usage heading (page.js strips the rest)
     const code = normalizeCodeString(getBlockText(block));
 
     if (!code.trim()) return null;
@@ -1166,11 +996,6 @@ function PortableTextBlock({ block, isLocked: lockedProp = false }) {
         <CodeBlock
           code={code}
           language={inferCodeLanguage(code)}
-          copyLocked={copyLimitLocked}
-          selectable={copySelectable}
-          onBeforeCopy={() => requestCopy(copySource(code))}
-          lockedCtaHref={lockedCtaHref}
-          lockedCtaLabel={lockedCtaLabel}
         />
       </div>
     );
