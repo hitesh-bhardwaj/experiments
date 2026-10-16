@@ -52,6 +52,19 @@ async function updateClerkPlan(clerkUserId, publicMetadataPatch) {
   });
 }
 
+// Runs a Supabase write up to 3 times (0.5s, then 1.5s apart) while it returns an error -
+// for writes that must land after money has moved
+async function withSupabaseRetry(write, delays = [500, 1500]) {
+  let result = await write();
+  for (const delay of delays) {
+    if (!result?.error) return result;
+    console.error("SUPABASE_WRITE_RETRY:", result.error?.message || result.error);
+    await new Promise((resolve) => setTimeout(resolve, delay));
+    result = await write();
+  }
+  return result;
+}
+
 export async function markUserProFromSubscription({ clerkUserId, subscription }) {
   if (!clerkUserId) {
     throw new Error("Missing clerkUserId in markUserProFromSubscription.");
@@ -66,7 +79,10 @@ export async function markUserProFromSubscription({ clerkUserId, subscription })
   const currentPeriodEnd = getPeriodEnd(subscription);
   const status = subscription.status || "active";
 
-  const { error } = await supabase.from("subscriptions").upsert(
+  // Retried: a payment is already taken by now, so a passing network blip (Supabase
+  // "upstream connect error ... connection timeout") mustn't leave the account on Free.
+  // Safe to repeat - it's an upsert on clerk_user_id.
+  const { error } = await withSupabaseRetry(() => supabase.from("subscriptions").upsert(
     {
       clerk_user_id: clerkUserId,
       razorpay_customer_id: subscription.customer_id || null,
@@ -81,7 +97,7 @@ export async function markUserProFromSubscription({ clerkUserId, subscription })
       updated_at: new Date().toISOString(),
     },
     { onConflict: "clerk_user_id" }
-  );
+  ));
 
   if (error) {
     console.error("SUPABASE_MARK_PRO_ERROR:", error);

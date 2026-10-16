@@ -107,10 +107,21 @@ export async function POST(req) {
 
       // Activate immediately - covers local dev where webhooks can't reach us.
       // Production webhooks re-confirm on subscription.activated/charged.
-      const result = await markUserProFromSubscription({
-        clerkUserId: userId,
-        subscription,
-      });
+      // The payment is genuine (signature checked above) and Razorpay has the
+      // subscription active, so a failure to record it here (a database timeout,
+      // already retried inside) isn't a failed payment: the visitor is told it's
+      // received and activating, and the subscription.activated / charged webhook
+      // records it. 202, not 500 - the checkout must not show "payment failed".
+      let result;
+      try {
+        result = await markUserProFromSubscription({
+          clerkUserId: userId,
+          subscription,
+        });
+      } catch (activationError) {
+        console.error("VERIFY_PAYMENT_ACTIVATION_PENDING:", razorpay_subscription_id, activationError);
+        return NextResponse.json({ verified: true, pending: true, reason: "activation_pending" }, { status: 202 });
+      }
 
       // A Pro -> Pro+ upgrade: Pro+ is paid, so the old Pro subscription is
       // cancelled now and never charges again. The webhook tries too, in case

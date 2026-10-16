@@ -8,6 +8,7 @@ import { ArrowLeft } from "lucide-react";
 import { useAdminRole } from "@/lib/useAdminRole";
 import { getDashboardPreview } from "@/lib/dev/dashboardPreview";
 import { displayFirstName } from "@/lib/display-name";
+import { hasDeletedAccount } from "@/lib/account-deleted";
 import { BUTTON_SIZE } from "@/homepage/components/Button";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import { AppVaultHeader as VaultHeader } from "@/components/layout/AppVaultHeader";
@@ -64,7 +65,7 @@ function AdminAudienceSwitch() {
 export function DashboardShell({ username, effects = [], catalog = [], children }) {
   const pathname = usePathname();
   const router = useRouter();
-  const { user } = useUser();
+  const { user, isLoaded: clerkLoaded, isSignedIn } = useUser();
   const role = useAdminRole();
 
   // The development preview (no session) stands in for a super admin with "admin".
@@ -76,6 +77,21 @@ export function DashboardShell({ username, effects = [], catalog = [], children 
     setPreview(getDashboardPreview());
     setHour(new Date().getHours());
   }, []);
+  // A dashboard page shown again without a session - the Back button after signing out
+  // or deleting the account (the browser can restore the page from its cache without
+  // asking the server): leave at once - to the effects after a deletion, else sign in.
+  useEffect(() => {
+    const leaveIfSignedOut = () => {
+      if (getDashboardPreview() || !clerkLoaded || isSignedIn) return;
+      window.location.replace(hasDeletedAccount(document.cookie) ? "/effects" : `/sign-in?redirect_url=${encodeURIComponent(window.location.pathname)}`);
+    };
+    leaveIfSignedOut();
+    // Restored from the back / forward cache: ask the server again (it redirects)
+    const onPageShow = (event) => event.persisted && window.location.reload();
+    window.addEventListener("pageshow", onPageShow);
+    return () => window.removeEventListener("pageshow", onPageShow);
+  }, [clerkLoaded, isSignedIn]);
+
   const isAdmin = role.isAdmin || preview === "admin";
   const isSuperAdmin = role.isSuperAdmin || preview === "admin";
 

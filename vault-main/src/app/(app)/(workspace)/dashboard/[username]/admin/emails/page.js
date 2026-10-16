@@ -23,6 +23,7 @@ const TYPES = {
   subscription_invoice: "Invoice",
   custom_animation_request: "Animation request",
   custom_animation_request_confirmation: "Animation request confirmation",
+  // The Work with Hyperiux form is gone; its past emails are still in the log
   work_with_hyperiux: "Work enquiry",
   work_with_hyperiux_confirmation: "Work enquiry confirmation",
   verification_code: "Verification code",

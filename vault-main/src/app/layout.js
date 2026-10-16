@@ -18,7 +18,6 @@ import { createRootMetadata } from "@/lib/seo-metadata";
 import CustomAnimationFormModal, {
   CustomAnimationFormProvider,
 } from "@/components/WebsiteComps/modals/CustomAnimationFormModal";
-import WorkWithHyperiuxModal from "@/components/WebsiteComps/modals/WorkWithHyperiuxModal";
 import { ExitIntentInviteModal } from "@/components/WebsiteComps/modals/ExitIntentInviteModal";
 import { CookieConsentNudge } from "@/components/WebsiteComps/CookieConsentNudge";
 import PixelPageTransition from "@/components/PageTransition/PixelPageTransition";
@@ -139,7 +138,6 @@ export default function RootLayout({ children }) {
                 <CustomAnimationFormModal />
               </Suspense>
               <Suspense>
-                <WorkWithHyperiuxModal />
               </Suspense>
               <ExitIntentInviteModal />
             </CustomAnimationFormProvider>

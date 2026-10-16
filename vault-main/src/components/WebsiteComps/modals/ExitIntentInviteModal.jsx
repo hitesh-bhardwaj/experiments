@@ -11,11 +11,9 @@ import { buttonClassName, ButtonChrome } from "@/homepage/components/Button";
 import { FREE_LABEL } from "@/lib/library-counts";
 
 // Site-wide exit-intent capture (except sign-in and /dashboard - see
-// isExcludedRoute below), mirroring WorkWithHyperiuxModal.jsx's technical
-// conventions (motion/react, same MODAL_TRANSITION curve, Lenis scroll-lock)
-// but with local useState instead of a query-param-driven open state - this
-// modal is triggered by cursor behavior, not a link anyone needs to
-// deep-link to or share.
+// isExcludedRoute below): motion/react with the MODAL_TRANSITION curve and a
+// Lenis scroll-lock, opened by local useState - it's triggered by cursor
+// behavior, not a link anyone needs to deep-link to or share.
 //
 // Mounted globally from the root layout rather than per-route, so the
 // pathname check below is what keeps it off the excluded routes, not where

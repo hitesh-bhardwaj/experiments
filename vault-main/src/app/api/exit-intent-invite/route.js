@@ -12,7 +12,7 @@ import {
 // createInvitation + sendEmail(waitlist-invite-email) pattern, but reachable
 // by any anonymous visitor (the exit-intent modal), not just admins. Same
 // Turnstile-only anti-abuse level as the other public lead form
-// (api/work-with-hyperiux/route.js) - no extra rate limiting on top, to
+// (api/custom-animation-form/route.js) - no extra rate limiting on top, to
 // match this codebase's existing risk tolerance for this class of form.
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 

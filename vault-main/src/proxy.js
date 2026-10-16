@@ -2,6 +2,7 @@ import { clerkClient, clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/
 import { NextRequest, NextResponse } from "next/server";
 import { DEV_PREVIEW_USERNAME } from "@/lib/dev/dashboardPreview";
 import { dashboardUsername } from "@/lib/user-slug";
+import { ACCOUNT_DELETED_COOKIE } from "@/lib/account-deleted";
 import registryIndex from "../public/r/index.json";
 import { getEffectSlugAliases } from "@/lib/effect-slugs";
 
@@ -58,6 +59,10 @@ const withClerk = clerkMiddleware(async (auth, request) => {
     if (!userId) {
       if (request.nextUrl.pathname.startsWith("/api/")) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      // Just deleted this browser's account: back to the effects, not the sign-in page
+      if (request.cookies.get(ACCOUNT_DELETED_COOKIE)?.value === "1") {
+        return NextResponse.redirect(new URL("/effects", request.url));
       }
       const signIn = new URL("/sign-in", request.url);
       signIn.searchParams.set("redirect_url", `${request.nextUrl.pathname}${request.nextUrl.search}`);

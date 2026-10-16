@@ -71,17 +71,31 @@ export default function RazorpayCheckoutButton({
         },
         handler: async function handleCheckoutSuccess(response) {
           try {
-            const verifyRes = await fetch("/api/razorpay/verify-payment", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(response),
-            });
-            const verifyJson = await verifyRes.json();
+            // The money has moved by now: a dropped connection or a server error is
+            // retried (verifying twice is safe) before anything is called a failure
+            const verify = () =>
+              fetch("/api/razorpay/verify-payment", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(response),
+              });
+            let verifyRes = null;
+            for (const wait of [0, 1500, 3000]) {
+              if (wait) await new Promise((resolve) => setTimeout(resolve, wait));
+              verifyRes = await verify().catch(() => null);
+              if (verifyRes && verifyRes.status < 500) break;
+            }
+            const verifyJson = verifyRes ? await verifyRes.json().catch(() => ({})) : {};
 
-            if (!verifyRes.ok || !verifyJson.verified) {
-              throw new Error(verifyJson.error || "Payment could not be verified");
+            if (!verifyRes || !verifyRes.ok || !verifyJson.verified) {
+              throw new Error(
+                verifyJson.error ||
+                  "We couldn’t confirm your payment yet. If you were charged, your plan will switch on within a few minutes - contact support if it doesn’t."
+              );
             }
 
+            // `pending`: paid and confirmed, the plan is still being switched on (the
+            // payment webhook finishes it) - still a successful payment
             onSuccess?.({ ...response, ...verifyJson, founding: data.founding === true });
           } catch (err) {
             setError(err.message);

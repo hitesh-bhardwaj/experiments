@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { razorpay } from "@/lib/razorpay";
 import { isAdminUser } from "@/lib/admin";
+import { ACCOUNT_DELETED_COOKIE } from "@/lib/account-deleted";
 
 // "Delete account" in the dashboard's settings: the account and its data go for good.
 //
@@ -77,5 +78,9 @@ export async function POST(request) {
     return NextResponse.json({ error: "Your data was removed but the account couldn't be closed. Please try again." }, { status: 500 });
   }
 
-  return NextResponse.json({ deleted: true });
+  // A short-lived marker for this browser: its dashboard pages (Back after deleting) go to
+  // the effects instead of the sign-in page (proxy.js, DashboardShell)
+  const res = NextResponse.json({ deleted: true });
+  res.cookies.set(ACCOUNT_DELETED_COOKIE, "1", { maxAge: 15 * 60, path: "/", sameSite: "lax", secure: process.env.NODE_ENV === "production" });
+  return res;
 }

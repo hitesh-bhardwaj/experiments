@@ -267,6 +267,12 @@ Rules: STYLE_GUIDE.md type scale, square corners, tokens; nav stays as our tab r
 | Admin Invoicing: date filter top right of the sheet; USD revenue and INR revenue as separate cards (subscriptions + templates each), Subscriptions, Template sales - all with change + line; template filter left of the Subscriptions / Templates switch; card-shaped first-load skeleton, rows-only loading after; orange-initials avatars | done | new `/api/admin/invoices/stats` (super admins; real rows only, no credits) |
 | Email log in the dashboard style: hidden admin tab (light sheet, "Email Log." hero, breadcrumb), Sent / Delivered / Failed cards, light type / delivery / per-page menus, light table with delivery dot, shared pager, dark preview dialog (Lenis held); no audience switch there | done | `dashboardRoutes` `hidden`, shell + profile menu skip hidden tabs |
 
+## Iteration 4.5 – account deletion exit, payment activation robustness (2026-10-16)
+| Step | Status | Files / notes |
+|---|---|---|
+| Delete account: on success the page is covered at once ("Your account has been deleted"), then `location.replace("/sign-in")` (settings leaves the history); Clerk sign-out still asked, its failure ignored. Delete sets `vault-account-deleted` cookie (15 min): the proxy sends a signed-out dashboard request with it to `/effects`; the dashboard shell leaves when Clerk says signed out and reloads pages restored from the back/forward cache | done, **not run end to end** | settings page, `api/user/delete-account`, `lib/account-deleted.js`, `proxy.js`, `DashboardShell`; proxy test added |
+| Payment "succeeded" but verify-payment 500 (Supabase connection timeout while marking Pro): the plan write is retried 3× (0.5s, 1.5s); if it still fails after a genuine, active payment, verify answers 202 `pending` (the subscription webhook records it) instead of 500; checkout retries verify on network / 5xx errors and treats `pending` as paid; Overview's banner says "Payment received. Your plan is switching on" until it does | done | `lib/pro-access.js`, `api/razorpay/verify-payment`, `RazorpayCheckoutButton.jsx`, overview |
+
 ## Iteration 4+ (next)
 - Admin pass: Users / Invoicing / user detail onto useDashboardData + shaped skeletons
 - Test Delete account end to end with a throwaway account on a deployed preview (Clerk can't sign in on localhost)

@@ -69,7 +69,7 @@ export async function POST(request) {
       );
     }
 
-    const to = process.env.RESEND_FROM_EMAIL;
+    const to = "Hyperiux Vault <admin@hyperiux.com>";
     const subject = `New custom animation request from ${values.name}`;
 
     const teamEmail = await sendEmail({

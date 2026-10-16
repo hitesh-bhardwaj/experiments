@@ -109,6 +109,8 @@ export default function SettingsPage() {
   const [confirmText, setConfirmText] = useState("");
   const [deleting, setDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState("");
+  // Deleted: the whole page is covered until the sign-in page loads
+  const [deleted, setDeleted] = useState(false);
   const mounted = useSyncExternalStore(subscribeNever, () => true, () => false);
 
   const closeDelete = () => {
@@ -139,9 +141,19 @@ export default function SettingsPage() {
       const res = await fetch("/api/user/delete-account", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ confirm: confirmText }) });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data.error || "Couldn’t delete your account.");
-      // The account is gone: clear the session and leave
-      await signOut({ redirectUrl: "/" }).catch(() => {
-        window.location.href = "/";
+      // The account is gone. Cover the page at once (nothing behind can flash an error),
+      // then go to the sign-in page, replacing this one in the history so Back can't
+      // return here. Clerk's sign-out is still asked to clear its cookies, but its session
+      // is already dead, so whatever it does (or a failure) only leads to the same place.
+      setDeleted(true);
+      const leave = () => window.location.replace("/sign-in");
+      const fallback = setTimeout(leave, 2000);
+      signOut(() => {
+        clearTimeout(fallback);
+        leave();
+      }).catch(() => {
+        clearTimeout(fallback);
+        leave();
       });
     } catch (err) {
       setDeleteError(err.message);
@@ -350,6 +362,17 @@ export default function SettingsPage() {
     } finally {
       setDeletingImage(false);
     }
+  }
+
+  // Deleted: a full-screen cover on the dark page colour until the sign-in page takes over
+  if (deleted) {
+    return (
+      <div role="status" className="fixed inset-0 z-10000 flex flex-col items-center justify-center gap-3 bg-background p-6 text-center text-foreground">
+        <LoaderCircle className="size-6 animate-spin text-primary" aria-hidden="true" />
+        <p className="type-h3">Your account has been deleted.</p>
+        <p className="type-small text-foreground/80">Taking you to the sign-in page…</p>
+      </div>
+    );
   }
 
   if (!isLoaded) {

@@ -276,7 +276,9 @@ export default function DashboardOverviewPage() {
       {justUpgraded && (
         <p role="status" className="type-body flex items-center gap-3 bg-primary/10 px-[calc(var(--cvw)*1.6)] py-[calc(var(--cvw)*1)] ring-1 ring-inset ring-primary/30 max-lg:px-6 max-lg:py-4">
           <span aria-hidden="true" className="size-2 shrink-0 bg-primary" />
-          Welcome to {planName}. Your account has been upgraded.
+          {/* Paid, but the plan can take a moment to switch on (a slow database write, then
+              the payment webhook); this card refreshes on its own every 30s */}
+          {isPro ? `Welcome to ${planName}. Your account has been upgraded.` : "Payment received. Your plan is switching on - this can take a minute."}
         </p>
       )}
 

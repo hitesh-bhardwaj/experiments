@@ -96,6 +96,12 @@ describe("proxy: routes that must require a Clerk session", () => {
     expect(location.searchParams.get("redirect_url")).toBe("/dashboard/harsh-goyal/saved?x=1");
   });
 
+  it("right after deleting the account, a dashboard page goes to the effects, not sign-in", async () => {
+    const request = new NextRequest(new URL("/dashboard/harsh-goyal/settings", "https://vault.hyperiux.com"), { headers: { host: "vault.hyperiux.com", cookie: "vault-account-deleted=1" } });
+    const location = new URL((await proxy(request)).headers.get("location"));
+    expect(location.pathname).toBe("/effects");
+  });
+
   it("a signed-out API call gets 401, not a redirect", async () => {
     const request = new NextRequest(new URL("/api/dashboard", "https://vault.hyperiux.com"), { headers: { host: "vault.hyperiux.com" } });
     expect((await proxy(request)).status).toBe(401);
