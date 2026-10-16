@@ -162,8 +162,8 @@ export default function RootLayout({ children }) {
         </ReducedMotionConfig>
         <Analytics />
         <SpeedInsights />
-        <DeferredGTM />
-        <DeferredAnalytics />
+        {/* <DeferredGTM /> */}
+        {/* <DeferredAnalytics /> */}
       </body>
     </html>
   );
