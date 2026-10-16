@@ -19,7 +19,7 @@ vi.mock("@/lib/recaptcha", () => ({ verifyRecaptcha: vi.fn(async () => ({ succes
 vi.mock("@/lib/supabase", async () => ({ supabase: (await import("../helpers/route-harness.js")).db }));
 
 process.env.RESEND_AUDIENCE_ID = "aud_test";
-process.env.RESEND_COMMUNITY_AUDIENCE_ID = "aud_community_test";
+process.env.RESEND_COMMUNITY_SEGMENT_ID = "seg_community_test";
 
 const { db, makeRequest } = await import("../helpers/route-harness.js");
 const { POST: newsletter } = await import("@/app/api/newsletter/route.js");

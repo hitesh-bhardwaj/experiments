@@ -10,6 +10,8 @@ const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
 // Email + submit, used in the hero and in Join. Both instances share the
 // joined state, so signing up in one marks the other done too.
+// On phones the field sits over a full-width button, at 16px so iOS Safari
+// doesn't zoom the page when it's tapped.
 export default function WaitlistForm({ className = "" }) {
   const inputId = useId();
   const buttonRef = useRef(null);
@@ -64,7 +66,7 @@ export default function WaitlistForm({ className = "" }) {
     <form
       onSubmit={onSubmit}
       noValidate
-      className={`relative flex w-full items-center gap-1.5 bg-background/60 px-1.5 py-1.5 ring-1 ring-inset backdrop-blur-lg transition-shadow duration-700 ease-[cubic-bezier(.16,1,.3,1)] max-md:flex-wrap max-md:p-2 ${
+      className={`relative flex w-full items-center gap-1.5 bg-background/60 px-1.5 py-1.5 ring-1 ring-inset backdrop-blur-lg transition-shadow duration-700 ease-[cubic-bezier(.16,1,.3,1)] max-md:flex-col max-md:items-stretch max-md:gap-2 max-md:p-2 ${
         joined
           ? "ring-success/60"
           : error
@@ -85,7 +87,7 @@ export default function WaitlistForm({ className = "" }) {
         onChange={(e) => { setEmail(e.target.value); if (error) setError(""); }}
         aria-invalid={!!error}
         aria-describedby={`${inputId}-msg`}
-        className={`type-body h-11 min-w-0  flex-1 border-0 bg-transparent px-[calc(var(--cvw)*1.2)] text-foreground outline-none [--input-autofill-bg:var(--background)] [--input-autofill-text:var(--foreground)] max-md:basis-full max-md:px-2.5 ${joined ? "placeholder:text-success" : "placeholder:text-foreground/60"}`}
+        className={`type-body h-11 min-w-0  flex-1 border-0 bg-transparent px-[calc(var(--cvw)*1.2)] text-foreground outline-none [--input-autofill-bg:var(--background)] [--input-autofill-text:var(--foreground)] max-md:h-12 max-md:flex-none max-md:bg-foreground/5 max-md:px-3 max-md:text-[16px] ${joined ? "placeholder:text-success" : "placeholder:text-foreground/60"}`}
       />
       <button
         ref={buttonRef}
@@ -94,11 +96,11 @@ export default function WaitlistForm({ className = "" }) {
         onPointerEnter={() => setHovered(true)}
         onPointerLeave={() => setHovered(false)}
         data-sound-kind="primary"
-        className={buttonClassName({ className: "max-md:w-[85%] max-md:mx-auto max-md:justify-center", disabled: joined || sending })}
+        className={buttonClassName({ className: "max-md:w-full max-md:justify-center", disabled: joined || sending })}
       >
         <ButtonChrome label={label} hovered={hovered} />
       </button>
-      <p id={`${inputId}-msg`} className={`type-label absolute top-[calc(100%+var(--cvw)*0.7)] left-[calc(var(--cvw)*1.2)] min-h-[1em] text-left text-danger max-md:static max-md:basis-full max-md:px-2.5 `} aria-live="polite">{error}</p>
+      <p id={`${inputId}-msg`} className="type-label absolute top-[calc(100%+var(--cvw)*0.7)] left-[calc(var(--cvw)*1.2)] min-h-[1em] text-left text-danger max-md:static max-md:min-h-0 max-md:px-1 max-md:empty:hidden" aria-live="polite">{error}</p>
     </form>
   );
 }
