@@ -1,19 +1,21 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
-import { Skeleton } from "@/components/ui/Skeleton";
 import CliTokenManager from "@/components/Dashboard/CliTokenManager";
 import { useDashboard } from "@/components/Dashboard/DashboardContext";
 import { CARD, CARD_PAD, CardLink, SourceChip } from "@/components/Dashboard/DashboardUI";
+import { Bar, ButtonBar, SkeletonCard, useAccountHint } from "@/components/Dashboard/DashboardSkeletons";
+import { useDashboardData } from "@/components/Dashboard/useDashboardData";
 import Button from "@/homepage/components/Button";
 import { TierBadge, effectCategoryLabel, resolveCover } from "@/app/(app)/(workspace)/effects/EffectCard";
 import { getEffectHref } from "@/lib/categories";
 import { markScrollToPricingCards } from "@/lib/pricingScrollIntent";
 import { getDashboardPreview, sampleDashboard } from "@/lib/dev/dashboardPreview";
+import { getCreditsPerYear } from "@/lib/plans";
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 const PERIOD_MONTHS = { monthly: 1, quarterly: 3, yearly: 12 };
@@ -63,25 +65,138 @@ function StatCard({ label, href, value, detail, className = "" }) {
   );
 }
 
-// Loading: every card as one block, in the overview's layout
-function OverviewSkeleton({ isAdmin }) {
+// Loading: every card in its own shape, in the account's layout - the plan and credits
+// cards only for plans (not admins), the period bar only on Pro, credit coins only when
+// the plan earns credits
+const ROW = "flex gap-[calc(var(--cvw)*0.8)] max-lg:gap-3";
+
+function OverviewSkeleton() {
+  const { isAdmin, plan, tier, billingInterval } = useAccountHint();
+  const isPro = plan === "pro";
+  const coins = isPro ? getCreditsPerYear(tier, billingInterval) : 0;
   return (
     <div aria-busy="true" aria-label="Loading your dashboard" className="flex flex-col gap-[calc(var(--cvw)*0.8)] max-lg:gap-3">
       {!isAdmin && (
-        <div className="flex gap-[calc(var(--cvw)*0.8)] max-lg:flex-col max-lg:gap-3">
-          <Skeleton className="h-[calc(var(--cvw)*20)] w-1/2 max-lg:h-72 max-lg:w-full" />
-          <Skeleton className="h-[calc(var(--cvw)*20)] flex-1 max-lg:h-56" />
+        <div className={`${ROW} max-lg:flex-col`}>
+          <SkeletonCard dark className="w-1/2 justify-between gap-[calc(var(--cvw)*2)] max-lg:w-full max-lg:gap-6">
+            <div className="flex flex-col gap-(--cvw) max-lg:gap-4">
+              <div className="flex flex-col gap-2">
+                <Bar type="type-label" className="w-20" />
+                <Bar type="type-h2" className="w-[45%]" />
+              </div>
+              <div className="flex w-[80%] flex-col gap-1 max-lg:w-full">
+                <Bar type="type-body" className="w-full" />
+                <Bar type="type-body" className="w-[60%]" />
+              </div>
+            </div>
+            {isPro && (
+              <div className="flex flex-col gap-2">
+                <Bar className="h-1 w-full" />
+                <div className="flex justify-between gap-4">
+                  <Bar type="type-small" className="w-28" />
+                  <Bar type="type-small" className="w-44" />
+                </div>
+              </div>
+            )}
+            <ButtonBar className="w-36" />
+          </SkeletonCard>
+          <SkeletonCard className="flex-1 gap-(--cvw) max-lg:gap-4">
+            <Bar type="type-label" className="w-32" />
+            {coins > 0 && (
+              <div className="flex gap-2">
+                {Array.from({ length: coins }, (_, i) => (
+                  <Bar key={i} className="size-[calc(var(--cvw)*2.6)] max-lg:size-10" />
+                ))}
+              </div>
+            )}
+            <Bar type="type-h3" className="w-[55%]" />
+            <div className="flex flex-col gap-1">
+              <Bar type="type-small" className="w-full" />
+              <Bar type="type-small" className="w-[70%]" />
+            </div>
+            <Bar type="type-label" className="mt-auto w-28" />
+          </SkeletonCard>
         </div>
       )}
-      <div className="flex gap-[calc(var(--cvw)*0.8)] max-md:flex-col max-lg:gap-3">
-        <Skeleton className="h-[calc(var(--cvw)*13)] w-[25%] max-lg:h-48 max-md:w-full" />
-        <Skeleton className="h-[calc(var(--cvw)*13)] flex-1 max-lg:h-48" />
-        <Skeleton className="h-[calc(var(--cvw)*13)] w-[25%] max-lg:h-48 max-md:w-full" />
+
+      <div className={`${ROW} max-md:flex-col max-lg:flex-wrap`}>
+        <SkeletonCard dark className="w-[25%] justify-between gap-[calc(var(--cvw)*1.2)] max-lg:w-[calc((100%-0.75rem)/2)] max-lg:gap-4 max-md:w-full">
+          <Bar type="type-label" className="w-24" />
+          <Bar type="type-h2" className="w-[60%]" />
+          <div className="flex flex-col gap-1">
+            <Bar type="type-small" className="w-full" />
+            <Bar type="type-small" className="w-[65%]" />
+          </div>
+        </SkeletonCard>
+        <SkeletonCard className="flex-1 justify-between gap-[calc(var(--cvw)*1.2)] max-lg:order-last max-lg:w-full max-lg:flex-none max-lg:gap-4">
+          <Bar type="type-label" className="w-28" />
+          <div className="flex flex-1 gap-[calc(var(--cvw)*1.6)] max-md:gap-4">
+            {[0, 1, 2].map((i) => (
+              <div key={i} className={`flex flex-1 flex-col justify-between gap-[calc(var(--cvw)*0.8)] max-lg:gap-3 ${i ? "border-l border-black/10 pl-[calc(var(--cvw)*1.6)] max-md:pl-4" : ""}`}>
+                <Bar type="type-h1" className="w-[45%]" />
+                <Bar type="type-small" className="w-12" />
+                <Bar type="type-small" className="w-[80%]" />
+              </div>
+            ))}
+          </div>
+        </SkeletonCard>
+        <SkeletonCard className="w-[25%] justify-between gap-[calc(var(--cvw)*1.2)] max-lg:w-[calc((100%-0.75rem)/2)] max-lg:gap-4 max-md:w-full">
+          <Bar type="type-label" className="w-16" />
+          <Bar type="type-h1" className="w-[35%]" />
+          <Bar type="type-small" className="w-[75%]" />
+        </SkeletonCard>
       </div>
-      <Skeleton className="h-[calc(var(--cvw)*16)] w-full max-lg:h-64" />
-      <div className="flex gap-[calc(var(--cvw)*0.8)] max-lg:flex-col max-lg:gap-3">
-        <Skeleton className="h-[calc(var(--cvw)*22)] w-[63%] max-lg:h-80 max-lg:w-full" />
-        <Skeleton className="h-[calc(var(--cvw)*22)] flex-1 max-lg:h-80" />
+
+      {/* the CLI token card */}
+      <SkeletonCard className="gap-[calc(var(--cvw)*2)] max-lg:gap-6">
+        <div className="flex items-start justify-between gap-[calc(var(--cvw)*3)] max-lg:flex-col max-lg:gap-6">
+          <div className="flex w-[70%] flex-col gap-[calc(var(--cvw)*0.6)] max-lg:w-full max-lg:gap-2">
+            <Bar type="type-h2" className="w-48" />
+            <Bar type="type-body" className="w-full" />
+            <Bar type="type-body" className="w-[85%]" />
+            <Bar type="type-small" className="w-[60%]" />
+          </div>
+          <div className="flex shrink-0 gap-[calc(var(--cvw)*0.6)] max-lg:gap-3">
+            <ButtonBar className="w-24" />
+            <ButtonBar className="w-36" />
+          </div>
+        </div>
+        <Bar className="h-[calc(var(--cvw)*3.4)] w-full max-lg:h-12" />
+      </SkeletonCard>
+
+      <div className={`${ROW} max-lg:flex-col`}>
+        <SkeletonCard className="w-[63%] gap-(--cvw) max-lg:w-full max-lg:gap-4">
+          <div className="flex justify-between gap-4">
+            <Bar type="type-h3" className="w-40" />
+            <Bar type="type-label" className="w-20" />
+          </div>
+          <div className="flex flex-col">
+            {[0, 1, 2, 3, 4].map((i) => (
+              <div key={i} className="flex items-center gap-4 border-t border-black/10 py-[calc(var(--cvw)*0.8)] first:border-t-0 max-lg:py-3">
+                <Bar type="type-small" className="w-12" />
+                <Bar type="type-body" className="w-[45%]" />
+                <Bar type="type-small" className="ml-auto w-14" />
+              </div>
+            ))}
+          </div>
+        </SkeletonCard>
+        <SkeletonCard className="flex-1 gap-(--cvw) max-lg:gap-4">
+          <div className="flex justify-between gap-4">
+            <Bar type="type-h3" className="w-36" />
+            <Bar type="type-label" className="w-20" />
+          </div>
+          <div className="flex flex-col">
+            {[0, 1, 2, 3].map((i) => (
+              <div key={i} className="flex items-center gap-(--cvw) border-t border-black/10 py-[calc(var(--cvw)*0.6)] first:border-t-0 first:pt-0 max-lg:gap-4 max-lg:py-3">
+                <Bar className="aspect-[16/8.6] w-[38%] shrink-0 max-md:w-[42%]" />
+                <div className="flex flex-1 flex-col gap-1">
+                  <Bar type="type-body" className="w-[80%]" />
+                  <Bar type="type-small" className="w-[55%]" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </SkeletonCard>
       </div>
     </div>
   );
@@ -97,43 +212,24 @@ function SectionHead({ title, href, label }) {
 }
 
 export default function DashboardOverviewPage() {
-  const { path, effectBySlug, isAdmin } = useDashboard();
+  const { path, effectBySlug, isAdmin, username } = useDashboard();
   const searchParams = useSearchParams();
   const justUpgraded = searchParams.get("upgraded") === "true";
 
-  const [data, setData] = useState(null);
-  const [failed, setFailed] = useState(false);
-  const [attempt, setAttempt] = useState(0);
-  const retry = useCallback(() => {
-    setFailed(false);
-    setAttempt((n) => n + 1);
-  }, []);
-
-  useEffect(() => {
-    let active = true;
-    async function load() {
+  // Cached across tabs: the skeleton shows on the first load only; then it refreshes
+  // quietly (copies, saves, focus, every 30s)
+  const { data, failed, retry } = useDashboardData(
+    `overview:${username}`,
+    async () => {
       // Development preview (lib/dev/dashboardPreview): sample data, no session needed
       const preview = getDashboardPreview();
-      if (preview) {
-        if (active) setData(sampleDashboard(preview));
-        return;
-      }
-      try {
-        const res = await fetch("/api/dashboard");
-        if (!res.ok) throw new Error(`dashboard ${res.status}`);
-        const json = await res.json();
-        if (active) setData(json);
-      } catch (error) {
-        console.error(error);
-        if (active) setFailed(true);
-      }
-    }
-    const frame = requestAnimationFrame(load);
-    return () => {
-      active = false;
-      cancelAnimationFrame(frame);
-    };
-  }, [attempt]);
+      if (preview) return sampleDashboard(preview);
+      const res = await fetch("/api/dashboard", { cache: "no-store" });
+      if (!res.ok) throw new Error(`dashboard ${res.status}`);
+      return res.json();
+    },
+    { pollMs: 30000 },
+  );
 
   // Date.now() must not run during render: it differs between server and browser.
   const [now, setNow] = useState(null);
@@ -154,7 +250,7 @@ export default function DashboardOverviewPage() {
     );
   }
 
-  if (!data) return <OverviewSkeleton isAdmin={isAdmin} />;
+  if (!data) return <OverviewSkeleton />;
 
   const isPro = data.plan === "pro";
   const planName = isPro ? (data.tier === "pro_plus" ? "Pro+" : "Pro") : "Free";
@@ -167,6 +263,8 @@ export default function DashboardOverviewPage() {
   if (start) start.setMonth(start.getMonth() - PERIOD_MONTHS[data.billingInterval]);
   const daysLeft = end && now ? Math.max(0, Math.ceil((end - now) / DAY_MS)) : null;
   const elapsed = start && end && now ? Math.min(1, Math.max(0, (now - start) / (end - start))) : 0;
+  // A cancelled plan keeps its access until the period ends, then doesn't renew
+  const cancelled = data.subscriptionStatus === "cancelled" || Boolean(data.cancelAtPeriodEnd);
 
   const savedCard = <StatCard label="Saved" href={path("saved")} value={data.savedCount} detail="Effects in your shortlist" className="w-[25%] max-lg:w-[calc((100%-0.75rem)/2)] max-md:w-full" />;
 
@@ -195,7 +293,7 @@ export default function DashboardOverviewPage() {
                     {isPro && interval && <span className="text-primary"> · {interval}</span>}
                   </h2>
                 </div>
-                {isPro && (
+                {isPro && !cancelled && (
                   <span className="type-small inline-flex items-center gap-2 bg-foreground/10 px-3 py-1 capitalize">
                     <span aria-hidden="true" className="size-1.5 rounded-full bg-primary" />
                     {data.subscriptionStatus}
@@ -224,7 +322,7 @@ export default function DashboardOverviewPage() {
                 <div className="type-small flex justify-between gap-4 text-foreground/80 max-md:flex-col max-md:gap-1">
                   <span>Started {formatDate(start)}</span>
                   <span>
-                    {daysLeft ?? "—"} days left · renews {formatDate(end)}
+                    {daysLeft ?? "—"} days left · {cancelled ? "ends" : "renews"} {formatDate(end)}
                   </span>
                 </div>
               </div>
@@ -318,7 +416,7 @@ export default function DashboardOverviewPage() {
         {savedCard}
       </div>
 
-      <CliTokenManager plan={data.plan} />
+      <CliTokenManager plan={data.plan} hasToken={data.hasCliToken} />
 
       {/* recent activity + recently saved */}
       <div className="flex gap-[calc(var(--cvw)*0.8)] max-lg:flex-col max-lg:gap-3">

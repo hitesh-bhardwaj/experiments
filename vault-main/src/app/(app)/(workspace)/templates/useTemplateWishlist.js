@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import { SignInRequiredModal } from "@/components/ui/SignInRequiredModal";
+import { refreshDashboard } from "@/components/Dashboard/useDashboardData";
 
 
 // Shared by TemplatesGrid (the /templates listing) and TemplateDetail's
@@ -69,6 +70,8 @@ export function useTemplateWishlist({ onSaved, onRemoved } = {}) {
       });
       if (!res.ok) throw new Error(`wishlist-templates ${res.status}`);
       const { saved } = await res.json();
+      // Stored: dashboard tabs on screen refetch now
+      refreshDashboard();
       // The server has the final say (e.g. after a double click).
       if (typeof saved === "boolean" && saved !== willSave) setSaved(template.slug, saved);
     } catch (err) {

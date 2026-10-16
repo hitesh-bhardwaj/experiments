@@ -7,11 +7,12 @@ import { useUser } from "@clerk/nextjs";
 import { ArrowLeft } from "lucide-react";
 import { useAdminRole } from "@/lib/useAdminRole";
 import { getDashboardPreview } from "@/lib/dev/dashboardPreview";
+import { displayFirstName } from "@/lib/display-name";
 import { BUTTON_SIZE } from "@/homepage/components/Button";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import { AppVaultHeader as VaultHeader } from "@/components/layout/AppVaultHeader";
 import { DarkSegment } from "@/components/ui/DarkSegment";
-import { ADMIN_TABS, USER_TABS, activeTab, dashboardPath, isAdminPath } from "./dashboardRoutes";
+import { ADMIN_HIDDEN_TABS, ADMIN_TABS, USER_TABS, activeTab, dashboardPath, isAdminPath } from "./dashboardRoutes";
 import { DashboardProvider, HERO_ASIDE_ID } from "./DashboardContext";
 
 // Each tab's header: the heading (its last words orange) and the line under it.
@@ -26,9 +27,6 @@ const HEROES = {
   users: ["", "Users.", "Everyone with a Vault account, and what they’re doing with it."],
   "admin-invoicing": ["", "Invoicing.", "Every payment across subscriptions and templates."],
 };
-
-// Invoicing is personal billing - an admin account has none, so the user view hides it.
-const ADMIN_HIDDEN_TABS = new Set(["invoicing"]);
 
 function greeting(hour) {
   if (hour < 12) return "Good Morning";
@@ -87,7 +85,8 @@ export function DashboardShell({ username, effects = [], catalog = [], children 
     : USER_TABS.filter((tab) => !(isAdmin && ADMIN_HIDDEN_TABS.has(tab.key)));
   const current = activeTab(adminView ? ADMIN_TABS : USER_TABS, username, pathname);
 
-  const firstName = user?.firstName || "there";
+  // The account's first name, else the first word of its email (lib/display-name)
+  const firstName = displayFirstName(user) || "there";
   const [lead, accent, line] =
     !current || current.key === "overview"
       ? [`${hour === null ? "Welcome back" : greeting(hour)},`, `${firstName}.`, "Your vault is open. Here’s everything at a glance."]
@@ -102,9 +101,9 @@ export function DashboardShell({ username, effects = [], catalog = [], children 
 
   return (
     <DashboardProvider username={username} catalog={catalog} isAdmin={isAdmin} isSuperAdmin={isSuperAdmin}>
-      {/* As tall as the workspace layout's min-h-[200vh] wrapper, so a short tab's light
-          sheet still reaches the bottom of the page */}
-      <div className="flex min-h-[200vh] flex-col text-foreground">
+      {/* At least a screen tall, so a short tab's light sheet still reaches the bottom of
+          the screen; otherwise as tall as the tab's content */}
+      <div className="flex min-h-svh flex-col text-foreground">
         <VaultHeader showSearch totalEffects={effects.length} effects={effects} />
 
         <section id="dashboard" className="section-x flex w-full flex-col gap-[calc(var(--cvw)*3)] pt-32 pb-[calc(var(--cvw)*3)] max-lg:gap-10 max-lg:pb-10 max-md:gap-8 max-md:pt-28 max-md:pb-8">
@@ -153,9 +152,10 @@ export function DashboardShell({ username, effects = [], catalog = [], children 
           </nav>
         </section>
 
-        {/* the tab: a full-width light sheet (white cards on it) for restyled tabs - no hover or
+        {/* the tab: a full-width light sheet (white cards on it), at least half a screen tall
+            and otherwise as tall as its content - no hover or
             movement sounds there, like every light section */}
-        <div id="dashboard-content" data-sound-flow={current?.light ? "off" : undefined} data-sound-hover={current?.light ? "off" : undefined} className={`flex-1 ${current?.light ? "bg-light text-ink" : ""}`}>
+        <div id="dashboard-content" data-sound-flow={current?.light ? "off" : undefined} data-sound-hover={current?.light ? "off" : undefined} className={`min-h-[50vh] flex-1 ${current?.light ? "bg-light text-ink" : ""}`}>
           <div className={`section-x w-full ${current?.light ? "py-[calc(var(--cvw)*3)] max-lg:py-12 max-md:py-10" : "pb-[7%]"}`}>{children}</div>
         </div>
       </div>

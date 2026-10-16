@@ -1,4 +1,5 @@
 import { clerkClient } from "@clerk/nextjs/server";
+import { displayName } from "@/lib/display-name";
 import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { assertAdmin } from "@/lib/admin";
@@ -44,7 +45,7 @@ async function findUserBySlug(clerk, slug) {
     (clerkUsers || []).find(
       (user) =>
         buildUserActivitySlug({
-          name: user.fullName || user.firstName || null,
+          name: displayName(user),
           email: user.emailAddresses?.[0]?.emailAddress || null,
         }) === slug
     ) || null
@@ -316,20 +317,8 @@ export async function GET(request, { params }) {
     return NextResponse.json({
       profile: {
         id: clerkUser.id,
-        // Name is never blank in the UI: falls back to the email's
-        // local-part, capitalized - same convention as displayName() in
-        // dashboard/admin/page.js and resolveDisplayName() in
-        // the Activity page's feed - rather than a generic "Unnamed user"
-        // placeholder when Clerk has no first/last name on file (invited
-        // accounts that completed sign-up through Clerk's own hosted widget
-        // without ever being asked for one, mainly).
-        name:
-          clerkUser.fullName ||
-          clerkUser.firstName ||
-          (() => {
-            const local = clerkUser.emailAddresses?.[0]?.emailAddress?.split("@")[0];
-            return local ? local.charAt(0).toUpperCase() + local.slice(1) : null;
-          })(),
+        // Never blank: the account's name, else one read from its email (lib/display-name)
+        name: displayName(clerkUser),
         email: clerkUser.emailAddresses?.[0]?.emailAddress || null,
         imageUrl: clerkUser.imageUrl || null,
         joinedAt: clerkUser.createdAt,

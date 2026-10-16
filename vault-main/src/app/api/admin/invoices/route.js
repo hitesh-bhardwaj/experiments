@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { displayName } from "@/lib/display-name";
 import { clerkClient } from "@clerk/nextjs/server";
 import { supabase } from "@/lib/supabase";
 import { assertSuperAdmin } from "@/lib/admin";
@@ -79,7 +80,7 @@ export async function GET(request) {
       return {
         id: row.id,
         userId: row.clerk_user_id,
-        userName: clerkUser?.fullName || clerkUser?.firstName || null,
+        userName: displayName(clerkUser),
         userEmail: clerkUser?.emailAddresses?.[0]?.emailAddress || null,
         userImageUrl: clerkUser?.imageUrl || null,
         paymentId: row.razorpay_payment_id,

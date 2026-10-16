@@ -229,6 +229,8 @@ export async function POST(req) {
         razorpayOrderId: razorpay_order_id,
         amount: typeof order.amount === "number" ? order.amount / 100 : null,
         currency: order.currency || "USD",
+        // The invoice's receipt page (create-order puts it on the order)
+        invoiceUrl: order.notes.invoice_url || null,
       });
     }
 

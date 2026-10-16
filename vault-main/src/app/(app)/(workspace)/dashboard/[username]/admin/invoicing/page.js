@@ -27,13 +27,14 @@ const formatDate = (value) => (value ? new Intl.DateTimeFormat("en", { month: "s
 
 // invoices.amount is in the smallest unit (paise / cents); template_purchases.amount in
 // whole units (see api/admin/template-purchases)
-function money(amount, currency = "USD", minorUnits = false) {
+function money(amount, currency, minorUnits = false) {
   if (typeof amount !== "number") return "—";
   const value = minorUnits ? amount / 100 : amount;
+  const code = currency || "USD";
   try {
-    return new Intl.NumberFormat(currency === "INR" ? "en-IN" : "en-US", { style: "currency", currency, maximumFractionDigits: 2 }).format(value);
+    return new Intl.NumberFormat(code === "INR" ? "en-IN" : "en-US", { style: "currency", currency: code, maximumFractionDigits: 2 }).format(value);
   } catch {
-    return `${value.toFixed(2)} ${currency}`;
+    return `${value.toFixed(2)} ${code}`;
   }
 }
 
@@ -236,7 +237,7 @@ export default function AdminInvoicingPage() {
                           {ledger === "subscriptions" && <span className="type-small text-black/60">{INTERVALS[row.billingInterval] || "—"}</span>}
                         </span>
                       </td>
-                      <td className="type-body whitespace-nowrap py-3 pr-4 text-right font-aeonik">{money(row.amount, row.currency, ledger === "subscriptions")}</td>
+                      <td className="type-body whitespace-nowrap py-3 pr-4 text-right font-aeonik">{row.redeemedWithCredit ? "1 credit" : money(row.amount, row.currency, ledger === "subscriptions")}</td>
                       <td className="type-small py-3 pr-4 text-black/60">
                         <span className="font-mono" title={row.paymentId}>
                           {row.paymentId || "—"}

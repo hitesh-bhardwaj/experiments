@@ -12,8 +12,9 @@ import { T14 } from "@/app/(app)/(workspace)/templates/tokens";
 // uses anywhere else - every other dropdown/panel here, e.g. CustomSelect,
 // is hand-rolled the same way this is).
 //
-// `from`/`to` are the same YYYY-MM-DD strings the <input type="date"> pair
-// this replaces already produced - a drop-in swap, no parent/API changes.
+// `from`/`to` are YYYY-MM-DD strings; every pick reports both at once through
+// `onChange({ from, to })`. (Two separate from / to callbacks lost the first
+// change when the parent built both from the same old value - picks did nothing.)
 
 const WEEKDAY_LABELS = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
 
@@ -40,7 +41,7 @@ const TONES = {
     icon: "text-black/40",
     value: "text-ink",
     placeholder: "",
-    panel: "bg-foreground text-ink shadow-xl ring-1 ring-inset ring-black/10",
+    panel: "bg-foreground text-ink ring-1 ring-inset ring-black/10",
     nav: "text-black/60 hover:bg-black/5 hover:text-ink",
     month: "text-ink",
     weekday: "text-black/40",
@@ -139,7 +140,7 @@ function MonthGrid({ monthDate, from, to, hoverDate, onSelectDay, onHoverDay, to
  * `tone`: "dark" (admin pages) or "light". `placeholder` labels the trigger before a
  * range is picked; with `onClear`, a picked range gets an × that clears it.
  */
-export function DateRangeCalendarPicker({ from, to, onFromChange, onToChange, tone: toneName = "dark", placeholder = "Pick a date range", onClear }) {
+export function DateRangeCalendarPicker({ from, to, onChange, tone: toneName = "dark", placeholder = "Pick a date range", onClear }) {
   const tone = TONES[toneName];
   const [open, setOpen] = useState(false);
   const [hoverDate, setHoverDate] = useState(null);
@@ -179,19 +180,18 @@ export function DateRangeCalendarPicker({ from, to, onFromChange, onToChange, to
   function handleSelectDay(date) {
     // No range yet, or a complete range already picked - start fresh.
     if (!fromDate || (fromDate && toDate)) {
-      onFromChange(toDateString(date));
-      onToChange("");
+      onChange({ from: toDateString(date), to: "" });
       return;
     }
 
     // Picking a day before the current start just moves the start instead
     // of producing an inverted range.
     if (date.getTime() < fromDate.getTime()) {
-      onFromChange(toDateString(date));
+      onChange({ from: toDateString(date), to: "" });
       return;
     }
 
-    onToChange(toDateString(date));
+    onChange({ from, to: toDateString(date) });
     setHoverDate(null);
     setOpen(false);
   }
@@ -220,7 +220,8 @@ export function DateRangeCalendarPicker({ from, to, onFromChange, onToChange, to
         <div
           role="dialog"
           onMouseLeave={() => setHoverDate(null)}
-          className={`absolute top-full right-0 z-30 mt-2 p-4 ${tone.panel}`}
+          // Fades and scales in
+          className={`absolute top-full right-0 z-30 mt-2 origin-top-right animate-[hx-scale-in_0.49s_cubic-bezier(0.33,1,0.68,1)] p-4 motion-reduce:animate-none ${tone.panel}`}
         >
           <button
             type="button"

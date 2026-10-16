@@ -2,12 +2,13 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { motion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import { useUser } from "@clerk/nextjs";
 import { useDashboard } from "@/components/Dashboard/DashboardContext";
 import { ALL_DATES, CARD, CARD_PAD, DateRangeFilter, FILTER_WIDTH, FilteredCount, inDateRange, resolveDateRange } from "@/components/Dashboard/DashboardUI";
 import { COLUMN_ITEMS, SlidingSegment } from "@/components/ui/SlidingSegment";
-import { Skeleton } from "@/components/ui/Skeleton";
+import { Bar } from "@/components/Dashboard/DashboardSkeletons";
+import { useDashboardData } from "@/components/Dashboard/useDashboardData";
 import Button from "@/homepage/components/Button";
 import { CARD_LAYOUT_TRANSITION, EffectCard } from "@/app/(app)/(workspace)/effects/EffectCard";
 import { FilterMenu } from "@/app/(app)/(workspace)/effects/FilterMenu";
@@ -15,6 +16,7 @@ import { useEffectCardActions } from "@/app/(app)/(workspace)/effects/useEffectC
 import { EFFECT_GRID, EFFECT_GRID_COLS } from "@/app/(app)/(workspace)/templates/tokens";
 import { effectCategories, getEffectHref, getQuickCategoryLabel, resolveEffectCategoryId } from "@/lib/categories";
 import { getDashboardPreview } from "@/lib/dev/dashboardPreview";
+import { WISHLIST_CHANGED_EVENT } from "@/lib/wishlistEvents";
 import { useGridColumns } from "@/hooks/useGridColumns";
 
 const TIERS = [
@@ -32,11 +34,18 @@ const titleOf = (effect) => effect.title || effect.name;
 export default function SavedEffectsPage() {
   const router = useRouter();
   const { user } = useUser();
-  const { catalog, effectBySlug } = useDashboard();
+  const { catalog, effectBySlug, username } = useDashboard();
   const { cardActions, overlays } = useEffectCardActions({ userPlan: user?.publicMetadata?.plan || "free" });
 
-  // Saved rows, newest first: { name, created_at, ... }; null while loading
-  const [rows, setRows] = useState(null);
+  // Saved rows, newest first: { name, created_at, ... }; null on the first load only
+  // (cached across tabs, refreshed on every save or unsave)
+  const { data: rows, mutate } = useDashboardData(`saved:${username}`, async () => {
+    // Development preview: the first nine effects in the catalogue, a day apart
+    if (getDashboardPreview()) return catalog.slice(0, 9).map((effect, i) => ({ name: effect.name, created_at: new Date(Date.now() - i * 86400000).toISOString() }));
+    const res = await fetch("/api/dashboard/saved", { cache: "no-store" });
+    if (!res.ok) throw new Error(`saved ${res.status}`);
+    return (await res.json()).savedEffects || [];
+  });
   const [tier, setTier] = useState("all");
   const [category, setCategory] = useState(null);
   const [sort, setSort] = useState("recent");
@@ -44,27 +53,15 @@ export default function SavedEffectsPage() {
   // 2 / 3 per row, in step with the sidebar like /effects (picking 3 closes it)
   const { cols, shownCols, chooseCols } = useGridColumns("hyperiux-dashboard-saved-cols");
 
+  // Unsaving a card here takes it off the grid straight away (the refetch confirms it)
   useEffect(() => {
-    let active = true;
-    // Development preview: the first nine effects in the catalogue, a day apart
-    if (getDashboardPreview()) {
-      const sample = catalog.slice(0, 9).map((effect, i) => ({ name: effect.name, created_at: new Date(Date.now() - i * 86400000).toISOString() }));
-      requestAnimationFrame(() => active && setRows(sample));
-      return () => {
-        active = false;
-      };
-    }
-    fetch("/api/dashboard/saved")
-      .then((res) => (res.ok ? res.json() : Promise.reject(new Error(`saved ${res.status}`))))
-      .then((data) => active && setRows(data.savedEffects || []))
-      .catch((error) => {
-        console.error(error);
-        if (active) setRows([]);
-      });
-    return () => {
-      active = false;
+    const onChange = (event) => {
+      const { saved, name } = event.detail || {};
+      if (saved === false && name) mutate((list) => (list || []).filter((row) => row.name !== name));
     };
-  }, [catalog]);
+    window.addEventListener(WISHLIST_CHANGED_EVENT, onChange);
+    return () => window.removeEventListener(WISHLIST_CHANGED_EVENT, onChange);
+  }, [mutate]);
 
   // Each saved row with the effect's full details from the catalogue (cover, tags, video)
   const saved = useMemo(() => (rows || []).map((row) => ({ ...row, ...(effectBySlug(row.name) || {}), savedAt: row.created_at })), [rows, effectBySlug]);
@@ -99,10 +96,25 @@ export default function SavedEffectsPage() {
       {overlays}
 
       {rows === null ? (
-        <div className={`flex flex-wrap ${EFFECT_GRID}`}>
-          {Array.from({ length: 6 }, (_, i) => (
-            <Skeleton key={i} className={`aspect-[16/11] ${EFFECT_GRID_COLS[3]}`} />
-          ))}
+        <div aria-busy="true" aria-label="Loading your saved effects" className="flex flex-col gap-[calc(var(--cvw)*1.6)] max-lg:gap-6">
+          {/* the count and the filters, then cards: cover, title, category line */}
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <Bar type="type-h3" className="w-32" />
+            <div className="flex gap-[calc(var(--cvw)*0.7)]">
+              <Bar className="h-9.5 w-44" />
+              <Bar className="h-9.5 w-[calc(var(--cvw)*13)] max-lg:w-48" />
+              <Bar className="h-9.5 w-20 max-lg:hidden" />
+            </div>
+          </div>
+          <div className={`flex flex-wrap ${EFFECT_GRID}`}>
+            {Array.from({ length: cols * 2 }, (_, i) => (
+              <div key={i} className={`flex flex-col gap-3 ${EFFECT_GRID_COLS[cols]}`}>
+                <Bar className="aspect-video w-full" />
+                <Bar type="type-body" className="w-[55%]" />
+                <Bar type="type-small" className="w-[35%]" />
+              </div>
+            ))}
+          </div>
         </div>
       ) : rows.length === 0 ? (
         <div className={`${CARD} ${CARD_PAD} items-start gap-4`}>
@@ -151,11 +163,20 @@ export default function SavedEffectsPage() {
           ) : (
             <div className={`flex flex-wrap ${EFFECT_GRID}`}>
               {/* the cards glide to their new slots on a column switch or filter, as on /effects */}
-              {shown.map((effect) => (
-                <motion.div key={effect.name} layout transition={CARD_LAYOUT_TRANSITION} className={EFFECT_GRID_COLS[cols]}>
-                  <EffectCard effect={effect} {...cardActions(effect)} onOpen={(item) => router.push(getEffectHref(item))} />
-                </motion.div>
-              ))}
+              {/* an unsaved card fades out and the rest close the gap */}
+              <AnimatePresence initial={false}>
+                {shown.map((effect) => (
+                  <motion.div
+                    key={effect.name}
+                    layout
+                    exit={{ opacity: 0, scale: 0.96, transition: { duration: 0.25 } }}
+                    transition={CARD_LAYOUT_TRANSITION}
+                    className={EFFECT_GRID_COLS[cols]}
+                  >
+                    <EffectCard effect={effect} {...cardActions(effect)} onOpen={(item) => router.push(getEffectHref(item))} />
+                  </motion.div>
+                ))}
+              </AnimatePresence>
             </div>
           )}
         </>

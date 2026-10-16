@@ -5,9 +5,10 @@ import Image from "next/image";
 import { Eye, EyeOff, LoaderCircle, Trash2, Upload, User, X } from "lucide-react";
 import { createPortal } from "react-dom";
 import { useClerk, useUser } from "@clerk/nextjs";
+import { useLenis } from "lenis/react";
 import { useDashboard } from "@/components/Dashboard/DashboardContext";
 import { ACTION_LINE, ACTION_PRIMARY, CARD, CARD_PAD, FIELD, FIELD_LABEL, SubmitButton, Toggle } from "@/components/Dashboard/DashboardUI";
-import { Skeleton } from "@/components/ui/Skeleton";
+import { Bar, ButtonBar, SkeletonCard } from "@/components/Dashboard/DashboardSkeletons";
 import { getDashboardPreview, samplePreviewUser } from "@/lib/dev/dashboardPreview";
 
 const MAX_AVATAR_DIMENSION = 512;
@@ -147,6 +148,7 @@ export default function SettingsPage() {
       setDeleting(false);
     }
   }
+  const lenis = useLenis();
   const fileInputRef = useRef(null);
 
   const [savingProfile, setSavingProfile] = useState(false);
@@ -352,7 +354,39 @@ export default function SettingsPage() {
   }
 
   if (!isLoaded) {
-    return <Skeleton className="h-[calc(var(--cvw)*30)] w-full max-lg:h-96" />;
+    // the section list, then the profile card (photo, two name fields, email) and the
+    // password card
+    return (
+      <div aria-busy="true" aria-label="Loading your settings" className="flex items-start gap-[calc(var(--cvw)*2.4)] max-lg:flex-col max-lg:gap-6">
+        <div className="flex w-[16%] shrink-0 flex-col gap-3 max-lg:w-full max-lg:flex-row">
+          {[0, 1, 2, 3].map((i) => (
+            <Bar key={i} type="type-label" className="w-[60%] max-lg:w-20" />
+          ))}
+        </div>
+        <div className="flex min-w-0 flex-1 flex-col gap-[calc(var(--cvw)*0.8)] max-lg:w-full max-lg:gap-3">
+          <SkeletonCard className="gap-[calc(var(--cvw)*1.4)] max-lg:gap-5">
+            <div className="flex flex-col gap-1">
+              <Bar type="type-h3" className="w-24" />
+              <Bar type="type-small" className="w-44" />
+            </div>
+            <div className="flex items-center gap-[calc(var(--cvw)*1.4)] max-lg:gap-5">
+              <Bar className="size-[calc(var(--cvw)*6)] shrink-0 rounded-full max-lg:size-24" />
+              <ButtonBar className="w-40" />
+            </div>
+            <div className="flex gap-4 max-md:flex-col">
+              <Bar className="h-[calc(var(--cvw)*3.4)] flex-1 max-lg:h-12" />
+              <Bar className="h-[calc(var(--cvw)*3.4)] flex-1 max-lg:h-12" />
+            </div>
+            <Bar className="h-[calc(var(--cvw)*3.4)] w-full max-lg:h-12" />
+          </SkeletonCard>
+          <SkeletonCard className="gap-[calc(var(--cvw)*1.4)] max-lg:gap-5">
+            <Bar type="type-h3" className="w-28" />
+            <Bar className="h-[calc(var(--cvw)*3.4)] w-full max-lg:h-12" />
+            <Bar className="h-[calc(var(--cvw)*3.4)] w-full max-lg:h-12" />
+          </SkeletonCard>
+        </div>
+      </div>
+    );
   }
 
   if (!user) {
@@ -365,12 +399,26 @@ export default function SettingsPage() {
 
   const email = user.primaryEmailAddress?.emailAddress;
 
+  // The section links glide to their section through Lenis (as the docs' in-page links),
+  // stopping the section's scroll-margin below the header, instead of jumping
+  function glideTo(event) {
+    if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    const id = event.currentTarget.getAttribute("href").slice(1);
+    const section = document.getElementById(id);
+    if (!section) return;
+    event.preventDefault();
+    const top = section.getBoundingClientRect().top + window.scrollY - (parseFloat(getComputedStyle(section).scrollMarginTop) || 0);
+    window.history.pushState(null, "", `#${id}`);
+    if (lenis) lenis.scrollTo(top, { duration: 1.15, easing: (t) => 1 - Math.pow(1 - t, 3), force: true });
+    else window.scrollTo({ top, behavior: "smooth" });
+  }
+
   return (
     <div className="flex items-start gap-[calc(var(--cvw)*2.4)] max-lg:flex-col max-lg:gap-6">
       {/* sections, pinned beside them on desktop */}
       <nav aria-label="Settings sections" className="sticky top-28 flex w-[16%] shrink-0 flex-col gap-3 max-lg:static max-lg:w-full max-lg:flex-row max-lg:flex-wrap">
         {SECTIONS.map(([id, label]) => (
-          <a key={id} href={`#${id}`} className="type-label w-fit text-black/60 transition-colors duration-300 hover:text-primary">
+          <a key={id} href={`#${id}`} onClick={glideTo} className="type-label w-fit text-black/60 transition-colors duration-300 hover:text-primary">
             {label}
           </a>
         ))}

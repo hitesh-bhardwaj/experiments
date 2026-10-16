@@ -1,15 +1,20 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
+import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
 import { Check } from "lucide-react";
 import { useDashboard } from "@/components/Dashboard/DashboardContext";
 import { CARD, CARD_PAD, DetailRows } from "@/components/Dashboard/DashboardUI";
-import { Skeleton } from "@/components/ui/Skeleton";
+import { Bar, ButtonBar, SkeletonCard, useAccountHint } from "@/components/Dashboard/DashboardSkeletons";
+import { refreshDashboard, useDashboardData } from "@/components/Dashboard/useDashboardData";
+import { Modal } from "@/components/ui/SignInRequiredModal";
 import Button from "@/homepage/components/Button";
 import { PLANS, formatPrice, getMonthlyEquivalent } from "@/lib/plans";
 import { markScrollToPricingCards } from "@/lib/pricingScrollIntent";
 import { getDashboardPreview, sampleInvoices } from "@/lib/dev/dashboardPreview";
+
+const subscribeNever = () => () => {};
 
 const INTERVAL_LABEL = { monthly: "Monthly", quarterly: "Quarterly", yearly: "Yearly" };
 
@@ -17,13 +22,14 @@ const formatDate = (value) => (value ? new Intl.DateTimeFormat("en", { month: "s
 
 // invoices.amount is in the smallest unit (paise / cents); template_purchases.amount in
 // whole units (see api/admin/template-purchases)
-function money(amount, currency = "USD", minorUnits = false) {
+function money(amount, currency, minorUnits = false) {
   if (typeof amount !== "number") return "—";
   const value = minorUnits ? amount / 100 : amount;
+  const code = currency || "USD";
   try {
-    return new Intl.NumberFormat(currency === "INR" ? "en-IN" : "en-US", { style: "currency", currency, minimumFractionDigits: 2 }).format(value);
+    return new Intl.NumberFormat(code === "INR" ? "en-IN" : "en-US", { style: "currency", currency: code, minimumFractionDigits: 2 }).format(value);
   } catch {
-    return `${value.toFixed(2)} ${currency}`;
+    return `${value.toFixed(2)} ${code}`;
   }
 }
 
@@ -52,37 +58,116 @@ function nextPlan(plan, tier) {
   };
 }
 
+// Loading: the dark current-plan card (its detail rows on Pro), the next-plan card beside it
+// (not on Pro+), then the receipts table
+function InvoicingSkeleton() {
+  const { plan, tier } = useAccountHint();
+  const isPro = plan === "pro";
+  const upsell = tier !== "pro_plus";
+  return (
+    <div aria-busy="true" aria-label="Loading your billing" className="flex flex-col gap-[calc(var(--cvw)*0.8)] max-lg:gap-3">
+      <div className="flex gap-[calc(var(--cvw)*0.8)] max-lg:flex-col max-lg:gap-3">
+        <SkeletonCard dark className={`justify-between gap-[calc(var(--cvw)*1.6)] max-lg:w-full max-lg:gap-6 ${upsell ? "w-[63%]" : "w-full"}`}>
+          <div className="flex flex-col gap-2">
+            <Bar type="type-label" className="w-28" />
+            <Bar type="type-h2" className="w-[40%]" />
+          </div>
+          {isPro ? (
+            <div className="flex flex-col">
+              {[0, 1, 2, 3, 4].map((i) => (
+                <div key={i} className="flex justify-between gap-4 border-t border-foreground/10 py-[calc(var(--cvw)*0.9)] first:border-t-0 max-lg:py-3">
+                  <Bar type="type-small" className="w-24" />
+                  <Bar type="type-body" className="w-[35%]" />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="flex flex-col gap-1">
+              <Bar type="type-body" className="w-full" />
+              <Bar type="type-body" className="w-[55%]" />
+            </div>
+          )}
+          {isPro && <ButtonBar className="w-52" />}
+        </SkeletonCard>
+        {upsell && (
+          <SkeletonCard className="flex-1 gap-(--cvw) max-lg:gap-4">
+            <Bar type="type-label" className="w-28" />
+            <Bar type="type-h2" className="w-[60%]" />
+            <div className="flex flex-col gap-2">
+              {[0, 1, 2].map((i) => (
+                <Bar key={i} type="type-body" className="w-[85%]" />
+              ))}
+            </div>
+            <Bar type="type-small" className="w-[70%]" />
+            <ButtonBar className="mt-auto w-40" />
+          </SkeletonCard>
+        )}
+      </div>
+      <SkeletonCard className="gap-[calc(var(--cvw)*1.2)] max-lg:gap-4">
+        <div className="flex justify-between gap-3">
+          <Bar type="type-h3" className="w-28" />
+          <Bar type="type-small" className="w-52" />
+        </div>
+        <div className="flex flex-col">
+          {[0, 1, 2].map((i) => (
+            <div key={i} className="flex items-center gap-4 border-b border-black/10 py-[calc(var(--cvw)*0.8)] last:border-b-0 max-lg:py-3">
+              <Bar type="type-small" className="w-[14%]" />
+              <Bar type="type-body" className="w-[30%] flex-1" />
+              <Bar type="type-body" className="w-[10%]" />
+              <Bar type="type-small" className="w-[8%]" />
+              <Bar type="type-small" className="w-10" />
+            </div>
+          ))}
+        </div>
+      </SkeletonCard>
+    </div>
+  );
+}
+
 export default function InvoicingPage() {
-  const { path, isAdmin } = useDashboard();
+  const { path, isAdmin, username } = useDashboard();
   const router = useRouter();
-  const [data, setData] = useState(null);
-  const [failed, setFailed] = useState(false);
+  // Cached across tabs: the skeleton shows on the first load only
+  const { data, failed, mutate } = useDashboardData(`invoices:${username}`, async () => {
+    const preview = getDashboardPreview();
+    if (preview) return sampleInvoices(preview);
+    const res = await fetch("/api/dashboard/invoices", { cache: "no-store" });
+    if (!res.ok) throw new Error(`invoices ${res.status}`);
+    return res.json();
+  });
+
+  // Cancel subscription: asks first, then cancels at the end of the paid period
+  // (api/user/cancel-subscription) - the plan stays until then
+  const [cancelOpen, setCancelOpen] = useState(false);
+  const [cancelling, setCancelling] = useState(false);
+  const [cancelError, setCancelError] = useState("");
+  const mounted = useSyncExternalStore(subscribeNever, () => true, () => false);
+  async function cancelSubscription() {
+    setCancelling(true);
+    setCancelError("");
+    try {
+      const preview = getDashboardPreview();
+      if (!preview) {
+        const res = await fetch("/api/user/cancel-subscription", { method: "POST" });
+        const json = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(json.error || "Couldn’t cancel your subscription.");
+      }
+      mutate((current) => ({ ...current, cancelAtPeriodEnd: true }));
+      // The overview's plan card follows too (the preview's sample data has no cancellation
+      // to refetch, so it stays as set here)
+      if (!preview) refreshDashboard();
+      setCancelOpen(false);
+    } catch (error) {
+      setCancelError(error.message);
+    } finally {
+      setCancelling(false);
+    }
+  }
 
   // Personal billing: an admin account has none, so it goes back to the overview
   useEffect(() => {
     if (isAdmin) router.replace(path());
   }, [isAdmin, router, path]);
-
-  useEffect(() => {
-    let active = true;
-    const preview = getDashboardPreview();
-    if (preview) {
-      requestAnimationFrame(() => active && setData(sampleInvoices(preview)));
-      return () => {
-        active = false;
-      };
-    }
-    fetch("/api/dashboard/invoices")
-      .then((res) => (res.ok ? res.json() : Promise.reject(new Error(`invoices ${res.status}`))))
-      .then((json) => active && setData(json))
-      .catch((error) => {
-        console.error(error);
-        if (active) setFailed(true);
-      });
-    return () => {
-      active = false;
-    };
-  }, []);
 
   if (failed) {
     return (
@@ -93,21 +178,12 @@ export default function InvoicingPage() {
     );
   }
 
-  // Loading: each card as one block
-  if (!data) {
-    return (
-      <div aria-busy="true" aria-label="Loading your billing" className="flex flex-col gap-[calc(var(--cvw)*0.8)] max-lg:gap-3">
-        <div className="flex gap-[calc(var(--cvw)*0.8)] max-lg:flex-col max-lg:gap-3">
-          <Skeleton className="h-[calc(var(--cvw)*22)] w-[63%] max-lg:h-80 max-lg:w-full" />
-          <Skeleton className="h-[calc(var(--cvw)*22)] flex-1 max-lg:h-72" />
-        </div>
-        <Skeleton className="h-[calc(var(--cvw)*14)] w-full max-lg:h-56" />
-      </div>
-    );
-  }
+  if (!data) return <InvoicingSkeleton />;
 
   const isPro = data.plan === "pro";
   const subscription = data.subscription;
+  // Cancelled: already ended at Razorpay, or cancelled here and running to the period's end
+  const cancelled = subscription?.status === "cancelled" || Boolean(data.cancelAtPeriodEnd);
   const interval = INTERVAL_LABEL[subscription?.billing_interval];
   const planName = isPro ? (data.tier === "pro_plus" ? "Pro+" : "Pro") : "Free";
   const upsell = nextPlan(data.plan, data.tier);
@@ -122,13 +198,14 @@ export default function InvoicingPage() {
       status: invoice.status,
       url: invoice.invoice_url,
     })),
+    // A template redeemed with a credit was never paid for: "1 credit", nothing to download
     ...data.templatePurchases.map((purchase) => ({
       id: purchase.id,
       date: purchase.createdAt,
       description: `Template · ${purchase.templateTitle}`,
-      amount: money(purchase.amount, purchase.currency),
-      status: purchase.status,
-      url: purchase.invoiceUrl,
+      amount: purchase.redeemedWithCredit ? "1 credit" : money(purchase.amount, purchase.currency),
+      status: purchase.redeemedWithCredit && purchase.status === "paid" ? "redeemed" : purchase.status,
+      url: purchase.redeemedWithCredit ? null : purchase.invoiceUrl,
     })),
   ].sort((a, b) => String(b.date).localeCompare(String(a.date)));
   const lastPayment = data.invoices?.[0];
@@ -150,9 +227,9 @@ export default function InvoicingPage() {
             <DetailRows
               tone="dark"
               rows={[
-                ["Status", <span key="s" className="capitalize">{subscription?.status || "active"}</span>],
-                [subscription?.status === "cancelled" ? "Access until" : "Renews on", formatDate(subscription?.current_period_end)],
-                ["Billing cycle", interval ? `${interval}, renews automatically` : "—"],
+                ["Status", <span key="s" className="capitalize">{cancelled ? "cancelled" : subscription?.status || "active"}</span>],
+                [cancelled ? "Access until" : "Renews on", formatDate(subscription?.current_period_end)],
+                ["Billing cycle", interval ? `${interval}, ${cancelled ? "doesn’t renew" : "renews automatically"}` : "—"],
                 ["Last payment", lastPayment ? `${money(lastPayment.amount, lastPayment.currency, true)} on ${formatDate(lastPayment.created_at)}` : "—"],
                 ["Payment", subscription?.razorpay_subscription_id ? "Managed by Razorpay" : "Access granted by the Vault team"],
               ]}
@@ -161,7 +238,39 @@ export default function InvoicingPage() {
           {!isPro && <p className="type-body text-foreground/80">Free accounts get the free effects and 3 a day. Upgrade for every effect and template credits.</p>}
 
           {/* free accounts upgrade from the Pro card beside this one */}
-          {isPro && subscription?.razorpay_short_url && <Button text="Manage subscription" href={subscription.razorpay_short_url} target_blank />}
+          {/* manage at Razorpay, and cancel (only a paid subscription that's still renewing) */}
+          {isPro && (subscription?.razorpay_short_url || (subscription?.razorpay_subscription_id && !cancelled)) && (
+            <div className="flex flex-wrap items-center gap-[calc(var(--cvw)*0.8)] max-lg:gap-3">
+              {subscription?.razorpay_short_url && <Button text="Manage subscription" href={subscription.razorpay_short_url} target_blank className="w-fit" />}
+              {subscription?.razorpay_subscription_id && !cancelled && <Button text="Cancel subscription" variant="outline" preventDefault onClick={() => setCancelOpen(true)} className="w-fit" />}
+            </div>
+          )}
+          {isPro && cancelled && (
+            <p className="type-small text-foreground/80">
+              Cancelled. You keep {planName} until {formatDate(subscription?.current_period_end)}, then your account moves to Free.
+            </p>
+          )}
+
+          {mounted &&
+            createPortal(
+              <Modal open={cancelOpen} onClose={() => !cancelling && setCancelOpen(false)} title="Cancel your subscription?">
+                {`You keep ${planName} until ${formatDate(subscription?.current_period_end)}. After that your account moves to Free and you won’t be charged again. The rest of this period isn’t refunded.`}
+                <div className="flex flex-col items-center gap-3">
+                  <div className="flex flex-wrap items-center justify-center gap-[calc(var(--cvw)*1.2)] max-lg:gap-4">
+                    <Button text={cancelling ? "Cancelling…" : "Cancel subscription"} preventDefault disabled={cancelling} onClick={cancelSubscription} />
+                    <button type="button" disabled={cancelling} onClick={() => setCancelOpen(false)} className="type-label cursor-pointer text-foreground underline underline-offset-3 transition-colors duration-300 hover:text-primary disabled:opacity-60">
+                      Keep it
+                    </button>
+                  </div>
+                  {cancelError && (
+                    <p role="alert" className="type-small text-primary">
+                      {cancelError}
+                    </p>
+                  )}
+                </div>
+              </Modal>,
+              document.body,
+            )}
         </section>
 
         {upsell && (
@@ -211,7 +320,7 @@ export default function InvoicingPage() {
                 <span className="type-body min-w-0 flex-1 max-md:order-1 max-md:w-full max-md:flex-none">{receipt.description}</span>
                 <span className="type-body w-[14%] text-right font-aeonik max-md:order-3 max-md:w-auto">{receipt.amount}</span>
                 <span className="type-small inline-flex w-[12%] items-center gap-1.5 capitalize max-md:order-4 max-md:w-auto">
-                  <span aria-hidden="true" className={`size-1.5 rounded-full ${receipt.status === "paid" ? "bg-primary" : "bg-black/20"}`} />
+                  <span aria-hidden="true" className={`size-1.5 rounded-full ${receipt.status === "paid" || receipt.status === "redeemed" ? "bg-primary" : "bg-black/20"}`} />
                   {receipt.status || "unknown"}
                 </span>
                 <span className="w-16 text-right max-md:order-5 max-md:ml-auto max-md:w-auto">

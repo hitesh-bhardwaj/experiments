@@ -79,3 +79,14 @@ export async function cancelReplacedSubscription(subscription) {
     return false;
   }
 }
+
+// "Cancel subscription" in the dashboard cancels at the end of the paid period, so the
+// subscription stays active (and the plan with it) until then; Razorpay's
+// subscription.cancelled webhook moves the account to Free at the end. Until it does, the
+// scheduled cancellation is kept on the Clerk account, tied to the subscription it was for
+// (a later upgrade is a new subscription, which isn't cancelled).
+export const CANCEL_SCHEDULED_KEY = "cancelScheduledFor";
+
+export function isCancelScheduled(user, razorpaySubscriptionId) {
+  return Boolean(razorpaySubscriptionId && user?.publicMetadata?.[CANCEL_SCHEDULED_KEY] === razorpaySubscriptionId);
+}

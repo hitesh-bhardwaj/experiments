@@ -1,15 +1,17 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { motion } from "motion/react";
 import { ALL_DATES, CARD, CARD_PAD, DateRangeFilter, FILTER_WIDTH, FilteredCount, inDateRange, resolveDateRange } from "@/components/Dashboard/DashboardUI";
-import { Skeleton } from "@/components/ui/Skeleton";
+import { Bar } from "@/components/Dashboard/DashboardSkeletons";
+import { useDashboard } from "@/components/Dashboard/DashboardContext";
+import { useDashboardData } from "@/components/Dashboard/useDashboardData";
 import { useToastQueue, ToastViewport } from "@/components/ui/Toast";
 import Button from "@/homepage/components/Button";
 import { TemplateCard } from "@/app/(app)/(workspace)/templates/TemplateCard";
 import { CARD_LAYOUT_TRANSITION } from "@/app/(app)/(workspace)/effects/EffectCard";
 import { FilterMenu } from "@/app/(app)/(workspace)/effects/FilterMenu";
-import { CATALOGUES, TEMPLATE_CARD_WIDTH, TEMPLATE_GRID, catalogueOf } from "@/app/(app)/(workspace)/templates/tokens";
+import { CATALOGUES, T13, T14, TEMPLATE_CARD_WIDTH, TEMPLATE_GRID, catalogueOf } from "@/app/(app)/(workspace)/templates/tokens";
 import { useTemplateWishlist } from "@/app/(app)/(workspace)/templates/useTemplateWishlist";
 import { getDashboardPreview } from "@/lib/dev/dashboardPreview";
 
@@ -32,48 +34,38 @@ export function MyTemplates({ templates }) {
     onRemoved: (template) => showToast({ title: `${template.title} removed`, description: "No longer in your saved templates." }),
   });
 
-  // slug -> when it became this account's (bought or redeemed; null if its plan
-  // includes it), and its credit balance; null while loading
-  const [owned, setOwned] = useState(null);
-  const [credits, setCredits] = useState(null);
-  // slug -> when it was saved
-  const [savedAt, setSavedAt] = useState({});
+  const { username } = useDashboard();
+  // What's this account's: { owned: slug -> when it became theirs (bought or redeemed; null
+  // if its plan includes it), savedAt: slug -> when it was saved, credits }. Cached across
+  // tabs (skeleton on the first load only) and refreshed after every save.
+  const { data } = useDashboardData(`templates:${username}`, async () => {
+    if (getDashboardPreview()) {
+      const day = (n) => new Date(Date.now() - n * 86400000).toISOString();
+      return {
+        owned: Object.fromEntries(templates.slice(0, 2).map((t, i) => [t.slug, day(i * 9 + 3)])),
+        savedAt: Object.fromEntries(templates.map((t, i) => [t.slug, day(i * 4 + 1)])),
+        credits: 1,
+      };
+    }
+    const json = (url, fallback) =>
+      fetch(url, { cache: "no-store" })
+        .then((res) => (res.ok ? res.json() : fallback))
+        .catch(() => fallback);
+    const [purchases, saved, credits] = await Promise.all([json("/api/dashboard/template-purchases", { templates: [] }), json("/api/wishlist-templates", []), json("/api/templates/credits", null)]);
+    return {
+      owned: Object.fromEntries((purchases.templates || []).map((t) => [t.slug, t.purchasedAt])),
+      savedAt: Array.isArray(saved) ? Object.fromEntries(saved.map((row) => [row.template_slug, row.created_at])) : {},
+      credits: credits?.balance ?? 0,
+    };
+  });
+  const owned = data?.owned ?? null;
+  const savedAt = data?.savedAt ?? {};
+  const credits = data?.credits ?? null;
   const [industry, setIndustry] = useState(null);
   // Which templates: all, the ones you own (bought, redeemed or in your plan), or saved ones
   const [kind, setKind] = useState("all");
   const [catalogue, setCatalogue] = useState("all");
   const [dates, setDates] = useState(ALL_DATES);
-
-  useEffect(() => {
-    let active = true;
-    if (getDashboardPreview()) {
-      requestAnimationFrame(() => {
-        if (!active) return;
-        const day = (n) => new Date(Date.now() - n * 86400000).toISOString();
-        setOwned(Object.fromEntries(templates.slice(0, 2).map((t, i) => [t.slug, day(i * 9 + 3)])));
-        setSavedAt(Object.fromEntries(templates.map((t, i) => [t.slug, day(i * 4 + 1)])));
-        setCredits(1);
-      });
-      return () => {
-        active = false;
-      };
-    }
-    fetch("/api/dashboard/template-purchases")
-      .then((res) => (res.ok ? res.json() : { templates: [] }))
-      .then((data) => active && setOwned(Object.fromEntries((data.templates || []).map((t) => [t.slug, t.purchasedAt]))))
-      .catch(() => active && setOwned({}));
-    fetch("/api/wishlist-templates")
-      .then((res) => (res.ok ? res.json() : []))
-      .then((rows) => active && Array.isArray(rows) && setSavedAt(Object.fromEntries(rows.map((row) => [row.template_slug, row.created_at]))))
-      .catch(() => {});
-    fetch("/api/templates/credits")
-      .then((res) => (res.ok ? res.json() : null))
-      .then((data) => active && setCredits(data?.balance ?? 0))
-      .catch(() => active && setCredits(0));
-    return () => {
-      active = false;
-    };
-  }, [templates]);
 
   // Every template that's this account's in some way - owned (bought, redeemed or in its
   // plan) and/or saved - in one list; the Owned / Saved filter narrows it
@@ -162,9 +154,20 @@ export function MyTemplates({ templates }) {
 
       {/* owned and saved together, one grid */}
       {owned === null ? (
-        <div className={TEMPLATE_GRID}>
+        // the template cards' shape: cover, then title and meta beside the price, tagline
+        <div aria-busy="true" aria-label="Loading your templates" className={TEMPLATE_GRID}>
           {[0, 1].map((i) => (
-            <Skeleton key={i} className={`aspect-[16/12] ${TEMPLATE_CARD_WIDTH}`} />
+            <div key={i} className={`flex flex-col gap-[calc(var(--cvw)*1.1)] max-lg:gap-4 ${TEMPLATE_CARD_WIDTH}`}>
+              <Bar className="aspect-16/10 w-full" />
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex w-[60%] flex-col gap-[calc(var(--cvw)*0.3)] max-lg:gap-1">
+                  <Bar type="type-h3" className="w-[70%]" />
+                  <Bar className={`h-[1lh] w-[45%] ${T13}`} />
+                </div>
+                <Bar type="type-h3" className="w-16" />
+              </div>
+              <Bar className={`h-[1lh] w-[85%] ${T14}`} />
+            </div>
           ))}
         </div>
       ) : total === 0 ? (

@@ -5,7 +5,7 @@ import { createPortal } from "react-dom";
 import Image from "next/image";
 import gsap from "gsap";
 import { prefersReducedMotion } from "@/lib/motion";
-import { useLenis } from "lenis/react";
+import { useLenisLock } from "@/hooks/useLenisLock";
 import { Download, Heart } from "lucide-react";
 import Button from "@/homepage/components/Button";
 import { BADGE, DISPLAY, PRICE, T11, T14, T16, T18, T24, catalogueLabel, catalogueOf, priceOf } from "./tokens";
@@ -43,7 +43,6 @@ export function TemplatePreviewDrawer({ template, templates = [], isWishlisted, 
   const panelRef = useRef(null);
   const contentRef = useRef(null);
   const closeRef = useRef(null);
-  const lenis = useLenis();
   const open = !!template;
 
   const [shown, setShown] = useState(null);
@@ -133,7 +132,6 @@ export function TemplatePreviewDrawer({ template, templates = [], isWishlisted, 
   useEffect(() => {
     if (!open) return undefined;
     document.documentElement.setAttribute("data-v4-drawer-open", "");
-    lenis?.stop();
     const insidePanel = (target) => target instanceof Node && panelRef.current?.contains(target);
     const blockScroll = (event) => {
       if (!insidePanel(event.target)) event.preventDefault();
@@ -148,13 +146,14 @@ export function TemplatePreviewDrawer({ template, templates = [], isWishlisted, 
     document.addEventListener("keydown", onKey);
     const focus = setTimeout(() => closeRef.current?.focus({ preventScroll: true }), PANEL_DURATION * 1000);
     return () => {
-      lenis?.start();
       document.removeEventListener("wheel", blockScroll);
       document.removeEventListener("touchmove", blockScroll);
       document.removeEventListener("keydown", onKey);
       clearTimeout(focus);
     };
-  }, [open, lenis, onClose]);
+  }, [open, onClose]);
+  // The page stays still behind it (shared with any modal opened on top)
+  useLenisLock(open);
 
   // The page scrollbar stays hidden while the drawer is on screen, including its close animation.
   const onScreen = !!shown;

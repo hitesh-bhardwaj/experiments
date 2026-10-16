@@ -7,11 +7,12 @@ import { useUser } from "@clerk/nextjs";
 import { Search } from "lucide-react";
 import { CopyButtonContent } from "@/components/ui/CodeBlock";
 import { useDashboard } from "@/components/Dashboard/DashboardContext";
-import { ALL_DATES, CARD, CARD_PAD, CardLink, DATE_PRESETS, DateRangeFilter, Pager, SourceChip, inDateRange, resolveDateRange } from "@/components/Dashboard/DashboardUI";
+import { ALL_DATES, CARD, CARD_PAD, CardLink, DATE_PRESETS, DateRangeFilter, Pager, PerPageMenu, SourceChip, inDateRange, resolveDateRange } from "@/components/Dashboard/DashboardUI";
+import { Bar, SkeletonCard, useAccountHint } from "@/components/Dashboard/DashboardSkeletons";
+import { useDashboardData } from "@/components/Dashboard/useDashboardData";
 import { RingMeter } from "@/components/Dashboard/RingMeter";
 import { SOURCE_BARS, UsageBars } from "@/components/Dashboard/UsageBars";
 import { SlidingSegment } from "@/components/ui/SlidingSegment";
-import { Skeleton } from "@/components/ui/Skeleton";
 import Button from "@/homepage/components/Button";
 import { resolveCover } from "@/app/(app)/(workspace)/effects/EffectCard";
 import { useEffectCardActions } from "@/app/(app)/(workspace)/effects/useEffectCardActions";
@@ -25,7 +26,6 @@ const SOURCES = [
   { id: "cli", label: "CLI" },
   { id: "mcp", label: "MCP" },
 ];
-const PER_PAGE = 8;
 // The chart's days with no range picked, and the most it draws for a long custom range
 const DEFAULT_DAYS = 30;
 const MAX_DAYS = 180;
@@ -66,38 +66,90 @@ function CopyCommand({ effect, copyInstall }) {
   );
 }
 
+// Loading: the cards in their own shapes - the dark Today card (not for unlimited
+// accounts), the chart, then the table's header and rows
+function UsageSkeleton() {
+  const { isAdmin } = useAccountHint();
+  return (
+    <div aria-busy="true" aria-label="Loading your usage" className="flex flex-col gap-[calc(var(--cvw)*0.8)] max-lg:gap-3">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <Bar type="type-label" className="w-[30%] max-md:w-full" />
+        <Bar className="h-9.5 w-[calc(var(--cvw)*13)] max-lg:w-48" />
+      </div>
+      <div className="flex gap-[calc(var(--cvw)*0.8)] max-lg:flex-col max-lg:gap-3">
+        {!isAdmin && (
+          <SkeletonCard dark className="w-1/2 flex-row items-center gap-[calc(var(--cvw)*2)] max-lg:w-full max-md:flex-col max-md:items-start max-md:gap-6">
+            <Bar className="size-[calc(var(--cvw)*8)] shrink-0 rounded-full max-lg:size-32" />
+            <div className="flex flex-1 flex-col gap-[calc(var(--cvw)*0.6)] max-lg:gap-2">
+              <Bar type="type-label" className="w-14" />
+              <Bar type="type-h1" className="w-[40%]" />
+              <Bar type="type-body" className="w-[85%]" />
+              <Bar type="type-label" className="w-[60%]" />
+            </div>
+          </SkeletonCard>
+        )}
+        <SkeletonCard className="min-w-0 flex-1 gap-[calc(var(--cvw)*1.6)] max-lg:gap-5">
+          <div className="flex justify-between gap-3">
+            <div className="flex w-[50%] flex-col gap-1">
+              <Bar type="type-h3" className="w-[60%]" />
+              <Bar type="type-small" className="w-full" />
+            </div>
+            <Bar type="type-small" className="w-32" />
+          </div>
+          <div className="flex h-[calc(var(--cvw)*10)] items-end gap-1 max-lg:h-40">
+            {[40, 65, 30, 80, 55, 20, 70, 45, 90, 35, 60, 50, 75, 25].map((h, i) => (
+              <Bar key={i} className="flex-1" style={{ height: `${h}%` }} />
+            ))}
+          </div>
+        </SkeletonCard>
+      </div>
+      <SkeletonCard className="gap-[calc(var(--cvw)*1.2)] max-lg:gap-4">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <Bar type="type-h3" className="w-44" />
+          <div className="flex gap-[calc(var(--cvw)*0.7)]">
+            <Bar className="h-9.5 w-[calc(var(--cvw)*14)] max-lg:w-44" />
+            <Bar className="h-9.5 w-60" />
+          </div>
+        </div>
+        <div className="flex flex-col">
+          {Array.from({ length: 6 }, (_, i) => (
+            <div key={i} className="flex items-center gap-4 border-b border-black/10 py-[calc(var(--cvw)*0.7)] last:border-b-0 max-lg:py-3">
+              <Bar className="aspect-[16/10] w-12 shrink-0" />
+              <Bar type="type-body" className="w-[30%] flex-1" />
+              <Bar type="type-small" className="w-12" />
+              <Bar type="type-small" className="w-[18%] max-md:hidden" />
+              <Bar className="h-8 w-24" />
+            </div>
+          ))}
+        </div>
+      </SkeletonCard>
+    </div>
+  );
+}
+
 export default function UsagePage() {
   const { user } = useUser();
-  const { effectBySlug, catalog, isAdmin } = useDashboard();
+  const { effectBySlug, catalog, isAdmin, username } = useDashboard();
   const { copyInstall, overlays } = useEffectCardActions({ userPlan: user?.publicMetadata?.plan || "free" });
 
-  const [data, setData] = useState(null);
-  const [failed, setFailed] = useState(false);
+  // Cached across tabs (skeleton on the first load only), refreshed after every copy or
+  // install here or elsewhere, on focus and every 30s - the table and chart stay live
+  const { data, failed } = useDashboardData(
+    `usage:${username}`,
+    async () => {
+      const preview = getDashboardPreview();
+      if (preview) return sampleUsage(preview, catalog);
+      const res = await fetch("/api/dashboard/usage", { cache: "no-store" });
+      if (!res.ok) throw new Error(`usage ${res.status}`);
+      return res.json();
+    },
+    { pollMs: 30000 },
+  );
   const [query, setQuery] = useState("");
   const [source, setSource] = useState("all");
   const [dates, setDates] = useState(ALL_DATES);
   const [page, setPage] = useState(0);
-
-  useEffect(() => {
-    let active = true;
-    const preview = getDashboardPreview();
-    if (preview) {
-      requestAnimationFrame(() => active && setData(sampleUsage(preview, catalog)));
-      return () => {
-        active = false;
-      };
-    }
-    fetch("/api/dashboard/usage")
-      .then((res) => (res.ok ? res.json() : Promise.reject(new Error(`usage ${res.status}`))))
-      .then((json) => active && setData(json))
-      .catch((error) => {
-        console.error(error);
-        if (active) setFailed(true);
-      });
-    return () => {
-      active = false;
-    };
-  }, [catalog]);
+  const [perPage, setPerPage] = useState(10);
 
   // Date.now() must not run during render: it differs between server and browser.
   const [now, setNow] = useState(null);
@@ -151,9 +203,9 @@ export default function UsagePage() {
           : "Custom range"
         : DATE_PRESETS[dates.preset];
 
-  const pages = Math.max(1, Math.ceil(events.length / PER_PAGE));
+  const pages = Math.max(1, Math.ceil(events.length / perPage));
   const current = Math.min(page, pages - 1);
-  const shown = events.slice(current * PER_PAGE, (current + 1) * PER_PAGE);
+  const shown = events.slice(current * perPage, (current + 1) * perPage);
   // Any filter change starts again from the first page
   const filter = (set) => (value) => {
     set(value);
@@ -169,21 +221,7 @@ export default function UsagePage() {
     );
   }
 
-  // Loading: each card as one block
-  if (!data) {
-    return (
-      <div aria-busy="true" aria-label="Loading your usage" className="flex flex-col gap-[calc(var(--cvw)*0.8)] max-lg:gap-3">
-        <div className="flex justify-end">
-          <Skeleton className="h-9.5 w-48" />
-        </div>
-        <div className="flex gap-[calc(var(--cvw)*0.8)] max-lg:flex-col max-lg:gap-3">
-          {!isAdmin && <Skeleton className="h-[calc(var(--cvw)*17)] flex-1 max-lg:h-60" />}
-          <Skeleton className="h-[calc(var(--cvw)*17)] flex-1 max-lg:h-60" />
-        </div>
-        <Skeleton className="h-[calc(var(--cvw)*30)] w-full max-lg:h-96" />
-      </div>
-    );
-  }
+  if (!data) return <UsageSkeleton />;
 
   // Admins (and any account without a limit) have no Today meter
   const unlimited = isAdmin || data.isAdmin || !data.limit;
@@ -255,6 +293,7 @@ export default function UsagePage() {
               <input value={query} onChange={(e) => filter(setQuery)(e.target.value)} placeholder="Search effects" className="w-[calc(var(--cvw)*12)] bg-transparent text-ink outline-none placeholder:text-black/40 max-lg:w-40" />
             </label>
             <SlidingSegment label="Source" items={SOURCES} value={source} onChange={filter(setSource)} itemClassName="w-14" />
+            <PerPageMenu value={perPage} onChange={filter(setPerPage)} />
           </div>
         </div>
 

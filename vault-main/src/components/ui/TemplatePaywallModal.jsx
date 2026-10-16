@@ -1,5 +1,6 @@
 "use client";
 
+import { useLenisLock } from "@/hooks/useLenisLock";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { Check, X } from "lucide-react";
@@ -56,6 +57,7 @@ export function TemplatePaywallModal({
   onPurchased,
   autoOpenCheckout = false,
 }) {
+  useLenisLock(open);
   const [mounted, setMounted] = useState(false);
   const currency = useCurrency();
   const { user } = useUser();

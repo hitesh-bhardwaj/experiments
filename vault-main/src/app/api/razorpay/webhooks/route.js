@@ -79,6 +79,7 @@ export async function POST(req) {
           razorpayOrderId: payment.order_id,
           amount: typeof payment.amount === "number" ? payment.amount / 100 : null,
           currency: payment.currency || order.currency || "USD",
+          invoiceUrl: order.notes.invoice_url || null,
         });
       }
     } catch (error) {

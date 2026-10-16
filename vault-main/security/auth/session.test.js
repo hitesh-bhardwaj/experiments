@@ -2,8 +2,10 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { NextRequest } from "next/server";
 
 // Session boundary: which paths the proxy (this Next version's middleware)
-// forces through Clerk's auth.protect(), and where the post-sign-in
-// redirect is allowed to send a freshly authenticated session.
+// keeps from a signed-out visitor - through Clerk's auth.protect(), or by
+// answering itself (a page redirects to the Vault's /sign-in, an API gets 401) -
+// and where the post-sign-in redirect is allowed to send a freshly
+// authenticated session.
 // Reports: M1 (open redirect).
 
 const protectCalls = [];
@@ -36,8 +38,11 @@ async function runProxy(pathname, { cookies = "" } = {}) {
   const request = new NextRequest(new URL(pathname, "https://vault.hyperiux.com"), {
     headers: { host: "vault.hyperiux.com", ...(cookies ? { cookie: cookies } : {}) },
   });
-  await proxy(request);
-  return protectCalls.includes(new URL(pathname, "https://x").pathname);
+  const res = await proxy(request);
+  if (protectCalls.includes(new URL(pathname, "https://x").pathname)) return true;
+  if (res?.status === 401) return true;
+  const location = res?.headers?.get("location");
+  return Boolean(location && new URL(location).pathname === "/sign-in");
 }
 
 describe("proxy: routes that must require a Clerk session", () => {
@@ -81,6 +86,24 @@ describe("proxy: routes that must require a Clerk session", () => {
     // proxy runs. Only check the variants that could actually reach code.
     expect(await runProxy("/api/dashboard/")).toBe(true);
     expect(await runProxy("/dashboard/admin/")).toBe(true);
+  });
+
+  it("a signed-out dashboard page goes to the Vault's own sign-in page and back", async () => {
+    const request = new NextRequest(new URL("/dashboard/harsh-goyal/saved?x=1", "https://vault.hyperiux.com"), { headers: { host: "vault.hyperiux.com" } });
+    const location = new URL((await proxy(request)).headers.get("location"));
+    expect(location.host).toBe("vault.hyperiux.com");
+    expect(location.pathname).toBe("/sign-in");
+    expect(location.searchParams.get("redirect_url")).toBe("/dashboard/harsh-goyal/saved?x=1");
+  });
+
+  it("a signed-out API call gets 401, not a redirect", async () => {
+    const request = new NextRequest(new URL("/api/dashboard", "https://vault.hyperiux.com"), { headers: { host: "vault.hyperiux.com" } });
+    expect((await proxy(request)).status).toBe(401);
+  });
+
+  it("a signed-in visit passes through", async () => {
+    sessionUserId = "user_1";
+    expect(await runProxy("/dashboard/harsh-goyal/saved")).toBe(false);
   });
 
   it("the Razorpay webhook is deliberately left to its own signature check", async () => {

@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { displayName } from "@/lib/display-name";
 import { clerkClient } from "@clerk/nextjs/server";
 import { supabase } from "@/lib/supabase";
 import { assertAdmin } from "@/lib/admin";
@@ -86,7 +87,7 @@ export async function GET(request) {
         id: row.id,
         occurredAt: row.occurred_at,
         userId: row.clerk_user_id,
-        userName: clerkUser?.fullName || clerkUser?.firstName || null,
+        userName: displayName(clerkUser),
         userEmail: clerkUser?.emailAddresses?.[0]?.emailAddress || null,
         userImageUrl: clerkUser?.imageUrl || null,
         identityKey: row.identity_key,
