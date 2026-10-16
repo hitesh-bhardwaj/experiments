@@ -259,7 +259,7 @@ export function mountPreviewChrome(opts = {}) {
     const t = e.target;
     if (t && (t.closest?.('input,textarea,select,[contenteditable="true"]'))) return;
     if (e.metaKey || e.ctrlKey || e.altKey) return;
-    const k = e.key.toLowerCase();
+    const k = e.key?.toLowerCase();
     if (k === 'r') replay();
     else if (k === 'p') setPanel(panel.hidden);
     else if (k === 'm') setRM(!rmOn);

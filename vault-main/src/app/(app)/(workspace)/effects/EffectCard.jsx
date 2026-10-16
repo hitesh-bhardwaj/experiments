@@ -23,7 +23,7 @@ const NEW_WINDOW_MS = 1000 * 60 * 60 * 24 * 30;
 
 // The Free / Pro badge sits on the preview image, with a barely-there shadow so it
 // holds against any cover.
-const BADGE = `inline-flex py-1 items-center px-3 ${T12} tracking-normal backdrop-blur-lg shadow-sm`;
+const BADGE = `inline-flex py-1 items-center px-3 ${T12} tracking-normal backdrop-blur-lg shadow-sm font-medium`;
 // The dark action buttons on a card (Save, Copy install, Preview); the drawer reuses it.
 export const ICON_BTN =
   `inline-flex h-8.5 min-w-8.5 cursor-pointer items-center justify-center gap-2 px-2.5 ${T12} text-foreground/90 bg-background/70 ring-1 ring-inset ring-foreground/12 backdrop-blur-lg transition-colors duration-500 hover:bg-grey/90 hover:text-foreground [&_svg]:size-3.5`;
@@ -58,7 +58,7 @@ export function resolveCover(effect) {
 // `className` overrides the default size (tailwind-merge), e.g. the drawer's button-height badge.
 export function TierBadge({ tier, className = "" }) {
   return tier === "pro" ? (
-    <span className={twMerge(`${BADGE} bg-primary text-background`, className)}>Pro</span>
+    <span className={twMerge(`${BADGE} bg-primary text-white`, className)}>Pro</span>
   ) : (
     <span className={twMerge(`${BADGE} bg-light/90 border border-black/10 text-ink`, className)}>Free</span>
   );

@@ -7,7 +7,7 @@ function DrawCheck({
   active,
   armed = false,
   className = "h-full w-full",
-  stroke = "currentColor",
+  stroke = "#00E05A",
   strokeWidth = 2.5,
   delay = 0,
   duration = 400,

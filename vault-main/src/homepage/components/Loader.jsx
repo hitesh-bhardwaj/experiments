@@ -463,7 +463,7 @@ export default function Loader() {
               underline
               tilted={false}
               underlineClassName="mt-0"
-              className="mx-auto cursor-pointer type-body text-foreground transition-colors duration-300 hover:text-primary"
+              className="mx-auto cursor-pointer text-[1.2vw] text-foreground transition-colors duration-300 hover:text-primary max-md:type-body"
             />
           </div>
         </div>

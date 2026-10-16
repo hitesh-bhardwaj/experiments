@@ -450,7 +450,7 @@ export function GlobalSearch({ effects = [], externalOpen = 0 }) {
 
   useEffect(() => {
     const handleKeyDown = (event) => {
-      const key = event.key.toLowerCase();
+      const key = event.key?.toLowerCase();
 
       if ((event.metaKey || event.ctrlKey) && key === "k") {
         event.preventDefault();

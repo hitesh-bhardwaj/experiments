@@ -177,7 +177,7 @@ export default function ProblemFixes() {
             Good Motion is{' '}
             <span className="gradient-text-animate">Harder</span> Than it Looks
           </LineReveal>
-          <p data-fadeup-delay="0.2" className="type-body-lg fadeup mx-auto max-w-[calc(var(--cvw)*55)] max-lg:max-w-[90%] max-md:w-full max-md:max-w-full">
+          <p data-fadeup-delay="0.2" className="type-body-lg fadeup mx-auto max-w-[calc(var(--cvw)*60)] max-lg:max-w-[90%] max-md:w-full max-md:max-w-full">
           Anyone can add a fade. What&apos;s hard is everything around it. Get timing, restraint, or performance wrong, and the moment meant to impress becomes the reason the site feels worse. Most teams see that risk and drop their ambitions to play it safe. And your interface ends up looking like everyone else&apos;s. Vault is engineered around that discipline by default, not as an afterthought.
           </p>
         </div>
@@ -213,7 +213,7 @@ export default function ProblemFixes() {
                     <DrawCross
                       active={index <= activeIndex}
                       armed={armed}
-                      className="text-danger h-[60%] w-[60%]"
+                      className="h-[60%] w-[60%]"
                     />
                   </div>
                 </div>
@@ -241,7 +241,7 @@ export default function ProblemFixes() {
                   <DrawCheck
                     active={index <= activeIndex}
                     armed={armed}
-                    className="text-success h-full w-full"
+                    className="h-full w-full"
                   />
                 </div>
               </div>

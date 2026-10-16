@@ -158,7 +158,7 @@ function SeamReveal({
                     href="/effects"
                     className="rounded-full border border-black bg-black px-[1.6vw] py-[1.4vh] text-[0.85vw] uppercase tracking-widest text-white transition-colors duration-300 ease-out hover:bg-transparent hover:text-black max-lg:text-[1.4vw] max-md:px-[6vw] max-md:py-[1.6vh] max-md:text-[3vw]"
                   >
-                    Browse effects
+                    Browse All Effects
                   </Link>
                   <Link
                     href={articleHref}

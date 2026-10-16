@@ -69,8 +69,16 @@ void main() {
 }`;
 
 const FRAGMENT_SHADER = /* glsl */ `
+uniform float uTime;
 varying float vHot, vR, vA, vSolid;
 void main() {
+  // The visitor's own particle (aHot > 1.5): a solid square pixel in --primary that
+  // blinks, like the sign-in page's marker. Every other particle stays a soft dot.
+  if (vHot > 1.5) {
+    float blink = step(0., sin(uTime * 6.));
+    gl_FragColor = vec4(vec3(1., .373, 0.) * (.35 + .65 * blink), 1.);
+    return;
+  }
   float d = length(gl_PointCoord - .5);
   if (d > .5) discard;
   float s = smoothstep(.5, 0., d);

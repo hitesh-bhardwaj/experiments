@@ -117,7 +117,7 @@ export default function SiteNotFound({ pages = [] }) {
                     </ul>
                     <div className={`flex flex-wrap justify-center gap-[0.6vw] max-md:gap-[2vw] ${riseIn} [animation-delay:.16s]`}>
                         <Button text="Back to home" href="/" className={COMPACT_BTN} />
-                        <Button text="Browse effects" href="/effects" variant="outline" className={`bg-transparent! ${COMPACT_BTN}`} />
+                        <Button text="Browse All Effects" href="/effects" variant="outline" className={`bg-transparent! ${COMPACT_BTN}`} />
                     </div>
                     <p className={`text18 text-foreground/60 ${riseIn} [animation-delay:.24s]`}>
                         Or try{" "}

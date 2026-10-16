@@ -3,7 +3,7 @@
 import { useId, useRef, useState } from "react";
 import { buttonClassName, ButtonChrome } from "@/homepage/components/Button";
 import { useInteraction } from "@/homepage/components/InteractionProvider";
-import { getCrowd, markJoined, useCommunity } from "./community-store";
+import { markJoined, useCommunity } from "./community-store"; // + getCrowd when the launch below is back
 
 const WAITLIST_ROUTE = "/api/community/waitlist";
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
@@ -52,8 +52,9 @@ export default function WaitlistForm({ className = "" }) {
       setSending(false);
     }
 
-    const b = buttonRef.current?.getBoundingClientRect();
-    if (b) getCrowd()?.launch(b.left + b.width / 2, b.top + b.height / 2);
+    // Paused for now: fires the visitor's own blinking primary pixel into the crowd.
+    // const b = buttonRef.current?.getBoundingClientRect();
+    // if (b) getCrowd()?.launch(b.left + b.width / 2, b.top + b.height / 2);
     sound?.note?.(4);
     markJoined();
   };

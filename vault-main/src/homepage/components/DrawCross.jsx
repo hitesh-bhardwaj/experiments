@@ -7,7 +7,7 @@ function DrawCross({
   active,
   armed = false,
   className = "h-[60%] w-[60%]",
-  stroke = "currentColor",
+  stroke = "#FF0B0B",
   strokeWidth = 2.5,
   delay = 0,
   duration = 350,

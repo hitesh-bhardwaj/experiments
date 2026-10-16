@@ -176,13 +176,13 @@ export function TemplateCard({ template, priority = false, isWishlisted = false,
                 </span>
               )}
             </h3>
-            <p className={`flex items-center gap-2.5 ${T13} text-black/50`}>
+            <p className={`flex items-center gap-3.5 ${T13} text-black font-medium`}>
               {template.category}
               {template.viewCountPending ? (
                 <Skeleton className="h-[1em] w-10" />
               ) : (
                 views > 0 && (
-                  <span className="inline-flex items-center gap-1">
+                  <span className="inline-flex items-center gap-1 text-black/50">
                     <Eye className="size-3.5" aria-hidden="true" />
                     {formatViews(views)}
                   </span>

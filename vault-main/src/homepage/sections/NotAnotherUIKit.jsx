@@ -5,9 +5,10 @@ import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
 import { prefersReducedMotion } from '@/lib/motion'
 import { MEDIA } from '@/lib/breakpoints'
 import { FREE_LABEL } from '@/lib/library-counts'
+import LineReveal from '@/components/Animations/LineReveal'
 
 if (typeof window !== "undefined") {
-    gsap.registerPlugin(ScrollTrigger)
+  gsap.registerPlugin(ScrollTrigger)
 }
 
 const UI_CARDS = [
@@ -104,8 +105,11 @@ export default function NotAnotherUIKit() {
 
   return (
     <div id="uikit-section" className="relative z-20 h-[250vh] w-full text-foreground max-lg:h-fit max-lg:overflow-hidden max-lg:py-[4%] max-md:py-[12%]">
+      {/* <LineReveal as="h2" className="section-x type-h1 mx-auto w-[calc(var(--cvw)*60)] text-center max-md:w-full">
+        Not  <span className="gradient-text-animate gradient-text-single">Another UI Kit.</span> Not a Side Project.
+      </LineReveal> */}
       {/* Use Case Cards */}
-      <div className="section-x pointer-events-none sticky top-0 z-15 mt-[-60vh] h-screen w-full overflow-hidden mobile-scrollbar max-lg:pointer-events-auto max-lg:static max-lg:mt-[calc(var(--cvw)*12)] max-lg:h-fit max-lg:overflow-x-scroll max-lg:overflow-y-hidden max-lg:pb-[calc(var(--cvw)*4)]">
+      <div className="section-x pointer-events-none sticky top-0 z-15 mt-[-60vh] h-screen w-full overflow-hidden mobile-scrollbar max-lg:pointer-events-auto max-lg:static max-lg:mt-[calc(var(--cvw)*6)] max-lg:h-fit max-lg:overflow-x-scroll max-lg:overflow-y-hidden max-lg:pb-[calc(var(--cvw)*4)]">
         <div className="use-case-container flex h-full w-fit translate-x-[20%] items-end gap-[calc(var(--cvw)*3)] max-lg:translate-x-0 max-lg:gap-[calc(var(--cvw)*6)] max-md:gap-[calc(var(--cvw)*8)]">
           {UI_CARDS.map((card) => (
             <div
@@ -119,20 +123,20 @@ export default function NotAnotherUIKit() {
               <div className="w-full h-[calc(var(--cvw)*37)] border border-grey content-container overflow-hidden max-lg:h-[calc(var(--cvw)*55)] max-md:h-[calc(var(--cvw)*100)]">
                 <div className="p-[calc(var(--cvw)*2.5)] flex flex-col justify-between h-full max-md:p-[calc(var(--cvw)*5)]">
                   <div className="space-y-[calc(var(--cvw)*1.5)] max-md:space-y-[calc(var(--cvw)*4)]">
-                  {/* The icon's shape masks the same moving gradient the headings use */}
-                  {card.icon && (
-                    <span
-                      aria-hidden="true"
-                      className="gradient-text-animate block size-[calc(var(--cvw)*4.2)] [-webkit-background-clip:border-box]! [background-clip:border-box]! mask-contain mask-center mask-no-repeat max-lg:size-[calc(var(--cvw)*8)] max-md:size-[calc(var(--cvw)*18)]"
-                      style={{ maskImage: `url(${card.icon})`, WebkitMaskImage: `url(${card.icon})` }}
-                    />
-                  )}
-                  <h3 className="type-h2 max-md:w-[80%]">
-                    {card.title}
-                  </h3>
+                    {/* The icon's shape masks the same moving gradient the headings use */}
+                    {card.icon && (
+                      <span
+                        aria-hidden="true"
+                        className="gradient-text-animate block size-[calc(var(--cvw)*4.2)] [-webkit-background-clip:border-box]! [background-clip:border-box]! mask-contain mask-center mask-no-repeat max-lg:size-[calc(var(--cvw)*8)] max-md:size-[calc(var(--cvw)*18)]"
+                        style={{ maskImage: `url(${card.icon})`, WebkitMaskImage: `url(${card.icon})` }}
+                      />
+                    )}
+                    <h3 className="type-h2 max-md:w-[80%]">
+                      {card.title}
+                    </h3>
                   </div>
 
-                   <p className="type-body-lg">
+                  <p className="type-body-lg">
                     {card.text}
                   </p>
                 </div>

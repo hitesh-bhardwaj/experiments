@@ -300,7 +300,7 @@ export default function UsagePage() {
         {data.events.length === 0 ? (
           <div className="flex flex-col items-start gap-4">
             <p className="type-body text-black/60">Nothing yet. Effects you install - copied on the website, or with the CLI or MCP - show up here.</p>
-            <Button href="/effects" text="Browse Effects" />
+            <Button href="/effects" text="Browse All Effects" />
           </div>
         ) : events.length === 0 ? (
           <p className="type-body text-black/60">No effects match these filters.</p>

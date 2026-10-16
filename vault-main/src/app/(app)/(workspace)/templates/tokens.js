@@ -2,7 +2,7 @@
 
 /* ---------- text sizes (vw: desktop · tablet · mobile), same scale as the effects v4 listing ---------- */
 export const T11 = "text-[0.76vw] max-lg:text-[1.4vw] max-md:text-[2.8vw]";
-export const T12 = "text-[0.87vw] max-lg:text-[1.5vw] max-md:text-[3.2vw]";
+export const T12 = "text-[0.9vw] max-lg:text-[1.5vw] max-md:text-[3.2vw]";
 export const T13 = "text-[0.9vw] max-lg:text-[1.6vw] max-md:text-[3.3vw]";
 export const T14 = "text-[0.97vw] max-lg:text-[1.7vw] max-md:text-[3.6vw]";
 export const T15 = "text-[1.04vw] max-lg:text-[1.8vw] max-md:text-[3.8vw]";

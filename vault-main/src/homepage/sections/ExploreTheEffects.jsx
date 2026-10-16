@@ -165,7 +165,7 @@ export default function ExploreTheEffects() {
                 <span
                     ref={pillRef}
                     aria-hidden="true"
-                    className="absolute inset-y-1 left-0 bg-foreground transition-[transform,width] duration-[600ms] motion-reduce:transition-none"
+                    className="absolute inset-y-0.5 left-0 border border-white bg-white transition-[transform,width] duration-[600ms] motion-reduce:transition-none"
                     style={{ transitionTimingFunction: EASE }}
                 />
                 <span
@@ -222,7 +222,7 @@ export default function ExploreTheEffects() {
                                 <h3 className="type-h3">{item.title}</h3>
                                 <p className="type-body text-white/60">{item.text}</p>
                             </div>
-                            <LinkButton href={item.href} text="Explore" underline tilted={false} underlineClassName="mt-0" className="type-small text-foreground hover:text-primary transition-colors duration-300" />
+                            <LinkButton href={item.href} text="Explore" underline tilted={false} underlineClassName="mt-0" className="type-small text-white hover:text-primary transition-colors duration-300" />
                         </div>
                     </article>
                 ))}

@@ -145,7 +145,7 @@ const billingOptions = (currency) => [
     {
         id: "y",
         label: "Yearly",
-        save: `Save up to ${Math.max(getYearlySaving("pro", currency).percent, getYearlySaving("pro_plus", currency).percent)}%`,
+        save: `Save ${Math.max(getYearlySaving("pro", currency).percent, getYearlySaving("pro_plus", currency).percent)}%`,
     },
 ];
 
@@ -173,7 +173,7 @@ export default function PricingPlansHome({ currency: initialCurrency, checkout =
     const billRef = useRef(null);
     const pillRef = useRef(null);
     const { sound } = useInteraction();
-    const [period, setPeriod] = useState("y");
+    const [period, setPeriod] = useState("q");
     // Which way the card text rolls: up when going to yearly, down when going back
     const dir = period === "y" ? 1 : -1;
 

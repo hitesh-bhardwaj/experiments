@@ -107,7 +107,7 @@ Let’s build something worth remembering.
 <a
   className="inline-flex items-center gap-1 rounded-full bg-white px-6 py-3 text-[#1a1a1a] transition-transform hover:scale-105"
 >
-  Browse effects
+  Browse All Effects
   <ArrowRight className="h-4 w-4" />
 </a>
  </div>

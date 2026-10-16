@@ -461,9 +461,6 @@ export function EffectsListing({
         </div>
 
         <div data-v4-hero className="flex justify-between gap-[calc(var(--cvw)*3)] max-lg:flex-col max-lg:items-stretch max-lg:gap-[5vw]">
-          {/* Same entrances as the effect page: chars for the title, lines for the copy. */}
-          {/* Keyed by page: SplitText owns the heading's text nodes, so a new page gets a
-              fresh heading (and runs its entrance again) instead of a stale update. */}
           <HeadAnim key={scope || "all"} rotate={0} animateOnScroll={false}>
             <h1 className="type-display -mt-3 w-[58%] max-lg:w-full">
               {scope ? (
@@ -491,8 +488,8 @@ export function EffectsListing({
 
       {/* ---------- trending ---------- */}
       {trendingEffects.length > 0 && (
-        <section id="trending" data-v4-fade aria-labelledby="v4-trending" className="mx-auto w-full flex flex-col gap-[calc(var(--cvw)*2)] px-[calc(var(--cvw)*4.5)] pb-28 pt-4 max-lg:gap-8 max-lg:px-0 max-lg:pb-20">
-          <div className="flex items-end justify-between">
+        <section id="trending" data-v4-fade aria-labelledby="v4-trending" className="mx-auto w-full flex flex-col gap-[calc(var(--cvw)*2)] px-[calc(var(--cvw)*4.5)] pb-28 pt-10 max-lg:gap-8 max-lg:px-0 max-lg:pb-20">
+          <div className="flex items-end justify-between space-y-4">
             <h2 id="v4-trending" className={`${DISPLAY} max-md:px-[7vw]  max-lg:px-[5vw] text-[calc(var(--cvw)*2.2)] max-lg:text-[4vw] max-md:text-[7vw]`}>
               Trending this Week
             </h2>
@@ -723,7 +720,7 @@ export function EffectsListing({
                 </p>
               </div>
               <div className="relative flex h-fit flex-wrap gap-2 pt-5">
-                <Button text="See Plans" href="/pricing" />
+                <Button text="See Plans" href="/pricing#plans" />
               </div>
             </div>
           </section>

@@ -1,12 +1,10 @@
 "use client";
 
 import DocsContent from "@/components/DocsContent/DocsContent";
-import Heading from "@/components/DocsContent/Heading";
 import Heading2 from "@/components/DocsContent/Heading2";
 import Para from "@/components/DocsContent/Para";
 import DocsList, { DocsListItem } from "@/components/DocsContent/List";
 import DocsTable from "@/components/DocsContent/Table";
-import LinkButton from "@/components/WebsiteComps/LinkButton";
 
 export default function RefundPolicy() {
   return (
@@ -41,7 +39,7 @@ export default function RefundPolicy() {
         Because that access is instant and the content is source code that, once viewed or
         downloaded, cannot practically be &quot;returned,&quot; we do not offer refunds once
         access has been granted, including for change-of-mind cancellations, whether you
-        paid monthly or annually.
+        paid quarterly or annually.
       </Para>
 
       <Para>
@@ -100,7 +98,7 @@ export default function RefundPolicy() {
         </DocsListItem>
         <DocsListItem>
           does not refund the amount already paid for your current billing period, whether
-          monthly or annual, except as described in Section 2 above;
+          quarterly or annually, except as described in Section 2 above;
         </DocsListItem>
         <DocsListItem>
           does not remove your access to Vault Pro for the remainder of the period

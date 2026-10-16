@@ -431,7 +431,7 @@ function PreviewBar({ title: titleProp, tier: tierProp, backHref: backHrefProp, 
   function onKey(e) {
     if (e.target?.closest?.("input,textarea,select,[contenteditable='true']")) return;
     if (e.metaKey || e.ctrlKey || e.altKey) return;
-    const k = e.key.toLowerCase();
+    const k = e.key?.toLowerCase();
     if (k === "r") replay();
     else if (k === "p") setPanel(!panelOpenRef.current);
     else if (k === "m") setReducedMotion(!rmRef.current);

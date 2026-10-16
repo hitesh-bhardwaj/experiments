@@ -27,7 +27,7 @@ export default function page() {
           />
           <ArrowFillButton
             className="cursor-pointer border max-md:w-58 border-[#ff5f00] text-[#ff5f00]"
-            btnText={"Browse effects"}
+            btnText={"Browse All Effects"}
             hoverFillTextColor={"#ffffff"}
             arrowColor={"#ffffff"}
             hoverArrowColor={"#ffffff"}

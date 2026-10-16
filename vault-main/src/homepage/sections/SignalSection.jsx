@@ -132,21 +132,20 @@ export default function SignalSection() {
             </div>
             <div className="section-x site-container relative z-60 h-[80vh] py-[7%] max-lg:h-fit">
                 <div className="grid min-h-[62vh] grid-cols-2 items-start gap-12 max-lg:min-h-fit max-lg:grid-cols-1">
-                    <div className="flex flex-col gap-[calc(var(--cvw)*4)] max-md:gap-8">
+                    {/* <div className="flex flex-col gap-[calc(var(--cvw)*4)] max-md:gap-8">
                         <LineReveal as="h2" className="type-h1 max-w-[calc(var(--cvw)*30)] max-lg:max-w-full max-md:max-w-full">
                             Small Motion. <span className="gradient-text-animate gradient-text-single">Big Signal.</span>
                         </LineReveal>
                         <div className="fadeup flex flex-wrap gap-4 max-md:flex-col max-md:items-start" data-fadeup-delay="0.16">
-                            <Button href="/effects" text="Browse Effects" />
+                            <Button href="/effects" text="Browse All Effects" />
                             <Button variant="outline" href="/docs" text="Read the Docs" />
                         </div>
-                    </div>
+                    </div> */}
                     {/* The line centres on this empty column, beside the heading */}
-                    <div ref={anchorRef} className="min-h-[40vh] self-stretch max-lg:hidden" aria-hidden="true" />
+                    {/* <div ref={anchorRef} className="min-h-[40vh] self-stretch max-lg:hidden" aria-hidden="true" /> */}
                 </div>
             </div>
             {/* "Not another UI kit": the principle cards, part of this section */}
-            <NotAnotherUIKit />
         </section>
     );
 }

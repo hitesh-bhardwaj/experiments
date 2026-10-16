@@ -285,7 +285,7 @@ export default function Footer() {
         <div className="flex mt-[calc(var(--cvw)*3)] max-lg:mt-[5vw] max-md:mt-[calc(var(--cvw)*3)] pb-[calc(var(--cvw)*2)] mb-[calc(var(--cvw)*4.5)] max-lg:mb-[8vw] max-lg:gap-[3vw] max-md:gap-[calc(var(--cvw)*4)] max-md:mb-[calc(var(--cvw)*10)] relative gap-(--cvw) fadeup max-md:flex-col">
           <Button
             variant="outline"
-            text="Browse the Effects"
+            text="Browse All Effects"
             href="/effects"
             className="max-md:w-full"
           />
@@ -460,7 +460,7 @@ export default function Footer() {
                 className="flex flex-col gap-[calc(var(--cvw)*0.6)] max-md:gap-3"
               >
                 {/* One line, one rule underneath: email on the left, Subscribe on the right */}
-                <div className="flex items-center gap-[calc(var(--cvw)*2)] border-b border-foreground/30 transition-colors duration-300 focus-within:border-white/70 max-md:gap-4 w-[90%]">
+                <div className="flex items-center gap-[calc(var(--cvw)*2)] border-b border-foreground transition-colors duration-300 focus-within:border-white/70 max-md:gap-4 w-[90%]">
                   <Input
                     type="email"
                     value={email}

@@ -120,7 +120,7 @@ export default function SavedEffectsPage() {
         <div className={`${CARD} ${CARD_PAD} items-start gap-4`}>
           <p className="type-h3">Nothing saved yet.</p>
           <p className="type-body text-black/60">Tap the heart on any effect to keep it here.</p>
-          <Button href="/effects" text="Browse Effects" />
+          <Button href="/effects" text="Browse All Effects" />
         </div>
       ) : (
         <>
