@@ -165,7 +165,7 @@ export default function ExploreTheEffects() {
                 <span
                     ref={pillRef}
                     aria-hidden="true"
-                    className="absolute inset-y-0.5 left-0 border border-white bg-white transition-[transform,width] duration-[600ms] motion-reduce:transition-none"
+                    className="absolute inset-y-1 left-0 border border-white bg-white transition-[transform,width] duration-[600ms] motion-reduce:transition-none"
                     style={{ transitionTimingFunction: EASE }}
                 />
                 <span
