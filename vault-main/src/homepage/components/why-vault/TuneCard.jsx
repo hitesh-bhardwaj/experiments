@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, useCallback, useEffect, useRef, useState } from "react";
+import { Fragment, useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { prefersReducedMotion } from "@/lib/motion";
 
@@ -68,7 +68,28 @@ export default function TuneCard({ replayKey }) {
     const wordsRef = useRef([]);
     // Live values live in a ref, not state, so slider drags cause no renders
     const tune = useRef({ duration: 1.4, stagger: 0.06, ease: "expo.out" });
-    const [ease, setEase] = useState("expo.out"); // only drives aria-pressed
+    const [ease, setEase] = useState("expo.out"); // drives the pill and aria-pressed
+    const [leaving, setLeaving] = useState(null); // the easing just switched away from
+    const easeBarRef = useRef(null);
+    const pillRef = useRef(null);
+
+    useLayoutEffect(() => {
+        const bar = easeBarRef.current;
+        const pill = pillRef.current;
+        const active = bar?.querySelector('[aria-pressed="true"]');
+        if (!bar || !pill || !active) return;
+
+        const place = () => {
+            pill.style.width = `${active.offsetWidth}px`;
+            pill.style.transform = `translateX(${active.offsetLeft}px)`;
+        };
+
+        place();
+        const ro = new ResizeObserver(place);
+        ro.observe(bar);
+        ro.observe(active);
+        return () => ro.disconnect();
+    }, [ease]);
 
     const replay = useCallback(() => {
         const words = wordsRef.current.filter(Boolean);
@@ -117,15 +138,27 @@ export default function TuneCard({ replayKey }) {
                 />
                 <div className="font-medium!">
                     <span className="text-black/60 type-label">Easing</span>
-                    <div className="mt-2.5 flex flex-wrap gap-1">
+                    {/* Same glass bar and sliding pill as the Scroll / Cursor / Text tabs */}
+                    <div ref={easeBarRef} className="relative mt-2.5 flex w-fit max-w-full gap-0.5 bg-glass p-0.5 backdrop-blur-lg">
+                        <span
+                            ref={pillRef}
+                            aria-hidden="true"
+                            className="absolute inset-y-0.5 left-0 bg-foreground transition-[transform,width] duration-[600ms] ease-[cubic-bezier(.16,1,.3,1)]"
+                        />
                         {EASINGS.map(([name, value]) => (
                             <button
                                 key={value}
                                 type="button"
                                 aria-pressed={ease === value}
                                 data-sound-hover="off"
-                                onClick={() => { tune.current.ease = value; setEase(value); replay(); }}
-                                className={`h-7 px-2.5 type-small ring-1 ring-inset ring-black/10 transition-colors duration-[600ms] ${ease === value ? "bg-ink text-foreground" : ""}`}
+                                onClick={() => {
+                                    if (value === ease) return;
+                                    tune.current.ease = value;
+                                    setLeaving(ease);
+                                    setEase(value);
+                                    replay();
+                                }}
+                                className={`relative z-1 h-8 px-3.5 type-small transition-colors duration-[600ms] ease-[cubic-bezier(.16,1,.3,1)] ${ease === value ? "text-ink" : "text-foreground"} ${leaving === value && ease !== value ? "motion-safe:animate-[hx-tab-release_.9s_ease-out_both]" : ""}`}
                             >
                                 {name}
                             </button>

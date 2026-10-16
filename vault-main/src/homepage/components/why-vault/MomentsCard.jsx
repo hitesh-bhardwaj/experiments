@@ -72,11 +72,11 @@ export default function MomentsCard() {
                     </p>
                 )}
             </div>
-            <div ref={tabsRef} className="absolute top-6 left-1/2 z-10 flex -translate-x-1/2 gap-0.5 bg-light/90 p-0.5" role="tablist" aria-label="Effect type">
+            <div ref={tabsRef} className="absolute top-6 left-1/2 z-10 flex -translate-x-1/2 gap-0.5 bg-glass p-0.5 backdrop-blur-lg" role="tablist" aria-label="Effect type">
                 <span
                     ref={pillRef}
                     aria-hidden="true"
-                    className="absolute inset-y-0.5 left-0 bg-ink transition-[transform,width] duration-[600ms] ease-[cubic-bezier(.16,1,.3,1)]"
+                    className="absolute inset-y-0.5 left-0 bg-foreground transition-[transform,width] duration-[600ms] ease-[cubic-bezier(.16,1,.3,1)]"
                 />
                 {TABS.map((t) => (
                     <button
@@ -89,7 +89,7 @@ export default function MomentsCard() {
                             setLeaving(tab);
                             setTab(t.id);
                         }}
-                        className={`relative z-1 h-8 px-3.5 type-small transition-colors duration-[600ms] ease-[cubic-bezier(.16,1,.3,1)] ${tab === t.id ? "text-foreground" : "text-ink"} ${leaving === t.id && tab !== t.id ? "motion-safe:animate-[hx-tab-release_.9s_ease-out_both]" : ""}`}
+                        className={`relative z-1 h-8 px-3.5 type-small transition-colors duration-[600ms] ease-[cubic-bezier(.16,1,.3,1)] ${tab === t.id ? "text-ink" : "text-foreground"} ${leaving === t.id && tab !== t.id ? "motion-safe:animate-[hx-tab-release_.9s_ease-out_both]" : ""}`}
                     >
                         {t.label}
                     </button>
@@ -97,7 +97,7 @@ export default function MomentsCard() {
             </div>
             <Link
                 href={current.href}
-                className="absolute bottom-4 left-4 z-10 type-label text-white/70 underline-offset-4 transition-colors duration-700 ease-[cubic-bezier(.16,1,.3,1)] hover:text-foreground hover:underline focus-visible:text-foreground focus-visible:underline"
+                className="absolute bottom-4 left-4 z-10 type-label text-foreground after:absolute after:inset-x-0 after:-bottom-1 after:h-px after:origin-right after:scale-x-0 after:bg-current after:transition-transform after:duration-700 after:ease-[cubic-bezier(.16,1,.3,1)] hover:after:origin-left hover:after:scale-x-100 focus-visible:after:origin-left focus-visible:after:scale-x-100"
             >
                 {current.effect}
             </Link>

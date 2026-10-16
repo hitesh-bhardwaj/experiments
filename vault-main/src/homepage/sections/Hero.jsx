@@ -126,7 +126,9 @@ export default function Hero() {
                 type: "words",
                 mask: "words",
             });
-            const copy = SplitText.create(copyRef.current, { type: "lines" });
+            // nowrap: SplitText measures the lines first, then each line becomes its own block. A line
+            // that only just fit the 30cvw paragraph can come out a pixel wider and drop its last word.
+            const copy = SplitText.create(copyRef.current, { type: "lines", linesClass: "whitespace-nowrap" });
 
             headingRef.current
                 ?.querySelectorAll(".gradient-text-animate")
@@ -223,12 +225,12 @@ export default function Hero() {
             <div className="pointer-events-none relative z-10 mx-auto flex min-h-dvh w-full max-w-384 flex-col justify-end px-[calc(var(--cvw)*4.5)] pt-[calc(var(--cvw)*8)] max-lg:px-[calc(var(--cvw)*7)] max-md:px-5! pb-[calc(var(--cvw)*5)] max-lg:pt-32 max-lg:pb-[12vw] max-md:pt-32 max-md:pb-10">
                 <div className="flex items-end justify-between gap-[calc(var(--cvw)*3)] max-lg:flex-col max-lg:items-stretch max-lg:gap-[6vw] max-md:items-stretch max-md:gap-5">
                    
-                    <h1 ref={headingRef} className="relative min-w-0 flex-[1.5] type-display leading-[1.15] max-w-[calc(var(--cvw)*53)] max-lg:max-w-full max-md:max-w-full text-white">
-                        The Interaction Layer Your Website is <span className="gradient-text-animate">Missing</span><EasterEggDot className="pointer-events-auto" />
+                    <h1 ref={headingRef} className="relative min-w-0 flex-[1.5] type-display leading-[1.12] max-w-[calc(var(--cvw)*53)] max-lg:max-w-full max-md:max-w-full text-white">
+                        The Interaction Layer Your Website Is <span className="gradient-text-animate">Missing</span><EasterEggDot className="pointer-events-auto" />
                     </h1>
 
                     <div className="flex min-w-0 flex-[0.7] flex-col gap-[calc(var(--cvw)*2)] pb-[calc(var(--cvw)*0.6)] max-lg:pb-0 max-lg:gap-[3vw] max-md:pb-0 max-md:gap-5">
-                        <p ref={copyRef} style={INTRO_HIDDEN} className="type-body-lg text-white/70 max-w-[calc(var(--cvw)*30)] max-lg:max-w-full max-lg:w-[85%] max-lg:text-left max-md:max-w-full max-md:w-full max-md:text-left">
+                        <p ref={copyRef} style={INTRO_HIDDEN} className="type-body-lg text-foreground max-w-[calc(var(--cvw)*30)] max-lg:max-w-full max-lg:w-full max-lg:text-left max-md:max-w-full max-md:w-full max-md:text-left">
                             Source-first scroll systems, cursor effects, text reveals, page transitions, loaders, backgrounds, and WebGL scenes for React and Next.js. Installed as real files in your project, not a dependency you rent.
                         </p>
 

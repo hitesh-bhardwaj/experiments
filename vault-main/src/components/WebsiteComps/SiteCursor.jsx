@@ -6,9 +6,9 @@ import gsap from "gsap";
 import { prefersReducedMotion } from "@/lib/motion";
 import { MEDIA } from "@/lib/breakpoints";
 
-// Ball cursor after cyanstudio.com: an 80px ball shown at half scale as a grey ring that
+// Ball cursor after cyanstudio.com: an 80px ball shown at 0.3 scale as a grey ring that
 // trails the pointer. Links and buttons swell it into a faint grey disc, text fields hide it,
-// hold zones open it into a blurred disc with a [ bracketed ] caption, and on a page change an
+// pressing and holding in a hold zone opens it into a blurred disc with a [ bracketed ] caption, and on a page change an
 // arc spins around it until the next route renders.
 const LINK_SELECTOR = "a, button, [role=button], [role=tab], [role=radio], label, select, input";
 // Text entry only: the ball hides so the caret shows. Range sliders get the drag cursor below,
@@ -39,7 +39,7 @@ function surfaceTone(target) {
 // Cyan's chevron slide: 0.2s on easeOutCubic, from just outside the ring
 const CHEVRON = { duration: 0.2, ease: "power2.out" };
 const CHEVRON_OFFSET = 32;
-const REST = { scale: 0.5 };
+const REST = { scale: 0.3 };
 // The ring is an SVG stroke in the ball's 80px space: stroke widths render fractionally, so it
 // thins smoothly (CSS borders snap to whole pixels). Its outer edge stays on the ball's edge.
 const BALL = 80;
@@ -49,16 +49,15 @@ const FOLLOW_DURATION = 0.35;
 const SPIN_DURATION = 800; // ms
 // The ball settling into its state once the loader has gone, slower than a hover
 const SETTLE = { duration: 0.8, ease: "power3.inOut" };
-// Caption text rolls up to its next word (Click & Hold → Holding → Release)
+// Caption text rolls up to its next word (Holding → Release)
 const ROLL = { duration: 0.4, ease: "power3.inOut" };
 // Stop spinning if a click never turns into a route change (cancelled navigation).
 const LOADER_TIMEOUT = 8000;
 
 // Press-and-hold scenes (hero / footer ribbons, signal wave, community particles, pricing
-// stacks) mark their zone data-near while the pointer is close and announce the hold through
-// hx-* window events. The hero takes a hold anywhere, so its caption stays up across it.
+// stacks) announce the hold through hx-* window events. The caption only shows while the
+// pointer is pressed inside a zone; until then the cursor behaves normally.
 const HOLD_ZONES = "#hero-v3,#footer,[data-hold-zone]";
-const ALWAYS_HOLD_ZONE = "#hero-v3";
 const HOLD_SKIP = "a,button,input,textarea,select,label,[role=button],[role=tab],[role=radio],h1,h2,h3,p";
 const TEXT_IN_ZONE = "h1,h2,h3,h4,p,li,blockquote,figcaption,[data-cursor-text]";
 // Same 0.2s delay + 1.9s charge as the holds
@@ -121,9 +120,8 @@ export default function SiteCursor() {
     if (!zone || !p || target.closest(HOLD_SKIP) || overText(zone, p.x, p.y)) return null;
     if (zone.querySelector("[data-ribbons-shattered]") || zone.hasAttribute("data-ribbons-shattered")) return null;
     const { holding, ready } = holdRef.current;
-    const near = zone.matches(ALWAYS_HOLD_ZONE) || zone.hasAttribute("data-near") || zone.classList.contains("pt-hover");
-    if (!near && !holding && !ready) return null;
-    return ready ? "Release" : holding ? "Holding" : zone.dataset.cursorLabel || "Click & Hold";
+    if (!holding && !ready) return null;
+    return ready ? "Release" : "Holding";
   }, []);
 
   const show = useCallback((next, settle = false) => {
@@ -161,7 +159,7 @@ export default function SiteCursor() {
     // overwrite: a quick move between states must not let an older, longer tween finish last
     const ball = ballRef.current;
     const t = (duration) => ({ duration, overwrite: true, ...(settle && SETTLE) });
-    gsap.to(discRef.current, { opacity: next.kind === "link" ? 0.15 : 0, ...t(0.2) });
+    gsap.to(discRef.current, { opacity: next.kind === "link" ? 0.4 : 0, ...t(0.2) });
     gsap.to(captionRef.current, { opacity: next.kind === "caption" ? 1 : 0, ...t(0.3), ...(settle && { delay: 0.2 }) });
     gsap.to(ringRef.current, { ...ring(next.kind === "rest" ? RING_WIDTH : next.kind === "drag" ? 2 : 0), ...t(next.kind === "rest" ? 0.3 : 0.2) });
     const [left, right] = chevronsRef.current;
@@ -174,10 +172,10 @@ export default function SiteCursor() {
       gsap.to(left, { x: -CHEVRON_OFFSET, opacity: 0, ...CHEVRON, overwrite: true });
       gsap.to(right, { x: CHEVRON_OFFSET, opacity: 0, ...CHEVRON, overwrite: true });
     }
-    if (next.kind === "drag") gsap.to(ball, { scale: 1, opacity: 1, ...t(0.2) });
-    else if (next.kind === "link") gsap.to(ball, { scale: 1, opacity: 1, ...t(0.2) });
-    else if (next.kind === "caption") gsap.to(ball, { scale: 1.4, opacity: 1, ...t(0.3) });
-    else if (next.kind === "hidden") gsap.to(ball, { scale: 1, opacity: 0, ...t(0.2) });
+    if (next.kind === "drag") gsap.to(ball, { scale: 0.9, opacity: 1, ...t(0.2) });
+    else if (next.kind === "link") gsap.to(ball, { scale: 0.9, opacity: 1, ...t(0.2) });
+    else if (next.kind === "caption") gsap.to(ball, { scale: 1.2, opacity: 1, ...t(0.3) });
+    else if (next.kind === "hidden") gsap.to(ball, { scale: 0.9, opacity: 0, ...t(0.2) });
     else gsap.to(ball, { ...REST, opacity: 1, ...t(0.3) });
   }, []);
 
@@ -215,7 +213,6 @@ export default function SiteCursor() {
     gsap.set(ballRef.current, REST);
     gsap.set([discRef.current, captionRef.current, loaderRef.current, ...chevronsRef.current], { opacity: 0 });
     gsap.set(chargeRef.current, { scale: 0 });
-
     const xTo = gsap.quickTo(cursor, "x", { duration: FOLLOW_DURATION, ease: "power1.out" });
     const yTo = gsap.quickTo(cursor, "y", { duration: FOLLOW_DURATION, ease: "power1.out" });
     // Hover is resolved once per frame from the latest pointer target, so captions also follow
@@ -392,7 +389,7 @@ export default function SiteCursor() {
             </svg>
           ))}
         </div>
-        <div ref={discRef} className="absolute inset-0 rounded-full bg-light-grey transition-colors duration-300 group-data-[tone=light]/cursor:bg-ink" />
+        <div ref={discRef} className="absolute inset-0 rounded-full bg-black transition-colors duration-300 group-data-[tone=light]/cursor:bg-ink" />
         <div ref={captionRef} className="absolute inset-0 flex items-center justify-center overflow-hidden rounded-full bg-background/30 text-foreground backdrop-blur-lg">
           <div ref={chargeRef} className="absolute inset-0 rounded-full bg-primary" />
           {/* Brackets pinned to the sides so they hold still while the word between them rolls */}

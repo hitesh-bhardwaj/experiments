@@ -36,6 +36,8 @@
   /* Dim text: black/20 on light surfaces, white/20 on dark ones */
   --black-20: rgb(0 0 0 / 0.2);
   --white-20: rgb(255 255 255 / 0.2);
+  /* Frosted grey for controls floating over imagery (the Scroll / Cursor / Text tabs) */
+  --glass: #6e6e6e73;
   --announcement-h: 0px;
   --announcement-offset: var(--announcement-h);
 }
@@ -64,6 +66,7 @@ body {
   --color-success-strong: var(--success-strong);
   --color-danger-strong: var(--danger-strong);
   --color-black-20: var(--black-20);
+  --color-glass: var(--glass);
   --color-white-20: var(--white-20);
   /* The site's two faces: font-avenir (text) and font-aeonik (headings / display) */
   --font-avenir: var(--font-avenir);
@@ -637,9 +640,9 @@ input:-webkit-autofill:active {
 }
 
 @keyframes hx-tab-release {
-  0% { color: #F4F4F4; }
+  0% { color: #1D1D1D; }
   45% { color: #8a8a8a; }
-  100% { color: #1D1D1D; }
+  100% { color: #F4F4F4; }
 }
 
 /* Modals (tutorial video, ribbon unlock card): a soft scale + fade in and out */
@@ -993,7 +996,7 @@ html.lenis.lenis-stopped[data-v4-drawer-open] {
 @utility type-h3 {
   font-family: var(--font-aeonik), system-ui, sans-serif;
   font-weight: 400;
-  font-size: calc(var(--cvw) * 1.6);
+  font-size: calc(var(--cvw) * 1.7);
   line-height: 1.25;
   letter-spacing: -0.02em;
   @variant max-lg { font-size: 2.2vw; }
@@ -1001,7 +1004,7 @@ html.lenis.lenis-stopped[data-v4-drawer-open] {
 }
 @utility type-body-lg {
   font-family: var(--font-avenir), "Avenir Next", system-ui, sans-serif;
-  font-size: calc(var(--cvw) * 1.1);
+  font-size: calc(var(--cvw) * 1.15);
   line-height: 1.6;
   @variant max-lg { font-size: clamp(15px, 2.5vw, 18px); }
   @variant max-md { font-size: clamp(15px, 4.1vw, 17px); }

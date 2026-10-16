@@ -103,7 +103,7 @@ export default function TextFillPixel({
   containerClassName = '',
   id = 'text-fill-pixel-v3',
   start = '20% 80%',
-  end = '85% 45%',
+  end = '85% 85%',
   pixelSize = 3,
   stagger = 12,
   /** Soft dither ramp as a fraction of the glyph along `direction`. */
@@ -459,6 +459,7 @@ export default function TextFillPixel({
         trigger: sectionRef.current,
         start,
         end,
+        // markers: true,
         onUpdate: (self) => {
           progress = self.progress;
           schedule();

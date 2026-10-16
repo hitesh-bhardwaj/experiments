@@ -160,18 +160,18 @@ export default function ExploreTheEffects() {
                 aria-label="Effect categories"
                 data-sound-hover="off"
                 data-fadeup-delay="0.1"
-                className="fadeup relative inline-flex max-w-full gap-0.5 self-center border border-white/20 bg-black/30 p-0.5 [scrollbar-width:none] max-md:overflow-x-auto [&::-webkit-scrollbar]:hidden"
+                className="fadeup relative inline-flex max-w-full gap-0.5 self-center bg-glass p-1 backdrop-blur-lg [scrollbar-width:none] max-md:overflow-x-auto [&::-webkit-scrollbar]:hidden"
             >
                 <span
                     ref={pillRef}
                     aria-hidden="true"
-                    className="absolute inset-y-0.5 left-0 border border-primary bg-primary transition-[transform,width] duration-[600ms] motion-reduce:transition-none"
+                    className="absolute inset-y-1 left-0 bg-foreground transition-[transform,width] duration-[600ms] motion-reduce:transition-none"
                     style={{ transitionTimingFunction: EASE }}
                 />
                 <span
                     ref={inkRef}
                     aria-hidden="true"
-                    className="pointer-events-none absolute top-0 left-0 z-2 flex h-full w-max gap-0.5 p-0.5 transition-[clip-path] duration-600 motion-reduce:transition-none"
+                    className="pointer-events-none absolute top-0 left-0 z-2 flex h-full w-max gap-0.5 p-1 transition-[clip-path] duration-600 motion-reduce:transition-none"
                     style={{ transitionTimingFunction: EASE }}
                 >
                     {CATEGORIES.map((category) => (

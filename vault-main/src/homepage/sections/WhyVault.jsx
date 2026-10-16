@@ -12,11 +12,13 @@ import CodeCard from "../components/why-vault/CodeCard";
 import MomentsCard from "../components/why-vault/MomentsCard";
 import TuneCard from "../components/why-vault/TuneCard";
 import { TOTAL_LABEL, FREE_EFFECTS } from "@/lib/library-counts";
+import { prefersReducedMotion } from "@/lib/motion";
+import { MEDIA } from "@/lib/breakpoints";
 
 const WHY_VAULT_ITEMS = [
     {
         id: "moments",
-        nav: `${TOTAL_LABEL} components / ${FREE_EFFECTS} free`,
+        nav: `${TOTAL_LABEL} components`,
         title: "Every moment, already built.",
         body: "Scroll systems, cursor presence, text reveals, transitions, loaders and WebGL scenes. Preview exactly how each one behaves before it touches your project.",
     },
@@ -60,6 +62,31 @@ export default function WhyVault() {
                     setActive(index);
                     // Counts activations so the tune card can replay each time
                     setActivations((counts) => counts.map((n, i) => (i === index ? n + 1 : n)));
+                },
+            });
+        });
+    }, { scope: rootRef });
+
+    // Desktop only: scrolling between the cards settles on the nearest one, at the same offset
+    // the nav buttons scroll to. Tablet and mobile stack the cards, so they scroll freely.
+    useGSAP(() => {
+        const mm = gsap.matchMedia();
+        mm.add(`(not ${MEDIA.tablet})`, () => {
+            if (prefersReducedMotion()) return;
+            const panels = [...rootRef.current.querySelectorAll("[data-wv-panel]")];
+            const tops = () => panels.map((panel) => window.scrollY + panel.getBoundingClientRect().top - CARD_TOP_GAP);
+            ScrollTrigger.create({
+                start: () => tops()[0],
+                end: () => tops()[panels.length - 1],
+                invalidateOnRefresh: true,
+                snap: {
+                    snapTo: (progress, self) => {
+                        const points = tops().map((top) => (top - self.start) / (self.end - self.start));
+                        return points.reduce((nearest, p) => (Math.abs(p - progress) < Math.abs(nearest - progress) ? p : nearest));
+                    },
+                    duration: { min: 0.3, max: 0.9 },
+                    delay: 0.03,
+                    ease: "power2.inOut",
                 },
             });
         });
