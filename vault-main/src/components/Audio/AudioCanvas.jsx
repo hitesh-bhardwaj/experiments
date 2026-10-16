@@ -101,7 +101,7 @@ export default function AudioCanvas({ isOn = false, onToggle, onHover, size = 44
             aria-pressed={isOn}
             aria-label={isOn ? "Turn sound off" : "Turn sound on"}
             title={isOn ? "Sound on" : "Sound off"}
-            className={`relative flex shrink-0 cursor-pointer items-center justify-center overflow-hidden bg-white/10 p-0 backdrop-blur-lg ${className}`}
+            className={`relative flex shrink-0 cursor-pointer items-center justify-center overflow-hidden border border-foreground/20 bg-white/10 p-0 backdrop-blur-lg ${className}`}
             // fit: the height comes from the row (min `size`); the canvas is taken out of
             // flow so it can't hold the button at an old, larger height.
             style={fit ? { width: drawSize, minHeight: size } : { width: size, height: size }}

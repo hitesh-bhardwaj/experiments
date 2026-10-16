@@ -206,6 +206,8 @@ function PreviewBar({ title: titleProp, tier: tierProp, backHref: backHrefProp, 
   // PreviewBar only renders in the browser (DemoHeader returns null on the server).
   const [osReducedMotion] = useState(() => prefersReducedMotion());
   const [panelOpen, setPanelOpen] = useState(startOpen && hasProps);
+  // Stays true while the close animation plays, so the panel isn't hidden mid-tween
+  const [panelShown, setPanelShown] = useState(startOpen && hasProps);
   const [keysOpen, setKeysOpen] = useState(false);
   const [away, setAway] = useState(false);
   // roll: switching device sizes rolls the label; plain resizes just update it.
@@ -351,6 +353,7 @@ function PreviewBar({ title: titleProp, tier: tierProp, backHref: backHrefProp, 
   function setPanel(v) {
     if (!hasProps) return;
     panelOpenRef.current = v;
+    if (v) setPanelShown(true);
     setPanelOpen(v);
   }
 
@@ -600,15 +603,28 @@ function PreviewBar({ title: titleProp, tier: tierProp, backHref: backHrefProp, 
     { dependencies: [away], scope: rootRef },
   );
 
-  // Props panel slides in each time it opens.
+  // Props panel slides in each time it opens, and scales down into its top-right corner as it closes.
   useGSAP(
     () => {
-      if (!panelOpen || !panelRef.current) return;
-      gsap.fromTo(
-        panelRef.current,
-        { autoAlpha: 0, x: 28, scale: 0.985 },
-        { autoAlpha: 1, x: 0, scale: 1, duration: 1, ease: EASE, overwrite: true },
-      );
+      if (!panelRef.current) return;
+      if (panelOpen) {
+        gsap.fromTo(
+          panelRef.current,
+          { autoAlpha: 0, x: 28, scale: 0.985 },
+          { autoAlpha: 1, x: 0, scale: 1, duration: 1, ease: EASE, overwrite: true },
+        );
+      } else if (panelShown) {
+        gsap.to(panelRef.current, {
+          autoAlpha: 0,
+          scale: 0.8,
+          duration: 0.3,
+          ease: "power2.inOut",
+          overwrite: true,
+          onComplete: () => {
+            if (!panelOpenRef.current) setPanelShown(false);
+          },
+        });
+      }
     },
     { dependencies: [panelOpen], scope: rootRef },
   );
@@ -880,11 +896,12 @@ function PreviewBar({ title: titleProp, tier: tierProp, backHref: backHrefProp, 
         <aside
           ref={panelRef}
           aria-label="Props"
-          hidden={!panelOpen}
+          hidden={!panelOpen && !panelShown}
+          inert={!panelOpen}
           data-lenis-prevent
           data-lenis-prevent-wheel
           data-lenis-prevent-touch
-          className="fixed top-19.5 right-10 z-9021 max-lg:top-17.5 max-lg:right-6 max-md:top-16 flex h-fit max-h-[min(600px,calc(100vh-94px))] w-[20vw] max-lg:w-[min(344px,calc(100vw-32px))] flex-col overflow-hidden bg-[#111] shadow-[inset_0_0_0_1px_rgba(244,244,244,.08),0_30px_80px_-20px_#000]"
+          className="fixed origin-top-right top-19.5 right-10 z-9021 max-lg:top-17.5 max-lg:right-6 max-md:top-16 flex h-fit max-h-[min(600px,calc(100vh-94px))] w-[20vw] max-lg:w-[min(344px,calc(100vw-32px))] flex-col overflow-hidden bg-[#111] shadow-[inset_0_0_0_1px_rgba(244,244,244,.08),0_30px_80px_-20px_#000]"
         >
           <div
             data-tip="Drag to move"

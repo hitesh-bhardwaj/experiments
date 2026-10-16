@@ -748,5 +748,10 @@
     "name": "@hyperiux/strip-slider",
     "version": "1.0.0",
     "tarball": "registry/dist/hyperiux-strip-slider-1.0.0.tgz"
+  },
+  {
+    "name": "@hyperiux/liquid-shatter",
+    "version": "1.0.0",
+    "tarball": "registry/dist/hyperiux-liquid-shatter-1.0.0.tgz"
   }
 ]
