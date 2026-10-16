@@ -19,7 +19,8 @@ export default function DemoContent({ registry }: { registry: any }) {
               body: "Hero Banner Animated moves light with your cursor in real time and zooms the scene on click. Since that tracking motion is continuous, reduced motion can't be applied here.",
             }}
           />
-          {effect}
+          {/* Fixed/overlay layers of the desktop copy would show over the device preview; the iframe renders its own. */}
+          <div className="[html[data-pc-dev]_&]:hidden">{effect}</div>
         </>
       )}
     </RegistryRemixerDemo>

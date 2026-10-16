@@ -25,7 +25,7 @@ export default function DemoContent({ registry }: { registry: RegistryLike }) {
       render={(values) => <SideNavbar {...values} navLinks={DEMO_NAV_LINKS} />}
       copyCodeOptions={{ propsVariableName: "sideNavbarProps" }}
     >
-      {({ effect }) => <div className="relative h-screen w-screen bg-white"><DemoHeader />{effect}</div>}
+      {({ effect }) => <div className="relative h-screen w-screen bg-white"><DemoHeader />{/* The navbar's header and menu are fixed and would show over the device preview; the iframe renders its own copy. */}<div className="[html[data-pc-dev]_&]:hidden">{effect}</div></div>}
     </RegistryRemixerDemo>
   );
 }

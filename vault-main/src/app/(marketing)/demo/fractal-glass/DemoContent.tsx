@@ -20,10 +20,10 @@ export default function DemoContent({ registry }: { registry: any }) {
             }}
           />
           {effect}
-          <div className="absolute bottom-8 left-1/2 w-fit -translate-x-1/2 text-center max-md:hidden">
+          <div className="absolute bottom-8 left-1/2 w-fit -translate-x-1/2 text-center max-lg:hidden">
             Move the cursor left and right to see the fractal effect
           </div>
-          <div className="absolute bottom-[85%] left-1/2 hidden w-fit -translate-x-1/2 text-center text-lg max-md:block max-sm:text-sm">
+          <div className="absolute bottom-[85%] left-1/2 hidden w-fit -translate-x-1/2 text-center text-lg max-lg:block max-md:text-sm">
             Drag left and right to see the fractal effect
           </div>
         </main>
