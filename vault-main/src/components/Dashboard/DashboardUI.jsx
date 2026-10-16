@@ -29,10 +29,10 @@ export function SourceChip({ source }) {
 // The FAQ's "View More" link (underline, rolling label) with a sideways arrow, no shimmer:
 // "All usage", "Your templates". `tone`: "light" (dark text on the white cards), "dark"
 // (white text on the dark plan card) or "accent" (orange, inline in a sentence - no
-// arrow there).
+// arrow there). `arrow={false}` drops the arrow, keeping the underline animation.
 const LINK_TONES = { light: "text-ink", dark: "text-foreground", accent: "text-primary" };
 
-export function CardLink({ href, children, tone = "light", onClick, className = "" }) {
+export function CardLink({ href, children, tone = "light", onClick, arrow = true, className = "" }) {
   const inline = tone === "accent";
   return (
     <LinkButton
@@ -40,7 +40,7 @@ export function CardLink({ href, children, tone = "light", onClick, className = 
       text={children}
       onClick={onClick}
       tilted={false}
-      showArrow={!inline}
+      showArrow={!inline && arrow}
       arrowRight
       underlineClassName="mt-0.5"
       colorClassName={LINK_TONES[tone]}

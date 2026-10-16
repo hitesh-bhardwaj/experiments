@@ -2,12 +2,15 @@
 
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import Image from "next/image";
-import { Eye, EyeOff, LoaderCircle, Trash2, Upload, User, X } from "lucide-react";
+import { LoaderCircle, Trash2, Upload, User, X } from "lucide-react";
+import { PasswordEye } from "@/components/ui/PasswordEye";
 import { createPortal } from "react-dom";
 import { useClerk, useUser } from "@clerk/nextjs";
 import { useLenis } from "lenis/react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
 import { useDashboard } from "@/components/Dashboard/DashboardContext";
-import { ACTION_LINE, ACTION_PRIMARY, CARD, CARD_PAD, FIELD, FIELD_LABEL, SubmitButton, Toggle } from "@/components/Dashboard/DashboardUI";
+import { ACTION_LINE, ACTION_PRIMARY, CARD, CARD_PAD, CardLink, FIELD, FIELD_LABEL, SubmitButton, Toggle } from "@/components/Dashboard/DashboardUI";
 import { Bar, ButtonBar, SkeletonCard } from "@/components/Dashboard/DashboardSkeletons";
 import { getDashboardPreview, samplePreviewUser } from "@/lib/dev/dashboardPreview";
 
@@ -149,6 +152,30 @@ export default function SettingsPage() {
     }
   }
   const lenis = useLenis();
+
+  // The section list follows the page: the current section's link is orange. A ScrollTrigger
+  // over the whole page picks the last section whose top has passed a line 40% down the
+  // screen. Near the end of the page the line slides down to the bottom edge, so the last
+  // sections - which can't scroll that high - still each take their turn.
+  const [active, setActive] = useState("profile");
+  const clickLockRef = useRef(false);
+  const sectionsReady = Boolean(isLoaded && user);
+  useEffect(() => {
+    if (!sectionsReady) return undefined;
+    gsap.registerPlugin(ScrollTrigger);
+    const pick = (self) => {
+      if (clickLockRef.current) return;
+      const sections = SECTIONS.map(([id]) => document.getElementById(id)).filter(Boolean);
+      if (!sections.length) return;
+      const runway = window.innerHeight * 0.6;
+      const left = Math.max(0, self.end - self.scroll());
+      const line = window.innerHeight * (0.4 + 0.6 * (1 - Math.min(1, left / runway)));
+      const current = sections.filter((section) => section.getBoundingClientRect().top <= line).pop() || sections[0];
+      setActive(current.id);
+    };
+    const trigger = ScrollTrigger.create({ start: 0, end: "max", onUpdate: pick, onRefresh: pick });
+    return () => trigger.kill();
+  }, [sectionsReady]);
   const fileInputRef = useRef(null);
 
   const [savingProfile, setSavingProfile] = useState(false);
@@ -409,8 +436,18 @@ export default function SettingsPage() {
     event.preventDefault();
     const top = section.getBoundingClientRect().top + window.scrollY - (parseFloat(getComputedStyle(section).scrollMarginTop) || 0);
     window.history.pushState(null, "", `#${id}`);
-    if (lenis) lenis.scrollTo(top, { duration: 1.15, easing: (t) => 1 - Math.pow(1 - t, 3), force: true });
-    else window.scrollTo({ top, behavior: "smooth" });
+    // The clicked link lights up at once and stays lit while the page glides past the
+    // sections in between
+    setActive(id);
+    clickLockRef.current = true;
+    const release = () => {
+      clickLockRef.current = false;
+    };
+    if (lenis) lenis.scrollTo(top, { duration: 1.15, easing: (t) => 1 - Math.pow(1 - t, 3), force: true, onComplete: release });
+    else {
+      window.scrollTo({ top, behavior: "smooth" });
+      setTimeout(release, 1200);
+    }
   }
 
   return (
@@ -418,7 +455,13 @@ export default function SettingsPage() {
       {/* sections, pinned beside them on desktop */}
       <nav aria-label="Settings sections" className="sticky top-28 flex w-[16%] shrink-0 flex-col gap-3 max-lg:static max-lg:w-full max-lg:flex-row max-lg:flex-wrap">
         {SECTIONS.map(([id, label]) => (
-          <a key={id} href={`#${id}`} onClick={glideTo} className="type-label w-fit text-black/60 transition-colors duration-300 hover:text-primary">
+          <a
+            key={id}
+            href={`#${id}`}
+            onClick={glideTo}
+            aria-current={active === id ? "true" : undefined}
+            className={`type-label w-fit transition-colors duration-300 hover:text-primary ${active === id ? "text-primary" : "text-black/60"}`}
+          >
             {label}
           </a>
         ))}
@@ -448,7 +491,7 @@ export default function SettingsPage() {
               <div className="flex flex-wrap items-center gap-3">
                 <button type="button" onClick={() => fileInputRef.current?.click()} disabled={savingImage || deletingImage} className={ACTION_PRIMARY}>
                   {savingImage ? <LoaderCircle className="animate-spin" aria-hidden="true" /> : <Upload aria-hidden="true" />}
-                  {savingImage ? "Uploading…" : "Upload Photo"}
+                  {savingImage ? "Uploading…" : user.hasImage ? "Update Photo" : "Upload Photo"}
                 </button>
                 {user.hasImage && (
                   <button type="button" onClick={handleImageDelete} disabled={deletingImage || savingImage} className={ACTION_LINE}>
@@ -506,9 +549,9 @@ export default function SettingsPage() {
               )}
               <div className="flex flex-wrap items-center gap-[calc(var(--cvw)*1.2)] max-lg:gap-4">
                 <SubmitButton label="Update Password" busy={savingPw} />
-                <button type="button" onClick={handleForgotPassword} disabled={sendingOtp} className="type-label cursor-pointer text-black/60 underline underline-offset-3 transition-colors duration-300 hover:text-primary disabled:opacity-60">
+                <CardLink href="#" arrow={false} onClick={() => !sendingOtp && handleForgotPassword()}>
                   {sendingOtp ? "Sending a code…" : "Forgot it?"}
-                </button>
+                </CardLink>
               </div>
             </form>
           ) : (
@@ -576,13 +619,10 @@ export default function SettingsPage() {
             <h2 id="privacy-h" className="type-h3">
               Privacy &amp; data
             </h2>
-            <p className="type-small text-black/60">
-              Under India’s DPDP Act you can access, correct or erase your data. See the{" "}
-              <a href="/legal/privacy-policy" className="text-ink underline underline-offset-3 transition-colors duration-300 hover:text-primary">
-                Privacy Policy
-              </a>
-              .
-            </p>
+            <p className="type-small text-black/60">Under India’s DPDP Act you can access, correct or erase your data.</p>
+            <CardLink href="/legal/privacy-policy" arrow={false}>
+              Privacy Policy
+            </CardLink>
           </div>
           <ul className="flex flex-col">
             <li className="flex items-center justify-between gap-4 py-[calc(var(--cvw)*0.9)] max-md:flex-col max-md:items-start max-lg:py-3">
@@ -686,8 +726,9 @@ function PasswordField({ label, shown, onToggle, ...input }) {
       {label}
       <span className="relative block">
         <input type={shown ? "text" : "password"} className={`${FIELD} pr-12`} {...input} />
-        <button type="button" onClick={onToggle} aria-label={shown ? "Hide password" : "Show password"} className="absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer text-black/40 transition-colors duration-300 hover:text-ink">
-          {shown ? <EyeOff className="size-4" aria-hidden="true" /> : <Eye className="size-4" aria-hidden="true" />}
+        <button type="button" onClick={onToggle} aria-label={shown ? "Hide password" : "Show password"} aria-pressed={shown} className="absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer text-black/40 transition-colors duration-300 hover:text-ink aria-pressed:text-ink">
+          {/* the sign-in page's eye: struck while hidden, open while shown, animated between */}
+          <PasswordEye revealed={shown} className="size-4.5" />
         </button>
       </span>
     </label>

@@ -213,6 +213,17 @@ Rules: STYLE_GUIDE.md type scale, square corners, tokens; nav stays as our tab r
 | Settings section links glide through Lenis (1.15s ease-out, stop at the section's scroll-margin) instead of jumping | done | settings `glideTo`, same as the docs' in-page links |
 | Token: "Generate token" generates straight away; only "Regenerate token" (token on screen) opens the confirm | done | `CliTokenManager` |
 
+## Iteration 3.9 – calendar limit, settings links + scroll spy, segment check (2026-10-16)
+| Step | Status | Files / notes |
+|---|---|---|
+| Calendar: days after today disabled (dimmed, no hover range), next-month arrow stops at the current month | done | `DateRangeCalendarPicker` (every dashboard date filter) |
+| Settings: "Update Photo" when a photo exists, else "Upload Photo" | done | |
+| Settings: "Forgot it?" and "Privacy Policy" are CardLinks (LinkButton with arrow) | done | Privacy Policy on its own line under the DPDP sentence |
+| Settings section list: clicked link turns orange at once (held through the glide); ScrollTrigger lights the section passing 40% of the screen, the line sliding to the bottom near the page end so every section gets its turn | done | order checked while scrolling: Profile → Password → Email → Privacy & data |
+| Settings password eyes: the sign-in page's eye (struck = hidden, open = shown, turn-and-scale swap with overshoot), shared | done | new `components/ui/PasswordEye.jsx`, used by `vault-door/StepField` + settings `PasswordField` |
+| "Forgot it?" and "Privacy Policy": no arrow (underline animation kept) | done | `CardLink` `arrow={false}` |
+| Product Updates segment checked live: create in segment → off (unsubscribed, still in segment) → on; test contact deleted afterwards | done | |
+
 ## Iteration 4+ (next)
 - Admin pass: Users / Invoicing / user detail onto useDashboardData + shaped skeletons
 - Test Delete account end to end with a throwaway account on a deployed preview (Clerk can't sign in on localhost)

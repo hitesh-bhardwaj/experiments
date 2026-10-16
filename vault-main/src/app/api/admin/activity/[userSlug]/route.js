@@ -144,6 +144,8 @@ export async function GET(request, { params }) {
           .from("template_purchases")
           .select("id,template_slug,razorpay_payment_id,amount,currency,status,invoice_url,created_at")
           .eq("clerk_user_id", userId)
+          // Real purchases only, like the invoices above
+          .eq("is_test", false)
           .order("created_at", { ascending: false })
       ),
 

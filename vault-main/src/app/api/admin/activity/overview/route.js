@@ -6,6 +6,7 @@ import { getAllSanityEffectEntries, buildEffectsFromSanity } from "@/lib/sanity"
 import { buildDailyBucketsForRange, fillDailyBuckets, resolveDateBounds } from "@/lib/admin-activity";
 import { TEMPLATES } from "@/lib/mock-templates";
 import { getTemplateViewCounts } from "@/lib/template-views";
+import { currentPlanOf, fetchAllRows, getAudience, parseAudience } from "@/lib/admin-data";
 
 const TOP_TEMPLATES_LIMIT = 10;
 
@@ -41,105 +42,71 @@ export async function GET(request) {
       to,
     });
 
-    function scoped(query, column = "created_at") {
-      let q = query;
-      if (startISO) q = q.gte(column, startISO);
-      if (endISO) q = q.lt(column, endISO);
-      return q;
+    const audience = await getAudience(parseAudience(searchParams));
+    const mine = (rows) => rows.filter((row) => audience.includes(row.clerk_user_id));
+
+    // Every row in the window (not the first 1000), for this audience
+    function scoped(table, columns, column = "created_at", extra = (q) => q) {
+      return fetchAllRows(() => {
+        let q = extra(supabase.from(table).select(columns));
+        if (startISO) q = q.gte(column, startISO);
+        if (endISO) q = q.lt(column, endISO);
+        return q;
+      }).then(mine);
     }
 
     const [
-      { count: totalUsers, error: totalUsersError },
-      { count: proUsers, error: proUsersError },
-      // Plan distribution is "what does the whole site look like right now,"
-      // not "what does the site look like among people who joined in this
-      // window" - deliberately unscoped, so picking "Last 7 days" doesn't
-      // quietly turn this into a donut of one week's signups.
-      { count: siteTotalUsers, error: siteTotalUsersError },
-      { count: siteProUsers, error: siteProUsersError },
-      { data: signupRows, error: signupError },
-      { data: copyRows, error: copyError },
-      { data: allCopyRows, error: allCopyError },
-      { data: allInstallRows, error: allInstallError },
-      { data: allSavedRows, error: allSavedError },
-      { data: savedTemplateRows, error: savedTemplateError },
-      { data: revenueRows, error: revenueError },
-      { data: templatePurchaseRows, error: templatePurchaseError },
+      subscriptionRows,
+      unlockRows,
+      savedRows,
+      savedTemplateRows,
+      revenueRows,
+      templatePurchaseRows,
       sanityEntries,
       templateViewCounts,
     ] = await Promise.all([
-      scoped(supabase.from("subscriptions").select("clerk_user_id", { count: "exact", head: true })),
-      scoped(
-        supabase
-          .from("subscriptions")
-          .select("clerk_user_id", { count: "exact", head: true })
-          .eq("plan", "pro")
+      fetchAllRows(() => supabase.from("subscriptions").select("clerk_user_id, plan, tier, status, current_period_end")),
+      // install_unlocks is the shared ledger across web/CLI/MCP. "Copies" means
+      // the website's copy button (source='web'), as everywhere else on the
+      // admin pages; "installs" covers all three.
+      scoped("install_unlocks", "clerk_user_id, effect_slug, source, usage_date", "usage_date"),
+      scoped("wishlisted_effects", "clerk_user_id, effect_slug"),
+      scoped("wishlisted_templates", "clerk_user_id, template_slug"),
+      // Real payments only: test-mode invoices are left out
+      scoped("invoices", "clerk_user_id, amount, currency, created_at", "created_at", (q) =>
+        q.eq("status", "paid").eq("is_test", false)
       ),
-      supabase.from("subscriptions").select("clerk_user_id", { count: "exact", head: true }),
-      supabase
-        .from("subscriptions")
-        .select("clerk_user_id", { count: "exact", head: true })
-        .eq("plan", "pro"),
-      scoped(supabase.from("subscriptions").select("created_at")),
-      // install_unlocks supersedes copy_usage_effects (Installation-SyncUp.md
-      // Stage 1.5) and is the shared ledger across web/CLI/MCP - but "copies"
-      // specifically means the website's copy button, same as everywhere
-      // else this word is used (Top saved/copied effects, the per-user
-      // detail page), so it's scoped to source='web' here rather than
-      // counting CLI/MCP installs under a "copies" label. "Installs"
-      // elsewhere on this page (AggregatePanels, via /api/admin/installs)
-      // stays unscoped - that one's deliberately meant to cover all three.
-      scoped(supabase.from("install_unlocks").select("usage_date").eq("source", "web"), "usage_date"),
-      scoped(supabase.from("install_unlocks").select("effect_slug").eq("source", "web"), "usage_date"),
-      // Unscoped by source, unlike allCopyRows above - "Top installed
-      // effects" means every surface (web/CLI/MCP), same as everywhere else
-      // "installs" is used on this page.
-      scoped(supabase.from("install_unlocks").select("effect_slug"), "usage_date"),
-      scoped(supabase.from("wishlisted_effects").select("effect_slug")),
-      scoped(supabase.from("wishlisted_templates").select("template_slug")),
-      // is_test excluded - those are admin-generated sample bills, not real revenue.
-      scoped(
-        supabase
-          .from("invoices")
-          .select("amount, currency, created_at")
-          .eq("status", "paid")
-          .eq("is_test", false)
+      scoped("template_purchases", "clerk_user_id, created_at, template_slug, status, source", "created_at", (q) =>
+        q.eq("is_test", false)
       ),
-      // Counted, not summed by amount: template_purchases mixes currencies
-      // (USD and INR orders both land here - see create-order/route.js),
-      // so summing raw amounts across rows would add unlike units. A
-      // purchase count avoids that without needing currency conversion.
-      // Sales per template too (the Templates table): paid only, and not credit
-      // redemptions, which move no money
-      scoped(supabase.from("template_purchases").select("created_at, template_slug, status, source")),
       getAllSanityEffectEntries(),
-      // Scoped to the same window as everything else on this page (view
-      // rows carry their own created_at) - unlike /templates' own all-time
-      // card counts, which call this with no range at all.
+      // Views in the same window and audience
       getTemplateViewCounts(
         TEMPLATES.map((template) => template.slug),
-        { startISO, endISO }
+        { startISO, endISO, includesIdentity: audience.includesIdentity }
       ),
     ]);
 
-    const firstError =
-      totalUsersError ||
-      proUsersError ||
-      siteTotalUsersError ||
-      siteProUsersError ||
-      signupError ||
-      copyError ||
-      allCopyError ||
-      allInstallError ||
-      allSavedError ||
-      savedTemplateError ||
-      revenueError ||
-      templatePurchaseError;
+    const copyRows = unlockRows.filter((row) => row.source === "web");
+    const allCopyRows = copyRows;
+    const allInstallRows = unlockRows;
+    const allSavedRows = savedRows;
 
-    if (firstError) {
-      console.error("ADMIN_ACTIVITY_OVERVIEW_ERROR:", firstError);
-      return NextResponse.json({ error: "Failed to load activity overview" }, { status: 500 });
-    }
+    // People: real accounts (Clerk), not subscriptions rows (which outlive deleted accounts)
+    const inWindow = (time) =>
+      (!startISO || time >= new Date(startISO).getTime()) && (!endISO || time < new Date(endISO).getTime());
+    const signupRows = audience.users
+      .filter((user) => inWindow(user.createdAt))
+      .map((user) => ({ created_at: new Date(user.createdAt).toISOString() }));
+
+    // Plans right now (not just this window's signups): Pro / Pro+ only while
+    // the paid or granted period is live
+    const planById = new Map(subscriptionRows.map((row) => [row.clerk_user_id, currentPlanOf(row)]));
+    const planCounts = { pro: 0, pro_plus: 0, free: 0 };
+    for (const user of audience.users) planCounts[planById.get(user.id) || "free"] += 1;
+    const proUsers = audience.users.filter(
+      (user) => inWindow(user.createdAt) && (planById.get(user.id) || "free") !== "free"
+    ).length;
 
     // One Sanity call, reused for both top-saved and top-copied title lookups
     // (mirrors the pattern in /api/dashboard/usage/route.js).
@@ -196,17 +163,15 @@ export async function GET(request) {
       (row) => row.amount / 100
     );
 
+    // Sales: paid, not refunded, not credit redemptions (no money moves)
+    const templateSaleRows = templatePurchaseRows.filter((row) => row.status === "paid" && row.source !== "credit");
     const templatePurchaseTrend = fillDailyBuckets(
       buildDailyBucketsForRange({ startDateString, endDateString }),
-      templatePurchaseRows || [],
+      templateSaleRows,
       (row) => new Date(row.created_at).toISOString().slice(0, 10)
     );
 
-    // Grouped by currency, never summed across them - invoices mixes INR and
-    // USD (Razorpay lets a customer's billing region pick either), so a
-    // single blended total would add unlike units. Same reasoning
-    // api/admin/template-purchases/route.js already documents for that
-    // table's own revenueByCurrency.
+    // Grouped by currency, never summed across them - invoices mix INR and USD.
     const revenueByCurrencyMap = {};
     for (const row of revenueRows || []) {
       const currency = row.currency || "INR";
@@ -255,15 +220,17 @@ export async function GET(request) {
     );
 
     const planDistribution = [
-      { name: "Pro", value: siteProUsers || 0 },
-      { name: "Free", value: Math.max(0, (siteTotalUsers || 0) - (siteProUsers || 0)) },
+      { name: "Pro+", value: planCounts.pro_plus },
+      { name: "Pro", value: planCounts.pro },
+      { name: "Free", value: planCounts.free },
     ];
 
     return NextResponse.json({
       range,
+      audience: audience.audience,
       stats: {
-        totalUsers: totalUsers || 0,
-        proUsers: proUsers || 0,
+        totalUsers: signupRows.length,
+        proUsers,
         // Same web-only copies count either way (install_unlocks, source=web,
         // in the selected window) - only the label on the frontend changes
         // when the window itself is "Today", so this doubles as both "Total

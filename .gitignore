@@ -40,3 +40,6 @@ CLAUDE.md
 
 # Template packaging output and Figma sources (scripts/package-template.mjs) - large, never committed
 /dist
+
+# Backups written by vault-main/scripts/cleanup-test-data.mjs - payment rows, never committed
+vault-main/scripts/test-data-backup-*.json

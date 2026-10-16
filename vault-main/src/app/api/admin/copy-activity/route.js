@@ -6,6 +6,7 @@ import { assertAdmin } from "@/lib/admin";
 import { getEffectMetadata } from "@/lib/registry";
 import { getAllSanityEffectEntries, buildEffectsFromSanity } from "@/lib/sanity";
 import { resolveDateBounds } from "@/lib/admin-activity";
+import { filterToAudience, getAudience, parseAudience } from "@/lib/admin-data";
 
 // install_events is the full per-attempt audit trail (web/CLI/MCP) written by
 // getInstallLimitDecision() in lib/install-limit.js - "allowed" and
@@ -37,6 +38,8 @@ export async function GET(request) {
 
     const { startISO, endISO } = resolveDateBounds({ range, from, to });
 
+    const audience = await getAudience(parseAudience(searchParams));
+
     let query = supabase
       .from("install_events")
       .select(
@@ -51,6 +54,7 @@ export async function GET(request) {
     if (source && source !== "all") query = query.eq("source", source);
     if (startISO) query = query.gte("occurred_at", startISO);
     if (endISO) query = query.lt("occurred_at", endISO);
+    query = filterToAudience(query, audience);
 
     const [{ data: rows, error, count }, sanityEntries] = await Promise.all([
       query,

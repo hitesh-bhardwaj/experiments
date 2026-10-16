@@ -28,7 +28,6 @@ const OTP = "482913";
 // Routes a regular admin must not reach (billing, revenue, role/plan changes).
 const SUPER_ADMIN_ONLY = [
   "invoices",
-  "revenue/overview",
   "template-purchases",
   "users/update-plan",
   "users/update-role",
@@ -95,7 +94,7 @@ describe("admin routes refuse non-admins", () => {
   beforeEach(seed);
 
   it("found the admin routes on disk", () => {
-    expect(ROUTE_FILES.length).toBeGreaterThanOrEqual(15);
+    expect(ROUTE_FILES.length).toBeGreaterThanOrEqual(14);
   });
 
   for (const file of ROUTE_FILES) {

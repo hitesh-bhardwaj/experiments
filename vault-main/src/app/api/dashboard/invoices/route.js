@@ -61,12 +61,12 @@ export async function GET() {
     // One-time template purchases - a separate table/checkout flow from
     // subscription invoices above (see lib/template-purchases.js), so this
     // page's "Previous Bills" alone would otherwise never show a template
-    // someone bought. No is_test column on this table to filter on (see
-    // api/admin/template-purchases/route.js's own comment on why).
+    // someone bought. Test-mode purchases left out, like test invoices above.
     supabase
       .from("template_purchases")
       .select("id,template_slug,amount,currency,status,invoice_url,razorpay_payment_id,source,created_at")
       .eq("clerk_user_id", userId)
+      .eq("is_test", false)
       .order("created_at", { ascending: false }),
   ]);
 

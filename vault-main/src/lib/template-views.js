@@ -1,5 +1,5 @@
 import "server-only";
-import { supabase } from "@/lib/supabase";
+import { fetchAllRows, supabase } from "@/lib/supabase";
 import { hashIp } from "@/lib/install-limit";
 
 // Real-time view counter for Template detail pages - TemplateDetail's mount
@@ -46,22 +46,31 @@ export async function recordTemplateView({ templateSlug, clerkUserId, ip }) {
 // Activity overview, which needs "views in the selected range" alongside
 // its other range-scoped stats; omitted entirely (the default) for
 // /templates' own all-time card counts.
-export async function getTemplateViewCounts(templateSlugs, { startISO, endISO } = {}) {
+// `includesIdentity` (admin only) keeps the views of one audience - customers or
+// our own team - by the viewer's identity_key.
+export async function getTemplateViewCounts(templateSlugs, { startISO, endISO, includesIdentity } = {}) {
   const counts = Object.fromEntries(templateSlugs.map((slug) => [slug, 0]));
   if (templateSlugs.length === 0) return counts;
 
-  let query = supabase.from("template_views").select("template_slug").in("template_slug", templateSlugs);
-  if (startISO) query = query.gte("created_at", startISO);
-  if (endISO) query = query.lt("created_at", endISO);
-
-  const { data, error } = await query;
-
-  if (error) {
+  let rows;
+  try {
+    // Every view, page by page - one request stops at 1000 rows
+    rows = await fetchAllRows(() => {
+      let query = supabase
+        .from("template_views")
+        .select("template_slug, identity_key")
+        .in("template_slug", templateSlugs);
+      if (startISO) query = query.gte("created_at", startISO);
+      if (endISO) query = query.lt("created_at", endISO);
+      return query;
+    });
+  } catch (error) {
     console.error("TEMPLATE_VIEW_COUNTS_ERROR:", error);
     return counts;
   }
 
-  for (const row of data || []) {
+  for (const row of rows) {
+    if (includesIdentity && !includesIdentity(row.identity_key)) continue;
     counts[row.template_slug] = (counts[row.template_slug] || 0) + 1;
   }
 

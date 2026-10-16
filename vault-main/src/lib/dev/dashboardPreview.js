@@ -141,7 +141,7 @@ export function sampleAdminActivity(catalog = []) {
   return {
     overview: {
       stats: { totalUsers: 125, proUsers: 6, totalCopies: total("web"), totalSaved: 62, totalViews: 366, revenueByCurrency: [{ currency: "USD", amount: 137 }, { currency: "INR", amount: 2358 }] },
-      planDistribution: [{ name: "Pro", value: 18 }, { name: "Free", value: 237 }],
+      planDistribution: [{ name: "Pro+", value: 7 }, { name: "Pro", value: 11 }, { name: "Free", value: 237 }],
       topCopiedEffects: top(0),
       topInstalledEffects: top(2),
       topSavedEffects: top(4),

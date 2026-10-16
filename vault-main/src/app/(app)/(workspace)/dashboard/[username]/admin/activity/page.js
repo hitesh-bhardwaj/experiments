@@ -7,6 +7,7 @@ import { DashboardHeroAside, useDashboard } from "@/components/Dashboard/Dashboa
 import { CARD, CARD_PAD, Pager, SourceChip } from "@/components/Dashboard/DashboardUI";
 import { SOURCE_BARS, UsageBars } from "@/components/Dashboard/UsageBars";
 import { DarkSegment } from "@/components/ui/DarkSegment";
+import { AdminAudienceToggle, useAdminAudience } from "@/components/admin/AdminAudience";
 import { SlidingSegment } from "@/components/ui/SlidingSegment";
 import { Bar, SkeletonCard } from "@/components/Dashboard/DashboardSkeletons";
 import { useDashboardData } from "@/components/Dashboard/useDashboardData";
@@ -179,20 +180,21 @@ function ActivitySkeleton({ kpis }) {
 export default function AdminActivityPage() {
   const { path, isSuperAdmin, catalog } = useDashboard();
   const [range, setRange] = useState("30d");
+  const [audience, setAudience] = useAdminAudience();
   const [fxTab, setFxTab] = useState("copied");
   const [userTab, setUserTab] = useState("installs");
 
   // The overview and the installs numbers for the window: cached per window (skeleton on a
   // window's first load only), refreshed on focus and every 30s
   const { data, failed } = useDashboardData(
-    `admin-activity:${range}`,
+    `admin-activity:${range}:${audience}`,
     async () => {
       if (getDashboardPreview()) {
         const sample = sampleAdminActivity(catalog);
         return { overview: sample.overview, installs: sample.installs };
       }
       const get = (url) => fetch(url, { cache: "no-store" }).then((res) => (res.ok ? res.json() : Promise.reject(new Error(`${url} ${res.status}`))));
-      const [overview, installs] = await Promise.all([get(`/api/admin/activity/overview?range=${range}`), get(`/api/admin/installs?range=${range}`)]);
+      const [overview, installs] = await Promise.all([get(`/api/admin/activity/overview?range=${range}&audience=${audience}`), get(`/api/admin/installs?range=${range}&audience=${audience}`)]);
       return { overview, installs };
     },
     { pollMs: 30000 },
@@ -211,7 +213,7 @@ export default function AdminActivityPage() {
         active = false;
       };
     }
-    const params = new URLSearchParams({ range, limit: String(FEED_PER_PAGE), offset: String(feedPage * FEED_PER_PAGE) });
+    const params = new URLSearchParams({ range, audience, limit: String(FEED_PER_PAGE), offset: String(feedPage * FEED_PER_PAGE) });
     if (feedQuery.trim()) params.set("effect", feedQuery.trim());
     if (feedSource !== "all") params.set("source", feedSource);
     // A short pause while typing, so each keystroke isn't a request
@@ -225,16 +227,23 @@ export default function AdminActivityPage() {
       active = false;
       clearTimeout(timer);
     };
-  }, [range, feedQuery, feedSource, feedPage, catalog]);
+  }, [range, audience, feedQuery, feedSource, feedPage, catalog]);
 
   const chooseRange = (next) => {
     setRange(next);
     setFeedPage(0);
   };
+  const chooseAudience = (next) => {
+    setAudience(next);
+    setFeedPage(0);
+  };
 
   const header = (
     <DashboardHeroAside>
-      <DarkSegment buttonSize label="Time window" items={WINDOWS} value={range} onChange={chooseRange} itemClassName="w-[calc(var(--cvw)*6.5)] max-lg:w-20" />
+      <div className="flex flex-wrap items-center gap-3">
+        <AdminAudienceToggle value={audience} onChange={chooseAudience} />
+        <DarkSegment buttonSize label="Time window" items={WINDOWS} value={range} onChange={chooseRange} itemClassName="w-[calc(var(--cvw)*6.5)] max-lg:w-20" />
+      </div>
     </DashboardHeroAside>
   );
 
@@ -263,8 +272,12 @@ export default function AdminActivityPage() {
   // The API sends [{ name: "web", value: 12 }, ...]; read it as { web: 12, ... }
   const bySource = Object.fromEntries((installs.sourceBreakdown || []).map(({ name, value }) => [name, value]));
   const delivered = (bySource.web || 0) + (bySource.cli || 0) + (bySource.mcp || 0);
-  const pro = overview.planDistribution?.find((p) => p.name === "Pro")?.value || 0;
-  const free = overview.planDistribution?.find((p) => p.name === "Free")?.value || 0;
+  // Accounts on each plan now (an expired plan counts as Free)
+  const planCount = (name) => overview.planDistribution?.find((p) => p.name === name)?.value || 0;
+  const proPlus = planCount("Pro+");
+  const pro = planCount("Pro");
+  const free = planCount("Free");
+  const paid = pro + proPlus;
   const days = (installs.sourceTrend || []).map(({ date, web, cli, mcp }) => ({ date, web, cli, mcp }));
 
   const fxRows = (overview[FX_TABS.find((t) => t.id === fxTab).key] || []).map((fx) => ({
@@ -360,16 +373,18 @@ export default function AdminActivityPage() {
             <p className="type-small text-black/60">Every account today</p>
           </div>
           <p className="type-h2">
-            {pro + free ? ((pro / (pro + free)) * 100).toFixed(1) : "0.0"}% <span className="type-small text-black/60">paid</span>
+            {paid + free ? ((paid / (paid + free)) * 100).toFixed(1) : "0.0"}% <span className="type-small text-black/60">paid</span>
           </p>
           <div className="flex flex-col gap-2">
             <span className="flex h-1.5 w-full gap-px">
               <span className="block h-full bg-black/10" style={{ flexGrow: free || 1 }} />
-              <span className="block h-full bg-primary" style={{ flexGrow: pro }} />
+              <span className="block h-full bg-primary/50" style={{ flexGrow: pro }} />
+              <span className="block h-full bg-primary" style={{ flexGrow: proPlus }} />
             </span>
-            <span className="type-small flex justify-between text-black/60">
+            <span className="type-small flex justify-between gap-3 text-black/60">
               <span>Free {number(free)}</span>
-              <span>Pro &amp; Pro+ {number(pro)}</span>
+              <span>Pro {number(pro)}</span>
+              <span>Pro+ {number(proPlus)}</span>
             </span>
           </div>
         </section>

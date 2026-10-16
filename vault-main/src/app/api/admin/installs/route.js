@@ -3,6 +3,7 @@ import { displayName } from "@/lib/display-name";
 import { clerkClient } from "@clerk/nextjs/server";
 import { supabase } from "@/lib/supabase";
 import { assertAdmin } from "@/lib/admin";
+import { fetchAllRows, getAudience, parseAudience } from "@/lib/admin-data";
 import { buildDailyBucketsForRange, fillDailyBuckets, fillDailyBucketsBySeries, resolveDateBounds, utcDateString } from "@/lib/admin-activity";
 
 // Stage 2 (Installation-SyncUp.md): calibrate the 2/3/10 daily limits against
@@ -84,47 +85,42 @@ export async function GET(request) {
     // was nothing to unlock), and plan isn't a column on install_unlocks -
     // and for the raw per-attempt event log at /api/admin/copy-activity,
     // which genuinely needs per-decision, per-timestamp granularity.
-    let unlocksQuery = supabase
-      .from("install_unlocks")
-      .select("usage_date,identity_key,clerk_user_id,effect_slug,source")
-      .order("usage_date", { ascending: false });
-    if (startISO) unlocksQuery = unlocksQuery.gte("usage_date", startISO);
-    if (endISO) unlocksQuery = unlocksQuery.lt("usage_date", endISO);
+    const audience = await getAudience(parseAudience(searchParams));
 
-    let eventsQuery = supabase
-      .from("install_events")
-      .select(
-        "occurred_at,identity_key,clerk_user_id,device_id,ip_hash,effect_slug,effect_tier,source,plan,decision,reason,enforced,would_have_denied,cli_version,mcp_version"
-      )
-      // Admins are never limited; their installs are only logged for their own usage
-      // tab (lib/install-limit), so they'd skew this limits analysis. plan can be null.
-      .or("plan.is.null,plan.neq.admin")
-      .order("occurred_at", { ascending: false });
-    if (startISO) eventsQuery = eventsQuery.gte("occurred_at", startISO);
-    if (endISO) eventsQuery = eventsQuery.lt("occurred_at", endISO);
-
-    const [
-      { data: unlockRows, error: unlocksError },
-      { data: eventRows, error: eventsError },
-      // "Installs Today" is a fixed daily pulse, deliberately independent of
-      // whatever window is selected elsewhere on the page - always today.
-      { count: installsToday, error: installsTodayError },
-    ] = await Promise.all([
-      unlocksQuery,
-      eventsQuery,
-      supabase
+    // Every row (one request stops at 1000), for this audience
+    const unlocksQuery = () => {
+      let q = supabase
         .from("install_unlocks")
-        .select("id", { count: "exact", head: true })
-        .eq("usage_date", today),
+        .select("usage_date,identity_key,clerk_user_id,effect_slug,source")
+        .order("usage_date", { ascending: false });
+      if (startISO) q = q.gte("usage_date", startISO);
+      if (endISO) q = q.lt("usage_date", endISO);
+      return q;
+    };
+
+    const eventsQuery = () => {
+      let q = supabase
+        .from("install_events")
+        .select(
+          "occurred_at,identity_key,clerk_user_id,device_id,ip_hash,effect_slug,effect_tier,source,plan,decision,reason,enforced,would_have_denied,cli_version,mcp_version"
+        )
+        // Admins are never limited; their installs are only logged for their own usage
+        // tab (lib/install-limit), so they'd skew this limits analysis. plan can be null.
+        .or("plan.is.null,plan.neq.admin")
+        .order("occurred_at", { ascending: false });
+      if (startISO) q = q.gte("occurred_at", startISO);
+      if (endISO) q = q.lt("occurred_at", endISO);
+      return q;
+    };
+
+    const mine = (rows) => rows.filter((row) => audience.includes(row.clerk_user_id));
+    const [unlocks, allEvents, todayUnlocks] = await Promise.all([
+      fetchAllRows(unlocksQuery).then(mine),
+      fetchAllRows(eventsQuery).then(mine),
+      // "Installs Today" is a fixed daily pulse, independent of the selected window
+      fetchAllRows(() => supabase.from("install_unlocks").select("clerk_user_id").eq("usage_date", today)).then(mine),
     ]);
-
-    if (unlocksError || eventsError || installsTodayError) {
-      console.error("ADMIN_INSTALLS_ERROR:", unlocksError || eventsError || installsTodayError);
-      return NextResponse.json({ error: "Failed to load install events" }, { status: 500 });
-    }
-
-    const unlocks = unlockRows || [];
-    const allEvents = eventRows || [];
+    const installsToday = todayUnlocks.length;
     const deniedEvents = allEvents.filter((row) => !SUCCESS_DECISIONS.includes(row.decision));
     const allowedRows = allEvents.filter((row) => row.decision === "allowed");
     const alreadyUnlockedRows = allEvents.filter((row) => row.decision === "already-unlocked");
@@ -199,7 +195,7 @@ export async function GET(request) {
         // "Installs" number, the way it could when the leaderboards read
         // the less-reliable install_events instead.
         totalInstalls: unlocks.length,
-        installsToday: installsToday || 0,
+        installsToday,
         // These three stay install_events-based - install_unlocks has no
         // concept of a denied attempt (nothing gets inserted there when a
         // claim is refused) or of what enforcement mode was active, so

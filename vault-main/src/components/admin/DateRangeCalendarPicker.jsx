@@ -31,6 +31,7 @@ const TONES = {
     nav: "text-white/50 hover:bg-white/10 hover:text-white",
     month: "text-white",
     weekday: "text-white/40",
+    future: "text-white/20",
     edge: "bg-[#ff5f00] text-black font-medium",
     between: "bg-white/10 text-white",
     day: "text-white/70 hover:bg-white/10",
@@ -45,6 +46,7 @@ const TONES = {
     nav: "text-black/60 hover:bg-black/5 hover:text-ink",
     month: "text-ink",
     weekday: "text-black/40",
+    future: "text-black/20",
     edge: "bg-primary text-background",
     between: "bg-primary/10 text-ink",
     day: "text-black/60 hover:bg-black/5 hover:text-ink",
@@ -95,6 +97,8 @@ function buildMonthGrid(monthDate) {
 
 function MonthGrid({ monthDate, from, to, hoverDate, onSelectDay, onHoverDay, tone }) {
   const cells = buildMonthGrid(monthDate);
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
   return (
     <div className="w-64 shrink-0">
@@ -112,6 +116,8 @@ function MonthGrid({ monthDate, from, to, hoverDate, onSelectDay, onHoverDay, to
         {cells.map((date, index) => {
           if (!date) return <div key={index} />;
 
+          // Nothing has happened after today, so later days can't be picked
+          const future = date.getTime() > today.getTime();
           const isStart = isSameDay(date, from);
           const isEnd = isSameDay(date, to);
           const rangeEnd = to || (hoverDate && from && hoverDate.getTime() > from.getTime() ? hoverDate : null);
@@ -121,10 +127,11 @@ function MonthGrid({ monthDate, from, to, hoverDate, onSelectDay, onHoverDay, to
             <button
               key={index}
               type="button"
+              disabled={future}
               onClick={() => onSelectDay(date)}
-              onMouseEnter={() => onHoverDay(date)}
-              className={`flex h-8 w-8 items-center justify-center justify-self-center text-xs transition-colors ${
-                isStart || isEnd ? tone.edge : inRange ? tone.between : tone.day
+              onMouseEnter={() => !future && onHoverDay(date)}
+              className={`flex h-8 w-8 items-center justify-center justify-self-center text-xs transition-colors disabled:cursor-default ${
+                future ? tone.future : isStart || isEnd ? tone.edge : inRange ? tone.between : tone.day
               }`}
             >
               {date.getDate()}
@@ -235,7 +242,9 @@ export function DateRangeCalendarPicker({ from, to, onChange, tone: toneName = "
             type="button"
             onClick={() => shiftMonth(1)}
             aria-label="Next month"
-            className={`absolute right-4 top-4 flex h-6 w-6 items-center justify-center transition ${tone.nav}`}
+            // No months after this one: they're all in the future
+            disabled={viewMonth.getFullYear() * 12 + viewMonth.getMonth() >= new Date().getFullYear() * 12 + new Date().getMonth()}
+            className={`absolute right-4 top-4 flex h-6 w-6 items-center justify-center transition disabled:pointer-events-none disabled:opacity-30 ${tone.nav}`}
           >
             <ChevronRight className="h-4 w-4" />
           </button>

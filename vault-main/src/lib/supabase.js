@@ -29,3 +29,17 @@ export const supabase = createClient(
     },
   }
 );
+// Supabase (PostgREST) returns at most 1000 rows per request, silently. For a
+// read that needs every row: `build` returns a fresh query (filters, no
+// .range()) and is called once per page of 1000.
+const PAGE_SIZE = 1000;
+
+export async function fetchAllRows(build) {
+  const rows = [];
+  for (let from = 0; ; from += PAGE_SIZE) {
+    const { data, error } = await build().range(from, from + PAGE_SIZE - 1);
+    if (error) throw error;
+    rows.push(...(data || []));
+    if (!data || data.length < PAGE_SIZE) return rows;
+  }
+}

@@ -27,6 +27,9 @@ export async function recordTemplatePurchase({
       currency,
       status: "paid",
       invoice_url: invoiceUrl || null,
+      // Taken with Razorpay test keys (local / preview): kept for testing access,
+      // left out of every revenue and sales number - same rule as invoices
+      is_test: (process.env.RAZORPAY_KEY_ID || "").startsWith("rzp_test_"),
     },
     { onConflict: "razorpay_payment_id", ignoreDuplicates: true }
   );

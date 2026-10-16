@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { useDashboard } from "@/components/Dashboard/DashboardContext";
+import { DashboardHeroAside, useDashboard } from "@/components/Dashboard/DashboardContext";
+import { AdminAudienceToggle, useAdminAudience } from "@/components/admin/AdminAudience";
 import { ALL_DATES, CARD, CARD_PAD, DateRangeFilter, FILTER_WIDTH, Pager } from "@/components/Dashboard/DashboardUI";
 import { SlidingSegment } from "@/components/ui/SlidingSegment";
 import { Skeleton } from "@/components/ui/Skeleton";
@@ -91,6 +92,7 @@ export default function AdminInvoicingPage() {
   const [ledger, setLedger] = useState("subscriptions");
   const [template, setTemplate] = useState("all");
   const [page, setPage] = useState(0);
+  const [audience, setAudience] = useAdminAudience();
   // Both tables' current page, with their stats: { invoices, templates }
   const [data, setData] = useState(null);
   const [failed, setFailed] = useState(false);
@@ -110,9 +112,11 @@ export default function AdminInvoicingPage() {
       };
     }
     const subs = rangeParams(dates);
+    subs.set("audience", audience);
     subs.set("limit", String(PER_PAGE));
     subs.set("offset", String(ledger === "subscriptions" ? page * PER_PAGE : 0));
     const tpl = rangeParams(dates);
+    tpl.set("audience", audience);
     if (template !== "all") tpl.set("template", template);
     tpl.set("limit", String(PER_PAGE));
     tpl.set("offset", String(ledger === "templates" ? page * PER_PAGE : 0));
@@ -126,13 +130,20 @@ export default function AdminInvoicingPage() {
     return () => {
       active = false;
     };
-  }, [isSuperAdmin, dates, ledger, template, page]);
+  }, [isSuperAdmin, dates, ledger, template, page, audience]);
 
   // Any filter change starts again from the first page
   const filter = (set) => (value) => {
     set(value);
     setPage(0);
   };
+
+  // Whose payments: customers, our team's internal accounts, or all
+  const header = (
+    <DashboardHeroAside>
+      <AdminAudienceToggle value={audience} onChange={filter(setAudience)} />
+    </DashboardHeroAside>
+  );
 
   if (failed) {
     return (
@@ -146,6 +157,7 @@ export default function AdminInvoicingPage() {
   if (!isSuperAdmin || !data) {
     return (
       <div aria-busy="true" aria-label="Loading payments" className="flex flex-col gap-[calc(var(--cvw)*0.8)] max-lg:gap-3">
+        {header}
         <div className="flex gap-[calc(var(--cvw)*0.8)] max-lg:gap-3">
           {[0, 1, 2, 3].map((i) => (
             <Skeleton key={i} className="h-[calc(var(--cvw)*9)] flex-1 max-lg:h-32" />
@@ -170,6 +182,7 @@ export default function AdminInvoicingPage() {
 
   return (
     <div className="flex flex-col gap-[calc(var(--cvw)*0.8)] max-lg:gap-3">
+      {header}
       {/* revenue per currency (never added across currencies), and counts */}
       <div className="flex gap-[calc(var(--cvw)*0.8)] max-md:flex-wrap max-lg:gap-3">
         <Kpi label="Subscription revenue" value={money(revenueIn(subStats, "USD"), "USD", true)} detail={otherCurrencies(subStats, true) || "Real payments only"} />

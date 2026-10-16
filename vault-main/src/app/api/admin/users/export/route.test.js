@@ -23,23 +23,22 @@ vi.mock("@clerk/nextjs/server", () => ({
   })),
 }));
 
-function makeSubscriptionQuery() {
-  const query = {
-    eq: vi.fn(() => query),
-    gte: vi.fn(() => query),
-    order: vi.fn(() => query),
-    range: vi.fn(() => Promise.resolve({ data: subscriptionRows, error: subscriptionError })),
-  };
-  return query;
-}
+vi.mock("@/lib/supabase", () => ({ supabase: {}, fetchAllRows: vi.fn(async () => []) }));
 
-vi.mock("@/lib/supabase", () => ({
-  supabase: {
-    from: vi.fn(() => ({
-      select: vi.fn(() => makeSubscriptionQuery()),
-    })),
-  },
-}));
+// The user list itself (lib/admin-data) is built from these: one entry per
+// subscriptions row whose Clerk account exists, with its current plan
+vi.mock("@/lib/admin-data", async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
+    getAdminUserList: vi.fn(async () => {
+      if (subscriptionError) throw subscriptionError;
+      return subscriptionRows
+        .filter((sub) => clerkUsersById[sub.clerk_user_id])
+        .map((sub) => ({ clerkUser: clerkUsersById[sub.clerk_user_id], sub, currentPlan: actual.currentPlanOf(sub) }));
+    }),
+  };
+});
 
 const { GET } = await import("./route.js");
 
@@ -96,7 +95,7 @@ describe("admin/users/export route", () => {
       "Name,Email,Joined At,Plan,Role,Status,Billing Interval,Plan Valid Until,Razorpay Customer ID,Razorpay Subscription ID,Clerk User ID"
     );
     expect(lines[1]).toBe(
-      "Ada Lovelace,ada@example.com,2026-01-01T00:00:00.000Z,pro,none,active,yearly,2027-01-01T00:00:00.000Z,cust_123,sub_123,user_a"
+      "Ada Lovelace,ada@example.com,2026-01-01T00:00:00.000Z,Pro+,none,active,yearly,2027-01-01T00:00:00.000Z,cust_123,sub_123,user_a"
     );
   });
 
@@ -132,10 +131,10 @@ describe("admin/users/export route", () => {
     const lines = csv.trim().split("\r\n");
 
     expect(lines[0]).toBe("Name,Email,Joined At,Plan,Role");
-    expect(lines[1]).toBe("Ada Lovelace,ada@example.com,2026-01-01T00:00:00.000Z,free,none");
+    expect(lines[1]).toBe("Ada Lovelace,ada@example.com,2026-01-01T00:00:00.000Z,Free,none");
   });
 
-  it("500s when the Supabase query errors, without throwing", async () => {
+  it("500s when loading the user list fails, without throwing", async () => {
     subscriptionError = new Error("connection reset");
     const res = await GET(makeRequest());
     expect(res.status).toBe(500);

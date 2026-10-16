@@ -4,10 +4,10 @@ import { clerkClient } from "@clerk/nextjs/server";
 import { supabase } from "@/lib/supabase";
 import { assertSuperAdmin } from "@/lib/admin";
 import { resolveDateBounds } from "@/lib/admin-activity";
+import { fetchAllRows, filterToAudience, getAudience, parseAudience } from "@/lib/admin-data";
 
 // Payment detail is more sensitive than the plan/role info already visible
-// in User Management, so this is gated to super admins only - same gate as
-// /api/admin/revenue/overview, which this page sits alongside.
+// in User Management, so this is gated to super admins only.
 //
 // Every real row's status is "paid" (recordInvoice() in lib/pro-access.js
 // only ever writes one on a successful Razorpay charge - there's no
@@ -30,8 +30,11 @@ export async function GET(request) {
       to: searchParams.get("to"),
     });
 
+    const audience = await getAudience(parseAudience(searchParams));
+
+    // The window and audience; real payments only (test-mode invoices left out)
     function scoped(q) {
-      let query = q;
+      let query = filterToAudience(q.eq("is_test", false), audience);
       if (startISO) query = query.gte("created_at", startISO);
       if (endISO) query = query.lt("created_at", endISO);
       return query;
@@ -44,22 +47,20 @@ export async function GET(request) {
           "id,clerk_user_id,razorpay_payment_id,amount,currency,status,billing_interval,plan_label,invoice_url,is_test,created_at",
           { count: "exact" }
         )
-        .eq("is_test", false)
         .order("created_at", { ascending: false })
     );
 
-    const [{ data: pageRows, error: pageError, count }, { data: realRows, error: statsError }] =
-      await Promise.all([
-        query.range(offset, offset + limit - 1),
-        // Stats always reflect every real invoice in the same window,
-        // independent of the current page, so the top-line numbers don't
-        // shift while paging.
-        scoped(supabase.from("invoices").select("amount, currency").eq("is_test", false)),
-      ]);
+    const [{ data: pageRows, error: pageError, count }, realRows] = await Promise.all([
+      query.range(offset, offset + limit - 1),
+      // Stats always reflect every real invoice in the same window (every
+      // row, not the first 1000), independent of the current page, so the
+      // top-line numbers don't shift while paging.
+      fetchAllRows(() => scoped(supabase.from("invoices").select("amount, currency"))),
+    ]);
 
-    if (pageError || statsError) {
-      console.error("ADMIN_INVOICES_ERROR:", pageError || statsError);
-      return NextResponse.json({ error: (pageError || statsError).message }, { status: 500 });
+    if (pageError) {
+      console.error("ADMIN_INVOICES_ERROR:", pageError);
+      return NextResponse.json({ error: pageError.message }, { status: 500 });
     }
 
     const rows = pageRows || [];

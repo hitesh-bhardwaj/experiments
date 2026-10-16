@@ -67,6 +67,8 @@ describe("committed secrets", () => {
     ];
     const hits = [];
     for (const file of tracked) {
+      // Tracked but deleted in the working tree (not committed yet): nothing to scan
+      if (!fs.existsSync(path.join(REPO_ROOT, file))) continue;
       const text = fs.readFileSync(path.join(REPO_ROOT, file), "utf-8");
       for (const pattern of PATTERNS) {
         const match = pattern.exec(text);

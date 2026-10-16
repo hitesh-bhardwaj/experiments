@@ -36,6 +36,18 @@ function makePageQuery() {
   return query;
 }
 
+// The admin data layer: every row of a query in one go, everyone in the audience
+vi.mock("@/lib/admin-data", () => ({
+  parseAudience: () => "customers",
+  getAudience: async () => ({ audience: "customers", internalIds: [], users: [], includes: () => true, includesIdentity: () => true }),
+  filterToAudience: (query) => query,
+  fetchAllRows: async (build) => {
+    const { data, error } = await build();
+    if (error) throw error;
+    return data || [];
+  },
+}));
+
 vi.mock("@/lib/supabase", () => ({
   supabase: {
     from: vi.fn(() => ({

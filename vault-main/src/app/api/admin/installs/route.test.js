@@ -52,19 +52,35 @@ function makeListQuery(getResult) {
   return query;
 }
 
+// Today's installs: one row per install (the route counts them, for one audience)
 function makeTodayCountQuery() {
   const query = {
     eq: vi.fn(() => query),
-    then: (resolve) => resolve({ count: installsTodayCount, error: installsTodayError }),
+    then: (resolve) =>
+      resolve({ data: Array.from({ length: installsTodayCount || 0 }, () => ({ clerk_user_id: "test" })), error: installsTodayError }),
   };
   return query;
 }
+
+// Every row of each query in one go, and every row in the audience
+vi.mock("@/lib/admin-data", () => ({
+  parseAudience: () => "customers",
+  getAudience: async () => ({ audience: "customers", users: [], includes: () => true, includesIdentity: () => true }),
+  fetchAllRows: async (build) => {
+    const { data, error } = await build();
+    if (error) throw error;
+    return data || [];
+  },
+}));
 
 vi.mock("@/lib/supabase", () => ({
   supabase: {
     from: vi.fn((table) => ({
       select: vi.fn((columns, opts) => {
         if (opts && opts.count === "exact" && opts.head === true) {
+          return makeTodayCountQuery();
+        }
+        if (table === "install_unlocks" && columns === "clerk_user_id") {
           return makeTodayCountQuery();
         }
         if (table === "install_unlocks") {

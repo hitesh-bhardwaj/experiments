@@ -11,6 +11,7 @@ import { Search, X, Upload, CheckCircle2, XCircle, UserCog } from "lucide-react"
 import { getDashboardPreview, sampleAdminUsers } from "@/lib/dev/dashboardPreview";
 import Button from "@/homepage/components/Button";
 import { DashboardHeroAside } from "@/components/Dashboard/DashboardContext";
+import { AdminAudienceToggle, useAdminAudience } from "@/components/admin/AdminAudience";
 import { ACTION_LINE, ALL_DATES, CARD, CARD_PAD, DateRangeFilter, FILTER_WIDTH, Pager, PerPageMenu } from "@/components/Dashboard/DashboardUI";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { FilterMenu } from "@/app/(app)/(workspace)/effects/FilterMenu";
@@ -19,7 +20,8 @@ import { buildUserActivitySlug } from "@/lib/user-slug";
 
 const DEFAULT_PAGE_SIZE = 10;
 
-const PLAN_FILTERS = { all: "All plans", pro: "Pro", free: "Free" };
+// The plan each account has now (an expired plan is Free)
+const PLAN_FILTERS = { all: "All plans", pro_plus: "Pro+", pro: "Pro", free: "Free" };
 const ROLE_FILTERS = { all: "All roles", user: "User", admin: "Admin", super_admin: "Super admin" };
 const SORTS = { newest: "Newest", copies: "Most copies", cli: "Most CLI", mcp: "Most MCP", saves: "Most saves" };
 
@@ -52,11 +54,11 @@ function PlanBadge({ plan, tier }) {
   );
 }
 
-// Site-wide activity for the picked window, scoped by real Supabase data (signups,
-// first-ever paid invoices, install unlocks, saves) - not the table's own filters, so
-// switching pages/filters never changes what these four numbers mean.
-// `dates` is the page's date filter ({ preset, from, to }).
-function UserStatsTiles({ dates }) {
+// Activity for the picked window and accounts (signups, accounts on a paid plan now,
+// install unlocks, saves) - not the table's own filters, so switching pages/filters
+// never changes what these four numbers mean.
+// `dates` is the page's date filter ({ preset, from, to }), `audience` whose accounts.
+function UserStatsTiles({ dates, audience }) {
   const [data, setData] = useState(null);
   const isCustom = dates.preset === "custom";
 
@@ -76,7 +78,7 @@ function UserStatsTiles({ dates }) {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setData(null);
 
-    const params = new URLSearchParams({ range: dates.preset });
+    const params = new URLSearchParams({ range: dates.preset, audience });
     if (isCustom && dates.from) params.set("from", dates.from);
     if (isCustom && dates.to) params.set("to", dates.to);
 
@@ -88,13 +90,13 @@ function UserStatsTiles({ dates }) {
     return () => {
       active = false;
     };
-  }, [dates.preset, isCustom, dates.from, dates.to]);
+  }, [dates.preset, isCustom, dates.from, dates.to, audience]);
 
   // Only "All time" is a headcount ("Total") - every other window is a "New" count
   const isAllTime = dates.preset === "all";
   const stats = [
     [isAllTime ? "Total users" : "New users", data?.newUsers, "Accounts"],
-    [isAllTime ? "Pro users" : "New Pro users", data?.newProUsers, "Paid plans"],
+    [isAllTime ? "Paid users" : "New paid users", data?.newProUsers, "On Pro or Pro+ now"],
     ["Installs & copies", data?.copies, "Web, CLI and MCP"],
     ["Saves", data?.saves, "Effects saved"],
   ];
@@ -785,6 +787,7 @@ export default function AdminPage() {
   const [search, setSearch] = useState("");
   const [planFilter, setPlanFilter] = useState("all");
   const [roleFilter, setRoleFilter] = useState("all");
+  const [audience, setAudience] = useAdminAudience();
   // When they joined: the dashboard's date filter ({ preset, from, to })
   const [dates, setDates] = useState(ALL_DATES);
   const dateRange = dates.preset;
@@ -804,6 +807,7 @@ export default function AdminPage() {
   const [prevCustomTo, setPrevCustomTo] = useState(customTo);
   const [prevSortBy, setPrevSortBy] = useState(sortBy);
   const [prevPageSize, setPrevPageSize] = useState(pageSize);
+  const [prevAudience, setPrevAudience] = useState(audience);
 
   // Reset to page 1 whenever a filter changes - derived purely from values
   // already available during render, so adjust it here instead of in an effect.
@@ -815,7 +819,8 @@ export default function AdminPage() {
     prevCustomFrom !== customFrom ||
     prevCustomTo !== customTo ||
     prevSortBy !== sortBy ||
-    prevPageSize !== pageSize
+    prevPageSize !== pageSize ||
+    prevAudience !== audience
   ) {
     setPrevSearch(search);
     setPrevPlanFilter(planFilter);
@@ -825,6 +830,7 @@ export default function AdminPage() {
     setPrevDateRange(dateRange);
     setPrevSortBy(sortBy);
     setPrevPageSize(pageSize);
+    setPrevAudience(audience);
     setCurrentPage(1);
   }
 
@@ -877,7 +883,7 @@ export default function AdminPage() {
     setLoading(true);
     setError(null);
     try {
-      const params = new URLSearchParams();
+      const params = new URLSearchParams({ audience });
       if (search) params.set("search", search);
       if (planFilter !== "all") params.set("plan", planFilter);
       if (roleFilter !== "all") params.set("role", roleFilter);
@@ -898,7 +904,7 @@ export default function AdminPage() {
     } finally {
       if (requestId === requestIdRef.current) setLoading(false);
     }
-  }, [search, planFilter, roleFilter, appendDateRangeParams, sortBy, pageSize, currentPage]);
+  }, [search, planFilter, roleFilter, audience, appendDateRangeParams, sortBy, pageSize, currentPage]);
 
   useEffect(() => {
     const timer = setTimeout(fetchUsers, 300);
@@ -915,7 +921,7 @@ export default function AdminPage() {
   // that's not a real route. A plain link is what every "Download PDF"
   // link on the web actually is - no JS delivery mechanism to break.
   function handleExport() {
-    const params = new URLSearchParams();
+    const params = new URLSearchParams({ audience });
     if (search) params.set("search", search);
     if (planFilter !== "all") params.set("plan", planFilter);
     if (roleFilter !== "all") params.set("role", roleFilter);
@@ -942,13 +948,14 @@ export default function AdminPage() {
       {/* header, right: export, the email log, invite */}
       <DashboardHeroAside>
         <div className="flex flex-wrap items-center gap-3">
+          <AdminAudienceToggle value={audience} onChange={setAudience} />
           <Button text="Export CSV" variant="outline" preventDefault onClick={handleExport} />
           <Button text="Email log" variant="outline" href={path("admin/emails")} />
           <Button text="Invite" preventDefault onClick={() => setShowInviteModal(true)} />
         </div>
       </DashboardHeroAside>
 
-      <UserStatsTiles dates={dates} />
+      <UserStatsTiles dates={dates} audience={audience} />
 
       <section aria-label="Users" className={`${CARD} ${CARD_PAD} gap-[calc(var(--cvw)*1.2)] max-lg:gap-4`}>
         {/* search and filters */}
