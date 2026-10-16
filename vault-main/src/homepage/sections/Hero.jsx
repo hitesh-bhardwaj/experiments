@@ -223,7 +223,7 @@ export default function Hero() {
                 )}
             </div>
             <div className="pointer-events-none relative z-10 mx-auto flex min-h-dvh w-full max-w-384 flex-col justify-end px-[calc(var(--cvw)*4.5)] pt-[calc(var(--cvw)*8)] max-lg:px-[calc(var(--cvw)*7)] max-md:px-5! pb-[calc(var(--cvw)*5)] max-lg:pt-32 max-lg:pb-[12vw] max-md:pt-32 max-md:pb-10">
-                <div className="flex items-end justify-between gap-[calc(var(--cvw)*3)] max-lg:flex-col max-lg:items-stretch max-lg:gap-[6vw] max-md:items-stretch max-md:gap-5">
+                <div className="flex items-end justify-between gap-[calc(var(--cvw)*6)] max-lg:flex-col max-lg:items-stretch max-lg:gap-[6vw] max-md:items-stretch max-md:gap-5">
                    
                     <h1 ref={headingRef} className="relative min-w-0 flex-[1.5] type-display leading-[1.12] max-w-[calc(var(--cvw)*53)] max-lg:max-w-full max-md:max-w-full text-white">
                         The Interaction Layer Your Website Is <span className="gradient-text-animate">Missing</span><EasterEggDot className="pointer-events-auto" />
