@@ -83,7 +83,7 @@ export async function GET(request) {
         userId: row.clerk_user_id,
         userName: displayName(clerkUser),
         userEmail: clerkUser?.emailAddresses?.[0]?.emailAddress || null,
-        userImageUrl: clerkUser?.imageUrl || null,
+        userImageUrl: clerkUser?.hasImage ? clerkUser.imageUrl : null, // a real photo, not Clerk's placeholder
         paymentId: row.razorpay_payment_id,
         amount: row.amount,
         currency: row.currency,

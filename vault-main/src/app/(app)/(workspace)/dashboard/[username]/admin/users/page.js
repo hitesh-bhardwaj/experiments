@@ -4,26 +4,31 @@ import { nameFromEmail } from "@/lib/display-name";
 import { useDashboard } from "@/components/Dashboard/DashboardContext";
 import { useEffect, useState, useCallback, useRef } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { useUser } from "@clerk/nextjs";
 import { AnimatePresence, motion } from "motion/react";
-import { Search, X, Upload, CheckCircle2, XCircle, UserCog } from "lucide-react";
+import { Search, X, Upload, CheckCircle2, XCircle, UserCog, Download, Mail, UserPlus, LoaderCircle } from "lucide-react";
+import { ToastViewport, useToastQueue } from "@/components/ui/Toast";
 import { getDashboardPreview, sampleAdminUsers } from "@/lib/dev/dashboardPreview";
 import Button from "@/homepage/components/Button";
-import { DashboardHeroAside } from "@/components/Dashboard/DashboardContext";
-import { AdminAudienceToggle, useAdminAudience } from "@/components/admin/AdminAudience";
-import { ACTION_LINE, ALL_DATES, CARD, CARD_PAD, DateRangeFilter, FILTER_WIDTH, Pager, PerPageMenu } from "@/components/Dashboard/DashboardUI";
+import { useAdminAudience } from "@/components/admin/AdminAudience";
+import { ACTION_LINE, ALL_DATES, CARD, CARD_PAD, DATE_PRESETS, DateRangeFilter, FILTER_WIDTH, Pager, PerPageMenu } from "@/components/Dashboard/DashboardUI";
+import { StatCard, StatCardSkeleton } from "@/components/Dashboard/TrendStat";
+import { Tooltip } from "@/components/ui/Tooltip";
+import { ManageUserDrawer } from "@/components/admin/ManageUserDrawer";
+import { UserAvatar } from "@/components/admin/UserAvatar";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { FilterMenu } from "@/app/(app)/(workspace)/effects/FilterMenu";
-import { CustomSelect } from "@/components/ui/CustomSelect";
 import { buildUserActivitySlug } from "@/lib/user-slug";
 
 const DEFAULT_PAGE_SIZE = 10;
 
+// An icon-only action beside the date filter, as tall as it
+const ICON_BUTTON = "grid size-9.5 cursor-pointer place-items-center bg-foreground text-black/60 ring-1 ring-inset ring-black/10 transition-[color,box-shadow] duration-300 hover:text-primary hover:ring-primary [&_svg]:size-4";
+
 // The plan each account has now (an expired plan is Free)
 const PLAN_FILTERS = { all: "All plans", pro_plus: "Pro+", pro: "Pro", free: "Free" };
 const ROLE_FILTERS = { all: "All roles", user: "User", admin: "Admin", super_admin: "Super admin" };
-const SORTS = { newest: "Newest", copies: "Most copies", cli: "Most CLI", mcp: "Most MCP", saves: "Most saves" };
+const SORTS = { newest: "Newest", installs: "Most installs", web: "Most web", cli: "Most CLI", mcp: "Most MCP", saves: "Most saves" };
 
 function formatDate(value) {
   if (!value) return "-";
@@ -54,9 +59,9 @@ function PlanBadge({ plan, tier }) {
   );
 }
 
-// Activity for the picked window and accounts (signups, accounts on a paid plan now,
-// install unlocks, saves) - not the table's own filters, so switching pages/filters
-// never changes what these four numbers mean.
+// Stat cards for the picked window and accounts (signups, of those on a paid plan now,
+// installs, saves), each with its change against the previous period and its line - not
+// the table's own filters, so switching pages / filters never changes what they mean.
 // `dates` is the page's date filter ({ preset, from, to }), `audience` whose accounts.
 function UserStatsTiles({ dates, audience }) {
   const [data, setData] = useState(null);
@@ -94,31 +99,31 @@ function UserStatsTiles({ dates, audience }) {
 
   // Only "All time" is a headcount ("Total") - every other window is a "New" count
   const isAllTime = dates.preset === "all";
-  const stats = [
-    [isAllTime ? "Total users" : "New users", data?.newUsers, "Accounts"],
-    [isAllTime ? "Paid users" : "New paid users", data?.newProUsers, "On Pro or Pro+ now"],
-    ["Installs & copies", data?.copies, "Web, CLI and MCP"],
-    ["Saves", data?.saves, "Effects saved"],
-  ];
+  const cards = data?.kpis
+    ? [
+        [isAllTime ? "Total users" : "New users", data.kpis.users, "Accounts"],
+        [isAllTime ? "Paid users" : "New paid users", data.kpis.paidUsers, "On Pro or Pro+ now"],
+        ["Installs", data.kpis.installs, "Web, CLI and MCP"],
+        ["Saves", data.kpis.saves, "Effects saved"],
+      ]
+    : null;
+  const ROW = "flex gap-[calc(var(--cvw)*0.8)] max-lg:flex-wrap max-lg:gap-3";
+  const EACH = "flex-1 max-lg:w-[calc((100%-0.75rem)/2)] max-lg:flex-none max-md:w-full";
 
-  if (!data) {
+  if (!cards) {
     return (
-      <div className="flex gap-[calc(var(--cvw)*0.8)] max-md:flex-wrap max-lg:gap-3">
-        {stats.map(([label]) => (
-          <Skeleton key={label} className="h-[calc(var(--cvw)*9)] flex-1 max-lg:h-32 max-md:w-[calc((100%-0.75rem)/2)] max-md:flex-none" />
+      <div className={ROW}>
+        {[0, 1, 2, 3].map((i) => (
+          <StatCardSkeleton key={i} className={EACH} />
         ))}
       </div>
     );
   }
 
   return (
-    <div className="flex gap-[calc(var(--cvw)*0.8)] max-md:flex-wrap max-lg:gap-3">
-      {stats.map(([label, value, detail]) => (
-        <div key={label} className={`${CARD} ${CARD_PAD} flex-1 justify-between gap-(--cvw) max-lg:gap-3 max-md:w-[calc((100%-0.75rem)/2)] max-md:flex-none`}>
-          <p className="type-label text-black/60">{label}</p>
-          <p className="type-h2">{new Intl.NumberFormat("en").format(value || 0)}</p>
-          <p className="type-small text-black/60">{detail}</p>
-        </div>
+    <div className={ROW}>
+      {cards.map(([label, stat, note]) => (
+        <StatCard key={label} className={EACH} label={label} value={new Intl.NumberFormat("en").format(stat.value || 0)} note={note} stat={stat} comparison={data.kpis.comparison} />
       ))}
     </div>
   );
@@ -334,7 +339,7 @@ function InviteModal({ onClose }) {
       transition={{ duration: 0.22, ease: "easeOut" }}
     >
       <motion.div
-        className="relative w-full max-w-lg  border border-white/10 bg-background p-6"
+        className="relative w-full max-w-lg border border-white/10 bg-background p-6 text-foreground"
         onClick={(e) => e.stopPropagation()}
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -354,7 +359,7 @@ function InviteModal({ onClose }) {
         </button>
 
         <div className="mb-6">
-          <h2 className="text-2xl font-semibold">Invite users</h2>
+          <h2 className="type-h3 text-foreground">Invite users</h2>
         </div>
         <p className="mb-2 text-sm text-white/80">
           Add one or more addresses - type and press Enter, paste a list, or
@@ -473,310 +478,6 @@ function InviteModal({ onClose }) {
   );
 }
 
-const ROLE_LABELS = { "": "No access", admin: "Admin", super_admin: "Super Admin" };
-const BILLING_LABELS = { monthly: "1 month", quarterly: "3 months", yearly: "1 year" };
-const LEVEL_LABELS = { free: "Free", pro: "Pro", pro_plus: "Pro+" };
-
-// "free" | "pro" | "pro_plus" - the one choice the modal offers; it maps to
-// plan + tier on save (Pro+ is plan "pro", tier "pro_plus")
-const levelOf = (user) => (user.plan === "pro" ? user.tier || "pro_plus" : "free");
-
-function ModalShell({ onClose, children, maxWidth = "max-w-lg" }) {
-  return (
-    <motion.div
-      className="fixed inset-0 z-900 flex items-center justify-center bg-black/60 px-4 backdrop-blur-lg"
-      onClick={onClose}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.22, ease: "easeOut" }}
-    >
-      <motion.div
-        className={`relative w-full ${maxWidth}  border border-white/10 bg-background p-6`}
-        onClick={(e) => e.stopPropagation()}
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.95 }}
-        transition={{ duration: 0.22, ease: "easeOut" }}
-      >
-        <button
-          type="button"
-          aria-label="Close"
-          onClick={onClose}
-          className="max-lg:hidden group absolute right-5 top-5 flex h-10 w-10 items-center justify-center  border border-white/20 bg-white/10 text-xl leading-none text-white/70 transition-all duration-500 ease-in-out hover:border-primary hover:bg-primary hover:text-white "
-        >
-          <div className="relative flex h-4 w-4 items-center justify-center duration-500 ease-in-out group-hover:rotate-90">
-            <span className="h-px w-4 rotate-45 bg-white" />
-            <span className="absolute h-px w-4 -rotate-45 bg-white" />
-          </div>
-        </button>
-        {children}
-      </motion.div>
-    </motion.div>
-  );
-}
-
-// Single entry point for both plan and role changes on one user - replaces
-// the old per-row duration-select + upgrade/downgrade button + role-select
-// trio with one "Manage" action, and gates the actual mutation behind an
-// explicit confirmation step naming exactly what's about to change (no
-// action here fires straight off a click any more).
-function ManageUserModal({ user, isOwnRow, onClose, onSaved }) {
-  const currentLevel = levelOf(user);
-  const [nextLevel, setNextLevel] = useState(currentLevel);
-  const nextPlan = nextLevel === "free" ? "free" : "pro";
-  // Monthly is the default billing interval when granting/changing Pro,
-  // regardless of what the user's own current interval happens to be -
-  // yearly is an explicit opt-in, not the fallback.
-  const [nextInterval, setNextInterval] = useState(
-    user.plan === "pro" ? user.billingInterval || "monthly" : "monthly"
-  );
-  const [nextRole, setNextRole] = useState(user.role || "");
-  const [step, setStep] = useState("edit");
-  const [saving, setSaving] = useState(false);
-  const [error, setError] = useState(null);
-
-  const planChanged =
-    nextLevel !== currentLevel ||
-    (nextPlan === "pro" && nextInterval !== (user.billingInterval || "monthly"));
-  const roleChanged = nextRole !== (user.role || "");
-  const hasChanges = planChanged || roleChanged;
-
-  const changeSummaries = [];
-  if (planChanged) {
-    if (nextPlan === "free") {
-      changeSummaries.push({
-        text: "Downgrade to Free - this immediately revokes Pro access and any active CLI token.",
-        danger: true,
-      });
-    } else if (nextLevel !== currentLevel) {
-      changeSummaries.push({ text: `Set plan to ${LEVEL_LABELS[nextLevel]}, for ${BILLING_LABELS[nextInterval]}.` });
-    } else {
-      changeSummaries.push({ text: `Change billing interval to ${BILLING_LABELS[nextInterval]}.` });
-    }
-  }
-  if (roleChanged) {
-    if (nextRole === "super_admin") {
-      changeSummaries.push({
-        text: "Grant Super Admin - full access including billing and role management.",
-        danger: true,
-      });
-    } else if (!nextRole && user.role) {
-      changeSummaries.push({ text: `Remove ${ROLE_LABELS[user.role]} access.`, danger: true });
-    } else {
-      changeSummaries.push({ text: `Set role to ${ROLE_LABELS[nextRole] || "No access"}.` });
-    }
-  }
-
-  async function handleConfirm() {
-    setSaving(true);
-    setError(null);
-
-    try {
-      const patch = {};
-
-      if (planChanged) {
-        const res = await fetch("/api/admin/users/update-plan", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            clerkUserId: user.id,
-            plan: nextPlan,
-            tier: nextPlan === "pro" ? nextLevel : null,
-            billingInterval: nextPlan === "pro" ? nextInterval : null,
-          }),
-        });
-        const json = await res.json();
-        if (!res.ok) throw new Error(json.error || "Plan update failed");
-        patch.plan = nextPlan;
-        patch.tier = json.tier;
-        patch.status = json.status;
-        patch.billingInterval = json.billingInterval;
-        patch.planValidUntil = json.currentPeriodEnd;
-      }
-
-      if (roleChanged) {
-        const res = await fetch("/api/admin/users/update-role", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ clerkUserId: user.id, role: nextRole || null }),
-        });
-        const json = await res.json();
-        if (!res.ok) throw new Error(json.error || "Role update failed");
-        patch.role = json.role;
-        patch.isAdmin = json.role !== null;
-      }
-
-      onSaved(patch);
-      onClose();
-    } catch (err) {
-      setError(err.message);
-      setStep("edit");
-    } finally {
-      setSaving(false);
-    }
-  }
-
-  return (
-    <ModalShell onClose={onClose}>
-      <div className="mb-6 flex items-center gap-3">
-        {user.imageUrl ? (
-          <Image
-            src={user.imageUrl}
-            alt={user.name || ""}
-            width={40}
-            height={40}
-            className="h-10 w-10 object-cover ring-1 ring-white/10"
-          />
-        ) : (
-          <div className="flex h-10 w-10 items-center justify-center bg-white/10 text-sm font-medium">
-            {(user.name?.[0] || user.email?.[0] || "?").toUpperCase()}
-          </div>
-        )}
-        <div className="min-w-0">
-          <h2 className="truncate text-lg font-semibold">{displayName(user)}</h2>
-          <p className="truncate text-xs text-white/45">{user.email || user.id}</p>
-        </div>
-      </div>
-
-      {step === "edit" && (
-        <div className="space-y-5">
-          <div>
-            <p className="mb-2 text-xs uppercase tracking-wider text-white/45">Plan</p>
-            <p className="mb-3 text-sm text-white/50">
-              Currently{" "}
-              <span className="text-white">
-                {user.plan === "pro"
-                  ? `${LEVEL_LABELS[currentLevel]}, billed ${BILLING_LABELS[user.billingInterval || "monthly"]}`
-                  : "Free"}
-              </span>
-            </p>
-            <div className="flex flex-wrap items-center gap-2">
-              <CustomSelect
-                value={nextLevel}
-                onChange={setNextLevel}
-                options={[
-                  { value: "free", label: "Free" },
-                  { value: "pro", label: "Pro" },
-                  { value: "pro_plus", label: "Pro+" },
-                ]}
-              />
-              {nextPlan === "pro" && (
-                <CustomSelect
-                  value={nextInterval}
-                  onChange={setNextInterval}
-                  options={[
-                    { value: "monthly", label: "1 month" },
-                    { value: "quarterly", label: "3 months" },
-                    { value: "yearly", label: "1 year" },
-                  ]}
-                />
-              )}
-            </div>
-            {/* Explicit, unmissable downgrade action - not just "pick Free
-                from the same dropdown" - since revoking a paying customer's
-                access is exactly the kind of change that shouldn't hide
-                inside a generic control. */}
-            {nextPlan === "pro" && user.plan === "pro" && (
-              <button
-                type="button"
-                onClick={() => setNextLevel("free")}
-                className="mt-2 text-xs text-red-400 underline underline-offset-2 transition hover:text-red-300"
-              >
-                Downgrade to Free
-              </button>
-            )}
-          </div>
-
-          <div>
-            <p className="mb-2 text-xs uppercase tracking-wider text-white/45">Role</p>
-            {isOwnRow ? (
-              <p className="text-sm text-white/50">
-                You can&apos;t change your own role - ask another super admin.
-              </p>
-            ) : (
-              <CustomSelect
-                value={nextRole}
-                onChange={setNextRole}
-                options={[
-                  { value: "", label: "No access" },
-                  { value: "admin", label: "Admin" },
-                  { value: "super_admin", label: "Super Admin" },
-                ]}
-              />
-            )}
-          </div>
-
-          {error && <p className="text-sm text-red-400">{error}</p>}
-
-          <div className="flex justify-end gap-3 pt-2">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-4 py-2 text-sm text-white/60 transition hover:text-white"
-            >
-              Cancel
-            </button>
-            <Button
-              href="#"
-              preventDefault
-              disabled={!hasChanges}
-              onClick={() => setStep("confirm")}
-              variant="orange"
-              text="Review Changes"
-            />
-          </div>
-        </div>
-      )}
-
-      {step === "confirm" && (
-        <div className="space-y-5">
-          <p className="text-sm text-white/70">
-            You&apos;re about to make the following change{changeSummaries.length === 1 ? "" : "s"}
-            {" "}to <span className="text-white">{user.name || user.email}</span>:
-          </p>
-
-          <ul className="space-y-2">
-            {changeSummaries.map((change) => (
-              <li
-                key={change.text}
-                className={`border px-3 py-2 text-sm ${
-                  change.danger
-                    ? "border-red-500/25 bg-red-500/10 text-red-300"
-                    : "border-white/10 bg-white/5 text-white/80"
-                }`}
-              >
-                {change.text}
-              </li>
-            ))}
-          </ul>
-
-          {error && <p className="text-sm text-red-400">{error}</p>}
-
-          <div className="flex justify-end gap-3 pt-2">
-            <button
-              type="button"
-              onClick={() => setStep("edit")}
-              disabled={saving}
-              className="px-4 py-2 text-sm text-white/60 transition hover:text-white disabled:opacity-50"
-            >
-              Back
-            </button>
-            <Button
-              href="#"
-              preventDefault
-              disabled={saving}
-              onClick={handleConfirm}
-              variant="orange"
-              text={saving ? "Saving…" : "Confirm"}
-            />
-          </div>
-        </div>
-      )}
-    </ModalShell>
-  );
-}
-
 export default function AdminPage() {
   // isSuperAdmin: the development preview stands in for one
   const { path, isSuperAdmin } = useDashboard();
@@ -787,7 +488,8 @@ export default function AdminPage() {
   const [search, setSearch] = useState("");
   const [planFilter, setPlanFilter] = useState("all");
   const [roleFilter, setRoleFilter] = useState("all");
-  const [audience, setAudience] = useAdminAudience();
+  // Customers / Internal / All: chosen in the tab row (DashboardShell)
+  const [audience] = useAdminAudience();
   // When they joined: the dashboard's date filter ({ preset, from, to })
   const [dates, setDates] = useState(ALL_DATES);
   const dateRange = dates.preset;
@@ -911,28 +613,41 @@ export default function AdminPage() {
     return () => clearTimeout(timer);
   }, [fetchUsers]);
 
-  // A plain same-origin GET, pointed straight at the API URL - the server's
-  // Content-Disposition: attachment header is what makes the browser
-  // download it rather than navigate, so this needs no fetch/blob JS at
-  // all. The earlier fetch-to-blob-to-<a download> version broke under
-  // Chrome's device-emulation mode (and possibly other constrained
-  // contexts): the blob click fell through to a real top-level navigation
-  // to the blob's bare id instead of triggering a save, 404ing because
-  // that's not a real route. A plain link is what every "Download PDF"
-  // link on the web actually is - no JS delivery mechanism to break.
-  function handleExport() {
+  // Download the filtered list as a CSV without leaving the page: fetched in the
+  // background and saved from memory, with a toast for how it went
+  const { toast, showToast, dismissToast } = useToastQueue();
+  const [exporting, setExporting] = useState(false);
+  async function handleExport() {
+    if (exporting) return;
     const params = new URLSearchParams({ audience });
     if (search) params.set("search", search);
     if (planFilter !== "all") params.set("plan", planFilter);
     if (roleFilter !== "all") params.set("role", roleFilter);
     appendDateRangeParams(params);
 
-    const link = document.createElement("a");
-    link.href = `/api/admin/users/export?${params.toString()}`;
-    link.rel = "noopener";
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
+    setExporting(true);
+    try {
+      const res = await fetch(`/api/admin/users/export?${params.toString()}`);
+      if (!res.ok) throw new Error(`export ${res.status}`);
+      const blob = await res.blob();
+      const name = res.headers.get("content-disposition")?.match(/filename="?([^";]+)"?/)?.[1] || "vault-users.csv";
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = name;
+      // A file, not a page: the page transitions leave it alone
+      link.setAttribute("data-no-page-transition", "");
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+      showToast({ title: "Export Downloaded", description: `${name} - the users matching these filters.` });
+    } catch (err) {
+      console.error(err);
+      showToast({ title: "Couldn't Export Users", description: "Please try again in a moment." });
+    } finally {
+      setExporting(false);
+    }
   }
 
   function applyManageChanges(userId, patch) {
@@ -944,23 +659,39 @@ export default function AdminPage() {
 
   return (
     <>
+    <ToastViewport toast={toast} onDismiss={dismissToast} />
     <div className="flex flex-col gap-[calc(var(--cvw)*0.8)] max-lg:gap-3">
-      {/* header, right: export, the email log, invite */}
-      <DashboardHeroAside>
-        <div className="flex flex-wrap items-center gap-3">
-          <AdminAudienceToggle value={audience} onChange={setAudience} />
-          <Button text="Export CSV" variant="outline" preventDefault onClick={handleExport} />
-          <Button text="Email log" variant="outline" href={path("admin/emails")} />
-          <Button text="Invite" preventDefault onClick={() => setShowInviteModal(true)} />
+      {/* the window and whose accounts, left; export, the email log, invite and the date, right */}
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <p className="type-label text-black/60">
+          {dates.preset === "custom" ? "Custom range" : `${DATE_PRESETS[dates.preset]}`} · {audience === "all" ? "every account" : audience === "internal" ? "internal accounts" : "customers"}
+        </p>
+        <div className="flex flex-wrap items-center gap-[calc(var(--cvw)*0.7)] max-md:gap-[2.5vw]">
+          <Tooltip label="Export CSV">
+            <button type="button" onClick={handleExport} disabled={exporting} aria-label="Export CSV" className={ICON_BUTTON}>
+              {exporting ? <LoaderCircle className="animate-spin" aria-hidden="true" /> : <Download aria-hidden="true" />}
+            </button>
+          </Tooltip>
+          <Tooltip label="Email log">
+            <Link href={path("admin/emails")} aria-label="Email log" className={ICON_BUTTON}>
+              <Mail aria-hidden="true" />
+            </Link>
+          </Tooltip>
+          <Tooltip label="Invite">
+            <button type="button" onClick={() => setShowInviteModal(true)} aria-label="Invite people" className={ICON_BUTTON}>
+              <UserPlus aria-hidden="true" />
+            </button>
+          </Tooltip>
+          <DateRangeFilter label="Joined" value={dates} onChange={setDates} />
         </div>
-      </DashboardHeroAside>
+      </div>
 
       <UserStatsTiles dates={dates} audience={audience} />
 
       <section aria-label="Users" className={`${CARD} ${CARD_PAD} gap-[calc(var(--cvw)*1.2)] max-lg:gap-4`}>
         {/* search and filters */}
         <div className="flex flex-wrap items-center gap-[calc(var(--cvw)*0.7)] max-md:gap-[2.5vw]">
-          <label className="type-small flex h-9.5 min-w-60 flex-1 items-center gap-2 bg-light px-3 text-black/60 ring-1 ring-inset ring-black/10 focus-within:ring-primary">
+          <label className="type-small flex h-9.5 min-w-40 flex-1 items-center gap-2 bg-light px-3 text-black/60 ring-1 ring-inset ring-black/10 focus-within:ring-primary">
             <Search className="size-3.5 shrink-0" aria-hidden="true" />
             <span className="sr-only">Search users</span>
             <input type="text" placeholder="Search by name or email" value={search} onChange={(e) => setSearch(e.target.value)} className="min-w-0 flex-1 bg-transparent text-ink outline-none placeholder:text-black/40" />
@@ -984,7 +715,9 @@ export default function AdminPage() {
               onSelect={set}
             />
           ))}
-          <DateRangeFilter label="Joined" value={dates} onChange={setDates} />
+          <div className="ml-auto">
+            <PerPageMenu value={pageSize} onChange={setPageSize} />
+          </div>
         </div>
 
         {error && <p className="type-small bg-primary/10 px-4 py-3 text-ink ring-1 ring-inset ring-primary/30">{error}</p>}
@@ -997,7 +730,7 @@ export default function AdminPage() {
                 <th className="py-3 pr-4 font-normal">User</th>
                 <th className="py-3 pr-4 font-normal">Joined</th>
                 <th className="py-3 pr-4 font-normal">Plan</th>
-                <th className="py-3 pr-4 font-normal">Web / CLI / MCP</th>
+                <th className="py-3 pr-4 font-normal">Installs (web / CLI / MCP)</th>
                 <th className="py-3 pr-4 font-normal">Saves</th>
                 {isSuperAdmin && (
                   <>
@@ -1030,11 +763,7 @@ export default function AdminPage() {
                   <tr key={user.id} className="border-b border-black/10 last:border-b-0">
                     <td className="py-[calc(var(--cvw)*0.7)] pr-4 max-lg:py-3">
                       <div className="flex items-center gap-3">
-                        {user.imageUrl ? (
-                          <Image src={user.imageUrl} alt="" width={32} height={32} className="size-8 shrink-0 rounded-full object-cover" />
-                        ) : (
-                          <span className="type-small grid size-8 shrink-0 place-items-center rounded-full bg-ink text-foreground">{(user.name?.[0] || user.email?.[0] || "?").toUpperCase()}</span>
-                        )}
+                        <UserAvatar name={user.name} email={user.email} imageUrl={user.imageUrl} className="size-9" />
                         <div className="flex min-w-0 flex-col">
                           <span className="flex items-center gap-1.5">
                             <Link href={path(`admin/activity/${buildUserActivitySlug(user)}`)} className="type-body truncate transition-colors duration-300 hover:text-primary">
@@ -1042,6 +771,7 @@ export default function AdminPage() {
                             </Link>
                             {user.role && user.role !== "user" && <span className="type-small shrink-0 bg-black/5 px-1.5 text-black/60">{user.role === "super_admin" ? "Super admin" : "Admin"}</span>}
                             {isSuperAdmin && user.id === viewer?.id && <span className="type-small shrink-0 text-black/40">(you)</span>}
+                            {user.suspended && <span className="type-small shrink-0 bg-danger-strong/10 px-1.5 text-danger-strong">Suspended</span>}
                           </span>
                           <span className="type-small truncate text-black/60">{user.email || user.id}</span>
                         </div>
@@ -1052,11 +782,14 @@ export default function AdminPage() {
                       <PlanBadge plan={user.plan} tier={user.tier} />
                     </td>
                     <td className="type-body whitespace-nowrap py-3 pr-4">
-                      <span title="Website copies">{user.copiesCount ?? 0}</span>
+                      <span title="All installs" className="text-ink">{user.installsCount ?? 0}</span>
+                      <span className="type-small text-black/60"> (</span>
+                      <span title="Web installs">{user.webCount ?? 0}</span>
                       <span className="text-black/20"> / </span>
                       <span title="CLI installs" className="text-primary">{user.cliCount ?? 0}</span>
                       <span className="text-black/20"> / </span>
                       <span title="MCP installs" className="text-black/60">{user.mcpCount ?? 0}</span>
+                      <span className="type-small text-black/60">)</span>
                     </td>
                     <td className="type-body py-3 pr-4">{user.savesCount ?? 0}</td>
                     {isSuperAdmin && (
@@ -1086,28 +819,25 @@ export default function AdminPage() {
           </table>
         </div>
 
-        {/* pages, and how many a page */}
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <PerPageMenu value={pageSize} onChange={setPageSize} />
-          <div className="min-w-0 flex-1">
-            <Pager page={currentPage - 1} pages={totalPages} total={total} noun={total === 1 ? "user" : "users"} onPage={(p) => setCurrentPage(p + 1)} />
-          </div>
-        </div>
+        <Pager page={currentPage - 1} pages={totalPages} total={total} noun={total === 1 ? "user" : "users"} onPage={(p) => setCurrentPage(p + 1)} />
       </section>
     </div>
     <AnimatePresence>
       {showInviteModal && (
         <InviteModal onClose={() => setShowInviteModal(false)} />
       )}
-      {manageUser && (
-        <ManageUserModal
-          user={manageUser}
-          isOwnRow={manageUser.id === viewer?.id}
-          onClose={() => setManageUser(null)}
-          onSaved={(patch) => applyManageChanges(manageUser.id, patch)}
-        />
-      )}
+
     </AnimatePresence>
+    <ManageUserDrawer
+      user={manageUser}
+      isOwnRow={manageUser?.id === viewer?.id}
+      activityHref={manageUser ? path(`admin/activity/${buildUserActivitySlug(manageUser)}`) : "#"}
+      onClose={() => setManageUser(null)}
+      onSaved={(patch) => {
+        applyManageChanges(manageUser.id, patch);
+        setManageUser((current) => (current ? { ...current, ...patch } : current));
+      }}
+    />
     </>
   );
 }

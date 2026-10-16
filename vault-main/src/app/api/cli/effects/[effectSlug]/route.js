@@ -81,6 +81,18 @@ export async function GET(request, { params }) {
   // installDecision.allowed is always true regardless of the real count (see
   // install-limit.js's shadow-mode semantics), so this branch is unreachable
   // in shadow mode and every request still falls through to the payload below.
+  // Signed out: every install needs an account (free effects too) - not a limit, so
+  // always refused, shadow mode or not
+  if (installDecision.reason === "sign-in-required") {
+    return NextResponse.json(
+      {
+        error: "Sign in to install effects. Create a free account at vault.hyperiux.com, then run `npx hyperiux login` (or set HYPERIUX_TOKEN).",
+        reason: "sign-in-required",
+      },
+      { status: 401 }
+    );
+  }
+
   if (!installDecision.allowed) {
     const retryAfter = secondsUntilNextUtcMidnight();
 

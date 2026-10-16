@@ -22,6 +22,8 @@ export const ADMIN_TABS = [
   { key: "activity", label: "Activity", sub: "admin/activity", light: true },
   { key: "users", label: "Users", sub: "admin/users", light: true },
   { key: "admin-invoicing", label: "Invoicing", sub: "admin/invoicing", superAdmin: true, light: true },
+  // Reached from Users (its Email log button), not from the tab row or the profile menu
+  { key: "emails", label: "Email log", sub: "admin/emails", light: true, hidden: true },
 ];
 
 // The tab a path belongs to: the longest `sub` that prefixes it, so

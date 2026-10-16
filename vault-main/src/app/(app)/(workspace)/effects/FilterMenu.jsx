@@ -135,8 +135,8 @@ export function FilterMenu({
     if (!open || !panel || prefersReducedMotion()) return undefined;
     const rows = Array.from(panel.children);
     const tl = gsap.timeline();
-    tl.fromTo(panel, { clipPath: "inset(0 0 100% 0)" }, { clipPath: "inset(0 0 0% 0)", duration: 0.56, ease: "power2.out", clearProps: "clipPath" });
-    tl.fromTo(rows, { opacity: 0 }, { opacity: 1, duration: 0.35, ease: "power1.out", stagger: 0.035, clearProps: "opacity" }, 0.18);
+    tl.fromTo(panel, { clipPath: "inset(0 0 100% 0)" }, { clipPath: "inset(0 0 0% 0)", duration: 0.45, ease: "power2.out", clearProps: "clipPath" });
+    tl.fromTo(rows, { opacity: 0 }, { opacity: 1, duration: 0.28, ease: "power1.out", stagger: 0.028, clearProps: "opacity" }, 0.14);
     return () => tl.kill();
   }, [open]);
 

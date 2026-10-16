@@ -1,6 +1,6 @@
 import { auth, currentUser } from "@clerk/nextjs/server";
+import { fetchInstalls } from "@/lib/admin-data";
 import { NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase";
 import { getUserPlanInfo } from "@/lib/subscription";
 import { isAdminUser } from "@/lib/admin";
 import { getEffectMetadata } from "@/lib/registry";
@@ -35,35 +35,21 @@ export async function GET() {
   const titles = new Map(buildEffectsFromSanity(sanityEntries).map((effect) => [effect.name, effect.title]));
   const titleOf = (slug) => titles.get(slug) || getEffectMetadata(slug)?.title || slug;
 
-  // Members: install_unlocks, the ledger shared across web/CLI/MCP - one row per (UTC
-  // day, effect), which is what the daily limit counts. Admins are never metered, so
-  // they have no ledger rows; their installs are logged in install_events instead
-  // (plan "admin", see lib/install-limit).
-  const { data: rows, error } = isAdmin
-    ? await supabase
-        .from("install_events")
-        .select("effect_slug, source, occurred_at")
-        .eq("clerk_user_id", userId)
-        .eq("plan", "admin")
-        .order("occurred_at", { ascending: false })
-        .limit(MAX_EVENTS)
-    : await supabase
-        .from("install_unlocks")
-        .select("effect_slug, source, usage_date, first_unlocked_at")
-        .eq("clerk_user_id", userId)
-        .order("first_unlocked_at", { ascending: false })
-        .limit(MAX_EVENTS);
-
-  if (error) {
+  // Their installs, newest first: one effect, one day, from the website, the CLI or MCP
+  // (lib/admin-data fetchInstalls - the count every admin page uses; admins included)
+  let rows;
+  try {
+    rows = (await fetchInstalls({ clerkUserId: userId })).slice(0, MAX_EVENTS);
+  } catch (error) {
     console.error("DASHBOARD_USAGE_ERROR:", error);
     return NextResponse.json({ error: "Failed to load usage" }, { status: 500 });
   }
 
-  const events = (rows || []).map((row) => ({
-    name: row.effect_slug,
-    title: titleOf(row.effect_slug),
-    source: row.source || "web",
-    at: row.occurred_at || row.first_unlocked_at || row.usage_date,
+  const events = rows.map((row) => ({
+    name: row.effectSlug,
+    title: titleOf(row.effectSlug),
+    source: row.source,
+    at: row.at,
   }));
 
   // Unique effects today (UTC), against the limit

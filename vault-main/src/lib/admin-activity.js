@@ -159,3 +159,66 @@ export function buildDailyBucketsForRange({ startDateString, endDateString, maxD
 
   return buckets;
 }
+
+// ---------------------------------------------------------------------------
+// Period comparison (the admin Activity stat cards)
+// ---------------------------------------------------------------------------
+
+const DAY_MS = 86400000;
+
+/**
+ * The window a stat is compared over, and the one before it, from resolveDateBounds()'s
+ * bounds. A bounded window is compared with the same length just before it ("vs prev.
+ * 30d"). All time has nothing before it, so its change is the last 30 days against the 30
+ * before ("last 30d vs prev. 30d") - the direction it's heading now.
+ * Returns { current: [startMs, endMs], previous: [startMs, endMs], label }.
+ */
+export function comparisonWindows({ startISO, endISO, range, now = Date.now() }) {
+  const end = endISO ? new Date(endISO).getTime() : now;
+  if (!startISO) {
+    return { current: [end - 30 * DAY_MS, end], previous: [end - 60 * DAY_MS, end - 30 * DAY_MS], label: "last 30d vs prev. 30d" };
+  }
+  const start = new Date(startISO).getTime();
+  const length = Math.max(end - start, DAY_MS);
+  const days = Math.round(length / DAY_MS);
+  const label = range === "today" ? "vs yesterday" : `vs prev. ${days}d`;
+  return { current: [start, end], previous: [start - length, start], label };
+}
+
+/**
+ * A stat's line over [startMs, endMs): hourly for a day or less, daily up to two months,
+ * weekly up to two years, monthly beyond - so a line stays readable at any range.
+ * `items` are { at: ms, value }. Returns [{ date: ISO of the bucket's start, value }].
+ */
+export function seriesBuckets(items, startMs, endMs) {
+  const span = Math.max(endMs - startMs, 1);
+  const size = span <= DAY_MS ? DAY_MS / 24 : span <= 62 * DAY_MS ? DAY_MS : span <= 730 * DAY_MS ? 7 * DAY_MS : 30 * DAY_MS;
+  const count = Math.min(Math.ceil(span / size), 400);
+  const buckets = Array.from({ length: count }, (_, i) => ({ date: new Date(startMs + i * size).toISOString(), value: 0 }));
+  for (const { at, value = 1 } of items) {
+    if (at < startMs || at >= endMs) continue;
+    const i = Math.min(count - 1, Math.floor((at - startMs) / size));
+    buckets[i].value += value;
+  }
+  return buckets;
+}
+
+/**
+ * One stat card: `value` (the total over the selected window - all of it for all time),
+ * `current` and `previous` (the two windows the change is worked out from) and `series`
+ * (the line, from `seriesStartMs` to the window's end). `inWindow(at)` says what's in the
+ * selected window. `items` are { at: ms, value }.
+ */
+export function compareStat(items, windows, { inWindow, seriesStartMs }) {
+  const [cs, ce] = windows.current;
+  const [ps, pe] = windows.previous;
+  let value = 0;
+  let current = 0;
+  let previous = 0;
+  for (const { at, value: v = 1 } of items) {
+    if (inWindow(at)) value += v;
+    if (at >= cs && at < ce) current += v;
+    else if (at >= ps && at < pe) previous += v;
+  }
+  return { value, current, previous, series: seriesBuckets(items, seriesStartMs, ce) };
+}

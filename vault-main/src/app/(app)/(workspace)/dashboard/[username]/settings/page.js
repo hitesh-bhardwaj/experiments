@@ -6,9 +6,6 @@ import { LoaderCircle, Trash2, Upload, User, X } from "lucide-react";
 import { PasswordEye } from "@/components/ui/PasswordEye";
 import { createPortal } from "react-dom";
 import { useClerk, useUser } from "@clerk/nextjs";
-import { useLenis } from "lenis/react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
 import { useDashboard } from "@/components/Dashboard/DashboardContext";
 import { ACTION_LINE, ACTION_PRIMARY, CARD, CARD_PAD, CardLink, FIELD, FIELD_LABEL, SubmitButton, Toggle } from "@/components/Dashboard/DashboardUI";
 import { Bar, ButtonBar, SkeletonCard } from "@/components/Dashboard/DashboardSkeletons";
@@ -151,31 +148,6 @@ export default function SettingsPage() {
       setDeleting(false);
     }
   }
-  const lenis = useLenis();
-
-  // The section list follows the page: the current section's link is orange. A ScrollTrigger
-  // over the whole page picks the last section whose top has passed a line 40% down the
-  // screen. Near the end of the page the line slides down to the bottom edge, so the last
-  // sections - which can't scroll that high - still each take their turn.
-  const [active, setActive] = useState("profile");
-  const clickLockRef = useRef(false);
-  const sectionsReady = Boolean(isLoaded && user);
-  useEffect(() => {
-    if (!sectionsReady) return undefined;
-    gsap.registerPlugin(ScrollTrigger);
-    const pick = (self) => {
-      if (clickLockRef.current) return;
-      const sections = SECTIONS.map(([id]) => document.getElementById(id)).filter(Boolean);
-      if (!sections.length) return;
-      const runway = window.innerHeight * 0.6;
-      const left = Math.max(0, self.end - self.scroll());
-      const line = window.innerHeight * (0.4 + 0.6 * (1 - Math.min(1, left / runway)));
-      const current = sections.filter((section) => section.getBoundingClientRect().top <= line).pop() || sections[0];
-      setActive(current.id);
-    };
-    const trigger = ScrollTrigger.create({ start: 0, end: "max", onUpdate: pick, onRefresh: pick });
-    return () => trigger.kill();
-  }, [sectionsReady]);
   const fileInputRef = useRef(null);
 
   const [savingProfile, setSavingProfile] = useState(false);
@@ -381,15 +353,9 @@ export default function SettingsPage() {
   }
 
   if (!isLoaded) {
-    // the section list, then the profile card (photo, two name fields, email) and the
-    // password card
+    // the profile card (photo, two name fields, email) and the password card
     return (
-      <div aria-busy="true" aria-label="Loading your settings" className="flex items-start gap-[calc(var(--cvw)*2.4)] max-lg:flex-col max-lg:gap-6">
-        <div className="flex w-[16%] shrink-0 flex-col gap-3 max-lg:w-full max-lg:flex-row">
-          {[0, 1, 2, 3].map((i) => (
-            <Bar key={i} type="type-label" className="w-[60%] max-lg:w-20" />
-          ))}
-        </div>
+      <div aria-busy="true" aria-label="Loading your settings" className="flex flex-col">
         <div className="flex min-w-0 flex-1 flex-col gap-[calc(var(--cvw)*0.8)] max-lg:w-full max-lg:gap-3">
           <SkeletonCard className="gap-[calc(var(--cvw)*1.4)] max-lg:gap-5">
             <div className="flex flex-col gap-1">
@@ -426,50 +392,12 @@ export default function SettingsPage() {
 
   const email = user.primaryEmailAddress?.emailAddress;
 
-  // The section links glide to their section through Lenis (as the docs' in-page links),
-  // stopping the section's scroll-margin below the header, instead of jumping
-  function glideTo(event) {
-    if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-    const id = event.currentTarget.getAttribute("href").slice(1);
-    const section = document.getElementById(id);
-    if (!section) return;
-    event.preventDefault();
-    const top = section.getBoundingClientRect().top + window.scrollY - (parseFloat(getComputedStyle(section).scrollMarginTop) || 0);
-    window.history.pushState(null, "", `#${id}`);
-    // The clicked link lights up at once and stays lit while the page glides past the
-    // sections in between
-    setActive(id);
-    clickLockRef.current = true;
-    const release = () => {
-      clickLockRef.current = false;
-    };
-    if (lenis) lenis.scrollTo(top, { duration: 1.15, easing: (t) => 1 - Math.pow(1 - t, 3), force: true, onComplete: release });
-    else {
-      window.scrollTo({ top, behavior: "smooth" });
-      setTimeout(release, 1200);
-    }
-  }
-
   return (
-    <div className="flex items-start gap-[calc(var(--cvw)*2.4)] max-lg:flex-col max-lg:gap-6">
-      {/* sections, pinned beside them on desktop */}
-      <nav aria-label="Settings sections" className="sticky top-28 flex w-[16%] shrink-0 flex-col gap-3 max-lg:static max-lg:w-full max-lg:flex-row max-lg:flex-wrap">
-        {SECTIONS.map(([id, label]) => (
-          <a
-            key={id}
-            href={`#${id}`}
-            onClick={glideTo}
-            aria-current={active === id ? "true" : undefined}
-            className={`type-label w-fit transition-colors duration-300 hover:text-primary ${active === id ? "text-primary" : "text-black/60"}`}
-          >
-            {label}
-          </a>
-        ))}
-      </nav>
+    <div className="flex flex-col">
 
       <div className="flex min-w-0 flex-1 flex-col gap-[calc(var(--cvw)*0.8)] max-lg:w-full max-lg:gap-3">
         {/* profile: photo, name, email */}
-        <section id="profile" aria-labelledby="profile-h" className={`${CARD} ${CARD_PAD} scroll-mt-32 gap-[calc(var(--cvw)*1.4)] max-lg:gap-5`}>
+        <section id="profile" aria-labelledby="profile-h" className={`${CARD} ${CARD_PAD} gap-[calc(var(--cvw)*1.4)] max-lg:gap-5`}>
           <div className="flex flex-col gap-1">
             <h2 id="profile-h" className="type-h3">
               Profile
@@ -530,7 +458,7 @@ export default function SettingsPage() {
         </section>
 
         {/* password: change it, or reset it with a code sent by email */}
-        <section id="password" aria-labelledby="password-h" className={`${CARD} ${CARD_PAD} scroll-mt-32 gap-[calc(var(--cvw)*1.4)] max-lg:gap-5`}>
+        <section id="password" aria-labelledby="password-h" className={`${CARD} ${CARD_PAD} gap-[calc(var(--cvw)*1.4)] max-lg:gap-5`}>
           <div className="flex flex-col gap-1">
             <h2 id="password-h" className="type-h3">
               Password
@@ -586,7 +514,7 @@ export default function SettingsPage() {
         </section>
 
         {/* email: product updates (the newsletter) can be turned off; account mail can't */}
-        <section id="email" aria-labelledby="email-h" className={`${CARD} ${CARD_PAD} scroll-mt-32 gap-(--cvw) max-lg:gap-4`}>
+        <section id="email" aria-labelledby="email-h" className={`${CARD} ${CARD_PAD} gap-(--cvw) max-lg:gap-4`}>
           <h2 id="email-h" className="type-h3">
             Email
           </h2>
@@ -614,7 +542,7 @@ export default function SettingsPage() {
         </section>
 
         {/* privacy & data: delete the account */}
-        <section id="privacy" aria-labelledby="privacy-h" className={`${CARD} ${CARD_PAD} scroll-mt-32 gap-[calc(var(--cvw)*1)] max-lg:gap-4`}>
+        <section id="privacy" aria-labelledby="privacy-h" className={`${CARD} ${CARD_PAD} gap-[calc(var(--cvw)*1)] max-lg:gap-4`}>
           <div className="flex flex-col gap-1">
             <h2 id="privacy-h" className="type-h3">
               Privacy &amp; data
@@ -710,14 +638,6 @@ export default function SettingsPage() {
     </div>
   );
 }
-
-// The sections, for the list beside them
-const SECTIONS = [
-  ["profile", "Profile"],
-  ["password", "Password"],
-  ["email", "Email"],
-  ["privacy", "Privacy & data"],
-];
 
 // A password field with show / hide
 function PasswordField({ label, shown, onToggle, ...input }) {

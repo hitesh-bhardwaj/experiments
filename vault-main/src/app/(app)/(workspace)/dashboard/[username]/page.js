@@ -401,7 +401,7 @@ export default function DashboardOverviewPage() {
           {/* effects taken through each surface, divided by hairlines: chip, number, caption */}
           <div className="flex flex-1 gap-[calc(var(--cvw)*1.6)] max-md:gap-4">
             {[
-              ["web", data.copiedCount, "Copied on the site"],
+              ["web", data.webCount, "From the website"],
               ["cli", data.cliCount, "Installed with the CLI"],
               ["mcp", data.mcpCount, "Through an AI editor"],
             ].map(([source, count, detail], i) => (
@@ -421,7 +421,7 @@ export default function DashboardOverviewPage() {
       {/* recent activity + recently saved */}
       <div className="flex gap-[calc(var(--cvw)*0.8)] max-lg:flex-col max-lg:gap-3">
         <section className={`${CARD} ${CARD_PAD} w-[63%] gap-[calc(var(--cvw)*1)] max-lg:w-full max-lg:gap-4`}>
-          <SectionHead title="Recent Activity" href={path("usage")} label="All Usage" />
+          <SectionHead title="Recent Installation Activity" href={path("usage")} label="All Usage" />
           {data.recentActivity?.length ? (
             <ul className="flex flex-col">
               {data.recentActivity.map((item) => {
@@ -438,7 +438,7 @@ export default function DashboardOverviewPage() {
               })}
             </ul>
           ) : (
-            <p className="type-body text-black/60">Nothing yet. Copy or install an effect and it shows up here.</p>
+            <p className="type-body text-black/60">Nothing yet. Install an effect (copy it on the site, or use the CLI or MCP) and it shows up here.</p>
           )}
         </section>
 

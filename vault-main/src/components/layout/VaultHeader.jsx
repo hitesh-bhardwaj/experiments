@@ -398,13 +398,16 @@ export function VaultHeader({
       {/* Desktop header - untouched, >1025px only (or never, when mobileOnly). */}
       <header
         ref={desktopHeaderRef}
-        className={`fixed left-0 right-0 top-(--announcement-offset) transition-[top] duration-300 ease-out z-50 px-[calc(var(--hx-vw,1vw)*2)] py-4.5 ${mobileOnly ? "hidden" : "max-lg:hidden"} ${isScrolled ? "bg-black/20 backdrop-blur-lg" : ""
+        // pointer-events-none: the bar is see-through (blurred), so clicks on its empty part
+        // reach the page under it - a dropdown showing through it is still usable. Its
+        // controls take clicks again (pointer-events-auto below).
+        className={`pointer-events-none fixed left-0 right-0 top-(--announcement-offset) transition-[top] duration-300 ease-out z-50 px-[calc(var(--hx-vw,1vw)*2)] py-4.5 ${mobileOnly ? "hidden" : "max-lg:hidden"} ${isScrolled ? "bg-black/20 backdrop-blur-lg" : ""
           }`}
       >
         <div className="flex h-full items-center justify-end gap-3">
           {/* One fixed height (--vault-ctl-h) for search, sound, the buttons and the avatar,
               signed in or out - the avatar used to make the row taller once signed in. */}
-          <div className="flex h-(--vault-ctl-h) items-stretch gap-3">
+          <div className="pointer-events-auto flex h-(--vault-ctl-h) items-stretch gap-3">
             {showSearch && (
               <button
                 type="button"

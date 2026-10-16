@@ -508,7 +508,7 @@ export default function GetCodeMenu({
           onKeyDown={onPanelKeyDown}
           // Fades and scales in. Phones: the button starts the row at the page gutter, so the panel opens from
           // its left edge across the whole content width (86vw, the stage's width) instead of the button's.
-          className={`absolute top-[calc(100%+var(--cvw)*0.5)] z-40 w-[calc(var(--cvw)*24)] min-w-72 origin-top animate-[hx-scale-in_0.49s_cubic-bezier(0.33,1,0.68,1)] border border-foreground/10 bg-dark-card p-1.5 motion-reduce:animate-none max-lg:w-[55vw] max-md:left-0! max-md:right-auto! max-md:w-[86vw] max-md:min-w-0 ${
+          className={`absolute top-[calc(100%+var(--cvw)*0.5)] z-40 w-[calc(var(--cvw)*24)] min-w-72 origin-top animate-[hx-scale-in_0.39s_cubic-bezier(0.33,1,0.68,1)] border border-foreground/10 bg-dark-card p-1.5 motion-reduce:animate-none max-lg:w-[55vw] max-md:left-0! max-md:right-auto! max-md:w-[86vw] max-md:min-w-0 ${
             align === "left" ? "left-0" : "right-0"
           }`}
         >

@@ -39,8 +39,11 @@ const OAUTH_ICONS = { oauth_google: GoogleIcon, oauth_github: GitHubIcon };
 // padding); the copyright shares its width so it lines up under the form
 const FORM_WIDTH_CLASS = "w-full";
 
-function modeFromPath(pathname) {
-  return pathname.startsWith(MODE_PATHS["sign-up"]) ? "sign-up" : "sign-in";
+// `?mode=reset` on the sign-in page opens straight on password reset (the link in the
+// email an admin sends from the Users tab, with `&email=` filled in)
+function modeFromPath(pathname, modeParam) {
+  if (pathname.startsWith(MODE_PATHS["sign-up"])) return "sign-up";
+  return modeParam === "reset" ? "reset" : "sign-in";
 }
 
 // The vault door: sign in, sign up and password reset as one full-screen scene.
@@ -48,8 +51,10 @@ function modeFromPath(pathname) {
 export default function VaultDoorAuth({ catalogue }) {
   // Hooks
   const router = useRouter();
-  const routeMode = modeFromPath(usePathname());
   const searchParams = useSearchParams();
+  const routeMode = modeFromPath(usePathname(), searchParams.get("mode"));
+  // An email handed over in the link (the reset email) starts filled in
+  const startValues = { ...EMPTY_VALUES, email: (searchParams.get("email") || "").slice(0, 320) };
   const reducedMotion = usePrefersReducedMotion();
   const rawRedirectUrl = searchParams.get("redirect_url");
   const redirectUrl = getSafeRedirectUrl(rawRedirectUrl, DEFAULT_REDIRECT);
@@ -66,7 +71,7 @@ export default function VaultDoorAuth({ catalogue }) {
   const rootRef = useRef(null);
   const formLayerRef = useRef(null);
   const paneRef = useRef(null);
-  const valuesRef = useRef(EMPTY_VALUES);
+  const valuesRef = useRef(startValues);
   useSiteHeaderHeight(rootRef);
 
   // Already signed in (e.g. sent here by an expired server cookie while the
@@ -83,7 +88,7 @@ export default function VaultDoorAuth({ catalogue }) {
   const [stepIndex, setStepIndex] = useState(0);
   // 1 forward, -1 back: which way the steps slide (StepTrack)
   const [direction, setDirection] = useState(1);
-  const [values, setValues] = useState(EMPTY_VALUES);
+  const [values, setValues] = useState(startValues);
   const [message, setMessage] = useState(null);
   const [busy, setBusy] = useState(false);
   const [opening, setOpening] = useState(false);

@@ -12,6 +12,7 @@ import { BUTTON_SIZE } from "@/homepage/components/Button";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import { AppVaultHeader as VaultHeader } from "@/components/layout/AppVaultHeader";
 import { DarkSegment } from "@/components/ui/DarkSegment";
+import { AdminAudienceToggle, useAdminAudience } from "@/components/admin/AdminAudience";
 import { ADMIN_HIDDEN_TABS, ADMIN_TABS, USER_TABS, activeTab, dashboardPath, isAdminPath } from "./dashboardRoutes";
 import { DashboardProvider, HERO_ASIDE_ID } from "./DashboardContext";
 
@@ -26,6 +27,7 @@ const HEROES = {
   activity: ["", "Activity.", "Site-wide usage, delivery, and who’s driving it."],
   users: ["", "Users.", "Everyone with a Vault account, and what they’re doing with it."],
   "admin-invoicing": ["", "Invoicing.", "Every payment across subscriptions and templates."],
+  emails: ["Email", "Log.", "Every email Vault has sent, and whether it was delivered."],
 };
 
 function greeting(hour) {
@@ -43,6 +45,12 @@ const VIEWS = [
 const TAB = `inline-flex shrink-0 items-center px-3.5 ${BUTTON_SIZE} transition-[background-color,color,box-shadow] duration-500 backdrop-blur-lg ring-1 ring-inset ring-foreground/10 hover:ring-primary/60 max-md:px-4 max-md:py-2.5 max-md:text-sm`;
 const TAB_ON = "bg-primary text-background";
 const TAB_OFF = "bg-foreground/5 text-foreground/80 ring-1 ring-inset ring-foreground/15 hover:text-foreground hover:ring-primary/60";
+
+// The Customers / Internal / All switch, shared by every admin page (remembered in this browser)
+function AdminAudienceSwitch() {
+  const [audience, setAudience] = useAdminAudience();
+  return <AdminAudienceToggle value={audience} onChange={setAudience} />;
+}
 
 /**
  * The dashboard frame for /dashboard/{username}/…: the site's vault header, back +
@@ -81,7 +89,7 @@ export function DashboardShell({ username, effects = [], catalog = [], children 
     router.push(dashboardPath(username, next === "admin" ? "admin/activity" : ""));
   };
   const tabs = adminView
-    ? ADMIN_TABS.filter((tab) => !tab.superAdmin || isSuperAdmin)
+    ? ADMIN_TABS.filter((tab) => !tab.hidden && (!tab.superAdmin || isSuperAdmin))
     : USER_TABS.filter((tab) => !(isAdmin && ADMIN_HIDDEN_TABS.has(tab.key)));
   const current = activeTab(adminView ? ADMIN_TABS : USER_TABS, username, pathname);
 
@@ -144,7 +152,10 @@ export function DashboardShell({ username, effects = [], catalog = [], children 
             })}
 
             {isAdmin && (
-              <div className="ml-auto flex items-center gap-3 max-md:ml-0 max-md:w-full">
+              <div className="ml-auto flex flex-wrap items-center gap-3 max-md:ml-0 max-md:w-full">
+                {/* admin pages: whose numbers - customers, our internal accounts, or all (not
+                    the email log, which isn't split by account) */}
+                {adminView && current?.key !== "emails" && <AdminAudienceSwitch />}
                 <span className="type-label text-foreground/80">View as</span>
                 <DarkSegment buttonSize label="Dashboard view" items={VIEWS} value={view} onChange={switchView} itemClassName="w-[calc(var(--cvw)*6)] max-lg:w-20" />
               </div>

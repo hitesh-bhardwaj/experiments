@@ -43,3 +43,4 @@ CLAUDE.md
 
 # Backups written by vault-main/scripts/cleanup-test-data.mjs - payment rows, never committed
 vault-main/scripts/test-data-backup-*.json
+vault-main/scripts/install-cleanup-backup-*.json

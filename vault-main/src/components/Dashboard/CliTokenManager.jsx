@@ -153,16 +153,16 @@ export default function CliTokenManager({ plan, hasToken = false }) {
         <div className="flex w-[70%] flex-col gap-[calc(var(--cvw)*2)] max-lg:w-full max-lg:gap-2">
           <h2 id="cli-token" className="type-h2 font-aeonik">CLI token</h2>
           <p className="type-body text-black/60">
-            A private token that identifies you to the Hyperiux CLI and MCP, so installs count against your
-            account&apos;s daily limit instead of the stricter anonymous one. Keep it secret: anyone with it can
-            install under your account, including Pro downloads on a subscription.
+            A private token that signs you in to the Hyperiux CLI and MCP. Every install needs one, free
+            effects included, and counts against your account&apos;s daily limit. Keep it secret: anyone with it
+            can install under your account, including Pro downloads on a subscription.
           </p>
           <p className="type-small text-black/50">
             {isPro ? (
               "As a subscriber, it also unlocks Pro effect source and your plan’s daily limit (5 a day on Pro, 10 on Pro+)."
             ) : (
               <>
-                On the Free plan it raises your daily installs from 1 (anonymous) to 3.{" "}
+                On the Free plan that’s 3 effects a day.{" "}
                 <CardLink tone="accent" href="/pricing#plans" onClick={markScrollToPricingCards}>
                   Upgrade to Pro
                 </CardLink>{" "}

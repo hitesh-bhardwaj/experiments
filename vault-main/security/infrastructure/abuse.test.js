@@ -114,11 +114,18 @@ describe("install quota", () => {
   });
 
   // `?dependency=1` is a client-controlled query flag; it skips the quota
-  // *and* the ledger entirely. Today enforcement is in shadow mode
-  // (INSTALL_LIMIT_ENFORCE unset), so this is latent - it becomes a full
-  // quota bypass the day enforcement is switched on.
-  it.fails("[M6] a client-set dependency flag can't skip quota accounting for a top-level install", async () => {
+  // *and* the ledger entirely. Signed out it no longer gets anything: every
+  // install needs an account, checked before the dependency shortcut (fixed
+  // 2026-10-16). Still open for signed-in callers - latent while enforcement
+  // is in shadow mode (INSTALL_LIMIT_ENFORCE unset).
+  it("[M6] signed out, a client-set dependency flag gets no code", async () => {
     const decision = await getInstallLimitDecision(anon({ isDependency: true }));
-    expect(decision.reason).not.toBe("dependency");
+    expect(decision.allowed).toBe(false);
+    expect(decision.reason).toBe("sign-in-required");
+  });
+
+  it("signed out, no effect installs at all - free ones included, shadow mode or not", async () => {
+    const decision = await getInstallLimitDecision(anon());
+    expect(decision).toMatchObject({ allowed: false, reason: "sign-in-required", enforced: true });
   });
 });

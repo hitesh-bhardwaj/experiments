@@ -30,6 +30,9 @@
   /* Form states (community waitlist, toasts) */
   --success: #63D69A;
   --danger: #FF8A78;
+  /* the same on light surfaces (white cards): darker, readable as text */
+  --success-strong: #1E8E50;
+  --danger-strong: #D2412E;
   /* Dim text: black/20 on light surfaces, white/20 on dark ones */
   --black-20: rgb(0 0 0 / 0.2);
   --white-20: rgb(255 255 255 / 0.2);
@@ -58,6 +61,8 @@ body {
   --color-ink: var(--ink);
   --color-success: var(--success);
   --color-danger: var(--danger);
+  --color-success-strong: var(--success-strong);
+  --color-danger-strong: var(--danger-strong);
   --color-black-20: var(--black-20);
   --color-white-20: var(--white-20);
   /* The site's two faces: font-avenir (text) and font-aeonik (headings / display) */

@@ -47,7 +47,7 @@ export function sampleDashboard(plan = "pro") {
     totalFreeEffects: FREE_EFFECTS,
     totalEffectsAccess: pro ? TOTAL_EFFECTS : FREE_EFFECTS,
     savedCount: 12,
-    copiedCount: 34,
+    webCount: 34,
     cliCount: 15,
     mcpCount: 6,
     todayCount: 2,
@@ -138,11 +138,27 @@ export function sampleAdminActivity(catalog = []) {
   });
   const total = (key) => days.reduce((sum, d) => sum + d[key], 0);
   const top = (offset) => Array.from({ length: 8 }, (_, i) => ({ ...effect(i * 5 + offset), slug: effect(i * 5 + offset).name, count: 16 - i * 2 }));
+  // A stat card (the overview's `kpis` shape): a 30-day line around `base` a day, rising or
+  // falling by `drift`, against a previous window `previous`
+  const stat = (base, drift, previous, seed) => {
+    const series = days.map((day, i) => ({ date: `${day.date}T00:00:00.000Z`, value: Math.max(0, Math.round(base + drift * i + base * 0.5 * Math.sin(i * 0.9 + seed))) }));
+    const value = series.reduce((sum, point) => sum + point.value, 0);
+    return { value, current: value, previous, series };
+  };
+  const installs = { ...stat(8, 0.05, 210, 1), bySource: { web: total("web"), cli: total("cli"), mcp: total("mcp") } };
+  installs.value = installs.current = installs.bySource.web + installs.bySource.cli + installs.bySource.mcp;
   return {
     overview: {
-      stats: { totalUsers: 125, proUsers: 6, totalCopies: total("web"), totalSaved: 62, totalViews: 366, revenueByCurrency: [{ currency: "USD", amount: 137 }, { currency: "INR", amount: 2358 }] },
+      kpis: {
+        comparison: "vs prev. 30d",
+        signups: stat(4, 0.1, 85, 2),
+        templateViews: stat(12, 0.2, 194, 3),
+        revenue: { ...stat(40, 1.5, 1210, 4), currency: "USD", byCurrency: [{ currency: "USD", amount: 1097 }, { currency: "INR", amount: 6478 }] },
+        installs,
+        saves: stat(2, -0.04, 74, 5),
+      },
+      stats: { totalUsers: 125, proUsers: 6, totalInstalls: installs.value, totalSaved: 62, totalSavedTemplates: 9, totalViews: 366, revenueByCurrency: [{ currency: "USD", amount: 1097 }, { currency: "INR", amount: 6478 }] },
       planDistribution: [{ name: "Pro+", value: 7 }, { name: "Pro", value: 11 }, { name: "Free", value: 237 }],
-      topCopiedEffects: top(0),
       topInstalledEffects: top(2),
       topSavedEffects: top(4),
       templateStats: [
@@ -156,7 +172,6 @@ export function sampleAdminActivity(catalog = []) {
       stats: { installsToday: 6 },
       sourceBreakdown: ["web", "cli", "mcp"].map((name) => ({ name, value: total(name) })),
       sourceTrend: days,
-      topUsers: people.map(([name, email], i) => ({ clerkUserId: `u${i}`, name, email, count: 11 - i * 2 })),
       topInstallers: people.map(([name, email], i) => ({ clerkUserId: `u${i}`, name, email, count: 14 - i * 2 })),
     },
     feed: {
@@ -179,7 +194,23 @@ export function sampleAdminActivity(catalog = []) {
 export function sampleAdminInvoicing() {
   const person = (i) => [["Omkar Patil", "omkar@example.com"], ["Nadia Rao", "nadia@example.com"], ["Joris de Vries", "joris@example.nl"], ["Blake Holman", "blake@example.com"]][i % 4];
   const day = (n) => new Date(Date.now() - n * 86400000).toISOString();
+  // A stat card: a 30-day line around `base` a day, drifting by `drift`, against `previous`
+  const card = (base, drift, previous, seed) => {
+    const series = Array.from({ length: 30 }, (_, i) => ({ date: day(29 - i), value: Math.max(0, Math.round(base + drift * i + base * 0.6 * Math.sin(i * 0.8 + seed))) }));
+    const value = series.reduce((sum, point) => sum + point.value, 0);
+    return { value, current: value, previous, series };
+  };
   return {
+    // GET /api/admin/invoices/stats
+    stats: {
+      kpis: {
+        comparison: "vs prev. 30d",
+        usd: { ...card(36, 0.6, 980, 1), currency: "USD", subscriptions: 958, templates: 139 },
+        inr: { ...card(215, -2, 7200, 2), currency: "INR", subscriptions: 6478, templates: 0 },
+        subscriptions: card(1, 0.02, 24, 3),
+        templateSales: card(0.3, 0.01, 3, 4),
+      },
+    },
     invoices: {
       total: 3,
       stats: { totalInvoices: 3, revenueByCurrency: [{ currency: "INR", amount: 235800 }, { currency: "USD", amount: 2000 }] },
@@ -211,10 +242,9 @@ export function sampleAdminUser(catalog = []) {
     profile: { id: "user_sample", name: "Harsh Goyal", email: "harsh@example.com", imageUrl: null, isAdmin: false, lastSignInAt: day(0) },
     session: { browserName: "Chrome", deviceType: "Desktop", city: "Delhi", country: "IN" },
     subscription: { plan: "pro" },
-    stats: { savedCount: 12, installedCount: 21, copiedCount: 34, lifetimeSpendByCurrency: [{ currency: "INR", amount: 2358 }, { currency: "USD", amount: 39 }] },
+    stats: { savedCount: 12, installCount: 55, installsBySource: { web: 34, cli: 15, mcp: 6 }, lifetimeSpendByCurrency: [{ currency: "INR", amount: 2358 }, { currency: "USD", amount: 39 }] },
     installTrend,
     savedEffects: list(0, "savedAt"),
-    copiedEffects: list(1, "lastCopiedAt"),
     installedEffects: list(2, "lastInstalledAt"),
     templatePurchases: [{ id: "t1", createdAt: day(9), templateTitle: "Elena Voss", amount: 39, currency: "USD", paymentId: "pay_sample1", status: "paid", invoiceUrl: null }],
     purchasedTemplates: [],
@@ -226,7 +256,16 @@ export function sampleAdminUser(catalog = []) {
 export function sampleAdminUsers() {
   const names = [["Harsh Goyal", "harsh@example.com", "super_admin"], ["Omkar Patil", "omkar@example.com"], ["Nadia Rao", "nadia@example.com"], ["Joris de Vries", "joris@example.nl"], ["Blake Holman", "blake@example.com"], ["Mira Kaur", "mira@example.com"]];
   return {
-    stats: { newUsers: 255, newProUsers: 18, copies: 465, saves: 134 },
+    stats: (() => {
+      // A stat card: a 30-day line around `base` a day, drifting by `drift`, against `previous`
+      const card = (base, drift, previous, seed) => {
+        const series = Array.from({ length: 30 }, (_, i) => ({ date: new Date(Date.now() - (29 - i) * 86400000).toISOString(), value: Math.max(0, Math.round(base + drift * i + base * 0.5 * Math.sin(i * 0.8 + seed))) }));
+        const value = series.reduce((sum, point) => sum + point.value, 0);
+        return { value, current: value, previous, series };
+      };
+      const kpis = { comparison: "vs prev. 30d", users: card(8, 0.1, 180, 1), paidUsers: card(1, 0.02, 22, 2), installs: card(15, 0.2, 380, 3), saves: card(4, -0.05, 150, 4) };
+      return { newUsers: kpis.users.value, newProUsers: kpis.paidUsers.value, installs: kpis.installs.value, saves: kpis.saves.value, kpis };
+    })(),
     total: names.length,
     users: names.map(([name, email, role], i) => ({
       id: `user_${i}`,
@@ -239,10 +278,11 @@ export function sampleAdminUsers() {
       tier: i % 3 === 1 ? "pro" : null,
       planValidUntil: i % 3 === 1 ? "2027-03-14T10:00:00.000Z" : null,
       razorpayCustomerId: i % 3 === 1 ? "cust_samplecustomer" : null,
-      copiesCount: 12 - i,
+      installsCount: 22 - i, webCount: 12 - i,
       cliCount: 6 - (i % 4),
       mcpCount: i % 3,
       savesCount: 9 - i,
+      suspended: i === 5,
     })),
   };
 }

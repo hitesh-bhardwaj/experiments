@@ -228,7 +228,7 @@ export function DateRangeCalendarPicker({ from, to, onChange, tone: toneName = "
           role="dialog"
           onMouseLeave={() => setHoverDate(null)}
           // Fades and scales in
-          className={`absolute top-full right-0 z-30 mt-2 origin-top-right animate-[hx-scale-in_0.49s_cubic-bezier(0.33,1,0.68,1)] p-4 motion-reduce:animate-none ${tone.panel}`}
+          className={`absolute top-full right-0 z-30 mt-2 origin-top-right animate-[hx-scale-in_0.39s_cubic-bezier(0.33,1,0.68,1)] p-4 motion-reduce:animate-none ${tone.panel}`}
         >
           <button
             type="button"

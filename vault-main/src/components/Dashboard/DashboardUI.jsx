@@ -14,16 +14,17 @@ import { SliderArrowButton } from "@/components/ui/SliderArrowButton";
 export const CARD = "flex flex-col bg-foreground text-ink ring-1 ring-inset ring-black/10";
 export const CARD_PAD = "p-[calc(var(--cvw)*1.6)] max-lg:p-6 max-md:p-5";
 
-// Where an effect was delivered: web dark, CLI orange, MCP outlined
+// Where an effect was delivered: web solid, CLI orange, MCP outlined - on white cards,
+// or on dark surfaces with `dark`
 const SOURCES = {
-  web: ["Web", "bg-ink text-foreground"],
-  cli: ["CLI", "bg-primary text-background"],
-  mcp: ["MCP", "text-ink ring-1 ring-inset ring-black/20"],
+  web: ["Web", "bg-ink text-foreground", "bg-foreground text-background"],
+  cli: ["CLI", "bg-primary text-background", "bg-primary text-background"],
+  mcp: ["MCP", "text-ink ring-1 ring-inset ring-black/20", "text-foreground ring-1 ring-inset ring-foreground/30"],
 };
 
-export function SourceChip({ source }) {
-  const [label, tone] = SOURCES[source] || SOURCES.web;
-  return <span className={`type-small inline-flex w-12 shrink-0 justify-center py-0.5 ${tone}`}>{label}</span>;
+export function SourceChip({ source, dark = false }) {
+  const [label, light, onDark] = SOURCES[source] || SOURCES.web;
+  return <span className={`type-small inline-flex w-12 shrink-0 justify-center py-0.5 ${dark ? onDark : light}`}>{label}</span>;
 }
 
 // The FAQ's "View More" link (underline, rolling label) with a sideways arrow, no shimmer:
@@ -83,8 +84,9 @@ export function resolveDateRange({ preset, from, to }) {
 
 /**
  * A date filter for the light sheet: a dropdown of ranges (last 7 / 30 / 90 days...), as
- * on the admin Activity page, with a calendar beside it for "Custom range". `label`
- * names the date ("Saved", "Bought or saved"); `value` is { preset, from, to }.
+ * on the admin Activity page, with a calendar beside it for "Custom range". The trigger
+ * shows just the range ("All time"); `label` names the date for screen readers ("Saved",
+ * "Joined"); `value` is { preset, from, to }.
  */
 export function DateRangeFilter({ label, value, onChange }) {
   // The trigger and its panel share one width
@@ -95,12 +97,12 @@ export function DateRangeFilter({ label, value, onChange }) {
         variant="label"
         alignRight
         widthClassName={FILTER_WIDTH}
-        label="Date range"
+        label={label ? `${label} date range` : "Date range"}
         panelClassName="left-auto! right-0"
         options={Object.keys(DATE_PRESETS)}
         categoryFilter={value.preset}
         activeFilter={value.preset === "all" ? null : value.preset}
-        getLabel={(id) => (id === "all" ? `${label}: ${DATE_PRESETS.all}` : DATE_PRESETS[id])}
+        getLabel={(id) => DATE_PRESETS[id]}
         onSelect={(preset) => onChange({ preset, from: preset === "custom" ? value.from : "", to: preset === "custom" ? value.to : "" })}
       />
       {value.preset === "custom" && (

@@ -1,4 +1,5 @@
 import { auth, currentUser } from "@clerk/nextjs/server";
+import { fetchInstalls } from "@/lib/admin-data";
 import { isCancelScheduled } from "@/lib/subscription-events";
 import { supabase } from "@/lib/supabase";
 import { NextResponse } from "next/server";
@@ -45,23 +46,11 @@ export async function GET() {
       .eq("clerk_user_id", userId)
       .maybeSingle(),
 
-    // install_unlocks has one row per (day, effect) an effect was newly unlocked, with
-    // the surface it came through: web (copied on the site), cli or mcp - counted per
-    // surface, the same split as the admin Users table's Copies / CLI / MCP. Admins are
-    // never metered, so their installs are in install_events instead (lib/install-limit),
-    // read in the same shape.
-    isAdminUser(user)
-      ? supabase
-          .from("install_events")
-          .select("effect_slug, source, usage_date:occurred_at, first_unlocked_at:occurred_at")
-          .eq("clerk_user_id", userId)
-          .eq("plan", "admin")
-          .order("occurred_at", { ascending: false })
-      : supabase
-          .from("install_unlocks")
-          .select("effect_slug, source, usage_date, first_unlocked_at")
-          .eq("clerk_user_id", userId)
-          .order("first_unlocked_at", { ascending: false }),
+    // Their installs: one effect, one day, from the website, the CLI or MCP - the same
+    // count as every admin page (lib/admin-data fetchInstalls; admins included)
+    fetchInstalls({ clerkUserId: userId })
+      .then((rows) => ({ data: rows.map((row) => ({ effect_slug: row.effectSlug, source: row.source, usage_date: row.day, first_unlocked_at: row.at })), error: null }))
+      .catch((error) => ({ data: null, error })),
   ]);
 
   // Fallback: if no subscription row exists (webhook missed), provision one now
@@ -107,14 +96,14 @@ export async function GET() {
       ? totalEffects
       : Math.min(totalFreeEffects, totalEffects);
 
-  // Distinct effects taken through each surface
-  const bySource = { web: new Set(), cli: new Set(), mcp: new Set() };
+  // Installs through each surface
+  const bySource = { web: 0, cli: 0, mcp: 0 };
 
   const todaySlugs = new Set();
   const todayUTC = new Date().toISOString().slice(0, 10);
 
   for (const row of unlockRows || []) {
-    bySource[row.source]?.add(row.effect_slug);
+    if (row.source in bySource) bySource[row.source] += 1;
     if (String(row.usage_date).slice(0, 10) === todayUTC) todaySlugs.add(row.effect_slug);
   }
 
@@ -124,10 +113,10 @@ export async function GET() {
   return NextResponse.json({
     savedCount: wishlist?.length || 0,
     savedEffects: wishlist || [],
-    // Distinct effects copied from the website, and installed with the CLI / MCP
-    copiedCount: bySource.web.size,
-    cliCount: bySource.cli.size,
-    mcpCount: bySource.mcp.size,
+    // Installs from the website, the CLI and MCP
+    webCount: bySource.web,
+    cliCount: bySource.cli,
+    mcpCount: bySource.mcp,
     // Unique effects taken today, against dailyInstallLimit
     todayCount: todaySlugs.size,
     recentActivity: (unlockRows || []).slice(0, 6).map((row) => ({

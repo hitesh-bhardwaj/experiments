@@ -77,6 +77,18 @@ export async function GET(req, { params }) {
 
   // Stage 3: only takes effect once INSTALL_LIMIT_ENFORCE=true - see the
   // identical note in the CLI twin route.
+  // Signed out: every install needs an account (free effects too) - not a limit, so
+  // always refused, shadow mode or not
+  if (installDecision.reason === "sign-in-required") {
+    return NextResponse.json(
+      {
+        error: "Sign in to install effects. Create a free account at vault.hyperiux.com, then run `npx hyperiux login` (or set HYPERIUX_TOKEN).",
+        reason: "sign-in-required",
+      },
+      { status: 401 }
+    );
+  }
+
   if (!installDecision.allowed) {
     const retryAfter = secondsUntilNextUtcMidnight();
 

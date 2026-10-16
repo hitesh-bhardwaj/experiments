@@ -232,7 +232,7 @@ export default function UsagePage() {
 
       {/* the range for the chart and the table */}
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <p className="type-label text-black/60">Every effect you’ve copied or installed, by day and by source.</p>
+        <p className="type-label text-black/60">Every effect you’ve installed - from the website, the CLI or MCP - by day.</p>
         <DateRangeFilter label="Showing" value={dates} onChange={filter(setDates)} />
       </div>
 
@@ -284,7 +284,7 @@ export default function UsagePage() {
       <section aria-labelledby="history-h" className={`${CARD} ${CARD_PAD} gap-[calc(var(--cvw)*1.2)] max-lg:gap-4`}>
         <div className="flex flex-wrap items-center justify-between gap-3">
           <h2 id="history-h" className="type-h3">
-            Installed &amp; Copied
+            Installs
           </h2>
           <div className="flex flex-wrap items-center gap-[calc(var(--cvw)*0.7)] max-md:gap-[2.5vw]">
             <label className="type-small flex h-9.5 items-center gap-2 bg-light px-3 text-black/60 ring-1 ring-inset ring-black/10 focus-within:ring-primary">
@@ -299,7 +299,7 @@ export default function UsagePage() {
 
         {data.events.length === 0 ? (
           <div className="flex flex-col items-start gap-4">
-            <p className="type-body text-black/60">Nothing yet. Effects you copy on the website or install with the CLI or MCP show up here.</p>
+            <p className="type-body text-black/60">Nothing yet. Effects you install - copied on the website, or with the CLI or MCP - show up here.</p>
             <Button href="/effects" text="Browse Effects" />
           </div>
         ) : events.length === 0 ? (

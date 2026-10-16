@@ -1,388 +1,313 @@
 "use client";
 
-import { useDashboard } from "@/components/Dashboard/DashboardContext";
-import { useEffect, useState, useCallback, useRef } from "react";
-import Link from "next/link";
-import { AnimatePresence, motion } from "motion/react";
-import { ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
-import { CustomSelect } from "@/components/ui/CustomSelect";
+import { useCallback, useEffect, useState, useSyncExternalStore } from "react";
+import { createPortal } from "react-dom";
+import { Eye } from "lucide-react";
+import { ACTION_LINE, CARD, CARD_PAD, FILTER_WIDTH, Pager, PerPageMenu } from "@/components/Dashboard/DashboardUI";
+import { Bar, SkeletonCard } from "@/components/Dashboard/DashboardSkeletons";
+import { FilterMenu } from "@/app/(app)/(workspace)/effects/FilterMenu";
+import { useLenisLock } from "@/hooks/useLenisLock";
 
-const EMAIL_TYPES = [
-  "all",
-  "welcome",
-  "reset_password_code",
-  "password_changed",
-  "password_reset_otp",
-  "pro_unlocked",
-  "invitations",
-  "subscription_invoice",
-  "custom_animation_request",
-  "custom_animation_request_confirmation",
-  "work_with_hyperiux",
-  "work_with_hyperiux_confirmation",
-  "verification_code",
-  "password_removed",
-  "primary_email_address_changed",
-  "account_locked",
-  "new_device_sign_in",
-];
+// Every email Vault has sent (sent_emails, logged by lib/resend), for admins: filter by
+// type and delivery, page through, and open one to see it as it was sent.
 
-function formatDate(value) {
-  if (!value) return "-";
-  return new Intl.DateTimeFormat("en", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  }).format(new Date(value));
-}
+const TYPES = {
+  all: "All types",
+  welcome: "Welcome",
+  reset_password_code: "Reset password code",
+  password_reset_link: "Password reset link",
+  password_changed: "Password changed",
+  password_reset_otp: "Password reset code",
+  pro_unlocked: "Pro unlocked",
+  invitations: "Invitations",
+  subscription_invoice: "Invoice",
+  custom_animation_request: "Animation request",
+  custom_animation_request_confirmation: "Animation request confirmation",
+  work_with_hyperiux: "Work enquiry",
+  work_with_hyperiux_confirmation: "Work enquiry confirmation",
+  verification_code: "Verification code",
+  password_removed: "Password removed",
+  primary_email_address_changed: "Primary email changed",
+  account_locked: "Account locked",
+  new_device_sign_in: "New device sign-in",
+  transactional: "Transactional",
+};
+const STATUSES = { all: "Delivered and failed", success: "Delivered", failed: "Failed" };
 
-function TypeLabel({ type }) {
-  const labels = {
-    welcome: "Welcome",
-    reset_password_code: "Reset Password Code",
-    password_changed: "Password Changed",
-    password_reset_otp: "Password Reset OTP",
-    pro_unlocked: "Pro Unlocked",
-    invitations: "Invitations",
-    subscription_invoice: "Invoice",
-    custom_animation_request: "Animation Request",
-    custom_animation_request_confirmation: "Animation Request Confirmation",
-    work_with_hyperiux: "Work Enquiry",
-    work_with_hyperiux_confirmation: "Work Enquiry Confirmation",
-    verification_code: "Verification Code",
-    password_removed: "Password Removed",
-    primary_email_address_changed: "Primary Email Changed",
-    account_locked: "Account Locked",
-    new_device_sign_in: "New Device Sign-In",
-    transactional: "Transactional",
-  };
-  return <span className="text-xs text-white/55">{labels[type] || type}</span>;
-}
+const subscribeNever = () => () => {};
+const number = (n) => new Intl.NumberFormat("en").format(n || 0);
+const formatDate = (value) =>
+  value ? new Intl.DateTimeFormat("en", { month: "short", day: "numeric", year: "numeric", hour: "numeric", minute: "2-digit" }).format(new Date(value)) : "—";
 
-function EmailPreviewModal({ emailId, onClose }) {
+// One sent email, as it was sent: the site's dark dialog, the email's own HTML inside
+function EmailPreview({ emailId, onClose }) {
   const [email, setEmail] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const iframeRef = useRef(null);
+  const mounted = useSyncExternalStore(subscribeNever, () => true, () => false);
+  useLenisLock(Boolean(emailId));
 
   useEffect(() => {
+    let active = true;
     fetch(`/api/admin/emails?id=${emailId}`)
-      .then((r) => r.json())
-      .then(setEmail)
-      .catch(console.error)
-      .finally(() => setLoading(false));
+      .then((res) => (res.ok ? res.json() : null))
+      .then((json) => active && setEmail(json || { text_content: "Couldn’t load this email." }))
+      .catch(() => active && setEmail({ text_content: "Couldn’t load this email." }));
+    return () => {
+      active = false;
+    };
   }, [emailId]);
 
   useEffect(() => {
-    const handleKey = (e) => { if (e.key === "Escape") onClose(); };
-    window.addEventListener("keydown", handleKey);
-    return () => window.removeEventListener("keydown", handleKey);
+    const onKey = (event) => event.key === "Escape" && onClose();
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
   }, [onClose]);
 
-  useEffect(() => {
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-
-    return () => {
-      document.body.style.overflow = previousOverflow;
-    };
-  }, []);
-
-  return (
-    <motion.div
-      className="fixed inset-0 z-900 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
-      onClick={onClose}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.22, ease: "easeOut" }}
-    >
-      <motion.div
-        className="relative w-full max-w-3xl max-h-[90vh] flex flex-col  border border-white/15 bg-[#0a0a0a] overflow-hidden"
-        onClick={(e) => e.stopPropagation()}
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.95 }}
-        transition={{ duration: 0.22, ease: "easeOut" }}
+  if (!mounted) return null;
+  return createPortal(
+    <div onClick={onClose} className="fixed inset-0 z-9999 flex items-center justify-center bg-black/40 p-4 backdrop-blur-lg">
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label={email?.subject || "Email"}
+        data-lenis-prevent
+        onClick={(event) => event.stopPropagation()}
+        className="relative flex max-h-[90svh] w-[min(52vw,48rem)] flex-col border border-white/20 bg-background text-foreground max-lg:w-[85%] max-md:w-full"
       >
-        <button
-          type="button"
-          aria-label="Close"
-          onClick={onClose}
-          className="max-lg:hidden group absolute right-5 top-4 flex h-10 w-10 items-center justify-center  border border-white/20 bg-white/10 text-xl leading-none text-white/70 transition-all duration-500 ease-in-out hover:border-[#ff5f00] hover:bg-[#ff5f00] hover:text-white "
-        >
-          <div className="relative flex h-4 w-4 items-center justify-center duration-500 ease-in-out group-hover:rotate-90">
-            <span className="h-px w-4 rotate-45 bg-white" />
-            <span className="absolute h-px w-4 -rotate-45 bg-white" />
-          </div>
-        </button>
-
-        {/* Header */}
-        <div className="flex items-start h-[5vw] max-md:h-[20vw] justify-between gap-4 px-6 py-4 pr-16 border-b border-white/10">
-          <div className="min-w-0">
-            {loading ? (
-              <div className="h-4 w-48  bg-white/10 animate-pulse" />
-            ) : (
-              <>
-                <p className="text-sm font-medium text-white truncate">{email?.subject}</p>
-                <p className="text-xs text-white/45 mt-0.5">{email?.recipient_email} · {formatDate(email?.sent_at)}</p>
-              </>
-            )}
-          </div>
-        </div>
-
-        {/* Email HTML preview */}
-        <div className="flex-1 overflow-hidden">
-          {loading ? (
-            <div className="flex flex-col gap-3 p-6 h-64" aria-busy="true">
-              <div className="h-6 w-1/2 bg-white/8 animate-pulse" />
-              <div className="h-4 w-full bg-white/8 animate-pulse" />
-              <div className="h-4 w-5/6 bg-white/8 animate-pulse" />
-              <div className="h-32 w-full bg-white/8 animate-pulse" />
+        <div className="flex items-start justify-between gap-4 border-b border-white/10 p-6 pr-20">
+          {email ? (
+            <div className="flex min-w-0 flex-col gap-1">
+              <p className="type-body truncate">{email.subject || "No subject"}</p>
+              <p className="type-small truncate text-foreground/80">
+                {email.recipient_email} · {formatDate(email.sent_at)}
+              </p>
             </div>
-          ) : email?.html_content ? (
-            <iframe
-              ref={iframeRef}
-              srcDoc={email.html_content}
-              sandbox="allow-popups"
-              className="w-full h-full min-h-[500px] border-0"
-              title="Email preview"
-            />
           ) : (
-            <div className="p-6">
-              <pre className="whitespace-pre-wrap text-sm text-white/60 font-mono">
-                {email?.text_content || "No content available."}
-              </pre>
+            <div className="flex w-[60%] flex-col gap-2 text-foreground">
+              <Bar type="type-body" className="w-full" />
+              <Bar type="type-small" className="w-[60%]" />
             </div>
           )}
+          <button
+            type="button"
+            aria-label="Close"
+            onClick={onClose}
+            className="group absolute top-5 right-5 grid size-10 cursor-pointer place-items-center border border-white/20 bg-white/10 text-foreground/80 transition-colors duration-500 hover:border-primary hover:bg-primary hover:text-foreground"
+          >
+            <span className="relative flex size-4 items-center justify-center transition-transform duration-500 ease-in-out group-hover:rotate-90">
+              <span className="h-px w-4 rotate-45 bg-foreground" />
+              <span className="absolute h-px w-4 -rotate-45 bg-foreground" />
+            </span>
+          </button>
         </div>
-      </motion.div>
-    </motion.div>
+        <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain">
+          {!email ? (
+            <div className="flex flex-col gap-3 p-6 text-foreground">
+              <Bar className="h-6 w-1/2" />
+              <Bar className="h-4 w-full" />
+              <Bar className="h-32 w-full" />
+            </div>
+          ) : email.html_content ? (
+            <iframe srcDoc={email.html_content} sandbox="allow-popups" title="Email preview" className="block h-[70svh] w-full border-0 bg-foreground" />
+          ) : (
+            <pre className="type-small whitespace-pre-wrap p-6 font-mono text-foreground/80">{email.text_content || "No content."}</pre>
+          )}
+        </div>
+      </div>
+    </div>,
+    document.body,
   );
 }
 
-const PAGE_SIZE_OPTIONS = [5, 10, 25, 50, 100, 250, 500];
-const DEFAULT_PAGE_SIZE = 10;
+// The table's rows while they load: recipient, subject, type, status, sent, preview
+function RowsSkeleton({ count }) {
+  return Array.from({ length: Math.min(count, 8) }, (_, i) => (
+    <tr key={i} className="border-b border-black/10 last:border-b-0">
+      <td colSpan={6} className="py-3">
+        <div className="flex items-center gap-4">
+          <Bar type="type-body" className="w-[18%]" />
+          <Bar type="type-body" className="w-[30%]" />
+          <Bar type="type-small" className="w-[12%]" />
+          <Bar type="type-small" className="w-[8%]" />
+          <Bar type="type-small" className="w-[14%]" />
+          <Bar className="ml-auto h-9.5 w-20" />
+        </div>
+      </td>
+    </tr>
+  ));
+}
 
 export default function AdminEmailsPage() {
-  const { path } = useDashboard();
   const [emails, setEmails] = useState([]);
-  const [total, setTotal] = useState(0);
-  // Delivered/failed counts across every row matching the current filters -
-  // fetched from the API, not derived from `emails` (which is only the
-  // current page) - counting just the current page is exactly what made
-  // "10 delivered" show up next to "2257 total".
-  const [successCount, setSuccessCount] = useState(0);
-  const [failedCount, setFailedCount] = useState(0);
+  // Counts across every email matching the filters, not just this page
+  const [counts, setCounts] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [typeFilter, setTypeFilter] = useState("all");
-  const [statusFilter, setStatusFilter] = useState("all");
-  const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE);
+  const [type, setType] = useState("all");
+  const [status, setStatus] = useState("all");
+  const [pageSize, setPageSize] = useState(10);
+  const [page, setPage] = useState(0);
   const [previewId, setPreviewId] = useState(null);
   const [error, setError] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [prevTypeFilter, setPrevTypeFilter] = useState(typeFilter);
-  const [prevStatusFilter, setPrevStatusFilter] = useState(statusFilter);
-  const [prevPageSize, setPrevPageSize] = useState(pageSize);
 
-  // Reset to page 1 whenever a filter changes - derived purely from values
-  // already available during render, so adjust it here instead of in an effect.
-  if (prevTypeFilter !== typeFilter || prevStatusFilter !== statusFilter || prevPageSize !== pageSize) {
-    setPrevTypeFilter(typeFilter);
-    setPrevStatusFilter(statusFilter);
-    setPrevPageSize(pageSize);
-    setCurrentPage(1);
-  }
+  // Any filter change starts again from the first page
+  const filter = (set) => (value) => {
+    set(value);
+    setPage(0);
+  };
 
   const fetchEmails = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
-      const params = new URLSearchParams();
-      if (typeFilter !== "all") params.set("type", typeFilter);
-      if (statusFilter !== "all") params.set("status", statusFilter);
-      params.set("limit", String(pageSize));
-      params.set("offset", String((currentPage - 1) * pageSize));
-
-      const res = await fetch(`/api/admin/emails?${params.toString()}`);
+      const params = new URLSearchParams({ limit: String(pageSize), offset: String(page * pageSize) });
+      if (type !== "all") params.set("type", type);
+      if (status !== "all") params.set("status", status);
+      const res = await fetch(`/api/admin/emails?${params}`);
       const json = await res.json();
-      if (!res.ok) throw new Error(json.error || "Failed to load emails");
+      if (!res.ok) throw new Error(json.error || "Couldn’t load the email log.");
       setEmails(json.emails || []);
-      setTotal(json.total || 0);
-      setSuccessCount(json.successCount || 0);
-      setFailedCount(json.failedCount || 0);
+      setCounts({ total: json.total || 0, delivered: json.successCount || 0, failed: json.failedCount || 0 });
     } catch (err) {
       setError(err.message);
+      setEmails([]);
+      setCounts((current) => current || { total: 0, delivered: 0, failed: 0 });
     } finally {
       setLoading(false);
     }
-  }, [typeFilter, statusFilter, pageSize, currentPage]);
+  }, [type, status, pageSize, page]);
 
   useEffect(() => {
-    // Fetches from a network API in response to filter/page changes - this
-    // is a genuine external-system sync, not derivable during render.
+    // Fetches in response to filter / page changes - an external-system sync
     // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchEmails();
   }, [fetchEmails]);
 
-  const totalPages = Math.max(1, Math.ceil(total / pageSize));
+  const total = counts?.total || 0;
+  const pages = Math.max(1, Math.ceil(total / pageSize));
 
   return (
-    <>
-      <AnimatePresence>
-        {previewId && (
-          <EmailPreviewModal emailId={previewId} onClose={() => setPreviewId(null)} />
-        )}
-      </AnimatePresence>
+    <div className="flex flex-col gap-[calc(var(--cvw)*0.8)] max-lg:gap-3">
+      {previewId && <EmailPreview emailId={previewId} onClose={() => setPreviewId(null)} />}
 
-      <div className="space-y-6">
-        <div className="flex items-center justify-between gap-4">
-          <div>
-            <div className="flex items-center gap-3 mb-1">
-              <Link
-                href={path("admin/users")}
-                className="flex items-center gap-1.5 text-sm text-white/50 hover:text-white transition"
-              >
-                <ArrowLeft className="h-3.5 w-3.5" />
-                User Management
-              </Link>
+      {/* sent, delivered, failed - for the filters below */}
+      <div className="flex gap-[calc(var(--cvw)*0.8)] max-md:flex-col max-lg:gap-3">
+        {[
+          ["Sent", counts?.total, "Emails matching the filters"],
+          ["Delivered", counts?.delivered, "Accepted by Resend"],
+          ["Failed", counts?.failed, "Not sent - see the reason on the row"],
+        ].map(([label, value, note]) =>
+          counts ? (
+            <div key={label} className={`${CARD} ${CARD_PAD} flex-1 gap-(--cvw) max-lg:gap-3`}>
+              <p className="type-label text-black/60">{label}</p>
+              <p className={`type-h2 ${label === "Failed" && value ? "text-danger-strong" : ""}`}>{number(value)}</p>
+              <p className="type-small text-black/60">{note}</p>
             </div>
-            <h1 className="text-2xl font-semibold">Email Log</h1>
-            <p className="mt-1 text-sm text-white/50">
-              {total} total · {successCount} delivered · {failedCount} failed
-            </p>
-          </div>
-        </div>
-
-        {/* Filters */}
-        <div className="flex gap-3 flex-wrap">
-          <CustomSelect
-            value={typeFilter}
-            onChange={setTypeFilter}
-            options={EMAIL_TYPES.map((t) => ({
-              value: t,
-              label: t === "all" ? "All types" : t,
-            }))}
-            panelClassName="max-h-[20vw] overflow-y-auto"
-          />
-          <CustomSelect
-            value={statusFilter}
-            onChange={setStatusFilter}
-            options={[
-              { value: "all", label: "All statuses" },
-              { value: "success", label: "Success" },
-              { value: "failed", label: "Failed" },
-            ]}
-          />
-          <div className="flex items-center gap-2 text-sm text-white/45">
-            Per page
-            <CustomSelect
-              size="compact"
-              value={String(pageSize)}
-              onChange={(value) => setPageSize(Number(value))}
-              options={PAGE_SIZE_OPTIONS.map((n) => ({ value: String(n), label: String(n) }))}
-            />
-          </div>
-        </div>
-
-        {error && (
-          <div className=" border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-400">
-            {error}
-          </div>
+          ) : (
+            <SkeletonCard key={label} className="flex-1 gap-(--cvw) max-lg:gap-3">
+              <Bar type="type-label" className="w-20" />
+              <Bar type="type-h2" className="w-[35%]" />
+              <Bar type="type-small" className="w-[60%]" />
+            </SkeletonCard>
+          ),
         )}
+      </div>
 
-        <div className=" border border-white/10 overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-white/10 bg-white/[0.03]">
-                  <th className="px-4 py-3 text-left text-xs font-medium text-white/45 uppercase tracking-wider">Recipient</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-white/45 uppercase tracking-wider">Subject</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-white/45 uppercase tracking-wider">Type</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-white/45 uppercase tracking-wider">Sent At</th>
-                  <th className="px-4 py-3 text-right text-xs font-medium text-white/45 uppercase tracking-wider">Preview</th>
+      <section aria-labelledby="emails-h" className={`${CARD} ${CARD_PAD} gap-[calc(var(--cvw)*1.2)] max-lg:gap-4`}>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h2 id="emails-h" className="type-h3">
+            Emails
+          </h2>
+          <div className="flex flex-wrap items-center gap-[calc(var(--cvw)*0.7)] max-md:gap-[2.5vw]">
+            <FilterMenu
+              tone="light"
+              variant="label"
+              alignRight
+              label="Email type"
+              widthClassName={FILTER_WIDTH}
+              panelClassName="left-auto! right-0 max-h-[20vw] max-md:max-h-[50vh] overflow-y-auto"
+              options={Object.keys(TYPES)}
+              categoryFilter={type}
+              activeFilter={type === "all" ? null : type}
+              getLabel={(id) => TYPES[id] || id}
+              onSelect={filter(setType)}
+            />
+            <FilterMenu
+              tone="light"
+              variant="label"
+              alignRight
+              label="Delivery"
+              widthClassName={FILTER_WIDTH}
+              panelClassName="left-auto! right-0"
+              options={Object.keys(STATUSES)}
+              categoryFilter={status}
+              activeFilter={status === "all" ? null : status}
+              getLabel={(id) => STATUSES[id]}
+              onSelect={filter(setStatus)}
+            />
+            <PerPageMenu value={pageSize} onChange={filter(setPageSize)} />
+          </div>
+        </div>
+
+        {error && <p className="type-small bg-danger-strong/10 px-4 py-3 text-danger-strong">{error}</p>}
+
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[calc(var(--cvw)*60)] border-collapse text-left max-lg:min-w-215">
+            <thead>
+              <tr className="type-label border-b border-black/10 text-black/60">
+                <th className="py-3 pr-4 font-normal">Recipient</th>
+                <th className="py-3 pr-4 font-normal">Subject</th>
+                <th className="py-3 pr-4 font-normal">Type</th>
+                <th className="py-3 pr-4 font-normal">Status</th>
+                <th className="py-3 pr-4 font-normal">Sent</th>
+                <th className="py-3 text-right font-normal">
+                  <span className="sr-only">Preview</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {loading ? (
+                <RowsSkeleton count={pageSize} />
+              ) : emails.length === 0 ? (
+                <tr>
+                  <td colSpan={6} className="type-body py-10 text-center text-black/60">
+                    No emails match these filters.
+                  </td>
                 </tr>
-              </thead>
-              <tbody className="divide-y divide-white/[0.06]">
-                {loading ? (
-                  Array.from({ length: Math.min(pageSize, 8) }).map((_, i) => (
-                    <tr key={i}>
-                      {Array.from({ length: 5 }).map((__, j) => (
-                        <td key={j} className="px-4 py-3">
-                          <div className="h-4  bg-white/8 animate-pulse" style={{ width: j === 1 ? "200px" : "100px" }} />
-                        </td>
-                      ))}
-                    </tr>
-                  ))
-                ) : emails.length === 0 ? (
-                  <tr>
-                    <td colSpan={5} className="px-4 py-10 text-center text-white/40">
-                      No emails found.
-                    </td>
-                  </tr>
-                ) : (
-                  emails.map((email) => (
-                    <tr key={email.id} className="transition hover:bg-white/[0.02]">
-                      <td className="px-4 py-3">
-                        <span className="text-white/80 truncate block max-w-48">{email.recipient_email}</span>
+              ) : (
+                emails.map((email) => {
+                  const failed = email.status === "failed";
+                  return (
+                    <tr key={email.id} className="border-b border-black/10 last:border-b-0">
+                      <td className="type-small max-w-48 truncate py-[calc(var(--cvw)*0.7)] pr-4 text-ink max-lg:py-3">{email.recipient_email}</td>
+                      <td className="py-3 pr-4">
+                        <span className="flex max-w-80 flex-col">
+                          <span className="type-body truncate">{email.subject}</span>
+                          {email.error_message && <span className="type-small truncate text-danger-strong">{email.error_message}</span>}
+                        </span>
                       </td>
-                      <td className="px-4 py-3">
-                        <span className="text-white truncate block max-w-64">{email.subject}</span>
-                        {email.error_message && (
-                          <span className="text-xs text-red-400 truncate block max-w-64">{email.error_message}</span>
-                        )}
+                      <td className="type-small py-3 pr-4 text-black/60">{TYPES[email.email_type] || email.email_type}</td>
+                      <td className="py-3 pr-4">
+                        <span className={`type-small inline-flex items-center gap-1.5 ${failed ? "text-danger-strong" : "text-ink"}`}>
+                          <span aria-hidden="true" className={`size-1.5 rounded-full ${failed ? "bg-danger-strong" : "bg-success-strong"}`} />
+                          {failed ? "Failed" : "Delivered"}
+                        </span>
                       </td>
-                      <td className="px-4 py-3">
-                        <TypeLabel type={email.email_type} />
-                      </td>
-                      <td className="px-4 py-3 text-white/50 whitespace-nowrap text-xs">
-                        {formatDate(email.sent_at)}
-                      </td>
-                      <td className="px-4 py-3 text-right">
-                        <button
-                          onClick={() => setPreviewId(email.id)}
-                          className=" px-3 py-1.5 text-xs font-medium bg-white/8 text-white/60 hover:bg-white/15 hover:text-white transition"
-                        >
+                      <td className="type-small whitespace-nowrap py-3 pr-4 text-black/60">{formatDate(email.sent_at)}</td>
+                      <td className="py-3 text-right">
+                        <button type="button" onClick={() => setPreviewId(email.id)} className={ACTION_LINE}>
+                          <Eye aria-hidden="true" />
                           View
                         </button>
                       </td>
                     </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
+                  );
+                })
+              )}
+            </tbody>
+          </table>
         </div>
 
-        {!loading && emails.length > 0 && (
-          <div className="flex items-center justify-between gap-4">
-            <p className="text-sm text-white/45">
-              Page {currentPage} of {totalPages}
-            </p>
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}
-                disabled={currentPage === 1}
-                className="flex h-8 w-8 items-center justify-center  border border-white/10 bg-white/5 text-white/70 transition hover:border-white/25 hover:text-white disabled:opacity-40 disabled:cursor-not-allowed"
-                aria-label="Previous page"
-              >
-                <ChevronLeft className="h-4 w-4" />
-              </button>
-              <button
-                type="button"
-                onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))}
-                disabled={currentPage === totalPages}
-                className="flex h-8 w-8 items-center justify-center  border border-white/10 bg-white/5 text-white/70 transition hover:border-white/25 hover:text-white disabled:opacity-40 disabled:cursor-not-allowed"
-                aria-label="Next page"
-              >
-                <ChevronRight className="h-4 w-4" />
-              </button>
-            </div>
-          </div>
-        )}
-      </div>
-    </>
+        <Pager page={Math.min(page, pages - 1)} pages={pages} total={total} noun={total === 1 ? "email" : "emails"} onPage={setPage} />
+      </section>
+    </div>
   );
 }

@@ -1,19 +1,15 @@
 import { NextResponse } from "next/server";
 import { displayName } from "@/lib/display-name";
 import { clerkClient } from "@clerk/nextjs/server";
-import { supabase } from "@/lib/supabase";
 import { assertAdmin } from "@/lib/admin";
 import { getEffectMetadata } from "@/lib/registry";
 import { getAllSanityEffectEntries, buildEffectsFromSanity } from "@/lib/sanity";
 import { resolveDateBounds } from "@/lib/admin-activity";
-import { filterToAudience, getAudience, parseAudience } from "@/lib/admin-data";
+import { fetchInstalls, getAudience, parseAudience } from "@/lib/admin-data";
 
-// install_events is the full per-attempt audit trail (web/CLI/MCP) written by
-// getInstallLimitDecision() in lib/install-limit.js - "allowed" and
-// "already-unlocked" are the two decisions that represent an actual
-// successful copy; "denied" rows are attempts that didn't happen, not
-// something a "who copied what" feed should list.
-const SUCCESS_DECISIONS = ["allowed", "already-unlocked"];
+// The Activity page's "Recent installs" feed: every install, newest first - one effect,
+// one account, one day, from the website, the CLI or MCP (lib/admin-data fetchInstalls,
+// the same count as every other admin number). Searched, filtered and paged here.
 
 // Matches the ceiling on /api/admin/users - the page-size selector in the
 // admin UI tops out at 500, so a smaller cap here would silently truncate a
@@ -40,31 +36,25 @@ export async function GET(request) {
 
     const audience = await getAudience(parseAudience(searchParams));
 
-    let query = supabase
-      .from("install_events")
-      .select(
-        "id, occurred_at, identity_key, clerk_user_id, effect_slug, source, decision",
-        { count: "exact" }
-      )
-      .in("decision", SUCCESS_DECISIONS)
-      .order("occurred_at", { ascending: false })
-      .range(offset, offset + limit - 1);
-
-    if (effectSearch) query = query.ilike("effect_slug", `%${effectSearch}%`);
-    if (source && source !== "all") query = query.eq("source", source);
-    if (startISO) query = query.gte("occurred_at", startISO);
-    if (endISO) query = query.lt("occurred_at", endISO);
-    query = filterToAudience(query, audience);
-
-    const [{ data: rows, error, count }, sanityEntries] = await Promise.all([
-      query,
+    const search = effectSearch.trim().toLowerCase();
+    // One account's installs only, with ?userId= (the Users tab's Manage drawer)
+    const userId = searchParams.get("userId");
+    const [installs, sanityEntries] = await Promise.all([
+      fetchInstalls(userId ? { startISO, endISO, clerkUserId: userId } : { startISO, endISO, audience }),
       getAllSanityEffectEntries(),
     ]);
-
-    if (error) {
-      console.error("ADMIN_COPY_ACTIVITY_ERROR:", error);
-      return NextResponse.json({ error: error.message }, { status: 500 });
-    }
+    const matching = installs.filter(
+      (row) => (!source || source === "all" || row.source === source) && (!search || row.effectSlug.toLowerCase().includes(search))
+    );
+    const count = matching.length;
+    const rows = matching.slice(offset, offset + limit).map((row) => ({
+      id: `${row.identityKey || row.clerkUserId}|${row.effectSlug}|${row.day}`,
+      occurred_at: row.at,
+      clerk_user_id: row.clerkUserId,
+      identity_key: row.identityKey,
+      effect_slug: row.effectSlug,
+      source: row.source,
+    }));
 
     const sanityEffectsBySlug = new Map(
       buildEffectsFromSanity(sanityEntries).map((effect) => [effect.name, effect])
@@ -93,12 +83,11 @@ export async function GET(request) {
         userId: row.clerk_user_id,
         userName: displayName(clerkUser),
         userEmail: clerkUser?.emailAddresses?.[0]?.emailAddress || null,
-        userImageUrl: clerkUser?.imageUrl || null,
+        userImageUrl: clerkUser?.hasImage ? clerkUser.imageUrl : null, // a real photo, not Clerk's placeholder
         identityKey: row.identity_key,
         effectSlug: row.effect_slug,
         effectTitle: resolveTitle(row.effect_slug),
         source: row.source,
-        decision: row.decision,
       };
     });
 

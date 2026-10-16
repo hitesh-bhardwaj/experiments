@@ -14,13 +14,13 @@ import { resolveClerkUserIdFromCliToken } from "@/lib/cli-auth";
 
 // Unique effects a day, shared across web copies, CLI and MCP. The paid
 // tiers' limits come from plans.js (Pro 5, Pro+ 10).
+// Signed-out callers get none: every install needs an account, even for free
+// effects (see the sign-in check in getInstallLimitDecision).
 export const LIMITS = {
-  anonymous: 1,
   free: 3,
   pro: PLANS.pro.installsPerDay,
   pro_plus: PLANS.pro_plus.installsPerDay,
   admin: null,
-  ip: 10,
 };
 
 // The daily limit for a signed-in user's tier ("free" | "pro" | "pro_plus")
@@ -177,8 +177,8 @@ export async function getUnlockedEffectSlugsToday({ clerkUserId }) {
  * flip enforcement on top of later. The only thing shadow mode changes is
  * whether the boolean handed back to the *caller* respects that claim.
  *
- * Exactly one of `clerkUserId` or `cliToken` should be set for a signed-in
- * caller; neither means anonymous, resolved via `deviceId`/`ip` instead.
+ * Exactly one of `clerkUserId` or `cliToken` should be set; neither means a
+ * signed-out caller, who is always refused ("sign-in-required").
  */
 export async function getInstallLimitDecision({
   effectSlug,
@@ -199,6 +199,42 @@ export async function getInstallLimitDecision({
     throw new Error("getInstallLimitDecision requires effectSlug and source");
   }
 
+  const usageDate = todayUTC();
+  const resolvedClerkUserId = clerkUserId || (cliToken ? await resolveClerkUserIdFromCliToken(cliToken) : null);
+
+  const telemetry = {
+    cli_version: telemetryDisabled ? null : cliVersion ?? null,
+    mcp_version: telemetryDisabled ? null : mcpVersion ?? null,
+    user_agent: telemetryDisabled ? null : userAgent ?? null,
+    anonymous_project_id: telemetryDisabled ? null : anonymousProjectId ?? null,
+  };
+
+  // No account, no install - free effects included, and in shadow mode too (this is
+  // access, not usage shaping). Checked before the dependency shortcut below, so
+  // `?dependency=1` can't be used to fetch code signed out. The attempt is logged
+  // (not for dependencies), so the admin pages can see sign-in-wall demand.
+  if (!resolvedClerkUserId) {
+    const ipHash = hashIp(ip);
+    if (!isDependency) {
+      await logInstallEvent({
+        identity_key: deviceId ? `device:${deviceId}` : ipHash ? `ip:${ipHash}` : "anonymous",
+        clerk_user_id: null,
+        device_id: deviceId ?? null,
+        ip_hash: ipHash,
+        effect_slug: effectSlug,
+        effect_tier: effectTier ?? null,
+        source,
+        plan: "anonymous",
+        decision: "denied",
+        reason: "sign-in-required",
+        enforced: true,
+        would_have_denied: true,
+        ...telemetry,
+      });
+    }
+    return decision("sign-in-required", { plan: "anonymous", enforced: true });
+  }
+
   // registryDependencies pulled in transitively never consume quota -
   // otherwise one `add` of a composite effect could eat a user's entire
   // daily allowance. Not logged either: it's not a real install attempt.
@@ -206,195 +242,69 @@ export async function getInstallLimitDecision({
     return decision("dependency", { allowed: true });
   }
 
-  const usageDate = todayUTC();
-  const resolvedClerkUserId = clerkUserId || (cliToken ? await resolveClerkUserIdFromCliToken(cliToken) : null);
+  const identity = await resolveSignedInIdentity(resolvedClerkUserId);
 
-  let identity;
-
-  if (resolvedClerkUserId) {
-    identity = await resolveSignedInIdentity(resolvedClerkUserId);
-  } else {
-    const ipHash = hashIp(ip);
-    const deviceKey = deviceId ? `device:${deviceId}` : null;
-    const ipKey = ipHash ? `ip:${ipHash}` : null;
-
-    if (!deviceKey && !ipKey) {
-      // No identity at all - can't attribute or limit, deny by policy.
-      // Rare in practice (web anonymous reads are unmetered, see risk #4,
-      // and a request without any resolvable IP is unusual) - but a missing
-      // device ID alone is common and handled below, not here: it falls
-      // back to the IP as this caller's identity rather than hitting this
-      // branch.
-      return decision("no-identity");
-    }
-
-    identity = { deviceKey, ipKey, isAnonymous: true, plan: "anonymous" };
-  }
-
-  async function recordAndReturn({ identityKey, claim, reason, limit }) {
-    const naturalAllowed = Boolean(claim?.allowed);
-    const finalAllowed = isEnforced() ? naturalAllowed : true;
-    const decisionLabel = claim?.already_unlocked ? "already-unlocked" : naturalAllowed ? "allowed" : "denied";
-
+  if (identity.isAdmin) {
+    // Admins aren't metered - no claim, no ledger row, matches the existing
+    // copy-usage/effect-access precedent. The install is still logged (plan
+    // "admin"), so the admin's own dashboard Usage tab has a history to show.
     await logInstallEvent({
-      identity_key: identityKey,
+      identity_key: identity.identityKey,
       clerk_user_id: identity.clerkUserId ?? null,
       device_id: deviceId ?? null,
-      ip_hash: identity.isAnonymous ? hashIp(ip) : null,
+      ip_hash: null,
       effect_slug: effectSlug,
       effect_tier: effectTier ?? null,
       source,
-      // The tier for signed-in users, so the admin installs view can tell
-      // Pro from Pro+ ("free" | "pro" | "pro_plus" | "admin" | "anonymous")
-      plan: identity.tier ?? identity.plan ?? null,
-      decision: decisionLabel,
-      reason,
+      plan: "admin",
+      decision: "allowed",
+      reason: "admin",
       enforced: isEnforced(),
-      would_have_denied: !naturalAllowed,
-      cli_version: telemetryDisabled ? null : cliVersion ?? null,
-      mcp_version: telemetryDisabled ? null : mcpVersion ?? null,
-      user_agent: telemetryDisabled ? null : userAgent ?? null,
-      anonymous_project_id: telemetryDisabled ? null : anonymousProjectId ?? null,
+      would_have_denied: false,
+      ...telemetry,
     });
-
-    return decision(reason, {
-      allowed: finalAllowed,
-      limit: claim ? (identity.isAdmin ? null : (limit ?? null)) : null,
-      count: claim?.claim_count ?? 0,
-      remaining: claim?.remaining ?? null,
-      identityKey,
-      plan: identity.plan ?? null,
-      tier: identity.tier ?? null,
-    });
+    return decision("admin", { allowed: true, identityKey: identity.identityKey, plan: "admin", tier: "admin", limit: null });
   }
 
-  if (!identity.isAnonymous) {
-    if (identity.isAdmin) {
-      // Admins aren't metered - no claim, no ledger row, matches the existing
-      // copy-usage/effect-access precedent. The install is still logged (plan
-      // "admin"), so the admin's own dashboard Usage tab has a history to show.
-      await logInstallEvent({
-        identity_key: identity.identityKey,
-        clerk_user_id: identity.clerkUserId ?? null,
-        device_id: deviceId ?? null,
-        ip_hash: null,
-        effect_slug: effectSlug,
-        effect_tier: effectTier ?? null,
-        source,
-        plan: "admin",
-        decision: "allowed",
-        reason: "admin",
-        enforced: isEnforced(),
-        would_have_denied: false,
-        cli_version: telemetryDisabled ? null : cliVersion ?? null,
-        mcp_version: telemetryDisabled ? null : mcpVersion ?? null,
-        user_agent: telemetryDisabled ? null : userAgent ?? null,
-        anonymous_project_id: telemetryDisabled ? null : anonymousProjectId ?? null,
-      });
-      return decision("admin", { allowed: true, identityKey: identity.identityKey, plan: "admin", tier: "admin", limit: null });
-    }
+  const claim = await claimSlot({
+    identityKey: identity.identityKey,
+    clerkUserId: identity.clerkUserId,
+    usageDate,
+    effectSlug,
+    source,
+    limit: identity.limit,
+  });
 
-    const claim = await claimSlot({
-      identityKey: identity.identityKey,
-      clerkUserId: identity.clerkUserId,
-      usageDate,
-      effectSlug,
-      source,
-      limit: identity.limit,
-    });
+  if (!claim) return decision("error", { identityKey: identity.identityKey, plan: identity.plan, tier: identity.tier, limit: identity.limit });
 
-    if (!claim) return decision("error", { identityKey: identity.identityKey, plan: identity.plan, tier: identity.tier, limit: identity.limit });
+  const naturalAllowed = Boolean(claim.allowed);
+  const reason = claim.already_unlocked ? "already-unlocked" : naturalAllowed ? "allowed" : "limit-reached";
 
-    return recordAndReturn({
-      identityKey: identity.identityKey,
-      claim,
-      reason: claim.already_unlocked ? "already-unlocked" : claim.allowed ? "allowed" : "limit-reached",
-      limit: identity.limit,
-    });
-  }
+  await logInstallEvent({
+    identity_key: identity.identityKey,
+    clerk_user_id: identity.clerkUserId ?? null,
+    device_id: deviceId ?? null,
+    ip_hash: null,
+    effect_slug: effectSlug,
+    effect_tier: effectTier ?? null,
+    source,
+    // The tier, so the admin installs view can tell Pro from Pro+ ("free" | "pro" | "pro_plus")
+    plan: identity.tier ?? identity.plan ?? null,
+    decision: claim.already_unlocked ? "already-unlocked" : naturalAllowed ? "allowed" : "denied",
+    reason,
+    enforced: isEnforced(),
+    would_have_denied: !naturalAllowed,
+    ...telemetry,
+  });
 
-  // Anonymous: checked against both device and IP buckets, stricter wins.
-  // Device is claimed first (lower limit, more likely to be the binding
-  // constraint, cheaper to short-circuit on). If it denies, the IP bucket
-  // is never touched. If device allows but the IP bucket then denies, the
-  // device slot has already been spent for this effect - an accepted
-  // imperfection given this is usage-shaping, not a security boundary (see
-  // Installation-SyncUp.md risk #1); retrying the same effect is still free
-  // via the device bucket's own already-unlocked check.
-  let deviceClaim = null;
-  let ipClaim = null;
-
-  if (identity.deviceKey) {
-    deviceClaim = await claimSlot({
-      identityKey: identity.deviceKey,
-      clerkUserId: null,
-      usageDate,
-      effectSlug,
-      source,
-      limit: LIMITS.anonymous,
-    });
-
-    if (deviceClaim && !deviceClaim.allowed) {
-      return recordAndReturn({
-        identityKey: identity.deviceKey,
-        claim: deviceClaim,
-        reason: "limit-reached",
-        limit: LIMITS.anonymous,
-      });
-    }
-  }
-
-  // LIMITS.ip only exists to keep many *different* real devices sharing one
-  // network (an office, a CI runner) from all getting falsely capped once
-  // they've each already passed their own device check above. It was never
-  // meant to apply to a single caller who simply never sent a device ID -
-  // that caller has no other identity, so the IP *is* them, and they must
-  // get the same strict per-anonymous-caller limit a device ID would have
-  // gotten them. Skipping this bucket entirely once a device already
-  // claimed successfully avoids double-spending: a shared-IP ceiling is a
-  // real, separate check in that case, not "the" check.
-  if (identity.ipKey && !identity.deviceKey) {
-    ipClaim = await claimSlot({
-      identityKey: identity.ipKey,
-      clerkUserId: null,
-      usageDate,
-      effectSlug,
-      source,
-      limit: LIMITS.anonymous,
-    });
-  } else if (identity.ipKey) {
-    ipClaim = await claimSlot({
-      identityKey: identity.ipKey,
-      clerkUserId: null,
-      usageDate,
-      effectSlug,
-      source,
-      limit: LIMITS.ip,
-    });
-  }
-
-  const primaryClaim = deviceClaim ?? ipClaim;
-  const primaryKey = identity.deviceKey ?? identity.ipKey;
-
-  if (!primaryClaim) return decision("error", { identityKey: primaryKey, plan: "anonymous" });
-
-  // Stricter verdict wins: only truly allowed if every bucket that ran
-  // allowed it.
-  const bothAllowed = [deviceClaim, ipClaim].filter(Boolean).every((c) => c.allowed);
-  const effectiveClaim = { ...primaryClaim, allowed: bothAllowed };
-
-  return recordAndReturn({
-    identityKey: primaryKey,
-    claim: effectiveClaim,
-    reason: effectiveClaim.already_unlocked ? "already-unlocked" : bothAllowed ? "allowed" : "limit-reached",
-    // Without a device key, the IP claim above always runs against
-    // LIMITS.anonymous (there's no other bucket in play) - report that,
-    // allowed or denied. With a device key, it's the original logic: device
-    // always checked first and short-circuits its own denial above (a
-    // truthy deviceKey reaching this point already passed), so a denial
-    // here is always the IP bucket's real (looser) limit, and a success
-    // reports the device's own (stricter) limit, since that's the primary
-    // claim a device-having caller was actually bound by.
-    limit: identity.deviceKey ? (bothAllowed ? LIMITS.anonymous : LIMITS.ip) : LIMITS.anonymous,
+  return decision(reason, {
+    // Shadow mode (INSTALL_LIMIT_ENFORCE unset): the limit is recorded, not applied
+    allowed: isEnforced() ? naturalAllowed : true,
+    limit: identity.limit ?? null,
+    count: claim.claim_count ?? 0,
+    remaining: claim.remaining ?? null,
+    identityKey: identity.identityKey,
+    plan: identity.plan ?? null,
+    tier: identity.tier ?? null,
   });
 }

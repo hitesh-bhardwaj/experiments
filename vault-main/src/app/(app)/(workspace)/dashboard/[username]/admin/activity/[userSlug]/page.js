@@ -16,11 +16,10 @@ import { getEffectHref } from "@/lib/categories";
 import { getDashboardPreview, sampleAdminUser } from "@/lib/dev/dashboardPreview";
 
 // One user's activity, for admins: who they are, their numbers, installs by day, the
-// effects they saved / copied / installed, templates they bought, and every payment.
+// effects they saved / installed, templates they bought, and every payment.
 
 const EFFECT_TABS = [
   { id: "saved", label: "Saved", key: "savedEffects", date: "savedAt", verb: "Saved" },
-  { id: "copied", label: "Copied", key: "copiedEffects", date: "lastCopiedAt", verb: "Last copied" },
   { id: "installed", label: "Installed", key: "installedEffects", date: "lastInstalledAt", verb: "Last installed" },
 ];
 
@@ -182,8 +181,11 @@ export default function AdminUserActivityPage({ params }) {
       {/* their numbers */}
       <div className="flex gap-[calc(var(--cvw)*0.8)] max-lg:flex-wrap max-lg:gap-3">
         <Kpi label="Saved" value={stats.savedCount} detail="Effects saved" />
-        <Kpi label="Installed" value={stats.installedCount} detail="Web, CLI and MCP" />
-        <Kpi label="Copied" value={stats.copiedCount} detail="From the website" />
+        <Kpi
+          label="Installs"
+          value={stats.installCount ?? 0}
+          detail={`${stats.installsBySource?.web ?? 0} web · ${stats.installsBySource?.cli ?? 0} CLI · ${stats.installsBySource?.mcp ?? 0} MCP`}
+        />
         <Kpi label="Templates" value={templatePurchases.length} detail="Bought" />
         <Kpi
           label="Lifetime spend"
@@ -207,7 +209,7 @@ export default function AdminUserActivityPage({ params }) {
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div className="flex flex-col gap-1">
             <h2 id="user-by-day-h" className="type-h3">
-              Installs &amp; copies by day
+              Installs by day
             </h2>
             <p className="type-small text-black/60">Hover a bar for its numbers.</p>
           </div>
@@ -223,7 +225,7 @@ export default function AdminUserActivityPage({ params }) {
         {days.length ? <UsageBars days={days} /> : <p className="type-body text-black/60">Nothing in this window.</p>}
       </section>
 
-      {/* their effects: saved / copied / installed */}
+      {/* their effects: saved / installed */}
       <section aria-labelledby="user-effects-h" className={`${CARD} ${CARD_PAD} gap-(--cvw) max-lg:gap-4`}>
         <div className="flex flex-wrap items-center justify-between gap-3">
           <h2 id="user-effects-h" className="type-h3">

@@ -232,17 +232,17 @@ describe("getInstallLimitDecision", () => {
       expect(result.limit).toBe(LIMITS.pro);
     });
 
-    it("falls through to anonymous for a malformed token", async () => {
+    it("a malformed token is treated as signed out: refused", async () => {
       const result = await getInstallLimitDecision({
         effectSlug: "a",
         source: "cli",
         cliToken: "not-a-real-token",
         deviceId: "device-1",
       });
-      expect(result.identityKey).toBe("device:device-1");
+      expect(result).toMatchObject({ allowed: false, reason: "sign-in-required" });
     });
 
-    it("falls through to anonymous when the shared resolver reports no identity (revoked/expired/etc)", async () => {
+    it("a token the resolver rejects (revoked/expired/etc) is treated as signed out: refused", async () => {
       cliTokenResolution = null; // what resolveClerkUserIdFromCliToken returns for a revoked token
 
       const result = await getInstallLimitDecision({
@@ -251,92 +251,34 @@ describe("getInstallLimitDecision", () => {
         cliToken: "hpx_abc",
         deviceId: "device-1",
       });
-      expect(result.identityKey).toBe("device:device-1");
+      expect(result).toMatchObject({ allowed: false, reason: "sign-in-required" });
     });
   });
 
-  describe("anonymous identity", () => {
-    it("denies outright with neither deviceId nor ip", async () => {
-      const result = await getInstallLimitDecision({ effectSlug: "a", source: "cli" });
-      expect(result.allowed).toBe(false);
-      expect(result.reason).toBe("no-identity");
-    });
-
-    it("applies the anonymous limit on the device bucket", async () => {
-      process.env.INSTALL_LIMIT_ENFORCE = "true";
-
-      const first = await getInstallLimitDecision({ effectSlug: "a", source: "cli", deviceId: "device-1" });
-      expect(first.plan).toBe("anonymous");
-      expect(insertedEvents.at(-1).plan).toBe("anonymous");
-
-      // Fill any remaining slots beyond the first, so this holds regardless
-      // of the exact configured limit.
-      for (let i = 1; i < LIMITS.anonymous; i++) {
-        await getInstallLimitDecision({ effectSlug: `extra-${i}`, source: "cli", deviceId: "device-1" });
-      }
-
-      const overCap = await getInstallLimitDecision({ effectSlug: "over-cap", source: "cli", deviceId: "device-1" });
-
-      expect(overCap.allowed).toBe(false);
-      expect(overCap.limit).toBe(LIMITS.anonymous); // was silently null before this was fixed
-    });
-
-    it("device-denied short-circuits before ever touching the IP bucket", async () => {
-      process.env.INSTALL_LIMIT_ENFORCE = "true";
-
-      for (let i = 0; i < LIMITS.anonymous; i++) {
-        await getInstallLimitDecision({ effectSlug: `fill-${i}`, source: "cli", deviceId: "device-1", ip: "1.2.3.4" });
-      }
-
+  describe("signed out", () => {
+    it("is refused, free effects included, even in shadow mode - and claims nothing", async () => {
+      delete process.env.INSTALL_LIMIT_ENFORCE;
       const rpcCallsBefore = supabaseMock.rpc.mock.calls.length;
-      const overCap = await getInstallLimitDecision({ effectSlug: "over-cap", source: "cli", deviceId: "device-1", ip: "1.2.3.4" });
-
-      expect(overCap.allowed).toBe(false);
-      // Only ONE more rpc call (the device claim) - IP bucket never touched.
-      expect(supabaseMock.rpc.mock.calls.length).toBe(rpcCallsBefore + 1);
+      const result = await getInstallLimitDecision({ effectSlug: "a", effectTier: "free", source: "cli", deviceId: "device-1", ip: "1.2.3.4" });
+      expect(result).toMatchObject({ allowed: false, reason: "sign-in-required", plan: "anonymous", enforced: true });
+      expect(supabaseMock.rpc.mock.calls.length).toBe(rpcCallsBefore);
     });
 
-    it("with no device ID at all, the IP claim itself gets the strict anonymous limit, not the loose shared-network one", async () => {
-      process.env.INSTALL_LIMIT_ENFORCE = "true";
-
-      // No deviceId anywhere below - this caller has no other identity, so
-      // the IP claim must stand in for the strict per-anonymous-caller cap
-      // rather than quietly getting the looser LIMITS.ip (10) meant for
-      // *distinguishable* devices sharing a network.
-      const first = await getInstallLimitDecision({ effectSlug: "a", source: "cli", ip: "5.5.5.5" });
-      expect(first.allowed).toBe(true);
-      expect(first.limit).toBe(LIMITS.anonymous);
-
-      for (let i = 1; i < LIMITS.anonymous; i++) {
-        await getInstallLimitDecision({ effectSlug: `extra-${i}`, source: "cli", ip: "5.5.5.5" });
-      }
-
-      const overCap = await getInstallLimitDecision({ effectSlug: "over-cap", source: "cli", ip: "5.5.5.5" });
-
-      expect(overCap.allowed).toBe(false);
-      expect(overCap.limit).toBe(LIMITS.anonymous); // was LIMITS.ip (10) before this was fixed
+    it("logs the refused attempt for the admin pages", async () => {
+      await getInstallLimitDecision({ effectSlug: "a", source: "mcp", deviceId: "device-1" });
+      expect(insertedEvents.at(-1)).toMatchObject({ plan: "anonymous", decision: "denied", reason: "sign-in-required", source: "mcp", identity_key: "device:device-1" });
     });
 
-    it("stricter verdict wins: device allows but IP bucket denies -> overall denied", async () => {
-      process.env.INSTALL_LIMIT_ENFORCE = "true";
+    it("is refused with no identity at all", async () => {
+      const result = await getInstallLimitDecision({ effectSlug: "a", source: "cli" });
+      expect(result).toMatchObject({ allowed: false, reason: "sign-in-required" });
+    });
 
-      // Exhaust the IP bucket (limit 10) via 10 different devices, one claim
-      // each - well under any device's own cap, so only the IP bucket
-      // (shared across all of them) is the one that fills up.
-      for (let i = 0; i < LIMITS.ip; i++) {
-        await getInstallLimitDecision({ effectSlug: `shared-${i}`, source: "cli", deviceId: `other-device-${i}`, ip: "9.9.9.9" });
-      }
-
-      const result = await getInstallLimitDecision({
-        effectSlug: "new-effect",
-        source: "cli",
-        deviceId: "device-1", // fresh device, well under its own cap
-        ip: "9.9.9.9", // but IP bucket is full
-      });
-
-      expect(result.allowed).toBe(false);
-      expect(result.reason).toBe("limit-reached");
-      expect(result.limit).toBe(LIMITS.ip); // the IP bucket was the one that actually denied it
+    it("can't use the dependency flag to get code, and that isn't logged", async () => {
+      const eventsBefore = insertedEvents.length;
+      const result = await getInstallLimitDecision({ effectSlug: "a", source: "cli", deviceId: "device-1", isDependency: true });
+      expect(result).toMatchObject({ allowed: false, reason: "sign-in-required" });
+      expect(insertedEvents.length).toBe(eventsBefore);
     });
   });
 });

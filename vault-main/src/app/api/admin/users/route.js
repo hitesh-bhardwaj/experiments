@@ -4,49 +4,51 @@ import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { getRole, isSuperAdminUser } from "@/lib/admin";
 import { resolveDateBounds } from "@/lib/admin-activity";
-import { fetchAllRows, getAdminUserList, parseAudience } from "@/lib/admin-data";
+import { fetchAllRows, fetchInstalls, getAdminUserList, parseAudience } from "@/lib/admin-data";
 
 const DEFAULT_LIMIT = 10;
 const MAX_LIMIT = 500;
 
-const SORT_OPTIONS = new Set(["copies", "cli", "mcp", "saves"]);
+// "installs" (all sources), or one source; "copies" is the old name for web
+const SORT_OPTIONS = new Set(["installs", "web", "cli", "mcp", "saves", "copies"]);
 const ROLE_OPTIONS = new Set(["admin", "super_admin", "user"]);
 const PLAN_OPTIONS = new Set(["pro_plus", "pro", "free", "paid"]);
 
-function countByUser(rows) {
+function countByUser(rows, key = "clerk_user_id") {
   const counts = new Map();
   for (const row of rows) {
-    counts.set(row.clerk_user_id, (counts.get(row.clerk_user_id) || 0) + 1);
+    counts.set(row[key], (counts.get(row[key]) || 0) + 1);
   }
   return counts;
 }
 
-// Lifetime effect activity per user, split by where it happened
-// (install_unlocks.source): copies = the website's copy buttons (web), cli =
-// `npx hyperiux add`, mcp = the Hyperiux MCP; plus saves (wishlisted_effects).
-// All-time, like the per-user page - the Joined filter decides who's listed,
-// not how much history counts. Every row, not the first 1000.
+// Lifetime installs per user (lib/admin-data fetchInstalls: one effect, one day - admins
+// included), in total and by where they happened: web (the website), cli
+// (`npx hyperiux add`), mcp (the Hyperiux MCP); plus saves (wishlisted_effects).
+// All-time, like the per-user page - the Joined filter decides who's listed, not how
+// much history counts. Every row, not the first 1000.
 async function activityCounts() {
-  const [unlockRows, saveRows] = await Promise.all([
-    fetchAllRows(() => supabase.from("install_unlocks").select("clerk_user_id, source").not("clerk_user_id", "is", null)),
+  const [installs, saveRows] = await Promise.all([
+    fetchInstalls().then((rows) => rows.filter((row) => row.clerkUserId)),
     fetchAllRows(() => supabase.from("wishlisted_effects").select("clerk_user_id")),
   ]);
   return {
-    copiesById: countByUser(unlockRows.filter((r) => r.source === "web")),
-    cliById: countByUser(unlockRows.filter((r) => r.source === "cli")),
-    mcpById: countByUser(unlockRows.filter((r) => r.source === "mcp")),
+    installsById: countByUser(installs, "clerkUserId"),
+    webById: countByUser(installs.filter((r) => r.source === "web"), "clerkUserId"),
+    cliById: countByUser(installs.filter((r) => r.source === "cli"), "clerkUserId"),
+    mcpById: countByUser(installs.filter((r) => r.source === "mcp"), "clerkUserId"),
     savesById: countByUser(saveRows),
   };
 }
 
-function shapeUser({ clerkUser, sub, currentPlan }, viewerIsSuperAdmin, { copiesById, cliById, mcpById, savesById }) {
+function shapeUser({ clerkUser, sub, currentPlan }, viewerIsSuperAdmin, { installsById, webById, cliById, mcpById, savesById }) {
   const role = getRole(clerkUser);
 
   const base = {
     id: clerkUser.id,
     email: clerkUser.emailAddresses?.[0]?.emailAddress || null,
     name: displayName(clerkUser),
-    imageUrl: clerkUser.imageUrl || null,
+    imageUrl: clerkUser.hasImage ? clerkUser.imageUrl : null, // a real photo, not Clerk's placeholder
     joinedAt: clerkUser.createdAt || sub?.created_at || null,
     // The plan they have now: an expired grant or a cancelled subscription is Free
     plan: currentPlan === "free" ? "free" : "pro",
@@ -54,10 +56,13 @@ function shapeUser({ clerkUser, sub, currentPlan }, viewerIsSuperAdmin, { copies
     tier: currentPlan === "free" ? null : currentPlan,
     role,
     isAdmin: role !== null,
-    copiesCount: copiesById.get(clerkUser.id) || 0,
+    installsCount: installsById.get(clerkUser.id) || 0,
+    webCount: webById.get(clerkUser.id) || 0,
     cliCount: cliById.get(clerkUser.id) || 0,
     mcpCount: mcpById.get(clerkUser.id) || 0,
     savesCount: savesById.get(clerkUser.id) || 0,
+    // Suspended (banned in Clerk): can't sign in until restored
+    suspended: Boolean(clerkUser.banned),
   };
 
   // Billing/payment detail is super-admin only - a regular admin gets user
@@ -120,8 +125,14 @@ export async function GET(request) {
     ]);
 
     if (sortBy !== "newest") {
-      const countMap =
-        sortBy === "copies" ? counts.copiesById : sortBy === "cli" ? counts.cliById : sortBy === "mcp" ? counts.mcpById : counts.savesById;
+      const countMap = {
+        installs: counts.installsById,
+        web: counts.webById,
+        copies: counts.webById,
+        cli: counts.cliById,
+        mcp: counts.mcpById,
+        saves: counts.savesById,
+      }[sortBy];
       list.sort((a, b) => (countMap.get(b.clerkUser.id) || 0) - (countMap.get(a.clerkUser.id) || 0));
     }
 

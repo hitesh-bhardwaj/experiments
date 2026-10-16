@@ -3,24 +3,27 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Search } from "lucide-react";
-import { DashboardHeroAside, useDashboard } from "@/components/Dashboard/DashboardContext";
-import { CARD, CARD_PAD, Pager, SourceChip } from "@/components/Dashboard/DashboardUI";
+import { useDashboard } from "@/components/Dashboard/DashboardContext";
+import { CARD, CARD_PAD, DATE_PRESETS, DateRangeFilter, Pager, PerPageMenu, SourceChip } from "@/components/Dashboard/DashboardUI";
+import { StatCard, StatCardSkeleton, TWO_OF_THREE } from "@/components/Dashboard/TrendStat";
 import { SOURCE_BARS, UsageBars } from "@/components/Dashboard/UsageBars";
-import { DarkSegment } from "@/components/ui/DarkSegment";
-import { AdminAudienceToggle, useAdminAudience } from "@/components/admin/AdminAudience";
+import { useAdminAudience } from "@/components/admin/AdminAudience";
 import { SlidingSegment } from "@/components/ui/SlidingSegment";
 import { Bar, SkeletonCard } from "@/components/Dashboard/DashboardSkeletons";
 import { useDashboardData } from "@/components/Dashboard/useDashboardData";
 import { getDashboardPreview, sampleAdminActivity } from "@/lib/dev/dashboardPreview";
 import { buildUserActivitySlug } from "@/lib/user-slug";
+import { UserAvatar } from "@/components/admin/UserAvatar";
 
-// The time window for the whole page
-const WINDOWS = [
-  { id: "7d", label: "7 days" },
-  { id: "30d", label: "30 days" },
-  { id: "90d", label: "90 days" },
-  { id: "all", label: "All time" },
-];
+// The page's window: the dashboard's date filter (all time to start with)
+const START_DATES = { preset: "all", from: "", to: "" };
+
+// The window as the admin APIs' query: a preset, or a custom from / to (one day if only
+// a start is picked yet)
+function rangeQuery({ preset, from, to }) {
+  if (preset === "custom" && from) return `from=${from}&to=${to || from}`;
+  return `range=${preset === "custom" ? "30d" : preset}`;
+}
 const FEED_SOURCES = [
   { id: "all", label: "All" },
   { id: "web", label: "Web" },
@@ -28,31 +31,13 @@ const FEED_SOURCES = [
   { id: "mcp", label: "MCP" },
 ];
 const FX_TABS = [
-  { id: "copied", label: "Copied", key: "topCopiedEffects" },
-  { id: "installed", label: "Installed", key: "topInstalledEffects" },
-  { id: "saved", label: "Saved", key: "topSavedEffects" },
+  { id: "installed", label: "Installed", key: "topInstalledEffects", unit: "installs" },
+  { id: "saved", label: "Saved", key: "topSavedEffects", unit: "saves" },
 ];
-const USER_TABS = [
-  { id: "installs", label: "Installs", key: "topInstallers" },
-  { id: "copies", label: "Copies", key: "topUsers" },
-];
-const FEED_PER_PAGE = 10;
 
 const number = (n) => new Intl.NumberFormat("en").format(n || 0);
 const money = (amount, currency) => new Intl.NumberFormat(currency === "INR" ? "en-IN" : "en-US", { style: "currency", currency, maximumFractionDigits: 0 }).format(amount);
 const formatWhen = (value) => new Intl.DateTimeFormat("en", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }).format(new Date(value));
-const initials = (name, email) => (name || email || "?").split(/[\s@.]+/).filter(Boolean).slice(0, 2).map((w) => w[0].toUpperCase()).join("");
-
-// A headline number: label at the top, the figure in the middle, its note at the foot
-function Kpi({ label, value, detail }) {
-  return (
-    <div className={`${CARD} ${CARD_PAD} min-w-0 flex-1 justify-between gap-[calc(var(--cvw)*1)] max-lg:w-[calc((100%-1.5rem)/3)] max-lg:flex-none max-lg:gap-3 max-md:w-[calc((100%-0.75rem)/2)]`}>
-      <p className="type-label text-black/60">{label}</p>
-      <p className="type-h2">{value}</p>
-      {detail && <p className="type-small text-black/60">{detail}</p>}
-    </div>
-  );
-}
 
 // A ranked list: position, name (with a bar for its share of the leader), count
 function RankList({ rows, unit }) {
@@ -85,18 +70,20 @@ function RankList({ rows, unit }) {
   );
 }
 
+// The admin pages' avatar: initials in orange on the dark page colour
 function Avatar({ name, email }) {
-  return <span className="type-small grid size-8 shrink-0 place-items-center rounded-full bg-ink text-foreground">{initials(name, email)}</span>;
+  return <UserAvatar name={name} email={email} className="size-8" />;
 }
 
 /**
- * Admin Activity: site-wide usage over a time window - headline numbers, installs and
- * copies by day and by source, plans, top effects and users, template views and sales,
- * and the live feed of installs and copies.
+ * Admin Activity: site-wide usage over a window - stat cards with their change against
+ * the previous period, installs by day and by source (web / CLI / MCP), plans, top effects
+ * and installers, template views and sales, and the live feed of installs.
  */
-// Loading: the headline numbers, the by-day chart, by source / plans / today, the two
-// rankings, the templates table and the feed - each in its own card's shape
-function ActivitySkeleton({ kpis }) {
+// Loading: the stat cards (3 then 2), the by-day chart, by source / plans / today, the two
+// rankings, the templates table and the feed - each in its own card's shape. `revenue`:
+// the Revenue card shows (super admins).
+function ActivitySkeleton({ revenue }) {
   const ROW = "flex gap-[calc(var(--cvw)*0.8)] max-lg:flex-col max-lg:gap-3";
   const ranked = (rows) => (
     <div className="flex flex-col gap-[calc(var(--cvw)*0.9)] max-lg:gap-3">
@@ -114,15 +101,13 @@ function ActivitySkeleton({ kpis }) {
   );
   return (
     <div aria-busy="true" aria-label="Loading activity" className="flex flex-col gap-[calc(var(--cvw)*0.8)] max-lg:gap-3">
-      <div className="flex gap-[calc(var(--cvw)*0.8)] max-lg:flex-wrap max-lg:gap-3">
-        {Array.from({ length: kpis }, (_, i) => (
-          <SkeletonCard key={i} className="min-w-0 flex-1 justify-between gap-(--cvw) max-lg:w-[calc((100%-1.5rem)/3)] max-lg:flex-none max-lg:gap-3 max-md:w-[calc((100%-0.75rem)/2)]">
-            <Bar type="type-label" className="w-[60%]" />
-            <Bar type="type-h2" className="w-[45%]" />
-            <Bar type="type-small" className="w-[75%]" />
-          </SkeletonCard>
-        ))}
-      </div>
+      {[revenue ? [1, 1, 1] : [1, 1], [2, 1]].map((row, r) => (
+        <div key={r} className={ROW}>
+          {row.map((span, i) => (
+            <StatCardSkeleton key={i} className={span === 2 && revenue ? TWO_OF_THREE : "flex-1"} />
+          ))}
+        </div>
+      ))}
       <SkeletonCard className="gap-[calc(var(--cvw)*1.6)] max-lg:gap-5">
         <div className="flex justify-between gap-3">
           <div className="flex w-[50%] flex-col gap-1">
@@ -179,22 +164,23 @@ function ActivitySkeleton({ kpis }) {
 
 export default function AdminActivityPage() {
   const { path, isSuperAdmin, catalog } = useDashboard();
-  const [range, setRange] = useState("30d");
-  const [audience, setAudience] = useAdminAudience();
-  const [fxTab, setFxTab] = useState("copied");
-  const [userTab, setUserTab] = useState("installs");
+  const [dates, setDates] = useState(START_DATES);
+  const query = rangeQuery(dates);
+  // Customers / Internal / All: chosen in the tab row (DashboardShell), shared by every admin page
+  const [audience] = useAdminAudience();
+  const [fxTab, setFxTab] = useState("installed");
 
   // The overview and the installs numbers for the window: cached per window (skeleton on a
   // window's first load only), refreshed on focus and every 30s
   const { data, failed } = useDashboardData(
-    `admin-activity:${range}:${audience}`,
+    `admin-activity:${query}:${audience}`,
     async () => {
       if (getDashboardPreview()) {
         const sample = sampleAdminActivity(catalog);
         return { overview: sample.overview, installs: sample.installs };
       }
       const get = (url) => fetch(url, { cache: "no-store" }).then((res) => (res.ok ? res.json() : Promise.reject(new Error(`${url} ${res.status}`))));
-      const [overview, installs] = await Promise.all([get(`/api/admin/activity/overview?range=${range}&audience=${audience}`), get(`/api/admin/installs?range=${range}&audience=${audience}`)]);
+      const [overview, installs] = await Promise.all([get(`/api/admin/activity/overview?${query}&audience=${audience}`), get(`/api/admin/installs?${query}&audience=${audience}`)]);
       return { overview, installs };
     },
     { pollMs: 30000 },
@@ -205,6 +191,13 @@ export default function AdminActivityPage() {
   const [feedQuery, setFeedQuery] = useState("");
   const [feedSource, setFeedSource] = useState("all");
   const [feedPage, setFeedPage] = useState(0);
+  const [feedPerPage, setFeedPerPage] = useState(10);
+  // A new window or audience starts the feed from its first page
+  const [feedScope, setFeedScope] = useState(`${query}:${audience}`);
+  if (feedScope !== `${query}:${audience}`) {
+    setFeedScope(`${query}:${audience}`);
+    setFeedPage(0);
+  }
   useEffect(() => {
     let active = true;
     if (getDashboardPreview()) {
@@ -213,12 +206,12 @@ export default function AdminActivityPage() {
         active = false;
       };
     }
-    const params = new URLSearchParams({ range, audience, limit: String(FEED_PER_PAGE), offset: String(feedPage * FEED_PER_PAGE) });
+    const params = new URLSearchParams({ audience, limit: String(feedPerPage), offset: String(feedPage * feedPerPage) });
     if (feedQuery.trim()) params.set("effect", feedQuery.trim());
     if (feedSource !== "all") params.set("source", feedSource);
     // A short pause while typing, so each keystroke isn't a request
     const timer = setTimeout(() => {
-      fetch(`/api/admin/copy-activity?${params}`)
+      fetch(`/api/admin/copy-activity?${query}&${params}`)
         .then((res) => (res.ok ? res.json() : Promise.reject(new Error(`feed ${res.status}`))))
         .then((json) => active && setFeed(json))
         .catch(() => active && setFeed({ events: [], total: 0 }));
@@ -227,48 +220,41 @@ export default function AdminActivityPage() {
       active = false;
       clearTimeout(timer);
     };
-  }, [range, audience, feedQuery, feedSource, feedPage, catalog]);
+  }, [query, audience, feedQuery, feedSource, feedPage, feedPerPage, catalog]);
 
-  const chooseRange = (next) => {
-    setRange(next);
-    setFeedPage(0);
-  };
-  const chooseAudience = (next) => {
-    setAudience(next);
-    setFeedPage(0);
-  };
-
+  // The window, at the top right of the sheet (above the stats)
   const header = (
-    <DashboardHeroAside>
-      <div className="flex flex-wrap items-center gap-3">
-        <AdminAudienceToggle value={audience} onChange={chooseAudience} />
-        <DarkSegment buttonSize label="Time window" items={WINDOWS} value={range} onChange={chooseRange} itemClassName="w-[calc(var(--cvw)*6.5)] max-lg:w-20" />
-      </div>
-    </DashboardHeroAside>
+    <div className="flex flex-wrap items-center justify-between gap-3">
+      <p className="type-label text-black/60">
+        {dates.preset === "custom" ? "Custom range" : DATE_PRESETS[dates.preset]} · {audience === "all" ? "every account" : audience === "internal" ? "internal accounts" : "customers"}
+      </p>
+      <DateRangeFilter label="Showing" value={dates} onChange={setDates} />
+    </div>
   );
 
   if (failed) {
     return (
-      <>
+      <div className="flex flex-col gap-[calc(var(--cvw)*0.8)] max-lg:gap-3">
         {header}
         <div className={`${CARD} ${CARD_PAD} items-start gap-4`}>
           <p className="type-h3">We couldn’t load the activity.</p>
           <p className="type-body text-black/60">Check your connection and reload the page.</p>
         </div>
-      </>
+      </div>
     );
   }
 
   if (!data) {
     return (
-      <>
+      <div className="flex flex-col gap-[calc(var(--cvw)*0.8)] max-lg:gap-3">
         {header}
-        <ActivitySkeleton kpis={isSuperAdmin ? 6 : 5} />
-      </>
+        <ActivitySkeleton revenue={isSuperAdmin} />
+      </div>
     );
   }
 
   const { overview, installs } = data;
+  const kpis = overview.kpis;
   // The API sends [{ name: "web", value: 12 }, ...]; read it as { web: 12, ... }
   const bySource = Object.fromEntries((installs.sourceBreakdown || []).map(({ name, value }) => [name, value]));
   const delivered = (bySource.web || 0) + (bySource.cli || 0) + (bySource.mcp || 0);
@@ -285,7 +271,7 @@ export default function AdminActivityPage() {
     name: fx.title,
     count: fx.count,
   }));
-  const userRows = (installs[USER_TABS.find((t) => t.id === userTab).key] || []).map((u) => ({
+  const userRows = (installs.topInstallers || []).map((u) => ({
     id: u.clerkUserId,
     name: u.name || u.email || "Unnamed",
     count: u.count,
@@ -293,39 +279,68 @@ export default function AdminActivityPage() {
     lead: <Avatar name={u.name} email={u.email} />,
   }));
 
-  const feedPages = Math.max(1, Math.ceil((feed?.total || 0) / FEED_PER_PAGE));
+  const feedPages = Math.max(1, Math.ceil((feed?.total || 0) / feedPerPage));
 
   return (
     <div className="flex flex-col gap-[calc(var(--cvw)*0.8)] max-lg:gap-3">
       {header}
 
-      {/* headline numbers for the window */}
-      <div className="flex gap-[calc(var(--cvw)*0.8)] max-lg:flex-wrap max-lg:gap-3">
-        <Kpi label="Signups" value={number(overview.stats.totalUsers)} detail="New accounts" />
-        <Kpi label="Copies" value={number(bySource.web)} detail="From the website" />
-        <Kpi label="CLI + MCP installs" value={number((bySource.cli || 0) + (bySource.mcp || 0))} detail={`${number(bySource.cli)} CLI · ${number(bySource.mcp)} MCP`} />
-        <Kpi label="Saves" value={number(overview.stats.totalSaved)} detail="Effects saved" />
-        <Kpi label="Template views" value={number(overview.stats.totalViews)} detail="Template pages opened" />
+      {/* the stat cards: signups, template views, revenue; then installs and saves */}
+      <div className="flex gap-[calc(var(--cvw)*0.8)] max-lg:flex-col max-lg:gap-3">
+        <StatCard className="flex-1" label="Signups" value={number(kpis.signups.value)} note="New accounts" stat={kpis.signups} comparison={kpis.comparison} />
+        <StatCard className="flex-1" label="Template views" value={number(kpis.templateViews.value)} note="Template pages opened" stat={kpis.templateViews} comparison={kpis.comparison} />
         {isSuperAdmin && (
-          <Kpi
+          <StatCard
+            className="flex-1"
             label="Revenue"
-            value={(overview.stats.revenueByCurrency || []).find((r) => r.currency === "USD") ? money(overview.stats.revenueByCurrency.find((r) => r.currency === "USD").amount, "USD") : "$0"}
-            detail={(overview.stats.revenueByCurrency || [])
-              .filter((r) => r.currency !== "USD")
-              .map((r) => `+ ${money(r.amount, r.currency)}`)
-              .join(" ") || "Subscriptions, paid"}
+            value={money(kpis.revenue.value, kpis.revenue.currency)}
+            note={
+              kpis.revenue.byCurrency
+                .filter((row) => row.currency !== kpis.revenue.currency)
+                .map((row) => `+ ${money(row.amount, row.currency)}`)
+                .join(" ") || "Subscriptions and templates"
+            }
+            stat={kpis.revenue}
+            comparison={kpis.comparison}
           />
         )}
       </div>
+      <div className="flex gap-[calc(var(--cvw)*0.8)] max-lg:flex-col max-lg:gap-3">
+        <StatCard
+          // Two of the three columns above (one card plus a gap wider); without Revenue the
+          // row above has two, so the two cards here split evenly
+          className={isSuperAdmin ? TWO_OF_THREE : "flex-1"}
+          label="Installs"
+          value={number(kpis.installs.value)}
+          note="Web, CLI and MCP · one effect, one account, one day"
+          stat={kpis.installs}
+          comparison={kpis.comparison}
+        >
+          {/* where they happened */}
+          <ul className="flex gap-[calc(var(--cvw)*1.6)] max-md:gap-4">
+            {SOURCE_BARS.map(({ key, label, tone }) => (
+              <li key={key} className="flex flex-col gap-1.5">
+                <span className="type-small flex items-center gap-1.5 text-black/60">
+                  <span aria-hidden="true" className={`size-2 ${tone}`} />
+                  {label}
+                </span>
+                <span className="type-h3">{number(kpis.installs.bySource[key])}</span>
+                <span className="type-small text-black/60">{kpis.installs.value ? Math.round((kpis.installs.bySource[key] / kpis.installs.value) * 100) : 0}%</span>
+              </li>
+            ))}
+          </ul>
+        </StatCard>
+        <StatCard className="flex-1" label="Saves" value={number(kpis.saves.value)} note={`Effects saved${overview.stats.totalSavedTemplates ? ` · ${number(overview.stats.totalSavedTemplates)} templates too` : ""}`} stat={kpis.saves} comparison={kpis.comparison} />
+      </div>
 
-      {/* installs and copies, by day and source */}
+      {/* installs, by day and source */}
       <section aria-labelledby="by-day-h" className={`${CARD} ${CARD_PAD} gap-[calc(var(--cvw)*1.6)] max-lg:gap-5`}>
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div className="flex flex-col gap-1">
             <h2 id="by-day-h" className="type-h3">
-              Installs &amp; copies by day
+              Installs by day
             </h2>
-            <p className="type-small text-black/60">Unique effects a day across every account. Hover a bar for its numbers.</p>
+            <p className="type-small text-black/60">Effects installed a day, split by web, CLI and MCP. Hover a bar for its numbers.</p>
           </div>
           <ul className="type-small flex gap-3 text-black/60">
             {SOURCE_BARS.map(({ key, label, tone }) => (
@@ -346,7 +361,7 @@ export default function AdminActivityPage() {
             <h2 id="source-h" className="type-h3">
               By source
             </h2>
-            <p className="type-small text-black/60">Where effects were delivered</p>
+            <p className="type-small text-black/60">Where installs happened</p>
           </div>
           <ul className="flex flex-col gap-[calc(var(--cvw)*0.9)] max-lg:gap-3">
             {SOURCE_BARS.map(({ key, label, tone }) => (
@@ -392,7 +407,7 @@ export default function AdminActivityPage() {
         <section aria-label="Today" className={`flex flex-1 flex-col justify-between gap-[calc(var(--cvw)*1.2)] bg-ink text-foreground ${CARD_PAD} max-lg:gap-4`}>
           <p className="type-label text-foreground/80">Today</p>
           <p className="type-h1 text-primary">{number(installs.stats?.installsToday)}</p>
-          <p className="type-small text-foreground/80">Installs and copies so far today (UTC), across every account.</p>
+          <p className="type-small text-foreground/80">Installs so far today (UTC), web, CLI and MCP together.</p>
         </section>
       </div>
 
@@ -405,16 +420,16 @@ export default function AdminActivityPage() {
             </h2>
             <SlidingSegment label="Rank effects by" items={FX_TABS} value={fxTab} onChange={setFxTab} itemClassName="w-20" />
           </div>
-          <RankList rows={fxRows} unit={fxTab} />
+          <RankList rows={fxRows} unit={FX_TABS.find((t) => t.id === fxTab).unit} />
         </section>
         <section aria-labelledby="top-users-h" className={`${CARD} ${CARD_PAD} flex-1 gap-[calc(var(--cvw)*1)] max-lg:gap-4`}>
           <div className="flex flex-wrap items-center justify-between gap-3">
             <h2 id="top-users-h" className="type-h3">
-              Top users
+              Top installers
             </h2>
-            <SlidingSegment label="Rank users by" items={USER_TABS} value={userTab} onChange={setUserTab} itemClassName="w-20" />
+            <p className="type-small text-black/60">Installs in this window</p>
           </div>
-          <RankList rows={userRows} unit={userTab} />
+          <RankList rows={userRows} unit="installs" />
         </section>
       </div>
 
@@ -452,9 +467,9 @@ export default function AdminActivityPage() {
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex flex-col gap-1">
             <h2 id="feed-h" className="type-h3">
-              Recent installs &amp; copies
+              Recent installs
             </h2>
-            <p className="type-small text-black/60">{feed ? `${number(feed.total)} events across web, CLI and MCP in this window` : " "}</p>
+            <p className="type-small text-black/60">{feed ? `${number(feed.total)} installs across web, CLI and MCP in this window` : " "}</p>
           </div>
           <div className="flex flex-wrap items-center gap-[calc(var(--cvw)*0.7)] max-md:gap-[2.5vw]">
             <label className="type-small flex h-9.5 items-center gap-2 bg-light px-3 text-black/60 ring-1 ring-inset ring-black/10 focus-within:ring-primary">
@@ -480,6 +495,13 @@ export default function AdminActivityPage() {
               }}
               itemClassName="w-14"
             />
+            <PerPageMenu
+              value={feedPerPage}
+              onChange={(next) => {
+                setFeedPerPage(next);
+                setFeedPage(0);
+              }}
+            />
           </div>
         </div>
 
@@ -500,7 +522,7 @@ export default function AdminActivityPage() {
             ))}
           </div>
         ) : feed.events.length === 0 ? (
-          <p className="type-body text-black/60">No installs or copies match.</p>
+          <p className="type-body text-black/60">No installs match.</p>
         ) : (
           <>
             <div className="flex flex-col">
@@ -533,7 +555,7 @@ export default function AdminActivityPage() {
                 </div>
               ))}
             </div>
-            <Pager page={feedPage} pages={feedPages} total={feed.total} noun="events" onPage={setFeedPage} />
+            <Pager page={feedPage} pages={feedPages} total={feed.total} noun={feed.total === 1 ? "install" : "installs"} onPage={setFeedPage} />
           </>
         )}
       </section>

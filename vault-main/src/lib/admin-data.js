@@ -162,3 +162,69 @@ export async function getAdminUserList({ audience, search = "", plan = "all", ro
       return haystack.includes(needle);
     });
 }
+
+// ---------------------------------------------------------------------------
+// Installs
+// ---------------------------------------------------------------------------
+
+// The one definition every admin (and dashboard) number uses: an install is one effect
+// taken by one account on one UTC day - a row in install_unlocks, which is also what the
+// daily limit counts - tagged with where it happened: "web" (copied on the website),
+// "cli" or "mcp". Taking the same effect again that day isn't another install.
+// Admins are never metered, so their installs have no ledger row; they're read from
+// install_events (plan "admin") and counted the same way: once per effect per day.
+export const INSTALL_SOURCES = ["web", "cli", "mcp"];
+
+/**
+ * Every install in [startISO, endISO) for an audience (or one account, `clerkUserId`,
+ * filtered in the database), as
+ * { clerkUserId, identityKey, effectSlug, source, day: "YYYY-MM-DD", at: ISO }, newest
+ * first. Either bound may be null (open).
+ */
+export async function fetchInstalls({ startISO = null, endISO = null, audience, clerkUserId } = {}) {
+  const startDay = startISO ? startISO.slice(0, 10) : null;
+  const endDay = endISO ? endISO.slice(0, 10) : null;
+
+  const [unlockRows, adminRows] = await Promise.all([
+    fetchAllRows(() => {
+      let q = supabase.from("install_unlocks").select("clerk_user_id, identity_key, effect_slug, source, usage_date, first_unlocked_at");
+      if (clerkUserId) q = q.eq("clerk_user_id", clerkUserId);
+      if (startDay) q = q.gte("usage_date", startDay);
+      if (endDay) q = q.lt("usage_date", endDay);
+      return q;
+    }),
+    fetchAllRows(() => {
+      let q = supabase
+        .from("install_events")
+        .select("clerk_user_id, identity_key, effect_slug, source, occurred_at")
+        .eq("plan", "admin")
+        .eq("decision", "allowed");
+      if (clerkUserId) q = q.eq("clerk_user_id", clerkUserId);
+      if (startISO) q = q.gte("occurred_at", startISO);
+      if (endISO) q = q.lt("occurred_at", endISO);
+      return q;
+    }),
+  ]);
+
+  const installs = unlockRows.map((row) => ({
+    clerkUserId: row.clerk_user_id,
+    identityKey: row.identity_key,
+    effectSlug: row.effect_slug,
+    source: row.source || "web",
+    day: String(row.usage_date).slice(0, 10),
+    at: row.first_unlocked_at || `${String(row.usage_date).slice(0, 10)}T00:00:00.000Z`,
+  }));
+
+  // Admin installs: the first of each (account, effect, day), oldest first
+  const seen = new Set();
+  for (const row of [...adminRows].sort((a, b) => String(a.occurred_at).localeCompare(String(b.occurred_at)))) {
+    const day = String(row.occurred_at).slice(0, 10);
+    const key = `${row.clerk_user_id}|${row.effect_slug}|${day}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    installs.push({ clerkUserId: row.clerk_user_id, identityKey: row.identity_key, effectSlug: row.effect_slug, source: row.source || "web", day, at: row.occurred_at });
+  }
+
+  const mine = audience ? installs.filter((row) => audience.includes(row.clerkUserId)) : installs;
+  return mine.sort((a, b) => String(b.at).localeCompare(String(a.at)));
+}

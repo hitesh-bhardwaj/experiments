@@ -80,7 +80,7 @@ export default function ProfileDropdown({ savedCount = 0, usage = null, plan = "
   const FIGURES = { saved: savedCount, usage: usageLabel };
   const links =
     view === "admin"
-      ? ADMIN_TABS.filter((tab) => !tab.superAdmin || isSuperAdmin)
+      ? ADMIN_TABS.filter((tab) => !tab.hidden && (!tab.superAdmin || isSuperAdmin))
       : USER_TABS.filter((tab) => !(isAdmin && ADMIN_HIDDEN_TABS.has(tab.key)));
   const name = displayName(user);
 
@@ -122,7 +122,7 @@ export default function ProfileDropdown({ savedCount = 0, usage = null, plan = "
       {/* Always mounted: it fades and drops in */}
       <div
         aria-hidden={!open}
-        className={`type-label absolute right-0 top-14 z-50 w-72 border border-white/10 bg-background backdrop-blur-lg transition-[opacity,translate,visibility] duration-[490ms] ease-[cubic-bezier(0.33,1,0.68,1)] motion-reduce:transition-none ${
+        className={`type-label absolute right-0 top-14 z-50 w-72 border border-white/10 bg-background backdrop-blur-lg transition-[opacity,translate,visibility] duration-[390ms] ease-[cubic-bezier(0.33,1,0.68,1)] motion-reduce:transition-none ${
           open ? "visible translate-y-0 opacity-100" : "invisible -translate-y-1 opacity-0"
         }`}
       >

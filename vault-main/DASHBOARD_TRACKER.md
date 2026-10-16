@@ -224,6 +224,49 @@ Rules: STYLE_GUIDE.md type scale, square corners, tokens; nav stays as our tab r
 | "Forgot it?" and "Privacy Policy": no arrow (underline animation kept) | done | `CardLink` `arrow={false}` |
 | Product Updates segment checked live: create in segment → off (unsubscribed, still in segment) → on; test contact deleted afterwards | done | |
 
+## Iteration 4 – admin Activity redesign, one "install", sign-in required (2026-10-16)
+| Step | Status | Files / notes |
+|---|---|---|
+| **One definition: install** = one effect, one account, one UTC day (install_unlocks row; admins' logged installs folded in, once per effect per day), tagged web / CLI / MCP | done | `fetchInstalls` + `INSTALL_SOURCES` in `lib/admin-data.js`, used by overview, installs, feed (copy-activity), users, users/stats, per-user, `/api/dashboard`, `/api/dashboard/usage` |
+| "Copies" removed as a metric everywhere: Activity (cards, by-day, feed, Today, top effects = Installed / Saved, Top installers), Users (KPI, sort, column), per-user page (KPI with split, tabs Saved / Installed), user Overview ("From the website"), Usage ("Installs") | done | user Overview counts installs per source (was distinct effects) |
+| **No installs signed out** (free included, shadow mode or not, dependency flag too): 401 "Sign in to install effects…" from both CLI/MCP routes; attempt logged (`reason: sign-in-required`, admin `signInRequiredCount`) | done | `lib/install-limit.js` (anonymous buckets removed, `LIMITS.anonymous/ip` gone), routes, tests; audit M6 signed-out part fixed; token card copy |
+| Activity: hero time tabs removed; date filter (presets + custom) top-right of the sheet; Customers / Internal / All switch moved into the tab row left of View as (all admin pages) | done | `DashboardShell` `AdminAudienceSwitch`; Users / Invoicing toggles removed (Invoicing resets its page on change) |
+| Stat cards 3 + 2: Signups · Template views · Revenue (super admins); Installs (wide, web/CLI/MCP split) · Saves - each with change vs previous period (all time: last 30d vs prev 30d) and a line, green up / red down | done | `kpis` from `/api/admin/activity/overview` (`comparisonWindows`, `seriesBuckets`, `compareStat` in `lib/admin-activity.js`, tested); `TrendStat.jsx`; tokens `success-strong` / `danger-strong`; revenue = subscriptions + template sales, per currency |
+| Not done / flagged | open | free effects' full source is public in `public/r/*.json` (56 files) - needs a registry/shadcn decision; `library-counts` tests fail on main (151 vs 150 effects, pre-existing) |
+
+## Iteration 4.1 – Activity fixes, Users redesign, Manage drawer (2026-10-16)
+| Step | Status | Files / notes |
+|---|---|---|
+| Activity: date filter no longer touches the cards while loading (header inside the page's gap); Installs card = exactly two of the three columns above (`TWO_OF_THREE`), Saves = one; default window All time | done | measured: Installs 353–1031 = Signups+Views, Saves 1042–1375 = Revenue |
+| Shared `StatCard` / `StatCardSkeleton` / `TWO_OF_THREE` | done | `Dashboard/TrendStat.jsx` |
+| Users: Export CSV / Email log / Invite as icon buttons (tooltips) + date filter at the top right of the sheet; stat cards with change + line (`/api/admin/users/stats` → `kpis`); rows per page at the table's top right (Joined dropdown moved up); avatars = orange initials on #111 in an orange ring | done | `components/admin/UserAvatar.jsx` (also Activity) |
+| Manage → right-hand drawer: who, installs / web·CLI·MCP / saves, Plan & access (plan + length, confirm), Role (confirm), recent installs (+ All activity), Account (copy email, Suspend / Restore with confirm); Esc / outside click closes; Lenis held | done | `components/admin/ManageUserDrawer.jsx`; new `/api/admin/users/suspend` (Clerk ban/unban, super admins, not yourself or another super admin); `/api/admin/copy-activity?userId=`; users list `suspended`. Old centred modal removed. No "Send password reset" (Clerk has no backend call for it) |
+
+## Iteration 4.2 – drawer in the preview-drawer style, avatars, export, reset email (2026-10-16)
+| Step | Status | Files / notes |
+|---|---|---|
+| Avatars: Clerk's default (purple placeholder) counted as a photo – admin APIs now send `imageUrl` only when `hasImage`, so those accounts get the orange-initials avatar | done | users, installs, copy-activity, invoices, template-purchases, per-user routes |
+| Manage drawer rebuilt dark, as the effects' PreviewDrawer: same GSAP open / close (0.65s power2.inOut slide + backdrop, content fade), same × close, Esc, focus | done | `ManageUserDrawer.jsx`; `SourceChip dark` |
+| Send password reset (drawer): emails a link to `/sign-in?mode=reset&email=…`; sign-in page opens on reset with the email filled in | done, **not sent for real** | `/api/admin/users/send-password-reset` (super admins, once a minute per account); `vault-door` `modeFromPath` + `startValues` |
+| Export CSV downloads in place (fetch → file) with a toast; no navigation | done | users page `handleExport` |
+| Activity Recent installs: rows per page | done | |
+| Invite dialog heading white | done | |
+| Dropdowns 20% faster: filter menus 0.45s, calendar / Get code / profile 0.39s | done | |
+
+## Iteration 4.3 – header blocking clicks (2026-10-16)
+| Step | Status | Files / notes |
+|---|---|---|
+| Dropdowns (and anything else) under the see-through desktop header couldn't be clicked: the 80px blurred bar spans the full width and took every click. The bar now lets clicks through its empty part (`pointer-events-none`); its controls group stays clickable | done | `layout/VaultHeader.jsx` (every site page); checked: date dropdown opens at 70px and 88px from the top |
+
+## Iteration 4.4 – export, labels, settings, admin invoicing, email log (2026-10-16)
+| Step | Status | Files / notes |
+|---|---|---|
+| Export CSV still navigated: the page-transition click handler routed the file link (blob URL) as a page. Both transitions now skip `download` / `blob:` / `data:` links; export link also marked `data-no-page-transition` | done | `PageTransition.jsx`, `PixelPageTransition.jsx` (site layout only); checked: file saved, page unchanged |
+| Date dropdowns show just the range ("All time"), no "Showing:" / "Joined:" prefix (the name stays for screen readers) | done | `DateRangeFilter` |
+| Settings: section list (sticky, scroll spy, glide) removed; one column | done | |
+| Admin Invoicing: date filter top right of the sheet; USD revenue and INR revenue as separate cards (subscriptions + templates each), Subscriptions, Template sales - all with change + line; template filter left of the Subscriptions / Templates switch; card-shaped first-load skeleton, rows-only loading after; orange-initials avatars | done | new `/api/admin/invoices/stats` (super admins; real rows only, no credits) |
+| Email log in the dashboard style: hidden admin tab (light sheet, "Email Log." hero, breadcrumb), Sent / Delivered / Failed cards, light type / delivery / per-page menus, light table with delivery dot, shared pager, dark preview dialog (Lenis held); no audience switch there | done | `dashboardRoutes` `hidden`, shell + profile menu skip hidden tabs |
+
 ## Iteration 4+ (next)
 - Admin pass: Users / Invoicing / user detail onto useDashboardData + shaped skeletons
 - Test Delete account end to end with a throwaway account on a deployed preview (Clerk can't sign in on localhost)

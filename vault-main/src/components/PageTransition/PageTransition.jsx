@@ -374,6 +374,10 @@ export default function PageTransition() {
       if (
         href.startsWith('http') ||
         href.startsWith('//') ||
+        // Downloads (a saved file, a CSV export) aren't pages
+        anchor.hasAttribute('download') ||
+        href.startsWith('blob:') ||
+        href.startsWith('data:') ||
         href.startsWith('mailto:') ||
         href.startsWith('tel:') ||
         href.startsWith('#') ||
