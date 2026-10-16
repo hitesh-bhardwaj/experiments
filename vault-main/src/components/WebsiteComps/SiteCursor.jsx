@@ -16,7 +16,9 @@ const LINK_SELECTOR = "a, button, [role=button], [role=tab], [role=radio], label
 const FIELD_SELECTOR =
   "input:not([type=range],[type=checkbox],[type=radio],[type=button],[type=submit],[type=reset],[type=color],[type=file]), textarea, [contenteditable=true]";
 // Draggable rows (carousels) opt in with data-cursor-drag, and range sliders get it too: the ball opens to a thin ring with
-// ‹ › chevrons sliding in at its sides. Buttons inside the row keep the link state.
+// ‹ › chevrons sliding in at its sides. Buttons inside the row keep the link state. The chevrons
+// are white unless the element (or an ancestor) sets data-cursor-color to a colour token name,
+// e.g. data-cursor-color="ink".
 const DRAG_SELECTOR = "[data-cursor-drag], input[type=range]";
 
 // Cyan's greys only read on dark surfaces, so over a light one (the first opaque background
@@ -26,7 +28,8 @@ function surfaceTone(target) {
   for (let el = target; el && el !== document.documentElement; el = el.parentElement) {
     if (tones.has(el)) return tones.get(el);
     const [, , l, a = 1] = gsap.utils.splitColor(getComputedStyle(el).backgroundColor, true);
-    if (a === 0) continue;
+    // A faint wash (bg-black/5) doesn't make a surface dark: look through it
+    if (a < 0.5) continue;
     const tone = l > 50 ? "light" : "dark";
     tones.set(el, tone);
     return tone;
@@ -98,6 +101,7 @@ export default function SiteCursor() {
   const frontLineRef = useRef(0);
   const chargeRef = useRef(null);
   const chevronsRef = useRef([]);
+  const chevronWrapRef = useRef(null);
   const loaderRef = useRef(null);
   const [enabled, setEnabled] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -124,7 +128,7 @@ export default function SiteCursor() {
 
   const show = useCallback((next, settle = false) => {
     const prev = modeRef.current;
-    if (prev.kind === next.kind && prev.text === next.text) return;
+    if (prev.kind === next.kind && prev.text === next.text && prev.color === next.color) return;
     modeRef.current = next;
 
     const charging = next.kind === "caption" && (holdRef.current.holding || holdRef.current.ready);
@@ -161,6 +165,8 @@ export default function SiteCursor() {
     gsap.to(captionRef.current, { opacity: next.kind === "caption" ? 1 : 0, ...t(0.3), ...(settle && { delay: 0.2 }) });
     gsap.to(ringRef.current, { ...ring(next.kind === "rest" ? RING_WIDTH : next.kind === "drag" ? 2 : 0), ...t(next.kind === "rest" ? 0.3 : 0.2) });
     const [left, right] = chevronsRef.current;
+    if (next.kind === "drag") chevronWrapRef.current.style.color = next.color ? `var(--${next.color})` : "";
+    if (next.kind === "drag" && prev.kind === "drag") return;
     if (next.kind === "drag") {
       gsap.fromTo(left, { x: -CHEVRON_OFFSET, opacity: 0 }, { x: 0, opacity: 1, ...CHEVRON, overwrite: true });
       gsap.fromTo(right, { x: CHEVRON_OFFSET, opacity: 0 }, { x: 0, opacity: 1, ...CHEVRON, overwrite: true });
@@ -184,7 +190,10 @@ export default function SiteCursor() {
       const text = target ? holdLabel(target) : null;
       if (text) return show({ kind: "caption", text }, settle);
       if (target?.closest?.(FIELD_SELECTOR)) return show({ kind: "hidden" }, settle);
-      if (target?.closest?.(DRAG_SELECTOR) && !target.closest("button")) return show({ kind: "drag" }, settle);
+      const drag = target?.closest?.(DRAG_SELECTOR);
+      if (drag && !target.closest("button")) {
+        return show({ kind: "drag", color: drag.closest("[data-cursor-color]")?.dataset.cursorColor }, settle);
+      }
       show({ kind: target?.closest?.(LINK_SELECTOR) ? "link" : "rest" }, settle);
     },
     [holdLabel, show],
@@ -376,7 +385,7 @@ export default function SiteCursor() {
         <svg viewBox={`0 0 ${BALL} ${BALL}`} className="absolute inset-0 size-full overflow-visible">
           <circle ref={ringRef} cx={BALL / 2} cy={BALL / 2} r={(BALL - RING_WIDTH) / 2} strokeWidth={RING_WIDTH} className="fill-none stroke-light-grey transition-colors duration-300 group-data-[tone=light]/cursor:stroke-black/40" />
         </svg>
-        <div className="absolute inset-0 flex items-center justify-between px-3 text-foreground transition-colors duration-300 group-data-[tone=light]/cursor:text-ink">
+        <div ref={chevronWrapRef} className="absolute inset-0 flex items-center justify-between px-3 text-foreground">
           {["M10 3 5 8l5 5", "M6 3l5 5-5 5"].map((d, i) => (
             <svg key={d} ref={(el) => { chevronsRef.current[i] = el; }} viewBox="0 0 16 16" className="size-4 fill-none stroke-current stroke-2">
               <path d={d} />

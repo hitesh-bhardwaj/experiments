@@ -50,6 +50,7 @@ function SmoothRange({ min, max, step, defaultValue, digits, label, onRelease })
             <input
                 ref={inputRef}
                 type="range"
+                data-cursor-color="ink"
                 data-sound-hover="off"
                 data-sound-click="off"
                 min={min}
