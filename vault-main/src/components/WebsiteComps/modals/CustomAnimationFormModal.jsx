@@ -14,7 +14,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { useLenis } from "lenis/react";
 import PhoneInput from "@/components/WebsiteComps/form/PhoneInput";
 import { GlobalError, StepHeading, SubmitButton } from "@/components/auth/AuthFormPrimitives";
-import CustomVerifyCheckbox from "@/components/WebsiteComps/Recaptcha/CustomVerifyCheckbox";
+import Turnstile from "@/components/WebsiteComps/Turnstile";
 import { validateForm } from "@/lib/form-validation";
 
 const MODAL_TRANSITION = {
@@ -256,7 +256,7 @@ function CustomAnimationFormModalInner() {
     if (Object.keys(nextErrors).length > 0) return;
 
     if (!captchaToken) {
-      setCaptchaError("Please verify you're not a robot.");
+      setCaptchaError("Still checking you're human - give it a moment, then send again.");
       return;
     }
 
@@ -274,7 +274,7 @@ function CustomAnimationFormModalInner() {
           email: values.email.trim(),
           number: values.number.trim(),
           message: values.message.trim(),
-          recaptchaToken: captchaToken,
+          turnstileToken: captchaToken,
         }),
       });
 
@@ -454,7 +454,7 @@ function CustomAnimationFormModalInner() {
                   </Field>
 
                   <div className="mb-6">
-                    <CustomVerifyCheckbox
+                    <Turnstile
                       action="custom_animation_form"
                       checked={captchaVerified}
                       onChange={(verified, token) => {

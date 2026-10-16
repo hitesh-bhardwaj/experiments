@@ -7,7 +7,6 @@ import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import DeferredAnalytics from "@/components/WebsiteComps/DeferredAnalytics";
 import DeferredGTM from "@/components/WebsiteComps/DeferredGTM";
-import LazyRecaptchaProvider from "@/components/WebsiteComps/LazyRecaptchaProvider";
 import {
   ImageObjectJsonLd,
   LocalBusiness,
@@ -136,15 +135,13 @@ export default function RootLayout({ children }) {
             
             <CustomAnimationFormProvider>
               {children}
-              <LazyRecaptchaProvider>
-                <Suspense>
-                  <CustomAnimationFormModal />
-                </Suspense>
-                <Suspense>
-                  <WorkWithHyperiuxModal />
-                </Suspense>
-                <ExitIntentInviteModal />
-              </LazyRecaptchaProvider>
+              <Suspense>
+                <CustomAnimationFormModal />
+              </Suspense>
+              <Suspense>
+                <WorkWithHyperiuxModal />
+              </Suspense>
+              <ExitIntentInviteModal />
             </CustomAnimationFormProvider>
           </SiteInteractions>
           <TooltipHost />

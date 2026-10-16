@@ -1,6 +1,6 @@
 import { clerkClient } from "@clerk/nextjs/server";
 import { sendEmail } from "@/lib/resend";
-import { verifyRecaptcha } from "@/lib/recaptcha";
+import { clientIp, verifyTurnstile } from "@/lib/turnstile";
 import { isBlockedEmailDomain } from "@/lib/blocked-email-domains";
 import {
   renderWaitlistInviteEmail,
@@ -11,7 +11,7 @@ import {
 // Public sibling to api/admin/waitlist/invite/route.js - same
 // createInvitation + sendEmail(waitlist-invite-email) pattern, but reachable
 // by any anonymous visitor (the exit-intent modal), not just admins. Same
-// reCAPTCHA-only anti-abuse level as the other public lead form
+// Turnstile-only anti-abuse level as the other public lead form
 // (api/work-with-hyperiux/route.js) - no extra rate limiting on top, to
 // match this codebase's existing risk tolerance for this class of form.
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -32,12 +32,12 @@ export async function POST(request) {
       );
     }
 
-    const { success: recaptchaOk } = await verifyRecaptcha(
-      body?.recaptchaToken,
-      "exit_intent_invite"
-    );
+    const { success: humanOk } = await verifyTurnstile(body?.turnstileToken, {
+      action: "exit_intent_invite",
+      ip: clientIp(request),
+    });
 
-    if (!recaptchaOk) {
+    if (!humanOk) {
       return Response.json(
         { error: "Verification failed. Please try again." },
         { status: 400 }

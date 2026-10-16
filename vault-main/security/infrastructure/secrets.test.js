@@ -33,12 +33,12 @@ const SERVER_SECRET_MODULES = [
   "lib/effect-access",
   "lib/install-limit",
   "lib/sanity",
-  "lib/recaptcha",
+  "lib/turnstile",
 ];
 
 const SECRET_NAME = /SECRET|TOKEN|PRIVATE|SERVICE_ROLE|PASSWORD|WEBHOOK|API_KEY|_SALT/i;
 // Public-by-design identifiers that happen to match the pattern.
-const PUBLIC_NAME_ALLOWLIST = new Set(["NEXT_PUBLIC_RECAPTCHA_SITE_KEY"]);
+const PUBLIC_NAME_ALLOWLIST = new Set(["NEXT_PUBLIC_TURNSTILE_SITE_KEY"]);
 
 describe("committed secrets", () => {
   it("no .env file (other than an example) is tracked by git", () => {
@@ -135,9 +135,8 @@ describe("server/client boundary", () => {
     expect(source).not.toMatch(/NEXT_PUBLIC_SUPABASE_ANON_KEY|NEXT_PUBLIC_SUPABASE_SERVICE/);
   });
 
-  // sanity.js reads SANITY_API_TOKEN and recaptcha.js reads
-  // RECAPTCHA_SECRET_KEY, but neither has the build-time guard - nothing
-  // stops a future client import from pulling them into the bundle.
+  // sanity.js reads SANITY_API_TOKEN without the build-time guard - nothing
+  // stops a future client import from pulling it into the bundle.
   it.fails("[L9] every module that reads a server secret starts with import 'server-only'", () => {
     const missing = [];
     for (const file of sourceFiles.filter((f) => /[\\/]lib[\\/]/.test(f))) {

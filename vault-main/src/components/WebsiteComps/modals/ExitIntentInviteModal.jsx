@@ -5,9 +5,8 @@ import { AnimatePresence, motion } from "motion/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useLenis } from "lenis/react";
-import { useReCaptcha } from "next-recaptcha-v3";
 import { Mail } from "lucide-react";
-import { armRecaptcha } from "@/lib/recaptchaEvents";
+import Turnstile from "@/components/WebsiteComps/Turnstile";
 import { buttonClassName, ButtonChrome } from "@/homepage/components/Button";
 import { FREE_LABEL } from "@/lib/library-counts";
 
@@ -18,10 +17,9 @@ import { FREE_LABEL } from "@/lib/library-counts";
 // modal is triggered by cursor behavior, not a link anyone needs to
 // deep-link to or share.
 //
-// Mounted globally from the root layout (inside LazyRecaptchaProvider, so
-// executeRecaptcha() below actually has a provider to talk to - see
-// lib/recaptchaEvents.js) rather than per-route, so the pathname check below
-// is what keeps it off the excluded routes, not where it's rendered from.
+// Mounted globally from the root layout rather than per-route, so the
+// pathname check below is what keeps it off the excluded routes, not where
+// it's rendered from.
 //
 // Submitting creates a real Clerk invitation and emails it via the existing
 // waitlist-invite-email template (see api/exit-intent-invite/route.js) -
@@ -58,7 +56,8 @@ export function ExitIntentInviteModal() {
   const [error, setError] = useState("");
   const [sendHovered, setSendHovered] = useState(false);
   const shownRef = useRef(false);
-  const { executeRecaptcha } = useReCaptcha();
+  // Cloudflare Turnstile token for the bot check (see components/WebsiteComps/Turnstile.jsx)
+  const [turnstileToken, setTurnstileToken] = useState(null);
   const lenis = useLenis();
   const pathname = usePathname();
   // Was homepage-only ("/") - now every route except sign-in (mid-auth-flow,
@@ -84,11 +83,6 @@ export function ExitIntentInviteModal() {
 
     const armTimer = window.setTimeout(() => {
       setArmed(true);
-      // Asks LazyRecaptchaProvider to mount <ReCaptchaProvider> now, not on
-      // submit - this modal opens on a mouseleave, not a query param, so it
-      // wouldn't otherwise be picked up (see lib/recaptchaEvents.js) and
-      // executeRecaptcha() would throw "Recaptcha has not been loaded".
-      armRecaptcha();
     }, ARM_DELAY_MS);
     return () => window.clearTimeout(armTimer);
   }, [isEligibleRoute]);
@@ -158,19 +152,25 @@ export function ExitIntentInviteModal() {
       return;
     }
 
+    if (!turnstileToken) {
+      setError("Still checking you're human - give it a moment, then send again.");
+      return;
+    }
+
     setStatus("submitting");
 
     try {
-      const recaptchaToken = await executeRecaptcha("exit_intent_invite");
       const res = await fetch("/api/exit-intent-invite", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: email.trim(), recaptchaToken }),
+        body: JSON.stringify({ email: email.trim(), turnstileToken }),
       });
       const data = await res.json();
 
       if (!res.ok) {
         setStatus("idle");
+        // Tokens are single-use: dropping it makes the widget fetch a fresh one
+        setTurnstileToken(null);
         setError(data?.error || "Something went wrong. Please try again.");
         return;
       }
@@ -179,6 +179,7 @@ export function ExitIntentInviteModal() {
       window.setTimeout(close, 2000);
     } catch {
       setStatus("idle");
+      setTurnstileToken(null);
       setError("Something went wrong. Please try again.");
     }
   };
@@ -338,6 +339,14 @@ export function ExitIntentInviteModal() {
                       </Link>
                     </span>
                   </label>
+
+                  {/* Invisible unless Cloudflare needs the visitor to click */}
+                  <Turnstile
+                    action="exit_intent_invite"
+                    appearance="interaction-only"
+                    checked={Boolean(turnstileToken)}
+                    onChange={(verified, token) => setTurnstileToken(verified ? token : null)}
+                  />
 
                   {error && <p className="text-xs text-red-400">{error}</p>}
 

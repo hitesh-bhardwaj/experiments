@@ -14,8 +14,8 @@ vi.mock("resend", () => ({
 }));
 const sendEmail = vi.fn(async () => ({ success: true }));
 vi.mock("@/lib/resend", () => ({ sendEmail: (...a) => sendEmail(...a) }));
-let recaptchaOk = true;
-vi.mock("@/lib/recaptcha", () => ({ verifyRecaptcha: vi.fn(async () => ({ success: recaptchaOk, score: 0.9 })) }));
+let humanOk = true;
+vi.mock("@/lib/turnstile", () => ({ clientIp: () => null, verifyTurnstile: vi.fn(async () => ({ success: humanOk })) }));
 vi.mock("@/lib/supabase", async () => ({ supabase: (await import("../helpers/route-harness.js")).db }));
 
 process.env.RESEND_AUDIENCE_ID = "aud_test";
@@ -30,7 +30,7 @@ const { getInstallLimitDecision } = await import("@/lib/install-limit");
 beforeEach(() => {
   contactsCreate.mockClear();
   sendEmail.mockClear();
-  recaptchaOk = true;
+  humanOk = true;
   db.reset({});
 });
 
@@ -43,7 +43,7 @@ describe("public list sign-ups", () => {
     expect(contactsCreate).not.toHaveBeenCalled();
   });
 
-  // No reCAPTCHA token is required or checked: a script can enrol any
+  // No bot-check token is required or checked: a script can enrol any
   // number of third-party addresses into the Resend audience.
   it.fails("[M4] newsletter requires a bot check before adding a contact", async () => {
     const res = await post(newsletter, { email: "victim@example.test" });
@@ -70,7 +70,7 @@ describe("contact forms that email the submitter", () => {
     email: "ada@hyperiux-test.dev",
     number: "+91 98765 43210",
     message: "Hello there, I'd like a custom animation.",
-    recaptchaToken: "tok",
+    turnstileToken: "tok",
     ...overrides,
   });
 
@@ -80,8 +80,8 @@ describe("contact forms that email the submitter", () => {
     expect(sendEmail).toHaveBeenCalledTimes(2);
   });
 
-  it("a failed reCAPTCHA sends nothing (control)", async () => {
-    recaptchaOk = false;
+  it("a failed Turnstile check sends nothing (control)", async () => {
+    humanOk = false;
     const res = await post(customAnimation, valid());
     expect(res.status).toBe(400);
     expect(sendEmail).not.toHaveBeenCalled();
@@ -89,7 +89,7 @@ describe("contact forms that email the submitter", () => {
 
   // `name` is unbounded and lands in the team subject line and in the
   // confirmation email sent to the *submitter-supplied* address - a ready
-  // made branded-spam relay once reCAPTCHA is solved (cheaply, at scale).
+  // made branded-spam relay once the bot check is solved (cheaply, at scale).
   it.fails("[M4] the name field is length-bounded before it reaches an email subject", async () => {
     const res = await post(customAnimation, valid({ name: "Win a prize at https://evil.example ".repeat(200) }));
     expect(res.status).toBe(400);

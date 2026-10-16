@@ -724,13 +724,6 @@ html.loader-first-visit body {
   background: #ffffff;
 }
 
-.grecaptcha-badge {
-  z-index: 9999 !important;
-  transform: scale(0.8) translateX(-18%);
-
-  transform-origin: bottom right;
-}
-
 .self-padd {
   padding: 0 3.5vw;
 }

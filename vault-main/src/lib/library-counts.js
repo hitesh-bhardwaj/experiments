@@ -7,7 +7,7 @@
 // without pulling the whole effect index into the browser bundle.
 
 export const FREE_EFFECTS = 56;
-export const PRO_EFFECTS = 94;
+export const PRO_EFFECTS = 95;
 export const TOTAL_EFFECTS = FREE_EFFECTS + PRO_EFFECTS;
 
 // Rounded down to the nearest ten for marketing copy: 56 -> "50+", 150 -> "150+".

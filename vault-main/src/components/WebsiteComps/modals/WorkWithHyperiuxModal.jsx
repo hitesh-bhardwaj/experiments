@@ -8,7 +8,7 @@ import WebsiteButton from "@/components/WebsiteComps/Button";
 import Input from "@/components/WebsiteComps/form/Input";
 import PhoneInput from "@/components/WebsiteComps/form/PhoneInput";
 import Textarea from "@/components/WebsiteComps/form/Textarea";
-import CustomVerifyCheckbox from "@/components/WebsiteComps/Recaptcha/CustomVerifyCheckbox";
+import Turnstile from "@/components/WebsiteComps/Turnstile";
 import { validateForm } from "@/lib/form-validation";
 
 const MODAL_QUERY_KEY = "work-with-hyperiux";
@@ -194,7 +194,7 @@ function WorkWithHyperiuxModalInner() {
     if (Object.keys(nextErrors).length > 0) return;
 
     if (!captchaToken) {
-      setCaptchaError("Please verify you're not a robot.");
+      setCaptchaError("Still checking you're human - give it a moment, then send again.");
       return;
     }
 
@@ -210,7 +210,7 @@ function WorkWithHyperiuxModalInner() {
           email: values.email.trim(),
           number: values.number.trim(),
           message: values.message.trim(),
-          recaptchaToken: captchaToken,
+          turnstileToken: captchaToken,
         }),
       });
 
@@ -421,7 +421,7 @@ function WorkWithHyperiuxModalInner() {
                   )}
 
                   <div className="col-span-2 max-lg:col-span-1">
-                    <CustomVerifyCheckbox
+                    <Turnstile
                       action="work_with_hyperiux"
                       checked={captchaVerified}
                       onChange={(verified, token) => {

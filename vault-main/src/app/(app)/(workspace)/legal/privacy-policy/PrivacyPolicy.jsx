@@ -239,6 +239,10 @@ export default function PrivacyPolicy() {
           described in Section 2.
         </DocsListItem>
         <DocsListItem>
+          Bot protection provider: Cloudflare Turnstile - to check that contact and invite
+          form submissions come from a person, not an automated script.
+        </DocsListItem>
+        <DocsListItem>
           Email delivery provider: Resend - to send newsletters and transactional email.
         </DocsListItem>
         <DocsListItem>
