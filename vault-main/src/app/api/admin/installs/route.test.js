@@ -209,7 +209,7 @@ describe("admin/installs route", () => {
     ];
     clerkUsers = [
       { id: "user_a", fullName: "Ada Lovelace", emailAddresses: [{ emailAddress: "ada@example.com" }], imageUrl: "https://img/a" },
-      // user_b has no name set on their Clerk profile - email is the fallback.
+      // user_b has no name set on their Clerk profile - one is read from the email.
       { id: "user_b", fullName: null, firstName: null, emailAddresses: [{ emailAddress: "bea@example.com" }], imageUrl: null },
     ];
 
@@ -218,7 +218,7 @@ describe("admin/installs route", () => {
 
     expect(body.topUsers).toEqual([
       { clerkUserId: "user_a", name: "Ada Lovelace", email: "ada@example.com", imageUrl: "https://img/a", count: 2 },
-      { clerkUserId: "user_b", name: null, email: "bea@example.com", imageUrl: null, count: 1 },
+      { clerkUserId: "user_b", name: "Bea", email: "bea@example.com", imageUrl: null, count: 1 },
     ]);
   });
 

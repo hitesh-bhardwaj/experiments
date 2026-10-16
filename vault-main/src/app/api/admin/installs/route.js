@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { displayName } from "@/lib/display-name";
 import { clerkClient } from "@clerk/nextjs/server";
 import { supabase } from "@/lib/supabase";
 import { assertAdmin } from "@/lib/admin";
@@ -178,7 +179,7 @@ export async function GET(request) {
           const clerkUser = clerkMap[clerkUserId];
           return {
             clerkUserId,
-            name: clerkUser.fullName || clerkUser.firstName || null,
+            name: displayName(clerkUser),
             email: clerkUser.emailAddresses?.[0]?.emailAddress || null,
             imageUrl: clerkUser.imageUrl || null,
             count,

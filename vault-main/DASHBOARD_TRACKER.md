@@ -165,7 +165,56 @@ Rules: STYLE_GUIDE.md type scale, square corners, tokens; nav stays as our tab r
 | Sidebar card buttons fit their text; delete dialog in the site's dark dialog style (dark panel, white/20 border, close ×) | done | |
 | Verify | done | lint, tests, Playwright (settings, dialog lock/unlock, admin card) |
 
+## Iteration 3.4 – email toggle + admin source numbers (2026-10-16)
+| Step | Status | Files / notes |
+|---|---|---|
+| Product updates toggle failed to load: route required RESEND_AUDIENCE_ID (not set). Resend v6 contacts are account-wide, so it now reads/writes the contact's `unsubscribed` flag; joins the audience on create only if the var is set | done | `/api/user/email-preferences`; key confirmed able to read contacts |
+| Admin Activity: Copies, CLI + MCP and By source showed 0 – page read `sourceBreakdown` as an object, API sends `[{ name, value }]` | done | activity page converts it; preview sample now uses the API's shape. Live table: 223 web / 222 CLI / 63 MCP all time |
+
+## Iteration 3.5 – user dashboard round (2026-10-16)
+| Step | Status | Files / notes |
+|---|---|---|
+| Data cached per tab (memory, across client navigation); skeleton on first load only; quiet refetch on return, focus, tab visible, copy/install events, saves (after the server stores them), every 30s on Overview / Usage / admin Activity | done | `Dashboard/useDashboardData.js`; overview, usage, saved, invoicing, MyTemplates, admin activity |
+| Skeletons in each card's real shape and colour, by plan (Free / Pro / Pro+ credits) and admin; sweeping light band instead of pulse | done | `Dashboard/DashboardSkeletons.jsx`, `ui/Skeleton.jsx` (`light`), `@keyframes skeleton-sweep`; settings too |
+| Calendar picks lost (from / to sent as two updates built from the same old value) | done | `DateRangeCalendarPicker` now `onChange({ from, to })` |
+| Usage table: per page 10/50/100/150/200, Trending arrows, arrows hidden on one page; admin Users uses the same menu | done | `Pager`, `PerPageMenu` in `DashboardUI` |
+| Saved: unsaved card leaves at once (fades out) | done | wishlist event carries the slug |
+| Cancelled plan: no status tag; "ends" instead of "renews" | done | overview; invoicing billing cycle says "doesn't renew" |
+| CLI token: "Regenerate token" when one is live + confirm dialog | done | `/api/dashboard` `hasCliToken` |
+| Names read from the email when Clerk has none (greeting, header, admin lists, exports) | done | `lib/display-name.js` |
+| Profile dropdown: every dashboard link; admins get User / Admin switch; smooth open | done, **not browser-checked (needs a session)** | `ProfileDropDown.jsx`, `ADMIN_HIDDEN_TABS` moved to `dashboardRoutes` |
+| Lenis stops for every modal (shared counter for stacked ones) | done | `hooks/useLenisLock.js` |
+| Grid 2→3 closes the sidebar and moves the cards at once | done | `useGridColumns`; settles ~0.5s (was ~0.73s), no reversals |
+| Dropdown shadows ease in | done | FilterMenu clip leaves room for the shadow; calendar + Get code fade in |
+| Manage subscription button fits its text | done | |
+| Product updates toggle verified against Resend (tests) | done | route tests; broadcasts skip unsubscribed contacts |
+
+## Iteration 3.6 – heights, token label, shimmer, dropdown speed (2026-10-16)
+| Step | Status | Files / notes |
+|---|---|---|
+| Dashboard pages as tall as their content instead of 200vh; the tab's light sheet at least 50vh | done | `VaultLayout` (dashboard paths only), `DashboardShell` `min-h-svh`; Invoicing (Free) 1013px on a 900px screen |
+| Token button: "Generate token" unless a token is on screen; replacing a live one still asks first | done | `CliTokenManager` |
+| Shimmer: each skeleton its own band, linear, starting and ending outside the box (no visible restart); picks up its loop by the clock on mount | done | `.skeleton-shimmer` in globals.css, `ui/Skeleton.jsx` |
+| Dropdowns: no drop shadow (filter/sort menus, calendar, Get code, profile); open slower and evenly: filter menus 0.8s power2.out (was 0.45s power3.out, most of it in the first ~120ms), calendar / Get code / profile 0.7s ease-out-cubic | done | |
+
+## Iteration 3.7 – sign-in redirect, dropdown speed (2026-10-16)
+| Step | Status | Files / notes |
+|---|---|---|
+| Signed-out dashboard visits go to the Vault's `/sign-in?redirect_url=…` (was Clerk's hosted sign-in via `auth.protect()`); protected APIs answer 401 JSON (were also redirected to Clerk) | done | `src/proxy.js` |
+| Dropdowns 30% faster: filter menus 0.56s, calendar / Get code / profile 0.49s | done | |
+| **Cancel subscription** beside Manage subscription (Invoicing, Razorpay subscriptions still renewing): confirm dialog, cancels **at the end of the paid period** (no refund, per Refund Policy); card then shows Cancelled / Access until / doesn't renew, Overview says "ends" | done, **not run against Razorpay** | `api/user/cancel-subscription` (`cancel(id, true)`); status column untouched (a non-active status would cut access at once); the scheduled cancel is kept on Clerk `publicMetadata.cancelScheduledFor = sub id` → `cancelAtPeriodEnd` in `/api/dashboard` + `/api/dashboard/invoices`; the `subscription.cancelled` webhook moves the account to Free at period end. 5 route tests |
+
+## Iteration 3.8 – template receipts, token click (2026-10-16)
+| Step | Status | Files / notes |
+|---|---|---|
+| "null" amount on Invoicing receipts = template **credit redemptions** (amount 0, no currency, no payment) formatted as money → now "1 credit", status Redeemed, no receipt; money() never prints "null" (user + admin Invoicing) | done | `source` column read in `/api/dashboard/invoices` + `/api/admin/template-purchases` |
+| No receipt link on paid template purchases – **not a test-mode issue**: checkout creates a Razorpay invoice, but only its order reached verify-payment / the webhook, so `invoice_url` was never saved (live too) | done | `create-order` puts `invoice_url` (invoice short_url) on the order notes; verify-payment + webhook record it. Old rows: `/api/dashboard/invoices` backfills (payment → invoice → short_url, saved; misses remembered per server). Local test keys can't see live payments |
+| Product updates switch keeps the email listed in the Resend segment **Product Updates** (`d2ba4cd4-…`), on or off; on = subscribed, off = unsubscribed (broadcasts skip it). New contacts are created in the segment; existing ones (footer signup) are added if missing | done, segment confirmed via API; **not toggled with a real account** | `/api/user/email-preferences`; `RESEND_PRODUCT_UPDATES_SEGMENT_ID` overrides the ID; `RESEND_AUDIENCE_ID` no longer used here |
+| Settings section links glide through Lenis (1.15s ease-out, stop at the section's scroll-margin) instead of jumping | done | settings `glideTo`, same as the docs' in-page links |
+| Token: "Generate token" generates straight away; only "Regenerate token" (token on screen) opens the confirm | done | `CliTokenManager` |
+
 ## Iteration 4+ (next)
+- Admin pass: Users / Invoicing / user detail onto useDashboardData + shaped skeletons
 - Test Delete account end to end with a throwaway account on a deployed preview (Clerk can't sign in on localhost)
 - Admin Email log page still has the old dark styling (reached from Users → Email log)
 - Invoicing: "needs review" flags, GST columns + CA export, one merged ledger (needs a server-side merged query)

@@ -1,5 +1,6 @@
 "use client";
 
+import { displayName } from "@/lib/display-name";
 import {
   useCallback,
   useEffect,
@@ -560,7 +561,7 @@ export function VaultHeader({
 
                 <div className="min-w-0">
                   <p className="truncate max-md:text-[4vw] text-white/90 max-lg:text-[2vw]">
-                    {user.fullName || user.username || "Account"}
+                    {displayName(user) || user.username || "Account"}
                   </p>
                   <p className="truncate text-[calc(var(--hx-vw,1vw)*3.2)] text-white/50 max-lg:text-[1.7vw] max-md:text-[3.2vw]">
                     {user.primaryEmailAddress?.emailAddress || user.username}

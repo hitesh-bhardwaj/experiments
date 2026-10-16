@@ -5,6 +5,7 @@ import { useUser } from "@clerk/nextjs";
 import { Modal, SignInRequiredModal } from "@/components/ui/SignInRequiredModal";
 import { useToastQueue, ToastViewport } from "@/components/ui/Toast";
 import { emitWishlistChanged } from "@/lib/wishlistEvents";
+import { refreshDashboard } from "@/components/Dashboard/useDashboardData";
 import { installCommand } from "./EffectCard";
 import { getLimitNudge } from "@/lib/limitNudge";
 import { mergeCopyUsage, publishCopyUsage, subscribeCopyUsage } from "@/lib/copyUsageEvents";
@@ -236,7 +237,7 @@ export function useEffectCardActions({ userPlan = "free", signInRedirect = "/eff
         title: `${effect.title} ${willSave ? "saved" : "removed"}`,
         description: willSave ? "You'll find it in your dashboard's Saved Effects." : "It's no longer in your dashboard's Saved Effects.",
       });
-      emitWishlistChanged(willSave);
+      emitWishlistChanged(willSave, effect.name);
 
       try {
         const res = await fetch("/api/wishlist", {
@@ -246,15 +247,17 @@ export function useEffectCardActions({ userPlan = "free", signInRedirect = "/eff
         });
         if (!res.ok) throw new Error(`wishlist ${res.status}`);
         const data = await res.json();
+        // Stored: dashboard tabs on screen (counts, recently saved) refetch now
+        refreshDashboard();
         // The server has the final say (e.g. after a double click).
         if (typeof data.saved === "boolean" && data.saved !== willSave) {
           setSaved(effect.name, data.saved);
-          emitWishlistChanged(data.saved);
+          emitWishlistChanged(data.saved, effect.name);
         }
       } catch (error) {
         console.error(error);
         setSaved(effect.name, !willSave);
-        emitWishlistChanged(!willSave);
+        emitWishlistChanged(!willSave, effect.name);
         showToast({ title: "Couldn't update Saved Effects", description: "Please try again in a moment." });
       }
     },

@@ -52,7 +52,17 @@ function legacyDashboardPath(pathname, username) {
 const withClerk = clerkMiddleware(async (auth, request) => {
   const preview = isDevDashboardPreview(request);
   if (isProtectedRoute(request) && !preview) {
-    await auth.protect();
+    // Signed out: a dashboard page goes to the Vault's own sign-in page (not Clerk's
+    // hosted one), which comes back here once signed in; an API answers 401.
+    const { userId } = await auth();
+    if (!userId) {
+      if (request.nextUrl.pathname.startsWith("/api/")) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      const signIn = new URL("/sign-in", request.url);
+      signIn.searchParams.set("redirect_url", `${request.nextUrl.pathname}${request.nextUrl.search}`);
+      return NextResponse.redirect(signIn);
+    }
   }
 
   if (LEGACY_DASHBOARD.test(request.nextUrl.pathname)) {

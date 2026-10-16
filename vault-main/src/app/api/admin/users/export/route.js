@@ -1,4 +1,5 @@
 import { auth, clerkClient } from "@clerk/nextjs/server";
+import { displayName } from "@/lib/display-name";
 import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { getRole, isSuperAdminUser } from "@/lib/admin";
@@ -22,7 +23,7 @@ function csvCell(value) {
 function toRow(clerkUser, sub, viewerIsSuperAdmin) {
   const role = getRole(clerkUser);
   const email = clerkUser.emailAddresses?.[0]?.emailAddress || "";
-  const name = clerkUser.fullName || clerkUser.firstName || "";
+  const name = displayName(clerkUser) || "";
   const joinedAt = clerkUser.createdAt || sub?.created_at || "";
 
   const base = [name, email, joinedAt ? new Date(joinedAt).toISOString() : "", sub?.plan || "free", role || "none"];

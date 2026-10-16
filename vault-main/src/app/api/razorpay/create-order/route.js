@@ -85,8 +85,10 @@ export async function POST(req) {
       // notes onto the order, verify-payment can't tell whose purchase it is
       // and every template purchase fails after Razorpay already took the
       // money. Same fix as the reference repo (hyperiux-pro-components).
+      // The invoice's receipt page goes on too, so the purchase is recorded with its link
+      // (the buyer's receipt on the dashboard's Invoicing tab).
       await razorpay.orders.edit(invoice.order_id, {
-        notes: { clerk_user_id: userId, template_slug: templateSlug },
+        notes: { clerk_user_id: userId, template_slug: templateSlug, invoice_url: invoice.short_url || "" },
       });
 
       return NextResponse.json({

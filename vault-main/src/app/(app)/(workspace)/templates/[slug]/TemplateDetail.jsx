@@ -120,8 +120,11 @@ export function TemplateDetail({ template, devices = {}, effects = [], stack = [
     };
   }, [template.slug, isLoaded, isSignedIn]);
   const [purchased, setPurchased] = useState(false);
-  const accessPending = templateAccess === null && !purchased;
-  const hasAccess = purchased || !!templateAccess?.allowed;
+  // Also updates live when this template is bought or redeemed with a credit from the popup
+  const relatedAccess = useTemplateAccess();
+  const ownedNow = purchased || relatedAccess.includes(template.slug);
+  const accessPending = templateAccess === null && !ownedNow;
+  const hasAccess = ownedNow || !!templateAccess?.allowed;
   const viewCounts = useTemplateViewCounts(baseRelated.map((t) => t.slug));
   const related = useMemo(
     () => baseRelated.map((t) => (viewCounts ? { ...t, viewCount: viewCounts[t.slug] || 0 } : { ...t, viewCountPending: true })),
@@ -154,7 +157,6 @@ export function TemplateDetail({ template, devices = {}, effects = [], stack = [
     onSaved: (t) => showToast({ title: `${t.title} saved`, description: "You'll find it in your dashboard's My Templates." }),
     onRemoved: (t) => showToast({ title: `${t.title} removed`, description: "No longer in your saved templates." }),
   });
-  const relatedAccess = useTemplateAccess();
   useFadeUp(rootRef);
 
   const price = priceOf(template);

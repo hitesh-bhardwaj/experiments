@@ -8,7 +8,8 @@ import { CARD, CARD_PAD, Pager, SourceChip } from "@/components/Dashboard/Dashbo
 import { SOURCE_BARS, UsageBars } from "@/components/Dashboard/UsageBars";
 import { DarkSegment } from "@/components/ui/DarkSegment";
 import { SlidingSegment } from "@/components/ui/SlidingSegment";
-import { Skeleton } from "@/components/ui/Skeleton";
+import { Bar, SkeletonCard } from "@/components/Dashboard/DashboardSkeletons";
+import { useDashboardData } from "@/components/Dashboard/useDashboardData";
 import { getDashboardPreview, sampleAdminActivity } from "@/lib/dev/dashboardPreview";
 import { buildUserActivitySlug } from "@/lib/user-slug";
 
@@ -92,38 +93,110 @@ function Avatar({ name, email }) {
  * copies by day and by source, plans, top effects and users, template views and sales,
  * and the live feed of installs and copies.
  */
+// Loading: the headline numbers, the by-day chart, by source / plans / today, the two
+// rankings, the templates table and the feed - each in its own card's shape
+function ActivitySkeleton({ kpis }) {
+  const ROW = "flex gap-[calc(var(--cvw)*0.8)] max-lg:flex-col max-lg:gap-3";
+  const ranked = (rows) => (
+    <div className="flex flex-col gap-[calc(var(--cvw)*0.9)] max-lg:gap-3">
+      {Array.from({ length: rows }, (_, i) => (
+        <div key={i} className="flex items-center gap-3">
+          <Bar type="type-small" className="w-5" />
+          <div className="flex flex-1 flex-col gap-1.5">
+            <Bar type="type-body" className="w-[55%]" />
+            <Bar className="h-1 w-[80%]" />
+          </div>
+          <Bar type="type-small" className="w-16" />
+        </div>
+      ))}
+    </div>
+  );
+  return (
+    <div aria-busy="true" aria-label="Loading activity" className="flex flex-col gap-[calc(var(--cvw)*0.8)] max-lg:gap-3">
+      <div className="flex gap-[calc(var(--cvw)*0.8)] max-lg:flex-wrap max-lg:gap-3">
+        {Array.from({ length: kpis }, (_, i) => (
+          <SkeletonCard key={i} className="min-w-0 flex-1 justify-between gap-(--cvw) max-lg:w-[calc((100%-1.5rem)/3)] max-lg:flex-none max-lg:gap-3 max-md:w-[calc((100%-0.75rem)/2)]">
+            <Bar type="type-label" className="w-[60%]" />
+            <Bar type="type-h2" className="w-[45%]" />
+            <Bar type="type-small" className="w-[75%]" />
+          </SkeletonCard>
+        ))}
+      </div>
+      <SkeletonCard className="gap-[calc(var(--cvw)*1.6)] max-lg:gap-5">
+        <div className="flex justify-between gap-3">
+          <div className="flex w-[50%] flex-col gap-1">
+            <Bar type="type-h3" className="w-[45%]" />
+            <Bar type="type-small" className="w-full" />
+          </div>
+          <Bar type="type-small" className="w-32" />
+        </div>
+        <div className="flex h-[calc(var(--cvw)*12)] items-end gap-1 max-lg:h-48">
+          {[40, 65, 30, 80, 55, 20, 70, 45, 90, 35, 60, 50, 75, 25, 55, 85, 40, 65].map((h, i) => (
+            <Bar key={i} className="flex-1" style={{ height: `${h}%` }} />
+          ))}
+        </div>
+      </SkeletonCard>
+      <div className={ROW}>
+        <SkeletonCard className="flex-1 gap-[calc(var(--cvw)*1.2)] max-lg:gap-4">
+          <Bar type="type-h3" className="w-32" />
+          {[0, 1, 2].map((i) => (
+            <div key={i} className="flex flex-col gap-1.5">
+              <Bar type="type-small" className="w-full" />
+              <Bar className="h-1.5 w-full" />
+            </div>
+          ))}
+        </SkeletonCard>
+        <SkeletonCard className="flex-1 justify-between gap-[calc(var(--cvw)*1.2)] max-lg:gap-4">
+          <Bar type="type-h3" className="w-20" />
+          <Bar type="type-h2" className="w-[45%]" />
+          <Bar className="h-1.5 w-full" />
+        </SkeletonCard>
+        <SkeletonCard dark className="flex-1 justify-between gap-[calc(var(--cvw)*1.2)] max-lg:gap-4">
+          <Bar type="type-label" className="w-16" />
+          <Bar type="type-h1" className="w-[30%]" />
+          <Bar type="type-small" className="w-[80%]" />
+        </SkeletonCard>
+      </div>
+      <div className={ROW}>
+        {[0, 1].map((i) => (
+          <SkeletonCard key={i} className="flex-1 gap-(--cvw) max-lg:gap-4">
+            <div className="flex justify-between gap-3">
+              <Bar type="type-h3" className="w-32" />
+              <Bar className="h-8 w-44" />
+            </div>
+            {ranked(6)}
+          </SkeletonCard>
+        ))}
+      </div>
+      <SkeletonCard className="gap-(--cvw) max-lg:gap-4">
+        <Bar type="type-h3" className="w-28" />
+        {ranked(4)}
+      </SkeletonCard>
+    </div>
+  );
+}
+
 export default function AdminActivityPage() {
   const { path, isSuperAdmin, catalog } = useDashboard();
   const [range, setRange] = useState("30d");
-  const [data, setData] = useState(null);
-  const [failed, setFailed] = useState(false);
   const [fxTab, setFxTab] = useState("copied");
   const [userTab, setUserTab] = useState("installs");
 
-  // The overview and the installs numbers for the window
-  useEffect(() => {
-    let active = true;
-    const preview = getDashboardPreview();
-    if (preview) {
-      const sample = sampleAdminActivity(catalog);
-      requestAnimationFrame(() => active && setData({ overview: sample.overview, installs: sample.installs }));
-      return () => {
-        active = false;
-      };
-    }
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setData(null);
-    const get = (url) => fetch(url).then((res) => (res.ok ? res.json() : Promise.reject(new Error(`${url} ${res.status}`))));
-    Promise.all([get(`/api/admin/activity/overview?range=${range}`), get(`/api/admin/installs?range=${range}`)])
-      .then(([overview, installs]) => active && setData({ overview, installs }))
-      .catch((error) => {
-        console.error(error);
-        if (active) setFailed(true);
-      });
-    return () => {
-      active = false;
-    };
-  }, [range, catalog]);
+  // The overview and the installs numbers for the window: cached per window (skeleton on a
+  // window's first load only), refreshed on focus and every 30s
+  const { data, failed } = useDashboardData(
+    `admin-activity:${range}`,
+    async () => {
+      if (getDashboardPreview()) {
+        const sample = sampleAdminActivity(catalog);
+        return { overview: sample.overview, installs: sample.installs };
+      }
+      const get = (url) => fetch(url, { cache: "no-store" }).then((res) => (res.ok ? res.json() : Promise.reject(new Error(`${url} ${res.status}`))));
+      const [overview, installs] = await Promise.all([get(`/api/admin/activity/overview?range=${range}`), get(`/api/admin/installs?range=${range}`)]);
+      return { overview, installs };
+    },
+    { pollMs: 30000 },
+  );
 
   // The feed: its own search, source and page
   const [feed, setFeed] = useState(null);
@@ -179,26 +252,16 @@ export default function AdminActivityPage() {
 
   if (!data) {
     return (
-      <div aria-busy="true" aria-label="Loading activity" className="flex flex-col gap-[calc(var(--cvw)*0.8)] max-lg:gap-3">
+      <>
         {header}
-        <div className="flex gap-[calc(var(--cvw)*0.8)] max-lg:gap-3">
-          {Array.from({ length: isSuperAdmin ? 6 : 5 }, (_, i) => (
-            <Skeleton key={i} className="h-[calc(var(--cvw)*9)] flex-1 max-lg:h-32" />
-          ))}
-        </div>
-        <Skeleton className="h-[calc(var(--cvw)*20)] w-full max-lg:h-72" />
-        <div className="flex gap-[calc(var(--cvw)*0.8)] max-lg:flex-col max-lg:gap-3">
-          {[0, 1, 2].map((i) => (
-            <Skeleton key={i} className="h-[calc(var(--cvw)*14)] flex-1 max-lg:h-48" />
-          ))}
-        </div>
-        <Skeleton className="h-[calc(var(--cvw)*28)] w-full max-lg:h-96" />
-      </div>
+        <ActivitySkeleton kpis={isSuperAdmin ? 6 : 5} />
+      </>
     );
   }
 
   const { overview, installs } = data;
-  const bySource = installs.sourceBreakdown || {};
+  // The API sends [{ name: "web", value: 12 }, ...]; read it as { web: 12, ... }
+  const bySource = Object.fromEntries((installs.sourceBreakdown || []).map(({ name, value }) => [name, value]));
   const delivered = (bySource.web || 0) + (bySource.cli || 0) + (bySource.mcp || 0);
   const pro = overview.planDistribution?.find((p) => p.name === "Pro")?.value || 0;
   const free = overview.planDistribution?.find((p) => p.name === "Free")?.value || 0;
@@ -406,7 +469,21 @@ export default function AdminActivityPage() {
         </div>
 
         {!feed ? (
-          <Skeleton className="h-[calc(var(--cvw)*24)] w-full max-lg:h-80" />
+          // the feed's rows: avatar, name and email, effect, source, when
+          <div aria-busy="true" className="flex flex-col">
+            {Array.from({ length: 6 }, (_, i) => (
+              <div key={i} className="flex items-center gap-4 border-b border-black/10 py-[calc(var(--cvw)*0.7)] last:border-b-0 max-lg:py-3">
+                <Bar className="size-8 shrink-0 rounded-full" />
+                <div className="flex w-[25%] flex-col gap-1">
+                  <Bar type="type-body" className="w-[80%]" />
+                  <Bar type="type-small" className="w-full" />
+                </div>
+                <Bar type="type-body" className="flex-1" />
+                <Bar type="type-small" className="w-12" />
+                <Bar type="type-small" className="w-[14%]" />
+              </div>
+            ))}
+          </div>
         ) : feed.events.length === 0 ? (
           <p className="type-body text-black/60">No installs or copies match.</p>
         ) : (

@@ -38,6 +38,7 @@ export function sampleDashboard(plan = "pro") {
     joinedAt: "2026-03-14T10:00:00.000Z",
     planValidUntil: pro ? "2027-03-14T10:00:00.000Z" : null,
     billingInterval: pro ? "yearly" : null,
+    hasCliToken: pro,
     subscriptionStatus: pro ? "active" : null,
     manageSubscriptionUrl: pro ? "https://example.com/manage" : null,
     dailyInstallLimit: pro ? 5 : 3,
@@ -153,7 +154,7 @@ export function sampleAdminActivity(catalog = []) {
     },
     installs: {
       stats: { installsToday: 6 },
-      sourceBreakdown: { web: total("web"), cli: total("cli"), mcp: total("mcp") },
+      sourceBreakdown: ["web", "cli", "mcp"].map((name) => ({ name, value: total(name) })),
       sourceTrend: days,
       topUsers: people.map(([name, email], i) => ({ clerkUserId: `u${i}`, name, email, count: 11 - i * 2 })),
       topInstallers: people.map(([name, email], i) => ({ clerkUserId: `u${i}`, name, email, count: 14 - i * 2 })),

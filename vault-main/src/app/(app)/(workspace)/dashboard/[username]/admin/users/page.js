@@ -1,5 +1,6 @@
 "use client";
 
+import { nameFromEmail } from "@/lib/display-name";
 import { useDashboard } from "@/components/Dashboard/DashboardContext";
 import { useEffect, useState, useCallback, useRef } from "react";
 import Link from "next/link";
@@ -10,13 +11,12 @@ import { Search, X, Upload, CheckCircle2, XCircle, UserCog } from "lucide-react"
 import { getDashboardPreview, sampleAdminUsers } from "@/lib/dev/dashboardPreview";
 import Button from "@/homepage/components/Button";
 import { DashboardHeroAside } from "@/components/Dashboard/DashboardContext";
-import { ACTION_LINE, ALL_DATES, CARD, CARD_PAD, DateRangeFilter, FILTER_WIDTH, Pager } from "@/components/Dashboard/DashboardUI";
+import { ACTION_LINE, ALL_DATES, CARD, CARD_PAD, DateRangeFilter, FILTER_WIDTH, Pager, PerPageMenu } from "@/components/Dashboard/DashboardUI";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { FilterMenu } from "@/app/(app)/(workspace)/effects/FilterMenu";
 import { CustomSelect } from "@/components/ui/CustomSelect";
 import { buildUserActivitySlug } from "@/lib/user-slug";
 
-const PAGE_SIZE_OPTIONS = [5, 10, 25, 50, 100, 250, 500];
 const DEFAULT_PAGE_SIZE = 10;
 
 const PLAN_FILTERS = { all: "All plans", pro: "Pro", free: "Free" };
@@ -40,10 +40,7 @@ function formatDate(value) {
 // affects future sign-ups; this fallback covers accounts that predate that.
 function displayName(user) {
   if (user.name) return user.name;
-  if (user.email) {
-    const local = user.email.split("@")[0];
-    return local.charAt(0).toUpperCase() + local.slice(1);
-  }
+  if (user.email) return nameFromEmail(user.email) || user.email;
   return "Unnamed user";
 }
 
@@ -1084,19 +1081,7 @@ export default function AdminPage() {
 
         {/* pages, and how many a page */}
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
-            <span className="type-small text-black/60">Per page</span>
-            <FilterMenu
-              tone="light"
-              variant="label"
-              widthClassName="w-24"
-              options={PAGE_SIZE_OPTIONS.map(String)}
-              categoryFilter={String(pageSize)}
-              activeFilter={null}
-              getLabel={(id) => id}
-              onSelect={(id) => setPageSize(Number(id))}
-            />
-          </div>
+          <PerPageMenu value={pageSize} onChange={setPageSize} />
           <div className="min-w-0 flex-1">
             <Pager page={currentPage - 1} pages={totalPages} total={total} noun={total === 1 ? "user" : "users"} onPage={(p) => setCurrentPage(p + 1)} />
           </div>

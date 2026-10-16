@@ -13,6 +13,9 @@ export const USER_TABS = [
   { key: "settings", label: "Settings", sub: "settings", light: true },
 ];
 
+// Invoicing is personal billing - an admin account has none, so the user view hides it.
+export const ADMIN_HIDDEN_TABS = new Set(["invoicing"]);
+
 // Admins and super admins. Invoicing (every user's payments) is super admin only, here
 // and - the real gate - in the admin invoices API.
 export const ADMIN_TABS = [

@@ -1,4 +1,5 @@
 import { auth, currentUser } from "@clerk/nextjs/server";
+import { isCancelScheduled } from "@/lib/subscription-events";
 import { supabase } from "@/lib/supabase";
 import { NextResponse } from "next/server";
 import { getRegistryIndex, getFreeEffectsCount, getEffectMetadata } from "@/lib/registry";
@@ -39,7 +40,7 @@ export async function GET() {
     supabase
       .from("subscriptions")
       .select(
-        "plan,status,billing_interval,current_period_end,razorpay_subscription_id,razorpay_plan_id,razorpay_short_url"
+        "plan,status,billing_interval,current_period_end,razorpay_subscription_id,razorpay_plan_id,razorpay_short_url,cli_token_hash,cli_token_revoked_at"
       )
       .eq("clerk_user_id", userId)
       .maybeSingle(),
@@ -152,11 +153,15 @@ export async function GET() {
     totalFreeEffects,
 
     subscriptionStatus: subscription?.status || "inactive",
+    // Cancelled from the dashboard: still active until the period ends, then Free
+    cancelAtPeriodEnd: isCancelScheduled(user, subscription?.razorpay_subscription_id),
     billingInterval: subscription?.billing_interval || null,
     planValidUntil: subscription?.current_period_end || null,
     creditsPerYear: plan === "pro" ? getCreditsPerYear(tier, subscription?.billing_interval) : 0,
     razorpaySubscriptionId: subscription?.razorpay_subscription_id || null,
     razorpayPlanId: subscription?.razorpay_plan_id || null,
     manageSubscriptionUrl: subscription?.razorpay_short_url || null,
+    // Whether a CLI token is live (the button says "Regenerate"); the hash never leaves here
+    hasCliToken: Boolean(subscription?.cli_token_hash && !subscription?.cli_token_revoked_at),
   });
 }

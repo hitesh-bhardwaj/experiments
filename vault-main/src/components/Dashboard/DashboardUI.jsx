@@ -1,11 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowLeft, ArrowRight, LoaderCircle } from "lucide-react";
+import { LoaderCircle } from "lucide-react";
 import { BUTTON_SIZE, ButtonChrome, buttonClassName } from "@/homepage/components/Button";
 import LinkButton from "@/components/WebsiteComps/LinkButton";
 import { DateRangeCalendarPicker } from "@/components/admin/DateRangeCalendarPicker";
 import { FilterMenu } from "@/app/(app)/(workspace)/effects/FilterMenu";
+import { SliderArrowButton } from "@/components/ui/SliderArrowButton";
 
 // Building blocks shared by the dashboard tabs on the light sheet.
 
@@ -94,6 +95,7 @@ export function DateRangeFilter({ label, value, onChange }) {
         variant="label"
         alignRight
         widthClassName={FILTER_WIDTH}
+        label="Date range"
         panelClassName="left-auto! right-0"
         options={Object.keys(DATE_PRESETS)}
         categoryFilter={value.preset}
@@ -106,8 +108,7 @@ export function DateRangeFilter({ label, value, onChange }) {
           tone="light"
           from={value.from}
           to={value.to}
-          onFromChange={(from) => onChange({ ...value, from })}
-          onToChange={(to) => onChange({ ...value, to })}
+          onChange={(range) => onChange({ ...value, ...range })}
           onClear={() => onChange(ALL_DATES)}
         />
       )}
@@ -163,22 +164,40 @@ export function DetailRows({ rows, tone = "light" }) {
   );
 }
 
-// Previous / next for a paged table, with "Page 1 of 5 · 40 events"
+// Previous / next for a paged table, with "Page 1 of 5 · 40 events" - the effects listing's
+// Trending arrows. One page only: just the count, no arrows.
 export function Pager({ page, pages, total, noun, onPage }) {
-  const btn = "grid size-9.5 cursor-pointer place-items-center text-ink ring-1 ring-inset ring-black/10 transition-shadow duration-300 hover:ring-primary disabled:cursor-default disabled:text-black/20 disabled:hover:ring-black/10";
   return (
     <div className="flex items-center justify-between gap-4">
-      <p className="type-small text-black/60">
-        Page {page + 1} of {pages} · {total} {noun}
-      </p>
-      <div className="flex gap-1.5">
-        <button type="button" aria-label="Previous page" disabled={page === 0} onClick={() => onPage(page - 1)} className={btn}>
-          <ArrowLeft className="size-4" aria-hidden="true" />
-        </button>
-        <button type="button" aria-label="Next page" disabled={page >= pages - 1} onClick={() => onPage(page + 1)} className={btn}>
-          <ArrowRight className="size-4" aria-hidden="true" />
-        </button>
-      </div>
+      <p className="type-small text-black/60">{pages > 1 ? `Page ${page + 1} of ${pages} · ${total} ${noun}` : `${total} ${noun}`}</p>
+      {pages > 1 && (
+        <div className="flex gap-[calc(var(--cvw)*0.6)] max-lg:gap-2">
+          <SliderArrowButton tone="light" direction="prev" ariaLabel="Previous page" disabled={page === 0} onClick={() => onPage(page - 1)} />
+          <SliderArrowButton tone="light" direction="next" ariaLabel="Next page" disabled={page >= pages - 1} onClick={() => onPage(page + 1)} />
+        </div>
+      )}
+    </div>
+  );
+}
+
+// How many rows a table shows a page
+export const PER_PAGE_OPTIONS = [10, 50, 100, 150, 200];
+
+export function PerPageMenu({ value, onChange }) {
+  return (
+    <div className="flex items-center gap-3">
+      <span className="type-small text-black/60">Per page</span>
+      <FilterMenu
+        tone="light"
+        variant="label"
+        widthClassName="w-24"
+        label="Rows per page"
+        options={PER_PAGE_OPTIONS.map(String)}
+        categoryFilter={String(value)}
+        activeFilter={null}
+        getLabel={(id) => id}
+        onSelect={(id) => onChange(Number(id))}
+      />
     </div>
   );
 }

@@ -513,9 +513,13 @@ export function VaultLayout({
     ]
   );
 
+  // The dashboard is as tall as its content (at least a screen); the other pages keep the
+  // 200vh floor their scroll effects are built around
+  const pageHeight = pathname?.startsWith("/dashboard") ? "min-h-svh" : "min-h-[200vh]";
+
   return (
     <VaultLayoutContext.Provider value={contextValue}>
-      <div className="relative min-h-[200vh] text-foreground">
+      <div className={`relative ${pageHeight} text-foreground`}>
         <Suspense fallback={null}>
           <RouteChangeWatcher
             isSidebarReady={isSidebarReady}
@@ -523,7 +527,7 @@ export function VaultLayout({
           />
         </Suspense>
 
-        <div className="relative z-300 flex  min-h-[200vh] items-start">
+        <div className={`relative z-300 flex ${pageHeight} items-start`}>
           <Suspense fallback={<SidebarFallback isExpanded={isSidebarOpen} />}>
             <Sidebar
               effects={effects}

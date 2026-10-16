@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { displayName } from "@/lib/display-name";
 import { clerkClient } from "@clerk/nextjs/server";
 import { supabase } from "@/lib/supabase";
 import { assertSuperAdmin } from "@/lib/admin";
@@ -49,7 +50,7 @@ export async function GET(request) {
       supabase
         .from("template_purchases")
         .select(
-          "id,clerk_user_id,template_slug,razorpay_payment_id,amount,currency,status,invoice_url,created_at",
+          "id,clerk_user_id,template_slug,razorpay_payment_id,amount,currency,status,invoice_url,source,created_at",
           { count: "exact" }
         )
         .order("created_at", { ascending: false })
@@ -97,12 +98,14 @@ export async function GET(request) {
       return {
         id: row.id,
         userId: row.clerk_user_id,
-        userName: clerkUser?.fullName || clerkUser?.firstName || null,
+        userName: displayName(clerkUser),
         userEmail: clerkUser?.emailAddresses?.[0]?.emailAddress || null,
         userImageUrl: clerkUser?.imageUrl || null,
         templateSlug: row.template_slug,
         templateTitle: template?.title || row.template_slug,
         paymentId: row.razorpay_payment_id,
+        // Redeemed with a template credit: no payment, shown as "1 credit"
+        redeemedWithCredit: row.source === "credit" || !row.razorpay_payment_id,
         amount: row.amount,
         currency: row.currency,
         status: row.status,

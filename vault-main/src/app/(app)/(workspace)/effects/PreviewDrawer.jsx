@@ -5,7 +5,7 @@ import { createPortal } from "react-dom";
 import Image from "next/image";
 import gsap from "gsap";
 import { prefersReducedMotion } from "@/lib/motion";
-import { useLenis } from "lenis/react";
+import { useLenisLock } from "@/hooks/useLenisLock";
 import { usePathname } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import { Heart, Lock } from "lucide-react";
@@ -67,7 +67,6 @@ export function PreviewDrawer({
   const panelRef = useRef(null);
   const contentRef = useRef(null);
   const closeRef = useRef(null);
-  const lenis = useLenis();
   const open = !!effect;
   const pathname = usePathname();
   // The install command is for signed-in visitors; Sign In opens the sign-in modal over the drawer.
@@ -186,15 +185,14 @@ export function PreviewDrawer({
   // The page scrollbar is hidden separately (data-v4-drawer-open, below) for as long as
   // the drawer is on screen. Scroll input outside the panel
   // is cancelled, so the page can't move; the panel scrolls natively and
-  // overscroll-behavior: contain stops it chaining at its ends. lenis.stop() covers
-  // pages that run Lenis.
+  // overscroll-behavior: contain stops it chaining at its ends. useLenisLock (below)
+  // stops Lenis on pages that run it.
   useEffect(() => {
     if (!open) return undefined;
     // Flag the page before stopping Lenis: lenis-stopped alone means overflow: clip on
     // <html>, which drops the scrollbar for a frame or two (a sideways jump) until the
     // render that sets this attribute catches up. The effect below removes it.
     document.documentElement.setAttribute("data-v4-drawer-open", "");
-    lenis?.stop();
     const insidePanel = (target) => target instanceof Node && panelRef.current?.contains(target);
     const blockScroll = (event) => {
       if (!insidePanel(event.target)) event.preventDefault();
@@ -211,13 +209,14 @@ export function PreviewDrawer({
     document.addEventListener("keydown", onKey);
     const focus = setTimeout(() => closeRef.current?.focus({ preventScroll: true }), PANEL_DURATION * 1000);
     return () => {
-      lenis?.start();
       document.removeEventListener("wheel", blockScroll);
       document.removeEventListener("touchmove", blockScroll);
       document.removeEventListener("keydown", onKey);
       clearTimeout(focus);
     };
-  }, [open, lenis, onClose]);
+  }, [open, onClose]);
+  // The page stays still behind it (shared with any modal opened on top)
+  useLenisLock(open);
 
   // The page scrollbar stays hidden for as long as the drawer is on screen - including
   // its close animation - so it only reappears once the panel has fully slid away.

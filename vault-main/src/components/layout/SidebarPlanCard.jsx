@@ -58,7 +58,6 @@ export function SidebarPlanCard({ username }) {
             ? "Unlimited effects and every template. You can see revenue and every user, and change roles."
             : "Unlimited effects and every template. You can see activity and every user."}
         </p>
-        <Button text="Open Admin" href={dashboardPath(username, "admin/activity")} className="w-fit" />
       </div>
     );
   }

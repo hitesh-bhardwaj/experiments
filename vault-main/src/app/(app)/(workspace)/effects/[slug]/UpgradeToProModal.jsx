@@ -1,5 +1,6 @@
 "use client";
 
+import { useLenisLock } from "@/hooks/useLenisLock";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import PlanCheckoutButton from "@/components/Payments/PlanCheckoutButton";
@@ -73,6 +74,7 @@ function PlanColumn({ tier, interval, currency, onSwitchToYearly }) {
 }
 
 export default function UpgradeToProModal({ open, onClose, reason = "pro-effect", isIndia }) {
+  useLenisLock(open);
   const [mounted, setMounted] = useState(false);
   const [interval, setBillingInterval] = useState("yearly");
   const currency = useCurrency(isIndia === undefined ? undefined : isIndia ? "INR" : "USD");

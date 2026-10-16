@@ -30,6 +30,8 @@ export function FilterMenu({
   // Light tone, opt-in: a fixed width class (e.g. "w-44") for the trigger, which the
   // open panel then matches exactly (the dashboard's dropdown filters).
   widthClassName,
+  // What the trigger is called for screen readers
+  label = "Filter effects",
   // Dark tone only: replaces the trigger's default padding / text size (e.g. to match nearby chips).
   triggerClassName,
   // Dark tone only: replaces the trigger's resting (no filter chosen) colours.
@@ -126,14 +128,15 @@ export function FilterMenu({
     });
   };
 
-  // The panel slides down open (clip reveal), then its rows fade in
+  // The panel unfolds downwards (clip reveal, an even ease so it's seen opening rather
+  // than snapping), then its rows fade in.
   useLayoutEffect(() => {
     const panel = panelRef.current;
     if (!open || !panel || prefersReducedMotion()) return undefined;
     const rows = Array.from(panel.children);
     const tl = gsap.timeline();
-    tl.fromTo(panel, { clipPath: "inset(0 0 100% 0)" }, { clipPath: "inset(0 0 0% 0)", duration: 0.45, ease: "power3.out", clearProps: "clipPath" });
-    tl.fromTo(rows, { opacity: 0 }, { opacity: 1, duration: 0.3, ease: "power2.out", stagger: 0.03, clearProps: "opacity" }, 0.2);
+    tl.fromTo(panel, { clipPath: "inset(0 0 100% 0)" }, { clipPath: "inset(0 0 0% 0)", duration: 0.56, ease: "power2.out", clearProps: "clipPath" });
+    tl.fromTo(rows, { opacity: 0 }, { opacity: 1, duration: 0.35, ease: "power1.out", stagger: 0.035, clearProps: "opacity" }, 0.18);
     return () => tl.kill();
   }, [open]);
 
@@ -153,7 +156,7 @@ export function FilterMenu({
       }
       className={[
         light
-          ? `space-y-1.5 ${widthClassName ? "w-full min-w-0" : "min-w-44"} border border-black/10 bg-foreground p-1.5 shadow-float`
+          ? `space-y-1.5 ${widthClassName ? "w-full min-w-0" : "min-w-44"} border border-black/10 bg-foreground p-1.5`
           : "space-y-1.5 min-w-44 border border-foreground/10 bg-black/20 p-1.5 backdrop-blur-lg",
         menuPos ? "fixed z-9999" : "absolute left-0 top-[calc(100%+calc(var(--cvw)*0.5))] z-30",
         panelClassName,
@@ -214,7 +217,7 @@ export function FilterMenu({
         onClick={handleToggle}
         aria-haspopup="menu"
         aria-expanded={open}
-        aria-label="Filter effects"
+        aria-label={label}
         className={
           light
             ? `relative flex h-9.5 cursor-pointer items-center ${widthClassName ? "w-full justify-between" : "justify-center"} gap-2 px-4 ${T14} transition-colors duration-300 ${activeFilter

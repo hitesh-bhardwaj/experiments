@@ -4,6 +4,12 @@ import { supabase } from "@/lib/supabase";
 import { getUserPlanInfo } from "@/lib/subscription";
 import { isAdminUser } from "@/lib/admin";
 import { getTemplateBySlug } from "@/lib/mock-templates";
+import { isCancelScheduled } from "@/lib/subscription-events";
+import { razorpay } from "@/lib/razorpay";
+
+// Payments with no Razorpay invoice to link to (older checkouts, or not found with these
+// keys): remembered for this server's lifetime so they aren't looked up on every load
+const NO_RECEIPT = new Set();
 
 export async function GET() {
   const { userId } = await auth();
@@ -59,7 +65,7 @@ export async function GET() {
     // api/admin/template-purchases/route.js's own comment on why).
     supabase
       .from("template_purchases")
-      .select("id,template_slug,amount,currency,status,invoice_url,razorpay_payment_id,created_at")
+      .select("id,template_slug,amount,currency,status,invoice_url,razorpay_payment_id,source,created_at")
       .eq("clerk_user_id", userId)
       .order("created_at", { ascending: false }),
   ]);
@@ -76,6 +82,31 @@ export async function GET() {
     );
   }
 
+  // Paid template purchases recorded before their receipt link was kept: every one was
+  // paid through a Razorpay invoice, so the link is looked up once (payment -> invoice)
+  // and saved. A failed lookup just leaves it for next time.
+  const missingReceipts = (templatePurchaseRows || [])
+    .filter((row) => row.razorpay_payment_id && !row.invoice_url && !NO_RECEIPT.has(row.razorpay_payment_id))
+    .slice(0, 10);
+  await Promise.all(
+    missingReceipts.map(async (row) => {
+      try {
+        const payment = await razorpay.payments.fetch(row.razorpay_payment_id);
+        const invoice = payment?.invoice_id ? await razorpay.invoices.fetch(payment.invoice_id) : null;
+        if (!invoice?.short_url) {
+          NO_RECEIPT.add(row.razorpay_payment_id);
+          return;
+        }
+        row.invoice_url = invoice.short_url;
+        await supabase.from("template_purchases").update({ invoice_url: invoice.short_url }).eq("id", row.id);
+      } catch (error) {
+        // e.g. a payment made with the other key set (test vs live) - not looked up again
+        NO_RECEIPT.add(row.razorpay_payment_id);
+        console.error("DASHBOARD_RECEIPT_LOOKUP_ERROR:", row.razorpay_payment_id, error?.error?.description || error?.message);
+      }
+    }),
+  );
+
   const templatePurchases = (templatePurchaseRows || []).map((row) => ({
     id: row.id,
     templateSlug: row.template_slug,
@@ -85,6 +116,8 @@ export async function GET() {
     status: row.status,
     invoiceUrl: row.invoice_url,
     paymentId: row.razorpay_payment_id,
+    // Redeemed with a template credit: no payment, so no amount or receipt
+    redeemedWithCredit: row.source === "credit" || !row.razorpay_payment_id,
     createdAt: row.created_at,
   }));
 
@@ -93,6 +126,8 @@ export async function GET() {
     plan,
     tier,
     subscription: subscriptionRow || null,
+    // Cancelled from the dashboard: active until the period ends, then Free
+    cancelAtPeriodEnd: isCancelScheduled(user, subscriptionRow?.razorpay_subscription_id),
     invoices: invoiceRows || [],
     templatePurchases,
   });

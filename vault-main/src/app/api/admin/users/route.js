@@ -1,4 +1,5 @@
 import { auth, clerkClient } from "@clerk/nextjs/server";
+import { displayName } from "@/lib/display-name";
 import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { getRole, isSuperAdminUser } from "@/lib/admin";
@@ -91,7 +92,7 @@ function shapeUser(clerkUser, sub, viewerIsSuperAdmin, { copiesById, cliById, mc
   const base = {
     id: clerkUser.id,
     email: clerkUser.emailAddresses?.[0]?.emailAddress || null,
-    name: clerkUser.fullName || clerkUser.firstName || null,
+    name: displayName(clerkUser),
     imageUrl: clerkUser.imageUrl || null,
     joinedAt: clerkUser.createdAt || sub?.created_at || null,
     plan: sub?.plan || "free",

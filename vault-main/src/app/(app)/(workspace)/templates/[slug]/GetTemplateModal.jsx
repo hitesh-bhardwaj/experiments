@@ -7,12 +7,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import gsap from "gsap";
-import { useLenis } from "lenis/react";
+import { useLenisLock } from "@/hooks/useLenisLock";
 import { AnimatePresence, motion } from "motion/react";
 import { prefersReducedMotion } from "@/lib/motion";
 import { LABEL, T13, T14, T16, catalogueOf, priceOf } from "../tokens";
 import { PLANS, canRedeemCatalogue } from "@/lib/plans";
 import { SignInRequiredModal } from "@/components/ui/SignInRequiredModal";
+import { useToastQueue, ToastViewport } from "@/components/ui/Toast";
 import { buttonClassName, ButtonChrome } from "@/homepage/components/Button";
 import { markScrollToPricingCards } from "@/lib/pricingScrollIntent";
 import { markTemplateOwned } from "../useTemplateAccess";
@@ -49,7 +50,6 @@ const subscribeNoop = () => () => {};
  */
 export function GetTemplateModal({ template, open, tab = "buy", onTab, onClose, onBuy }) {
   const mounted = useSyncExternalStore(subscribeNoop, () => true, () => false);
-  const lenis = useLenis();
   const closeRef = useRef(null);
   const thumbRef = useRef(null);
   const coinRefs = useRef([]);
@@ -59,6 +59,8 @@ export function GetTemplateModal({ template, open, tab = "buy", onTab, onClose, 
   // null | "redeemed" | "already-owned" | "error"
   const [outcome, setOutcome] = useState(null);
   const [busy, setBusy] = useState(false);
+  // Stays up after the popup closes, so it confirms the download
+  const { toast, showToast, dismissToast } = useToastQueue();
   // The sign-in modal over this one; closing it reloads the balance (now signed in)
   const [signIn, setSignIn] = useState(false);
   // Signed in from that modal, until the balance has reloaded as the signed-in visitor
@@ -105,17 +107,17 @@ export function GetTemplateModal({ template, open, tab = "buy", onTab, onClose, 
 
   useEffect(() => {
     if (!open) return undefined;
-    lenis?.stop();
     // Escape closes the sign-in modal on top first, not this one
     const onKey = (e) => e.key === "Escape" && !signInRef.current && onClose();
     window.addEventListener("keydown", onKey);
     const id = setTimeout(() => closeRef.current?.focus(), 50);
     return () => {
-      lenis?.start();
       window.removeEventListener("keydown", onKey);
       clearTimeout(id);
     };
-  }, [open, lenis, onClose]);
+  }, [open, onClose]);
+  // The page stays still behind it (shared with any modal opened on top)
+  useLenisLock(open);
 
   if (!mounted || !template) return null;
 
@@ -129,6 +131,11 @@ export function GetTemplateModal({ template, open, tab = "buy", onTab, onClose, 
   const canRedeem = subscribed && !locked && remaining > 0 && !outcome && !owned;
   const coins = Math.min(remaining, MAX_COINS);
   const downloadHref = `/api/templates/${template.slug}/download`;
+  // The link starts the download; the popup closes and a toast confirms it
+  const onDownload = () => {
+    onClose();
+    showToast({ title: `${template.title} downloaded`, description: `${template.title} has been downloaded.` });
+  };
 
   // The coin flies into the thumbnail once the server has actually spent it
   const redeem = async () => {
@@ -286,6 +293,7 @@ export function GetTemplateModal({ template, open, tab = "buy", onTab, onClose, 
                           <p className={`${T14} text-foreground/70`}>You already own {template.title}. Download it any time.</p>
                           <a
                             href={downloadHref}
+                            onClick={onDownload}
                             className={`inline-flex h-12 w-fit items-center gap-2 bg-primary px-5 ${T16} text-background transition-colors duration-500 hover:bg-primary-hover`}
                           >
                             <Download className="size-4" aria-hidden="true" /> Download
@@ -357,6 +365,7 @@ export function GetTemplateModal({ template, open, tab = "buy", onTab, onClose, 
                         {(outcome === "redeemed" || outcome === "already-owned" || owned) && (
                           <a
                             href={downloadHref}
+                            onClick={onDownload}
                             className={`inline-flex h-11 items-center gap-2 bg-primary px-5 ${T16} text-background transition-colors duration-500 hover:bg-primary-hover`}
                           >
                             <Download className="size-4" aria-hidden="true" /> Download
@@ -398,6 +407,7 @@ export function GetTemplateModal({ template, open, tab = "buy", onTab, onClose, 
         </motion.div>
       )}
     </AnimatePresence>
+    <ToastViewport toast={toast} onDismiss={dismissToast} />
     <SignInRequiredModal
       open={signIn}
       onSignedIn={() => {

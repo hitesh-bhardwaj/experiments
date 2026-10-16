@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useSyncExternalStore } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import { CardLink } from "./DashboardUI";
 import Button from "@/homepage/components/Button";
@@ -53,8 +53,17 @@ function ExampleCommand() {
   );
 }
 
-export default function CliTokenManager({ plan }) {
+export default function CliTokenManager({ plan, hasToken = false }) {
   const [token, setToken] = useState("");
+  // Whether a token is live: from the dashboard's data, then from what's done here
+  const [live, setLive] = useState(hasToken);
+  useEffect(() => {
+    // The dashboard refreshes in the background; follow it
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setLive(hasToken);
+  }, [hasToken]);
+  // Replacing a live token asks first: the old one stops working straight away
+  const [confirmOpen, setConfirmOpen] = useState(false);
   // A new token opens a dialog in the middle of the screen: it's shown only once.
   const [tokenDialog, setTokenDialog] = useState(false);
   // Portals need <body>; false on the server and during hydration.
@@ -100,6 +109,7 @@ export default function CliTokenManager({ plan }) {
       }
 
       setToken(data.token);
+      setLive(true);
       setMessage(data.message);
       setCopied(false);
       setTokenDialog(true);
@@ -128,6 +138,7 @@ export default function CliTokenManager({ plan }) {
       }
 
       setToken("");
+      setLive(false);
       setMessage(data.message || "CLI token revoked.");
     } catch (error) {
       setMessage(error.message);
@@ -139,7 +150,7 @@ export default function CliTokenManager({ plan }) {
   return (
     <section aria-labelledby="cli-token" className="flex flex-col gap-[calc(var(--cvw)*2)] bg-foreground p-[calc(var(--cvw)*1.6)] text-ink ring-1 ring-inset ring-black/10 max-lg:gap-6 max-lg:p-6">
       <div className="flex items-start justify-between gap-[calc(var(--cvw)*3)] max-lg:flex-col max-lg:gap-6">
-        <div className="flex w-[70%] flex-col gap-[calc(var(--cvw)*0.6)] max-lg:w-full max-lg:gap-2">
+        <div className="flex w-[70%] flex-col gap-[calc(var(--cvw)*2)] max-lg:w-full max-lg:gap-2">
           <h2 id="cli-token" className="type-h2 font-aeonik">CLI token</h2>
           <p className="type-body text-black/60">
             A private token that identifies you to the Hyperiux CLI and MCP, so installs count against your
@@ -163,8 +174,16 @@ export default function CliTokenManager({ plan }) {
 
         {/* phones: stacked, full width */}
         <div className="flex shrink-0 gap-[calc(var(--cvw)*0.6)] max-lg:gap-3 max-md:w-full max-md:flex-col">
-          <Button text="Revoke" variant="outline" preventDefault disabled={isLoading} onClick={revokeToken} className="max-md:w-full" />
-          <Button text={isLoading ? "Working…" : "Generate Token"} preventDefault disabled={isLoading} onClick={generateToken} className="max-md:w-full" />
+          <Button text="Revoke" variant="outline" preventDefault disabled={isLoading || !live} onClick={revokeToken} className="max-md:w-full" />
+          <Button
+            // "Generate token" makes one straight away; "Regenerate token" (a token is on
+            // screen) asks first, since the one shown stops working
+            text={isLoading ? "Working…" : token ? "Regenerate Token" : "Generate Token"}
+            preventDefault
+            disabled={isLoading}
+            onClick={() => (token ? setConfirmOpen(true) : generateToken())}
+            className="max-md:w-full"
+          />
         </div>
       </div>
 
@@ -184,6 +203,27 @@ export default function CliTokenManager({ plan }) {
           </div>
         </div>
       )}
+
+      {mounted &&
+        createPortal(
+          <Modal open={confirmOpen} onClose={() => setConfirmOpen(false)} title="Regenerate your token?">
+            Your current token stops working straight away. Anything using it, like CI or your editor’s MCP config, will need the new one.
+            <div className="flex flex-wrap items-center justify-center gap-[calc(var(--cvw)*1.2)] max-lg:gap-4">
+              <Button
+                text="Regenerate"
+                preventDefault
+                onClick={() => {
+                  setConfirmOpen(false);
+                  generateToken();
+                }}
+              />
+              <button type="button" onClick={() => setConfirmOpen(false)} className="type-label cursor-pointer text-foreground underline underline-offset-3 transition-colors duration-300 hover:text-primary">
+                Keep it
+              </button>
+            </div>
+          </Modal>,
+          document.body,
+        )}
 
       {mounted &&
         createPortal(

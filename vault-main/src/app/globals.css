@@ -661,6 +661,28 @@ input:-webkit-autofill:active {
   }
 }
 
+/* Skeleton shimmer (components/ui/Skeleton): each skeleton has its own soft band, sweeping
+   across it left to right at a steady speed. The gradient is three times the skeleton's
+   width with the band in the middle, so the band starts and ends fully outside the box -
+   the loop's restart is never seen. */
+.skeleton-shimmer {
+  --skeleton-band: color-mix(in srgb, var(--foreground) 10%, transparent);
+  background-image: linear-gradient(100deg, transparent 40%, var(--skeleton-band) 50%, transparent 60%);
+  background-size: 300% 100%;
+  background-repeat: no-repeat;
+  animation: skeleton-sweep 1.8s linear infinite;
+}
+.skeleton-shimmer-light {
+  --skeleton-band: color-mix(in srgb, var(--foreground) 80%, transparent);
+}
+@keyframes skeleton-sweep {
+  from { background-position: 100% 0; }
+  to { background-position: 0% 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-shimmer { animation: none; background-image: none; }
+}
+
 @property --g-shift {
   syntax: "<length>";
   inherits: true;
