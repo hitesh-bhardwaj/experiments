@@ -23,6 +23,8 @@ import {
 import { lockScroll, resetScrollTop, useScrollLockLenis } from "./scroll-lock";
 import { MEDIA } from "@/lib/breakpoints";
 import LinkButton from "@/components/WebsiteComps/LinkButton";
+import { useInteraction } from "./InteractionProvider";
+import { readSoundPreference } from "./SoundToggle";
 
 // ── Build: the rings follow real loading ─────────────────────────────────────
 // The pace is the counter's roll (ROLL / STAGGER below), so the rings never
@@ -107,6 +109,7 @@ function skipLoaderNow() {
  * they build; there is no button - it never waits on the visitor.
  */
 export default function Loader() {
+  const { setSound } = useInteraction();
   const [done, setDone] = useState(false);
   const [run, setRun] = useState(false);
   // Below desktop the hero has no rings, so the loader fades in its still instead
@@ -450,7 +453,12 @@ export default function Loader() {
             <LinkButton
               href="#"
               text="Enter the Vault"
-              onClick={() => enterRef.current?.()}
+              onClick={() => {
+                // The click is the user gesture browsers need before audio can start.
+                // Turns sound on unless the visitor muted it on an earlier visit.
+                if (readSoundPreference() !== false) setSound(true);
+                enterRef.current?.();
+              }}
               data-sound-kind="primary"
               underline
               tilted={false}

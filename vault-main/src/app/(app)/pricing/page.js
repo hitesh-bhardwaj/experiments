@@ -46,7 +46,7 @@ export default async function PricingPage() {
               <PricingFinder />
             </div>
             <div className="home-type">
-              <PricingCredits />
+              {/* <PricingCredits /> */}
               <PricingProCompare />
             </div>
             <PricingUseCase useCases={USE_CASES} />
