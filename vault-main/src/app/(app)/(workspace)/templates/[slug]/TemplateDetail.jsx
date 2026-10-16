@@ -6,7 +6,7 @@ import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, use
 import { preload } from "react-dom";
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Download, Heart } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useLenis } from "lenis/react";
@@ -98,7 +98,6 @@ export function TemplateDetail({ template, devices = {}, effects = [], stack = [
   const stageTopRef = useRef(null);
   const router = useRouter();
   const pathname = usePathname();
-  const searchParams = useSearchParams();
 
   // The page is cached (ISR), so access is fetched in the browser: the page works
   // straight away, and the Buy / Download button shows a skeleton until it's known.
@@ -179,7 +178,9 @@ export function TemplateDetail({ template, devices = {}, effects = [], stack = [
   useEffect(() => {
     if (accessPending || resumedRef.current) return;
     resumedRef.current = true;
-    if (searchParams.get(RESUME_PURCHASE_PARAM) !== "1") return;
+    // Read here, not with useSearchParams(): that would stop Next server-rendering
+    // this cached page (it shipped an empty fallback and built the page in the browser)
+    if (new URLSearchParams(window.location.search).get(RESUME_PURCHASE_PARAM) !== "1") return;
     if (hasAccess || templateAccess.reason === "anonymous") return;
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setPaywallOpen(true);

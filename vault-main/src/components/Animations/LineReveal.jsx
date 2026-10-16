@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useLayoutEffect, useRef } from "react";
+import { keepServerPaint, useFromServerHtml } from "./serverPaint";
 import gsap from "gsap";
 import { SplitText } from "gsap/dist/SplitText";
 import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
@@ -82,6 +83,7 @@ export default function LineReveal({
   const triggerRef = useRef(null);
   const refreshRef = useRef(null);
   const runIdRef = useRef(0);
+  const fromServerHtml = useFromServerHtml();
 
   useIsomorphicLayoutEffect(() => {
     const container = containerRef.current;
@@ -89,6 +91,8 @@ export default function LineReveal({
     if (!container) return;
 
     const runId = ++runIdRef.current;
+
+    if (keepServerPaint({ runId, fromServerHtml, element: container })) return;
 
     tweenRef.current?.kill();
     driftsRef.current.forEach((t) => t.kill());
@@ -246,7 +250,7 @@ export default function LineReveal({
 
   return React.createElement(
     as,
-    { ref: containerRef, className, style: { opacity: 0 }, ...rest },
+    { ref: containerRef, className, ...rest },
     text ?? children
   );
 }

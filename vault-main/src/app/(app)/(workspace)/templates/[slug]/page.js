@@ -126,7 +126,7 @@ export default async function TemplateDetailPage({ params }) {
     <>
       <WebpageJsonLd metadata={pageMetadata} />
       <BreadcrumbsJSONLD pathname={pageMetadata.url} />
-      {/* TemplateDetail reads useSearchParams() to resume a purchase after sign-in. */}
+      {/* TemplateDetail reads ?buy=1 from window.location after load, not useSearchParams(), so it renders on the server. */}
       <Suspense fallback={null}>
       <TemplateDetail
         template={template}

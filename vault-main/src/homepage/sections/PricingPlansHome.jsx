@@ -262,7 +262,7 @@ export default function PricingPlansHome({ currency: initialCurrency, checkout =
                                 role="radio"
                                 aria-checked={on}
                                 onClick={() => choose(b.id)}
-                                className={`relative z-1 inline-flex h-10 items-center gap-2.5 px-[2vw] type-sm whitespace-nowrap max-md:h-[12vw] max-md:grow max-md:justify-center max-md:gap-[2vw] max-md:px-[3vw] max-md:text-[2.8vw] font-medium   transition-colors duration-700 ${on ? "text-white" : "text-[#6B6B6B]"}`}
+                                className={`relative z-1 inline-flex h-10 items-center gap-2.5 px-[2vw] type-sm whitespace-nowrap max-md:h-[12vw] max-md:grow max-md:justify-center max-md:gap-[2vw] max-md:px-[3vw] max-md:text-[3.6vw] font-medium   transition-colors duration-700 ${on ? "text-white" : "text-[#6B6B6B]"}`}
                             >
                                 {b.label}
                                 {b.save && (

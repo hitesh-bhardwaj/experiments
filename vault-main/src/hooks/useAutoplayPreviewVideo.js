@@ -15,14 +15,20 @@ import { usePrefersReducedMotion } from "@/lib/motion";
 // than competing for slots or never playing. Some preview clips are tens of
 // MB and each concurrent one competes for the same bandwidth (see the
 // onWaiting stall fallback below), so this is still short of the browser's
-// real per-tab decoder limit even at 12.
+// real per-tab decoder limit even at 12. Phones show one or two cards at a
+// time, on mobile data, so they get a much smaller budget.
 const MAX_CONCURRENT_PREVIEW_VIDEOS = 12;
+const MAX_CONCURRENT_PREVIEW_VIDEOS_PHONE = 3;
 const playingCardIds = new Set();
 const waitingForSlot = new Map(); // cardId -> retry callback
 
+function maxConcurrentVideos() {
+  return window.matchMedia("(max-width: 767px)").matches ? MAX_CONCURRENT_PREVIEW_VIDEOS_PHONE : MAX_CONCURRENT_PREVIEW_VIDEOS;
+}
+
 function claimVideoSlot(id, retry) {
   if (playingCardIds.has(id)) return true;
-  if (playingCardIds.size >= MAX_CONCURRENT_PREVIEW_VIDEOS) {
+  if (playingCardIds.size >= maxConcurrentVideos()) {
     waitingForSlot.set(id, retry);
     return false;
   }
@@ -74,17 +80,40 @@ if (typeof document !== "undefined" && !document.__effectPreviewVisibilityBound)
   });
 }
 
-// Preview clips are several MB each. Hold them until the page has loaded and the
-// browser is idle, so they don't compete with the page's own CSS, JS and images on
-// first load, and don't autoplay at all when the visitor asked to save data.
+// Preview clips are about 1 MB each. Hold them until the page has loaded, and
+// then until the visitor first scrolls, touches, clicks or types - or
+// FIRST_PLAY_DELAY after load, once the browser is idle - so they don't
+// compete with the page's own CSS, JS, fonts and cover images while it's
+// still settling (the covers show meanwhile). No autoplay at all when the
+// visitor asked to save data.
+const FIRST_PLAY_DELAY = 3000;
+const INTERACTION_EVENTS = ["scroll", "wheel", "touchstart", "pointerdown", "keydown"];
 let pageSettled = null;
 function whenPageSettled() {
   if (!pageSettled) {
     pageSettled = new Promise((resolve) => {
-      const idle = () =>
-        window.requestIdleCallback ? window.requestIdleCallback(() => resolve(), { timeout: 2000 }) : setTimeout(resolve, 300);
-      if (document.readyState === "complete") idle();
-      else window.addEventListener("load", idle, { once: true });
+      let interacted = false;
+      let loaded = false;
+      const finish = () => {
+        INTERACTION_EVENTS.forEach((type) => window.removeEventListener(type, onInteract, true));
+        resolve();
+      };
+      function onInteract() {
+        interacted = true;
+        if (loaded) finish();
+      }
+      INTERACTION_EVENTS.forEach((type) => window.addEventListener(type, onInteract, { capture: true, passive: true }));
+
+      const onLoad = () => {
+        loaded = true;
+        if (interacted) return finish();
+        setTimeout(() => {
+          if (window.requestIdleCallback) window.requestIdleCallback(finish, { timeout: 2000 });
+          else finish();
+        }, FIRST_PLAY_DELAY);
+      };
+      if (document.readyState === "complete") onLoad();
+      else window.addEventListener("load", onLoad, { once: true });
     });
   }
   return pageSettled;
