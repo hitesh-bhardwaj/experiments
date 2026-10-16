@@ -1863,6 +1863,23 @@
       "tier": "free"
     },
     {
+      "name": "liquid-shatter",
+      "type": "registry:component",
+      "category": "components",
+      "categories": [
+        "components"
+      ],
+      "dependencies": [
+        "gsap",
+        "three"
+      ],
+      "registryDependencies": [],
+      "exportName": "LiquidShatter",
+      "exportKind": "default",
+      "version": "1.0.0",
+      "tier": "pro"
+    },
+    {
       "name": "shear-wipe",
       "type": "registry:component",
       "category": "components",
