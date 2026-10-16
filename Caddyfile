@@ -1,0 +1,13 @@
+# Local HTTPS for vault-main with the live Clerk keys, which only accept
+# hyperiux.com domains. Needs `127.0.0.1 local.vault.hyperiux.com` in /etc/hosts
+# and Caddy's local CA trusted once (`caddy trust`). Start with:
+#   caddy run --config Caddyfile
+{
+	# Trusting the CA needs the Mac password, so it's done once by hand
+	skip_install_trust
+}
+
+local.vault.hyperiux.com {
+	tls internal
+	reverse_proxy localhost:3000
+}
