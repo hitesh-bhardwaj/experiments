@@ -451,7 +451,6 @@ function mountScene(
   { ribbonCount, particleCount, intro }: SceneOptions,
 ) {
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
   const small = window.matchMedia("(max-width: 767px)").matches || (navigator.hardwareConcurrency || 8) <= 4;
   const timers = new Set<ReturnType<typeof setTimeout>>();
   const later = (fn: () => void, ms: number) => {
@@ -859,7 +858,6 @@ function mountScene(
   let chargeTween: gsap.core.Tween | null = null;
   let lastX = -1, lastY = -1;
   const canHold = (target: EventTarget | null) =>
-    finePointer &&
     live.current.holdToShatter &&
     target instanceof Element &&
     host.contains(target) &&
@@ -873,18 +871,27 @@ function mountScene(
     mouse.y = clamp((mouse.cy / r.height) * 2 - 1, -1, 1);
     mouse.on = mouse.cx >= 0 && mouse.cy >= 0 && mouse.cx <= r.width && mouse.cy <= r.height;
   };
+  // Pointer where a hold can start, grabbing while one is active.
+  let holdable = false;
+  const restCursor = () => {
+    host.style.cursor = holdable ? "pointer" : "";
+  };
   const onPointerMove = (e: PointerEvent) => {
     updatePointer(e.clientX, e.clientY);
+    holdable = canHold(e.target);
+    if (!press) restCursor();
     lastX = e.clientX;
     lastY = e.clientY;
   };
   const onPointerLeave = () => {
+    holdable = false;
+    if (!press) restCursor();
     mouse.on = false;
     mouse.x = 0;
     mouse.y = 0;
   };
   const onPointerDown = (e: PointerEvent) => {
-    if (e.button !== 0 || !canHold(e.target)) return;
+    if (!e.isPrimary || e.button !== 0 || !canHold(e.target)) return;
     e.preventDefault();
     if (live.current.sound) sound.unlock();
     updatePointer(e.clientX, e.clientY);
@@ -915,11 +922,17 @@ function mountScene(
       }),
     };
     press = p;
+    host.style.cursor = "grabbing";
+  };
+  // Long-press on touch opens the callout/context menu, which would eat the hold.
+  const onContextMenu = (e: Event) => {
+    if (canHold(e.target)) e.preventDefault();
   };
   const onPointerUp = () => {
     if (!press) return;
     const p = press;
     press = null;
+    restCursor();
     p.tw.kill();
     const quick = performance.now() - p.t < TAP_MS, full = charge.v > FULL_CHARGE;
     if (p.sounding) sound.holdEnd(full, live.current.sound);
@@ -938,6 +951,18 @@ function mountScene(
       RU.uHitA.value = 0.4 + charge.v * 0.6;
     }
     chargeTween = gsap.to(charge, { v: 0, duration: 1.4, ease: "expo.out" });
+  };
+  // Touch: the browser takes over for a vertical scroll and cancels the pointer,
+  // so drop the hold without firing a shatter or a tap.
+  const onPointerCancel = () => {
+    if (!press) return;
+    const p = press;
+    press = null;
+    restCursor();
+    p.tw.kill();
+    if (p.sounding) sound.holdEnd(false, live.current.sound);
+    chargeTween = gsap.to(charge, { v: 0, duration: 0.6, ease: "expo.out" });
+    onPointerLeave();
   };
   const onScroll = () => {
     if (lastX >= 0) updatePointer(lastX, lastY);
@@ -996,7 +1021,7 @@ function mountScene(
   let introT = 0;
   const ringStarted = subs.map(() => false);
   if (entering) subs.forEach((sb) => sb.scale.setScalar(0.001));
-  if (hint.root && finePointer) hint.root.style.opacity = "1";
+  if (hint.root) hint.root.style.opacity = "1";
 
   function updateIntro(dt: number) {
     introT += dt;
@@ -1097,11 +1122,11 @@ function mountScene(
     });
 
     if (hint.root) {
-      if (SH.mode === 1 || SH.mode === 2) setHint("Move to stir");
+      if (SH.mode === 1 || SH.mode === 2) setHint("Move to Stir");
       else if (SH.mode) setHint("Reforming");
-      else if (!press || !press.ready) setHint(press ? "Keep holding" : "Press and hold");
+      else if (!press || !press.ready) setHint(press ? "Keep Holding" : "Press and Hold");
       if (hint.fill) hint.fill.style.transform = `scaleX(${SH.mode ? 0 : ch.toFixed(3)})`;
-      hint.root.style.opacity = finePointer && L.holdToShatter ? "1" : "0";
+      hint.root.style.opacity = L.holdToShatter ? "1" : "0";
     }
 
     renderer.render(scene, camera);
@@ -1111,7 +1136,8 @@ function mountScene(
   host.addEventListener("pointerleave", onPointerLeave);
   host.addEventListener("pointerdown", onPointerDown);
   window.addEventListener("pointerup", onPointerUp);
-  window.addEventListener("pointercancel", onPointerUp);
+  window.addEventListener("pointercancel", onPointerCancel);
+  host.addEventListener("contextmenu", onContextMenu);
   window.addEventListener("scroll", onScroll, { passive: true });
 
   return () => {
@@ -1124,13 +1150,15 @@ function mountScene(
     host.removeEventListener("pointerleave", onPointerLeave);
     host.removeEventListener("pointerdown", onPointerDown);
     window.removeEventListener("pointerup", onPointerUp);
-    window.removeEventListener("pointercancel", onPointerUp);
+    window.removeEventListener("pointercancel", onPointerCancel);
+    host.removeEventListener("contextmenu", onContextMenu);
     window.removeEventListener("scroll", onScroll);
     timers.forEach(clearTimeout);
     timers.clear();
     chargeTween?.kill();
     press?.tw.kill();
     press = null;
+    host.style.cursor = "";
     sound.destroy();
     disposables.forEach((d) => d.dispose());
     envScene.traverse((o) => {
@@ -1259,7 +1287,7 @@ export default function LiquidShatter({
   return (
     <div
       ref={hostRef}
-      className={`relative h-svh w-full overflow-hidden select-none ${className}`}
+      className={`relative h-svh w-full touch-pan-y overflow-hidden select-none [-webkit-touch-callout:none] ${className}`}
       style={{ background: backgroundColor }}
     >
       <canvas ref={canvasRef} aria-hidden="true" className="absolute inset-0 block h-full w-full" />
@@ -1270,8 +1298,8 @@ export default function LiquidShatter({
           aria-hidden="true"
           className="pointer-events-none absolute bottom-8 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-2.5 opacity-0 transition-opacity duration-700"
         >
-          <span ref={labelRef} className="font-mono text-[11px] tracking-[0.24em] text-white/60 uppercase">
-            Press and hold
+          <span ref={labelRef} className="font-mono text-sm text-white/60 ">
+            Press and Hold
           </span>
           <span className="relative block h-px w-24 overflow-hidden bg-white/15">
             <span ref={fillRef} className="absolute inset-0 origin-left" style={{ transform: "scaleX(0)" }} />

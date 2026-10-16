@@ -85,22 +85,9 @@ export function CustomAnimationFormProvider({ children }) {
 }
 
 // Fields match the sign-in page (components/auth/AuthFormPrimitives TextField):
-// Geist Mono label, a quiet white/5 box, and four orange corner brackets that
-// appear while the field has focus.
+// Geist Mono label and a quiet white/5 box.
 const FIELD_CLASS =
   "w-full border border-white/10 bg-white/5 px-4 py-3 text-base! text-white placeholder:text-white/30 outline-none transition";
-
-function FocusCorners() {
-  const corner = "pointer-events-none absolute h-1.5 w-1.5 border-primary opacity-0 transition-opacity duration-300 group-focus-within:opacity-100 max-md:hidden";
-  return (
-    <>
-      <span aria-hidden="true" className={`${corner} top-0 left-0 border-t border-l`} />
-      <span aria-hidden="true" className={`${corner} top-0 right-0 border-t border-r`} />
-      <span aria-hidden="true" className={`${corner} bottom-0 left-0 border-b border-l`} />
-      <span aria-hidden="true" className={`${corner} bottom-0 right-0 border-b border-r`} />
-    </>
-  );
-}
 
 function Field({ id, label, error, children }) {
   return (
@@ -110,7 +97,6 @@ function Field({ id, label, error, children }) {
       </label>
       <div className="group relative h-fit w-full">
         {children}
-        <FocusCorners />
       </div>
       {error && (
         <p id={`${id}-error`} className="text-sm text-red-400">
