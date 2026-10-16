@@ -546,7 +546,7 @@ export default function SettingsPage() {
               </span>
               <button type="button" onClick={() => setDeleteOpen(true)} disabled={isAdmin} className={ACTION_LINE}>
                 <Trash2 aria-hidden="true" />
-                Delete account
+                Delete Account
               </button>
             </li>
           </ul>

@@ -370,7 +370,7 @@ export default function VaultDoorAuth({ catalogue }) {
                 />
                 {/* Only on the password step, right under the field (it slides with it) */}
                 {mode === "sign-in" && field === "password" && (
-                  <div className="text18 w-fit text-light-grey">{paneLink("reset", "Forgot password?")}</div>
+                  <div className="text18 w-fit text-light-grey">{paneLink("reset", "Forgot Password?")}</div>
                 )}
               </StepTrack>
             </fieldset>

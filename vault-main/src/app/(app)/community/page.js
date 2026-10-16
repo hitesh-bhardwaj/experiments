@@ -18,21 +18,25 @@ const CommunityJoin = dynamic(() => import("@/components/Community/CommunityJoin
 const COMMUNITY_FAQ = [
   {
     id: "cm-faq1",
-    question: "Who is it for?",
-    answer: "Front-end and creative developers, designers who code, and anyone who has ever re-timed an animation at 2am because it didn’t feel right. You don’t need to be an expert. You need to care.",
+    question: "What is Hyperiux Vault Community?",
+    answer: "Hyperiux Vault Community is a Discord space built for creative developers, designers and motion enthusiasts who want to push the boundaries of web experiences. It's a place to exchange ideas, explore creative coding, share experiments, and connect with people who are equally passionate about building interactive experiences.",
   },
-  { id: "cm-faq2", question: "Is it free?", answer: "Joining the waitlist is free. [To confirm: community membership pricing.]" },
+  { id: "cm-faq2", question: "Who can join Vault Community?", answer: "Whether you're an experienced creative developer, a frontend engineer, a designer learning to code, or a student experimenting with animations, you're welcome here. You don't need years of experience or an impressive portfolio. All you need is curiosity, a willingness to learn and a passion for creating better experiences on the web." },
   {
     id: "cm-faq3",
-    question: "Do I need Vault Pro to join?",
-    answer: "[To confirm.] The community is built for anyone who cares about motion on the web, whether you use the free core or Pro.",
+    question: "Is Vault Community free to join?",
+    answer: "Yes, Hyperiux Vault Community is completely free to join. You don't need a Vault Pro subscription, a credit card, or any paid membership to participate. The community is about bringing creative minds together, sharing knowledge, exchanging feedback and growing alongside developers who care about the craft.",
   },
   {
     id: "cm-faq4",
-    question: "Where will the community live?",
-    answer: "[To confirm: platform, e.g. Discord or Circle.] Waitlist members will get the invite link directly.",
+    question: "How do I join Vault Community?",
+    answer: "We're getting our Discord community ready for launch. For now, simply enter your email address in the waitlist form at the top of this page. Once the community goes live, we'll send an invitation directly to your inbox with everything you need to join and start connecting with fellow creative developers.",
   },
-  { id: "cm-faq5", question: "When does it open?", answer: "[To confirm: launch date.] Waitlist members hear first and get invited first." },
+  { id: "cm-faq5", question: "When will Vault Community launch?", answer: "We're putting the finishing touches on our Discord community and getting everything ready for its official launch. While we haven't announced a specific date yet, we're working towards opening it soon. Join the waitlist and you'll receive an email invitation as soon as the community is ready to welcome members." },
+  { id: "cm-faq6", question: "What can I expect inside Vault Community?", answer: "Expect conversations around creative coding, React, Next.js, GSAP, Three.js, WebGL and everything that makes the web more interactive. You'll be able to share projects created using Hyperiux Vault, exchange feedback, explore interesting implementations, discover creative techniques and connect with developers who love experimenting beyond conventional interfaces." },
+  { id: "cm-faq7", question: "Do I need Vault Pro to join the community", answer: "Not at all. Vault Community is open to everyone, whether you're using our free effects, have a Vault Pro subscription, or haven't explored Vault yet. While members can discuss Vault components, share implementations and exchange ideas, community membership doesn't require a paid subscription or automatically unlock premium Vault effects." },
+  { id: "cm-faq8", question: "Is Vault Community limited to React and Next.js developers?", answer: "Definitely not. While Hyperiux Vault primarily focuses on React and Next.js, our community welcomes anyone passionate about creative web development. Whether you're experimenting with GSAP, Three.js, WebGL, Motion, Vue, Svelte, or Webflow, there's room to share your ideas, explore new techniques and learn from developers working across different technologies." },
+
 ];
 
 export const metadata = createPageMetadata({

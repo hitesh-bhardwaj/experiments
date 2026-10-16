@@ -142,7 +142,7 @@ export function createCore({ canvas, layer, tooltip, effects, onHover }) {
       const to = nodes[b];
       const alpha = 0.05 + ((from.depth + to.depth) / 2 + 1) * 0.07;
       const lit = Math.min(from.lit, to.lit) * (1 - state.deny);
-      ctx.strokeStyle = lit > 0.05 ? rgba(CANVAS_COLORS.orange, alpha * 1.6 * lit + 0.02) : rgba(CANVAS_COLORS.grey, alpha);
+      ctx.strokeStyle = rgba(CANVAS_COLORS.orange, lit > 0.05 ? alpha * 1.6 * lit + 0.02 : alpha);
       ctx.beginPath();
       ctx.moveTo(from.screenX, from.screenY);
       ctx.lineTo(to.screenX, to.screenY);
@@ -160,7 +160,7 @@ export function createCore({ canvas, layer, tooltip, effects, onHover }) {
       .forEach((node) => {
         const depth = (node.depth + 1) / 2;
         const isPro = node.effect.tier === "pro";
-        const baseColor = isPro ? CANVAS_COLORS.offWhite : CANVAS_COLORS.grey;
+        const baseColor = CANVAS_COLORS.orange;
         const alpha = (0.25 + depth * 0.65) * (mode === "sign-up" && isPro ? 0.35 : 1);
         const size = 1.1 + depth * 1.9 + node.ripple * 2.2;
         const lit = Math.max(node.lit, node.ripple * 0.9) * (1 - state.deny * 0.9);

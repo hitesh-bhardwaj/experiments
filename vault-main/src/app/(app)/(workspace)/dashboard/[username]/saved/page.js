@@ -127,7 +127,7 @@ export default function SavedEffectsPage() {
                   options={["all", ...categoryChips.map((c) => c.id)]}
                   categoryFilter={category || "all"}
                   activeFilter={category}
-                  getLabel={(id) => (id === "all" ? "All categories" : getQuickCategoryLabel(id))}
+                  getLabel={(id) => (id === "all" ? "All Categories" : getQuickCategoryLabel(id))}
                   onSelect={(id) => setCategory(id === "all" ? null : id)}
                 />
               )}

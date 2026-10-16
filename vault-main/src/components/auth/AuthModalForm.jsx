@@ -206,7 +206,7 @@ export function AuthModalForm({ redirectUrl = "/", initialMode = "sign-in", intr
           onChange={handleChange}
         />
         {/* Only on the password step, right under the field (it slides with it) */}
-        {mode === "sign-in" && field === "password" && <div className={`${T13} w-fit`}>{modeLink("reset", "Forgot password?")}</div>}
+        {mode === "sign-in" && field === "password" && <div className={`${T13} w-fit`}>{modeLink("reset", "Forgot Password?")}</div>}
       </StepTrack>
 
       {field === "code" && (

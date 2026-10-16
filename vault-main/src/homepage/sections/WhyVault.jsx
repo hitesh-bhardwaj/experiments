@@ -101,7 +101,7 @@ export default function WhyVault() {
                     Production-grade motion, without the production complexity.
                 </LineReveal>
                 <LineReveal as="h2" start="top 85%" delay={0.2} className="type-h1">
-                    Built for Teams Where the Frontend <span className="gradient-text-animate gradient-text-single">Is the Brand.</span>
+                    Built for Teams Where the Frontend <span className="gradient-text-animate gradient-text-single">is the Brand.</span>
                 </LineReveal>
             </div>
 

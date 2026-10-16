@@ -323,7 +323,7 @@ export default function DashboardOverviewPage() {
       {/* recent activity + recently saved */}
       <div className="flex gap-[calc(var(--cvw)*0.8)] max-lg:flex-col max-lg:gap-3">
         <section className={`${CARD} ${CARD_PAD} w-[63%] gap-[calc(var(--cvw)*1)] max-lg:w-full max-lg:gap-4`}>
-          <SectionHead title="Recent activity" href={path("usage")} label="All usage" />
+          <SectionHead title="Recent Activity" href={path("usage")} label="All Usage" />
           {data.recentActivity?.length ? (
             <ul className="flex flex-col">
               {data.recentActivity.map((item) => {
@@ -345,7 +345,7 @@ export default function DashboardOverviewPage() {
         </section>
 
         <section className={`${CARD} ${CARD_PAD} flex-1 gap-[calc(var(--cvw)*1)] max-lg:gap-4`}>
-          <SectionHead title="Recently saved" href={path("saved")} label="All saved" />
+          <SectionHead title="Recently Saved" href={path("saved")} label="All Saved" />
           {data.recentlySaved?.length ? (
             <ul className="flex flex-col">
               {data.recentlySaved.slice(0, 4).map((item) => {

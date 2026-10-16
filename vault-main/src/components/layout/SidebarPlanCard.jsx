@@ -51,14 +51,14 @@ export function SidebarPlanCard({ username }) {
       <div className="flex w-full flex-col gap-(--cvw) bg-dark-card p-[calc(var(--cvw)*1.2)] ring-1 ring-inset ring-foreground/10">
         <p className="type-label text-foreground/80">
           {superAdmin ? "Super" : ""}
-          <span className="text-primary">{superAdmin ? " admin" : "Admin"}</span>
+          <span className="text-primary">{superAdmin ? " Admin" : "Admin"}</span>
         </p>
         <p className="type-small text-foreground/80">
           {superAdmin
             ? "Unlimited effects and every template. You can see revenue and every user, and change roles."
             : "Unlimited effects and every template. You can see activity and every user."}
         </p>
-        <Button text="Open admin" href={dashboardPath(username, "admin/activity")} className="w-fit" />
+        <Button text="Open Admin" href={dashboardPath(username, "admin/activity")} className="w-fit" />
       </div>
     );
   }

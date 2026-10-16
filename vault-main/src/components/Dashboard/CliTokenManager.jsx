@@ -164,7 +164,7 @@ export default function CliTokenManager({ plan }) {
         {/* phones: stacked, full width */}
         <div className="flex shrink-0 gap-[calc(var(--cvw)*0.6)] max-lg:gap-3 max-md:w-full max-md:flex-col">
           <Button text="Revoke" variant="outline" preventDefault disabled={isLoading} onClick={revokeToken} className="max-md:w-full" />
-          <Button text={isLoading ? "Working…" : "Generate token"} preventDefault disabled={isLoading} onClick={generateToken} className="max-md:w-full" />
+          <Button text={isLoading ? "Working…" : "Generate Token"} preventDefault disabled={isLoading} onClick={generateToken} className="max-md:w-full" />
         </div>
       </div>
 

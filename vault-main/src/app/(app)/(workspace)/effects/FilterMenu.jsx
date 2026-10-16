@@ -154,7 +154,7 @@ export function FilterMenu({
       className={[
         light
           ? `space-y-1.5 ${widthClassName ? "w-full min-w-0" : "min-w-44"} border border-black/10 bg-foreground p-1.5 shadow-float`
-          : "space-y-1.5 min-w-44 border border-white/10 bg-black/20  p-1.5",
+          : "space-y-1.5 min-w-44 border border-foreground/10 bg-black/20 p-1.5 backdrop-blur-lg",
         menuPos ? "fixed z-9999" : "absolute left-0 top-[calc(100%+calc(var(--cvw)*0.5))] z-30",
         panelClassName,
       ]
@@ -171,7 +171,7 @@ export function FilterMenu({
           !EFFECT_SORT_OPTIONS.includes(options[index - 1]);
 
         return (
-          <div key={cat} className="flex flex-col gap-1.5 backdrop-blur-lg">
+          <div key={cat} className="flex flex-col gap-1.5">
             {showDivider && (
               <span
                 aria-hidden="true"

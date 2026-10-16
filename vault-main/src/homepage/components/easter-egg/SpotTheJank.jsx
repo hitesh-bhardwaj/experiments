@@ -353,7 +353,7 @@ export default function SpotTheJank({ onClose, sound, toast, realHref = "/effect
                             onBlur={() => setStartHovered(false)}
                             className={buttonClassName({ variant: "outline" })}
                         >
-                            <ButtonChrome label="Train my eye" hovered={startHovered} />
+                            <ButtonChrome label="Train my Eye" hovered={startHovered} />
                         </button>
                     </div>
                 )}
@@ -381,10 +381,10 @@ export default function SpotTheJank({ onClose, sound, toast, realHref = "/effect
                                 onBlur={() => setAgainHovered(false)}
                                 className={buttonClassName({ variant: "outline" })}
                             >
-                                <ButtonChrome label="Play again" hovered={againHovered} />
+                                <ButtonChrome label="Play Again" hovered={againHovered} />
                             </button>
                             <Link href={realHref} onClick={requestClose} className={btnGhost}>See how Vault avoids jank</Link>
-                            <button type="button" onClick={share} className={btnGhost}>Copy score</button>
+                            <button type="button" onClick={share} className={btnGhost}>Copy Score</button>
                         </div>
                     </div>
                 )}

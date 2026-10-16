@@ -159,8 +159,10 @@ export function TemplatesListing({ templates: baseTemplates = [], description = 
       ),
     [templates, category, catalogue],
   );
-  // One or no match shows only the grid, so the switch reflects that.
-  const view = corridorOk && filtered.length > 1 ? chosenView || "corr" : "grid";
+  // One or no match shows only the grid and fades out the corridor option.
+  const canChooseView = corridorOk && filtered.length > 1;
+  const view = canChooseView ? chosenView || "corr" : "grid";
+  const viewItems = VIEWS.map((item) => ({ ...item, hidden: item.id === "corr" && !canChooseView }));
 
   const clearFilters = () => {
     setCategory("All");
@@ -193,7 +195,7 @@ export function TemplatesListing({ templates: baseTemplates = [], description = 
 
         {/* view on the left · category + catalogue on the right */}
         <motion.div {...heroFadeUp(1.2)} className="flex flex-wrap items-center justify-between gap-3.5 pt-7 max-md:pt-3">
-          {corridorOk && <DarkSegment label="View" items={VIEWS} value={view} onChange={setChosenView} itemClassName="w-[calc(var(--cvw)*5.5)] max-lg:w-20" />}
+          <DarkSegment label="View" items={viewItems} value={view} onChange={setChosenView} itemClassName="w-[calc(var(--cvw)*5.5)] max-lg:w-20" />
           <div className="ml-auto flex flex-wrap items-center gap-3.5 max-md:ml-0">
             <div role="group" aria-label="Category" className="flex flex-wrap gap-1.5">
               {categories.map((c) => (
@@ -213,11 +215,12 @@ export function TemplatesListing({ templates: baseTemplates = [], description = 
               <FilterMenu
                 alignRight
                 // Same resting look as the category chips beside it
-                idleClassName={`${CHIP_OFF} backdrop-blur-lg`}
+                idleClassName={CHIP_OFF}
                 triggerClassName={`px-3 py-1.5 max-md:py-3 ${T14} before:invisible before:inline-block before:w-0 before:-mr-2 before:content-['.']`}
                 panelClassName="left-auto! right-0"
                 options={CATALOGUES.map((c) => c.id)}
                 activeFilter={catalogue === "all" ? null : catalogue}
+                categoryFilter={catalogue}
                 getLabel={(id) => CATALOGUES.find((c) => c.id === id)?.label}
                 onSelect={setCatalogue}
                 onClear={() => setCatalogue("all")}

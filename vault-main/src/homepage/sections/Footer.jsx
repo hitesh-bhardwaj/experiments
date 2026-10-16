@@ -292,7 +292,7 @@ export default function Footer() {
           <Button
             text="Upgrade to Pro"
             className="max-lg:border max-lg:border-transparent max-md:border-0 max-md:w-full"
-            href="/sign-up"
+            href="/pricing#plans"
             variant="orange"
           />
           <p className="shimmer-text w-full flex items-center gap-[calc(var(--cvw)*0.5)] text-light-grey leading-none max-md:gap-2 absolute max-lg:bottom-[-5vw] max-md:bottom-[calc(var(--cvw)*-12)] bottom-[calc(var(--cvw)*-0.8)] left-1/2 -translate-x-1/2">

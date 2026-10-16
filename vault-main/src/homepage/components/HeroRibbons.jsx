@@ -6,7 +6,7 @@ import { mountThereminRibbons } from "../lib/theremin-ribbons";
 import { useInteraction } from "./InteractionProvider";
 import { loaderScene, markSceneReady } from "./loader-scene";
 
-const UNLOCK_TITLE = "Effect unlocked · Liquid shatter";
+const UNLOCK_TITLE = "Effect Unlocked · Liquid Shatter";
 const UNLOCK_BODY =
     "You just played one of Vault’s WebGL moments. Every interaction on this page ships as real code you own.";
 const UNLOCK_VISIBLE_MS = 3500;

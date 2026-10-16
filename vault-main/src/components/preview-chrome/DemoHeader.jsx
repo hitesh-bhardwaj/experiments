@@ -884,7 +884,7 @@ function PreviewBar({ title: titleProp, tier: tierProp, backHref: backHrefProp, 
           data-lenis-prevent
           data-lenis-prevent-wheel
           data-lenis-prevent-touch
-          className="fixed top-19.5 right-10 z-9021 max-lg:top-17.5 max-lg:right-6 max-md:top-16 flex h-[min(600px,calc(100vh-94px))] w-[20vw] max-lg:w-[min(344px,calc(100vw-32px))] flex-col overflow-hidden bg-[#111] shadow-[inset_0_0_0_1px_rgba(244,244,244,.08),0_30px_80px_-20px_#000]"
+          className="fixed top-19.5 right-10 z-9021 max-lg:top-17.5 max-lg:right-6 max-md:top-16 flex h-fit max-h-[min(600px,calc(100vh-94px))] w-[20vw] max-lg:w-[min(344px,calc(100vw-32px))] flex-col overflow-hidden bg-[#111] shadow-[inset_0_0_0_1px_rgba(244,244,244,.08),0_30px_80px_-20px_#000]"
         >
           <div
             data-tip="Drag to move"
@@ -903,10 +903,10 @@ function PreviewBar({ title: titleProp, tier: tierProp, backHref: backHrefProp, 
               </span>
             </button>
           </div>
-          {/* The app's RemixerPanel fills the rest edge to edge: the panel height is fixed, so
-              opening or closing a group never moves the Copy / Reset footer; only the controls
-              between the header and the footer scroll. */}
-          <div className="flex min-h-0 flex-1 flex-col overflow-hidden overscroll-contain *:animate-none! *:bg-transparent! [&>aside]:h-full">
+          {/* The app's RemixerPanel fills the rest edge to edge. The panel hugs its content
+              (h-fit) up to a max height; past that, only the controls between the header and
+              the Copy / Reset footer scroll. */}
+          <div className="flex min-h-0 flex-1 flex-col overflow-hidden overscroll-contain *:animate-none! *:bg-transparent! [&>aside]:min-h-0 [&>aside]:flex-1">
             {/* compact: the same tight panel as the effect page's Playground. */}
             <RemixerPanel
               compact

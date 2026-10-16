@@ -173,7 +173,7 @@ export default function PricingFinder({ currency: initialCurrency }) {
       <div className="site-container flex items-center justify-between gap-[calc(var(--cvw)*3)] max-lg:flex-col max-lg:items-stretch max-lg:gap-[7vw] max-md:gap-[10vw]">
         <div className="flex w-[40%] flex-col gap-[calc(var(--cvw)*1.8)] max-lg:w-full max-lg:gap-[3vw] max-md:gap-[10vw]">
           <LineReveal as="h2" className="type-h1 w-[70%] text-foreground max-lg:w-[80%]">
-            Not Sure? <span className="gradient-text-animate">Let’s Size It.</span>
+            Not Sure? <span className="gradient-text-animate">Let’s Size it.</span>
           </LineReveal>
           <p className="fadeup type-body-lg w-[80%] text-foreground/60 max-lg:w-[70%] max-md:w-full">
             Tell us how you build. We’ll point you to the plan that fits, and show you exactly why.
@@ -204,7 +204,7 @@ export default function PricingFinder({ currency: initialCurrency }) {
             <p data-pick className={`text-foreground/60 ${LABEL}`}>We’d pick</p>
             <div className="type-h1 flex items-center gap-[calc(var(--cvw)*1)] text-foreground max-lg:gap-[2vw] max-md:gap-[5vw]">
               <RollText text={rec.plan.name} dir={rec.key === "plus" ? 1 : -1} className="pb-[0.1em]" />
-              <span ref={tagRef} className={`bg-primary/20 px-[calc(var(--cvw)*0.7)] py-[calc(var(--cvw)*0.4)] text-primary-hover max-lg:px-[1.4vw] max-lg:py-[0.8vw] max-md:px-[2vw] max-md:py-[1vw] ${LABEL}`}>
+              <span ref={tagRef} className={`bg-primary/20 px-[calc(var(--cvw)*0.7)] py-[calc(var(--cvw)*0.4)] text-primary-hover max-lg:px-[1.4vw] max-lg:py-[0.8vw] max-md:px-[2vw] max-md:py-[1vw] ${LABEL} tracking-wide!`}>
                 {rec.period === "y" ? "Yearly" : "Quarterly"}
               </span>
             </div>

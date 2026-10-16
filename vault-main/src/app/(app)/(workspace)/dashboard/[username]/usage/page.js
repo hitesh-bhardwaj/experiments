@@ -246,7 +246,7 @@ export default function UsagePage() {
       <section aria-labelledby="history-h" className={`${CARD} ${CARD_PAD} gap-[calc(var(--cvw)*1.2)] max-lg:gap-4`}>
         <div className="flex flex-wrap items-center justify-between gap-3">
           <h2 id="history-h" className="type-h3">
-            Installed &amp; copied
+            Installed &amp; Copied
           </h2>
           <div className="flex flex-wrap items-center gap-[calc(var(--cvw)*0.7)] max-md:gap-[2.5vw]">
             <label className="type-small flex h-9.5 items-center gap-2 bg-light px-3 text-black/60 ring-1 ring-inset ring-black/10 focus-within:ring-primary">
