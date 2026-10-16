@@ -56,7 +56,7 @@ export default function Cursor() {
                 // Charging: the ring's primary stroke fills in step with the ribbons' hold
                 if (holding || ready) root.dataset.charging = ""; else delete root.dataset.charging;
                 // Charged and waiting: tell them to let go
-                return setMode("hold", ready ? "Release" : holding ? "" : zone.dataset.cursorLabel || "Hold to Explore");
+                return setMode("hold", ready ? "Release" : holding ? "" : zone.dataset.cursorLabel || "Click & Hold");
             }
             delete root.dataset.charging;
             return setMode("off");

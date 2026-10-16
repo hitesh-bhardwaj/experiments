@@ -8,24 +8,21 @@ import InteractionProvider, {
 } from "@/homepage/components/InteractionProvider";
 import { readSoundPreference } from "@/homepage/components/SoundToggle";
 import { EasterEggProvider } from "@/homepage/components/easter-egg/EasterEgg";
+import SiteCursor from "@/components/WebsiteComps/SiteCursor";
 
-// Client-only: the fluid touches canvas/window on mount and has nothing to
-// server-render.
+
 const SiteBackground = dynamic(
     () => import("@/homepage/components/SiteBackground"),
     { ssr: false },
 );
 
-// Effect showcases paint their own full-bleed scenes; the site's grid would
-// change what they show.
 const SHOWCASE_PREFIXES = ["/demo", "/template-demo"];
 
 const matchesPrefix = (path, prefixes) =>
     Boolean(path) &&
     prefixes.some((prefix) => path === prefix || path.startsWith(`${prefix}/`));
 
-// Browsers block audio until a user gesture, so a saved "on" preference is
-// honoured at the first pointerdown/keydown of the page load - never before.
+
 function ResumeSavedSound() {
     const { setSound } = useInteraction();
 
@@ -33,8 +30,7 @@ function ResumeSavedSound() {
         if (readSoundPreference() !== true) return;
 
         const onFirstGesture = (e) => {
-            // The toggle's own click decides - resuming here first would
-            // make that click switch the sound straight back off.
+           
             if (e.target?.closest?.("[data-sound-toggle]")) return;
             removeListeners();
             setSound(true);
@@ -52,9 +48,7 @@ function ResumeSavedSound() {
     return null;
 }
 
-// Mounted once in the root layout: one sound engine, the full-page dotted
-// grid and fluid (the sound toggle itself lives in Navbar), and the hidden "Ship at 60" game.
-// The layout never remounts on client navigation, so the music keeps playing.
+
 export default function SiteInteractions({ children }) {
     const pathname = usePathname();
     const isShowcase = matchesPrefix(pathname, SHOWCASE_PREFIXES);
@@ -63,6 +57,7 @@ export default function SiteInteractions({ children }) {
         <InteractionProvider uiSounds={!isShowcase}>
             {!isShowcase && <SiteBackground />}
             {!isShowcase && <ResumeSavedSound />}
+            {!isShowcase && <SiteCursor />}
             {isShowcase ? children : <EasterEggProvider>{children}</EasterEggProvider>}
         </InteractionProvider>
     );

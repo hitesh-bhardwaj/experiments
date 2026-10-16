@@ -578,7 +578,7 @@ export function mountCrowd(canvas, opts = {}) {
   // Press and hold (fine pointers) charges the particles and a full charge explodes them on
   // release, as the homepage hero. Dark sections only, never on controls or copy.
   const finePointer = matchMedia("(hover: hover) and (pointer: fine)").matches;
-  // The dark sections are hold zones for the page's cursor tag (SquareCursor), as the homepage hero
+  // The dark sections are hold zones for the page's cursor label (SiteCursor), as the homepage hero
   const holdZones = finePointer && !reducedMotion ? formZones : [];
   holdZones.forEach((z) => { z.dataset.holdZone = ""; });
   // Lets the page's cursor know the particles are in pieces, as the homepage ribbons do

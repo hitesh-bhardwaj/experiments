@@ -382,7 +382,7 @@ function mountBlob(canvas, { preset, phoneTop = 0.29, sound = null, small, reduc
   };
   const onPointerLeave = () => { mouse.on = false; };
 
-  // The hero is a hold zone for the page's cursor tag (SquareCursor), as the homepage hero:
+  // The hero is a hold zone for the page's cursor label (SiteCursor), as the homepage hero:
   // marked data-near while the pointer is over the blob, data-ribbons-shattered while in pieces
   const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
   const zone = finePointer && !reducedMotion ? canvas.closest("section") : null;
@@ -451,7 +451,7 @@ function mountBlob(canvas, { preset, phoneTop = 0.29, sound = null, small, reduc
     mouse.lastY = mouse.cy;
     // In pieces, the cursor stirs the shards instead of the hover
     hover.frame(dt, pointerOn && !shatter.active, mouse.x, mouse.y);
-    // The page's cursor tag (SquareCursor): "Hold to explore" near the blob, nothing once in pieces
+    // The page's cursor label (SiteCursor): "Click & Hold" near the blob, nothing once in pieces
     markZone(pointerOn && Math.hypot(mouse.x - view.x, mouse.y - view.y) < view.s * 1.3, shatter.active);
     shatter.frame(dt, time, pointerOn, mouse.x, mouse.y, moved, camera.position.z);
     state.pulse *= Math.pow(0.2, dt);

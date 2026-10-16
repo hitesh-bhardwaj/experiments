@@ -504,6 +504,7 @@ export function EffectsListing({
           </div>
           <div
             ref={trendRef}
+            data-cursor-drag
             // overflow-y is set explicitly: with only overflow-x set the browser computes
             // overflow-y to auto, and the site's Lenis (allowNestedScroll) then treats this
             // row as a vertical scroller and traps the wheel inside it.

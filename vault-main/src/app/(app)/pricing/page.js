@@ -4,7 +4,6 @@ import { getSearchIndexEffects } from "@/lib/search-index";
 import PricingHero from "@/components/Pricing/pricing-hero/PricingHero";
 import { FAQJSONLD, WebpageJsonLd } from "@/lib/json-ld";
 import { createPageMetadata } from "@/lib/seo-metadata";
-import SquareCursor from "@/homepage/components/SquareCursor";
 import SectionOverlay from "@/components/Animations/SectionOverlay";
 
 // Below-the-fold sections load as separate chunks (still server-rendered)
@@ -36,7 +35,6 @@ export default async function PricingPage() {
       <WebpageJsonLd metadata={metadata} />
       <FAQJSONLD faqs={faqItems} />
       <VaultShell effects={effects}>
-        <SquareCursor />
         <main id="main-content">
           <PricingHero />
           {/* Plans through FAQ are one sheet that scales in after the hero, like the homepage */}

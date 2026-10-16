@@ -551,7 +551,8 @@ export function mountThereminRibbons(
       v: 1, duration: HOLD_DURATION, delay: HOLD_DELAY, ease: "power2.in",
       onStart: () => { p.sounding = true; sound?.holdStart?.(); },
       onUpdate: () => {
-        if (!p.ready && charge.v >= FULL_CHARGE) { p.ready = true; sound?.ready?.(); }
+        // hx-hold-ready: the site cursor's caption turns to "Release"
+        if (!p.ready && charge.v >= FULL_CHARGE) { p.ready = true; sound?.ready?.(); dispatchEvent(new Event("hx-hold-ready")); }
       },
     });
   };
@@ -612,6 +613,7 @@ export function mountThereminRibbons(
       press = null;
       p.tw.kill();
       if (p.sounding) sound?.holdEnd?.(false);
+      dispatchEvent(new Event("hx-hold-cancel"));
       chargeTween = gsap.to(charge, { v: 0, duration: 1.4, ease: "expo.out" });
     }
     if (lastX >= 0) {
