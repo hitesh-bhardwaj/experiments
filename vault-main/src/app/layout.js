@@ -103,8 +103,6 @@ export default function RootLayout({ children }) {
             __html: `try{document.documentElement.dataset.sidebar=localStorage.getItem("hyperiux-sidebar-expanded")==="false"?"collapsed":"expanded"}catch(e){}`,
           }}
         />
-        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
-        <link rel="dns-prefetch" href="https://www.google-analytics.com" />
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
@@ -119,15 +117,6 @@ export default function RootLayout({ children }) {
       <body className="min-h-dvh text-foreground">
         {/* Covers the page from first paint until it hydrates (then gsap.set to opacity 0) */}
         <PageLoadOverlay />
-        <noscript>
-          <iframe
-            src="https://www.googletagmanager.com/ns.html?id=GTM-NCDH9PHF"
-            height="0"
-            width="0"
-            style={{ display: "none", visibility: "hidden" }}
-            title="Google Tag Manager"
-          />
-        </noscript>
         {/* <script
           id="clear-stale-clerk-cookies"
           dangerouslySetInnerHTML={{ __html: CLEAR_STALE_CLERK_COOKIES }}
